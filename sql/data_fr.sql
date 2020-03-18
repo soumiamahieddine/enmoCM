@@ -1263,14 +1263,11 @@ INSERT INTO tags (label) VALUES ('LITTORAL');
 INSERT INTO tags (label) VALUES ('SPORT');
 
 ------------
-------------
 --TEMPLATES
 ------------
 TRUNCATE TABLE templates;
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'Appel téléphonique', 'Appel Téléphonique', '', 'OFFICE', '0000#', 'appel_telephonique.docx', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (2, '[notification] Notifications événement', 'Notifications des événements système',
-'<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (2, '[notification] Notifications événement', 'Notifications des événements système', '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p><font face="verdana,geneva" size="1"> </font></p>
 <p><font face="verdana,geneva" size="1">Voici la liste des &eacute;v&eacute;nements de l''application qui vous sont notifi&eacute;s ([notification.description]) :</font></p>
 <table style="width: 800px; height: 36px;" border="0" cellspacing="1" cellpadding="1">
@@ -1286,10 +1283,8 @@ VALUES (2, '[notification] Notifications événement', 'Notifications des évén
 <td><font face="verdana,geneva" size="1">[events.event_info]</font></td>
 </tr>
 </tbody>
-</table>',
-'HTML', NULL, NULL, '', 'notif_events', 'notifications');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
+</table>', 'HTML', NULL, NULL, '', 'notif_events', 'notifications', NULL);
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des courriers dont la date limite de traitement est dépassée :n</font></p>
 <table style="border: 1pt solid #000000; width: 1582px; height: 77px;" border="1" cellspacing="1" cellpadding="5" frame="box">
@@ -1315,9 +1310,8 @@ VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><f
 <td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktoprocess]" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications', NULL);
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
 <p> </p>
@@ -1346,9 +1340,8 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 <td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktoprocess]" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications', NULL);
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers présents dans les bannettes', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
 <p>&nbsp;</p>
 <p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Voici la liste des nouveaux courriers pr&eacute;sents dans cette bannette :</p>
 <table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%;">
@@ -1374,9 +1367,8 @@ VALUES (7, '[notification courrier] Diffusion de courrier', 'Alerte de courriers
 </tbody>
 </table>
 <p>&nbsp;</p>
-<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; width: 100%; text-align: center; font-size: 9px; font-style: italic; opacity: 0.5;">Message g&eacute;n&eacute;r&eacute; via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
-VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; width: 100%; text-align: center; font-size: 9px; font-style: italic; opacity: 0.5;">Message g&eacute;n&eacute;r&eacute; via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications', NULL);
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Bonjour <strong>[recipient.firstname] [recipient.lastname]</strong>,</p>
 <p>&nbsp;</p>
 <p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif;">Voici les nouvelles annotations sur les courriers suivants :</p>
 <table style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; border-collapse: collapse; width: 100%;">
@@ -1404,77 +1396,11 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 </tbody>
 </table>
 <p>&nbsp;</p>
-<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; width: 100%; text-align: center; font-size: 9px; font-style: italic; opacity: 0.5;">Message g&eacute;n&eacute;r&eacute; via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
-INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left;"><span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="text-decoration: underline;"><span style="font-size: small;">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
-<p style="text-align: center;">&nbsp;</p>
-<table style="background-color: #a8c33c; width: 800px; border: #000000 1pt solid;" border="1" cellspacing="1" cellpadding="5">
-<tbody>
-<tr>
-<td style="width: 200px;">CLOTURE&nbsp;DE LA DEMANDE</td>
-<td>DATE: [dates]</td>
-<td>HEURE: [time]</td>
-</tr>
-</tbody>
-</table>
-<table style="width: 800px; border: #000000 1pt solid;" border="1" cellspacing="1" cellpadding="5">
-<tbody>
-<tr>
-<td style="width: 200px; background-color: #a8c33c;">OBJET</td>
-<td style="background-color: #e1f787;">&nbsp;[res_letterbox.subject]</td>
-</tr>
-<tr>
-<td style="width: 200px; background-color: #a8c33c;">ACTIONS CONDUITES</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td style="width: 200px; background-color: #a8c33c;">DATE DE REMISE EN ETAT / SERVICE</td>
-<td style="background-color: #e1f787;">&nbsp;</td>
-</tr>
-<tr>
-<td style="width: 200px; background-color: #a8c33c;">CONSIGNES COMPLEMENTAIRES</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td style="width: 200px; background-color: #a8c33c;">AUTRES OBSERVATIONS</td>
-<td style="background-color: #e1f787;">&nbsp;</td>
-</tr>
-<tr>
-<td style="width: 200px; background-color: #a8c33c;">&nbsp;</td>
-<td>&nbsp;</td>
-</tr>
-<tr>
-<td style="width: 200px; background-color: #a8c33c;">&nbsp;</td>
-<td style="background-color: #e1f787;">&nbsp;</td>
-</tr>
-</tbody>
-</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'indexingFile');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (20, 'Accompagnement courriel', 'Modèle de courriel d''''accompagnement', '<p>Bonjour,</p>
-<p>En r&eacute;ponse &agrave; votre courrier en date du [res_letterbox.doc_date], veuillez trouver notre r&eacute;ponse en pi&egrave;ce-jointe.</p>
-<p>Cordialement,</p>
-<p><strong>Ville de Maarch-les-Bains</strong><br /><em>[user.firstname] [user.lastname]</em><br /><em>[user.phone]</em></p>', 'HTML', NULL, NULL, 'DOCX: standard_nosign', 'letterbox_attachment', 'sendmail', 'all');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (21, 'AR dérogation LO', 'AR derogation carte scolaire', '', 'OFFICE', '0000#', 'ar_derogation.odt', 'ODT: ARderogation', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (22, 'Réponse crèche LO', 'Réponse à une demande de place en crèche', '', 'OFFICE', '0000#', 'rep_creche.odt', 'ODT: Repddeplacecreche', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (23, 'Réponse générique LO', 'Modèle de réponse générique', '', 'OFFICE', '0000#', 'rep_standard.odt', 'ODT: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (24, 'Réponse générique MS', 'Modèle de réponse MS Office', '', 'OFFICE', '0000#', 'rep_standard.docx', 'DOCX: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (25, 'AR SVA LO', 'AR SVA LO', '', 'OFFICE', '0000#', 'ar_sva.odt', 'ODT: ar_sva', 'letterbox_attachment', 'attachments', 'sva');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (26, 'AR SVR LO', 'AR SVR LO', '', 'OFFICE', '0000#', 'ar_svr.odt', 'ODT: ar_svr', 'letterbox_attachment', 'attachments', 'svr');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (27, 'Réponse avec transmission LO', 'Réponse avec transmission LO', '', 'OFFICE', '0000#', 'rep_transmission.odt', 'ODT: rep_transmission', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (28, 'Transmission LO', 'Transmission LO', '', 'OFFICE', '0000#', 'transmission.odt', 'ODT: transmission', 'letterbox_attachment', 'attachments', 'transmission');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (29, 'Courrier invitation PME LO', 'Courrier invitation PME LO', '', 'OFFICE', '0000#', 'invitation.odt', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (30, 'AR dérogation LO sans carré', 'AR derogation carte scolaire sans carré', '', 'OFFICE', '0000#', 'ar_derogation_sans_carre.odt', 'ODT: ARderogation', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (31, 'Réponse crèche LO sans carré', 'Réponse à une demande de place en crèche sans carré', '', 'OFFICE', '0000#', 'rep_creche_sans_carre.odt', 'ODT: Repddeplacecreche', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (32, 'Réponse générique LO sans carré', 'Modèle de réponse générique sans carré', '', 'OFFICE', '0000#', 'rep_standard_sans_carre.odt', 'ODT: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (33, 'Réponse générique MS sans carré', 'Modèle de réponse MS Office sans carré', '', 'OFFICE', '0000#', 'rep_standard_sans_carre.docx', 'DOCX: standard_sign', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (34, 'AR SVA LO sans carré', 'AR SVA LO sans carré', '', 'OFFICE', '0000#', 'ar_sva_sans_carre.odt', 'ODT: ar_sva', 'letterbox_attachment', 'attachments', 'sva');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (35, 'AR SVR LO sans carré', 'AR SVR LO sans carré', '', 'OFFICE', '0000#', 'ar_svr_sans_carre.odt', 'ODT: ar_svr', 'letterbox_attachment', 'attachments', 'svr');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (36, 'Réponse avec transmission LO sans carré', 'Réponse avec transmission LO sans carré', '', 'OFFICE', '0000#', 'rep_transmission_sans_carre.odt', 'ODT: rep_transmission', 'letterbox_attachment', 'attachments', 'response_project');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (37, 'Transmission LO sans carré', 'Transmission LO sans carré', '', 'OFFICE', '0000#', 'transmission_sans_carre.odt', 'ODT: transmission', 'letterbox_attachment', 'attachments', 'transmission');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (38, 'Courrier invitation PME LO sans carré', 'Courrier invitation PME LO sans carré', '', 'OFFICE', '0000#', 'invitation_sans_carre.odt', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
-------------
---TEMPLATES réponses mail SVE
---
+<p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; width: 100%; text-align: center; font-size: 9px; font-style: italic; opacity: 0.5;">Message g&eacute;n&eacute;r&eacute; via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications', NULL);
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (900, '[TRT] Passer me voir', 'Passer me voir', 'Passer me voir à mon bureau, merci.', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (901, '[TRT] Compléter', 'Compléter', 'Le projet de réponse doit être complété/révisé sur les points suivants : \n\n- ', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (901, '[TRT] Compléter', 'Compléter', 'Le projet de réponse doit être complété/révisé sur les points suivants : 
+
+- ', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (902, '[AVIS] Demande avis', 'Demande avis', 'Merci de me fournir les éléments de langage pour répondre à ce courrier.', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (904, '[AVIS] Avis favorable', 'Avis favorable', 'Merci de répondre favorablement à la demande inscrite dans ce courrier', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (905, '[CLOTURE] Clôture pour REJET', 'Clôture pour REJET', 'Clôture pour REJET', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
@@ -1483,49 +1409,147 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (908, '[CLOTURE] Clôture AUTRE', 'Clôture AUTRE', 'Clôture pour ce motif : ', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (909, '[REJET] Erreur affectation', 'Erreur affectation', 'Ce courrier ne semble pas concerner mon service', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (910, '[REJET] Anomalie de numérisation', 'Anomalie de numérisation', 'Le courrier présente des anomalies de numérisation', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
---
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1000, '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[destination.adrs_1]</em><br /><em>[destination.adrs_2]</em><br /><em>[destination.zipcode] [destination.city]<br /></em></p>
-<p>(Veuillez renseigner le numero de telephone de votre service)</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui ne rel&egrave;ve pas de sa comp&eacute;tence.</p>
-<p>Votre demande concerne [res_letterbox.subject].</p>
-<p>Cette demande a &eacute;t&eacute; transmise &agrave; (veuillez renseigner le nom de l''AUTORITE COMPETENTE).</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_attachment', 'sendmail', 'all');
---
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1020, 'AR EN MASSE TYPE SVR dans le cas d’une décision implicite de rejet', 'AR EN MASSE TYPE SVR dans le cas d’une décision implicite de rejet', '<h2>Ville de Maarch-les-Bains</h2>
-<p>[contact.title] [contact.lastname]</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui rel&egrave;ve de sa comp&eacute;tence.</p>
-<p>Votre demande concerne : [res_letterbox.subject].</p>
-<p>Le pr&eacute;sent accus&eacute; r&eacute;ception atteste la r&eacute;ception de votre demande, il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''&eacute;tude des pi&egrave;ces fournies. Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [user.phone] ou par messagerie [user.mail].</p>
-<p>Votre demande est susceptible de faire l''objet d''une d&eacute;cision implicite de rejet en l''absence de r&eacute;ponse dans les jours suivant sa r&eacute;ception, soit le [res_letterbox.process_limit_date].</p>
-<p>Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.</p>
-<p>Dans ce cas, le d&eacute;lai de d&eacute;cision implicite de rejet serait alors suspendu le temps de produire les pi&egrave;ces demand&eacute;es.</p>
-<p>Si vous estimez que la d&eacute;cision qui sera prise par l''administration est contestable, vous pourrez formuler :</p>
-<p>- Soit un recours gracieux devant l''auteur de la d&eacute;cision</p>
-<p>- Soit un recours hi&eacute;rarchique devant le Maire</p>
-<p>- Soit un recours contentieux devant le Tribunal Administratif territorialement comp&eacute;tent.</p>
-<p>Le recours gracieux ou le recours hi&eacute;rarchique peuvent &ecirc;tre faits sans condition de d&eacute;lais.</p>
-<p>Le recours contentieux doit intervenir dans un d&eacute;lai de deux mois &agrave; compter de la notification de la d&eacute;cision.</p>
-<p>Toutefois, si vous souhaitez en cas de rejet du recours gracieux ou du recours hi&eacute;rarchique former un recours contentieux, ce recours gracieux ou hi&eacute;rarchique devra avoir &eacute;t&eacute; introduit dans le d&eacute;lai sus-indiqu&eacute; du recours contentieux.</p>
-<p>Vous conserverez ainsi la possibilit&eacute; de former un recours contentieux, dans un d&eacute;lai de deux mois &agrave; compter de la d&eacute;cision intervenue sur ledit recours gracieux ou hi&eacute;rarchique.</p>', 'OFFICE_HTML', '0000#', 'ar_masse_svr_sans_carre.odt', 'ODT: ar_svr', 'letterbox_attachment', 'acknowledgementReceipt', 'svr');
---
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1010, 'AR EN MASSE TYPE SVA dans le cas d’une décision implicite d’acceptation', 'AR EN MASSE TYPE SVA dans le cas d’une décision implicite d’acceptation', '<h2>Ville de Maarch-les-Bains</h2>
-<p>[contact.title] [contact.lastname]</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui rel&egrave;ve de sa comp&eacute;tence.</p>
-<p>Votre demande concerne [res_letterbox.subject].</p>
-<p>Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''''&eacute;tude des pi&egrave;ces fournies.</p>
-<p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [user.phone] ou par messagerie [user.mail].</p>
-<p>Votre demande est susceptible de faire l''objet d''''une d&eacute;cision implicite d''''acceptation en l''absence de r&eacute;ponse dans les jours suivant sa r&eacute;ception, soit le [res_letterbox.process_limit_date].</p>
-<p>Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.</p>
-<p>Le cas &eacute;ch&eacute;ant, le d&eacute;lai de d&eacute;cision implicite d''acceptation ne d&eacute;butera qu''''apr&egrave;s la production des pi&egrave;ces demand&eacute;es.</p>
-<p>En cas de d&eacute;cision implicite d''''acceptation vous avez la possibilit&eacute; de demander au service charg&eacute; du dossier une attestation conform&eacute;ment aux dispositions de l''article 22 de la loi n&deg; 2000-321 du 12 avril 2000 relative aux droits des citoyens dans leurs relations avec les administrations modifi&eacute;e.</p>', 'OFFICE_HTML', '0000#', 'ar_masse_sva_sans_carre.odt', 'ODT: ar_sva', 'letterbox_attachment', 'acknowledgementReceipt', 'sva');
---
-INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1030, 'AR EN MASSE TYPE SIMPLE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', 'AR EN MASSE TYPE SIMPLE dans le cas d’une demande n’impliquant pas de décision implicite de l’administration', '<h2>Ville de Maarch-les-Bains</h2>
-<p>[contact.title] [contact.lastname]</p>
-<p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui rel&egrave;ve de sa comp&eacute;tence.</p>
-<p>Votre demande concerne [res_letterbox.subject].</p>
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1033, 'AR EN MASSE TYPE SIMPLE', 'Cas d’une demande n’impliquant pas de décision implicite de l’administration', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;"><strong>Accus&eacute; de r&eacute;ception</strong></span></p>
+<p>Service instructeur : <strong>[userPrimaryEntity.entity_label]</strong> <br />Courriel : [userPrimaryEntity.email]</p>
+<p>[userPrimaryEntity.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+<p>Votre demande concernant :</p>
+<p><strong>[res_letterbox.subject]</strong></p>
+<p>&agrave; bien &eacute;t&eacute; r&eacute;ceptionn&eacute;e par nos services le [res_letterbox.admission_date].</p>
+<p><br />La r&eacute;f&eacute;rence de votre dossier est : <strong>[res_letterbox.alt_identifier]</strong></p>
 <p>Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. Il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''&eacute;tude des pi&egrave;ces fournies.</p>
-<p>Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.</p>
-<p>Pour tout renseignement concernant votre dossier, vous pouvez contacter le service charg&eacute; du dossier par t&eacute;l&eacute;phone [user.phone] ou par messagerie [user.mail].</p>', 'OFFICE_HTML', '0000#', 'ar_masse_simple_sans_carre.odt', 'ODT: rep_standard', 'letterbox_attachment', 'acknowledgementReceipt', 'simple');
+<p>Si l''instruction de votre demande n&eacute;cessite des informations ou des pi&egrave;ces compl&eacute;mentaires, nos services vous en ferons la demande</p>
+<p>&nbsp;</p>
+<p>Nous vous conseillons de conserver ce message jusqu''&agrave; la fin du traitement de votre dossier.</p>
+<p>&nbsp;</p>
+<p>[userPrimaryEntity.entity_label]</p>
+<p>Ville de Maarch-les-Bains</p>
+<p>&nbsp;</p>
+</div>', 'OFFICE_HTML', '2020/03/0001/', '0001_1443263267.docx', '', 'letterbox_attachment', 'acknowledgementReceipt', 'simple');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1034, 'AR EN MASSE TYPE SVA', 'Cas d’une demande impliquant une décision implicite d''acceptation de l’administration', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;"><strong>Accus&eacute; de r&eacute;ception de votre demande intervenant<br />dans le cadre d''une d&eacute;cision implicite d''acceptation<br /></strong></span></p>
+<p>Num&eacute;ro d''enregistrement :<strong> [res_letterbox.alt_identifier]</strong></p>
+<p>Service instructeur : <strong>[userPrimaryEntity.entity_label]</strong> <br />Courriel : [userPrimaryEntity.email]</p>
+<p>[userPrimaryEntity.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+<p>Votre demande concernant :</p>
+<p><strong>[res_letterbox.subject]</strong></p>
+<p>&agrave; bien &eacute;t&eacute; r&eacute;ceptionn&eacute;e par nos services le [res_letterbox.admission_date].</p>
+<p><br />La r&eacute;f&eacute;rence de votre dossier est : <strong>[res_letterbox.alt_identifier]</strong></p>
+Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''''&eacute;tude des pi&egrave;ces fournies.<br /><br />Votre demande est susceptible de faire l''objet d''''une d&eacute;cision implicite d''''acceptation en l''absence de r&eacute;ponse dans les jours suivant sa r&eacute;ception, soit le <strong>[res_letterbox.process_limit_date]</strong>.<br /><br />Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.<br /><br />Le cas &eacute;ch&eacute;ant, le d&eacute;lai de d&eacute;cision implicite d''acceptation ne d&eacute;butera qu''''apr&egrave;s la production des pi&egrave;ces demand&eacute;es.<br /><br />En cas de d&eacute;cision implicite d''''acceptation vous avez la possibilit&eacute; de demander au service charg&eacute; du dossier une attestation conform&eacute;ment aux dispositions de l''article 22 de la loi n&deg; 2000-321 du 12 avril 2000 relative aux droits des citoyens dans leurs relations avec les administrations modifi&eacute;e.
+<p>Nous vous conseillons de conserver ce message jusqu''&agrave; la fin du traitement de votre dossier.</p>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;">Ville de Maarch-les-Bains</span><br />[userPrimaryEntity.entity_label]</p>
+<p>Courriel : [userPrimaryEntity.email]<br />T&eacute;l&eacute;phone : [user.phone]</p>
+</div>', 'OFFICE_HTML', NULL, NULL, 'DOCX: AR_Masse_SVA', 'letterbox_attachment', 'acknowledgementReceipt', 'sva');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1042, 'PR - Demande de Place en crèche', 'Projet de réponse demande de place en crèche', NULL, 'OFFICE', '2020/03/0001/', '0007_701346109.docx', 'DOCX: PR04_CRECHE', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1037, 'PR - Dérogation carte scolaire', 'Projet de réponse dérogation carte scolaire', NULL, 'OFFICE', '2020/03/0001/', '0002_2059891324.docx', 'DOCX: PR03_SCOLAIRE', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1045, 'AR TYPE SVR - Courriel Manuel', 'A utiliser avec l''action "Générer les AR"', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;"><strong>Accus&eacute; de r&eacute;ception de votre demande intervenant<br />dans le cadre d''une d&eacute;cision implicite de rejet<br /></strong></span></p>
+<p>Num&eacute;ro d''enregistrement :<strong> [res_letterbox.alt_identifier]</strong></p>
+<p>Service instructeur : <strong>[userPrimaryEntity.entity_label]</strong> <br />Courriel : [userPrimaryEntity.email]</p>
+<p>[userPrimaryEntity.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+<p>Votre demande concernant :</p>
+<p><strong>[res_letterbox.subject]</strong></p>
+<p>&agrave; bien &eacute;t&eacute; r&eacute;ceptionn&eacute;e par nos services le [res_letterbox.admission_date].</p>
+<p><br />La r&eacute;f&eacute;rence de votre dossier est : <strong>[res_letterbox.alt_identifier]</strong></p>
+Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''''&eacute;tude des pi&egrave;ces fournies.<br /><br />Votre demande est susceptible de faire l''objet d''une d&eacute;cision implicite de rejet en l''absence de r&eacute;ponse dans les jours suivant sa r&eacute;ception, soit le <strong>[res_letterbox.process_limit_date]</strong>.<br /><br />Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.<br /><br />Dans ce cas, le d&eacute;lai de d&eacute;cision implicite de rejet serait alors suspendu le temps de produire les pi&egrave;ces demand&eacute;es.<br /><br />Si vous estimez que la d&eacute;cision qui sera prise par l''administration est contestable, vous pourrez formuler :<br /><br />- Soit un recours gracieux devant l''auteur de la d&eacute;cision<br />- Soit un recours hi&eacute;rarchique devant le Maire<br />- Soit un recours contentieux devant le Tribunal Administratif territorialement comp&eacute;tent.<br /><br />Le recours gracieux ou le recours hi&eacute;rarchique peuvent &ecirc;tre faits sans condition de d&eacute;lais.<br /><br />Le recours contentieux doit intervenir dans un d&eacute;lai de deux mois &agrave; compter de la notification de la d&eacute;cision.<br /><br />Toutefois, si vous souhaitez en cas de rejet du recours gracieux ou du recours hi&eacute;rarchique former un recours contentieux, ce recours gracieux ou hi&eacute;rarchique devra avoir &eacute;t&eacute; introduit dans le d&eacute;lai sus-indiqu&eacute; du recours contentieux.<br /><br />Vous conserverez ainsi la possibilit&eacute; de former un recours contentieux, dans un d&eacute;lai de deux mois &agrave; compter de la d&eacute;cision intervenue sur ledit recours gracieux ou hi&eacute;rarchique.<br />
+<p>Nous vous conseillons de conserver ce message jusqu''&agrave; la fin du traitement de votre dossier.</p>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;">Ville de Maarch-les-Bains</span><br />[userPrimaryEntity.entity_label]</p>
+<p>Courriel : [userPrimaryEntity.email]<br />T&eacute;l&eacute;phone : [user.phone]</p>
+</div>', 'HTML', NULL, NULL, NULL, 'letterbox_attachment', 'sendmail', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1035, 'AR EN MASSE TYPE SVR', 'Cas d’une demande impliquant une décision implicite de rejet de l’administration', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;"><strong>Accus&eacute; de r&eacute;ception de votre demande intervenant<br />dans le cadre d''une d&eacute;cision implicite de rejet<br /></strong></span></p>
+<p>Num&eacute;ro d''enregistrement :<strong> [res_letterbox.alt_identifier]</strong></p>
+<p>Service instructeur : <strong>[userPrimaryEntity.entity_label]</strong> <br />Courriel : [userPrimaryEntity.email]</p>
+<p>[userPrimaryEntity.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+<p>Votre demande concernant :</p>
+<p><strong>[res_letterbox.subject]</strong></p>
+<p>&agrave; bien &eacute;t&eacute; r&eacute;ceptionn&eacute;e par nos services le [res_letterbox.admission_date].</p>
+<p><br />La r&eacute;f&eacute;rence de votre dossier est : <strong>[res_letterbox.alt_identifier]</strong></p>
+Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''''&eacute;tude des pi&egrave;ces fournies.<br /><br />Votre demande est susceptible de faire l''objet d''une d&eacute;cision implicite de rejet en l''absence de r&eacute;ponse dans les jours suivant sa r&eacute;ception, soit le <strong>[res_letterbox.process_limit_date]</strong>.<br /><br />Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.<br /><br />Dans ce cas, le d&eacute;lai de d&eacute;cision implicite de rejet serait alors suspendu le temps de produire les pi&egrave;ces demand&eacute;es.<br /><br />Si vous estimez que la d&eacute;cision qui sera prise par l''administration est contestable, vous pourrez formuler :<br /><br />- Soit un recours gracieux devant l''auteur de la d&eacute;cision<br />- Soit un recours hi&eacute;rarchique devant le Maire<br />- Soit un recours contentieux devant le Tribunal Administratif territorialement comp&eacute;tent.<br /><br />Le recours gracieux ou le recours hi&eacute;rarchique peuvent &ecirc;tre faits sans condition de d&eacute;lais.<br /><br />Le recours contentieux doit intervenir dans un d&eacute;lai de deux mois &agrave; compter de la notification de la d&eacute;cision.<br /><br />Toutefois, si vous souhaitez en cas de rejet du recours gracieux ou du recours hi&eacute;rarchique former un recours contentieux, ce recours gracieux ou hi&eacute;rarchique devra avoir &eacute;t&eacute; introduit dans le d&eacute;lai sus-indiqu&eacute; du recours contentieux.<br /><br />Vous conserverez ainsi la possibilit&eacute; de former un recours contentieux, dans un d&eacute;lai de deux mois &agrave; compter de la d&eacute;cision intervenue sur ledit recours gracieux ou hi&eacute;rarchique.<br />
+<p>Nous vous conseillons de conserver ce message jusqu''&agrave; la fin du traitement de votre dossier.</p>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;">Ville de Maarch-les-Bains</span><br />[userPrimaryEntity.entity_label]</p>
+<p>Courriel : [userPrimaryEntity.email]<br />T&eacute;l&eacute;phone : [user.phone]</p>
+</div>', 'OFFICE_HTML', NULL, NULL, 'DOCX: AR_Masse_SVR', 'letterbox_attachment', 'acknowledgementReceipt', 'svr');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (20, 'Courriel d''accompagnement', 'Modèle de courriel d''accompagnement', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>[user.firstname] [user.lastname]<br />[userPrimaryEntity.role]<br />[userPrimaryEntity.entity_label]<br /><br />T&eacute;l&eacute;phone : &nbsp;&nbsp; &nbsp;[user.phone]<br />Courriel : &nbsp;&nbsp; &nbsp;[user.mail]</p>
+<p>[userPrimaryEntity.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+<p>Veuillez trouver en pi&egrave;ce jointe &agrave; ce courriel notre r&eacute;ponse &agrave; votre demande du [res_letterbox.admission_date].</p>
+<p>Bien cordialement.</p>
+<p>[user.firstname] [user.lastname]<br />[userPrimaryEntity.role]<br />[userPrimaryEntity.entity_label]<br /><br /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>', 'HTML', NULL, NULL, 'DOCX: standard_nosign', 'letterbox_attachment', 'sendmail', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1036, 'SVE - Courriel de réorientation', 'Modèle de courriel de réorientation d''une saisine SVE', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>[destination.entity_label]<br /><br />T&eacute;l&eacute;phone : &nbsp;&nbsp; &nbsp;[user.phone]<br />Courriel : &nbsp;&nbsp;&nbsp; [destination.email]</p>
+<p>[destination.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui ne rel&egrave;ve pas de sa comp&eacute;tence.<br /><br />Votre demande cit&eacute;e en objet de ce courriel a &eacute;t&eacute; transmise &agrave;</div>
+<div class="is-node">&nbsp;</div>
+<div class="is-node">(veuillez renseigner le nom de l''AUTORITE COMPETENTE).<br />
+<p><br /><br /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>', 'HTML', NULL, NULL, 'DOCX: AR_Masse_SVA', 'letterbox_attachment', 'sendmail', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1038, 'EC - Générique', 'Enregistrement de courrier générique', NULL, 'OFFICE', '2020/03/0001/', '0003_141957512.docx', 'DOCX: EC01_GENERIC', 'letterbox_attachment', 'indexingFile', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1039, 'EC - Invitation', 'Enregistrement de courrier invitation', NULL, 'OFFICE', '2020/03/0001/', '0004_1073460227.docx', 'DOCX: EC02_INVITATION', 'letterbox_attachment', 'indexingFile', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1040, 'PR - Générique', 'Projet de réponse générique', NULL, 'OFFICE', '2020/03/0001/', '0005_1965884423.docx', 'DOCX: PR01_GENERIC', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1041, 'PR - Invitation', 'Projet de réponse invitation', NULL, 'OFFICE', '2020/03/0001/', '0006_1359063643.docx', 'DOCX: PR02_INVITATION', 'letterbox_attachment', 'attachments', 'response_project');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1043, 'AR TYPE SIMPLE- Courriel Manuel', 'A utiliser avec l''action "Générer les AR"', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;"><strong>Accus&eacute; de r&eacute;ception</strong></span></p>
+<p>Service instructeur : <strong>[userPrimaryEntity.entity_label]</strong> <br />Courriel : [userPrimaryEntity.email]</p>
+<p>[userPrimaryEntity.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+<p>Votre demande concernant :</p>
+<p><strong>[res_letterbox.subject]</strong></p>
+<p>&agrave; bien &eacute;t&eacute; r&eacute;ceptionn&eacute;e par nos services le [res_letterbox.admission_date].</p>
+<p><br />La r&eacute;f&eacute;rence de votre dossier est : <strong>[res_letterbox.alt_identifier]</strong></p>
+<p>Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. Il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''&eacute;tude des pi&egrave;ces fournies.</p>
+<p>Si l''instruction de votre demande n&eacute;cessite des informations ou des pi&egrave;ces compl&eacute;mentaires, nos services vous en ferons la demande</p>
+<p>&nbsp;</p>
+<p>Nous vous conseillons de conserver ce message jusqu''&agrave; la fin du traitement de votre dossier.</p>
+<p>&nbsp;</p>
+<p>[userPrimaryEntity.entity_label]</p>
+<p>Ville de Maarch-les-Bains</p>
+<p>&nbsp;</p>
+</div>', 'HTML', NULL, NULL, NULL, 'letterbox_attachment', 'sendmail', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1044, 'AR TYPE SVA - Courriel Manuel', 'A utiliser avec l''action "Générer les AR"', '<div id="write" class="is-node"><br /><hr /><span style="color: #236fa1;">H&ocirc;tel de ville</span><br /><span style="color: #236fa1;">Place de la Libert&eacute;</span><br /><span style="color: #236fa1;">99000 Maarch-les-bains</span>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;"><strong>Accus&eacute; de r&eacute;ception de votre demande intervenant<br />dans le cadre d''une d&eacute;cision implicite d''acceptation<br /></strong></span></p>
+<p>Num&eacute;ro d''enregistrement :<strong> [res_letterbox.alt_identifier]</strong></p>
+<p>Service instructeur : <strong>[userPrimaryEntity.entity_label]</strong> <br />Courriel : [userPrimaryEntity.email]</p>
+<p>[userPrimaryEntity.city], le [datetime.date;frm=dddd dd mmmm yyyy;locale]</p>
+<hr />
+<p>Bonjour,</p>
+<p>Votre demande concernant :</p>
+<p><strong>[res_letterbox.subject]</strong></p>
+<p>&agrave; bien &eacute;t&eacute; r&eacute;ceptionn&eacute;e par nos services le [res_letterbox.admission_date].</p>
+<p><br />La r&eacute;f&eacute;rence de votre dossier est : <strong>[res_letterbox.alt_identifier]</strong></p>
+Le pr&eacute;sent accus&eacute; de r&eacute;ception atteste de la r&eacute;ception de votre demande. il ne pr&eacute;juge pas de la conformit&eacute; de son contenu qui d&eacute;pend entre autres de l''''&eacute;tude des pi&egrave;ces fournies.<br /><br />Votre demande est susceptible de faire l''objet d''''une d&eacute;cision implicite d''''acceptation en l''absence de r&eacute;ponse dans les jours suivant sa r&eacute;ception, soit le <strong>[res_letterbox.process_limit_date]</strong>.<br /><br />Si l''instruction de votre demande n&eacute;cessite des informations ou pi&egrave;ces compl&eacute;mentaires, la Ville vous contactera afin de les fournir, dans un d&eacute;lai de production qui sera fix&eacute;.<br /><br />Le cas &eacute;ch&eacute;ant, le d&eacute;lai de d&eacute;cision implicite d''acceptation ne d&eacute;butera qu''''apr&egrave;s la production des pi&egrave;ces demand&eacute;es.<br /><br />En cas de d&eacute;cision implicite d''''acceptation vous avez la possibilit&eacute; de demander au service charg&eacute; du dossier une attestation conform&eacute;ment aux dispositions de l''article 22 de la loi n&deg; 2000-321 du 12 avril 2000 relative aux droits des citoyens dans leurs relations avec les administrations modifi&eacute;e.
+<p>Nous vous conseillons de conserver ce message jusqu''&agrave; la fin du traitement de votre dossier.</p>
+<p>&nbsp;</p>
+<p><span style="color: #236fa1;">Ville de Maarch-les-Bains</span><br />[userPrimaryEntity.entity_label]</p>
+<p>Courriel : [userPrimaryEntity.email]<br />T&eacute;l&eacute;phone : [user.phone]</p>
+</div>', 'HTML', NULL, NULL, NULL, 'letterbox_attachment', 'sendmail', 'all');
 
 INSERT INTO templates (template_label, template_comment, template_content, template_type, template_style, template_target, template_attachment_type) VALUES ('Quota d''utilisateur', 'Modèle de notification pour le quota utilisateur', '<p>Quota utilisateur atteint</p>', 'HTML', 'ODT: rep_standard', 'notifications', 'all');
 
