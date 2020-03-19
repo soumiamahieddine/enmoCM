@@ -326,11 +326,11 @@ class SendMessageExchangeController
     {
         $aReturn    = [];
 
+        $oBody = new \stdClass();
         if (!empty($aArgs['body'])) {
             $entityRoot = EntityModel::getEntityRootById(['entityId' => $aArgs['TransferringAgencyInformations']['entity_id']]);
             $userInfo = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['firstname', 'lastname', 'mail']]);
             $headerNote = $userInfo['firstname'] . ' ' . $userInfo['lastname'] . ' (' . $entityRoot['entity_label'] . ' - ' . $aArgs['TransferringAgencyInformations']['entity_label'] . ' - ' .$userInfo['mail'].') : ';
-            $oBody        = new \stdClass();
             $oBody->value = $headerNote . ' ' . $aArgs['body'];
         } else {
             $oBody->value = '';
