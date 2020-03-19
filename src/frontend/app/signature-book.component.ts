@@ -255,9 +255,10 @@ export class SignatureBookComponent implements OnInit {
             if (idToGo >= 0) {
                 $j("#send").removeAttr("disabled");
                 $j("#send").css("opacity", "1");
-                this.zone.run(() => this.changeLocation(idToGo, "action"));
+                
+                this.changeLocation(idToGo, "action");
             } else {
-                this.zone.run(() => this.backToBasket());
+                this.backToBasket();
             }
         }
     }
@@ -585,4 +586,8 @@ export class SignatureBookComponent implements OnInit {
         this.appVisaWorkflow.saveVisaWorkflow();
     }
 
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
+    }
 }
