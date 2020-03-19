@@ -42,7 +42,11 @@ foreach ($customs as $custom) {
 
         $aFolderIdMap = [];
         foreach ($folders as $folder) {
-            $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $folder['typist']]);
+            if (empty($folder['typist'])) {
+                $user['id'] = $masterOwnerId;
+            } else {
+                $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $folder['typist']]);
+            }
             if (empty($folder['destination'])) {
                 // Public
                 if (empty($user)) {
