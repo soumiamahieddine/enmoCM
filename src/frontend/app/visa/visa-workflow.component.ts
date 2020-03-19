@@ -72,7 +72,7 @@ export class VisaWorkflowComponent implements OnInit {
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
-            if (this.canManageUser(this.visaWorkflow.items[event.previousIndex], event.currentIndex)) {
+            if (this.canManageUser(this.visaWorkflow.items[event.currentIndex], event.currentIndex)) {
                 moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             } else {
                 this.notify.error(`${this.scanPipe.transform(this.lang.moveVisaUserErr, [this.visaWorkflow.items[event.previousIndex].labelToDisplay])}`);
