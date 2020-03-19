@@ -55,19 +55,19 @@
         <mat-form-field>
             <mat-label class="attachLabel">{{lang.mailSubject}}</mat-label>
             <input matInput [readonly]="!canManageMail()" [(ngModel)]="numericPackage.object" maxlength="70" required>
-            <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue"
-                [disabled]="!canManageMail() || emailAttachTool[keyVal.key].list.length === 0" [title]="emailAttachTool[keyVal.key].title"
-                (click)="$event.stopPropagation();currentEmailAttachTool=keyVal.key;"
+            <button mat-icon-button matSuffix *ngFor="let keyVal of numericPackageAttachTool | keyvalue"
+                [disabled]="!canManageMail() || numericPackageAttachTool[keyVal.key].list.length === 0" [title]="numericPackageAttachTool[keyVal.key].title"
+                (click)="$event.stopPropagation();numericPackageCurrentAttachTool=keyVal.key;"
                 [matMenuTriggerFor]="emailAttachListMenu">
-                <mat-icon class="{{emailAttachTool[keyVal.key].icon}}"
+                <mat-icon class="{{numericPackageAttachTool[keyVal.key].icon}}"
                     [class.activeButton]="isSelectedAttachType(keyVal.key)" color="primary">
                 </mat-icon>
             </button>
             <mat-menu #emailAttachListMenu="matMenu" [class]="'attachListMenu'">
-                <ng-container *ngFor="let keyVal of emailAttachTool | keyvalue">
-                    <ng-container *ngIf="keyVal.key === currentEmailAttachTool">
+                <ng-container *ngFor="let keyVal of numericPackageAttachTool | keyvalue">
+                    <ng-container *ngIf="keyVal.key === numericPackageCurrentAttachTool">
                         <button mat-menu-item style="line-height: normal;" disableRipple
-                            *ngFor="let attach of emailAttachTool[keyVal.key].list"
+                            *ngFor="let attach of numericPackageAttachTool[keyVal.key].list"
                             [disabled]="isSelectedAttach(attach,keyVal.key)"
                             (click)="$event.stopPropagation();toggleAttach(attach,keyVal.key,'original');">
                             <span (click)="$event.stopPropagation();toggleAttach(attach,keyVal.key,'original')"
@@ -86,7 +86,7 @@
             <input matInput [value]="reference" readonly>
         </mat-form-field>
         <div class="attachMsg"
-            *ngIf="numericPackage.mainExchangeDoc === null && emailAttach.length === 0 && canManageMail()">
+            *ngIf="numericPackage.mainExchangeDoc === null && numericPackageAttach.length === 0 && canManageMail()">
             {{lang.attachItemToNumericPackage}}
             <i class="fas fa-arrow-up"></i>
         </div>
@@ -105,10 +105,10 @@
                     </p>
                 </mat-list-item>
             </mat-list>
-            <mat-divider *ngIf="emailAttach.length > 0"></mat-divider>
-            <mat-list *ngIf="emailAttach.length > 0">
+            <mat-divider *ngIf="numericPackageAttach.length > 0"></mat-divider>
+            <mat-list *ngIf="numericPackageAttach.length > 0">
                 <h3 mat-subheader class="attachLabel">{{canManageMail() ? lang.attachmentsNumericPackageToSend : lang.attachmentsNumericPackage}}</h3>
-                <mat-list-item class="numericPackageAttach" *ngFor="let attach of emailAttach; let i=index">
+                <mat-list-item class="numericPackageAttach" *ngFor="let attach of numericPackageAttach; let i=index">
                     <p mat-line class="numericPackageAttachItem">
                         <span style="overflow: hidden;text-overflow: ellipsis;"
                             [title]="attach.label">{{attach.label}}</span>
@@ -169,10 +169,10 @@
     <span class="divider-modal"></span>
     <div mat-dialog-actions class="actions">
         <button mat-raised-button color="primary"
-            *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail') && emailStatus !== 'ERROR'" (click)="onSubmit()"
+            *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail') && numericPackageStatus !== 'ERROR'" (click)="onSubmit()"
             [disabled]="recipients.length === 0 || numericPackage.mainExchangeDoc === null || loading">{{lang.send}}</button>
         <button mat-raised-button color="warn" (click)="deleteEmail()"
-            *ngIf="data.emailId && !loading && emailStatus === 'ERROR'"
-            [disabled]="headerService.user.id !== emailCreatorId">{{lang.delete}}</button>
+            *ngIf="data.emailId && !loading && numericPackageStatus === 'ERROR'"
+            [disabled]="headerService.user.id !== numericPackageCreatorId">{{lang.delete}}</button>
     </div>
 </div>

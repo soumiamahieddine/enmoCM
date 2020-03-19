@@ -1596,6 +1596,8 @@ export const LANG_EN = {
     "noPrivileges" : "Insufficient privileges",
     "mustDeleteUsersWithNoPrivileges" : "You must delete users with insufficient privileges",
     "sendNumericPackage" : "Send a numeric package",
+    "numericPackageSent" : "Numeric package sent",
+    "numericPackageDeleted" : "Numeric package deleted",
     "sendNumericPackageInfo" : "You can send mail and attachments between <b> two instances </b> of Maarch Courrier. <br /> <br /> You will receive <b> an acknowledgment of receipt </b> and you will be able <b> follow the progress </b> of the mail at the recipient. (see <a href=\"{0}\" target=\"_blank\"> Maarch2GEC </a> for more information).", 
     "mailSubject" : "Mail subject", 
     "attachItemToNumericPackage" : "Attach an element to sending mail",

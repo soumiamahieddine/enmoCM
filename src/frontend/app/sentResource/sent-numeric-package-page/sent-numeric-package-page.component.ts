@@ -30,8 +30,6 @@ export class SentNumericPackagePageComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = true;
 
-    readonly separatorKeysCodes: number[] = [COMMA];
-
     availableEmailModels: any[] = [];
     availableSignEmailModels: any[] = [];
 
@@ -41,10 +39,6 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     recipients: any[] = [];
 
-    copies: any[] = [];
-
-    invisibleCopies: any[] = [];
-
     recipientsCtrl: FormControl = new FormControl();
 
     emailSignListForm = new FormControl();
@@ -52,14 +46,10 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     filteredEmails: Observable<string[]>;
 
-    showCopies: boolean = false;
-    showInvisibleCopies: boolean = false;
-
-    emailCreatorId: number = null;
-    emailId: number = null;
-    emailStatus: string = 'WAITING';
-    currentEmailAttachTool: string = '';
-    emailAttachTool: any = {
+    numericPackageCreatorId: number = null;
+    numericPackageStatus: string = 'WAITING';
+    numericPackageCurrentAttachTool: string = '';
+    numericPackageAttachTool: any = {
         document: {
             icon: 'fa fa-file',
             title: this.lang.attachMainDocument,
@@ -76,7 +66,7 @@ export class SentNumericPackagePageComponent implements OnInit {
             list: []
         },
     };
-    emailAttach: any = [];
+    numericPackageAttach: any = [];
 
     numericPackage: any = {
         mainExchangeDoc: null,
@@ -196,13 +186,13 @@ export class SentNumericPackagePageComponent implements OnInit {
             this.http.get(`../../rest/messageExchanges/${emailId}`).pipe(
                 map((data: any) => data.messageExchange),
                 tap((data: any) => {
-                    this.emailCreatorId = data.userId;
+                    this.numericPackageCreatorId = data.userId;
 
                     this.recipients = [data.recipient];
 
                     this.currentSender.label = data.sender;
                     this.numericPackage.object = data.object;
-                    this.emailStatus = data.status.toUpperCase();
+                    this.numericPackageStatus = data.status.toUpperCase();
                     this.numericPackage.content = data.body;
                     this.communicationType = data.communicationType;
                     this.reference = data.reference;
@@ -215,34 +205,34 @@ export class SentNumericPackagePageComponent implements OnInit {
                     this.messageReview = this.reversePipe.transform(this.messageReview);
 
 
-                    console.log(this.emailAttachTool);
+                    console.log(this.numericPackageAttachTool);
 
                     if (data.disposition.tablename === 'res_letterbox') {
                         this.numericPackage.mainExchangeDoc = {
-                            ...this.emailAttachTool['document'].list[0],
+                            ...this.numericPackageAttachTool['document'].list[0],
                             typeLabel: this.lang.mainDocument,
                             type: 'document'
                         }
                         
-                        this.emailAttach = this.emailAttach.concat(this.emailAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1));
+                        this.numericPackageAttach = this.numericPackageAttach.concat(this.numericPackageAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1));
                     } else {
                         this.numericPackage.mainExchangeDoc = {
-                            ...this.emailAttachTool['attachments'].list.filter((item: any) => item.id == data.disposition.res_id)[0],
+                            ...this.numericPackageAttachTool['attachments'].list.filter((item: any) => item.id == data.disposition.res_id)[0],
                             type: 'attachments'
                         }
-                        this.emailAttach = this.emailAttach.concat(this.emailAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1 && item.id != data.disposition.res_id));
+                        this.numericPackageAttach = this.numericPackageAttach.concat(this.numericPackageAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1 && item.id != data.disposition.res_id));
 
                     }
 
                     if (data.resMasterAttached && data.disposition.tablename !== 'res_letterbox') {
-                        this.emailAttach.push({
-                            ...this.emailAttachTool['document'].list[0],
+                        this.numericPackageAttach.push({
+                            ...this.numericPackageAttachTool['document'].list[0],
                             typeLabel: this.lang.mainDocument,
                             type: 'document'
                         });
                     }
 
-                    this.emailAttach = this.emailAttach.concat(this.emailAttachTool['notes'].list.filter((item: any) => data.notes.indexOf(item.id.toString()) > -1));
+                    this.numericPackageAttach = this.numericPackageAttach.concat(this.numericPackageAttachTool['notes'].list.filter((item: any) => data.notes.indexOf(item.id.toString()) > -1));
 
                     resolve(true);
                 }),
@@ -315,12 +305,12 @@ export class SentNumericPackagePageComponent implements OnInit {
                 tap((data: any) => {
                     Object.keys(data).forEach(element => {
                         if (element === 'resource') {
-                            this.emailAttachTool.document.list = [];
+                            this.numericPackageAttachTool.document.list = [];
                             if (!this.functions.empty(data[element])) {
-                                this.emailAttachTool.document.list = [data[element]];
+                                this.numericPackageAttachTool.document.list = [data[element]];
                             }
                         } else {
-                            this.emailAttachTool[element].list = data[element].map((item: any) => {
+                            this.numericPackageAttachTool[element].list = data[element].map((item: any) => {
                                 return {
                                     ...item,
                                     original: item.original !== undefined ? item.original : true,
@@ -399,7 +389,7 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-        this.emailStatus = 'WAITING';
+        this.numericPackageStatus = 'WAITING';
         if (this.data.emailId === null) {
             if (this.numericPackage.object === '') {
                 const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.warnEmptySubject } });
@@ -422,7 +412,7 @@ export class SentNumericPackagePageComponent implements OnInit {
     createEmail(closeModal: boolean = true) {
         this.http.post(`../../rest/resources/${this.data.resId}/messageExchange`, this.formatNumericPackage()).pipe(
             tap(() => {
-                this.notify.success(`Pli numérique envoyé`);
+                this.notify.success(this.lang.numericPackageSent);
 
                 this.closeModal('success');
             }),
@@ -435,32 +425,28 @@ export class SentNumericPackagePageComponent implements OnInit {
     }
 
     deleteEmail() {
-        // TODO : useless ? can not delete m2m
         const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
-            // filter((data: string) => data === 'ok'),
-            // exhaustMap(() => this.http.delete(`../../rest/emails/${this.data.emailId}`)),
-            // tap(() => {
-            //     this.notify.success(this.lang.emailDeleted);
-            //     this.closeModal('success');
-            // }),
-            // finalize(() => this.loading = false),
-            // catchError((err) => {
-            //     this.notify.handleSoftErrors(err);
-            //     return of(false);
-            // })
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete(`../../rest/messageExchanges/${this.data.emailId}`)),
+            tap(() => {
+                this.notify.success(this.lang.numericPackageDeleted);
+                this.closeModal('success');
+            }),
+            finalize(() => this.loading = false),
+            catchError((err) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
         ).subscribe();
     }
 
     updateEmail(closeModal: boolean = true) {
         this.http.put(`../../rest/emails/${this.data.emailId}`, this.formatNumericPackage()).pipe(
             tap(() => {
-                if (this.emailStatus === 'DRAFT') {
-                    // this.notify.success(this.lang.draftUpdated);
-                } else {
-                    this.notify.success(`Pli numérique envoyé`);
-                }
+
+                this.notify.success(this.lang.numericPackageSent);
 
                 if (closeModal) {
                     this.closeModal('success');
@@ -482,7 +468,7 @@ export class SentNumericPackagePageComponent implements OnInit {
                 type: type
             }
         } else {
-            this.emailAttach.push({
+            this.numericPackageAttach.push({
                 ...item,
                 typeLabel: item.typeLabel !== undefined ? item.typeLabel : this.lang.mainDocument,
                 type: type
@@ -491,7 +477,7 @@ export class SentNumericPackagePageComponent implements OnInit {
     }
 
     removeAttach(index: number) {
-        this.emailAttach.splice(index, 1);
+        this.numericPackageAttach.splice(index, 1);
     }
 
     formatNumericPackage() {
@@ -509,23 +495,23 @@ export class SentNumericPackagePageComponent implements OnInit {
         numericPackage.object = this.numericPackage.object;
         numericPackage.content = this.numericPackage.content;
         numericPackage.contacts = this.recipients.map(recipient => recipient.id);
-        numericPackage.joinAttachment = this.emailAttach.filter((attach: any) => attach.type === 'attachments').map((attach: any) => attach.id);
-        numericPackage.notes = this.emailAttach.filter((attach: any) => attach.type === 'notes').map((attach: any) => attach.id);
+        numericPackage.joinAttachment = this.numericPackageAttach.filter((attach: any) => attach.type === 'attachments').map((attach: any) => attach.id);
+        numericPackage.notes = this.numericPackageAttach.filter((attach: any) => attach.type === 'notes').map((attach: any) => attach.id);
         numericPackage.senderEmail = this.currentSender.id;
 
         return numericPackage;
     }
 
     isSelectedAttach(item: any, type: string) {
-        return this.emailAttach.filter((attach: any) => attach.id === item.id && attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && this.numericPackage.mainExchangeDoc.id === item.id && type === this.numericPackage.mainExchangeDoc.type);
+        return this.numericPackageAttach.filter((attach: any) => attach.id === item.id && attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && this.numericPackage.mainExchangeDoc.id === item.id && type === this.numericPackage.mainExchangeDoc.type);
     }
 
     isSelectedAttachType(type: string) {
-        return this.emailAttach.filter((attach: any) => attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && type === this.numericPackage.mainExchangeDoc.type);
+        return this.numericPackageAttach.filter((attach: any) => attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && type === this.numericPackage.mainExchangeDoc.type);
     }
 
     canManageMail() {
-        if ((this.data.emailId === null) || (this.emailStatus !== 'SENT' && this.headerService.user.id === this.emailCreatorId)) {
+        if ((this.data.emailId === null) || (this.numericPackageStatus !== 'SENT' && this.headerService.user.id === this.numericPackageCreatorId)) {
             this.recipientsCtrl.enable();
             return true;
         } else {
