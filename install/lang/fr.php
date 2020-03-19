@@ -97,7 +97,7 @@ if (!defined('_UNOCONV_NOT_INSTALLED')) {
     define('_UNOCONV_NOT_INSTALLED', "Outils de conversion de documents bureautiques soffice/unoconv non installés");
 }
 if (!defined('_NETCAT_OR_NMAP_INSTALLED')) {
-    define('_NETCAT_OR_NMAP_INSTALLED', "Utilitaire permettant d'ouvrir des connexions réseau installé (netcat / nmap)");
+    define('_NETCAT_OR_NMAP_INSTALLED', "Utilitaire permettant d'ouvrir des connexions réseau (netcat / nmap)");
 }
 if (!defined('_NETCAT_OR_NMAP_NOT_INSTALLED')) {
     define('_NETCAT_OR_NMAP_NOT_INSTALLED', "Utilitaire permettant d'ouvrir des connexions réseau non installé (netcat / nmap)");

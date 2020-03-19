@@ -32,7 +32,6 @@ ALTER SEQUENCE adr_letterbox_id_seq restart WITH 1;
 TRUNCATE TABLE adr_attachments;
 ALTER SEQUENCE adr_attachments_id_seq restart WITH 1;
 
-TRUNCATE TABLE res_linked;
 TRUNCATE TABLE res_mark_as_read;
 
 TRUNCATE TABLE saved_queries;
