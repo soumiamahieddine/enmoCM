@@ -4350,7 +4350,7 @@ if (!defined('_CHOOSE_DEPARTMENT_NUMBER')) {
     define('_CHOOSE_DEPARTMENT_NUMBER', "Choisissez le département concerné");
 }
 if (!defined('_DEPARTMENT_NUMBER')) {
-    define('_DEPARTMENT_NUMBER', "Département concerné");
+    define('_DEPARTMENT_NUMBER', "Département des expéditeurs");
 }
 if (!defined('_CHRONO_NUMBER_HELP')) {
     define('_CHRONO_NUMBER_HELP', "Exemple : MAARCH/2018A/36");

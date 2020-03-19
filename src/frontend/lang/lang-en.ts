@@ -262,7 +262,7 @@ export const LANG_EN = {
     "deleteRedirection"                     : "Delete redirection",
     "deleteUnit"                            : "Delete unit",
     "delimiter"                             : "Delimiter",
-    "department"                            : "Department",
+    "department"                            : "Department of senders",
     "departureDate"                         : "Departure date",
     "desactivateAbsence"                    : "Deactivate absence",
     "descending"                            : "Descending",

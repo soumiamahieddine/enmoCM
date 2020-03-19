@@ -276,7 +276,7 @@ export const LANG_FR = {
     "deleteRedirection"                     : "Supprimer la redirection",
     "deleteUnit"                            : "Supprimer la zone",
     "delimiter"                             : "Délimiteur",
-    "department"                            : "Département",
+    "department"                            : "Département des expéditeurs",
     "departureDate"                         : "Date de départ",
     "desactivateAbsence"                    : "Désactiver l'absence",
     "descending"                            : "Descendant",
