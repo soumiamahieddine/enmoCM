@@ -280,10 +280,6 @@ try {
         $xml_entreprise = simplexml_load_file($GLOBALS['MaarchDirectory'] . 'apps' . DIRECTORY_SEPARATOR . 'maarch_entreprise' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'entreprise.xml');
     }
 
-    if (file_exists($GLOBALS['MaarchDirectory'] . 'custom' . DIRECTORY_SEPARATOR . $GLOBALS['CustomId'] . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . 'maarch_entreprise' . DIRECTORY_SEPARATOR . 'department_list.php')) {
-        include($GLOBALS['MaarchDirectory'] . 'custom' . DIRECTORY_SEPARATOR . $GLOBALS['CustomId'] . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR . 'maarch_entreprise' . DIRECTORY_SEPARATOR . 'department_list.php');
-    }
-
 } catch (IncludeFileError $e) {
     $GLOBALS['logger']->write(
         'Problem with the php include path:' 

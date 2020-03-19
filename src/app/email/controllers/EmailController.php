@@ -432,6 +432,7 @@ class EmailController
                 'chrono'            => $attachment['identifier'],
                 'label'             => $attachment['title'],
                 'typeLabel'         => $attachmentTypes[$attachment['attachment_type']]['label'],
+                'attachInMail'      => $attachmentTypes[$attachment['attachment_type']]['attachInMail'],
                 'convertedDocument' => $convertedDocument,
                 'creator'           => UserModel::getLabelledUserById(['login' => $attachment['typist']]),
                 'format'            => $attachment['format'],

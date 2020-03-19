@@ -44,15 +44,15 @@ abstract class MessageExchangeModelAbstract
     public static function getMessageByReference($aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['reference']);
+        ValidatorModel::arrayType($aArgs, ['orderBy']);
 
-        $aReturn = DatabaseModel::select(
-            [
-            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['message_exchange'],
-            'where'  => ['reference = ?'],
-            'data'   => [$aArgs['reference']]
-            ]
-        );
+        $aReturn = DatabaseModel::select([
+            'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'    => ['message_exchange'],
+            'where'    => ['reference = ?'],
+            'data'     => [$aArgs['reference']],
+            'order_by' => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
+        ]);
 
         if (empty($aReturn[0])) {
             return [];
@@ -254,7 +254,7 @@ abstract class MessageExchangeModelAbstract
                 'select' => empty($args['select']) ? ['*'] : $args['select'],
                 'table'  => ['unit_identifier'],
                 'where'  => ['message_id = ?'],
-                'data'   => [$args['message_id']]
+                'data'   => [$args['messageId']]
             ]);
 
         return $messages;

@@ -84,10 +84,10 @@
         <Version><?merge .Content.Version ?></Version>
         <?merge .Content.Tag ?><Tag><?merge .value ?></Tag>
         <?merge .Content.Keyword.array() ?><Keyword>
-        <KeywordContent role="[?merge .KeywordContent.role @role ?]"><?merge .KeywordContent.value ?></KeywordContent>
-        <KeywordReference schemeID="[?merge .KeywordReference.schemeID @schemeID ?]" schemeName="[?merge .KeywordReference.schemeName @schemeName ?]" schemeAgencyID="[?merge .KeywordReference.schemeAgencyID @schemeAgencyID ?]" schemeAgencyName="[?merge .KeywordReference.schemeAgencyName @schemeAgencyName ?]" schemeVersionID="[?merge .KeywordReference.schemeVersionID @schemeVersionID ?]" schemeDataURI="[?merge .KeywordReference.schemeDataURI @schemeDataURI ?]" schemeURI="[?merge .KeywordReference.schemeURI @schemeURI ?]"><?merge .KeywordReference.value ?></KeywordReference>
-        <KeywordType listVersionID="[?merge .KeywordType.listVersionID @listVersionID ?]"><?merge .KeywordType ?></KeywordType>
-    </Keyword>
+            <KeywordContent role="[?merge .KeywordContent.role @role ?]"><?merge .KeywordContent.value ?></KeywordContent>
+            <KeywordReference schemeID="[?merge .KeywordReference.schemeID @schemeID ?]" schemeName="[?merge .KeywordReference.schemeName @schemeName ?]" schemeAgencyID="[?merge .KeywordReference.schemeAgencyID @schemeAgencyID ?]" schemeAgencyName="[?merge .KeywordReference.schemeAgencyName @schemeAgencyName ?]" schemeVersionID="[?merge .KeywordReference.schemeVersionID @schemeVersionID ?]" schemeDataURI="[?merge .KeywordReference.schemeDataURI @schemeDataURI ?]" schemeURI="[?merge .KeywordReference.schemeURI @schemeURI ?]"><?merge .KeywordReference.value ?></KeywordReference>
+            <KeywordType listVersionID="[?merge .KeywordType.listVersionID @listVersionID ?]"><?merge .KeywordType ?></KeywordType>
+        </Keyword>
         <?merge .Content.OriginatingAgency.bool() ?>
         <OriginatingAgency>
             <Identifier><?merge .Content.OriginatingAgency.Identifier.value ?></Identifier>
@@ -194,7 +194,8 @@
             <EventDetail><?merge .EventDetail ?></EventDetail>
         </Event>
     </Content>
-    <?merge .ArchiveUnit /resources/ArchiveUnit.xml?>
+    <?merge .ArchiveUnit.array() ?>
+    <?xinclude /resources/ArchiveUnit.xml ?>
     <?merge .DataObjectReference.array() ?>
     <DataObjectReference>
         <?merge .DataObjectReferenceId.bool() ?>

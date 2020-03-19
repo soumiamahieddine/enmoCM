@@ -9,7 +9,7 @@ declare var angularGlobals: any;
 
 @Component({
     templateUrl: "about-us.component.html",
-    styleUrls: ['profile.component.css'],
+    styleUrls: ['about-us.component.css'],
     providers: [AppService]
 })
 export class AboutUsComponent implements OnInit {

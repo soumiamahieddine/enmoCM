@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Component, OnInit, NgZone, ViewChild, HostListener } from '@angular/core';
+import { Pipe, PipeTransform, Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -16,14 +16,14 @@ import { ActionsService } from './actions/actions.service';
 import { HeaderService } from '../service/header.service';
 import { AppService } from '../service/app.service';
 
-declare function $j(selector: string) : any;
+declare function $j(selector: string): any;
 
-declare var angularGlobals : any;
+declare var angularGlobals: any;
 
 
 @Pipe({ name: 'safeUrl' })
 export class SafeUrlPipe implements PipeTransform {
-    constructor(private sanitizer: DomSanitizer) {}
+    constructor(private sanitizer: DomSanitizer) { }
     transform(url: string) {
         return this.sanitizer.bypassSecurityTrustResourceUrl(url);
     }
@@ -36,44 +36,44 @@ export class SafeUrlPipe implements PipeTransform {
 })
 export class SignatureBookComponent implements OnInit {
 
-    coreUrl                     : string;
-    resId                       : number;
-    basketId                    : number;
-    groupId                     : number;
-    userId                     : number;
-    lang                        : any       = LANG;
+    coreUrl: string;
+    resId: number;
+    basketId: number;
+    groupId: number;
+    userId: number;
+    lang: any = LANG;
 
     signatureBook: any = {
-        consigne                : "",
-        documents               : [],
-        attachments             : [],
-        resList                 : [],
-        resListIndex            : 0,
-        lang                    : {}
+        consigne: "",
+        documents: [],
+        attachments: [],
+        resList: [],
+        resListIndex: 0,
+        lang: {}
     };
 
-    rightSelectedThumbnail      : number    = 0;
-    leftSelectedThumbnail       : number    = 0;
-    rightViewerLink             : string    = "";
-    leftViewerLink              : string    = "";
-    headerTab                   : string    = "document";
-    showTopRightPanel           : boolean   = false;
-    showTopLeftPanel            : boolean   = false;
-    showResLeftPanel            : boolean   = true;
-    showLeftPanel               : boolean   = true;
-    showRightPanel              : boolean   = true;
-    showAttachmentPanel         : boolean   = false;
-    showSignaturesPanel         : boolean   = false;
-    loading                     : boolean   = false;
-    loadingSign                 : boolean   = false;
+    rightSelectedThumbnail: number = 0;
+    leftSelectedThumbnail: number = 0;
+    rightViewerLink: string = "";
+    leftViewerLink: string = "";
+    headerTab: string = "document";
+    showTopRightPanel: boolean = false;
+    showTopLeftPanel: boolean = false;
+    showResLeftPanel: boolean = true;
+    showLeftPanel: boolean = true;
+    showRightPanel: boolean = true;
+    showAttachmentPanel: boolean = false;
+    showSignaturesPanel: boolean = false;
+    loading: boolean = false;
+    loadingSign: boolean = false;
 
     subscription: Subscription;
     currentResourceLock: any = null;
 
-    leftContentWidth            : string    = "44%";
-    rightContentWidth           : string    = "44%";
+    leftContentWidth: string = "44%";
+    rightContentWidth: string = "44%";
     dialogRef: MatDialogRef<any>;
-    
+
     processTool: any[] = [
         {
             id: 'notes',
@@ -106,9 +106,9 @@ export class SignatureBookComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private appService: AppService,
-        private route: ActivatedRoute, 
-        private router: Router, 
-        private zone: NgZone, 
+        private route: ActivatedRoute,
+        private router: Router,
+        private zone: NgZone,
         private notify: NotificationService,
         public privilegeService: PrivilegeService,
         public dialog: MatDialog,
@@ -125,21 +125,21 @@ export class SignatureBookComponent implements OnInit {
         });
     }
 
-    ngOnInit() : void {
+    ngOnInit(): void {
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
 
         this.route.params.subscribe(params => {
-            this.resId      = +params['resId'];
-            this.basketId   = params['basketId'];
-            this.groupId    = params['groupId'];
-            this.userId    = params['userId'];
+            this.resId = +params['resId'];
+            this.basketId = params['basketId'];
+            this.groupId = params['groupId'];
+            this.userId = params['userId'];
 
             this.signatureBook.resList = []; // This line is added because of manage action behaviour (processAfterAction is called twice)
             this.lockResource();
             this.http.get("../../rest/signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + this.resId)
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     if (data.error) {
                         location.hash = "";
                         location.search = "";
@@ -147,19 +147,19 @@ export class SignatureBookComponent implements OnInit {
                     }
                     this.signatureBook = data;
 
-                    this.headerTab              = "document";
-                    this.leftSelectedThumbnail  = 0;
+                    this.headerTab = "document";
+                    this.leftSelectedThumbnail = 0;
                     this.rightSelectedThumbnail = 0;
-                    this.leftViewerLink         = "";
-                    this.rightViewerLink        = "";
-                    this.showLeftPanel          = true;
-                    this.showRightPanel         = true;
-                    this.showResLeftPanel       = true;
-                    this.showTopLeftPanel       = false;
-                    this.showTopRightPanel      = false;
-                    this.showAttachmentPanel    = false;
+                    this.leftViewerLink = "";
+                    this.rightViewerLink = "";
+                    this.showLeftPanel = true;
+                    this.showRightPanel = true;
+                    this.showResLeftPanel = true;
+                    this.showTopLeftPanel = false;
+                    this.showTopRightPanel = false;
+                    this.showAttachmentPanel = false;
 
-                    this.leftContentWidth  = "44%";
+                    this.leftContentWidth = "44%";
                     this.rightContentWidth = "44%";
                     if (this.signatureBook.documents[0]) {
                         this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
@@ -171,13 +171,13 @@ export class SignatureBookComponent implements OnInit {
                         this.rightViewerLink = this.signatureBook.attachments[0].viewerLink;
                     }
 
-                    this.signatureBook.resListIndex = this.signatureBook.resList.map((e:any) => { return e.res_id; }).indexOf(this.resId);
+                    this.signatureBook.resListIndex = this.signatureBook.resList.map((e: any) => { return e.res_id; }).indexOf(this.resId);
 
                     this.displayPanel("RESLEFT");
                     this.loading = false;
 
                     setTimeout(() => {
-                        $j("#rightPanelContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                        $j("#rightPanelContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                         if ($j(".tooltipstered").length == 0) {
                             $j("#obsVersion").tooltipster({
                                 interactive: true
@@ -207,6 +207,9 @@ export class SignatureBookComponent implements OnInit {
         this.currentResourceLock = setInterval(() => {
             this.http.put(`../../rest/resourcesList/users/${this.userId}/groups/${this.groupId}/baskets/${this.basketId}/lock`, { resources: [this.resId] }).pipe(
                 catchError((err: any) => {
+                    if (err.status == 403) {
+                        clearInterval(this.currentResourceLock);
+                    }
                     this.notify.handleErrors(err);
                     return of(false);
                 })
@@ -224,18 +227,14 @@ export class SignatureBookComponent implements OnInit {
             })
         ).subscribe();
     }
-    
+
     loadActions() {
         this.http.get("../../rest/resourcesList/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/actions?resId=" + this.resId)
-        .subscribe((data : any) => {
-            this.signatureBook.actions = data.actions;
-        }, (err) => {
-            this.notify.error(err.error.errors);
-        });
-    }
-
-    processAfterAttach(mode: string) {
-        this.zone.run(() => this.refreshAttachments(mode));
+            .subscribe((data: any) => {
+                this.signatureBook.actions = data.actions;
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 
     processAfterAction() {
@@ -309,7 +308,7 @@ export class SignatureBookComponent implements OnInit {
                 this.leftContentWidth = "44%";
                 if (this.signatureBook.resList.length == 0 || typeof this.signatureBook.resList[0].creation_date === 'undefined') {
                     this.http.get("../../rest/signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources")
-                        .subscribe((data : any) => {
+                        .subscribe((data: any) => {
                             this.signatureBook.resList = data.resources;
                             this.signatureBook.resList.forEach((value: any, index: number) => {
                                 if (value.res_id == this.resId) {
@@ -317,7 +316,7 @@ export class SignatureBookComponent implements OnInit {
                                 }
                             });
                             setTimeout(() => {
-                                $j("#resListContent").niceScroll({touchbehavior:false, cursorcolor:"#666", cursoropacitymax:0.6, cursorwidth:4});
+                                $j("#resListContent").niceScroll({ touchbehavior: false, cursorcolor: "#666", cursoropacitymax: 0.6, cursorwidth: 4 });
                                 $j("#resListContent").scrollTop(0);
                                 $j("#resListContent").scrollTop($j(".resListContentFrameSelected").offset().top - 42);
                             }, 0);
@@ -349,13 +348,13 @@ export class SignatureBookComponent implements OnInit {
     refreshAttachments(mode: string) {
         if (mode == "rightContent") {
             this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/incomingMailAttachments')
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     this.signatureBook.documents = data;
                 });
 
         } else {
             this.http.get(this.coreUrl + 'rest/signatureBook/' + this.resId + '/attachments')
-                .subscribe((data : any) => {
+                .subscribe((data: any) => {
                     var i = 0;
                     if (mode == "add") {
                         var found = false;
@@ -410,14 +409,15 @@ export class SignatureBookComponent implements OnInit {
         if (!this.loadingSign && this.signatureBook.canSign) {
             this.loadingSign = true;
             var route = attachment.isResource ? '../../rest/resources/' + attachment.res_id + '/sign' : '../../rest/attachments/' + attachment.res_id + '/sign';
-            this.http.put(route, {'signatureId' : signature.id})
-                .subscribe((data : any) => {
+            this.http.put(route, { 'signatureId': signature.id })
+                .subscribe((data: any) => {
                     if (!attachment.isResource) {
                         this.rightViewerLink = "../../rest/attachments/" + data.id + "/content";
                         this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
                         this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
                     } else {
                         this.rightViewerLink += "?tsp=" + Math.floor(Math.random() * 100);
+                        this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
                     }
                     this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                     var allSigned = true;
@@ -439,32 +439,51 @@ export class SignatureBookComponent implements OnInit {
     }
 
     unsignFile(attachment: any) {
-        this.http.put('../../rest/attachments/' + attachment.res_id + '/unsign', {})
-            .subscribe(() => {
-                this.rightViewerLink = "../../rest/attachments/" + attachment.res_id + "/content";
-                this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
-                this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
-                this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = attachment.res_id;
-                if (this.signatureBook.resList.length > 0) {
-                    this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
-                }
-                if(this.headerTab=="visaCircuit"){
-                    this.changeSignatureBookLeftContent("document");
-                    setTimeout(() => {
-                        this.changeSignatureBookLeftContent("visaCircuit");
-                    }, 0);
-                }
+        if (attachment.isResource) {
+            this.http.put('../../rest/resources/' + attachment.res_id + '/unsign', {})
+                .subscribe(() => {
+                    this.rightViewerLink += "?tsp=" + Math.floor(Math.random() * 100);
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
 
-            });
+                    if (this.signatureBook.resList.length > 0) {
+                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
+                    }
+                    if (this.headerTab == "visaCircuit") {
+                        this.changeSignatureBookLeftContent("document");
+                        setTimeout(() => {
+                            this.changeSignatureBookLeftContent("visaCircuit");
+                        }, 0);
+                    }
+                });
+        } else {
+            this.http.put('../../rest/attachments/' + attachment.res_id + '/unsign', {})
+                .subscribe(() => {
+                    this.rightViewerLink = "../../rest/attachments/" + attachment.res_id + "/content";
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = attachment.res_id;
+                    if (this.signatureBook.resList.length > 0) {
+                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
+                    }
+                    if (this.headerTab == "visaCircuit") {
+                        this.changeSignatureBookLeftContent("document");
+                        setTimeout(() => {
+                            this.changeSignatureBookLeftContent("visaCircuit");
+                        }, 0);
+                    }
+
+                });
+        }
+
     }
 
     backToBasket() {
-        let path = '/basketList/users/'+this.userId+'/groups/'+this.groupId+'/baskets/'+this.basketId;
+        let path = '/basketList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId;
         this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/unlock', { resources: [this.resId] })
             .subscribe((data: any) => {
-                this.router.navigate([path]); 
+                this.router.navigate([path]);
             }, (err: any) => {
-                this.router.navigate([path]); 
+                this.router.navigate([path]);
             });
     }
 
@@ -473,7 +492,7 @@ export class SignatureBookComponent implements OnInit {
             .subscribe((data: any) => {
                 this.router.navigate([`/resources/${this.resId}`]);
             }, (err: any) => { });
-        
+
     }
 
     changeLocation(resId: number, origin: string) {
@@ -483,7 +502,7 @@ export class SignatureBookComponent implements OnInit {
                     alert(data.lockedResources + ' ' + this.lang.warnLockRes + '.');
                 } else {
                     let path = "signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + resId;
-                    this.router.navigate([path]); 
+                    this.router.navigate([path]);
                 }
             }, (err: any) => {
                 this.notify.handleErrors(err);
@@ -547,8 +566,8 @@ export class SignatureBookComponent implements OnInit {
 
     showAttachment(attachment: any) {
         if (attachment.canModify && attachment.status != "SIGN") {
-            this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: this.appService.getViewMode() ? '99vw' : '90vw', maxWidth: this.appService.getViewMode() ? '99vw' : '90vw', panelClass: 'attachment-modal-container', disableClose: true, data: { resId: attachment.res_id} });
-    
+            this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: this.appService.getViewMode() ? '99vw' : '90vw', maxWidth: this.appService.getViewMode() ? '99vw' : '90vw', panelClass: 'attachment-modal-container', disableClose: true, data: { resId: attachment.res_id } });
+
             this.dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'success'),
                 tap(() => {

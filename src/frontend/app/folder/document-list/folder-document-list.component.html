@@ -146,10 +146,10 @@
                                                 [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
                                             </mat-icon>
                                         </button>
-                                        <button mat-icon-button title="{{lang.viewResource}}" (click)="$event.stopPropagation();viewDocument(row)"
+                                        <button mat-icon-button title="{{row.hasDocument ? lang.viewResource : lang.noDocument}}" (click)="$event.stopPropagation();viewDocument(row)"
                                                 (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
                                                 [disabled]="!row.hasDocument">
-                                                <mat-icon  fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
+                                                <mat-icon class="fa" [ngClass]="[row.hasDocument ? 'fa-eye' : 'fa-eye-slash']"></mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.linkDetails}}"
                                                     (click)="$event.stopPropagation();goToDetail(row);">

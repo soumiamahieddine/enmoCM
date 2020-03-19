@@ -200,7 +200,7 @@ try {
         #### Department Full Name ####
         $department_name = "";
         if($selectedFile->department_number_id <> ""){
-            $department_name = $selectedFile->department_number_id . " - " .$depts[$selectedFile->department_number_id];
+            $department_name = $selectedFile->department_number_id . " - " .\Resource\controllers\DepartmentController::FRENCH_DEPARTMENTS[$selectedFile->department_number_id];
         }
 
         #### Info contacts ####

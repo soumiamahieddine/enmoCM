@@ -136,11 +136,11 @@ export class BasketAdministrationComponent implements OnInit {
                                 this.basketGroups = data.groups;
 
                                 this.loading = false;
-                            }, () => {
-                                location.href = "index.php";
+                            }, (err) => {
+                                this.notify.handleErrors(err);
                             });
-                    }, () => {
-                        location.href = "index.php";
+                    }, (err) => {
+                        this.notify.handleErrors(err);
                     });
             }
         });
@@ -340,7 +340,7 @@ export class BasketAdministrationSettingsModalComponent {
     lang: any = LANG;
     allEntities: any[] = [];
 
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
+    constructor(public http: HttpClient,private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationSettingsModalComponent>) {
     }
 
     @ViewChild('statusInput', { static: true }) statusInput: ElementRef;
@@ -412,8 +412,8 @@ export class BasketAdministrationSettingsModalComponent {
                 entities.entities.forEach((entity: any) => {
                     this.allEntities.push(entity);
                 });
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 
@@ -557,7 +557,7 @@ export class BasketAdministrationGroupListModalComponent {
     actionAll: any = [];
     newBasketGroup: any = {};
 
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationGroupListModalComponent>) {
+    constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<BasketAdministrationGroupListModalComponent>) {
     }
 
     ngOnInit(): void {
@@ -574,8 +574,8 @@ export class BasketAdministrationGroupListModalComponent {
                     this.actionAll.push(tmpAction);
                 });
 
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
 
         this.data.groups.forEach((tmpGroup: any) => {

@@ -252,7 +252,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel vis
 define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
 define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
 define('_VISA_MAIL', 'Viser le courrier');
-define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Créer des pièces jointes depuis la fiche détail");
 define("_MODIFY_ATTACHMENTS", "Modifier les pièces jointes");
 define("_DELETE_ATTACHMENTS", "Supprimer les pièces jointes");
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
@@ -309,8 +308,6 @@ define("_ROUTING", "Fiche de circulation");
 define("_OUTGOING_MAIL", "Courrier départ spontané");
 define("_CONVERTED_PDF", "PDF converti par la solution");
 define('_PRINT_FOLDER', 'Dossier');
-define('_SVA', 'SVA');
-define('_SVR', 'SVR');
 define('_REDACTOR', 'Rédacteur');
 define('_ASSIGNEE', 'Attributaire');
 define('_DOCUMENT_WITH_NOTES', 'Document annoté');

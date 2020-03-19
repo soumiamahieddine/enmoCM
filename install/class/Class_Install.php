@@ -150,7 +150,7 @@ class Install extends functions
 
     public function isPhpVersion()
     {
-        if (version_compare(PHP_VERSION, '7.0') < 0) {
+        if (version_compare(PHP_VERSION, '7.2') < 0) {
             return false;
             exit;
         }
@@ -191,18 +191,10 @@ class Install extends functions
 
     public function isIniErrorRepportingRequirements()
     {
-        if (version_compare(PHP_VERSION, '5.4') >= 0) {
-            if (ini_get('error_reporting') != 22519) {
-                return false;
-            } else {
-                return true;
-            }
+        if (ini_get('error_reporting') != 22519) {
+            return false;
         } else {
-            if (ini_get('error_reporting') != 22519) {
-                return false;
-            } else {
-                return true;
-            }
+            return true;
         }
     }
 
@@ -1126,6 +1118,28 @@ class Install extends functions
 
         if (empty($output[1])) {
             $error .= _UNOCONV_NOT_INSTALLED;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * test if netcat or nmap is installed.
+     *
+     * @return bool or error message
+     */
+    public function isNetCatOrNmapInstalled()
+    {
+        exec('whereis netcat', $output, $return);
+        $output = explode(':', $output[0]);
+
+        exec('whereis nmap', $output2, $return2);
+        $output2 = explode(':', $output2[0]);
+
+        if (empty($output[1])) {
+            $error .= _NETCAT_OR_NMAP_NOT_INSTALLED;
+        } elseif (empty($output2[1])) {
+            $error .= _NETCAT_OR_NMAP_INSTALLED;
         } else {
             return true;
         }

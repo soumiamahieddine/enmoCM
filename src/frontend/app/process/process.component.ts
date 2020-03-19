@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap, RouterEvent, NavigationEnd } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
@@ -175,6 +175,27 @@ export class ProcessComponent implements OnInit {
         public privilegeService: PrivilegeService,
         public functions: FunctionsService
     ) {
+
+        // ngOnInit does not call if navigate in the same component route : must be in constructor for this case
+        this.route.params.subscribe(params => {
+            this.loading = true;
+
+            this.headerService.sideBarForm = true;
+            this.headerService.showhHeaderPanel = true;
+            this.headerService.showMenuShortcut = false;
+            this.headerService.showMenuNav = false;
+            this.headerService.sideBarAdmin = true;
+
+            if (typeof params['detailResId'] !== "undefined") {
+                this.initDetailPage(params);
+            } else {
+                this.initProcessPage(params);
+            }
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
+
+
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
             this.actionEnded = true;
@@ -184,20 +205,10 @@ export class ProcessComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loading = true;
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu', 'form');
         this.headerService.setHeader(this.lang.eventProcessDoc);
-
-        this.route.params.subscribe(params => {            
-            if (typeof params['detailResId'] !== "undefined") {
-                this.initDetailPage(params);
-            } else {
-                this.initProcessPage(params);
-            }
-        }, (err: any) => {
-            this.notify.handleErrors(err);
-        });
     }
+
 
     checkAccesDocument(resId: number) {
         return new Promise((resolve, reject) => {
@@ -216,12 +227,12 @@ export class ProcessComponent implements OnInit {
                     return of(false);
                 })
             )
-            .subscribe();
+                .subscribe();
         });
     }
 
     async initProcessPage(params: any) {
-        
+
         this.detailMode = false;
 
         this.currentUserId = params['userSerialId'];
@@ -233,9 +244,9 @@ export class ProcessComponent implements OnInit {
             mailtracking: false
         };
 
-        this.headerService.sideBarButton = { 
-            icon: 'fa fa-inbox', 
-            label: this.lang.backBasket, 
+        this.headerService.sideBarButton = {
+            icon: 'fa fa-inbox',
+            label: this.lang.backBasket,
             route: `/basketList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}`
         }
 
@@ -276,17 +287,17 @@ export class ProcessComponent implements OnInit {
 
     async initDetailPage(params: any) {
         this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
-            this.isMailing = !this.functions.empty(paramMap.get('isMailing')) ;
+            this.isMailing = !this.functions.empty(paramMap.get('isMailing'));
         });
-        
+
         this.detailMode = true;
         this.currentResourceInformations = {
             resId: params['detailResId'],
             mailtracking: false
         };
-        this.headerService.sideBarButton = { 
-            icon: 'fas fa-arrow-left', 
-            label: this.lang.back, 
+        this.headerService.sideBarButton = {
+            icon: 'fas fa-arrow-left',
+            label: this.lang.back,
             route: `__GOBACK`
         }
 
@@ -330,9 +341,14 @@ export class ProcessComponent implements OnInit {
 
     setEditDataPrivilege() {
         if (this.detailMode) {
-            this.canEditData =  this.privilegeService.hasCurrentUserPrivilege('edit_resource') && this.currentResourceInformations.statusAlterable;
+            this.canEditData = this.privilegeService.hasCurrentUserPrivilege('edit_resource') && this.currentResourceInformations.statusAlterable;
             if (this.isMailing && this.isToolEnabled('attachments')) {
                 this.currentTool = 'attachments';
+
+                // Avoid auto open if the user click one more time on tab attachments
+                setTimeout(() => {
+                    this.isMailing = false;
+                }, 200);
             }
         } else {
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
@@ -514,6 +530,9 @@ export class ProcessComponent implements OnInit {
         this.currentResourceLock = setInterval(() => {
             this.http.put(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/lock`, { resources: [this.currentResourceInformations.resId] }).pipe(
                 catchError((err: any) => {
+                    if (err.status == 403) {
+                        clearInterval(this.currentResourceLock);
+                    }
                     this.notify.handleErrors(err);
                     return of(false);
                 })
@@ -568,12 +587,14 @@ export class ProcessComponent implements OnInit {
 
     async processAction() {
         if (this.indexingForm.isValidForm()) {
+            this.actionService.loading = true;
             if (this.isToolModified()) {
                 const dialogRef = this.openConfirmModification();
                 dialogRef.afterClosed().pipe(
                     tap((data: string) => {
                         if (data !== 'ok') {
                             this.refreshTool();
+                            this.actionService.loading = false;
                         }
                     }),
                     filter((data: string) => data === 'ok'),
@@ -587,6 +608,7 @@ export class ProcessComponent implements OnInit {
                     }),
                     catchError((err: any) => {
                         this.notify.handleSoftErrors(err);
+                        this.actionService.loading = false;
                         return of(false);
                     })
                 ).subscribe();

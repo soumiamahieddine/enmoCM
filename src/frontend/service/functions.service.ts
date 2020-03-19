@@ -44,6 +44,24 @@ export class FunctionsService {
         }
     }
 
+    formatFrenchDateToObjectDate(date: string, delimiter: string = '-') {
+        if (!this.empty(date)) {
+            let arrDate = date.split(delimiter);
+            arrDate = arrDate.concat(arrDate[arrDate.length-1].split(' '));
+            arrDate.splice(2,1);
+
+            if (this.empty(arrDate[3])) {
+                arrDate[3] = '00:00:00';
+            }
+     
+            const formatDate = `${arrDate[2]}-${arrDate[1]}-${arrDate[0]} ${arrDate[3]}`;
+    
+            return new Date(formatDate);
+        } else {
+            return date;
+        }
+    }
+
     formatDateObjectToDateString(date: Date, limitMode: boolean = false, format:string = 'dd-mm-yyyy') {
         if (date !== null) {
             let formatDate: any[] = [];

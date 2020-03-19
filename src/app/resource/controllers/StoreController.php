@@ -221,6 +221,8 @@ class StoreController
 
     public static function prepareUpdateResourceStorage(array $args)
     {
+        $definedVars = get_defined_vars();
+
         $preparedData = [
             'modification_date' => 'CURRENT_TIMESTAMP'
         ];
@@ -237,27 +239,34 @@ class StoreController
         if (!empty($args['initiator'])) {
             $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
             $preparedData['initiator'] = $entity['entity_id'];
-        } else {
-            $definedVars = get_defined_vars();
-            if (array_key_exists('initiator', $definedVars['args'])) {
-                $preparedData['initiator'] = null;
-            }
+        } else if (array_key_exists('initiator', $definedVars['args'])) {
+            $preparedData['initiator'] = null;
         }
 
         if (isset($args['documentDate'])) {
             $preparedData['doc_date'] = $args['documentDate'];
+        } else if (array_key_exists('documentDate', $definedVars['args'])) {
+            $preparedData['doc_date'] = null;
         }
         if (isset($args['arrivalDate'])) {
             $preparedData['admission_date'] = $args['arrivalDate'];
+        } else if (array_key_exists('arrivalDate', $definedVars['args'])) {
+            $preparedData['admission_date'] = null;
         }
         if (isset($args['departureDate'])) {
             $preparedData['departure_date'] = $args['departureDate'];
+        } else if (array_key_exists('departureDate', $definedVars['args'])) {
+            $preparedData['departure_date'] = null;
         }
         if (isset($args['processLimitDate'])) {
             $preparedData['process_limit_date'] = $args['processLimitDate'];
+        } else if (array_key_exists('processLimitDate', $definedVars['args'])) {
+            $preparedData['process_limit_date'] = null;
         }
         if (isset($args['priority'])) {
             $preparedData['priority'] = $args['priority'];
+        } else if (array_key_exists('priority', $definedVars['args'])) {
+            $preparedData['priority'] = null;
         }
         if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
             $preparedData['priority'] = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $args['processLimitDate']]);
@@ -309,6 +318,10 @@ class StoreController
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
             $shouldBeInSignatureBook = $relations[0]['in_signature_book'];
         }
+        $typist = $GLOBALS['userId'];
+        if (!empty($args['typist']) && !is_numeric($args['typist'])) {
+            $typist = $args['typist'];
+        }
 
         $externalId = '{}';
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
@@ -319,7 +332,7 @@ class StoreController
         $preparedData = [
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
-            'typist'                => !empty($args['typist']) ? $args['typist'] : $GLOBALS['userId'],
+            'typist'                => $typist,
             'status'                => $args['status'] ?? 'A_TRA',
             'relation'              => $relation,
             'origin_id'             => $args['originId'] ?? null,

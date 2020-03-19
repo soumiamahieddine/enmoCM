@@ -95,8 +95,8 @@ export class UsersAdministrationComponent implements OnInit {
 
                 this.loading = false;
                 this.setDatasource();
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 

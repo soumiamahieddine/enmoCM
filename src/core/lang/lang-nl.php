@@ -251,7 +251,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurde
 define('_PROCEED_WORKFLOW', 'Het goedkeuringscircuit verderzetten');
 define('_PROCEED_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurder / ondertekenaar die in het goedkeuringscircuit van het brief aanwezig is (\process_date\ van de tabel listinstance).');
 define('_VISA_MAIL', 'De e-mail goedkeuren');
-define('_CREATE_ATTACHMENTS_FROM_DETAILS', 'Bijlagen vanuit de detailfiche aanmaken');
 define('_MODIFY_ATTACHMENTS', 'De bijlagen wijzigen');
 define('_DELETE_ATTACHMENTS', 'De bijlagen verwijderen');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Een (parallelle) berichtenvraag verzenden');
@@ -309,8 +308,6 @@ define('_ROUTING', 'Circulatiefiche');
 define('_OUTGOING_MAIL', 'Brief spontaan vertrek');
 define('_CONVERTED_PDF', 'PDF geconverteerd door de oplossing');
 define('_PRINT_FOLDER', 'Map');
-define('_SVA', 'Stilzwijgende aanvaarding');
-define('_SVR', 'Stilzwijgende weigering');
 define('_REDACTOR', 'Opsteller');
 define('_ASSIGNEE', 'Toegekende persoon');
 define('_DOCUMENT_WITH_NOTES', 'Document met opmerkingen');

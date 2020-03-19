@@ -55,8 +55,8 @@ export class PrintSeparatorComponent implements OnInit {
                 });
                 this.loadEntities();
 
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 

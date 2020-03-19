@@ -41,8 +41,8 @@ export class ReportsAdministrationComponent implements OnInit {
                 this.groups = data['groups'];
                 this.loadReports(0);
                 this.loading = false;
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 

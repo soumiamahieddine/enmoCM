@@ -75,12 +75,6 @@ export class ActionsListComponent implements OnInit {
     }
 
     launchEvent(action: any, row: any) {
-        if (action.component === null) {
-            action.component = 'documentDetails';
-            this.actionService.launchAction(action, this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, this.selectedRes, this.currentResource, false);
-            return;
-        }
-
         this.arrRes = [];
         this.currentAction = action;
 

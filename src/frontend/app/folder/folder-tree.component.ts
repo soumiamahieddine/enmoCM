@@ -17,6 +17,7 @@ import { FormControl } from '@angular/forms';
 import { PluginAutocomplete } from '../../plugins/autocomplete/autocomplete.component';
 import { HeaderService } from '../../service/header.service';
 import { FolderCreateModalComponent } from './folder-create-modal/folder-create-modal.component';
+import { FunctionsService } from '../../service/functions.service';
 
 declare function $j(selector: any): any;
 /**
@@ -131,7 +132,8 @@ export class FolderTreeComponent implements OnInit {
         private router: Router,
         private renderer: Renderer2,
         private headerService: HeaderService,
-        public foldersService: FoldersService
+        public foldersService: FoldersService,
+        private functions: FunctionsService,
     ) {
         // Event after process action 
         this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {   
@@ -299,9 +301,9 @@ export class FolderTreeComponent implements OnInit {
     }
 
     openCreateFolderModal() {
-        this.dialogRef = this.dialog.open(FolderCreateModalComponent, { panelClass: 'maarch-modal' });
+        this.dialogRef = this.dialog.open(FolderCreateModalComponent, { panelClass: 'maarch-modal', data: { folderName: this.autocomplete.getValue() } });
         this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'success'),
+            filter((folderId: number) => !this.functions.empty(folderId)),
             tap(() => {
                 this.autocomplete.resetValue();
                 this.getFolders();

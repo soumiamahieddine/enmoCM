@@ -6,8 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { tap, exhaustMap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import {HeaderService} from "../../../service/header.service";
-import {FunctionsService} from "../../../service/functions.service";
 
 @Component({
     templateUrl: "close-and-index-action.component.html",
@@ -23,9 +21,7 @@ export class CloseAndIndexActionComponent implements OnInit {
     constructor(public http: HttpClient,
                 private notify: NotificationService,
                 public dialogRef: MatDialogRef<CloseAndIndexActionComponent>,
-                @Inject(MAT_DIALOG_DATA) public data: any,
-                private headerService: HeaderService,
-                private functions: FunctionsService
+                @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 
     ngOnInit(): void { }
@@ -47,9 +43,6 @@ export class CloseAndIndexActionComponent implements OnInit {
             }),
             exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNote()})),
             tap(() => {
-                if (!this.functions.empty(this.data.resource['followed']) && this.data.resource['followed']) {
-                    this.headerService.nbResourcesFollowed++;
-                }
                 this.dialogRef.close(this.data.resIds);
             }),
             finalize(() => this.loading = false),

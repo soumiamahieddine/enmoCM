@@ -182,8 +182,8 @@ export class UserAdministrationComponent implements OnInit {
                             this.dataSource.paginator = this.paginator;
                             this.dataSource.sort = this.sort;
                         }, 0);
-                    }, () => {
-                        location.href = "index.php";
+                    }, (err) => {
+                        this.notify.handleErrors(err);
                     });
             }
         });
@@ -277,8 +277,8 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 //this.userList = data['users'];
 
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 

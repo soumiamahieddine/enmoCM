@@ -44,7 +44,7 @@ ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '
 
 /* BASKETS LIST EVENT */
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event;
-ALTER TABLE groupbasket ADD COLUMN list_event character varying(255);
+ALTER TABLE groupbasket ADD COLUMN list_event character varying(255) DEFAULT 'documentDetails' NOT NULL;
 UPDATE groupbasket SET list_event = 'processDocument'
 FROM (
        SELECT basket_id, group_id
@@ -384,6 +384,8 @@ DO $$ BEGIN
 END$$;
 
 /* RES_LETTERBOX */
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS department_number_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_link;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
 ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 UPDATE res_letterbox set model_id = 2 WHERE category_id = 'outgoing';
@@ -509,6 +511,8 @@ ALTER TABLE res_letterbox ALTER COLUMN version SET NOT NULL;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS integrations;
 ALTER TABLE res_letterbox ADD COLUMN integrations jsonb DEFAULT '{}' NOT NULL;
 
+ALTER TABLE entities DROP COLUMN IF EXISTS external_id;
+ALTER TABLE entities ADD COLUMN external_id jsonb DEFAULT '{}';
 
 /* REFACTORING DATA */
 DO $$ BEGIN
@@ -665,6 +669,11 @@ DO $$
 $$ ;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
+
+
+UPDATE templates SET template_target = 'attachments' WHERE (template_target = '' OR template_target is null) AND template_type = 'OFFICE';
+UPDATE templates SET template_target = 'notes' WHERE (template_target = '' OR template_target is null) AND template_type = 'TXT';
+DELETE FROM templates WHERE template_target = '' OR template_target is null;
 
 /* ListTemplates */
 DROP TABLE IF EXISTS list_templates;

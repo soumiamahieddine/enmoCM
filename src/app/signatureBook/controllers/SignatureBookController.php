@@ -330,6 +330,14 @@ class SignatureBookController
             $attachments[0]['sign'] = true;
             $attachments[0]['viewerLink'] = "../../rest/resources/{$args['resId']}/content?".rand();
 
+            $isSigned = AdrModel::getDocuments([
+                'select'    => [1],
+                'where'     => ['res_id = ?', 'type = ?'],
+                'data'      => [$args['resId'], 'SIGN']
+            ]);
+            if (!empty($isSigned)) {
+                $attachments[0]['status'] = 'SIGN';
+            }
             $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $attachments[0]['res_id'], 'collId' => 'letterbox_coll']);
             if (empty($convertedAttachment['errors'])) {
                 $attachments[0]['isConverted'] = true;

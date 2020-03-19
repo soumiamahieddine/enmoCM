@@ -3045,14 +3045,8 @@ div.autocomplete ul li span.informal {
     margin-bottom: 4px;
 }
 
-
-
 .zero_padding td {
     padding: 4px 3px 1px 1px;
-}
-
-.popup_content {
-    /*padding: 10px;*/
 }
 
 .block .check {

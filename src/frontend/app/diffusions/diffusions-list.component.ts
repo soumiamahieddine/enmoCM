@@ -94,7 +94,8 @@ export class DiffusionsListComponent implements OnInit {
 
         if (this.resId !== null && this.target !== 'redirect') {
             this.loadListinstance(this.resId);
-
+        } else if (this.resId === null && this.entityId !== null) {
+            this.loadListModel(this.entityId);
         }
     }
 

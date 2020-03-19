@@ -22,6 +22,7 @@ use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
+use Resource\controllers\DepartmentController;
 use Resource\models\ExportTemplateModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceListModel;
@@ -30,10 +31,11 @@ use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
-use Tag\models\TagModel;
 use Tag\models\ResourceTagModel;
+use Tag\models\TagModel;
 use User\models\UserModel;
 
 require_once 'core/class/Url.php';
@@ -162,8 +164,6 @@ class ExportController
                     $select[] = 'res_view_letterbox.typist';
                 } elseif ($value['value'] == 'getAssignee') {
                     $select[] = 'res_view_letterbox.dest_user';
-                } elseif ($value['value'] == 'getDepartment') {
-                    $select[] = 'res_view_letterbox.department_number_id';
                 }
             } else {
                 $select[] = "res_view_letterbox.{$value['value']}";
@@ -270,11 +270,8 @@ class ExportController
                         $signatureDates = ExportController::getSignatureDates(['chunkedResIds' => $aArgs['chunkedResIds']]);
                         $csvContent[] = empty($signatureDates[$resource['res_id']]) ? '' : $signatureDates[$resource['res_id']];
                     } elseif ($value['value'] == 'getDepartment') {
-                        if (!empty($resource['department_number_id'])) {
-                            $csvContent[] = $resource['department_number_id'] . ' - ' . DepartmentController::getById(['id' => $resource['department_number_id']]);
-                        } else {
-                            $csvContent[] = '';
-                        }
+                        $department   = ExportController::getDepartment(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $csvContent[] = empty($department[$resource['res_id']]) ? '' : $department[$resource['res_id']];
                     } elseif (strpos($value['value'], 'custom_', 0) !== false) {
                         $csvContent[] = ExportController::getCustomFieldValue(['custom' => $value['value'], 'resId' => $resource['res_id']]);
                     }
@@ -380,13 +377,10 @@ class ExportController
                         $content[] = empty($signatories[$resource['res_id']]) ? '' : $signatories[$resource['res_id']];
                     } elseif ($value['value'] == 'getSignatureDates') {
                         $signatureDates = ExportController::getSignatureDates(['chunkedResIds' => $aArgs['chunkedResIds']]);
-                        $csvContent[] = empty($signatureDates[$resource['res_id']]) ? '' : $signatureDates[$resource['res_id']];
+                        $content[] = empty($signatureDates[$resource['res_id']]) ? '' : $signatureDates[$resource['res_id']];
                     } elseif ($value['value'] == 'getDepartment') {
-                        if (!empty($resource['department_number_id'])) {
-                            $content[] = $resource['department_number_id'] . ' - ' . DepartmentController::getById(['id' => $resource['department_number_id']]);
-                        } else {
-                            $content[] = '';
-                        }
+                        $department = ExportController::getDepartment(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $content[]  = empty($department[$resource['res_id']]) ? '' : $department[$resource['res_id']];
                     } elseif (strpos($value['value'], 'custom_', 0) !== false) {
                         $content[] = ExportController::getCustomFieldValue(['custom' => $value['value'], 'resId' => $resource['res_id']]);
                     }
@@ -460,6 +454,65 @@ class ExportController
             $aCopies = ['empty'];
         }
         return $aCopies;
+    }
+
+    private static function getDepartment(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
+
+        static $aDepartment = [];
+        if (!empty($aDepartment)) {
+            return $aDepartment;
+        }
+
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $contactsMatch = DatabaseModel::select([
+                'select'    => ['res_id', 'address_postcode'],
+                'table'     => ['resource_contacts', 'contacts'],
+                'left_join' => ['resource_contacts.item_id = contacts.id'],
+                'where'     => ["res_id in (?)", "type = 'contact'","mode = 'sender'", "(address_country ILIKE 'FRANCE' OR address_country = '' OR address_country IS NULL)"],
+                'data'      => [$resIds]
+            ]);
+
+            $resId = '';
+            $departmentName = '';
+            if (!empty($contactsMatch)) {
+                foreach ($contactsMatch as $key => $contact) {
+                    if (empty($contact['address_postcode'])) {
+                        continue;
+                    }
+                    if ($key != 0 && $resId == $contact['res_id']) {
+                        $departmentName .= "\n";
+                    } elseif ($key != 0 && $resId != $contact['res_id']) {
+                        $aDepartment[$resId] = $departmentName;
+                        $departmentName = '';
+                    } else {
+                        $departmentName = '';
+                    }
+                    $departmentId = substr($contact['address_postcode'], 0, 2);
+
+                    if ((int) $departmentId >= 97 || $departmentId == '20') {
+                        $departmentId = substr($contact['address_postcode'], 0, 3);
+                        if ((int)$departmentId < 202) {
+                            $departmentId = "2A";
+                        } elseif ((int)$departmentId >= 202 && (int)$departmentId < 970) {
+                            $departmentId = "2B";
+                        }
+                    }
+                    $departmentName .= $departmentId . ' - ' . DepartmentController::getById(['id' => $departmentId]);
+                    $resId = $contact['res_id'];
+                }
+                if (!empty($resId)) {
+                    $aDepartment[$resId] = $departmentName;
+                }
+            }
+        }
+
+        if (empty($aDepartment)) {
+            $aDepartment = ['empty'];
+        }
+        return $aDepartment;
     }
 
     private static function getTags(array $args)

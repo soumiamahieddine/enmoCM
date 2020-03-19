@@ -78,8 +78,8 @@ export class GroupsAdministrationComponent implements OnInit {
                     this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 

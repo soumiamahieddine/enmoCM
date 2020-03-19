@@ -433,7 +433,7 @@ export const LANG_NL = {
     "groupAdded"                            : "Toegevoegde groep",
     "groupCreation"                         : "Aanmaak van een groep",
     "groupDeleted"                          : "Verwijderde groep",
-    "groupeCompany"                         : "vennootschap van de Archiveco groep",
+    "groupeCompany"                         : "vennootschap van de Xelians groep",
     "grouping"                              : "Grouping", //_TO_TRANSLATE
     "groupModification"                     : "Wijziging van een groep",
     "groupRedirect"                         : "Groepswijziging",
@@ -634,7 +634,6 @@ export const LANG_NL = {
     "noResult"                              : "Geen resultaat",
     "noSettingsAvailable"                   : "Geen instellingen beschikbaar", //_TO_TRANSLATE
     "noShippingTemplate"                    : "No common shipping Maileva templates available for these entities", //_TO_TRANSLATE
-    "noTarget"                              : "Geen doel",
     "noTemplate"                            : "No template", //_TO_TRANSLATE
     "notes"                                 : "Opmerkingen",
     "noteTemplates"                         : "Note Templates", //_TO_TRANSLATE
@@ -1340,6 +1339,7 @@ export const LANG_NL = {
     "signedAlt"   : "Signed", //_TO_TRANSLATE
     "deleteResource"   : "Delete document", //_TO_TRANSLATE
     "viewResource"   : "View document", //_TO_TRANSLATE
+    "noDocument": "No document", //_TO_TRANSLATE
     "addAttachment"   : "Add an attachment", //_TO_TRANSLATE
     "dateAgo"   : "Since", //_TO_TRANSLATE
     "dateTo"   : "The", //_TO_TRANSLATE
@@ -1435,8 +1435,7 @@ export const LANG_NL = {
     "visaWorkflowDeleted" : "Visa workflow deleted", //_TO_TRANSLATE
     "publicModel" : "Public model", //_TO_TRANSLATE
     "privateModel" : "Private model", //_TO_TRANSLATE
-    "moveVisaUserErr1" : "You cannot move", //_TO_TRANSLATE
-    "moveVisaUserErr2" : "with users who have already approved / signed", //_TO_TRANSLATE
+    "moveVisaUserErr" : "You cannot move <p>{0}</p> with users who have already approved / signed or sign / approval is in progress.", //_TO_TRANSLATE
     "moveAvisUserErr1" : "You cannot move", //_TO_TRANSLATE
     "moveAvisUserErr2" : "with users who have already given an opinion", //_TO_TRANSLATE
     "avisWorkflowUpdated" : "Opinion workflow updated", //_TO_TRANSLATE
@@ -1590,6 +1589,7 @@ export const LANG_NL = {
     "emailSent" : "Email sent", //_TO_TRANSLATE
     "emailCannotSent" : "Error during sending email", //_TO_TRANSLATE
     "sentToFastParapheur" : "Send to FAST-Parapheur", //_TO_TRANSLATE
+    "sentToIParapheur" : "Send to IParapheur", //_TO_TRANSLATE
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
     "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",//_TO_TRANSLATE
@@ -1621,15 +1621,23 @@ export const LANG_NL = {
     "noPrivileges" : "Insufficient privileges", //_TO_TRANSLATE
     "mustDeleteUsersWithNoPrivileges" : "You must delete users with insufficient privileges", //_TO_TRANSLATE
     "sendNumericPackage" : "Send a numeric package", //_TO_TRANSLATE
+    "numericPackageSent" : "Numeric package sent", //_TO_TRANSLATE
+    "numericPackageDeleted" : "Numeric package deleted", //_TO_TRANSLATE
     "sendNumericPackageInfo" : "You can send mail and attachments between <b> two instances </b> of Maarch Courrier. <br /> <br /> You will receive <b> an acknowledgment of receipt </b> and you will be able <b> follow the progress </b> of the mail at the recipient. (see <a href=\"{0}\" target=\"_blank\"> Maarch2GEC </a> for more information).", //_TO_TRANSLATE
     "mailSubject" : "Mail subject", //_TO_TRANSLATE
     "attachItemToNumericPackage" : "Attach an element to sending mail", //_TO_TRANSLATE
     "note" : "Note", //_TO_TRANSLATE
     "addNoteToNumericPackage" : "Add a note Ajouter to sending mail", //_TO_TRANSLATE
-    "mainDocNumericPackage" : "Main document of sending mail", //_TO_TRANSLATE
-    "attachmentsNumericPackage" : "Attachments of sending mail", //_TO_TRANSLATE
+    "mainDocNumericPackage" : "Main document of sent mail", //_TO_TRANSLATE
+    "attachmentsNumericPackage" : "Attachments of sent mail", //_TO_TRANSLATE
+    "mainDocNumericPackageToSend" : "Main document of sending mail", //_TO_TRANSLATE
+    "attachmentsNumericPackageToSend" : "Attachments of sending mail", //_TO_TRANSLATE
     "closeSidePanel" : "Close side panel", //_TO_TRANSLATE
     "openSidePanel" : "Open side panel", //_TO_TRANSLATE
     "saveAsPrivateModel" : "Save as private model", //_TO_TRANSLATE
     "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?", //_TO_TRANSLATE
+    "createFolder" : "Create a folder", //_TO_TRANSLATE
+    "downloadNumericPackage" : "Download the numeric package", //_TO_TRANSLATE
+    "actionsHistory" : "Actions history", //_TO_TRANSLATE
+    "noActionProcessed": "No action processed", //_TO_TRANSLATE
 };

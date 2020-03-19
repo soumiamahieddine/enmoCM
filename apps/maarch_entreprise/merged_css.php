@@ -56,7 +56,6 @@ foreach (array_keys($_SESSION['modules_loaded']) as $value) {
     }
 }
 
-require_once 'apps/'.$_SESSION['config']['app_id'].'/css/doctype_levels.css';
 require_once 'apps/'.$_SESSION['config']['app_id'].'/css/bootstrapTree.css';
 
 //Dependencies

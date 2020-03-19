@@ -39,14 +39,6 @@ if (!defined("_AVIS_USER_INFO")) {
     define("_AVIS_USER_INFO", "For information (recommendation)");
 }
 
-if (!defined("_RECOMMENDATION_USER")) {
-    define("_RECOMMENDATION_USER", "Person for recommendation");
-}
-
-if (!defined("_RECOMMENDATION_NOTE")) {
-    define("_RECOMMENDATION_NOTE", "Recommendation pattern");
-}
-
 if (!defined("_OPINION_LIMIT_DATE")) {
     define("_OPINION_LIMIT_DATE", "Recommendation deadline");
 }
@@ -67,10 +59,6 @@ if (!defined("_SEND_TO_AVIS_WF_DESC")) {
     define("_SEND_TO_AVIS_WF_DESC", "Opens a modal to configure a notification circuit for mail.");
 }
 
-if (!defined("_WAITING_FOR_AVIS")) {
-    define("_WAITING_FOR_AVIS", "Recommendation on hold");
-}
-
 if (!defined("_PROCEED_WORKFLOW_AVIS")) {
     define("_PROCEED_WORKFLOW_AVIS", "Issue an opinion (sequential)");
 }
@@ -87,54 +75,18 @@ if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC")) {
     define("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC", "Updates the notification date of the user present in the mail mailing list ('process_date' in the listinstance table).");
 }
 
-if (!defined("_EMPTY_AVIS_WORKFLOW")) {
-    define("_EMPTY_AVIS_WORKFLOW", "The recommendation workflow is empty");
-}
-
 if (!defined("_AVIS_SENT")) {
     define("_AVIS_SENT", "Notice given");
-}
-
-if (!defined("_AVIS_NB")) {
-    define("_AVIS_NB", "Notice n°");
-}
-
-if (!defined("_NB_AVIS")) {
-    define("_NB_AVIS", "Number of Notices");
 }
 
 if (!defined("_DOCUMENTS_LIST_WITH_AVIS")) {
     define("_DOCUMENTS_LIST_WITH_AVIS", "List of mails with notices");
 }
 
-if (!defined("_NB_AVIS_SENT")) {
-    define("_NB_AVIS_SENT", "Notice given");
-}
-
 if (!defined("_WRITTEN_BY")) {
     define("_WRITTEN_BY", "Written by");
 }
 
-if (!defined("_AVIS_NOTE")) {
-    define("_AVIS_NOTE", "Description of the request");
-}
-
 if (!defined("_VALIDATE_BY")) {
     define("_VALIDATE_BY", "Validate by");
-}
-
-if (!defined("_AVIS_ROLE_UNAVAILABLE")) {
-    define("_AVIS_ROLE_UNAVAILABLE", "The role \"for advice\" is not available in the mailing list");
-}
-
-if (!defined("_ADD_AVIS_ROLE")) {
-    define("_ADD_AVIS_ROLE", "Add a user for recommendation");
-}
-
-if (!defined("_ADD_AVIS_MODEL")) {
-    define("_ADD_AVIS_MODEL", "Use avis circuit model");
-}
-
-if (!defined("_AVIS_BY")) {
-    define("_AVIS_BY", "Avis given by");
 }

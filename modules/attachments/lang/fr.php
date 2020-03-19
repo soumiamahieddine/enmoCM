@@ -49,9 +49,6 @@ if (!defined("_ATTACHED_DOC")) {
 if (!defined("_INDEX_ATTACHMENT")) {
     define("_INDEX_ATTACHMENT", "Indexer une pièce jointe");
 }
-if (!defined("_INDEX_ATTACHMENT_DESC")) {
-    define("_INDEX_ATTACHMENT_DESC", "Indexer une pièce jointe");
-}
 if (!defined("_VIEW_ATTACHMENTS")) {
     define("_VIEW_ATTACHMENTS", "Voir les pièces jointes");
 }
@@ -60,22 +57,6 @@ if (!defined("_VIEW_ATTACHMENTS_DESC")) {
 }
 if (!defined("_MANAGE_ATTACHMENTS")) {
     define("_MANAGE_ATTACHMENTS", "Gérer les pièces jointes");
-}
-if (!defined("_GENERATE_OFFICE_ATTACHMENT")) {
-    define("_GENERATE_OFFICE_ATTACHMENT", "Générer OFFICE");
-}
-if (!defined("_GENERATE_HTML_ATTACHMENT")) {
-    define("_GENERATE_HTML_ATTACHMENT", "Générer HTML");
-}
-if (!defined("_ATTACH_FROM_HDD")) {
-    define("_ATTACH_FROM_HDD", "Ajouter une pièce jointe / réponse depuis votre disque dur");
-}
-if (!defined("_GENERATE_ATTACHMENT_FROM")) {
-    define("_GENERATE_ATTACHMENT_FROM", "Générer une pièce jointe / réponse depuis un modèle au format");
-}
-
-if (!defined("_EDIT_ATTACHMENTS_FROM_DETAILS")) {
-    define("_EDIT_ATTACHMENTS_FROM_DETAILS", "Gérer les pièces jointes depuis la fiche détail");
 }
 
 if (!defined("_CREATED")) {
@@ -159,9 +140,6 @@ if (!defined("_ALREADY_MODEL_SELECTED")) {
 if (!defined("_MODIFY_ANSWER")) {
     define("_MODIFY_ANSWER", "Modifier une pièce jointe/un attachement");
 }
-if (!defined("_CREATE_NEW_ATTACHMENT_VERSION")) {
-    define("_CREATE_NEW_ATTACHMENT_VERSION", "Créer une nouvelle version ?");
-}
 if (!defined("_ATTACH_UPDATED")) {
     define("_ATTACH_UPDATED", "Pièce jointe mise à jour");
 }
@@ -171,17 +149,11 @@ if (!defined("_FINAL_VERSION")) {
 if (!defined("_SHOW_PREVIOUS_VERSION")) {
     define("_SHOW_PREVIOUS_VERSION", "Voir les versions précédentes");
 }
-if (!defined("_CREATE_ATTACHMENTS_FROM_DETAILS")) {
-    define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Créer des pièces jointes depuis la fiche détail");
-}
 if (!defined("_DELETE_ATTACHMENTS")) {
     define("_DELETE_ATTACHMENTS", "Supprimer les pièces jointes");
 }
 if (!defined("_MODIFY_ATTACHMENTS")) {
     define("_MODIFY_ATTACHMENTS", "Modifier les pièces jointes");
-}
-if (!defined("_ALL_ATTACHMENT_TYPES")) {
-    define("_ALL_ATTACHMENT_TYPES", "Tous les attachements");
 }
 if (!defined("_ATTACHEMENTS")) {
     define("_ATTACHEMENTS", "Attachements");
@@ -193,13 +165,6 @@ if (!defined("_WAYBILL")) {
 if (!defined("_VIEW_MAIN_DOC")) {
     define("_VIEW_MAIN_DOC", "Voir le courrier principal");
 }
-if (!defined("_RETRIEVE_BACK_UP")) {
-    define("_RETRIEVE_BACK_UP", "Reprise du dernier document car celui ci n'a pas été fermé correctement");
-}
-
-if (!defined("_DEST_USER_PJ")) {
-    define("_DEST_USER_PJ", "Destinataire");
-}
 
 if (!defined("_NO_PREVIEW_AVAILABLE")) {
     define("_NO_PREVIEW_AVAILABLE", "Aucun aperçu disponible");
@@ -207,10 +172,6 @@ if (!defined("_NO_PREVIEW_AVAILABLE")) {
 
 if (!defined("_FILE_HAS_NO_PDF")) {
     define("_FILE_HAS_NO_PDF", "La version PDF du fichier n'existe pas.");
-}
-
-if (!defined("_MODEL_NOT_EDITED")) {
-    define("_MODEL_NOT_EDITED", "Modèle non édité");
 }
 
 // RECONCILIATION
@@ -230,12 +191,6 @@ if (!defined('_RECONCILIATION_MAIL')) {
 
 /************** Message d'erreur **************/
 
-if (!defined('_MULTIPLE_RESPONSE_PROJECT_CHRONO')) {
-    define('_MULTIPLE_RESPONSE_PROJECT_CHRONO', 'Il existe plusieurs projets de réponses pour le courrier selectionné. Merci de saisir le numéro de chrono du projet de réponse');
-}
-if (!defined('_MULTIPLE_RESPONSE_PROJECT_DEST')) {
-    define('_MULTIPLE_RESPONSE_PROJECT_DEST', 'Il existe plusieurs projets de réponses pour le courrier selectionné. Merci de saisir un destinataire ');
-}
 if (!defined('_NO_RESPONSE_PROJECT')) {
     define('_NO_RESPONSE_PROJECT', 'Le courrier selectionné ne contient aucun projet de réponse. Veuillez entrer les informations manuellement');
 }
@@ -252,20 +207,7 @@ if (!defined('_NO_DEST_INFOS')) {
     define('_NO_DEST_INFOS', 'Merci de saisir un destinataire manuellement');
 }
 
-/************** POPUP **************/
-
-if (!defined('_NO_ATTACHMENT_CHRONO')) {
-    define('_NO_ATTACHMENT_CHRONO', 'Pas de pièces jointes pour ce numéro de chrono');
-}
-
 /************** INTERFACE ***********/
-
-if (!defined('_GENERATE_CHRONO_NUMBER')) {
-    define('_GENERATE_CHRONO_NUMBER', 'Génerer un numéro de chrono');
-}
-if (!defined('_CLOSE_INCOMING')) {
-    define('_CLOSE_INCOMING', 'Cloturer le(s) courrier(s) cible(s)');
-}
 
 if (!defined('_MAILING_INFO_1')) {
     define('_MAILING_INFO_1', '<b>Publipostage activé</b> : ');

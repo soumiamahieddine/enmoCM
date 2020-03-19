@@ -6,7 +6,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FunctionsService } from '../../service/functions.service';
 import { tap, exhaustMap, map, startWith, catchError, finalize, filter } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
-import { LatinisePipe } from 'ngx-pipes';
+import { LatinisePipe, ScanPipe } from 'ngx-pipes';
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { AddVisaModelModalComponent } from './addVisaModel/add-visa-model-modal.component';
@@ -15,7 +15,8 @@ import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 @Component({
     selector: 'app-visa-workflow',
     templateUrl: 'visa-workflow.component.html',
-    styleUrls: ['visa-workflow.component.scss']
+    styleUrls: ['visa-workflow.component.scss'],
+    providers: [ScanPipe]
 })
 export class VisaWorkflowComponent implements OnInit {
 
@@ -40,6 +41,7 @@ export class VisaWorkflowComponent implements OnInit {
     data: any;
 
     @Input('injectDatas') injectDatas: any;
+    @Input('target') target: string = '';
     @Input('adminMode') adminMode: boolean;
     @Input('resId') resId: number = null;
 
@@ -57,7 +59,8 @@ export class VisaWorkflowComponent implements OnInit {
         private notify: NotificationService,
         public functions: FunctionsService,
         private latinisePipe: LatinisePipe,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private scanPipe: ScanPipe
     ) { }
 
     ngOnInit(): void {
@@ -69,10 +72,10 @@ export class VisaWorkflowComponent implements OnInit {
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
-            if (this.functions.empty(this.visaWorkflow.items[event.currentIndex].process_date)) {
+            if (this.canManageUser(this.visaWorkflow.items[event.previousIndex], event.currentIndex)) {
                 moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             } else {
-                this.notify.error(`${this.lang.moveVisaUserErr1} <b>${this.visaWorkflow.items[event.previousIndex].labelToDisplay}</b> ${this.lang.moveVisaUserErr2}.`);
+                this.notify.error(`${this.scanPipe.transform(this.lang.moveVisaUserErr, [this.visaWorkflow.items[event.previousIndex].labelToDisplay])}`);
             }
         }
     }
@@ -86,25 +89,25 @@ export class VisaWorkflowComponent implements OnInit {
 
         return new Promise((resolve, reject) => {
             this.http.get(route)
-            .subscribe((data: any) => {
-                if (data.listTemplates[0]) {
-                    this.visaWorkflow.items = data.listTemplates[0].items.map((item: any) => {
-                        return {
-                            ...item,
-                            item_entity: item.descriptionToDisplay,
-                            requested_signature: item.item_mode !== 'visa'
+                .subscribe((data: any) => {
+                    if (data.listTemplates[0]) {
+                        this.visaWorkflow.items = data.listTemplates[0].items.map((item: any) => {
+                            return {
+                                ...item,
+                                item_entity: item.descriptionToDisplay,
+                                requested_signature: item.item_mode !== 'visa'
+                            }
+                        });
+                    }
+                    this.visaWorkflow.items.forEach((element: any, key: number) => {
+                        if (!this.functions.empty(element['externalId'])) {
+                            this.getMaarchParapheurUserAvatar(element.externalId.maarchParapheur, key);
                         }
                     });
-                }
-                this.visaWorkflow.items.forEach((element: any, key: number) => {
-                    if (!this.functions.empty(element['externalId'])) {
-                        this.getMaarchParapheurUserAvatar(element.externalId.maarchParapheur, key);
-                    }
+                    this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
+                    this.loading = false;
+                    resolve(true);
                 });
-                this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
-                this.loading = false;
-                resolve(true);
-            });
         });
     }
 
@@ -215,7 +218,7 @@ export class VisaWorkflowComponent implements OnInit {
                 if (this.showListModels) {
                     await this.loadVisaModelList();
                 }
-                
+
                 this.searchVisaSignUser.reset();
 
                 this.visaModelListNotLoaded = false;
@@ -303,12 +306,12 @@ export class VisaWorkflowComponent implements OnInit {
         ).subscribe();
     }
 
-    loadWorkflowMaarchParapheur(attachmentId: number) {
+    loadWorkflowMaarchParapheur(attachmentId: number, type: string) {
         this.loading = true;
         this.visaWorkflow.items = [];
-        this.http.get(`../../rest/attachments/${attachmentId}/maarchParapheurWorkflow`)
+        this.http.get(`../../rest/documents/${attachmentId}/maarchParapheurWorkflow?type=${type}`)
             .subscribe((data: any) => {
-                data.workflow.forEach((element: any, key:any) => {
+                data.workflow.forEach((element: any, key: any) => {
                     const user = {
                         'listinstance_id': key,
                         'id': element.userId,
@@ -349,10 +352,12 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     getCurrentVisaUserIndex() {
-
-        const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
-
-        return (index + 1);
+        if (this.getLastVisaUser().listinstance_id === undefined) {
+            return 0;
+        } else {
+            const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
+            return (index + 1);
+        }
     }
 
     getFirstVisaUser() {
@@ -422,7 +427,7 @@ export class VisaWorkflowComponent implements OnInit {
         });
     }
 
-    addItemToWorkflow(item: any, maarchParapheurMode = false) {        
+    addItemToWorkflow(item: any, maarchParapheurMode = false) {
         return new Promise((resolve, reject) => {
             if (maarchParapheurMode) {
                 this.visaWorkflow.items.push({
@@ -434,7 +439,7 @@ export class VisaWorkflowComponent implements OnInit {
                     difflist_type: 'VISA_CIRCUIT',
                     signatory: !this.functions.empty(item.signatory) ? item.signatory : false,
                     requested_signature: !this.functions.empty(item.requested_signature) ? item.requested_signature : false,
-                    hasPrivilege : true
+                    hasPrivilege: true
                 });
                 if (this.linkedToMaarchParapheur) {
                     this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
@@ -451,9 +456,9 @@ export class VisaWorkflowComponent implements OnInit {
                     difflist_type: 'VISA_CIRCUIT',
                     signatory: !this.functions.empty(item.signatory) ? item.signatory : false,
                     requested_signature: !this.functions.empty(item.requested_signature) ? item.requested_signature : false,
-                    hasPrivilege : item.hasPrivilege
+                    hasPrivilege: item.hasPrivilege
                 });
-    
+
                 if (this.linkedToMaarchParapheur) {
                     this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
                 }
@@ -464,7 +469,7 @@ export class VisaWorkflowComponent implements OnInit {
                 this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
                     tap((data: any) => {
                         this.visaWorkflow.items = this.visaWorkflow.items.concat(
-    
+
                             data.listTemplate.items.map((itemTemplate: any) => {
                                 return {
                                     item_id: itemTemplate.item_id,
@@ -474,7 +479,7 @@ export class VisaWorkflowComponent implements OnInit {
                                     difflist_type: 'VISA_CIRCUIT',
                                     signatory: false,
                                     requested_signature: itemTemplate.item_mode === 'sign',
-                                    hasPrivilege : itemTemplate.hasPrivilege
+                                    hasPrivilege: itemTemplate.hasPrivilege
                                 }
                             })
                         );
@@ -484,7 +489,7 @@ export class VisaWorkflowComponent implements OnInit {
                     })
                 ).subscribe();
             }
-        });        
+        });
     }
 
     resetWorkflow() {
@@ -502,7 +507,7 @@ export class VisaWorkflowComponent implements OnInit {
     getError() {
         if (this.visaWorkflow.items.filter((item: any) => item.requested_signature).length === 0) {
             return this.lang.signUserRequired;
-        } else if(this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege).length > 0) {
+        } else if (this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege).length > 0) {
             return this.lang.mustDeleteUsersWithNoPrivileges;
         }
     }
@@ -570,7 +575,19 @@ export class VisaWorkflowComponent implements OnInit {
         }
     }
 
-    isModified() {        
+    isModified() {
         return !(this.loading || JSON.stringify(this.visaWorkflow.items) === JSON.stringify(this.visaWorkflowClone));
+    }
+
+    canManageUser(item: any, i: number) {
+        if (this.adminMode) {
+            if (!this.functions.empty(item.process_date) || (this.target === 'signatureBook' && this.getCurrentVisaUserIndex() === i)) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 }

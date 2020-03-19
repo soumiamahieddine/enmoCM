@@ -180,9 +180,9 @@
                                     <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="usersDisplayedColumns"></mat-header-row>
-                                <mat-row *matRowDef="let row; columns: usersDisplayedColumns;"
-                                         routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
-                                         style="cursor:pointer;"></mat-row>
+                                <mat-row *matRowDef="let row; columns: usersDisplayedColumns;" matTooltip="{{lang.view}}" [matTooltipDisabled]="!row.allowed"
+                                         [ngStyle]="{'cursor': row.allowed ? 'pointer' : ''}" (click)="goToUserAdmin(row)">
+                                </mat-row>
                             </mat-table>
                         </mat-tab>
                         <mat-tab label="{{lang.relatedBaskets}}" *ngIf="!creationMode">

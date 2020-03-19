@@ -142,22 +142,23 @@ class HomeController
                 'res_letterbox.confidentiality',
                 'status.img_filename as status_icon',
                 'status.label_status as status_label',
-                'status.id as status_id'
+                'status.id as status_id',
+                'res_letterbox.filename'
             ],
             'limit'     => 5,
             'userId'    => $GLOBALS['userId']
         ]);
+
         if (!empty($lastResources)) {
-            $priorities = array_column($lastResources, 'priority');
-            $priorities = PriorityModel::get(['select' => ['id', 'color'], 'where' => ['id in (?)'], 'data' => [$priorities]]);
+            $priorities     = array_column($lastResources, 'priority');
+            $prioritiesInfo = PriorityModel::get(['select' => ['id', 'color'], 'where' => ['id in (?)'], 'data' => [$priorities]]);
+            $aPriorities    = array_column($prioritiesInfo, 'color', 'id');
 
             foreach ($lastResources as $key => $lastResource) {
+                $lastResources[$key]['hasDocument'] = $lastResource['filename'] != null;
+                unset($lastResources[$key]['filename']);
                 if (!empty($lastResource['priority'])) {
-                    foreach ($priorities as $priority) {
-                        if ($lastResource['priority'] == $priority['id']) {
-                            $lastResources[$key]['priority_color'] = $priority['color'];
-                        }
-                    }
+                    $lastResources[$key]['priority_color'] = $aPriorities[$lastResource['priority']] ?? null;
                 }
             }
         }

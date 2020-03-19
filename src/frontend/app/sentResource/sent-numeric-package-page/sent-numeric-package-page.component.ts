@@ -13,7 +13,7 @@ import { AppService } from '../../../service/app.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { HeaderService } from '../../../service/header.service';
-import { StripTagsPipe } from 'ngx-pipes';
+import { StripTagsPipe, ReversePipe } from 'ngx-pipes';
 
 declare var angularGlobals: any;
 declare function $j(selector: any): any;
@@ -22,15 +22,13 @@ declare function $j(selector: any): any;
     selector: 'app-sent-numeric-package-page',
     templateUrl: './sent-numeric-package-page.component.html',
     styleUrls: ['./sent-numeric-package-page.component.scss'],
-    providers: [ContactService, AppService, StripTagsPipe],
+    providers: [ContactService, AppService, StripTagsPipe, ReversePipe],
 })
 export class SentNumericPackagePageComponent implements OnInit {
 
 
     lang: any = LANG;
     loading: boolean = true;
-
-    readonly separatorKeysCodes: number[] = [COMMA];
 
     availableEmailModels: any[] = [];
     availableSignEmailModels: any[] = [];
@@ -41,10 +39,6 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     recipients: any[] = [];
 
-    copies: any[] = [];
-
-    invisibleCopies: any[] = [];
-
     recipientsCtrl: FormControl = new FormControl();
 
     emailSignListForm = new FormControl();
@@ -52,15 +46,10 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     filteredEmails: Observable<string[]>;
 
-    showCopies: boolean = false;
-    showInvisibleCopies: boolean = false;
-
-    emailCreatorId: number = null;
-    emailId: number = null;
-    emailStatus: string = 'WAITING';
-    emailContent: string = '';
-    currentEmailAttachTool: string = '';
-    emailAttachTool: any = {
+    numericPackageCreatorId: number = null;
+    numericPackageStatus: string = 'WAITING';
+    numericPackageCurrentAttachTool: string = '';
+    numericPackageAttachTool: any = {
         document: {
             icon: 'fa fa-file',
             title: this.lang.attachMainDocument,
@@ -77,7 +66,7 @@ export class SentNumericPackagePageComponent implements OnInit {
             list: []
         },
     };
-    emailAttach: any = [];
+    numericPackageAttach: any = [];
 
     numericPackage: any = {
         mainExchangeDoc: null,
@@ -92,6 +81,7 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     communicationType: string = null;
     reference: string = null;
+    messageReview: any[] = [];
 
     maarch2maarchUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2maarch.html`;
 
@@ -108,6 +98,7 @@ export class SentNumericPackagePageComponent implements OnInit {
         public privilegeService: PrivilegeService,
         public headerService: HeaderService,
         private stringPipe: StripTagsPipe,
+        private reversePipe: ReversePipe,
     ) { }
 
     async ngOnInit(): Promise<void> {
@@ -154,7 +145,7 @@ export class SentNumericPackagePageComponent implements OnInit {
             tap((data: any) => {
                 var textArea = document.createElement('textarea');
                 textArea.innerHTML = data.mergedDocument;
-                this.emailContent += this.stringPipe.transform(textArea.value);
+                this.numericPackage.content += this.stringPipe.transform(textArea.value);
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);
@@ -170,8 +161,8 @@ export class SentNumericPackagePageComponent implements OnInit {
         this.http.get(`../../rest/currentUser/emailSignatures/${templateId}`).pipe(
             tap((data: any) => {
                 var textArea = document.createElement('textarea');
-                textArea.innerHTML = data.mergedDocument;
-                this.emailContent += this.stringPipe.transform(textArea.value);
+                textArea.innerHTML = data.emailSignature.content;
+                this.numericPackage.content += this.stringPipe.transform(textArea.value);
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);
@@ -195,41 +186,53 @@ export class SentNumericPackagePageComponent implements OnInit {
             this.http.get(`../../rest/messageExchanges/${emailId}`).pipe(
                 map((data: any) => data.messageExchange),
                 tap((data: any) => {
-                    this.emailCreatorId = data.userId;
+                    this.numericPackageCreatorId = data.userId;
 
-                    this.recipients = [{
-                        label: data.recipent,
-                        m2m: data.recipent
-                    }];
+                    this.recipients = [data.recipient];
 
                     this.currentSender.label = data.sender;
                     this.numericPackage.object = data.object;
-                    this.emailStatus = data.status.toUpperCase();
+                    this.numericPackageStatus = data.status.toUpperCase();
                     this.numericPackage.content = data.body;
                     this.communicationType = data.communicationType;
                     this.reference = data.reference;
-
-                    Object.keys(data.document).forEach(element => {
-                        if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
-                            data.document[element].forEach((dataAttach: any) => {
-                                const elem = this.emailAttachTool[element].list.filter((item: any) => item.id === dataAttach.id || item.id === dataAttach);
-                                if (elem.length > 0) {
-                                    this.emailAttach[element] = elem.map((item: any) => {
-                                        return {
-                                            ...item,
-                                            format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
-                                            original: dataAttach.original,
-                                            size: dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
-                                        }
-                                    })
-                                }
-                            });
-                        } else if (element === 'isLinked' && data.document.isLinked === true) {
-                            this.emailAttach.document.isLinked = true;
-                            this.emailAttach.document.original = data.document.original;
-                            this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
+                    this.messageReview = data.messageReview.map((item: any) => {
+                        return {
+                            date: this.functions.formatFrenchDateToObjectDate(item.substring(1, 19), '/'),
+                            content: item.substring(21),
                         }
                     });
+                    this.messageReview = this.reversePipe.transform(this.messageReview);
+
+
+                    console.log(this.numericPackageAttachTool);
+
+                    if (data.disposition.tablename === 'res_letterbox') {
+                        this.numericPackage.mainExchangeDoc = {
+                            ...this.numericPackageAttachTool['document'].list[0],
+                            typeLabel: this.lang.mainDocument,
+                            type: 'document'
+                        }
+                        
+                        this.numericPackageAttach = this.numericPackageAttach.concat(this.numericPackageAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1));
+                    } else {
+                        this.numericPackage.mainExchangeDoc = {
+                            ...this.numericPackageAttachTool['attachments'].list.filter((item: any) => item.id == data.disposition.res_id)[0],
+                            type: 'attachments'
+                        }
+                        this.numericPackageAttach = this.numericPackageAttach.concat(this.numericPackageAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1 && item.id != data.disposition.res_id));
+
+                    }
+
+                    if (data.resMasterAttached && data.disposition.tablename !== 'res_letterbox') {
+                        this.numericPackageAttach.push({
+                            ...this.numericPackageAttachTool['document'].list[0],
+                            typeLabel: this.lang.mainDocument,
+                            type: 'document'
+                        });
+                    }
+
+                    this.numericPackageAttach = this.numericPackageAttach.concat(this.numericPackageAttachTool['notes'].list.filter((item: any) => data.notes.indexOf(item.id.toString()) > -1));
 
                     resolve(true);
                 }),
@@ -302,12 +305,12 @@ export class SentNumericPackagePageComponent implements OnInit {
                 tap((data: any) => {
                     Object.keys(data).forEach(element => {
                         if (element === 'resource') {
-                            this.emailAttachTool.document.list = [];
+                            this.numericPackageAttachTool.document.list = [];
                             if (!this.functions.empty(data[element])) {
-                                this.emailAttachTool.document.list = [data[element]];
+                                this.numericPackageAttachTool.document.list = [data[element]];
                             }
                         } else {
-                            this.emailAttachTool[element].list = data[element].map((item: any) => {
+                            this.numericPackageAttachTool[element].list = data[element].map((item: any) => {
                                 return {
                                     ...item,
                                     original: item.original !== undefined ? item.original : true,
@@ -356,7 +359,6 @@ export class SentNumericPackagePageComponent implements OnInit {
         ).subscribe();
     }
 
-
     initEmailModelsList() {
         this.http.get(`../../rest/resources/${this.data.resId}/emailTemplates`).pipe(
             tap((data: any) => {
@@ -387,7 +389,7 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-        this.emailStatus = 'WAITING';
+        this.numericPackageStatus = 'WAITING';
         if (this.data.emailId === null) {
             if (this.numericPackage.object === '') {
                 const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.warnEmptySubject } });
@@ -410,7 +412,7 @@ export class SentNumericPackagePageComponent implements OnInit {
     createEmail(closeModal: boolean = true) {
         this.http.post(`../../rest/resources/${this.data.resId}/messageExchange`, this.formatNumericPackage()).pipe(
             tap(() => {
-                this.notify.success(`Pli numérique envoyé`);
+                this.notify.success(this.lang.numericPackageSent);
 
                 this.closeModal('success');
             }),
@@ -427,9 +429,9 @@ export class SentNumericPackagePageComponent implements OnInit {
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete(`../../rest/emails/${this.data.emailId}`)),
+            exhaustMap(() => this.http.delete(`../../rest/messageExchanges/${this.data.emailId}`)),
             tap(() => {
-                this.notify.success(this.lang.emailDeleted);
+                this.notify.success(this.lang.numericPackageDeleted);
                 this.closeModal('success');
             }),
             finalize(() => this.loading = false),
@@ -443,11 +445,8 @@ export class SentNumericPackagePageComponent implements OnInit {
     updateEmail(closeModal: boolean = true) {
         this.http.put(`../../rest/emails/${this.data.emailId}`, this.formatNumericPackage()).pipe(
             tap(() => {
-                if (this.emailStatus === 'DRAFT') {
-                    // this.notify.success(this.lang.draftUpdated);
-                } else {
-                    this.notify.success(`Pli numérique envoyé`);
-                }
+
+                this.notify.success(this.lang.numericPackageSent);
 
                 if (closeModal) {
                     this.closeModal('success');
@@ -461,33 +460,15 @@ export class SentNumericPackagePageComponent implements OnInit {
         ).subscribe();
     }
 
-    saveDraft() {
-        this.closeModal();
-        /*if (this.canManageMail()) {
-          this.emailStatus = 'DRAFT';
-          if (this.data.emailId === null) {
-            if (!this.functions.empty(tinymce.get('emailSignature').getContent())) {
-              this.createEmail(true);
-            } else {
-              this.closeModal();
-            }
-          } else {
-            this.updateEmail(true);
-          }
-        } else {
-          this.closeModal();
-        }*/
-    }
-
     toggleAttach(item: any, type: string, mode: string) {
-        if (this.numericPackage.mainExchangeDoc === null) {
+        if (this.numericPackage.mainExchangeDoc === null && type !== 'notes') {
             this.numericPackage.mainExchangeDoc = {
                 ...item,
                 typeLabel: item.typeLabel !== undefined ? item.typeLabel : this.lang.mainDocument,
                 type: type
             }
         } else {
-            this.emailAttach.push({
+            this.numericPackageAttach.push({
                 ...item,
                 typeLabel: item.typeLabel !== undefined ? item.typeLabel : this.lang.mainDocument,
                 type: type
@@ -496,7 +477,7 @@ export class SentNumericPackagePageComponent implements OnInit {
     }
 
     removeAttach(index: number) {
-        this.emailAttach.splice(index, 1);
+        this.numericPackageAttach.splice(index, 1);
     }
 
     formatNumericPackage() {
@@ -514,23 +495,23 @@ export class SentNumericPackagePageComponent implements OnInit {
         numericPackage.object = this.numericPackage.object;
         numericPackage.content = this.numericPackage.content;
         numericPackage.contacts = this.recipients.map(recipient => recipient.id);
-        numericPackage.joinAttachment = this.emailAttach.filter((attach: any) => attach.type === 'attachments').map((attach: any) => attach.id);
-        numericPackage.notes = this.emailAttach.filter((attach: any) => attach.type === 'notes').map((attach: any) => attach.id);
+        numericPackage.joinAttachment = this.numericPackageAttach.filter((attach: any) => attach.type === 'attachments').map((attach: any) => attach.id);
+        numericPackage.notes = this.numericPackageAttach.filter((attach: any) => attach.type === 'notes').map((attach: any) => attach.id);
         numericPackage.senderEmail = this.currentSender.id;
 
         return numericPackage;
     }
 
     isSelectedAttach(item: any, type: string) {
-        return this.emailAttach.filter((attach: any) => attach.id === item.id && attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && this.numericPackage.mainExchangeDoc.id === item.id && type === this.numericPackage.mainExchangeDoc.type);
+        return this.numericPackageAttach.filter((attach: any) => attach.id === item.id && attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && this.numericPackage.mainExchangeDoc.id === item.id && type === this.numericPackage.mainExchangeDoc.type);
     }
 
     isSelectedAttachType(type: string) {
-        return this.emailAttach.filter((attach: any) => attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && type === this.numericPackage.mainExchangeDoc.type);
+        return this.numericPackageAttach.filter((attach: any) => attach.type === type).length > 0 || (this.numericPackage.mainExchangeDoc !== null && type === this.numericPackage.mainExchangeDoc.type);
     }
 
     canManageMail() {
-        if ((this.data.emailId === null) || (this.emailStatus !== 'SENT' && this.headerService.user.id === this.emailCreatorId)) {
+        if ((this.data.emailId === null) || (this.numericPackageStatus !== 'SENT' && this.headerService.user.id === this.numericPackageCreatorId)) {
             this.recipientsCtrl.enable();
             return true;
         } else {
@@ -542,4 +523,40 @@ export class SentNumericPackagePageComponent implements OnInit {
     compareSenders(sender1: any, sender2: any) {
         return (sender1.label === sender2.label || ((sender1.label === null || sender2.label === null) && (sender1.entityId === null || sender2.entityId === null))) && sender1.entityId === sender2.entityId && sender1.email === sender2.email;
     }
+
+    saveNumericPackageFile() {
+        this.http.get(`../../rest/messageExchanges/${this.data.emailId}/archiveContent`, { responseType: "blob" }).pipe(
+            tap((data: any) => {
+                let downloadLink = document.createElement('a');
+                downloadLink.href = window.URL.createObjectURL(data);
+
+                let today: any;
+                let dd: any;
+                let mm: any;
+                let yyyy: any;
+
+                today = new Date();
+                dd = today.getDate();
+                mm = today.getMonth() + 1;
+                yyyy = today.getFullYear();
+
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = dd + '-' + mm + '-' + yyyy;
+                downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+            }),
+            catchError((err) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
 }
+
+

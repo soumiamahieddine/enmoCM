@@ -276,10 +276,8 @@ $arr_tmp2 = array('label' => _PROJECT, 'type' => 'input_text', 'param' => array(
 $param['folder'] = $arr_tmp2;
 
 // Department number
-include("apps/maarch_entreprise/department_list.php");
-
 $arr_tmp = array();
-foreach ($depts as $key => $value) {
+foreach (\Resource\controllers\DepartmentController::FRENCH_DEPARTMENTS as $key => $value) {
     array_push($arr_tmp, array('VALUE' => $key, 'LABEL' => $key . " - " . $value));
 }
 

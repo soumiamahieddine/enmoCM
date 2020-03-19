@@ -70,7 +70,7 @@ export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
             component.unlockResource();
         }
 
-        if ((component.isToolModified() && !component.isModalOpen()) || component.appDocumentViewer.isEditingTemplate()) {
+        if ((component.isToolModified() && !component.isModalOpen()) || (component.appDocumentViewer !== undefined && component.appDocumentViewer.isEditingTemplate())) {
             if (confirm(component.lang.saveModifiedData)) {
                 await component.saveModificationBeforeClose();
             }

@@ -54,8 +54,8 @@ export class PriorityAdministrationComponent implements OnInit {
                         this.priority = data.priority;
                         this.headerService.setHeader(this.lang.priorityModification, this.priority.label);
                         this.loading = false;
-                    }, () => {
-                        location.href = "index.php";
+                    }, (err) => {
+                        this.notify.handleErrors(err);
                     });
             }
         });

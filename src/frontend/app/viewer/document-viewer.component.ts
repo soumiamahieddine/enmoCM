@@ -16,6 +16,7 @@ import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/o
 import { FunctionsService } from '../../service/functions.service';
 import { DocumentViewerModalComponent } from './modal/document-viewer-modal.component';
 import { PrivilegeService } from '../../service/privileges.service';
+import {VisaWorkflowModalComponent} from "../visa/modal/visa-workflow-modal.component";
 
 
 @Component({
@@ -59,6 +60,7 @@ export class DocumentViewerComponent implements OnInit {
 
 
     listTemplates: any[] = [];
+    externalId: any = {};
 
     templateListForm = new FormControl();
 
@@ -569,6 +571,15 @@ export class DocumentViewerComponent implements OnInit {
                         return of(false);
                     }
                 );
+                this.http.get(`../../rest/resources/${this.resId}/fields/externalId`).pipe(
+                    tap((data: any) => {
+                        this.externalId = data.field;
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
             }
         }
     }
@@ -960,5 +971,9 @@ export class DocumentViewerComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    openMaarchParapheurWorkflow() {
+        this.dialog.open(VisaWorkflowModalComponent, { panelClass: 'maarch-modal', data: { id: this.resId, type: 'resource' } });
     }
 }

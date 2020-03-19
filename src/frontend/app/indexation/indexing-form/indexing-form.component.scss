@@ -553,7 +553,8 @@
 
 .radio-form {
     padding-left: 20px;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     width: 100%;
 
     .mat-radio-button {
@@ -564,7 +565,6 @@
             color: rgba(0, 0, 0, 0.54);
         }
     }
-
 }
 
 .input-radio {
@@ -573,7 +573,7 @@
     }
 
     ::ng-deep.mat-form-field-flex {
-        height: 40px;
+        height: auto;
     }
 
     ::ng-deep.mat-form-field-label {

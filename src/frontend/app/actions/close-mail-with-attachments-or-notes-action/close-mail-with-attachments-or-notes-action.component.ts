@@ -63,7 +63,7 @@ export class closeMailWithAttachmentsOrNotesActionComponent implements OnInit {
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();

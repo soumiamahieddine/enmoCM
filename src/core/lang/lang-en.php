@@ -251,7 +251,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Update visa date of current supervisor / sig
 define('_PROCEED_WORKFLOW', 'continue the visa flow');
 define('_PROCEED_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory in visa circuit of mail (\'process_date\' of listinstance table).');
 define('_VISA_MAIL', 'Aim the mail');
-define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Create attachments from details card");
 define("_MODIFY_ATTACHMENTS", "Modify attachments");
 define("_DELETE_ATTACHMENTS", "Delete attachments");
 define("_SEND_DOCS_TO_RECOMMENDATION", "Sent a recommendation request (parallel)");
@@ -308,8 +307,6 @@ define("_ROUTING", "Flow slip");
 define("_OUTGOING_MAIL", "Spontaneous start mail");
 define("_CONVERTED_PDF", "Converted PDF by the solution");
 define('_PRINT_FOLDER', 'Folder');
-define('_SVA', 'SVA');
-define('_SVR', 'SVR');
 define('_REDACTOR', 'Redactor');
 define('_ASSIGNEE', 'Assignee');
 define('_DOCUMENT_WITH_NOTES', 'Document with notes');

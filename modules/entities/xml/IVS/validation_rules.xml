@@ -173,13 +173,6 @@
 		<parameter name="specific_role" type="string" />
     </validationRule>
 
-    <validationRule name="load_listmodel" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="origin" type="string" />
-		<parameter name="objectType" type="identifier" />
-		<parameter name="objectId" type="identifier" />
-    </validationRule>
-
     <validationRule name="manage_listmodel" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="origin" type="integer" />

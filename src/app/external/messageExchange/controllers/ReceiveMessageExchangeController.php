@@ -17,6 +17,7 @@ namespace MessageExchange\controllers;
 
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertPdfController;
 use Entity\models\EntityModel;
 use ExportSeda\controllers\SendMessageController;
 use Group\controllers\PrivilegeController;
@@ -260,6 +261,17 @@ class ReceiveMessageExchangeController
 
         $storeResource = StoreController::storeResource($dataValue);
         if (empty($storeResource['errors'])) {
+            if (!empty($dataValue['encodedFile'])) {
+                ConvertPdfController::convert([
+                    'resId'     => $storeResource,
+                    'collId'    => 'letterbox_coll',
+                    'version'   => 1
+                ]);
+    
+                $customId = CoreConfigModel::getCustomId();
+                $customId = empty($customId) ? 'null' : $customId;
+                exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
+            }
             ResourceContactModel::create(['res_id' => $storeResource, 'item_id' => $aArgs['contact']['id'], 'type' => 'contact', 'mode' => 'sender']);
         }
 
@@ -329,21 +341,23 @@ class ReceiveMessageExchangeController
     {
         $countNote = 0;
         foreach ($aArgs['dataObject']->Comment as $value) {
-            NoteModel::create([
-                "resId" => $aArgs['resId'],
-                "user_id"    => $aArgs['userId'],
-                "note_text"  => $value->value
-            ]);
-
-            HistoryController::add([
-                'tableName' => 'notes',
-                'recordId'  => $aArgs['resId'],
-                'eventType' => 'ADD',
-                'eventId'   => 'noteadd',
-                'info'       => _NOTE_ADDED
-            ]);
-
-            $countNote++;
+            if (!empty($value->value)) {
+                NoteModel::create([
+                    "resId" => $aArgs['resId'],
+                    "user_id"    => $aArgs['userId'],
+                    "note_text"  => $value->value
+                ]);
+    
+                HistoryController::add([
+                    'tableName' => 'notes',
+                    'recordId'  => $aArgs['resId'],
+                    'eventType' => 'ADD',
+                    'eventId'   => 'noteadd',
+                    'info'       => _NOTE_ADDED
+                ]);
+    
+                $countNote++;
+            }
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] '.$countNote . ' note(s) enregistrée(s)';
         return true;
@@ -369,26 +383,21 @@ class ReceiveMessageExchangeController
                 $BinaryDataObjectInfo = self::getBinaryDataObjectInfo(["binaryDataObject" => $dataObjectPackage->BinaryDataObject, "binaryDataObjectId" => $attachmentDataObjectId]);
                 $filename             = $BinaryDataObjectInfo->Attachment->filename;
                 $fileFormat           = substr($filename, strrpos($filename, '.') + 1);
-
-                $dataValue = [];
-                array_push($dataValue, ['column' => 'typist',          'value' => 'superadmin',                      'type' => 'string']);
-                array_push($dataValue, ['column' => 'type_id',         'value' => '0',                               'type' => 'integer']);
-                array_push($dataValue, ['column' => 'res_id_master',   'value' => $resIdMaster,                      'type' => 'integer']);
-                array_push($dataValue, ['column' => 'attachment_type', 'value' => $defaultConfig['attachment_type'], 'type' => 'string']);
-                array_push($dataValue, ['column' => 'relation',        'value' => '1',                               'type' => 'integer']);
-                array_push($dataValue, ['column' => 'coll_id',         'value' => 'letterbox_coll',                  'type' => 'string']);
-                array_push($dataValue, ['column' => 'doc_date',        'value' => $attachmentContent->CreatedDate,   'type' => 'date']);
-                array_push($dataValue, ['column' => 'title',           'value' => $attachmentContent->Title[0],      'type' => 'string']);
-
-                $allDatas = [
-                    "encodedFile" => $BinaryDataObjectInfo->Attachment->value,
-                    "data"        => $dataValue,
-                    "version"       => false,
-                    "fileFormat"  => $fileFormat,
-                    "status"      => 'TRA'
-                ];
                 
+                $allDatas = [
+                    'title'        => $attachmentContent->Title[0],
+                    'encodedFile'  => $BinaryDataObjectInfo->Attachment->value,
+                    'format'       => $fileFormat,
+                    'typist'       => 'superadmin',
+                    'resIdMaster'  => $resIdMaster,
+                    'type'         => $defaultConfig['attachment_type']
+                ];
+
                 $resId = StoreController::storeAttachment($allDatas);
+                ConvertPdfController::convert([
+                    'resId'  => $resId,
+                    'collId' => 'attachments_coll'
+                ]);
                 $countAttachment++;
             }
         }

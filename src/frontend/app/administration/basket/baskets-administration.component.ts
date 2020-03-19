@@ -66,8 +66,8 @@ export class BasketsAdministrationComponent implements OnInit {
                     this.http.get("../../rest/sortedBaskets")
                         .subscribe((data: any) => {
                             this.basketsOrder = data['baskets'];
-                        }, () => {
-                            location.href = "index.php";
+                        }, (err) => {
+                            this.notify.handleErrors(err);
                         });
                     this.dataSource = new MatTableDataSource(this.baskets);
                     this.dataSource.paginator = this.paginator;
@@ -76,8 +76,8 @@ export class BasketsAdministrationComponent implements OnInit {
                     this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 
@@ -95,8 +95,8 @@ export class BasketsAdministrationComponent implements OnInit {
                     this.http.get("../../rest/sortedBaskets")
                         .subscribe((data: any) => {
                             this.basketsOrder = data['baskets'];
-                        }, () => {
-                            location.href = "index.php";
+                        }, (err) => {
+                            this.notify.handleErrors(err);
                         });
                 }, (err: any) => {
                     this.notify.error(err.error.errors);

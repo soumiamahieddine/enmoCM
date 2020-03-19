@@ -683,7 +683,7 @@ class AutoCompleteController
             if (isset($control['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
             } elseif (isset($control['success'])) {
-                return $response->withStatus(400)->withJson(['errors' => $control['success']]);
+                return $response->withJson([]);
             }
         }
 
@@ -757,7 +757,7 @@ class AutoCompleteController
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $queryParams['search'],
             'fields'        => $fields,
-            'where'         => ['enabled = ?', "external_id->>'m2m' is not null", "(communication_means->>'url' is not null OR communication_means->>'email' is not null)"],
+            'where'         => ['enabled = ?', "external_id->>'m2m' is not null", "external_id->>'m2m' != ''", "(communication_means->>'url' is not null OR communication_means->>'email' is not null)"],
             'data'          => [true],
             'fieldsNumber'  => $fieldsNumber
         ]);
@@ -797,7 +797,7 @@ class AutoCompleteController
             if (isset($control['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
             } elseif (isset($control['success'])) {
-                return $response->withStatus(400)->withJson(['errors' => $control['success']]);
+                return $response->withJson([]);
             }
         }
 

@@ -87,62 +87,14 @@ if (!defined('_BASKET_VIEW')) {
 if (!defined('_MODIFY_BASKET')) {
     define('_MODIFY_BASKET', 'Het bakje wijzigen');
 }
-if (!defined('_ADD_A_NEW_BASKET')) {
-    define('_ADD_A_NEW_BASKET', 'Een nieuwe bakje aanmaken');
-}
-if (!defined('_ADD_A_GROUP_TO_BASKET')) {
-    define('_ADD_A_GROUP_TO_BASKET', 'Een nieuwe groep aan het bakje koppelen');
-}
 if (!defined('_DEL_GROUPS')) {
     define('_DEL_GROUPS', 'Groep(en) verwijderen');
 }
 if (!defined('_BASKET_NOT_USABLE')) {
     define('_BASKET_NOT_USABLE', 'Geen groep gekoppeld (het bakje kan momenteel niet gebruikt worden)');
 }
-if (!defined('_ASSOCIATED_GROUP')) {
-    define('_ASSOCIATED_GROUP', 'Aan het bakje gekoppelde groepslijst');
-}
-if (!defined('_TITLE_GROUP_BASKET')) {
-    define('_TITLE_GROUP_BASKET', 'Het bakje aan een groep koppelen');
-}
 if (!defined('_ADD_TO_BASKET')) {
     define('_ADD_TO_BASKET', 'Het bakje koppelen');
-}
-if (!defined('_TO_THE_GROUP')) {
-    define('_TO_THE_GROUP', 'aan een groep');
-}
-if (!defined('_ALLOWED_ACTIONS')) {
-    define('_ALLOWED_ACTIONS', 'Toegelaten acties');
-}
-if (!defined('_SERVICES_BASKETS')) {
-    define('_SERVICES_BASKETS', 'Dienstbakjes');
-}
-if (!defined('_USERGROUPS_BASKETS')) {
-    define('_USERGROUPS_BASKETS', 'Bakjes van de gebruikersgroepen');
-}
-if (!defined('_BASKET_RESULT_PAGE')) {
-    define('_BASKET_RESULT_PAGE', 'Resultatenlijst');
-}
-if (!defined('_ADD_THIS_GROUP')) {
-    define('_ADD_THIS_GROUP', 'De groep toevoegen');
-}
-if (!defined('_MODIFY_THIS_GROUP')) {
-    define('_MODIFY_THIS_GROUP', 'De groep wijzigen');
-}
-if (!defined('_DEFAULT_ACTION_LIST')) {
-    define('_DEFAULT_ACTION_LIST', 'Standaardactie op de lijst<br/><i>(Klik op de lijn)');
-}
-if (!defined('_NO_ACTION_DEFINED')) {
-    define('_NO_ACTION_DEFINED', 'Geen actie gedefinieerd');
-}
-if (!defined('_WAITING_VAL_LIST')) {
-    define('_WAITING_VAL_LIST', 'Lijst van de stukken die op bevestiging wachten');
-}
-if (!defined('_WAITING_QUAL_LIST')) {
-    define('_WAITING_QUAL_LIST', 'Lijst van de stukken die op kwalificatie wachten');
-}
-if (!defined('_WAITING_DISTRIB_LIST')) {
-    define('_WAITING_DISTRIB_LIST', 'Lijst van brieven die op verdeling wachten');
 }
 if (!defined('_NO_REDIRECT_RIGHT')) {
     define('_NO_REDIRECT_RIGHT', 'U hebt geen omleidingsrechten voor dit bakje');
@@ -237,9 +189,6 @@ if (!defined('_COPY_LIST')) {
 if (!defined('_PROCESS_LIST')) {
     define('_PROCESS_LIST', 'Lijst van de te verwerken brieven');
 }
-if (!defined('_CLICK_LINE_TO_VIEW')) {
-    define('_CLICK_LINE_TO_VIEW', 'Klik op een lijn om weer te geven');
-}
 if (!defined('_CLICK_LINE_TO_PROCESS')) {
     define('_CLICK_LINE_TO_PROCESS', 'Klik op een lijn om te verwerken');
 }
@@ -255,32 +204,8 @@ if (!defined('_ENTITY_UPDATE')) {
 if (!defined('_MY_ABS')) {
     define('_MY_ABS', 'Mijn afwezigheden beheren');
 }
-if (!defined('_MY_ABS_TXT')) {
-    define('_MY_ABS_TXT', 'Om uw bakjes om te leiden indien u met verlof gaat.');
-}
-if (!defined('_MY_ABS_REDIRECT')) {
-    define('_MY_ABS_REDIRECT', 'Uw brieven worden momenteel omgeleid naar');
-}
-if (!defined('_MY_ABS_DEL')) {
-    define('_MY_ABS_DEL', 'Om de omleiding te verwijderen, klik hier om te stoppen');
-}
 if (!defined('_ADMIN_ABS')) {
     define('_ADMIN_ABS', 'De afwezigheden beheren.');
-}
-if (!defined('_ADMIN_ABS_TXT')) {
-    define('_ADMIN_ABS_TXT', 'Om de brieven van de gebruiker in wacht om te leiden indien u met verlof gaat.');
-}
-if (!defined('_ADMIN_ABS_REDIRECT')) {
-    define('_ADMIN_ABS_REDIRECT', 'Omleiding van huidige afwezigheid.');
-}
-if (!defined('_ADMIN_ABS_FIRST_PART')) {
-    define('_ADMIN_ABS_FIRST_PART', 'De brieven van');
-}
-if (!defined('_ADMIN_ABS_SECOND_PART')) {
-    define('_ADMIN_ABS_SECOND_PART', 'worden momenteel omgeleid naar');
-}
-if (!defined('_ADMIN_ABS_THIRD_PART')) {
-    define('_ADMIN_ABS_THIRD_PART', '. Klik hier om de omleiding te verwijderen.');
 }
 if (!defined('_ACTIONS_DONE')) {
     define('_ACTIONS_DONE', 'Acties uitgevoerd op');
@@ -291,20 +216,11 @@ if (!defined('_PROCESSED_MAIL')) {
 if (!defined('_INDEXED_MAIL')) {
     define('_INDEXED_MAIL', 'Geïndexeerde brieven');
 }
-if (!defined('_REDIRECTED_MAIL')) {
-    define('_REDIRECTED_MAIL', 'Omgeleide brieven');
-}
-if (!defined('_PROCESS_MAIL_OF')) {
-    define('_PROCESS_MAIL_OF', 'Te verwerken brieven van');
-}
 if (!defined('_MISSING')) {
     define('_MISSING', 'Afwezig');
 }
 if (!defined('_BACK_FROM_VACATION')) {
     define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
-}
-if (!defined('_MISSING_CHOOSE')) {
-    define('_MISSING_CHOOSE', 'Wilt u verdergaan?');
 }
 if (!defined('_CHOOSE_PERSON_TO_REDIRECT')) {
     define('_CHOOSE_PERSON_TO_REDIRECT', 'Kies de persoon naar wie u deze brieven wil omleiden uit de bovenstaande lijst');
@@ -342,20 +258,8 @@ if (!defined('_CONFIG')) {
 if (!defined('_CONFIG_ACTION')) {
     define('_CONFIG_ACTION', 'Instelling van de actie');
 }
-if (!defined('_WHERE_CLAUSE_ACTION_TEXT')) {
-    define('_WHERE_CLAUSE_ACTION_TEXT', 'Bepaal een verschijningsvoorwaarde van de actie op de pagina door een Where clause (Facultatief):');
-}
 if (!defined('_IN_ACTION')) {
     define('_IN_ACTION', 'in de actie');
-}
-if (!defined('_TO_ENTITIES')) {
-    define('_TO_ENTITIES', 'Naar de diensten');
-}
-if (!defined('_TO_USERGROUPS')) {
-    define('_TO_USERGROUPS', 'Naar de gebruikersgroepen');
-}
-if (!defined('_USE_IN_MASS')) {
-    define('_USE_IN_MASS', 'Actie beschikbaar in de lijst');
 }
 if (!defined('_USE_ONE')) {
     define('_USE_ONE', 'Actie beschikbaar in de actiepagina');
@@ -371,12 +275,6 @@ if (!defined('_MUST_CHOOSE_USER')) {
 }
 if (!defined('_REDIRECT_TO_DEP_OK')) {
     define('_REDIRECT_TO_DEP_OK', 'naar een dienst');
-}
-if (!defined('_REDIRECT_TO_USER_OK')) {
-    define('_REDIRECT_TO_USER_OK', 'naar een gebruiker');
-}
-if (!defined('_SAVE_CHANGES')) {
-    define('_SAVE_CHANGES', 'De wijzigingen bewaren');
 }
 if (!defined('_VIEW_BASKETS')) {
     define('_VIEW_BASKETS', 'Mijn bakjes');
@@ -548,9 +446,6 @@ if (!defined('_ENTITY_UPDATE')) {
 }
 if (!defined('_MISSING_ADVERT_01')) {
     define('_MISSING_ADVERT_01', 'Deze account staat momenteel in modus ‘afwezig’.');
-}
-if (!defined('_TO_ENTITIES')) {
-    define('_TO_ENTITIES', 'Naar eenheden');
 }
 if (!defined('_MUST_CHOOSE_DEP')) {
     define('_MUST_CHOOSE_DEP', 'U moet een eenheid selecteren!');

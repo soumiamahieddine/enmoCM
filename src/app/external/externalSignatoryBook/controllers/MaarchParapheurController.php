@@ -512,8 +512,8 @@ class MaarchParapheurController
                         ]);
                         if (!empty($userInfos)) {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['id'];
-                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $userInfos['firstname'] . ' ' . $userInfos['lastname'];
                         }
+                        $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $state['noteCreatorName'];
                     }
                     if (!empty($state['signatoryUserId'])) {
                         $signatoryUser = UserModel::getByExternalId([
@@ -963,17 +963,29 @@ class MaarchParapheurController
 
     public function getWorkflow(Request $request, Response $response, array $args)
     {
-        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'external_id']]);
-        if (empty($attachment)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
-        }
-        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
+        $queryParams = $request->getQueryParams();
+
+        if ($queryParams['type'] == 'resource') {
+            if (!ResController::hasRightByResId(['resId' => [$args['id']], 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
+            }
+            $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['external_id']]);
+            if (empty($resource)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Resource does not exist']);
+            }
+        } else {
+            $resource = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'external_id']]);
+            if (empty($resource)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
+            }
+            if (!ResController::hasRightByResId(['resId' => [$resource['res_id_master']], 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Resource does not exist']);
+            }
         }
 
-        $externalId = json_decode($attachment['external_id'], true);
+        $externalId = json_decode($resource['external_id'], true);
         if (empty($externalId['signatureBookId'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Attachment is not linked to Maarch Parapheur']);
+            return $response->withStatus(400)->withJson(['errors' => 'Resource is not linked to Maarch Parapheur']);
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);

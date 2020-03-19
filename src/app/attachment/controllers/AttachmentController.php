@@ -563,6 +563,30 @@ class AttachmentController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
+    public function getByChrono(Request $request, Response $response, array $args)
+    {
+        $queryParams = $request->getQueryParams();
+        if (empty($queryParams['chrono'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query chrono is not set']);
+        }
+
+        $attachment = AttachmentModel::get([
+            'select'    => ['res_id as "resId"', 'res_id_master as "resIdMaster"', 'status', 'title'],
+            'where'     => ['identifier = ?'],
+            'data'      => [$queryParams['chrono']]
+        ]);
+        if (empty($attachment) || in_array($attachment[0]['status'], ['DEL', 'OBS'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
+        }
+        $attachment = $attachment[0];
+
+        if (!ResController::hasRightByResId(['resId' => [$attachment['resIdMaster']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
+        }
+
+        return $response->withJson($attachment);
+    }
+
     public function getAttachmentsTypes(Request $request, Response $response)
     {
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -733,10 +757,9 @@ class AttachmentController
                 if (!empty($id['errors'])) {
                     return ['errors' => $id['errors']];
                 }
-                ConvertPdfController::convert([
-                    'resId'     => $id,
-                    'collId'    => 'attachments_coll'
-                ]);
+                $customId = CoreConfigModel::getCustomId();
+                $customId = empty($customId) ? 'null' : $customId;
+                exec("php src/app/convert/scripts/ConvertPdfScript.php --customId {$customId} --resId {$id} --type attachment --userId {$GLOBALS['id']} > /dev/null &");
             }
         }
 

@@ -206,8 +206,13 @@ if ($nbMeta > 0) {
                 $json_txt = substr($json_txt, 0, -1);
                 $json_txt .= '],';
 
-                $where_request .=" (department_number_id in (:department_number)) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":department_number" => $_REQUEST['department_number_chosen']));
+                $sDepartment = join('|', $_REQUEST['department_number_chosen']);
+                $sDepartment = str_replace(['2A', '2B'], '20', $sDepartment);
+
+                $where_request .= " ((res_id in (SELECT res_id FROM resource_contacts rc LEFT JOIN contacts ON rc.item_id = contacts.id 
+                WHERE type = 'contact' AND mode = 'sender' AND (address_country ILIKE 'FRANCE' OR address_country = '' OR address_country IS NULL)
+                AND address_postcode similar to :department_number))) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":department_number" => '('.$sDepartment . ')%'));
             }
             // NOTES
             elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes'])) {

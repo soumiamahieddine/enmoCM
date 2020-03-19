@@ -142,8 +142,8 @@ export class DoctypesAdministrationComponent implements OnInit {
                 }, 0);
                 $j('#jstree').jstree('select_node', this.doctypes[0]);
                 this.loading = false;
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 

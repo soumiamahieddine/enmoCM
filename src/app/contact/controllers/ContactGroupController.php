@@ -48,6 +48,8 @@ class ContactGroupController
         $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
         if (empty($contactsGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contacts group not found']);
+        } elseif (!$contactsGroup['public'] && $contactsGroup['owner'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
@@ -245,13 +247,11 @@ class ContactGroupController
         $position = 0;
         foreach ($list as $listItem) {
             $contact = ContactModel::getById([
-                'select'    => [
-                    'id', 'firstname', 'lastname', 'email', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
-                ],
+                'select'    => ['id', 'firstname', 'lastname', 'email', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode', 'enabled'],
                 'id'        => $listItem['contact_id']
             ]);
 
-            if (!empty($contact)) {
+            if (!empty($contact) && $contact['enabled']) {
                 $email = $contact['email'];
                 $contact = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'position' => $position, 'color' => true])['contact'];
                 $contact['email'] = $email;

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { tap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -18,20 +18,21 @@ export class FolderCreateModalComponent implements OnInit {
 
     constructor(
         public http: HttpClient, 
-        private notify: NotificationService, 
+        private notify: NotificationService,
+        @Inject(MAT_DIALOG_DATA) public data: any, 
         public dialogRef: MatDialogRef<FolderCreateModalComponent>
     ) { }
 
     ngOnInit(): void { 
-
+        this.folderName = this.data.folderName !== undefined ? this.data.folderName : '';
     }
 
     onSubmit() {
         this.loading = true;
         this.http.post("../../rest/folders", { label: this.folderName }).pipe(
-            tap(() => {
+            tap((data : any) => {
                 this.notify.success(this.lang.folderAdded);
-                this.dialogRef.close('success');
+                this.dialogRef.close(data.folder);
             }),
             finalize(() => this.loading = false),
             catchError((err) => {

@@ -92,6 +92,13 @@ class MessageExchangeController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $aMessageReview = [];
+        $messageReview  = MessageExchangeModel::get(['where' => ['reference = ?'], 'data' => [$message['reference'].'_Notification'], 'orderBy' => ['date asc']]);
+        foreach ($messageReview as $review) {
+            $oMessageReview = json_decode($review['data']);
+            $aMessageReview[] = $oMessageReview->Comment[0]->value;
+        }
+
         $type = $message['type'];
         if (!empty($message['receptionDate'])) {
             $reference = $message['reference'] . '_Reply';
@@ -156,16 +163,18 @@ class MessageExchangeController
         $sender = $user . ' (' . $message['sender_org_name'] . ')';
 
         if ($message['status'] == 'S') {
-            $status = 'sent';
+            $status = 'SENT';
         } elseif ($message['status'] == 'E') {
-            $status = 'error';
+            $status = 'ERROR';
         } elseif ($message['status'] == 'W') {
-            $status = 'wait';
+            $status = 'WAIT';
         } else {
-            $status = 'draft';
+            $status = 'DRAFT';
         }
 
+        $userInfo = UserModel::getByLogin(['login' => $message['account_id'], 'select' => ['id']]);
         $messageExchange = [
+            'userId'                    => $userInfo['id'],
             'messageId'                 => $message['message_id'],
             'creationDate'              => $message['date'],
             'type'                      => $messageType,
@@ -184,7 +193,8 @@ class MessageExchangeController
             'attachments'               => $attachments,
             'resMasterAttached'         => $resMasterAttached,
             'disposition'               => $disposition,
-            'reference'                 => $message['reference']
+            'reference'                 => $message['reference'],
+            'messageReview'             => $aMessageReview
         ];
 
         return $response->withJson(['messageExchange' => $messageExchange]);

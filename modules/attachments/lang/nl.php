@@ -35,9 +35,6 @@ if (!defined('_ATTACHED_DOC')) {
 if (!defined('_INDEX_ATTACHMENT')) {
     define('_INDEX_ATTACHMENT', 'Een bijlage indexeren');
 }
-if (!defined('_INDEX_ATTACHMENT_DESC')) {
-    define('_INDEX_ATTACHMENT_DESC', 'Een bijlage indexeren');
-}
 if (!defined('_VIEW_ATTACHMENTS')) {
     define('_VIEW_ATTACHMENTS', 'De bijlagen bekijken');
 }
@@ -47,21 +44,7 @@ if (!defined('_VIEW_ATTACHMENTS_DESC')) {
 if (!defined('_MANAGE_ATTACHMENTS')) {
     define('_MANAGE_ATTACHMENTS', 'De bijlagen beheren');
 }
-if (!defined('_GENERATE_OFFICE_ATTACHMENT')) {
-    define('_GENERATE_OFFICE_ATTACHMENT', 'OFFICE genereren');
-}
-if (!defined('_GENERATE_HTML_ATTACHMENT')) {
-    define('_GENERATE_HTML_ATTACHMENT', 'HTML genereren');
-}
-if (!defined('_ATTACH_FROM_HDD')) {
-    define('_ATTACH_FROM_HDD', 'Een bijlage / antwoord toevoegen vanuit uw harde schijf');
-}
-if (!defined('_GENERATE_ATTACHMENT_FROM')) {
-    define('_GENERATE_ATTACHMENT_FROM', 'Een bijlage / antwoord toevoegen vanuit uw model in formaat');
-}
-if (!defined('_EDIT_ATTACHMENTS_FROM_DETAILS')) {
-    define('_EDIT_ATTACHMENTS_FROM_DETAILS', 'De bijlagen beheren vanuit de detailfiche');
-}
+
 if (!defined('_CREATED')) {
     define('_CREATED', 'Aangemaakt op');
 }
@@ -143,9 +126,6 @@ if (!defined('_ALREADY_MODEL_SELECTED')) {
 if (!defined('_MODIFY_ANSWER')) {
     define('_MODIFY_ANSWER', 'Een bijlage/een bijgevoegd document wijzigen');
 }
-if (!defined('_CREATE_NEW_ATTACHMENT_VERSION')) {
-    define('_CREATE_NEW_ATTACHMENT_VERSION', 'Een nieuwe versie aanmaken?');
-}
 if (!defined('_ATTACH_UPDATED')) {
     define('_ATTACH_UPDATED', 'Bijlage bijgewerkt');
 }
@@ -155,17 +135,11 @@ if (!defined('_FINAL_VERSION')) {
 if (!defined('_SHOW_PREVIOUS_VERSION')) {
     define('_SHOW_PREVIOUS_VERSION', 'De vorige versies bekijken');
 }
-if (!defined('_CREATE_ATTACHMENTS_FROM_DETAILS')) {
-    define('_CREATE_ATTACHMENTS_FROM_DETAILS', 'Bijlagen vanuit de detailfiche aanmaken');
-}
 if (!defined('_DELETE_ATTACHMENTS')) {
     define('_DELETE_ATTACHMENTS', 'De bijlagen verwijderen');
 }
 if (!defined('_MODIFY_ATTACHMENTS')) {
     define('_MODIFY_ATTACHMENTS', 'De bijlagen wijzigen');
-}
-if (!defined('_ALL_ATTACHMENT_TYPES')) {
-    define('_ALL_ATTACHMENT_TYPES', 'Alle bijlagen');
 }
 if (!defined('_ATTACHEMENTS')) {
     define('_ATTACHEMENTS', 'Bijlagen');
@@ -176,20 +150,11 @@ if (!defined('_WAYBILL')) {
 if (!defined('_VIEW_MAIN_DOC')) {
     define('_VIEW_MAIN_DOC', 'De belangrijkste briefwisseling bekijken');
 }
-if (!defined('_RETRIEVE_BACK_UP')) {
-    define('_RETRIEVE_BACK_UP', 'Hername van het laatste document omdat dit niet correct afgesloten was');
-}
-if (!defined('_DEST_USER_PJ')) {
-    define('_DEST_USER_PJ', 'Ontvanger');
-}
 if (!defined('_NO_PREVIEW_AVAILABLE')) {
     define('_NO_PREVIEW_AVAILABLE', 'Geen overzicht beschikbaar');
 }
 if (!defined('_FILE_HAS_NO_PDF')) {
     define('_FILE_HAS_NO_PDF', 'Er bestaat geen PDF-versie van het bestand.');
-}
-if (!defined('_MODEL_NOT_EDITED')) {
-    define('_MODEL_NOT_EDITED', 'Niet bijgewerkt model');
 }
 if (!defined('_RECONCILIATION')) {
     define('_RECONCILIATION', 'Aan een brief koppelen');
@@ -202,12 +167,6 @@ if (!defined('_RECONCILIATION_LABEL')) {
 }
 if (!defined('_RECONCILIATION_MAIL')) {
     define('_RECONCILIATION_MAIL', 'Benadering van de brief');
-}
-if (!defined('_MULTIPLE_RESPONSE_PROJECT_CHRONO')) {
-    define('_MULTIPLE_RESPONSE_PROJECT_CHRONO', 'Er bestaan meerdere antwoordontwerpen voor de geselecteerde post. Geef het chrononummer in van het antwoordontwerp');
-}
-if (!defined('_MULTIPLE_RESPONSE_PROJECT_DEST')) {
-    define('_MULTIPLE_RESPONSE_PROJECT_DEST', 'Er bestaan meerdere antwoordontwerpen voor de geselecteerde post. Geef een bestemmeling in');
 }
 if (!defined('_NO_RESPONSE_PROJECT')) {
     define('_NO_RESPONSE_PROJECT', 'De geselecteerde brief bevat geen enkel antwoordontwerp. Geef de informatie manueel in');
@@ -224,12 +183,7 @@ if (!defined('_CHOOSE_ATTACH')) {
 if (!defined('_NO_DEST_INFOS')) {
     define('_NO_DEST_INFOS', 'Geef een bestemmeling manueel in');
 }
-if (!defined('_GENERATE_CHRONO_NUMBER')) {
-    define('_GENERATE_CHRONO_NUMBER', 'Een chrononummer aanmaken');
-}
-if (!defined('_CLOSE_INCOMING')) {
-    define('_CLOSE_INCOMING', 'Doelpost(en) sluiten');
-}
+
 if (!defined('_MAILING_INFO_1')) {
     define('_MAILING_INFO_1', '<b>Publipostage geactiveerd</b>');
 }

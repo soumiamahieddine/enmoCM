@@ -19,22 +19,12 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('_MEP_VERSION')) {
-    define('_MEP_VERSION', 'Maarch v19.04');
-}
-
 //if (!defined("_ID_TO_DISPAY")) define("_ID_TO_DISPAY", "res_id"); // value res_id || chrono_number
 if (!defined('_ID_TO_DISPLAY')) {
     define('_ID_TO_DISPLAY', 'res_id');
 } // value res_id || chrono_number
 
 /************** Administration **************/
-if (!defined('_SVR')) {
-    define('_SVR', 'SVR');
-}
-if (!defined('_SVA')) {
-    define('_SVA', 'SVA');
-}
 if (!defined('_ADDED')) {
     define('_ADDED', 'added');
 }
@@ -852,9 +842,6 @@ if (!defined('_CSS_STYLE')) {
 if (!defined('_CHOOSE_STYLE')) {
     define('_CHOOSE_STYLE', 'Choose a style');
 }
-if (!defined('_DEFAULT_STYLE')) {
-    define('_DEFAULT_STYLE', 'Default style');
-}
 
 /********************** colors style ***************************/
 if (!defined('_BLACK')) {
@@ -903,34 +890,6 @@ if (!defined('_PURPLE')) {
 /************** Sub-folders : List + Form**************/
 if (!defined('_SUBFOLDER')) {
     define('_SUBFOLDER', 'sub-folder');
-}
-
-if (!defined('_ADD_SUBFOLDER')) {
-    define('_ADD_SUBFOLDER', 'Add a new sub-folder');
-}
-if (!defined('_THE_SUBFOLDER')) {
-    define('_THE_SUBFOLDER', 'The new sub-folder');
-}
-if (!defined('_SUBFOLDER_MODIF')) {
-    define('_SUBFOLDER_MODIF', 'Sub-folder modification');
-}
-if (!defined('_SUBFOLDER_CREATION')) {
-    define('_SUBFOLDER_CREATION', 'Sub-folder creation');
-}
-if (!defined('_SUBFOLDER_ID_PB')) {
-    define('_SUBFOLDER_ID_PB', 'There is a problem with the sub-folder ID');
-}
-if (!defined('_SUBFOLDER_ADDED')) {
-    define('_SUBFOLDER_ADDED', 'New sub-folder addition');
-}
-if (!defined('_NEW_SUBFOLDER')) {
-    define('_NEW_SUBFOLDER', 'New sub-folder');
-}
-if (!defined('_STRUCTURE_MANDATORY')) {
-    define('_STRUCTURE_MANDATORY', 'The sub-folder is mandatory');
-}
-if (!defined('_SUBFOLDER_DESC_MISSING')) {
-    define('_SUBFOLDER_DESC_MISSING', "It's missing the sub-folder description");
 }
 
 if (!defined('_ATTACH_STRUCTURE')) {
@@ -1791,21 +1750,6 @@ if (!defined('_CHOOSE_TYPE')) {
     define('_CHOOSE_TYPE', 'Choose a type');
 }
 
-if (!defined('_FILE_LOADED_BUT_NOT_VISIBLE')) {
-    define('_FILE_LOADED_BUT_NOT_VISIBLE', 'The file is loaded and ready to be saved on the server.<br/>');
-}
-if (!defined('_ONLY_FILETYPES_AUTHORISED')) {
-    define('_ONLY_FILETYPES_AUTHORISED', 'Only the following files can be displayed in this window');
-}
-if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) {
-    define('_PROBLEM_LOADING_FILE_TMP_DIR', 'problem during the file loading on the temporary folder of the server');
-}
-if (!defined('_NO_FILE_SELECTED')) {
-    define('_NO_FILE_SELECTED', 'No loaded file');
-}
-if (!defined('_DOWNLOADED_FILE')) {
-    define('_DOWNLOADED_FILE', 'Loaded file');
-}
 if (!defined('_WRONG_FILE_TYPE')) {
     define('_WRONG_FILE_TYPE', 'This kind of file is not allowed');
 }
@@ -1824,9 +1768,6 @@ if (!defined('_APA_COLL')) {
 }
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'List');
-}
-if (!defined('_LOGS_LIST')) {
-    define('_LOGS_LIST', 'Logs list');
 }
 
 /********* Contacts ************/
@@ -2548,9 +2489,6 @@ if (!defined('_QUICKLAUNCH')) {
 if (!defined('_SHOW_DETAILS_DOC')) {
     define('_SHOW_DETAILS_DOC', 'See the document details');
 }
-if (!defined('_VISIBLEBY')) {
-    define('_VISIBLEBY', 'Visible by');
-}
 if (!defined('_VIEW_DOC_FULL')) {
     define('_VIEW_DOC_FULL', 'see the document');
 }
@@ -2592,9 +2530,6 @@ if (!defined('_CLEAR_FORM')) {
     define('_CLEAR_FORM', 'Clear the form');
 }
 
-if (!defined('_MAX_SIZE_UPLOAD_REACHED')) {
-    define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
-}
 if (!defined('_NOT_ALLOWED')) {
     define('_NOT_ALLOWED', 'Forbidden');
 }

@@ -39,14 +39,6 @@ if (!defined("_AVIS_USER_INFO")) {
     define("_AVIS_USER_INFO", "Pour information (avis)");
 }
 
-if (!defined("_RECOMMENDATION_USER")) {
-    define("_RECOMMENDATION_USER", "Personne pour avis");
-}
-
-if (!defined("_RECOMMENDATION_NOTE")) {
-    define("_RECOMMENDATION_NOTE", "Motif de l'avis");
-}
-
 if (!defined("_OPINION_LIMIT_DATE")) {
     define("_OPINION_LIMIT_DATE", "Date limite de l'avis");
 }
@@ -67,10 +59,6 @@ if (!defined("_SEND_TO_AVIS_WF_DESC")) {
     define("_SEND_TO_AVIS_WF_DESC", "Ouvre une modal permettant de configurer un circuit d'avis pour le courrier.");
 }
 
-if (!defined("_WAITING_FOR_AVIS")) {
-    define("_WAITING_FOR_AVIS", "En attente d'avis");
-}
-
 if (!defined("_PROCEED_WORKFLOW_AVIS")) {
     define("_PROCEED_WORKFLOW_AVIS", "Emettre un avis (séquentiel)");
 }
@@ -87,54 +75,18 @@ if (!defined("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC")) {
     define("_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC", "Met à jour la date d'émission d'avis de l'utilisateur présent en avis dans la liste de diffusion du courrier ('process_date' de la table listinstance).");
 }
 
-if (!defined("_EMPTY_AVIS_WORKFLOW")) {
-    define("_EMPTY_AVIS_WORKFLOW", "Aucun circuit d'avis paramétré");
-}
-
 if (!defined("_AVIS_SENT")) {
     define("_AVIS_SENT", "Avis donné");
-}
-
-if (!defined("_AVIS_NB")) {
-    define("_AVIS_NB", "Avis n°");
-}
-
-if (!defined("_NB_AVIS")) {
-    define("_NB_AVIS", "Nombre d'Avis");
 }
 
 if (!defined("_DOCUMENTS_LIST_WITH_AVIS")) {
     define("_DOCUMENTS_LIST_WITH_AVIS", "Liste des courriers avec avis");
 }
 
-if (!defined("_NB_AVIS_SENT")) {
-    define("_NB_AVIS_SENT", "Avis donné(s)");
-}
-
 if (!defined("_WRITTEN_BY")) {
     define("_WRITTEN_BY", "Rédigé par");
 }
 
-if (!defined("_AVIS_NOTE")) {
-    define("_AVIS_NOTE", "Description de la demande");
-}
-
 if (!defined("_VALIDATE_BY")) {
     define("_VALIDATE_BY", "Validé par");
-}
-
-if (!defined("_AVIS_ROLE_UNAVAILABLE")) {
-    define("_AVIS_ROLE_UNAVAILABLE", "Le rôle \"pour avis\" n'est pas disponible dans la liste de diffusion");
-}
-
-if (!defined("_ADD_AVIS_ROLE")) {
-    define("_ADD_AVIS_ROLE", "Ajouter un conseiller");
-}
-
-if (!defined("_ADD_AVIS_MODEL")) {
-    define("_ADD_AVIS_MODEL", "Utiliser un modèle de circuit d'avis");
-}
-
-if (!defined("_AVIS_BY")) {
-    define("_AVIS_BY", "Avis donné par");
 }

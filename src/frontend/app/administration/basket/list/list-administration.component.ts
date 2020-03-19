@@ -234,7 +234,7 @@ export class ListAdministrationComponent implements OnInit {
             this.displayedSecondaryData.push(this.availableData[indexData]);
             this.availableData.splice(indexData, 1);
         });
-        this.selectedListEvent = this.basketGroup.list_event === null ? 'documentDetails' : this.basketGroup.list_event;
+        this.selectedListEvent = this.basketGroup.list_event;
         this.selectedListEventClone = this.selectedListEvent;
 
         if (this.basketGroup.list_event === 'processDocument') {
@@ -309,7 +309,6 @@ export class ListAdministrationComponent implements OnInit {
     }
 
     saveTemplate() {
-        this.selectedListEvent = this.selectedListEvent === 'documentDetails' ? null : this.selectedListEvent;
         let template: any = [];
         this.displayedSecondaryData.forEach((element: any) => {
             template.push(
@@ -325,7 +324,6 @@ export class ListAdministrationComponent implements OnInit {
             .subscribe(() => {
                 this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
                 this.basketGroup.list_display = template;
-                this.selectedListEvent = this.selectedListEvent === null ? 'documentDetails' : this.selectedListEvent;
                 this.basketGroup.list_event = this.selectedListEvent;
                 this.selectedListEventClone = this.selectedListEvent;
                 this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));

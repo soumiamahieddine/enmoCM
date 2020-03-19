@@ -151,15 +151,6 @@
 		<parameter name="page" value="load_listinstance"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="load_listmodel">
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-		<parameter name="page" value="load_listmodel"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="load_listmodel">
-		<parameter name="page" value="load_listmodel"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
 
 	<requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="manage_listmodel">
 		<parameter name="page" value="manage_listmodel"/>

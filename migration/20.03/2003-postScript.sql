@@ -1,7 +1,7 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
--- Model migration script - 19.04 to 20.01 (Run this file after migrate.sh) --
+-- Model migration script - 19.04 to 20.03 (Run this file after migrate.sh) --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
@@ -162,10 +162,8 @@ SELECT r.res_id,
        r.work_batch,
        r.doc_date,
        r.external_id,
-       r.external_link,
        r.departure_date,
        r.opinion_limit_date,
-       r.department_number_id,
        r.barcode,
        r.initiator,
        r.destination,

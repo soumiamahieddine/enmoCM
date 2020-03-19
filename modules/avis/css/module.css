@@ -34,39 +34,9 @@
     width : 100%;
 }
 
-#avisUserList{
-    width:45%;
-    float:left;
-}
-
 .droptarget.currentVis{
     color : #135F7F;
     border: solid 2px #135F7F;
-}
-
-.avisUserInfo,.avisUserStatus,.avisUserConsigne,.avisUserAction{
-	display: table-cell;
-	vertical-align: middle;
-}
-
-.avisUserStatus{
-	width: 5%;
-}
-.vised .avisUserStatus{
-	opacity: 1;
-}
-.avisUserInfo{
-	width: 55%;
-	font-weight: bold;
-}
-
-.avisUserInfo .nbRes{
-	background-color: grey;
-	font-weight: normal;
-}
-
-.avisUserInfo sub{
-	font-weight: normal;
 }
 
 .droptarget:hover.vised #dropZone{
@@ -102,17 +72,6 @@
 }
 #dropZone:active{
 	cursor: grabbing;
-}
-.avisUserConsigne{
-	width: 30%;
-}
-.avisUserAction{
-	color : red;
-	text-align: center;
-	width: 5%;
-}
-.avisUserAction i{
-	cursor: pointer;
 }
 
 .chosen-container-single .chosen-default {

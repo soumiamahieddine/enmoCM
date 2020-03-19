@@ -17,11 +17,5 @@
         <parameter name="page" value="templates_management_controler"/>
         <parameter name="module" value="templates"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="file_iframe" >
-        <parameter name="page" value="file_iframe"/>
-        <parameter name="module" value="templates"/>
-        <parameter name="display" value="true"/>
-        <parameter name="model_id"/>
-    </requestDefinition>
 
 </requestDefinitions>

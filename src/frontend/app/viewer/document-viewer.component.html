@@ -58,6 +58,10 @@
                         <mat-icon color="primary" class="fas fa-external-link-alt"></mat-icon>
                         <span>{{lang.openInExternalModal}}</span>
                     </button>
+                    <button mat-menu-item *ngIf="(file.contentView !== undefined || base64 !== null) && resId != null && mode !== 'attachment' && externalId.signatureBookId" (click)="openMaarchParapheurWorkflow()">
+                        <mat-icon color="primary" class="fas fa-list-ol"></mat-icon>
+                        <span>{{lang.externalVisaWorkflow}}</span>
+                    </button>
                     <button mat-menu-item *ngIf="editMode && resId === null" (click)="docToUpload.click()">
                         <mat-icon color="primary" class="fa fa-file-upload"></mat-icon>
                         <span>{{lang.uploadAnOtherFile}}</span>
@@ -117,7 +121,7 @@
 <button mat-raised-button 
     *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && (privilegeService.hasCurrentUserPrivilege('sign_document') || this.headerService.user.id == file.creatorId)" 
     color="warn"
-    [title]="lang.unsign" style="position: fixed;z-index: 1;bottom: 30px;right: 70px;"
+    [title]="lang.unsign" style="position: fixed;z-index: 1;bottom: 100px;right: 150px;"
     (click)="unsignMainDocument()">
     {{lang.removeSignature}}
 </button>

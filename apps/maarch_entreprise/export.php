@@ -1,17 +1,15 @@
 <?php
-if($_REQUEST['origin'] != 'graph'){
+if ($_REQUEST['origin'] != 'graph') {
     require_once('core/class/ExportControler.php');
     $export = new ExportControler();
 }
 if (!empty($_SESSION['error'])) {
-    
     ?>
     <script language="javascript" >
         window.opener.location.reload();
         window.close();
     </script>
     <?php
-    
 } else {
     header('Pragma: public');
     header('Expires: 0');

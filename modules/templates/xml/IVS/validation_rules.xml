@@ -33,9 +33,4 @@
     	<parameter name="module" type="identifier" />
     </validationRule>
 
-    <validationRule name="file_iframe" extends="standardForm" mode="error">
-    	<parameter name="model_id" type="integer" />
-    	<parameter name="module" type="identifier" />
-    </validationRule>
-
 </validationRules>

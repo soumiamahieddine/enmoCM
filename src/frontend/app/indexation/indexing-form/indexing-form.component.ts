@@ -6,7 +6,7 @@ import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AppService } from '../../../service/app.service';
 import { tap, catchError, exhaustMap, filter } from 'rxjs/operators';
-import { of} from 'rxjs';
+import { of } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
@@ -484,9 +484,6 @@ export class IndexingFormComponent implements OnInit {
                             }
                         });
                         elem.event = 'loadDiffusionList';
-                        if (elem.default_value !== null && !this.adminMode) {
-                            this.loadDiffusionList(elem, elem.default_value);
-                        }
                         elem.allowedEntities = elem.values.filter((val: any) => val.disabled === false).map((entities: any) => entities.id);
                     }
                     resolve(true);
@@ -1013,8 +1010,6 @@ export class IndexingFormComponent implements OnInit {
     }
 
     loadDiffusionList(field: any, value: any) {
-        setTimeout(() => {
-            this.appDiffusionsList.loadListModel(value);
-        }, 0);
+        this.appDiffusionsList.loadListModel(value);
     }
 }

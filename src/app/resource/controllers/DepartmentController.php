@@ -126,7 +126,7 @@ class DepartmentController
     public static function getById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::stringType($aArgs, ['id']);
 
         if (empty(self::FRENCH_DEPARTMENTS[$aArgs['id']])) {
             return '';

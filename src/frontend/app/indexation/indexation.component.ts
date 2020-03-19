@@ -94,7 +94,7 @@ export class IndexationComponent implements OnInit {
         this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
             const refresh = paramMap.get('refresh');
             this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu', 'form');
-            this.headerService.sideBarButton = {icon: 'fa fa-home', label: this.lang.backHome, route : '/home'};
+            this.headerService.sideBarButton = { icon: 'fa fa-home', label: this.lang.backHome, route: '/home' };
             if (refresh) {
                 this.appDocumentViewer.templateListForm.reset();
                 this.appDocumentViewer.file = {
@@ -187,6 +187,7 @@ export class IndexationComponent implements OnInit {
 
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
+            this.actionService.loading = true;
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
 
             formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
@@ -204,6 +205,11 @@ export class IndexationComponent implements OnInit {
                         this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });
 
                         this.dialogRef.afterClosed().pipe(
+                            tap((data: string) => {
+                                if (data !== 'ok') {
+                                    this.actionService.loading = false;
+                                }
+                            }),
                             filter((data: string) => data === 'ok'),
                             tap(() => {
                                 this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);

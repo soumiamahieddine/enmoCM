@@ -332,10 +332,12 @@ class ListTemplateController
                     }
 
                     $listTemplateItems[$itemKey]['hasPrivilege'] = true;
-                    if ($listTemplate['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['item_id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['item_id']])) {
-                        $listTemplateItems[$itemKey]['hasPrivilege'] = false;
-                    } elseif ($listTemplate['type'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['item_id']])) {
-                        $listTemplateItems[$itemKey]['hasPrivilege'] = false;
+                    if (empty($queryParams['maarchParapheur'])) {
+                        if ($listTemplate['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['item_id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['item_id']])) {
+                            $listTemplateItems[$itemKey]['hasPrivilege'] = false;
+                        } elseif ($listTemplate['type'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['item_id']])) {
+                            $listTemplateItems[$itemKey]['hasPrivilege'] = false;
+                        }
                     }
 
                     $externalId = json_decode($user['external_id'], true);
@@ -343,7 +345,8 @@ class ListTemplateController
                         $userExists = MaarchParapheurController::userExists(['userId' => $externalId['maarchParapheur']]);
                         if (!empty($userExists)) {
                             $listTemplateItems[$itemKey]['externalId']['maarchParapheur'] = $externalId['maarchParapheur'];
-                            $listTemplateItems[$itemKey]['labelToDisplay'] = $userExists['firstname'] . ' ' . $userExists['lastname'];
+                            $listTemplateItems[$itemKey]['descriptionToDisplay']          = $userExists['email'];
+                            $listTemplateItems[$itemKey]['labelToDisplay']                = $userExists['firstname'] . ' ' . $userExists['lastname'];
                         }
                     }
                 }

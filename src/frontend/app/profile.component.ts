@@ -273,8 +273,7 @@ export class ProfileComponent implements OnInit {
                     this.dataSourceGroupsList.sort = this.sortGroupsList;
                 }, 0);
             }, (err) => {
-                console.log(err);
-                location.href = "index.php";
+                this.notify.handleErrors(err);
             });
     }
 
