@@ -83,6 +83,7 @@ $app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\Attachmen
 $app->put('/attachments/{id}/sign', \SignatureBook\controllers\SignatureBookController::class . ':signAttachment');
 $app->put('/attachments/{id}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignAttachment');
 $app->post('/attachments/{id}/mailing', \Attachment\controllers\AttachmentController::class . ':getMailingById');
+$app->get('/attachmentsInformations', \Attachment\controllers\AttachmentController::class . ':getByChrono');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
 
 //AutoComplete
