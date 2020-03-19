@@ -38,55 +38,60 @@ class SearchController
     {
         $queryParams = $request->getQueryParams();
 
-        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $entities = array_column($entities, 'id');
-        $entities = empty($entities) ? [0] : $entities;
+        if ($GLOBALS['userId'] == 'superadmin') {
+            $whereClause = '1=1';
+            $dataClause = [];
+        } else {
+            $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+            $entities = array_column($entities, 'id');
+            $entities = empty($entities) ? [0] : $entities;
 
-        $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
-        $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
+            $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
+            $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
 
-        $whereClause = "(res_id in (select res_id from users_followed_resources where user_id = ?)) OR ({$foldersClause})";
-        $dataClause = [$GLOBALS['id'], $entities, $GLOBALS['id']];
+            $whereClause = "(res_id in (select res_id from users_followed_resources where user_id = ?)) OR ({$foldersClause})";
+            $dataClause = [$GLOBALS['id'], $entities, $GLOBALS['id']];
 
-        $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId'], 'select' => ['where_clause']]);
-        $groupsClause = '';
-        foreach ($groups as $key => $group) {
-            if (!empty($group['where_clause'])) {
-                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'login' => $GLOBALS['userId']]);
-                if ($key > 0) {
-                    $groupsClause .= ' or ';
+            $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId'], 'select' => ['where_clause']]);
+            $groupsClause = '';
+            foreach ($groups as $key => $group) {
+                if (!empty($group['where_clause'])) {
+                    $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'login' => $GLOBALS['userId']]);
+                    if ($key > 0) {
+                        $groupsClause .= ' or ';
+                    }
+                    $groupsClause .= "({$groupClause})";
                 }
-                $groupsClause .= "({$groupClause})";
             }
-        }
-        if (!empty($groupsClause)) {
-            $whereClause .= " OR ({$groupsClause})";
-        }
+            if (!empty($groupsClause)) {
+                $whereClause .= " OR ({$groupsClause})";
+            }
 
-        $baskets = BasketModel::getBasketsByLogin(['login' => $GLOBALS['userId']]);
-        $basketsClause = '';
-        foreach ($baskets as $basket) {
-            if (!empty($basket['basket_clause'])) {
-                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $GLOBALS['userId']]);
-                if (!empty($basketsClause)) {
-                    $basketsClause .= ' or ';
+            $baskets = BasketModel::getBasketsByLogin(['login' => $GLOBALS['userId']]);
+            $basketsClause = '';
+            foreach ($baskets as $basket) {
+                if (!empty($basket['basket_clause'])) {
+                    $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $GLOBALS['userId']]);
+                    if (!empty($basketsClause)) {
+                        $basketsClause .= ' or ';
+                    }
+                    $basketsClause .= "({$basketClause})";
                 }
-                $basketsClause .= "({$basketClause})";
             }
-        }
-        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $GLOBALS['id']]);
-        foreach ($assignedBaskets as $basket) {
-            if (!empty($basket['basket_clause'])) {
-                $basketOwner = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
-                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $basketOwner['user_id']]);
-                if (!empty($basketsClause)) {
-                    $basketsClause .= ' or ';
+            $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $GLOBALS['id']]);
+            foreach ($assignedBaskets as $basket) {
+                if (!empty($basket['basket_clause'])) {
+                    $basketOwner = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
+                    $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $basketOwner['user_id']]);
+                    if (!empty($basketsClause)) {
+                        $basketsClause .= ' or ';
+                    }
+                    $basketsClause .= "({$basketClause})";
                 }
-                $basketsClause .= "({$basketClause})";
             }
-        }
-        if (!empty($basketsClause)) {
-            $whereClause .= " OR ({$basketsClause})";
+            if (!empty($basketsClause)) {
+                $whereClause .= " OR ({$basketsClause})";
+            }
         }
 
 
