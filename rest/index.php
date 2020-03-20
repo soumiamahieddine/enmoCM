@@ -153,6 +153,7 @@ $app->get('/civilities', \Contact\controllers\ContactController::class . ':getCi
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
 $app->get('/convertedFile/{filename}', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileByFilename');
+$app->post('/convertedFile/encodedFile', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileFromEncodedFile');
 
 //ContentManagement
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
