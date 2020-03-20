@@ -24,7 +24,7 @@ use User\models\UserModel;
 
 class MessageExchangeController
 {
-    public static function getByResId(Request $request, Response $response, array $args)
+    public function getByResId(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
@@ -73,7 +73,7 @@ class MessageExchangeController
         return $response->withJson(['messageExchanges' => $messages]);
     }
 
-    public static function getById(Request $request, Response $response, array $args)
+    public function getById(Request $request, Response $response, array $args)
     {
         if (!Validator::stringType()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query param id is not a string']);
@@ -200,7 +200,7 @@ class MessageExchangeController
         return $response->withJson(['messageExchange' => $messageExchange]);
     }
 
-    public static function getArchiveContentById(Request $request, Response $response, array $args)
+    public function getArchiveContentById(Request $request, Response $response, array $args)
     {
         if (!Validator::stringType()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query param id is not a string']);
@@ -236,5 +236,35 @@ class MessageExchangeController
         $response->write($fileContent);
         $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.zip");
         return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public function delete(Request $request, Response $response, array $args)
+    {
+        if (!Validator::stringType()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query param id is not a string']);
+        }
+
+        $message = MessageExchangeModel::getMessageByIdentifier([
+            'select'    => ['res_id_master'],
+            'messageId' => $args['id']
+        ]);
+        if (empty($message)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Message not found']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => [$message['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        MessageExchangeModel::delete([
+            'where' => ['message_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+        MessageExchangeModel::deleteUnitIdentifier([
+            'where' => ['message_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        return $response->withStatus(204);
     }
 }
