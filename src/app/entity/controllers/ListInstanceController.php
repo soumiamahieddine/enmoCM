@@ -356,14 +356,23 @@ class ListInstanceController
                 'where'     => ['res_id = ?', 'difflist_type = ?'],
                 'data'      => [$resource['resId'], self::MAPPING_TYPES[$args['type']]]
             ]);
+
+
+            $newListSequenceOrdered = array_column($resource['listInstances'], null, 'sequence');
+
             ListInstanceModel::delete([
                 'where' => ['res_id = ?', 'difflist_type = ?'],
                 'data'  => [$resource['resId'], self::MAPPING_TYPES[$args['type']]]
             ]);
 
+            $minSequenceNoProcessDate = -1;
             foreach ($listInstances as $listInstanceKey => $listInstance) {
                 if (empty($listInstance['process_date'])) {
                     unset($listInstances[$listInstanceKey]);
+                } else {
+                    if ($listInstance['sequence'] > $minSequenceNoProcessDate) {
+                        $minSequenceNoProcessDate = $listInstance['sequence'];
+                    }
                 }
             }
             $listInstances =  array_values($listInstances);
@@ -377,6 +386,11 @@ class ListInstanceController
                 } elseif (!empty($listInstance['process_comment']) && !Validator::stringType()->length(1, 255)->validate($listInstance['process_comment'])) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] process_comment is too long"]);
+                }
+
+                if ($listInstance['sequence'] <= $minSequenceNoProcessDate) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] sequence is before already processed users"]);
                 }
 
                 if ($listInstance['item_type'] == 'user_id') {
