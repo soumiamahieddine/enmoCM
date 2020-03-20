@@ -352,9 +352,10 @@ class ListInstanceController
             }
 
             $listInstances = ListInstanceModel::get([
-                'select'    => ['*'],
-                'where'     => ['res_id = ?', 'difflist_type = ?'],
-                'data'      => [$resource['resId'], self::MAPPING_TYPES[$args['type']]]
+                'select'  => ['*'],
+                'where'   => ['res_id = ?', 'difflist_type = ?'],
+                'data'    => [$resource['resId'], self::MAPPING_TYPES[$args['type']]],
+                'orderBy' => ['sequence']
             ]);
 
 
@@ -388,7 +389,7 @@ class ListInstanceController
                     return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] process_comment is too long"]);
                 }
 
-                if ($listInstance['sequence'] <= $minSequenceNoProcessDate) {
+                if (!empty($newListSequenceOrdered['sequence']) && $listInstance['sequence'] < $minSequenceNoProcessDate) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] sequence is before already processed users"]);
                 }
