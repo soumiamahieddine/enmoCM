@@ -560,7 +560,17 @@ class ContactController
             }
         }
 
-        return $response->withJson(['contactsFilling' => $contactsFilling, 'contactsParameters' => $contactParameters]);
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/m2m_config.xml']);
+
+        $annuaryEnabled = true;
+        if (!$loadedXml) {
+            $annuaryEnabled = false;
+        }
+        if (empty($loadedXml->annuaries) || $loadedXml->annuaries->enabled == 'false') {
+            $annuaryEnabled = false;
+        }
+
+        return $response->withJson(['contactsFilling' => $contactsFilling, 'contactsParameters' => $contactParameters, 'annuaryEnabled' => $annuaryEnabled]);
     }
 
     public function updateContactsParameters(Request $request, Response $response)

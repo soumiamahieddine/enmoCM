@@ -185,7 +185,7 @@
                                         {{getErrorMsg(field.control.errors)}}</mat-error>
                                 </ng-container>
                                 <ng-container *ngIf="field.id === 'communicationMeans'">
-                                    <mat-form-field>
+                                    <mat-form-field *ngIf="annuaryEnabled">
                                         <input type="text" #autoCompleteInputCommunicationMean
                                             [placeholder]="lang.searchCommunicationMean" matInput
                                             [formControl]="field.control" [matAutocomplete]="auto"
@@ -211,9 +211,16 @@
                                             </mat-option>
                                         </mat-autocomplete>
                                     </mat-form-field>
+                                    <mat-form-field *ngIf="!annuaryEnabled">
+                                        <input type="text" #autoCompleteInputCommunicationMean
+                                            [placeholder]="lang.communicationMean" matInput
+                                            [formControl]="field.control">
+                                        <mat-hint *ngIf="!isEmptyValue(field.desc)" align="end"
+                                                  [innerHTML]="field.desc"></mat-hint>
+                                    </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="field.id === 'externalId_m2m'">
-                                    <mat-form-field>
+                                    <mat-form-field *ngIf="annuaryEnabled">
                                         <input type="text" #autoCompleteInputExternalIdM2M
                                             [placeholder]="lang.searchExternalIdM2M" matInput
                                             [formControl]="field.control" [matAutocomplete]="auto"
@@ -239,6 +246,13 @@
                                                 <mat-spinner diameter="20"></mat-spinner>
                                             </mat-option>
                                         </mat-autocomplete>
+                                    </mat-form-field>
+                                    <mat-form-field *ngIf="!annuaryEnabled">
+                                        <input type="text" #autoCompleteInputExternalIdM2M
+                                            [placeholder]="lang.IdMaarch2Maarch" matInput
+                                            [formControl]="field.control">
+                                        <mat-hint *ngIf="!isEmptyValue(field.desc)" align="end"
+                                                  [innerHTML]="field.desc"></mat-hint>
                                     </mat-form-field>
                                 </ng-container>
                             </p>
