@@ -11,6 +11,7 @@ import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { AddVisaModelModalComponent } from './addVisaModel/add-visa-model-modal.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
     selector: 'app-visa-workflow',
@@ -54,17 +55,39 @@ export class VisaWorkflowComponent implements OnInit {
 
     searchVisaSignUser = new FormControl();
 
+    loadedInConstructor: boolean = false;
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
         public functions: FunctionsService,
         private latinisePipe: LatinisePipe,
         public dialog: MatDialog,
-        private scanPipe: ScanPipe
-    ) { }
+        private scanPipe: ScanPipe,
+        private route: ActivatedRoute
+    ) {
+        // ngOnInit is not called if navigating in the same component : must be in constructor for this case
+        this.route.params.subscribe(params => {
+            this.loading = true;
+
+            if (params['resId'] !== undefined && params['resId'] !== null) {
+                this.resId = params['resId'];
+            }
+
+            if (this.resId !== undefined && this.resId !== null) {
+                this.loadedInConstructor = true;
+                this.loadWorkflow(params['resId']);
+            } else {
+                this.loadedInConstructor = false;
+            }
+
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
+    }
 
     ngOnInit(): void {
-        if (this.resId !== null) {
+        if (this.resId !== null && !this.loadedInConstructor) {
             //this.initFilterVisaModelList();
             this.loadWorkflow(this.resId);
         }
