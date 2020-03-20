@@ -782,6 +782,7 @@ ALTER TABLE users DROP COLUMN IF EXISTS custom_t1;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t2;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t3;
 DROP TABLE IF EXISTS templates_doctype_ext;
+DROP TABLE IF EXISTS notif_rss_stack;
 
 /* M2M */
 DO $$ BEGIN

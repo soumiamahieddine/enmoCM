@@ -708,29 +708,6 @@ WITH (
 );
 
 
-CREATE SEQUENCE notif_rss_stack_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-  
-CREATE TABLE notif_rss_stack
-(
-  rss_stack_sid bigint NOT NULL DEFAULT nextval('notif_rss_stack_seq'::regclass),
-  rss_user_id character varying(128) NOT NULL,
-  rss_event_stack_sid bigint NOT NULL,
-  rss_event_url text,
-  CONSTRAINT notif_rss_stack_pkey PRIMARY KEY (rss_stack_sid )
-)
-WITH (
-  OIDS=FALSE
-);
-
--- modules/postindexing/sql/structure/postindexing.postgresql.sql
-
-
-
 -- modules/reports/sql/structure/reports.postgresql.sql
 
 CREATE TABLE usergroups_reports
