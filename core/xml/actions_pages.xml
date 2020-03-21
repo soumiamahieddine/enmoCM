@@ -317,7 +317,7 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-    <ACTIONPAGE>
+    <!-- <ACTIONPAGE>
         <ID>export_seda</ID>
         <LABEL>_EXPORT_SEDA</LABEL>
         <NAME>export_seda</NAME>
@@ -376,7 +376,7 @@ An action page is described in a ACTIONPAGE tag :
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
-    </ACTIONPAGE>
+    </ACTIONPAGE> -->
     <ACTIONPAGE>
         <ID>send_shipping</ID>
         <LABEL>_SEND_MAILEVA</LABEL>
