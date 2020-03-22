@@ -1231,7 +1231,6 @@ if (!defined('_IVS_VALUE_NOT_ALLOWED')) { define('_IVS_VALUE_NOT_ALLOWED', 'De w
 if (!defined('_IVS_FORMAT_NOT_ALLOWED')) { define('_IVS_FORMAT_NOT_ALLOWED', 'Het formaat is niet toegelaten');}
 if (!defined('_IVS_TOO_MANY_DIGITS')) { define('_IVS_TOO_MANY_DIGITS', 'Teveel tekens');}
 if (!defined('_IVS_TOO_MANY_DECIMAL_DIGITS')) { define('_IVS_TOO_MANY_DECIMAL_DIGITS', 'Teveel decimale tekens');}
-if (!defined('_CONTROL_PARAM_TECHNIC')) { define('_CONTROL_PARAM_TECHNIC', 'De technische instellingen controleren');}
 if (!defined('_COMPONENT')) { define('_COMPONENT', 'Component');}
 if (!defined('_MARK_AS_READ')) { define('_MARK_AS_READ', 'Markeren als gelezen');}
 if (!defined('_MARK_AS_READ_DESC')) { define('_MARK_AS_READ_DESC', 'Markeert het document als gelezen in het bakje. Voegt het gegeven van de res_mark_as_read in de tabel in (nuttig indien gebruikt in de bakjes clauses)');}
@@ -1345,7 +1344,6 @@ if (!defined('_DEPLOY_VERSION')) { define('_DEPLOY_VERSION', 'De versie unzippen
 if (!defined('_UPDATE_END')) { define('_UPDATE_END', 'Update geslaagd');}
 if (!defined('_UPDATE_DESC_END')) { define('_UPDATE_DESC_END', 'Update geslaagd');}
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) { define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Geen versie beschikbaar voor update');}
-if (!defined('_ID_IS_EMPTY_CONTROLLER')) { define('_ID_IS_EMPTY_CONTROLLER', 'De gebruikersnaam is leeg');}
 if (!defined('_PARAM_VALUE_IS_EMPTY')) { define('_PARAM_VALUE_IS_EMPTY', 'De waarde van de instelling is leeg');}
 if (!defined('_INVALID_PARAM_DATE')) { define('_INVALID_PARAM_DATE', 'Instelling ongeldige datum');}
 if (!defined('_INVALID_INTEGER')) { define('_INVALID_INTEGER', 'Geheel is ongeldig');}

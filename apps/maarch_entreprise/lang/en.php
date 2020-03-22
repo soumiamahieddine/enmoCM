@@ -3810,9 +3810,6 @@ if (!defined('_IVS_TOO_MANY_DECIMAL_DIGITS')) {
 }
 
 //control technical params
-if (!defined('_CONTROL_PARAM_TECHNIC')) {
-    define('_CONTROL_PARAM_TECHNIC', 'Control technical configurations');
-}
 if (!defined('_COMPONENT')) {
     define('_COMPONENT', 'Component');
 }

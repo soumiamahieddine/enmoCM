@@ -3864,9 +3864,6 @@ if (!defined('_IVS_TOO_MANY_DECIMAL_DIGITS')) {
 }
 
 //control technical params
-if (!defined('_CONTROL_PARAM_TECHNIC')) {
-    define('_CONTROL_PARAM_TECHNIC', 'Contrôler les paramètres techniques');
-}
 if (!defined('_COMPONENT')) {
     define('_COMPONENT', 'Composant');
 }
@@ -4226,9 +4223,6 @@ if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) {
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Aucune version disponible pour une mise à jour');
 }
 //PARAMETERS
-if (!defined('_ID_IS_EMPTY_CONTROLLER')) {
-    define('_ID_IS_EMPTY_CONTROLLER', ' L\'identifiant est vide');
-}
 if (!defined('_PARAM_VALUE_IS_EMPTY')) {
     define('_PARAM_VALUE_IS_EMPTY', ' La valeur du paramètre est vide');
 }

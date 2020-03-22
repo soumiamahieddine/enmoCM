@@ -292,32 +292,8 @@ if (!defined('_PARAMETER')) {
     define('_PARAMETER', 'paramètre');
 }
 
-if (!defined('_ID_IS_EMPTY_CONTROLLER')) {
-    define('_ID_IS_EMPTY_CONTROLLER', 'L\'identifiant est vide');
-}
-
-if (!defined('_PARAM_CREATED_SUCCESS')) {
-    define('_PARAM_CREATED_SUCCESS', 'Paramètre créé avec succès');
-}
-
-if (!defined('_PARAM_UPDATED_SUCCESS')) {
-    define('_PARAM_UPDATED_SUCCESS', 'Mise à jour effectuée');
-}
-
 if (!defined('_DELETE_CONFIRM')) {
     define('_DELETE_CONFIRM', 'Voulez-vous vraiment supprimer le paramètre');
-}
-
-if (!defined('_CONTROL_TECHNICAL_PARAMS')) {
-    define('_CONTROL_TECHNICAL_PARAMS', 'Contrôler les paramètres techniques');
-}
-
-if (!defined('_DRAG_N_DROP_CHANGE_ORDER')) {
-    define('_DRAG_N_DROP_CHANGE_ORDER', 'Glisser/déposer pour modifier l\'ordre du circuit');
-}
-
-if (!defined('_DRAG_N_DROP_CHANGE_ORDER')) {
-    define('_DRAG_N_DROP_CHANGE_ORDER', 'Glisser/déposer pour modifier l\'ordre du circuit');
 }
 
 if (!defined('_NO_USER_SIGNED_DOC')) {
