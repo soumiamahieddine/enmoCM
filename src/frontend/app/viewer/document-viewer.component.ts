@@ -833,43 +833,19 @@ export class DocumentViewerComponent implements OnInit {
     loadTemplates() {
         if (this.listTemplates.length === 0) {
             let arrValues: any[] = [];
-            let arrTypes: any = [];
-            this.http.get('../../rest/attachmentsTypes').pipe(
-                tap((data: any) => {
-                    arrTypes.push({
-                        id: 'all',
-                        label: this.lang.others
-                    });
-                    Object.keys(data.attachmentsTypes).forEach(templateType => {
-                        arrTypes.push({
-                            id: templateType,
-                            label: data.attachmentsTypes[templateType].label
-                        });
-                        arrTypes = this.sortPipe.transform(arrTypes, 'label');
-                    });
-                }),
-                exhaustMap(() => {
-                    if (this.mode == 'mainDocument') {
-                        return this.http.get('../../rest/currentUser/templates?target=indexingFile');
-                    } else {
-                        return this.http.get('../../rest/currentUser/templates?target=attachments&type=office');
-                    }
-                }),
-                tap((data: any) => {
-                    this.listTemplates = data.templates;
-
-                    arrTypes = arrTypes.filter((type: any) => data.templates.map((template: any) => template.attachmentType).indexOf(type.id) > -1);
-
-                    arrTypes.forEach((arrType: any) => {
+            if (this.mode == 'mainDocument') {
+                this.http.get('../../rest/currentUser/templates?target=indexingFile').pipe(
+                    tap((data: any) => {
+                        this.listTemplates = data.templates;
                         arrValues.push({
-                            id: arrType.id,
-                            label: arrType.label,
-                            title: arrType.label,
+                            id: 'all',
+                            label: this.lang.indexation,
+                            title: this.lang.indexation,
                             disabled: true,
                             isTitle: true,
                             color: '#135f7f'
                         });
-                        data.templates.filter((template: any) => template.attachmentType === arrType.id).forEach((template: any) => {
+                        data.templates.forEach((template: any) => {
                             arrValues.push({
                                 id: template.id,
                                 label: '&nbsp;&nbsp;&nbsp;&nbsp;' + template.label,
@@ -878,12 +854,59 @@ export class DocumentViewerComponent implements OnInit {
                                 disabled: !template.exists,
                             });
                         });
-                    });
-
-                    this.listTemplates = arrValues;
-                })
-
-            ).subscribe();
+                        this.listTemplates = arrValues;
+                    })
+    
+                ).subscribe();
+            } else {
+                let arrTypes: any = [];
+                this.http.get('../../rest/attachmentsTypes').pipe(
+                    tap((data: any) => {
+                        arrTypes.push({
+                            id: 'all',
+                            label: this.lang.others
+                        });
+                        Object.keys(data.attachmentsTypes).forEach(templateType => {
+                            arrTypes.push({
+                                id: templateType,
+                                label: data.attachmentsTypes[templateType].label
+                            });
+                            arrTypes = this.sortPipe.transform(arrTypes, 'label');
+                        });
+                    }),
+                    exhaustMap(() => {
+                        return this.http.get('../../rest/currentUser/templates?target=attachments&type=office');
+                    }),
+                    tap((data: any) => {
+                        this.listTemplates = data.templates;
+    
+                        arrTypes = arrTypes.filter((type: any) => data.templates.map((template: any) => template.attachmentType).indexOf(type.id) > -1);
+    
+                        arrTypes.forEach((arrType: any) => {
+                            arrValues.push({
+                                id: arrType.id,
+                                label: arrType.label,
+                                title: arrType.label,
+                                disabled: true,
+                                isTitle: true,
+                                color: '#135f7f'
+                            });
+                            data.templates.filter((template: any) => template.attachmentType === arrType.id).forEach((template: any) => {
+                                arrValues.push({
+                                    id: template.id,
+                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;' + template.label,
+                                    title: template.exists ? template.label : this.lang.fileDoesNotExists,
+                                    extension: template.extension,
+                                    disabled: !template.exists,
+                                });
+                            });
+                        });
+    
+                        this.listTemplates = arrValues;
+                    })
+    
+                ).subscribe();
+            }
         }
     }
 
