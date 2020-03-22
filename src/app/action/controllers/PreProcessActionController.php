@@ -25,6 +25,7 @@ use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use ExternalSignatoryBook\controllers\IxbusController;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
 use IndexingModel\models\IndexingModelFieldModel;
@@ -414,8 +415,9 @@ class PreProcessActionController
                 'noAttachment'  => []
             ];
             if ($signatureBookEnabled == 'ixbus') {
-                // TODO
-            } elseif (in_array($signatureBookEnabled, ['maarchParapheur', 'fastParapheur', 'iParapheur'])) {
+                $additionalsInfos['ixbus'] = IxbusController::getInitializeDatas($config);
+            }
+            if (in_array($signatureBookEnabled, ['maarchParapheur', 'fastParapheur', 'iParapheur', 'ixbus'])) {
                 if (is_array($data['resources']) && count($data['resources']) == 1) {
                     $resDestination = ResModel::getById([
                         'select'   => ['destination'],

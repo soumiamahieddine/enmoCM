@@ -211,7 +211,7 @@ class FastParapheurController
             . $attachmentFileName . '.zip';  // The zip file need to have the same name as the attachment we want to sign
 
         if ($zip->open($zipFilePath, \ZipArchive::CREATE)!==true) {
-            exit(_ERROR_CREATE_ZIP . "<$zipFilePath>\n");
+            return ['error' => "Can not open file : <$zipFilePath>\n"];
         }
         $zip->addFile($attachmentFilePath, $attachmentFileName);
 

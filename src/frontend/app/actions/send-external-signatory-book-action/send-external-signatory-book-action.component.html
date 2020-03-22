@@ -35,6 +35,10 @@
                             [additionalsInfos]="additionalsInfos"
                             [externalSignatoryBookDatas]="externalSignatoryBookDatas">
                         </app-i-paraph>
+                        <app-ixbus-paraph #ixbus *ngIf="signatoryBookEnabled=='ixbus'"
+                            [additionalsInfos]="additionalsInfos"
+                            [externalSignatoryBookDatas]="externalSignatoryBookDatas">
+                        </app-ixbus-paraph>
                         <app-fast-paraph #fastParapheur *ngIf="signatoryBookEnabled=='fastParapheur'"
                             [additionalsInfos]="additionalsInfos"
                             [externalSignatoryBookDatas]="externalSignatoryBookDatas">

@@ -14,6 +14,7 @@ namespace Action\controllers;
 
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
+use ExternalSignatoryBook\controllers\IxbusController;
 use ExternalSignatoryBook\controllers\IParapheurController;
 use ExternalSignatoryBook\controllers\FastParapheurController;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
@@ -62,64 +63,69 @@ trait ExternalSignatoryBookTrait
             }
 
             if ($config['id'] == 'ixbus') {
-                // TODO
-            } elseif (in_array($config['id'], ['maarchParapheur', 'fastParapheur', 'iParapheur'])) {
-                $integratedResource = ResModel::get([
-                    'select' => [1],
-                    'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
-                    'data'   => [$args['resId']]
+                $loginIxbus    = $args['data']['ixbus']['login'];
+                $passwordIxbus = $args['data']['ixbus']['password'];
+                $userInfo      = IxbusController::getInfoUtilisateur(['config' => $config, 'login' => $loginIxbus, 'password' => $passwordIxbus]);
+                if (empty($userInfo->Identifiant)) {
+                    return ['errors' => [_BAD_LOGIN_OR_PSW]];
+                }
+            }
+
+            $integratedResource = ResModel::get([
+                'select' => [1],
+                'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
+                'data'   => [$args['resId']]
+            ]);
+
+            if (empty($attachments) && empty($integratedResource) && $args['data']['objectSent'] == 'attachment') {
+                $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
+                return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
+            }
+
+            if ($config['id'] == 'maarchParapheur') {
+                $sentInfo = MaarchParapheurController::sendDatas([
+                    'config'      => $config,
+                    'resIdMaster' => $args['resId'],
+                    'objectSent'  => 'attachment',
+                    'userId'      => $GLOBALS['userId'],
+                    'steps'       => $args['data']['steps'],
+                    'note'        => $args['note']['content'] ?? null
                 ]);
-
-                if (empty($attachments) && empty($integratedResource) && $args['data']['objectSent'] == 'attachment') {
-                    $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
-                    return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
-                }
-
-                if ($config['id'] == 'maarchParapheur') {
-                    $sentInfo = MaarchParapheurController::sendDatas([
-                        'config'      => $config,
-                        'resIdMaster' => $args['resId'],
-                        'objectSent'  => 'attachment',
-                        'userId'      => $GLOBALS['userId'],
-                        'steps'       => $args['data']['steps'],
-                        'note'        => $args['note']['content'] ?? null
-                    ]);
-                } elseif ($config['id'] == 'fastParapheur') {
-                    $sentInfo = FastParapheurController::sendDatas([
-                        'config'      => $config,
-                        'resIdMaster' => $args['resId']
-                    ]);
-                } elseif ($config['id'] == 'iParapheur') {
-                    $sentInfo = IParapheurController::sendDatas([
-                        'config'      => $config,
-                        'resIdMaster' => $args['resId']
-                    ]);
-                }
-                if (!empty($sentInfo['error'])) {
-                    return ['errors' => [$sentInfo['error']]];
-                } else {
-                    $attachmentToFreeze = $sentInfo['sended'];
-                }
-
-                $historyInfo = $sentInfo['historyInfos'];
+            } elseif ($config['id'] == 'fastParapheur') {
+                $sentInfo = FastParapheurController::sendDatas([
+                    'config'      => $config,
+                    'resIdMaster' => $args['resId']
+                ]);
+            } elseif ($config['id'] == 'iParapheur') {
+                $sentInfo = IParapheurController::sendDatas([
+                    'config'      => $config,
+                    'resIdMaster' => $args['resId']
+                ]);
+            } elseif ($config['id'] == 'ixbus') {
+                $sentInfo = IxbusController::sendDatas([
+                    'config'        => $config,
+                    'resIdMaster'   => $args['resId'],
+                    'loginIxbus'    => $loginIxbus,
+                    'passwordIxbus' => $passwordIxbus,
+                    'classeurName'  => $args['data']['ixbus']['nature'],
+                    'messageModel'  => $args['data']['ixbus']['messageModel'],
+                    'manSignature'  => $args['data']['ixbus']['signatureMode']
+                ]);
             } elseif ($config['id'] == 'xParaph') {
-                if (empty($attachments)) {
-                    $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
-                    return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
-                }
-
                 $sentInfo = XParaphController::sendDatas([
                     'config'      => $config,
                     'resIdMaster' => $args['resId'],
                     'info'        => $args['data']['info'],
                     'steps'       => $args['data']['steps'],
                 ]);
-                if (!empty($sentInfo['error'])) {
-                    return ['errors' => [$sentInfo['error']]];
-                } else {
-                    $attachmentToFreeze = $sentInfo['sended'];
-                }
             }
+            if (!empty($sentInfo['error'])) {
+                return ['errors' => [$sentInfo['error']]];
+            } else {
+                $attachmentToFreeze = $sentInfo['sended'];
+            }
+
+            $historyInfo = $sentInfo['historyInfos'];
         }
 
         if (!empty($attachmentToFreeze)) {

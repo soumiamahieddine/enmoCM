@@ -402,10 +402,6 @@ if (!defined('_SEND_TO_FAST')) {
     define('_SEND_TO_FAST', "Envoyer au parapheur FAST ?");
 }
 
-if (!defined('_ERROR_CREATE_ZIP')) {
-    define('_ERROR_CREATE_ZIP', "Impossible d'ouvrir le fichier");
-}
-
 if (!defined('_PROJECT_NUMBER')) {
     define('_PROJECT_NUMBER', "Projet courrier numéro ");
 }

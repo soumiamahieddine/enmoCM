@@ -1589,6 +1589,13 @@ export const LANG_NL = {
     "emailSent" : "Email sent", //_TO_TRANSLATE
     "emailCannotSent" : "Error during sending email", //_TO_TRANSLATE
     "sentToFastParapheur" : "Send to FAST-Parapheur", //_TO_TRANSLATE
+    "sentToIxbusParapheur" : "Send to Ixbus Parapheur", //_TO_TRANSLATE
+    "natureIxbusParapheur" : "Document nautre", //_TO_TRANSLATE
+    "loginIxbus" : "Ixbus login", //_TO_TRANSLATE
+    "passwordIxbus" : "Ixbus password", //_TO_TRANSLATE
+    "workflowModelIxbus" : "Ixbus visa workflow", //_TO_TRANSLATE
+    "electronicSignature" : "Electronic signature", //_TO_TRANSLATE
+    "handwrittenSignature" : "Handwritten signature", //_TO_TRANSLATE
     "sentToIParapheur" : "Send to IParapheur", //_TO_TRANSLATE
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
     "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE

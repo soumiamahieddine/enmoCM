@@ -12,49 +12,17 @@
  * @author dev@maarch.org
  */
 
+namespace ExternalSignatoryBook\controllers;
+
+use Attachment\models\AttachmentModel;
+use Convert\controllers\ConvertPdfController;
+use Docserver\models\DocserverModel;
+use Resource\models\ResModel;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
 
 class IxbusController
 {
-    public static function getModal($config)
-    {
-        $initializeDatas = IxbusController::getInitializeDatas($config);
-        if (!empty($initializeDatas['error'])) {
-            return ['error' => $initializeDatas['error']];
-        }
-        if (empty($initializeDatas['natures'])) {
-            return ['error' => _NATURE . ' ' . _IS_EMPTY ];
-        }
-        if (empty($initializeDatas['messagesModel'])) {
-            return ['error' => _VISA_WORKFLOW . ' ' . _IS_EMPTY ];
-        }
-        $html .= '<label for="nature">' . _NATURE_IXBUS . '</label><select name="nature" id="nature">';
-        if (!empty($initializeDatas['natures']->Classeur)) {
-            foreach ($initializeDatas['natures']->Classeur as $value) {
-                $html .= '<option value="';
-                $html .= $value->Libelle;
-                $html .= '">';
-                $html .= $value->Libelle;
-                $html .= '</option>';
-            }
-        }
-        $html .= '</select><br /><br />';
-
-        $html .= '<label for="messageModel">' . _WORKFLOW_MODEL_IXBUS . '</label><select name="messageModel" id="messageModel">';
-        foreach ($initializeDatas['messagesModel'] as $value) {
-            $html .= '<option value="';
-            $html .= $value;
-            $html .= '">';
-            $html .= $value;
-            $html .= '</option>';
-        }
-        $html .= '</select><br /><br />';
-        $html .= '<label for="loginIxbus">'._ID_IXBUS.'</label><input name="loginIxbus" id="loginIxbus"/><br /><br />';
-        $html .= '<label for="passwordIxbus">'._PASSWORD_IXBUS.'</label><input type="password" name="passwordIxbus" id="passwordIxbus"/><br /><br />';
-        $html .= _ESIGN . '<input type="radio" name="mansignature" id="mansignature" value="false" checked="checked" />' . _HANDWRITTEN_SIGN .'<input type="radio" name="mansignature" id="mansignature" value="true" /><br /><br />';
-
-        return $html;
-    }
-
     public static function createSession($config)
     {
         $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
@@ -68,7 +36,7 @@ class IxbusController
                         </soap:Body>
                         </soap:Envelope>';
 
-        $data = \SrcCore\models\CurlModel::execSOAP([
+        $data = CurlModel::execSOAP([
             'xmlPostString' => $xmlPostString,
             'url'           => $config['data']['url'] . '/parapheurws/service.asmx',
             'soapAction'    => 'http://www.srci.fr/CreateSession',
@@ -93,14 +61,15 @@ class IxbusController
         if (!empty($sessionId['error'])) {
             return ['error' => $sessionId['error']];
         }
-        $rawResponse['natures']       = IxbusController::getNature(['config' => $config, 'sessionId' => $sessionId['cookie']]);
-        // $rawResponse['usersList']     = IxbusController::getUsersList(['config' => $config, 'sessionId' => $sessionId['cookie']]);
-        $userInfo  = IxbusController::getInfoUtilisateur(['config' => $config, 'login' => $config['data']['userId'], 'password' => $config['data']['password']]);
+        $natures        = IxbusController::getNature(['config' => $config, 'sessionId' => $sessionId['cookie']]);
+        $userInfo       = IxbusController::getInfoUtilisateur(['config' => $config, 'login' => $config['data']['userId'], 'password' => $config['data']['password']]);
         $messagesModels = IxbusController::getMessagesModel(['config' => $config, 'sessionId' => $sessionId['cookie'], 'userIdentifiant' => $userInfo->Identifiant]);
 
+        $rawResponse['natures'] = [];
         $rawResponse['messagesModel'] = [];
-        if (!empty($rawResponse['natures']->Classeur)) {
-            foreach ($rawResponse['natures']->Classeur as $nature) {
+        if (!empty($natures->Classeur)) {
+            foreach ($natures->Classeur as $nature) {
+                $rawResponse['natures'][] = (string)$nature->Libelle;
                 foreach ($messagesModels->Message as $message) {
                     $messageModel = IxbusController::getMessageNature(['config' => $config, 'messageId' => $message->Identifiant, 'sessionId' => $sessionId['cookie']]);
                     if ((string)$messageModel->IdentifiantClasseur == (string)$nature->Identifiant) {
@@ -108,8 +77,8 @@ class IxbusController
                     }
                 }
             }
+            $rawResponse['messagesModel'] = array_values($rawResponse['messagesModel']);
         }
-
         return $rawResponse;
     }
 
@@ -124,27 +93,13 @@ class IxbusController
                         </soap:Body>
                         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetNaturesAvecDroitsCreer\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+          'soapAction'    => 'http://www.srci.fr/GetNaturesAvecDroitsCreer',
+          'Cookie'        => $aArgs['sessionId']
+        ])['response'];
 
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetNaturesAvecDroitsCreerResponse->GetNaturesAvecDroitsCreerResult;
 
         return $response;
@@ -164,27 +119,12 @@ class IxbusController
           </soap:Body>
         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetMessagesModel\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+          'soapAction'    => 'http://www.srci.fr/GetMessagesModel',
+          'Cookie'        => $aArgs['sessionId']
+        ])['response'];
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessagesModelResponse->GetMessagesModelResult;
 
         return $response;
@@ -201,27 +141,12 @@ class IxbusController
           </soap:Body>
         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetMessageNature\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+          'soapAction'    => 'http://www.srci.fr/GetMessageNature',
+          'Cookie'        => $aArgs['sessionId']
+        ])['response'];
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetMessageNatureResponse->GetMessageNatureResult;
 
         return $response;
@@ -239,26 +164,11 @@ class IxbusController
           </soap:Body>
         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/ixbuswebws/Utilisateur.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "SOAPAction: \"http://www.srci.fr/getUtilisateur\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/ixbuswebws/Utilisateur.asmx',
+          'soapAction'    => 'http://www.srci.fr/getUtilisateur'
+        ])['response'];
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->getUtilisateurResponse->getUtilisateurResult;
 
         return $response;
@@ -272,35 +182,47 @@ class IxbusController
         }
         $userInfo  = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'password' => $aArgs['passwordIxbus']]);
 
-        $attachments = \Attachment\models\AttachmentModel::get([
+        $attachments = AttachmentModel::get([
             'select'    => [
                 'res_id', 'title', 'identifier', 'attachment_type',
                 'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                 'validation_date', 'relation', 'origin_id'
             ],
-            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+            'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
             'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
 
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachments as $key => $value) {
+            if (!$attachmentTypes[$value['attachment_type']]['sign']) {
+                unset($attachments[$key]);
+            }
+        }
+
         $attachmentToFreeze = [];
+        $signature = $aArgs['manSignature'] == 'manual' ? 'true' : 'false';
+
+        $mainResource = ResModel::getById([
+          'resId'  => $aArgs['resIdMaster'],
+          'select' => ['res_id', 'subject', 'path', 'filename', 'docserver_id', 'format', 'category_id', 'external_id', 'integrations', 'process_limit_date']
+        ]);
+
+        if (empty($mainResource['process_limit_date'])) {
+            $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
+        } else {
+            $processLimitDateTmp = explode(" ", $mainResource['process_limit_date']);
+            $processLimitDate = $processLimitDateTmp[0];
+        }
 
         foreach ($attachments as $value) {
             $resId  = $value['res_id'];
             $collId = 'attachments_coll';
 
-            $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
-            $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+            $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
+            $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
             $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
 
             $encodedZipFile = IxbusController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename'], 'res_id_master' => $aArgs['resIdMaster']]);
-
-            $mainResource = \Resource\models\ResModel::getById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
-            if (empty($mainResource['process_limit_date'])) {
-                $processLimitDate = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
-            } else {
-                $processLimitDateTmp = explode(" ", $mainResource['process_limit_date']);
-                $processLimitDate = $processLimitDateTmp[0];
-            }
 
             $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
             <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -316,55 +238,84 @@ class IxbusController
                   <Confidentiel>false</Confidentiel>
                   <DocumentModifiable>true</DocumentModifiable>
                   <AnnexesSignables>false</AnnexesSignables>
-                  <SignatureManuscrite>'.$aArgs['manSignature'].'</SignatureManuscrite>
+                  <SignatureManuscrite>'.$signature.'</SignatureManuscrite>
                 </SendDossier>
               </soap:Body>
             </soap:Envelope>';
 
-            $opts = [
-                CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-                CURLOPT_HTTPHEADER => [
-                    'content-type:text/xml;charset=\"utf-8\"',
-                    'accept:text/xml',
-                    "Cache-Control: no-cache",
-                    "Pragma: no-cache",
-                    "Content-length: ".strlen($xmlPostString),
-                    "Cookie:".$sessionId['cookie'],
-                    "SOAPAction: \"http://www.srci.fr/SendDossier\""
-                ],
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS  => $xmlPostString
-            ];
-    
-            $curl = curl_init();
-            curl_setopt_array($curl, $opts);
-            $rawResponse = curl_exec($curl);
-    
-            $data = simplexml_load_string($rawResponse);
+            $data = CurlModel::execSOAP([
+              'xmlPostString' => $xmlPostString,
+              'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+              'soapAction'    => 'http://www.srci.fr/SendDossier',
+              'Cookie'        => $sessionId['cookie']
+            ])['response'];
             $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->SendDossierResponse->SendDossierResult;
 
             $attachmentToFreeze[$collId][$resId] = (string)$response;
         }
 
-        return $attachmentToFreeze;
+        // Send main document if in signature book
+        $mainDocumentIntegration = json_decode($mainResource['integrations'], true);
+        $externalId              = json_decode($mainResource['external_id'], true);
+        if ($mainDocumentIntegration['inSignatureBook'] && empty($externalId['signatureBookId'])) {
+            $resId  = $mainResource['res_id'];
+            $collId = 'letterbox_coll';
+
+            $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
+            $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+            $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+            $encodedZipFile = IxbusController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename'], 'res_id_master' => $resId]);
+
+            $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <SendDossier xmlns="http://www.srci.fr">
+                  <ContenuDocumentZip>'. $encodedZipFile .'</ContenuDocumentZip>
+                  <NomDocumentPrincipal>'. $adrInfo['filename'] . '</NomDocumentPrincipal>
+                  <NomDossier>'. $mainResource['subject'] .'</NomDossier>
+                  <NomModele>'. $aArgs['messageModel'] .'</NomModele>
+                  <NomNature>'. $aArgs['classeurName'] .'</NomNature>
+                  <DateLimite>'.$processLimitDate.'</DateLimite>
+                  <LoginResponsable>'. $userInfo->NomUtilisateur .'</LoginResponsable>
+                  <Confidentiel>false</Confidentiel>
+                  <DocumentModifiable>true</DocumentModifiable>
+                  <AnnexesSignables>false</AnnexesSignables>
+                  <SignatureManuscrite>'.$signature.'</SignatureManuscrite>
+                </SendDossier>
+              </soap:Body>
+            </soap:Envelope>';
+
+            $data = CurlModel::execSOAP([
+              'xmlPostString' => $xmlPostString,
+              'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+              'soapAction'    => 'http://www.srci.fr/SendDossier',
+              'Cookie'        => $sessionId['cookie']
+            ])['response'];
+            $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->SendDossierResponse->SendDossierResult;
+
+            $attachmentToFreeze[$collId][$resId] = (string)$response;
+        }
+      
+        return ['sended' => $attachmentToFreeze];
     }
 
     public static function createZip($aArgs)
     {
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
 
         $pathInfo    = pathinfo($aArgs['filepath'], PATHINFO_FILENAME);
-        $tmpPath     = \SrcCore\models\CoreConfigModel::getTmpPath();
+        $tmpPath     = CoreConfigModel::getTmpPath();
         $zipFilename = $tmpPath . $pathInfo."_".rand().".zip";
 
-        if ($zip->open($zipFilename, ZipArchive::CREATE) === true) {
+        if ($zip->open($zipFilename, \ZipArchive::CREATE) === true) {
             $zip->addFile($aArgs['filepath'], $aArgs['filename']);
             
-            $adrInfo             = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['res_id_master'], 'collId' => 'letterbox_coll']);
-            $docserverInfo       = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
-            $arrivedMailfilePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
-            $zip->addFile($arrivedMailfilePath, 'courrier_arrivee.pdf');
+            $adrInfo             = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['res_id_master'], 'collId' => 'letterbox_coll']);
+            if (!empty($adrInfo['docserver_id'])) {
+                $docserverInfo       = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                $arrivedMailfilePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+                $zip->addFile($arrivedMailfilePath, 'courrier_arrivee.pdf');
+            }
 
             $zip->close();
 
@@ -382,7 +333,7 @@ class IxbusController
         if (!empty($sessionId['error'])) {
             return ['error' => $sessionId['error']];
         }
-        foreach (['noVersion'] as $version) {
+        foreach (['noVersion', 'resLetterbox'] as $version) {
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $etatDossier = IxbusController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
     
@@ -421,27 +372,12 @@ class IxbusController
           </soap:Body>
         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetEtatDossier\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+          'soapAction'    => 'http://www.srci.fr/GetEtatDossier',
+          'Cookie'        => $aArgs['sessionId']
+        ])['response'];
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetEtatDossierResponse->GetEtatDossierResult;
 
         return $response;
@@ -458,27 +394,12 @@ class IxbusController
           </soap:Body>
         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetAnnotations\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+          'soapAction'    => 'http://www.srci.fr/GetAnnotations',
+          'Cookie'        => $aArgs['sessionId']
+        ])['response'];
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetAnnotationsResponse->GetAnnotationsResult;
 
         return $response;
@@ -495,27 +416,12 @@ class IxbusController
           </soap:Body>
         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetDossier\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+          'soapAction'    => 'http://www.srci.fr/GetDossier',
+          'Cookie'        => $aArgs['sessionId']
+        ])['response'];
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetDossierResponse->GetDossierResult;
 
         return $response;
@@ -533,27 +439,12 @@ class IxbusController
           </soap:Body>
         </soap:Envelope>';
 
-        $opts = [
-        CURLOPT_URL => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
-        CURLOPT_HTTPHEADER => [
-        'content-type:text/xml;charset=\"utf-8\"',
-        'accept:text/xml',
-        "Cache-Control: no-cache",
-        "Pragma: no-cache",
-        "Content-length: ".strlen($xmlPostString),
-        "Cookie:".$aArgs['sessionId'],
-        "SOAPAction: \"http://www.srci.fr/GetAnnexe\""
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS  => $xmlPostString
-        ];
-
-        $curl = curl_init();
-        curl_setopt_array($curl, $opts);
-        $rawResponse = curl_exec($curl);
-
-        $data = simplexml_load_string($rawResponse);
+        $data = CurlModel::execSOAP([
+          'xmlPostString' => $xmlPostString,
+          'url'           => $aArgs['config']['data']['url'] . '/parapheurws/service.asmx',
+          'soapAction'    => 'http://www.srci.fr/GetAnnexe',
+          'Cookie'        => $aArgs['sessionId']
+        ])['response'];
         $response = $data->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children()->GetAnnexeResponse->GetAnnexeResult;
 
         return $response;

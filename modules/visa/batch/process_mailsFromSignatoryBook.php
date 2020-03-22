@@ -184,24 +184,14 @@ try {
         exit(102);
     }
 
-    if (!empty($configRemoteSignatoryBook)) {
-        if ($configRemoteSignatoryBook['id'] == 'ixbus') {
-            $signatoryBook = "/modules/visa/class/IxbusController.php";
-        }
-    } else {
+    if (empty($configRemoteSignatoryBook)) {
         $GLOBALS['logger']->write('no signatory book enabled', 'ERROR', 102);
         echo "\nNo signatory book enabled ! \nThe batch cannot be launched !\n\n";
         exit(102);
     }
 
     // On inclut la classe du parapheur activé
-    if (is_file($GLOBALS['MaarchDirectory'] . 'custom/' . $GLOBALS['CustomId'] . $signatoryBook)) {
-        $classToInclude = $GLOBALS['MaarchDirectory'] . 'custom/' . $GLOBALS['CustomId'] . $signatoryBook;
-        Bt_myInclude($classToInclude);
-    } elseif (is_file($GLOBALS['MaarchDirectory'] . $signatoryBook)) {
-        $classToInclude = $GLOBALS['MaarchDirectory'] . $signatoryBook;
-        Bt_myInclude($classToInclude);
-    } elseif (!in_array($configRemoteSignatoryBook['id'], ['maarchParapheur', 'xParaph', 'fastParapheur', 'iParapheur'])) {
+    if (!in_array($configRemoteSignatoryBook['id'], ['maarchParapheur', 'xParaph', 'fastParapheur', 'iParapheur', 'ixbus'])) {
         $GLOBALS['logger']->write('No class detected', 'ERROR', 102);
         echo "\nNo class detected ! \nThe batch cannot be launched !\n\n";
         exit(102);
@@ -245,7 +235,7 @@ while ($reqResult = $stmt->fetchObject()) {
 // On récupère les pj signés dans le parapheur distant
 $GLOBALS['logger']->write('Retrieve signed/annotated documents from remote signatory book', 'INFO');
 if ($configRemoteSignatoryBook['id'] == 'ixbus') {
-    $retrievedMails = IxbusController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
+    $retrievedMails = \ExternalSignatoryBook\controllers\IxbusController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 } elseif ($configRemoteSignatoryBook['id'] == 'iParapheur') {
     $retrievedMails = \ExternalSignatoryBook\controllers\IParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
 } elseif ($configRemoteSignatoryBook['id'] == 'fastParapheur') {
@@ -271,6 +261,8 @@ if (!empty($idsToRetrieve['resLetterbox'])) {
         $retrievedLetterboxMails = \ExternalSignatoryBook\controllers\FastParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
     } elseif ($configRemoteSignatoryBook['id'] == 'iParapheur') {
         $retrievedLetterboxMails = \ExternalSignatoryBook\controllers\IParapheurController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
+    } elseif ($configRemoteSignatoryBook['id'] == 'ixbus') {
+        $retrievedLetterboxMails = \ExternalSignatoryBook\controllers\IxbusController::retrieveSignedMails(['config' => $configRemoteSignatoryBook, 'idsToRetrieve' => $idsToRetrieve]);
     }
     $retrievedMails['resLetterbox'] = $retrievedLetterboxMails['resLetterbox'];
 }

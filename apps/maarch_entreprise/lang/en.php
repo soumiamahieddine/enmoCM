@@ -3624,36 +3624,6 @@ if (!defined('_PRINTED_FILE_NUMBER')) {
 if (!defined('_CREATED_ON')) {
     define('_CREATED_ON', 'Created on');
 }
-if (!defined('_INFORMATIONS_OF_THE_DOCUMENT')) {
-    define('_INFORMATIONS_OF_THE_DOCUMENT', 'Datas on the mail');
-}
-if (!defined('_PRINT_ADMISSION_DATE')) {
-    define('_PRINT_ADMISSION_DATE', 'Arrival date');
-}
-if (!defined('_PRINT_TYPIST')) {
-    define('_PRINT_TYPIST', 'Operator');
-}
-if (!defined('_PRINT_FREE_NOTES')) {
-    define('_PRINT_FREE_NOTES', 'FREE NOTES');
-}
-if (!defined('_PRINT_FURTHER_INFORMATIONS')) {
-    define('_PRINT_FURTHER_INFORMATIONS', 'FURTHER INFORMATIONS');
-}
-if (!defined('_PRINT_COPIES')) {
-    define('_PRINT_COPIES', 'COPIES');
-}
-if (!defined('_PRINT_NOTES')) {
-    define('_PRINT_NOTES', 'NOTES');
-}
-if (!defined('_PRINT_PROCESS_ENTITY')) {
-    define('_PRINT_PROCESS_ENTITY', 'Processing department');
-}
-if (!defined('_PRINT_PRIVATE_NOTE')) {
-    define('_PRINT_PRIVATE_NOTE', 'Private note');
-}
-if (!defined('_PRINT_THE')) {
-    define('_PRINT_THE', 'The');
-}
 
 //MULTICONTACTS
 if (!defined('_MULTI')) {
@@ -3667,14 +3637,6 @@ if (!defined('_CONTACT_EXTERNAL')) {
 }
 if (!defined('_CONTACT_INTERNAL')) {
     define('_CONTACT_INTERNAL', 'Internal contact');
-}
-
-//DocLocker
-if (!defined('_DOC_LOCKER_RES_ID')) {
-    define('_DOC_LOCKER_RES_ID', 'you cannot open the mail number');
-}
-if (!defined('_DOC_LOCKER_USER')) {
-    define('_DOC_LOCKER_USER', ', is already handling by :');
 }
 
 //RECOMMANDE

@@ -311,9 +311,6 @@ if (!defined('_SEND_TO_IPARAPHEUR')) {
 if (!defined('_SEND_TO_FAST')) {
     define('_SEND_TO_FAST', 'Verzenden naar het FAST vloeiboek?');
 }
-if (!defined('_ERROR_CREATE_ZIP')) {
-    define('_ERROR_CREATE_ZIP', 'Bestand kan niet geopend worden');
-}
 if (!defined('_PROJECT_NUMBER')) {
     define('_PROJECT_NUMBER', 'Project brief nummer ');
 }

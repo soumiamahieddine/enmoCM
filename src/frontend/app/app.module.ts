@@ -53,6 +53,7 @@ import { SendExternalNoteBookActionComponent }   from './actions/send-external-n
 import { XParaphComponent }                         from './actions/send-external-signatory-book-action/x-paraph/x-paraph.component';
 import { MaarchParaphComponent }                         from './actions/send-external-signatory-book-action/maarch-paraph/maarch-paraph.component';
 import { IParaphComponent }                  from './actions/send-external-signatory-book-action/i-paraph/i-paraph.component';
+import { IxbusParaphComponent }                  from './actions/send-external-signatory-book-action/ixbus-paraph/ixbus-paraph.component';
 import { FastParaphComponent }                  from './actions/send-external-signatory-book-action/fast-paraph/fast-paraph.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
@@ -159,6 +160,7 @@ import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-
         XParaphComponent,
         MaarchParaphComponent,
         FastParaphComponent,
+        IxbusParaphComponent,
         IParaphComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
