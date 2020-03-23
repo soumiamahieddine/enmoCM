@@ -277,6 +277,8 @@ define('_NO_EMAIL_TEMPLATE', 'No electronic template');
 define('_NO_PAPER_TEMPLATE', 'No paper template');
 define('_FOR_ENTITY', 'for this entity:');
 define('_NO_ENTITY', 'No entity associated with the mail');
+define('_RECONCILE_RESOURCE', 'Reconcile a document');
+define('_RECONCILE_RESOURCE_DESC', "Add the document main file to another document");
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Number of read folders');

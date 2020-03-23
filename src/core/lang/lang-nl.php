@@ -278,6 +278,8 @@ define('_NO_EMAIL_TEMPLATE', 'Geen elektronisch sjabloon'); //_TO_TRANSLATE
 define('_NO_PAPER_TEMPLATE', 'Geen papieren sjabloon'); //_TO_TRANSLATE
 define('_FOR_ENTITY', 'voor deze entiteit :');
 define('_NO_ENTITY', 'Geen enkele entiteit geassocieerd met de post');
+define('_RECONCILE_RESOURCE', 'Reconcile a document');
+define('_RECONCILE_RESOURCE_DESC', "Add the document main file to another document");
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Aantal geraadpleegde mappen');

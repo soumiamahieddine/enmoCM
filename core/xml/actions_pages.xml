@@ -396,4 +396,14 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>reconcile</ID>
+        <LABEL>_RECONCILE_RESOURCE</LABEL>
+        <NAME>reconcile</NAME>
+        <DESC>_RECONCILE_RESOURCE_DESC</DESC>
+        <component>reconcileAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
