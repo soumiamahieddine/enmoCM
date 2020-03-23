@@ -387,7 +387,11 @@ export class DiffusionsListComponent implements OnInit {
         let item_mode: any = 'cc';
 
         if (this.hasEmptyDest() && element.type == 'user') {
-            item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
+            if (this.currentEntityId) {
+                item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
+            } else {
+                item_mode = this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
+            }
         }
 
         let itemType = '';
