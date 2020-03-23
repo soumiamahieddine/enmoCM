@@ -67,6 +67,7 @@ import { SendAvisWorkflowComponent }               from './actions/avis-workflow
 import { SendAvisParallelComponent }               from './actions/avis-parallel-send-action/send-avis-parallel-action.component';
 import { GiveAvisParallelActionComponent }               from './actions/avis-give-parallel-action/give-avis-parallel-action.component';
 import { ValidateAvisParallelComponent }               from './actions/avis-parallel-validate-action/validate-avis-parallel-action.component';
+import { ReconcileActionComponent }               from './actions/reconciliation-action/reconcile-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -210,7 +211,8 @@ import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-
         SentResourcePageComponent,
         PrintedFolderModalComponent,
         SentNumericPackagePageComponent,
-        FolderCreateModalComponent
+        FolderCreateModalComponent,
+        ReconcileActionComponent
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,
@@ -256,7 +258,8 @@ import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-
         SentResourcePageComponent,
         PrintedFolderModalComponent,
         SentNumericPackagePageComponent,
-        FolderCreateModalComponent
+        FolderCreateModalComponent,
+        ReconcileActionComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

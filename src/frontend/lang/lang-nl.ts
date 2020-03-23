@@ -1647,4 +1647,6 @@ export const LANG_NL = {
     "downloadNumericPackage" : "Download the numeric package", //_TO_TRANSLATE
     "actionsHistory" : "Actions history", //_TO_TRANSLATE
     "noActionProcessed": "No action processed", //_TO_TRANSLATE
+    "reconcileMsg": "The mails will be converted into <b>signed version</b> and linked to selected new mail.", //_TO_TRANSLATE
+    "selectMailToReconcile": "Please, select a mail to reconcile", //_TO_TRANSLATE
 };

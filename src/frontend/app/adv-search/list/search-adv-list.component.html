@@ -19,6 +19,7 @@
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef style="width: 70px;flex: initial;">
                 <mat-checkbox color="primary"
+                    *ngIf="!singleMode"
                     [checked]="selectedRes.length == allResInSearch.length && selectedRes.length > 0"
                     [indeterminate]="selectedRes.length > 0 && selectedRes.length < allResInSearch.length"
                     title="{{lang.selectAllResInBasket}}" (change)="toggleAllRes($event)"></mat-checkbox>

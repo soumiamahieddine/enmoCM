@@ -39,6 +39,7 @@ export class SearchAdvListComponent implements OnInit {
 
     @Input('search') search: string = '';
     @Input('currentResId') currentResId: number;
+    @Input('singleMode') singleMode: boolean = false;
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableResourceListSort', { static: true }) sort: MatSort;
@@ -114,6 +115,9 @@ export class SearchAdvListComponent implements OnInit {
     }
 
     toggleRes(e: any, row: any) {
+        if (this.singleMode) {
+            this.selectedRes = [];  
+        }
         if (e.checked) {
             if (this.selectedRes.indexOf(row.resId) === -1) {
                 this.selectedRes.push(row.resId);

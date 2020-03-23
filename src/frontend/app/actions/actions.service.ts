@@ -34,6 +34,7 @@ import { GiveAvisParallelActionComponent } from './avis-give-parallel-action/giv
 import { ValidateAvisParallelComponent } from './avis-parallel-validate-action/validate-avis-parallel-action.component';
 import { HeaderService } from '../../service/header.service';
 import { FunctionsService } from '../../service/functions.service';
+import { ReconcileActionComponent } from './reconciliation-action/reconcile-action.component';
 
 @Injectable()
 export class ActionsService {
@@ -900,5 +901,26 @@ export class ActionsService {
         ).subscribe();
     }
 
-
+    reconciliationAction(options: any = null) {
+        const dialogRef = this.dialog.open(ReconcileActionComponent, {
+            panelClass: 'maarch-modal',
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            /* tap((resIds: any) => {
+                this.unlockResourceAfterActionModal(resIds);
+            }),*/
+            filter((resIds: any) => !this.functions.empty(resIds)),
+            tap((resIds: any) => {
+                this.endAction(resIds);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
 }

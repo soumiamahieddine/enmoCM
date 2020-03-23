@@ -1661,4 +1661,6 @@ export const LANG_FR = {
     "downloadNumericPackage" : "Télécharger le pli numérique",
     "actionsHistory" : "Historique des actions",
     "noActionProcessed": "Aucune action effectuée",
+    "reconcileMsg": "Les courriers seront convertis en tant que <b>version signée</b> et liés au courrier qui sera sélectionnée.",
+    "selectMailToReconcile": "Veuillez sélectionner le courrier cible de la reconciliation",
 };

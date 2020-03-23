@@ -1622,4 +1622,6 @@ export const LANG_EN = {
     "downloadNumericPackage" : "Download the numeric package",
     "actionsHistory" : "Actions history",
     "noActionProcessed": "No action processed",
+    "reconcileMsg": "The mails will be converted into <b>signed version</b> and linked to selected new mail.",
+    "selectMailToReconcile": "Please, select a mail to reconcile",
 };
