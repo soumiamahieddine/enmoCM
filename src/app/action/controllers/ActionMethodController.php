@@ -18,6 +18,10 @@ use Action\models\BasketPersistenceModel;
 use Action\models\ResMarkAsReadModel;
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
+use Convert\controllers\ConvertPdfController;
+use Convert\models\AdrModel;
+use Docserver\controllers\DocserverController;
+use Docserver\models\DocserverModel;
 use Entity\controllers\ListInstanceController;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -28,6 +32,7 @@ use MessageExchange\controllers\MessageExchangeReviewController;
 use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
 use Resource\controllers\ResController;
+use Resource\controllers\StoreController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use SrcCore\models\CoreConfigModel;
@@ -42,32 +47,33 @@ class ActionMethodController
     use ExternalSignatoryBookTrait;
 
     const COMPONENTS_ACTIONS = [
-        'confirmAction'                          => null,
-        'closeMailAction'                        => 'closeMailAction',
-        'closeMailWithAttachmentsOrNotesAction'  => 'closeMailWithAttachmentsOrNotesAction',
-        'redirectAction'                         => 'redirect',
-        'closeAndIndexAction'                    => 'closeMailAction',
-        'updateDepartureDateAction'              => 'updateDepartureDateAction',
-        'enabledBasketPersistenceAction'         => 'enabledBasketPersistenceAction',
-        'disabledBasketPersistenceAction'        => 'disabledBasketPersistenceAction',
-        'resMarkAsReadAction'                    => 'resMarkAsReadAction',
-        'sendExternalSignatoryBookAction'        => 'sendExternalSignatoryBookAction',
-        'sendExternalNoteBookAction'             => 'sendExternalNoteBookAction',
-        'createAcknowledgementReceiptsAction'    => 'createAcknowledgementReceipts',
-        'updateAcknowledgementSendDateAction'    => 'updateAcknowledgementSendDateAction',
-        'sendShippingAction'                     => 'createMailevaShippings',
-        'sendSignatureBookAction'                => 'sendSignatureBook',
-        'continueVisaCircuitAction'              => 'continueVisaCircuit',
-        'redirectInitiatorEntityAction'          => 'redirectInitiatorEntityAction',
-        'rejectVisaBackToPreviousAction'         => 'rejectVisaBackToPrevious',
-        'resetVisaAction'                        => 'resetVisa',
-        'interruptVisaAction'                    => 'interruptVisa',
-        'sendToParallelOpinion'                  => 'sendToParallelOpinion',
-        'sendToOpinionCircuitAction'             => 'sendToOpinionCircuit',
-        'continueOpinionCircuitAction'           => 'continueOpinionCircuit',
-        'giveOpinionParallelAction'              => 'giveOpinionParallel',
-        'validateParallelOpinionDiffusionAction' => 'validateParallelOpinionDiffusion',
-        'noConfirmAction'                        => null
+        'confirmAction'                             => null,
+        'closeMailAction'                           => 'closeMailAction',
+        'closeMailWithAttachmentsOrNotesAction'     => 'closeMailWithAttachmentsOrNotesAction',
+        'redirectAction'                            => 'redirect',
+        'closeAndIndexAction'                       => 'closeMailAction',
+        'updateDepartureDateAction'                 => 'updateDepartureDateAction',
+        'enabledBasketPersistenceAction'            => 'enabledBasketPersistenceAction',
+        'disabledBasketPersistenceAction'           => 'disabledBasketPersistenceAction',
+        'resMarkAsReadAction'                       => 'resMarkAsReadAction',
+        'sendExternalSignatoryBookAction'           => 'sendExternalSignatoryBookAction',
+        'sendExternalNoteBookAction'                => 'sendExternalNoteBookAction',
+        'createAcknowledgementReceiptsAction'       => 'createAcknowledgementReceipts',
+        'updateAcknowledgementSendDateAction'       => 'updateAcknowledgementSendDateAction',
+        'sendShippingAction'                        => 'createMailevaShippings',
+        'sendSignatureBookAction'                   => 'sendSignatureBook',
+        'continueVisaCircuitAction'                 => 'continueVisaCircuit',
+        'redirectInitiatorEntityAction'             => 'redirectInitiatorEntityAction',
+        'rejectVisaBackToPreviousAction'            => 'rejectVisaBackToPrevious',
+        'resetVisaAction'                           => 'resetVisa',
+        'interruptVisaAction'                       => 'interruptVisa',
+        'sendToParallelOpinion'                     => 'sendToParallelOpinion',
+        'sendToOpinionCircuitAction'                => 'sendToOpinionCircuit',
+        'continueOpinionCircuitAction'              => 'continueOpinionCircuit',
+        'giveOpinionParallelAction'                 => 'giveOpinionParallel',
+        'validateParallelOpinionDiffusionAction'    => 'validateParallelOpinionDiffusion',
+        'reconcileAction'                           => 'reconcile',
+        'noConfirmAction'                           => null
     ];
 
     public static function terminateAction(array $args)
@@ -874,6 +880,89 @@ class ActionMethodController
             'where' => ['res_id = ?'],
             'data'  => [$args['resId']]
         ]);
+
+        return true;
+    }
+
+    public static function reconcile(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'data']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['data']);
+
+        $resource = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'format', 'subject'], 'resId' => $args['resId']]);
+        if (empty($resource['filename'])) {
+            return ['errors' => ['Document has no file']];
+        }
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+        if (empty($docserver['path_template'])) {
+            return ['errors' => ['Docserver does not exist']];
+        }
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resource['path']) . $resource['filename'];
+        if (!is_file($pathToDocument)) {
+            return ['errors' => ['Document not found on docserver']];
+        }
+
+        $targetResource = ResModel::getById(['select' => ['category_id', 'filename', 'version'], 'resId' => $args['data']['resId']]);
+        if (empty($targetResource)) {
+            return ['errors' => ['Target resource does not exist']];
+        } elseif ($targetResource['category_id'] == 'outgoing' && empty($targetResource['filename'])) {
+            return ['errors' => ['Target resource has no file']];
+        }
+
+        if ($targetResource['category_id'] == 'outgoing') {
+            $storeResult = DocserverController::storeResourceOnDocServer([
+                'collId'            => 'letterbox_coll',
+                'docserverTypeId'   => 'DOC',
+                'encodedResource'   => base64_encode(file_get_contents($pathToDocument)),
+                'format'            => 'pdf'
+            ]);
+            if (!empty($storeResult['errors'])) {
+                return ['errors' => ["[storeResourceOnDocServer] {$storeResult['errors']}"]];
+            }
+            AdrModel::createDocumentAdr([
+                'resId'         => $args['data']['resId'],
+                'type'          => 'SIGN',
+                'docserverId'   => $storeResult['docserver_id'],
+                'path'          => $storeResult['directory'],
+                'filename'      => $storeResult['file_destination_name'],
+                'version'       => $targetResource['version'],
+                'fingerprint'   => $storeResult['fingerPrint']
+            ]);
+
+        } else {
+            $id = StoreController::storeAttachment([
+                'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
+                'type'          => 'response_project',
+                'resIdMaster'   => $args['data']['resId'],
+                'title'         => $resource['subject']
+            ]);
+            if (empty($id) || !empty($id['errors'])) {
+                return ['errors' => ['[storeAttachment] ' . $id['errors']]];
+            }
+            ConvertPdfController::convert([
+                'resId'     => $id,
+                'collId'    => 'attachments_coll'
+            ]);
+
+            $id = StoreController::storeAttachment([
+                'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
+                'type'          => 'signed_response',
+                'resIdMaster'   => $args['data']['resId'],
+                'title'         => $resource['subject'],
+                'originId'      => $id
+            ]);
+            if (empty($id) || !empty($id['errors'])) {
+                return ['errors' => ['[storeAttachment] ' . $id['errors']]];
+            }
+            ConvertPdfController::convert([
+                'resId'     => $id,
+                'collId'    => 'attachments_coll'
+            ]);
+        }
+
+        ResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
 
         return true;
     }

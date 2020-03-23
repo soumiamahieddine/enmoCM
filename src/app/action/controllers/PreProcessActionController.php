@@ -1460,6 +1460,56 @@ class PreProcessActionController
         return $response->withJson(['errors' => $emptyFields, 'success' => $canClose]);
     }
 
+    public function checkReconcile(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
+
+        $targetResource = ResModel::getById(['select' => ['category_id', 'filename'], 'resId' => $body['data']['resId']]);
+        if ($targetResource['category_id'] == 'outgoing' && empty($targetResource['filename'])) {
+            return $response->withJson(['fatalError' => 'Target resource has no file', 'reason' => 'targetResourceHasNoFile']);
+        }
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename']]);
+
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            if (empty($resource['filename'])) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noFilename'];
+                continue;
+            }
+
+            $targetResource = ResModel::getById(['select' => ['category_id', 'filename'], 'resId' => $body['data']['resId']]);
+            if (empty($targetResource)) {
+                return ['errors' => ['Target resource does not exist']];
+            } elseif ($targetResource['category_id'] == 'outgoing' && empty($targetResource['filename'])) {
+                return ['errors' => ['Target resource has no file']];
+            }
+
+            $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
+    }
+
     private static function getNonLockedResources(array $args)
     {
         ValidatorModel::notEmpty($args, ['resources', 'userId']);

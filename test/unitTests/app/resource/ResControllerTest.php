@@ -321,7 +321,7 @@ class ResControllerTest extends TestCase
     public function testDelete()
     {
         //  DELETE
-        \Resource\models\ResModel::delete(['resId' => self::$id]);
+        \Resource\models\ResModel::update(['set' => ['status' => 'DEL'], 'where' => ['res_id = ?'], 'data' => [self::$id]]);
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);

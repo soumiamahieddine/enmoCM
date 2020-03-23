@@ -107,18 +107,15 @@ abstract class ResModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
-        DatabaseModel::update([
+        DatabaseModel::delete([
             'table' => 'res_letterbox',
-            'set'   => [
-                'status'    => 'DEL'
-            ],
-            'where' => ['res_id = ?'],
-            'data'  => [$aArgs['resId']]
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
