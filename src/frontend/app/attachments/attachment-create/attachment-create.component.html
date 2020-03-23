@@ -13,7 +13,7 @@
         <div *ngIf="loading" class="loading">
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
-        <mat-tab-group #pjList style="width: 100%;" [(selectedIndex)]="indexTab" (selectedIndexChange)="test($event)" *ngIf="!loading">
+        <mat-tab-group #pjList style="width: 100%;" [(selectedIndex)]="indexTab" (selectedIndexChange)="updateFile($event)" *ngIf="!loading">
             <mat-tab *ngFor="let attachment of attachments; let i=index" [disabled]="isDocLoading()">
                 <ng-template mat-tab-label>
                     <span [class.complete]="isPjValid(i)">PJ n°{{i+1}}&nbsp;<i *ngIf="isPjValid(i)"
