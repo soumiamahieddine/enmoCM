@@ -398,9 +398,8 @@ An action page is described in a ACTIONPAGE tag :
     </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>reconcile</ID>
-        <LABEL>_RECONCILE_RESOURCE</LABEL>
+        <LABEL>_RECONCILE</LABEL>
         <NAME>reconcile</NAME>
-        <DESC>_RECONCILE_RESOURCE_DESC</DESC>
         <component>reconcileAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
