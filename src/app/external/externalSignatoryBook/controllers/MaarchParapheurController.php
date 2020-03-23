@@ -199,7 +199,7 @@ class MaarchParapheurController
                 return ['error' => 'steps is empty'];
             }
 
-            $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
+            $excludeAttachmentTypes = ['signed_response'];
 
             $attachments = AttachmentModel::get([
                 'select'    => [

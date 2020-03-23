@@ -54,12 +54,11 @@ if (isset($_REQUEST['res_id_master'])) {
 
     $db = new Database();
 
-    $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
     $query = "SELECT * FROM res_attachments 
                             WHERE res_id_master = ? 
-                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?)  AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 
+                            AND status NOT IN ('DEL', 'OBS') AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 
                             ORDER BY creation_date desc";
-    $arrayPDO = array($_REQUEST['res_id_master'], $excludeAttachmentTypes, $_SESSION['user']['UserId']);
+    $arrayPDO = array($_REQUEST['res_id_master'], $_SESSION['user']['UserId']);
     $stmt = $db->query($query, $arrayPDO);
 
     while ($return_db = $stmt->fetchObject()) {

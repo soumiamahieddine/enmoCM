@@ -49,7 +49,7 @@ trait ExternalSignatoryBookTrait
                         'res_id', 'status'
                     ],
                     'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-                    'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
+                    'data'      => [$args['resId'], ['signed_response']]
                 ]);
 
                 foreach ($attachments as $attachment) {

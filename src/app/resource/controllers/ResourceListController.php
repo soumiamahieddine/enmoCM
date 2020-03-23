@@ -88,7 +88,7 @@ class ResourceListController
         $defaultAction = [];
         $displayFolderTags = false;
         if (!empty($resIds)) {
-            $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
+            $excludeAttachmentTypes = ['signed_response'];
             $attachments = AttachmentModel::get([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
                 'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],

@@ -169,8 +169,8 @@ class FullTextController
         } else {
             $resIds = AttachmentModel::get([
                 'select'    => ['res_id'],
-                'where'     => ['attachment_type <> ?', 'status NOT IN (?)', 'fulltext_result = ?'],
-                'data'      => ['print_folder', ['DEL','OBS','TMP'], 'ERROR'],
+                'where'     => ['status NOT IN (?)', 'fulltext_result = ?'],
+                'data'      => [['DEL','OBS','TMP'], 'ERROR'],
                 'orderBy'   => ['res_id DESC'],
             ]);
         }

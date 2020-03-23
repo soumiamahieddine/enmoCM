@@ -27,12 +27,12 @@ if ($_SESSION['req'] == 'details') {
     } else {
         $stmt = $db->query("SELECT res_id, creation_date, title, format FROM "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','signed_response','outgoing_mail_signed','converted_pdf','outgoing_mail','print_folder','aihp'". $exclude . ") and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
+            . " WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type NOT IN ('response_project','signed_response','outgoing_mail_signed','outgoing_mail','aihp'". $exclude . ") and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
     }
 } else {
     $stmt = $db->query("SELECT res_id FROM "
         . $_SESSION['tablename']['attach_res_attachments']
-        . " WHERE status <> 'DEL'  and attachment_type NOT IN ('converted_pdf', 'print_folder'". $exclude . ") and res_id_master = ? and coll_id = ? and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
+        . " WHERE status <> 'DEL' and res_id_master = ? and coll_id = ? and (status <> 'TMP' or (typist = ? and status = 'TMP'))", array($res_id, $coll_id, $_SESSION['user']['UserId']));
 }
 $nbAttach = $stmt->rowCount();
 

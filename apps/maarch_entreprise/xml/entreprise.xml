@@ -29,21 +29,9 @@
             <id>waybill</id>
             <label>_WAYBILL</label>
         </type> -->
-	    <type show="false" with_chrono="true" icon="FC" sign="false">
-            <id>routing</id>
-            <label>_ROUTING</label>
-        </type>
         <type show="true" with_chrono="true" icon="DS" sign="true">
             <id>outgoing_mail</id>
             <label>_OUTGOING_MAIL</label>
-        </type>
-	    <type show="false" with_chrono="false" icon="" sign="false">
-            <id>converted_pdf</id>
-            <label>_CONVERTED_PDF</label>
-        </type>
-	    <type show="false" with_chrono="false" icon="" sign="false">
-            <id>print_folder</id>
-            <label>_PRINT_FOLDER</label>
         </type>
     </attachment_types>
     <contact_check>

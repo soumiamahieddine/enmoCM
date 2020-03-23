@@ -445,7 +445,7 @@ class PreProcessActionController
                             'validation_date', 'relation', 'origin_id'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-                        'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
+                        'data'      => [$resId, ['signed_response']]
                     ]);
 
                     $integratedResource = ResModel::get([
@@ -532,7 +532,7 @@ class PreProcessActionController
                             'validation_date', 'relation', 'origin_id'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-                        'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
+                        'data'      => [$resId, ['signed_response']]
                     ]);
                     
                     if (empty($attachments)) {
@@ -714,8 +714,8 @@ class PreProcessActionController
         if (!empty($aTemplates)) {
             $aAttachments = AttachmentModel::get([
                 'select'    => ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier as chrono', 'recipient_id', 'recipient_type'],
-                'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', 'in_send_attach = ?'],
-                'data'      => [$data['resources'], ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder'], true],
+                'where'     => ['res_id_master in (?)', 'status not in (?)', 'in_send_attach = ?'],
+                'data'      => [$data['resources'], ['OBS', 'DEL', 'TMP', 'FRZ'], true],
                 'groupBy'   => ['res_id_master', 'title', 'res_id', 'chrono', 'recipient_id', 'recipient_type']
             ]);
 

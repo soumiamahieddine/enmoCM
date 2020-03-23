@@ -189,7 +189,7 @@ class IxbusController
                 'validation_date', 'relation', 'origin_id'
             ],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-            'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
+            'data'      => [$aArgs['resIdMaster'], ['incoming_mail_attachment', 'signed_response']]
         ]);
 
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();

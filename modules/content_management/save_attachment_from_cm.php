@@ -82,7 +82,7 @@ if ($arrayIsAllowed['status'] == false) {
                 var eleframe1 = window.parent.top.document.getElementById('list_attach');
                 eleframe1.location.href = '<?php
 		            echo $_SESSION['config']['businessappurl'];
-		            ?>index.php?display=true&module=attachments&page=frame_list_attachments&attach_type_exclude=converted_pdf,print_folder&mode=normal&load';
+		            ?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&load';
             </script>
             <?php
             exit();
