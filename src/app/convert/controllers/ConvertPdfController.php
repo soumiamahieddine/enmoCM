@@ -326,7 +326,7 @@ class ConvertPdfController
         return $response->withJson($encodedFiles);
     }
 
-    public function getConvertedFileWithEncodedFile(Request $request, Response $response)
+    public function getConvertedFileFromEncodedFile(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 

@@ -13,7 +13,7 @@
         <div *ngIf="loading" class="loading">
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
-        <mat-tab-group #pjList style="width: 100%;" [(selectedIndex)]="indexTab" *ngIf="!loading">
+        <mat-tab-group #pjList style="width: 100%;" [(selectedIndex)]="indexTab" (selectedIndexChange)="test($event)" *ngIf="!loading">
             <mat-tab *ngFor="let attachment of attachments; let i=index" [disabled]="isDocLoading()">
                 <ng-template mat-tab-label>
                     <span [class.complete]="isPjValid(i)">PJ n°{{i+1}}&nbsp;<i *ngIf="isPjValid(i)"
@@ -118,7 +118,7 @@
             </mat-tab>
             <mat-tab disabled class="addPJ">
                 <ng-template mat-tab-label>
-                    <span><button mat-icon-button [disabled]="sendMassMode" [title]="lang.newAttachment"
+                    <span><button mat-icon-button [disabled]="sendMassMode || isDocLoading()" [title]="lang.newAttachment"
                             (click)="$event.stopPropagation();newPj()">
                             <mat-icon class="fa fa-plus"></mat-icon>
                         </button></span>
@@ -128,10 +128,10 @@
     </mat-dialog-content>
     <div mat-dialog-actions class="actions">
         <button mat-raised-button color="primary" *ngIf="creationMode && !loading" (click)="onSubmit()"
-            [disabled]="isDocLoading()">{{lang.validate}}</button>
+            [disabled]="canValidatePj()">{{lang.validate}}</button>
         <button mat-raised-button color="primary" *ngIf="sendMassMode && !loading" (click)="onSubmit('mailing')"
-            [disabled]="isDocLoading()">{{lang.mailing}}</button>
-        <button mat-raised-button mat-button *ngIf="creationMode && !loading" [disabled]="isDocLoading()"
+            [disabled]="canValidatePj()">{{lang.mailing}}</button>
+        <button mat-raised-button mat-button *ngIf="creationMode && !loading" [disabled]="canValidatePj()"
             [mat-dialog-close]="">{{lang.cancel}}</button>
     </div>
 </div>

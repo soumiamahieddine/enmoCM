@@ -152,7 +152,7 @@ export class DocumentViewerComponent implements OnInit {
             })
         ).subscribe();
 
-        if (this.base64 !== null) {
+        if (!this.functions.empty(this.base64)) {
             this.loadFileFromBase64();
         } else if (this.tmpFilename != '' && this.tmpFilename !== undefined) {
             this.http.get('../../rest/convertedFile/' + this.tmpFilename).pipe(
@@ -941,6 +941,58 @@ export class DocumentViewerComponent implements OnInit {
                 tap(() => {
                     this.closeEditor();
                     this.loadRessource(this.resId);
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    loadTmpDocument(base64Content: string, format: string) {
+        return new Promise((resolve, reject) => {
+            this.http.post(`../../rest/convertedFile/encodedFile`, { format: format, encodedFile : base64Content}).pipe(
+                tap((data: any) => {
+                    console.log(data);
+                    this.file = {
+                        name: 'maarch',
+                        format: format,
+                        type: 'application/pdf',
+                        contentMode: 'base64',
+                        content: base64Content,
+                        src: this.base64ToArrayBuffer(data.encodedResource)
+                    };
+                }),
+                //exhaustMap((data) => this.http.post(`../../rest/convertedFile/encodedFile`, data.content)),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    saveTmpDocument() {
+        return new Promise((resolve, reject) => {
+            this.getFile().pipe(
+                tap((data: any) => {
+                    this.file = {
+                        name: 'maarch',
+                        format: data.format,
+                        type: 'application/pdf',
+                        contentMode: 'base64',
+                        content: data.content,
+                        src: null
+                    };
+                }),
+                exhaustMap((data) => this.http.post(`../../rest/convertedFile/encodedFile`, { format: data.format, encodedFile : data.content})),
+                tap((data: any) => {
+                    this.file.src = this.base64ToArrayBuffer(data.encodedResource);
+                    this.closeEditor();
                     resolve(true);
                 }),
                 catchError((err: any) => {
