@@ -134,9 +134,9 @@ export class UserAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.route.params.subscribe((params: any) => {
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
-            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
+        this.route.params.subscribe((params: any) => {
 
             if (typeof params['id'] == "undefined") {
 

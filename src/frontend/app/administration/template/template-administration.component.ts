@@ -62,11 +62,9 @@ export class TemplateAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.route.params.subscribe(params => {
-
-            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
-
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.templateCreation);
 
