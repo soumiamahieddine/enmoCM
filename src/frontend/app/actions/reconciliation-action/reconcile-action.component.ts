@@ -34,7 +34,7 @@ export class ReconcileActionComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        //this.checkReconcile();
+        this.checkReconcile();
     }
 
     onSubmit() {

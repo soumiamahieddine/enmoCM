@@ -901,7 +901,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    reconciliationAction(options: any = null) {
+    reconcileAction(options: any = null) {
         const dialogRef = this.dialog.open(ReconcileActionComponent, {
             panelClass: 'maarch-modal',
             autoFocus: false,
