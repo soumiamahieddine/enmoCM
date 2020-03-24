@@ -2827,7 +2827,7 @@ if (!defined('_HOW_CAN_I_LOGIN')) {
     define('_HOW_CAN_I_LOGIN', 'I can not log on...');
 }
 if (!defined('_CONNECT')) {
-    define('_CONNECT', 'To log on');
+    define('_CONNECT', 'Log in');
 }
 if (!defined('_LOGIN_MODE')) {
     define('_LOGIN_MODE', 'Type of authentication');

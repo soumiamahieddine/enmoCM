@@ -41,7 +41,7 @@ export const LANG_NL = {
     "activeCron"                            : "Actieve ta(a)k(en)",
     "actives"                               : "Actief",
     "add"                                   : "Toevoegen",
-    "addAllDatas"                           : "_TO_TRANSLATE",
+    "addAllData"                           : "_TO_TRANSLATE",
     "addContacts"                           : "Contacten toevoegen",
     "addCustomUnit"                         : "_TO_TRANSLATE",
     "addDoctype"                            : "Een documenttype toevoegen",
