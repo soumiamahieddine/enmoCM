@@ -920,6 +920,11 @@ class ActionMethodController
             if (!empty($storeResult['errors'])) {
                 return ['errors' => ["[storeResourceOnDocServer] {$storeResult['errors']}"]];
             }
+
+            $alreadySigned = AdrModel::getDocuments(['select' => [1], 'where' => ['type = ?', 'res_id = ?', 'version = ?'], 'data' => ['SIGN', $args['data']['resId'], $targetResource['version']]]);
+            if (!empty($alreadySigned)) {
+                AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type in (?)', 'version = ?'], 'data' => [$args['data']['resId'], ['SIGN', 'TNL'], $targetResource['version']]]);
+            }
             AdrModel::createDocumentAdr([
                 'resId'         => $args['data']['resId'],
                 'type'          => 'SIGN',
@@ -929,7 +934,6 @@ class ActionMethodController
                 'version'       => $targetResource['version'],
                 'fingerprint'   => $storeResult['fingerPrint']
             ]);
-
         } else {
             $id = StoreController::storeAttachment([
                 'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),

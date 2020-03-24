@@ -1488,10 +1488,10 @@ class PreProcessActionController
             }
 
             if (empty($resource['filename'])) {
-                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noFilename'];
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noFile'];
                 continue;
             }
-            
+
             $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
         }
 
