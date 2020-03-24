@@ -1479,11 +1479,6 @@ class PreProcessActionController
         }
         $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
-        $targetResource = ResModel::getById(['select' => ['category_id', 'filename'], 'resId' => $body['data']['resId']]);
-        if ($targetResource['category_id'] == 'outgoing' && empty($targetResource['filename'])) {
-            return $response->withJson(['fatalError' => 'Target resource has no file', 'reason' => 'targetResourceHasNoFile']);
-        }
-
         $resourcesInformation = [];
         foreach ($body['resources'] as $resId) {
             $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename']]);

@@ -477,4 +477,3 @@ define("_SENT_BY", "Sent by"); //TO TRANSLATE
 define('_TO_CCI', 'On copy hidden'); //TO TRANSLATE
 define('_PRIMARY_INFORMATION', 'Primary information'); //TO TRANSLATE
 define("_EMPTY_SUBJECT", "Empty subject"); //TO TRANSLATE
-define("_RECONCILE", "Convert mail into signed version for another mail"); //TO TRANSLATE
