@@ -24,6 +24,7 @@ export class ReconcileActionComponent implements OnInit {
     searchUrl: string = '';
     resourcesErrors: any[] = [];
     selectedRes: number[] = [];
+    noResourceToProcess: boolean = false;
 
     constructor(
         public http: HttpClient,
@@ -47,16 +48,17 @@ export class ReconcileActionComponent implements OnInit {
         this.resourcesErrors = [];
 
         return new Promise((resolve, reject) => {
-            this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkReconcile', { resources: this.data.resIds })
+            this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkReconcile', { resources: this.data.resIds,  })
             .subscribe((data: any) => {
                 if(!this.functions.empty(data.resourcesInformations.error)) {
                     this.resourcesErrors = data.resourcesInformations.error;
                 }
                 if (data.resourcesInformations.success) {
                     data.resourcesInformations.success.forEach((value: any) => {
-                        this.selectedRes.push(value);
+                        this.selectedRes.push(value.res_id);
                     });
                 }
+                this.noResourceToProcess = this.resourcesErrors.length === this.data.resIds.length;
                 resolve(true);
             }, (err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -66,18 +68,21 @@ export class ReconcileActionComponent implements OnInit {
     }
 
     executeAction() {
-        console.log(this.appSearchAdvList.getSelectedRessources());
         
-        /*this.http.put(this.data.processActionRoute, { resources: this.selectedRes }).pipe(
-            tap(() => {
-                this.dialogRef.close(this.selectedRes);
+        this.http.put(this.data.processActionRoute, { resources: this.selectedRes, data: {resId : this.appSearchAdvList.getSelectedRessources()[0]} }).pipe(
+            tap((data: any) => {
+                if (data !== null && !this.functions.empty(data.errors)) {
+                    this.notify.error(data.errors);
+                } else {
+                    this.dialogRef.close(this.selectedRes);
+                }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
                 return of(false);
             })
-        ).subscribe();*/
+        ).subscribe();
     }
 
     launchSearch(value: any) {

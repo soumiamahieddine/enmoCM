@@ -38,8 +38,10 @@ export class SearchAdvListComponent implements OnInit {
     searchResource = new FormControl();
 
     @Input('search') search: string = '';
-    @Input('currentResId') currentResId: number;
     @Input('singleMode') singleMode: boolean = false;
+    @Input('excludeRes') excludeRes: number[] = [];
+
+    
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableResourceListSort', { static: true }) sort: MatSort;
@@ -134,11 +136,11 @@ export class SearchAdvListComponent implements OnInit {
         this.selectedRes = [];
         if (e.checked) {
             this.data.forEach((element: any) => {
-                if (element['resId'] != this.currentResId) {
+                if (this.excludeRes.indexOf(element['resId']) === -1) {
                     element['checked'] = true;
                 }
             });
-            let selectResEnabled = this.allResInSearch.filter(elem => elem != this.currentResId)
+            let selectResEnabled = this.allResInSearch.filter(elem => this.excludeRes.indexOf(elem) === -1)
             this.selectedRes = JSON.parse(JSON.stringify(selectResEnabled));
         } else {
             this.data.forEach((element: any) => {

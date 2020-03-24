@@ -13,35 +13,37 @@
                     <b *ngIf="data.resIds.length === 1" color="primary" class="highlight">{{data.resource.chrono}}</b>
                     <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                         {{lang.elements}}</b> ?
-                    <div class="alert-message alert-message-info" role="alert" style="margin-top: 30px;max-width: 100%;"
-                        [innerHTML]="lang.reconcileMsg">
-                    </div>
-                    <div class="alert-message alert-message-info" role="alert" style="margin-top: 30px;max-width: 100%;"
-                        [innerHTML]="lang.selectMailToReconcile + ' : '">
-                    </div>
-                </div>
-                <div *ngIf="resourcesErrors.length > 0" class="alert-message alert-message-danger mailList"
-                    role="alert">
-                    <p>
-                        {{lang.canNotMakeAction}} :
-                    </p>
-                    <ul>
-                        <li *ngFor="let ressource of resourcesErrors">
-                            <b>{{ressource.alt_identifier}}</b> : {{lang[ressource.reason]}}
-                        </li>
-                    </ul>
                 </div>
                 <div class="col-md-12">
+                    <div *ngIf="resourcesErrors.length > 0" class="alert-message alert-message-danger mailList"
+                        style="max-width: 100%;">
+                        <p>
+                            {{lang.canNotMakeAction}} :
+                        </p>
+                        <ul>
+                            <li *ngFor="let ressource of resourcesErrors">
+                                <b>{{ressource.alt_identifier}}</b> : {{lang[ressource.reason]}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div *ngIf="!noResourceToProcess" class="col-md-12">
+                    <div class="alert-message alert-message-info" role="alert" style="max-width: 100%;"
+                        [innerHTML]="data.resIds.length === 1 ? lang.reconcileMsg : lang.reconcileMsg + '<br/>' + lang.reconcileMsg2">
+                    </div>
+                </div>
+                <div *ngIf="!noResourceToProcess" class="col-md-12">
                     <app-criteria-tool (searchUrlGenerated)="launchSearch($event)"
                         [defaultCriteria]="['resourceField','contactField']"></app-criteria-tool>
-                    <search-adv-list #appSearchAdvList [singleMode]="true"></search-adv-list>
+                    <search-adv-list #appSearchAdvList [singleMode]="true" [excludeRes]="data.resIds"></search-adv-list>
                 </div>
             </ng-container>
         </div>
     </div>
     <span class="divider-modal"></span>
     <div mat-dialog-actions class="actions">
-        <button mat-raised-button mat-button color="primary" [disabled]="loading || (appSearchAdvList !== undefined && appSearchAdvList.getSelectedRessources().length === 0)"
+        <button mat-raised-button mat-button color="primary"
+            [disabled]="loading || (appSearchAdvList !== undefined && appSearchAdvList.getSelectedRessources().length === 0) || noResourceToProcess"
             (click)="onSubmit()">{{lang.validate}}</button>
         <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
     </div>

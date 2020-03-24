@@ -1648,5 +1648,6 @@ export const LANG_NL = {
     "actionsHistory" : "Actions history", //_TO_TRANSLATE
     "noActionProcessed": "No action processed", //_TO_TRANSLATE
     "reconcileMsg": "The mails will be converted into <b>signed version</b> and linked to selected new mail.", //_TO_TRANSLATE
+    "reconcileMsg2": "If an <b>outgoing mail</b> is selected, only the <b>last mail</b> will be converted into signed version. The others will be <b>removed</b> !", //_TO_TRANSLATE
     "selectMailToReconcile": "Please, select a mail to reconcile", //_TO_TRANSLATE
 };

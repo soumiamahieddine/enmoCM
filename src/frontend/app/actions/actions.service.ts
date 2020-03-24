@@ -909,9 +909,9 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            /* tap((resIds: any) => {
-                this.unlockResourceAfterActionModal(resIds);
-            }),*/
+            tap(() => {
+                this.stopRefreshResourceLock();
+            }),
             filter((resIds: any) => !this.functions.empty(resIds)),
             tap((resIds: any) => {
                 this.endAction(resIds);
