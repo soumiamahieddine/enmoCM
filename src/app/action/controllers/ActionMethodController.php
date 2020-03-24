@@ -915,7 +915,7 @@ class ActionMethodController
                 'collId'            => 'letterbox_coll',
                 'docserverTypeId'   => 'DOC',
                 'encodedResource'   => base64_encode(file_get_contents($pathToDocument)),
-                'format'            => 'pdf'
+                'format'            => $resource['format']
             ]);
             if (!empty($storeResult['errors'])) {
                 return ['errors' => ["[storeResourceOnDocServer] {$storeResult['errors']}"]];
@@ -939,7 +939,8 @@ class ActionMethodController
                 'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
                 'type'          => 'response_project',
                 'resIdMaster'   => $args['data']['resId'],
-                'title'         => $resource['subject']
+                'title'         => $resource['subject'],
+                'format'        => $resource['format']
             ]);
             if (empty($id) || !empty($id['errors'])) {
                 return ['errors' => ['[storeAttachment] ' . $id['errors']]];
@@ -954,7 +955,8 @@ class ActionMethodController
                 'type'          => 'signed_response',
                 'resIdMaster'   => $args['data']['resId'],
                 'title'         => $resource['subject'],
-                'originId'      => $id
+                'originId'      => $id,
+                'format'        => $resource['format']
             ]);
             if (empty($id) || !empty($id['errors'])) {
                 return ['errors' => ['[storeAttachment] ' . $id['errors']]];
