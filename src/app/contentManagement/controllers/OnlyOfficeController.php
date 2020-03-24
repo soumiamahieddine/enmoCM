@@ -178,7 +178,7 @@ class OnlyOfficeController
         $uri = (string)$loadedXml->onlyoffice->server_uri;
         $port = (string)$loadedXml->onlyoffice->server_port;
 
-        if (strpos($checkUrl, "{$uri}:{$port}/cache/files/") !== 0 && ($port != 80 || strpos($checkUrl, "{$uri}/cache/files/") !== 0)) {
+        if (strpos($checkUrl, "{$uri}:{$port}/cache/files/") !== 0 && (($port != 80 && $port != 443) || strpos($checkUrl, "{$uri}/cache/files/") !== 0)) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params url is not allowed']);
         }
 
