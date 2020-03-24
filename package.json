@@ -16,7 +16,7 @@
   "author": "Maarch",
   "license": "GPL-3.0",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@swimlane/ngx-charts": "^13.0.2",
     "@tinymce/tinymce-angular": "^3.4.0",
     "bootstrap": "^3.4.1",
@@ -45,14 +45,14 @@
     "@angular/cdk": "^8.2.0",
     "@angular/cli": "^8.3.23",
     "@angular/common": "^8.2.14",
-    "@angular/compiler-cli": "^8.2.14",
     "@angular/compiler": "^8.2.14",
+    "@angular/compiler-cli": "^8.2.14",
     "@angular/core": "^8.2.14",
     "@angular/forms": "^8.2.14",
     "@angular/http": "^7.2.15",
     "@angular/material": "^8.2.0",
-    "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/platform-browser": "^8.2.14",
+    "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/platform-server": "^8.2.14",
     "@angular/router": "^8.2.14",
     "@types/datatables.net": "^1.10.18",
@@ -69,7 +69,7 @@
     "tslib": "^1.11.0",
     "typescript": "3.5.3",
     "url-loader": "^1.1.2",
-    "webpack": "^4.39.2"
+    "webpack": "^4.42.1"
   },
   "repository": {}
 }
