@@ -145,8 +145,9 @@ export class ActionsService {
                 } else {
                     this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
                         tap((data: any) => {
-                            if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
+                            if (this.canExecuteAction(data.countLockedResources, data.lockers, resIds)) {
                                 try {
+                                    this.currentResIds = data.resourcesToProcess;
                                     this.lockResource();
                                     this[action.component](action.data);
                                 }

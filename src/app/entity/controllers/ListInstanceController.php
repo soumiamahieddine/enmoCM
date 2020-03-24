@@ -121,6 +121,11 @@ class ListInstanceController
             $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
             $listInstances[$key]['item_type'] = 'user';
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
+
+            $listInstances[$key]['hasPrivilege'] = true;
+            if (empty($value['process_date']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['id']])) {
+                $listInstances[$key]['hasPrivilege'] = false;
+            }
         }
 
         return $response->withJson($listInstances);

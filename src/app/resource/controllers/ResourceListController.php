@@ -542,7 +542,7 @@ class ResourceListController
             }
         }
 
-        return $response->withJson(['lockedResources' => $locked, 'lockers' => $lockers]);
+        return $response->withJson(['countLockedResources' => $locked, 'lockers' => $lockers, 'resourcesToProcess' => $resourcesToLock]);
     }
 
     public function unlock(Request $request, Response $response, array $aArgs)

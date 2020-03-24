@@ -499,8 +499,8 @@ export class SignatureBookComponent implements OnInit {
     changeLocation(resId: number, origin: string) {
         this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/lock', { resources: [resId] })
             .subscribe((data: any) => {
-                if (data.lockedResources > 0) {
-                    alert(data.lockedResources + ' ' + this.lang.warnLockRes + '.');
+                if (data.countLockedResources > 0) {
+                    alert(data.countLockedResources + ' ' + this.lang.warnLockRes + '.');
                 } else {
                     let path = "signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + resId;
                     this.router.navigate([path]);

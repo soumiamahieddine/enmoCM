@@ -90,6 +90,8 @@ export class VisaWorkflowComponent implements OnInit {
         if (this.resId !== null && !this.loadedInConstructor) {
             //this.initFilterVisaModelList();
             this.loadWorkflow(this.resId);
+        } else {
+            this.loading = false;
         }
     }
 
