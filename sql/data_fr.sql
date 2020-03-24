@@ -89,6 +89,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'print_f
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_avis_workflow');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_avis_workflow_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'private_tag');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'manage_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_contacts');
@@ -109,6 +110,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'print_folder_doc');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'private_tag');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'manage_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_contacts');
@@ -133,6 +135,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'c
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'config_avis_workflow_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'avis_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'private_tag');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'manage_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_users');
@@ -897,8 +900,7 @@ TRUNCATE TABLE contacts;
 INSERT INTO contacts VALUES (1, 'title1', 'Jean-Louis', 'ERCOLANI', 'MAARCH', '', 'Directeur Général', '11', 'Boulevard du Sud-Est', '', '', '99000', 'MAARCH LES BAINS', 'France', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (2, 'title1', 'Karim', 'SY', 'MAARCH', '', 'Administrateur', '', 'Sacré Coeur 3', '', 'Villa 9653 4ème phase', '', 'DAKAR', 'SENEGAL', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (3, 'title1', 'Laurent', 'GIOVANNONI', 'MAARCH', '', 'Directeur Général Adjoint', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
-INSERT INTO contacts VALUES (4, 'title1', 'Nicolas', 'MARTIN', 'Préfecture de Maarch Les Bains', '', '', '13', 'RUE LA PREFECTURE', NULL, '', '99000', 'MAARCH LES BAINS', '', '', '', '{"url": "https://cchaplin:maarch@preview.maarchcourrier.com"}', 'Préfecture de Maarch Les Bains', 21, '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', true, '{"m2m": "45239273100025/COU"}');
---INSERT INTO contacts VALUES (4, 'title1', 'Nicolas', 'MARTIN', 'Préfecture de Maarch Les Bains', '', '', '13', 'RUE LA PREFECTURE', NULL, '', '99000', 'MAARCH LES BAINS', '', '', '', NULL, 'Préfecture de Maarch Les Bains', 21, '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (4, 'title1', 'Nicolas', 'MARTIN', 'Préfecture de Maarch Les Bains', '', '', '13', 'RUE LA PREFECTURE', NULL, '', '99000', 'MAARCH LES BAINS', '', '', '', '{"url": "https://cchaplin:maarch@demo.maarchcourrier.com"}', 'Préfecture de Maarch Les Bains', 21, '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', true, '{"m2m": "45239273100025/COU"}');
 INSERT INTO contacts VALUES (5, 'title2', 'Brigitte', 'BERGER', 'ACME', '', 'Directrice Générale', '25', 'PLACE DES MIMOSAS', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Archivage et Conservation des Mémoires Electroniques', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (6, 'title1', 'Bernard', 'PASCONTENT', '', '', '', '25', 'route de Pampelone', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'bernard.pascontent@gmail.com', '06 08 09 07 55', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 INSERT INTO contacts VALUES (7, 'title1', 'Jacques', 'DUPONT', '', '', '', '1', 'rue du Peuplier', NULL, '', '92000', 'NANTERRE', '', '', '', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
