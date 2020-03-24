@@ -1491,14 +1491,7 @@ class PreProcessActionController
                 $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noFilename'];
                 continue;
             }
-
-            $targetResource = ResModel::getById(['select' => ['category_id', 'filename'], 'resId' => $body['data']['resId']]);
-            if (empty($targetResource)) {
-                return ['errors' => ['Target resource does not exist']];
-            } elseif ($targetResource['category_id'] == 'outgoing' && empty($targetResource['filename'])) {
-                return ['errors' => ['Target resource has no file']];
-            }
-
+            
             $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
         }
 
