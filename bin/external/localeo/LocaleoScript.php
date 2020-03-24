@@ -542,5 +542,29 @@ class LocaleoScript
         $file = fopen('bin/external/localeo/localeoScript.log', 'a');
         fwrite($file, '[' . date('Y-m-d H:i:s') . '] ' . $args['message'] . PHP_EOL);
         fclose($file);
+
+        if (strpos($args['message'], '[ERROR]') === 0) {
+            \SrcCore\controllers\LogsController::add([
+                'isTech'    => true,
+                'moduleId'  => 'localeo',
+                'level'     => 'ERROR',
+                'tableName' => '',
+                'recordId'  => 'Localeo',
+                'eventType' => 'Localeo',
+                'eventId'   => $args['message']
+            ]);
+        } else {
+            \SrcCore\controllers\LogsController::add([
+                'isTech'    => true,
+                'moduleId'  => 'localeo',
+                'level'     => 'INFO',
+                'tableName' => '',
+                'recordId'  => 'Localeo',
+                'eventType' => 'Localeo',
+                'eventId'   => $args['message']
+            ]);
+        }
+
+        \History\models\BatchHistoryModel::create(['info' => $args['message'], 'module_name' => 'localeo']);
     }
 }

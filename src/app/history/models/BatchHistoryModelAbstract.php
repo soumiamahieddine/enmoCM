@@ -37,4 +37,24 @@ abstract class BatchHistoryModelAbstract
 
         return $history;
     }
+
+    public static function create(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['info', 'module_name']);
+        ValidatorModel::stringType($args, ['info', 'module_name']);
+
+        DatabaseModel::insert([
+            'table'         => 'history_batch',
+            'columnsValues' => [
+                'module_name'       => $args['module_name'],
+                'batch_id'          => $args['batch_id'] ?? null,
+                'event_date'        => 'CURRENT_TIMESTAMP',
+                'info'              => $args['info'],
+                'total_processed'   => $args['total_processed'] ?? 0,
+                'total_errors'      => $args['total_processed'] ?? 0,
+            ]
+        ]);
+
+        return true;
+    }
 }
