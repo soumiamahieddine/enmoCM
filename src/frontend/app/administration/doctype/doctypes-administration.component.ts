@@ -30,7 +30,6 @@ export class DoctypesAdministrationComponent implements OnInit {
     currentSecondLevel: any = false;
     currentFirstLevel: any = false;
     firstLevels: any = false;
-    folderTypes: any = false;
     types: any = false;
     secondLevels: any = false;
     processModes: any = false;
@@ -218,7 +217,6 @@ export class DoctypesAdministrationComponent implements OnInit {
             this.http.get("../../rest/doctypes/firstLevel/" + data.node.original.doctypes_first_level_id )
                 .subscribe((data: any) => {
                     this.currentFirstLevel  = data['firstLevel'];
-                    this.folderTypes        = data['folderTypes'];
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -413,7 +411,6 @@ export class DoctypesAdministrationComponent implements OnInit {
         $j('#jstree').jstree('deselect_all');
         this.http.get("../../rest/administration/doctypes/new")
             .subscribe((data: any) => {
-                this.folderTypes  = data['folderTypes'];
                 this.firstLevels  = data['firstLevel'];
                 this.secondLevels = data['secondLevel'];
                 this.processModes = ['NORMAL', 'SVA', 'SVR'];
