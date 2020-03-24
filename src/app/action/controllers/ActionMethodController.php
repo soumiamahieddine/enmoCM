@@ -940,7 +940,8 @@ class ActionMethodController
                 'type'          => 'response_project',
                 'resIdMaster'   => $args['data']['resId'],
                 'title'         => $resource['subject'],
-                'format'        => $resource['format']
+                'format'        => $resource['format'],
+                'status'        => 'SIGN'
             ]);
             if (empty($id) || !empty($id['errors'])) {
                 return ['errors' => ['[storeAttachment] ' . $id['errors']]];
