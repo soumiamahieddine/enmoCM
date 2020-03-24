@@ -140,7 +140,7 @@ export class ActionsService {
             this.lockMode = lockRes;
             this.setResourceInformations(datas);
             if (this.lockMode) {
-                if (action.component == 'viewDoc') {
+                if (action.component == 'viewDoc' || action.component == 'documentDetails') {
                     this[action.component](action.data);
                 } else {
                     this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
