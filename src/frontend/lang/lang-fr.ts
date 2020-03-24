@@ -1661,7 +1661,7 @@ export const LANG_FR = {
     "downloadNumericPackage" : "Télécharger le pli numérique",
     "actionsHistory" : "Historique des actions",
     "noActionProcessed": "Aucune action effectuée",
-    "reconcileMsg": "Les courriers seront convertis en tant que <b>version signée</b> et liés au courrier qui sera sélectionnée.",
+    "reconcileMsg": "Les courriers seront convertis en tant que <b>version signée</b> et liés au courrier qui sera sélectionné.",
     "reconcileMsg2": "Si vous sélectionnez un <b>courrier départ</b>, seul le <b>dernier courrier</b> sera converti en tant de version signée. Les autres seront <b>supprimés</b> !",
-    "selectMailToReconcile": "Veuillez sélectionner le courrier cible de la reconciliation",
+    "selectMailToReconcile": "Veuillez sélectionner le courrier cible de la réconciliation",
 };
