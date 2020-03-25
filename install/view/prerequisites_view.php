@@ -78,7 +78,8 @@
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isNetCatOrNmapInstalled()
+                            $Class_Install->isNetCatOrNmapInstalled(),
+                            true
                         );?>
                     </td>
                     <td>
