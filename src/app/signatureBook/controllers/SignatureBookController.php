@@ -487,12 +487,14 @@ class SignatureBookController
             'version'       => $resource['version'],
             'fingerprint'   => $storeResult['fingerPrint']
         ]);
+        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['data']['resId'], 'TNL', $resource['version']]]);
 
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
             'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
             'data'  => [$args['resId'], $GLOBALS['userId'], 'VISA_CIRCUIT']
         ]);
+
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
