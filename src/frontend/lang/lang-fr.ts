@@ -1459,7 +1459,7 @@ export const LANG_FR = {
     "sunday":                                      "Dimanche",
     "supervision":                                 "SUPERVISION",
     "suspend":                                     "Suspendre",
-    "suspendNotification":                         "Susprendre la notification",
+    "suspendNotification":                         "Suspendre la notification",
     "suspended":                                   "Suspendu",
     "sveStartDate":                                "Date de début SVE",
     "switchInHtml":                                "Passer en mode HTML",
