@@ -20,13 +20,16 @@ use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\models\AdrModel;
+use CustomField\models\CustomFieldModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Entity\controllers\ListInstanceController;
 use Entity\models\EntityModel;
+use Entity\models\ListInstanceHistoryModel;
 use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
+use Folder\models\ResourceFolderModel;
 use History\controllers\HistoryController;
 use MessageExchange\controllers\MessageExchangeReviewController;
 use Note\models\NoteEntityModel;
@@ -34,10 +37,12 @@ use Note\models\NoteModel;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use Tag\models\ResourceTagModel;
 use User\models\UserModel;
 
 class ActionMethodController
@@ -970,6 +975,11 @@ class ActionMethodController
 
         ResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        ListInstanceModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        ListInstanceHistoryModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        ResourceContactModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        ResourceFolderModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        ResourceTagModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
 
         return true;
     }

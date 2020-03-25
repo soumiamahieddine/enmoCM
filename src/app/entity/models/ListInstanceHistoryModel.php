@@ -39,4 +39,18 @@ class ListInstanceHistoryModel
 
         return $nextSequenceId;
     }
+
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'listinstance_history',
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
+    }
 }

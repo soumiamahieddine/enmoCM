@@ -278,8 +278,8 @@ define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique');
 define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier');
 define('_FOR_ENTITY', 'pour l\'entité :');
 define('_NO_ENTITY', 'Pas d\'entité associée au courrier');
-define('_RECONCILE_RESOURCE', 'Réconcilier un document');
-define('_RECONCILE_RESOURCE_DESC', "Ajoute le fichier principal du document à un autre document");
+define('_RECONCILE_RESOURCE', 'Réconcilier un courrier');
+define('_RECONCILE_RESOURCE_DESC', "Ajoute le fichier principal du courrier à un autre courrier");
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');
