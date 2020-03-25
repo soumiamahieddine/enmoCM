@@ -325,4 +325,26 @@ class ConvertPdfController
 
         return $response->withJson($encodedFiles);
     }
+
+    public function getConvertedFileFromEncodedFile(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['format'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body format is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['encodedFile'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body encodedFile is empty']);
+        }
+
+        if (!ConvertPdfController::canConvert(['extension' => $body['format']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Format can not be converted']);
+        }
+
+        $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $body['encodedFile']]);
+        if (!empty($convertion['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $convertion['errors']]);
+        }
+
+        return $response->withJson($convertion);
+    }
 }

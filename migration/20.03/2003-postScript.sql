@@ -16,6 +16,8 @@ DELETE FROM contacts_groups_lists WHERE contact_id IS NULL;
 
 DELETE FROM resources_folders WHERE res_id NOT IN (SELECT res_id FROM res_letterbox);
 
+DELETE FROM res_attachments WHERE attachment_type in ('converted_pdf', 'print_folder', 'routing');
+
 DROP TABLE IF EXISTS contacts_res;
 DROP TABLE IF EXISTS contact_addresses;
 DROP TABLE IF EXISTS contact_communication;

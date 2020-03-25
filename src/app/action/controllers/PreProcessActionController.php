@@ -25,6 +25,7 @@ use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use ExternalSignatoryBook\controllers\IxbusController;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
 use IndexingModel\models\IndexingModelFieldModel;
@@ -414,8 +415,9 @@ class PreProcessActionController
                 'noAttachment'  => []
             ];
             if ($signatureBookEnabled == 'ixbus') {
-                // TODO
-            } elseif (in_array($signatureBookEnabled, ['maarchParapheur', 'fastParapheur', 'iParapheur'])) {
+                $additionalsInfos['ixbus'] = IxbusController::getInitializeDatas($config);
+            }
+            if (in_array($signatureBookEnabled, ['maarchParapheur', 'fastParapheur', 'iParapheur', 'ixbus'])) {
                 if (is_array($data['resources']) && count($data['resources']) == 1) {
                     $resDestination = ResModel::getById([
                         'select'   => ['destination'],
@@ -443,7 +445,7 @@ class PreProcessActionController
                             'validation_date', 'relation', 'origin_id'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-                        'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
+                        'data'      => [$resId, ['signed_response']]
                     ]);
 
                     $integratedResource = ResModel::get([
@@ -530,7 +532,7 @@ class PreProcessActionController
                             'validation_date', 'relation', 'origin_id'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
-                        'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
+                        'data'      => [$resId, ['signed_response']]
                     ]);
                     
                     if (empty($attachments)) {
@@ -712,8 +714,8 @@ class PreProcessActionController
         if (!empty($aTemplates)) {
             $aAttachments = AttachmentModel::get([
                 'select'    => ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier as chrono', 'recipient_id', 'recipient_type'],
-                'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', 'in_send_attach = ?'],
-                'data'      => [$data['resources'], ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder'], true],
+                'where'     => ['res_id_master in (?)', 'status not in (?)', 'in_send_attach = ?'],
+                'data'      => [$data['resources'], ['OBS', 'DEL', 'TMP', 'FRZ'], true],
                 'groupBy'   => ['res_id_master', 'title', 'res_id', 'chrono', 'recipient_id', 'recipient_type']
             ]);
 
@@ -1456,6 +1458,44 @@ class PreProcessActionController
         }
 
         return $response->withJson(['errors' => $emptyFields, 'success' => $canClose]);
+    }
+
+    public function checkReconcile(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename']]);
+
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            if (empty($resource['filename'])) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noFile'];
+                continue;
+            }
+
+            $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
     }
 
     private static function getNonLockedResources(array $args)

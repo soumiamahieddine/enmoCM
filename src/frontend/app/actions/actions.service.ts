@@ -34,6 +34,7 @@ import { GiveAvisParallelActionComponent } from './avis-give-parallel-action/giv
 import { ValidateAvisParallelComponent } from './avis-parallel-validate-action/validate-avis-parallel-action.component';
 import { HeaderService } from '../../service/header.service';
 import { FunctionsService } from '../../service/functions.service';
+import { ReconcileActionComponent } from './reconciliation-action/reconcile-action.component';
 
 @Injectable()
 export class ActionsService {
@@ -139,13 +140,14 @@ export class ActionsService {
             this.lockMode = lockRes;
             this.setResourceInformations(datas);
             if (this.lockMode) {
-                if (action.component == 'viewDoc') {
+                if (action.component == 'viewDoc' || action.component == 'documentDetails') {
                     this[action.component](action.data);
                 } else {
                     this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
                         tap((data: any) => {
-                            if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
+                            if (this.canExecuteAction(data.countLockedResources, data.lockers, resIds)) {
                                 try {
+                                    this.currentResIds = data.resourcesToProcess;
                                     this.lockResource();
                                     this[action.component](action.data);
                                 }
@@ -900,5 +902,26 @@ export class ActionsService {
         ).subscribe();
     }
 
-
+    reconcileAction(options: any = null) {
+        const dialogRef = this.dialog.open(ReconcileActionComponent, {
+            panelClass: 'maarch-modal',
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap(() => {
+                this.stopRefreshResourceLock();
+            }),
+            filter((resIds: any) => !this.functions.empty(resIds)),
+            tap((resIds: any) => {
+                this.endAction(resIds);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
 }

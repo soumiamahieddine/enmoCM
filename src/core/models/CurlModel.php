@@ -128,6 +128,9 @@ class CurlModel
         if (!empty($aArgs['soapAction'])) {
             $opts[CURLOPT_HTTPHEADER][] = "SOAPAction: \"{$aArgs['soapAction']}\"";
         }
+        if (!empty($aArgs['Cookie'])) {
+            $opts[CURLOPT_HTTPHEADER][] = "Cookie:{$aArgs['Cookie']}";
+        }
         if (!empty($aArgs['options'])) {
             foreach ($aArgs['options'] as $key => $option) {
                 $opts[$key] = $option;

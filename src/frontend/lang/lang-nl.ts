@@ -41,7 +41,7 @@ export const LANG_NL = {
     "activeCron"                            : "Actieve ta(a)k(en)",
     "actives"                               : "Actief",
     "add"                                   : "Toevoegen",
-    "addAllDatas"                           : "_TO_TRANSLATE",
+    "addAllData"                           : "_TO_TRANSLATE",
     "addContacts"                           : "Contacten toevoegen",
     "addCustomUnit"                         : "_TO_TRANSLATE",
     "addDoctype"                            : "Een documenttype toevoegen",
@@ -1589,6 +1589,13 @@ export const LANG_NL = {
     "emailSent" : "Email sent", //_TO_TRANSLATE
     "emailCannotSent" : "Error during sending email", //_TO_TRANSLATE
     "sentToFastParapheur" : "Send to FAST-Parapheur", //_TO_TRANSLATE
+    "sentToIxbusParapheur" : "Send to Ixbus Parapheur", //_TO_TRANSLATE
+    "natureIxbusParapheur" : "Document nautre", //_TO_TRANSLATE
+    "loginIxbus" : "Ixbus login", //_TO_TRANSLATE
+    "passwordIxbus" : "Ixbus password", //_TO_TRANSLATE
+    "workflowModelIxbus" : "Ixbus visa workflow", //_TO_TRANSLATE
+    "electronicSignature" : "Electronic signature", //_TO_TRANSLATE
+    "handwrittenSignature" : "Handwritten signature", //_TO_TRANSLATE
     "sentToIParapheur" : "Send to IParapheur", //_TO_TRANSLATE
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
     "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
@@ -1640,4 +1647,7 @@ export const LANG_NL = {
     "downloadNumericPackage" : "Download the numeric package", //_TO_TRANSLATE
     "actionsHistory" : "Actions history", //_TO_TRANSLATE
     "noActionProcessed": "No action processed", //_TO_TRANSLATE
+    "reconcileMsg": "The mails will be converted into <b>signed version</b> and linked to selected new mail.", //_TO_TRANSLATE
+    "reconcileMsg2": "If an <b>outgoing mail</b> is selected, only the <b>last mail</b> will be converted into signed version. The others will be <b>removed</b> !", //_TO_TRANSLATE
+    "selectMailToReconcile": "Please, select a mail to reconcile", //_TO_TRANSLATE
 };

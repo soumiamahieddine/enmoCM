@@ -181,7 +181,7 @@
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="usersDisplayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: usersDisplayedColumns;" matTooltip="{{lang.view}}" [matTooltipDisabled]="!row.allowed"
-                                         [ngStyle]="{'cursor': row.allowed ? 'pointer' : ''}" (click)="goToUserAdmin(row)">
+                                         [ngStyle]="{'cursor': row.allowed ? 'pointer' : '', 'opacity': row.allowed ? '1' : '0.6'}" (click)="goToUserAdmin(row)">
                                 </mat-row>
                             </mat-table>
                         </mat-tab>

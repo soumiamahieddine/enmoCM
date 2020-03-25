@@ -1175,21 +1175,10 @@ if (!defined('_PRINT_STATUS')) { define('_PRINT_STATUS', 'Status');}
 if (!defined('_PRINT_ALT_IDENTIFIER')) { define('_PRINT_ALT_IDENTIFIER', 'Chrononummer');}
 if (!defined('_PRINTED_FILE_NUMBER')) { define('_PRINTED_FILE_NUMBER', 'Verbindingsfiche');}
 if (!defined('_CREATED_ON')) { define('_CREATED_ON', 'Aangemaakt op');}
-if (!defined('_INFORMATIONS_OF_THE_DOCUMENT')) { define('_INFORMATIONS_OF_THE_DOCUMENT', 'Informatie over het brief');}
-if (!defined('_PRINT_ADMISSION_DATE')) { define('_PRINT_ADMISSION_DATE', 'Aankomstdatum');}
-if (!defined('_PRINT_TYPIST')) { define('_PRINT_TYPIST', 'Operator');}
-if (!defined('_PRINT_FREE_NOTES')) { define('_PRINT_FREE_NOTES', 'VRIJE AANTEKENINGEN');}
-if (!defined('_PRINT_COPIES')) { define('_PRINT_COPIES', 'KOPIEËN');}
-if (!defined('_PRINT_NOTES')) { define('_PRINT_NOTES', 'AANTEKENINGEN');}
-if (!defined('_PRINT_PROCESS_ENTITY')) { define('_PRINT_PROCESS_ENTITY', 'VERWERKENDE DIENST');}
-if (!defined('_PRINT_PRIVATE_NOTE')) { define('_PRINT_PRIVATE_NOTE', 'Privé aantekening');}
-if (!defined('_PRINT_THE')) { define('_PRINT_THE', 'Op');}
 if (!defined('_MULTI')) { define('_MULTI', 'Multi');}
 if (!defined('_MULTI_CONTACTS')) { define('_MULTI_CONTACTS', 'Veelvuldige contacten');}
 if (!defined('_CONTACT_EXTERNAL')) { define('_CONTACT_EXTERNAL', 'Extern contact');}
 if (!defined('_CONTACT_INTERNAL')) { define('_CONTACT_INTERNAL', 'Intern contact');}
-if (!defined('_DOC_LOCKER_RES_ID')) { define('_DOC_LOCKER_RES_ID', 'U kunt u het brief nr. niet openen');}
-if (!defined('_DOC_LOCKER_USER')) { define('_DOC_LOCKER_USER', 'het wordt reeds verwerkt door:');}
 if (!defined('_MONITORING_NUMBER')) { define('_MONITORING_NUMBER', 'Aanbevolen nr.');}
 if (!defined('_EXPORT_CONTACT')) { define('_EXPORT_CONTACT', 'Contacten exporteren');}
 if (!defined('_WITHOUT_FILE')) { define('_WITHOUT_FILE', 'Zonder bestand');}
@@ -1242,7 +1231,6 @@ if (!defined('_IVS_VALUE_NOT_ALLOWED')) { define('_IVS_VALUE_NOT_ALLOWED', 'De w
 if (!defined('_IVS_FORMAT_NOT_ALLOWED')) { define('_IVS_FORMAT_NOT_ALLOWED', 'Het formaat is niet toegelaten');}
 if (!defined('_IVS_TOO_MANY_DIGITS')) { define('_IVS_TOO_MANY_DIGITS', 'Teveel tekens');}
 if (!defined('_IVS_TOO_MANY_DECIMAL_DIGITS')) { define('_IVS_TOO_MANY_DECIMAL_DIGITS', 'Teveel decimale tekens');}
-if (!defined('_CONTROL_PARAM_TECHNIC')) { define('_CONTROL_PARAM_TECHNIC', 'De technische instellingen controleren');}
 if (!defined('_COMPONENT')) { define('_COMPONENT', 'Component');}
 if (!defined('_MARK_AS_READ')) { define('_MARK_AS_READ', 'Markeren als gelezen');}
 if (!defined('_MARK_AS_READ_DESC')) { define('_MARK_AS_READ_DESC', 'Markeert het document als gelezen in het bakje. Voegt het gegeven van de res_mark_as_read in de tabel in (nuttig indien gebruikt in de bakjes clauses)');}
@@ -1356,7 +1344,6 @@ if (!defined('_DEPLOY_VERSION')) { define('_DEPLOY_VERSION', 'De versie unzippen
 if (!defined('_UPDATE_END')) { define('_UPDATE_END', 'Update geslaagd');}
 if (!defined('_UPDATE_DESC_END')) { define('_UPDATE_DESC_END', 'Update geslaagd');}
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) { define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Geen versie beschikbaar voor update');}
-if (!defined('_ID_IS_EMPTY_CONTROLLER')) { define('_ID_IS_EMPTY_CONTROLLER', 'De gebruikersnaam is leeg');}
 if (!defined('_PARAM_VALUE_IS_EMPTY')) { define('_PARAM_VALUE_IS_EMPTY', 'De waarde van de instelling is leeg');}
 if (!defined('_INVALID_PARAM_DATE')) { define('_INVALID_PARAM_DATE', 'Instelling ongeldige datum');}
 if (!defined('_INVALID_INTEGER')) { define('_INVALID_INTEGER', 'Geheel is ongeldig');}

@@ -16,7 +16,8 @@ import { AppService } from '../../service/app.service';
 @Component({
     selector: 'plugin-select-search',
     templateUrl: 'select-search.component.html',
-    styleUrls: ['select-search.component.scss', '../../app/indexation/indexing-form/indexing-form.component.scss']
+    styleUrls: ['select-search.component.scss', '../../app/indexation/indexing-form/indexing-form.component.scss'],
+    providers: [AppService]
 })
 export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
     lang: any = LANG;

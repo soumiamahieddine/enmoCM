@@ -36,7 +36,7 @@ class XParaphController
             'select'    => [
                 'res_id', 'title', 'docserver_id', 'path', 'filename'],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-            'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'print_folder', 'signed_response']]
+            'data'      => [$aArgs['resIdMaster'], ['signed_response']]
         ]);
 
         $attachmentToFreeze = [];

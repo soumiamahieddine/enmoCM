@@ -675,11 +675,10 @@ if ($mode == 'normal') {
                 }
 
                 if ($tab[$i][$j][$value] == 'count_attachment') {
-                    $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
                     $query = "SELECT count(res_id) as total FROM res_attachments 
                             WHERE res_id_master = ? 
-                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?) AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
-                    $arrayPDO = array($tab[$i][0]['res_id'], $excludeAttachmentTypes, $_SESSION['user']['UserId']);
+                            AND status NOT IN ('DEL', 'OBS') AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                    $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['user']['UserId']);
                     $stmt2 = $db->query($query, $arrayPDO);
                     $return_count = $stmt2->fetchObject();
 

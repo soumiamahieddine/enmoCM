@@ -1164,24 +1164,25 @@ class ResController extends ResourceControlController
         if (!empty($resources) && $data['withFile'] === true) {
             foreach ($resources as $key => $res) {
                 $document = ResModel::getById(['resId' => $res['res_id'], 'select' => ['path', 'filename', 'docserver_id']]);
-                $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
-                if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-                    continue;
+                if (!empty($document['docserver_id'])) {
+                    $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+                    if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                        $resources[$key]['fileBase64Content'] = null;
+                    }
+                    $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+                    if (!file_exists($pathToDocument)) {
+                        $resources[$key]['fileBase64Content'] = null;
+                    }
+                    $file = file_get_contents($pathToDocument);
+                    $base64Content = base64_encode($file);
+                    $resources[$key]['fileBase64Content'] = $base64Content;
+                } else {
+                    $resources[$key]['fileBase64Content'] = null;
                 }
-                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
-                if (!file_exists($pathToDocument)) {
-                    continue;
-                }
-                $file = file_get_contents($pathToDocument);
-                $base64Content = base64_encode($file);
-                $resources[$key]['fileBase64Content'] = $base64Content;
             }
         }
         if (!empty($resources) && $sve_start_date) {
-            $aResId = [];
-            foreach ($resources as $res) {
-                $aResId[] = $res['res_id'];
-            }
+            $aResId = array_column($resources, 'res_id');
             $aSveStartDate = AcknowledgementReceiptModel::getByResIds([
                 'select'  => ['res_id', 'min(send_date) as send_date'],
                 'resIds'  => $aResId,

@@ -1596,12 +1596,15 @@ class UserController
                 return ['status' => 403, 'error' => 'Service forbidden'];
             }
             if ($GLOBALS['userId'] != 'superadmin') {
+                $users = [];
                 $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-                $users = UserEntityModel::getWithUsers([
-                    'select'    => ['users.id'],
-                    'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
-                    'data'      => [$entities, 'DEL']
-                ]);
+                if (!empty($entities)) {
+                    $users = UserEntityModel::getWithUsers([
+                        'select'    => ['users.id'],
+                        'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                        'data'      => [$entities, 'DEL']
+                    ]);
+                }
                 $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
                 $users = array_merge($users, $usersNoEntities);
                 $allowed = false;

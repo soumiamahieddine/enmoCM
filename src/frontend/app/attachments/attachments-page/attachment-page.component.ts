@@ -357,15 +357,8 @@ export class AttachmentPageComponent implements OnInit {
         if (this.functions.empty(this.appAttachmentViewer)) {
             return false;
         }
-        if (this.appAttachmentViewer.editor.async) {
-            return this.appAttachmentViewer.isEditingTemplate();
-        }
 
-        if (this.appAttachmentViewer.isEditingTemplate()) {
-            return this.appAttachmentViewer.isEditorLoaded()
-        }
-
-        return false;
+        return this.appAttachmentViewer.isEditorLoaded();
     }
 
     closeModal() {

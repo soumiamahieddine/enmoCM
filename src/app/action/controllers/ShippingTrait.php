@@ -63,7 +63,7 @@ trait ShippingTrait
         $attachments = AttachmentModel::get([
             'select'    => ['res_id', 'title', 'recipient_id', 'recipient_type', 'external_id', 'status'],
             'where'     => ['res_id_master = ?', 'in_send_attach = ?', 'status not in (?)', 'attachment_type not in (?)'],
-            'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder', 'signed_response']]
+            'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['signed_response']]
         ]);
 
         if (empty($attachments) && empty($integrations['inShipping'])) {

@@ -317,7 +317,7 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-    <ACTIONPAGE>
+    <!-- <ACTIONPAGE>
         <ID>export_seda</ID>
         <LABEL>_EXPORT_SEDA</LABEL>
         <NAME>export_seda</NAME>
@@ -376,7 +376,7 @@ An action page is described in a ACTIONPAGE tag :
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
-    </ACTIONPAGE>
+    </ACTIONPAGE> -->
     <ACTIONPAGE>
         <ID>send_shipping</ID>
         <LABEL>_SEND_MAILEVA</LABEL>
@@ -392,6 +392,16 @@ An action page is described in a ACTIONPAGE tag :
         <NAME>no_confirm_status</NAME>
         <DESC>_NO_CONFIRM_DESC</DESC>
         <component>noConfirmAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>reconcile</ID>
+        <LABEL>_RECONCILE_RESOURCE</LABEL>
+        <NAME>reconcile</NAME>
+        <DESC>_RECONCILE_RESOURCE_DESC</DESC>
+        <component>reconcileAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

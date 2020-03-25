@@ -1,6 +1,7 @@
 <?php
 
 use Contact\models\ContactCustomFieldListModel;
+use CustomField\models\CustomFieldModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use SrcCore\models\CoreConfigModel;
@@ -20,7 +21,7 @@ $DATA_TO_REPLACE = [
     'res_letterbox.contact_lastname'    => '[sender.lastname]',
     'res_letterbox.contact_society'     => '[sender.company]',
 
-    'res_letterbox.nature_id'                     => '[res_letterbox.custom_1]',
+    'res_letterbox.nature_id' => '[res_letterbox.customField_1]',
 
     // Initiator
     'res_letterbox.initiator_entity_id'           => '[initiator.entity_id]',
@@ -235,13 +236,25 @@ const DATA_CONTACT_ACKNOWLEDGEMENT_RECEIPT = [
     'contact.email'                     => '[sender.email]',
 ];
 
-$customFields = [
+$contactCustomFields = [
     ['oldId' => 'salutation_header', 'label' => 'Formule de politesse (Début)'],
     ['oldId' => 'salutation_footer', 'label' => 'Formule de politesse (Fin)'],
     ['oldId' => 'website', 'label' => 'Site internet'],
     ['oldId' => 'contact_type_label', 'label' => 'Type de contact'],
     ['oldId' => 'contact_purpose_label', 'label' => 'Dénomination'],
     ['oldId' => 'society_short', 'label' => 'Sigle de la structure'],
+];
+
+$resourceCustomFields = [
+    ['id' => 'description', 'label' => 'Autres informations'],
+    ['id' => 'external_reference', 'label' => 'Référence courrier expéditeur'],
+    ['id' => 'reference_number', 'label' => 'N° recommandé'],
+    ['id' => 'scan_date', 'label' => 'Date de scan'],
+    ['id' => 'scan_user', 'label' => 'Utilisateur de scan'],
+    ['id' => 'scan_location', 'label' => 'Lieu de scan'],
+    ['id' => 'scan_wkstation', 'label' => 'Station de scan'],
+    ['id' => 'scan_batch', 'label' => 'Batch de scan'],
+    ['id' => 'scan_postmark', 'label' => 'Tampon de scan'],
 ];
 
 chdir('../..');
@@ -256,13 +269,22 @@ foreach ($customs as $custom) {
     \SrcCore\models\DatabasePDO::reset();
     new \SrcCore\models\DatabasePDO(['customId' => $custom]);
 
-    foreach ($customFields as $customField) {
+    foreach ($contactCustomFields as $customField) {
         $idNewCustomField = ContactCustomFieldListModel::get([
             'select' => ['id'],
             'where'  => ['label = ?'],
             'data'   => [$customField['label']]
         ]);
         $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.customField_{$idNewCustomField[0]['id']}]";
+    }
+
+    foreach ($resourceCustomFields as $customField) {
+        $idNewCustomField = CustomFieldModel::get([
+            'select' => ['id'],
+            'where'  => ['label = ?'],
+            'data'   => [$customField['label']]
+        ]);
+        $DATA_TO_REPLACE["res_letterbox." . $customField['id']] = "[res_letterbox.customField_{$idNewCustomField[0]['id']}]";
     }
 
     $migrated    = 0;

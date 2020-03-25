@@ -89,7 +89,7 @@ class IParapheurController
         $attachments = AttachmentModel::get([
             'select' => ['res_id', 'docserver_id', 'path', 'filename', 'format', 'attachment_type'],
             'where'  => ['res_id_master = ?', 'attachment_type not in (?)', "status NOT IN ('DEL','OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-            'data'   => [$aArgs['resIdMaster'], ['converted_pdf', 'print_folder', 'signed_response']]
+            'data'   => [$aArgs['resIdMaster'], ['signed_response']]
         ]);
 
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();

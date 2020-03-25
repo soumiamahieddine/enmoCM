@@ -113,7 +113,7 @@ export class IndexationComponent implements OnInit {
 
     fetchData() {
         this.loading = false;
-        this.headerService.setHeader("Enregistrement d'un courrier");
+        this.headerService.setHeader(this.lang.recordingMail);
 
         this.route.params.subscribe(params => {
             this.currentGroupId = params['groupId'];

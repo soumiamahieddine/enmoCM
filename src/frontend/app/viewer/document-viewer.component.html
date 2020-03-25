@@ -118,6 +118,11 @@
     (click)="saveMainDocument()">
     <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
 </button>
+<button mat-fab *ngIf="isDocModified && mode === 'attachment'" color="accent"
+    [title]="lang.saveModifications" style="position: absolute;z-index: 3;bottom: 40px;right: 60px;"
+    (click)="saveTmpDocument()">
+    <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+</button>
 <button mat-raised-button 
     *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && (privilegeService.hasCurrentUserPrivilege('sign_document') || this.headerService.user.id == file.creatorId)" 
     color="warn"

@@ -1,7 +1,7 @@
 <mat-sidenav-container autosize class="maarch-container">
     <ng-template #adminMenuTemplate>
         <mat-nav-list>
-            <h3 mat-subheader>{{lang.actions}}</h3>
+            <h3 mat-subheader *ngIf="!creationMode">{{lang.actions}}</h3>
             <a mat-list-item (click)="createScript()" *ngIf="!creationMode && !loading && !notification.scriptcreated">
                 <mat-icon color="primary" mat-list-icon class="fa fa-terminal"></mat-icon>
                 <p mat-line>

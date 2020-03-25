@@ -80,13 +80,9 @@ Class Purge{
 
     private function purgeResource($resId)
     {
-        $aArgs = [
-            'resId'         => $resId,
-        ];
+        \Resource\models\ResModel::update(['set' => ['status' => 'DEL'], 'where' => ['res_id = ?'], 'data' => [$resId]]);
 
-        $response = \Resource\models\ResModel::delete($aArgs);
-
-        return $response;
+        return true;
     }
 
     private function purgeContact($contactId)

@@ -61,7 +61,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 
     $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, attachment_type from "
         . $tableName
-        . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
+        . " where res_id = ?", array($objectId));
 
     if ($stmt->rowCount() < 1) {
         echo '{"status":1, "error" : "'._FILE.' '._UNKNOWN.'"}';

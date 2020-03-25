@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, Inject, ViewChildren, QueryList} from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChildren, QueryList } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import {catchError, tap, filter, distinctUntilChanged} from 'rxjs/operators';
+import { catchError, tap, filter, distinctUntilChanged, take } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
@@ -43,6 +43,9 @@ export class AttachmentCreateComponent implements OnInit {
 
     now: Date = new Date();
 
+    // To catch previous index to update file
+    asyncIndexTab: number = 0;
+    
     indexTab: number = 0;
 
     resourceContacts: any[] = [];
@@ -138,7 +141,7 @@ export class AttachmentCreateComponent implements OnInit {
                             this.toggleSendMass();
                         }
                     } else {
-                        if (!this.functions.empty(data.senders) &&  data.senders.length > 1) {
+                        if (!this.functions.empty(data.senders) && data.senders.length > 1) {
                             this.toggleSendMass();
                         }
                     }
@@ -321,12 +324,15 @@ export class AttachmentCreateComponent implements OnInit {
     isValid() {
         let state = true;
         this.attachFormGroup.forEach(formgroup => {
-            if (formgroup.status === 'INVALID') {
-                state = false;
-            }
             Object.keys(formgroup.controls).forEach(key => {
                 formgroup.controls[key].markAsTouched();
             });
+            console.log(formgroup.controls);
+
+            if (formgroup.status === 'INVALID') {
+                state = false;
+            }
+
         });
         return state;
     }
@@ -340,6 +346,16 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     isDocLoading() {
+        let state = false;
+        this.appDocumentViewer.toArray().forEach((app, index: number) => {
+            if (app.isEditingTemplate()) {
+                state = true;
+            }
+        });
+        return state;
+    }
+
+    canValidatePj() {
         let state = false;
         this.appDocumentViewer.toArray().forEach((app, index: number) => {
             if (app.isEditingTemplate() && app.editor.async) {
@@ -369,37 +385,51 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     newPj() {
+        this.attachments.push({
+            title: new FormControl({ value: '', disabled: false }, [Validators.required]),
+            recipient: new FormControl({ value: !this.functions.empty(this.resourceContacts[this.attachments.length]) ? [{ id: this.resourceContacts[this.attachments.length].id, type: this.resourceContacts[this.attachments.length].type }] : null, disabled: false }),
+            type: new FormControl({ value: 'response_project', disabled: false }, [Validators.required]),
+            validationDate: new FormControl({ value: null, disabled: false }),
+            encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required]),
+            format: new FormControl({ value: '', disabled: false }, [Validators.required])
+        });
+        this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length - 1]));
+        this.indexTab = this.attachments.length - 1;
+        setTimeout(() => {
+            this.getAttachType('response_project', this.indexTab);
+        }, 800);
+    }
 
-        this.appDocumentViewer.toArray()[this.indexTab].getFile().pipe(
-            tap((data) => {
-                this.attachments[this.indexTab].encodedFile.setValue(data.content);
-                this.attachments[this.indexTab].format.setValue(data.format);
-                this.attachments.push({
-                    title: new FormControl({ value: '', disabled: false }, [Validators.required]),
-                    recipient: new FormControl({ value: !this.functions.empty(this.resourceContacts[this.attachments.length]) ? [{ id: this.resourceContacts[this.attachments.length].id, type: this.resourceContacts[this.attachments.length].type }] : null, disabled: false }),
-                    type: new FormControl({ value: 'response_project', disabled: false }, [Validators.required]),
-                    validationDate: new FormControl({ value: null, disabled: false }),
-                    encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required]),
-                    format: new FormControl({ value: '', disabled: false }, [Validators.required])
-                });
+    updateFile(index: number) {
+        if (this.functions.empty(this.attachments[this.asyncIndexTab].encodedFile.value)) {
+            console.log('ca passe!');
+            
+            this.appDocumentViewer.toArray()[this.asyncIndexTab].getFile().pipe(
+                take(1),
+                tap((data) => {
+                    console.log(data);
+                    
+                    this.attachments[this.asyncIndexTab].encodedFile.setValue(data.content);
+                    this.attachments[this.asyncIndexTab].format.setValue(data.format);
+                    this.asyncIndexTab = index;
+                }),
+            ).subscribe();
+        } else {
+            this.asyncIndexTab = index;
+        }
 
-                this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length - 1]));
-                this.indexTab = this.attachments.length - 1;
-                setTimeout(() => {
-                    this.getAttachType('response_project', this.indexTab);
-                }, 800);
-            }),
-        ).subscribe();
+
 
     }
 
     removePj(i: number) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete + ' : PJ n°' + (i + 1), msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete + ' : ' + this.lang.attachmentShort + ' n°' + (i + 1), msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             tap(() => {
                 this.indexTab = 0;
+                this.asyncIndexTab = this.indexTab;
                 this.attachments.splice(i, 1);
                 this.attachFormGroup.splice(i, 1);
             }),

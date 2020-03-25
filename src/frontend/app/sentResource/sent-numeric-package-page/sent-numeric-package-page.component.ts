@@ -79,7 +79,6 @@ export class SentNumericPackagePageComponent implements OnInit {
         "senderEmail": null
     }
 
-    communicationType: string = null;
     reference: string = null;
     messageReview: any[] = [];
 
@@ -188,13 +187,13 @@ export class SentNumericPackagePageComponent implements OnInit {
                 tap((data: any) => {
                     this.numericPackageCreatorId = data.userId;
 
+                    data.recipient.communicationMeans = data.communicationType;
                     this.recipients = [data.recipient];
 
                     this.currentSender.label = data.sender;
                     this.numericPackage.object = data.object;
                     this.numericPackageStatus = data.status.toUpperCase();
                     this.numericPackage.content = data.body;
-                    this.communicationType = data.communicationType;
                     this.reference = data.reference;
                     this.messageReview = data.messageReview.map((item: any) => {
                         return {

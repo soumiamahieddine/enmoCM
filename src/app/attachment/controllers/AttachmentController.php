@@ -101,11 +101,6 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
         }
 
-        $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-        if (in_array($attachment['type'], $excludeAttachmentTypes)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Attachment type out of perimeter']);
-        }
-
         if ($attachment['modificationDate'] == $attachment['creationDate']) {
             $attachment['modificationDate'] = null;
         }
@@ -272,7 +267,7 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an integer']);
         }
 
-        $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
+        $excludeAttachmentTypes = ['signed_response'];
 
         $attachments = AttachmentModel::get([
             'select'    => [
@@ -572,10 +567,10 @@ class AttachmentController
 
         $attachment = AttachmentModel::get([
             'select'    => ['res_id as "resId"', 'res_id_master as "resIdMaster"', 'status', 'title'],
-            'where'     => ['identifier = ?'],
-            'data'      => [$queryParams['chrono']]
+            'where'     => ['identifier = ?', 'status not in (?)'],
+            'data'      => [$queryParams['chrono'], ['DEL', 'OBS']]
         ]);
-        if (empty($attachment) || in_array($attachment[0]['status'], ['DEL', 'OBS'])) {
+        if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
         $attachment = $attachment[0];

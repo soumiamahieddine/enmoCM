@@ -118,7 +118,7 @@ class FastParapheurController
                 'res_id', 'docserver_id', 'path', 'filename', 'format', 'attachment_type'
             ],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-            'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'print_folder', 'signed_response']]
+            'data'      => [$aArgs['resIdMaster'], ['signed_response']]
         ]);
 
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -211,7 +211,7 @@ class FastParapheurController
             . $attachmentFileName . '.zip';  // The zip file need to have the same name as the attachment we want to sign
 
         if ($zip->open($zipFilePath, \ZipArchive::CREATE)!==true) {
-            exit(_ERROR_CREATE_ZIP . "<$zipFilePath>\n");
+            return ['error' => "Can not open file : <$zipFilePath>\n"];
         }
         $zip->addFile($attachmentFilePath, $attachmentFileName);
 

@@ -255,9 +255,10 @@ export class SignatureBookComponent implements OnInit {
             if (idToGo >= 0) {
                 $j("#send").removeAttr("disabled");
                 $j("#send").css("opacity", "1");
-                this.zone.run(() => this.changeLocation(idToGo, "action"));
+                
+                this.changeLocation(idToGo, "action");
             } else {
-                this.zone.run(() => this.backToBasket());
+                this.backToBasket();
             }
         }
     }
@@ -498,8 +499,8 @@ export class SignatureBookComponent implements OnInit {
     changeLocation(resId: number, origin: string) {
         this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/lock', { resources: [resId] })
             .subscribe((data: any) => {
-                if (data.lockedResources > 0) {
-                    alert(data.lockedResources + ' ' + this.lang.warnLockRes + '.');
+                if (data.countLockedResources > 0) {
+                    alert(data.countLockedResources + ' ' + this.lang.warnLockRes + '.');
                 } else {
                     let path = "signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + resId;
                     this.router.navigate([path]);
@@ -585,4 +586,8 @@ export class SignatureBookComponent implements OnInit {
         this.appVisaWorkflow.saveVisaWorkflow();
     }
 
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
+    }
 }

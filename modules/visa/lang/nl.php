@@ -230,26 +230,8 @@ if (!defined('_PREVIOUS')) {
 if (!defined('_PARAMETER')) {
     define('_PARAMETER', 'instelling');
 }
-if (!defined('_ID_IS_EMPTY_CONTROLLER')) {
-    define('_ID_IS_EMPTY_CONTROLLER', 'De gebruikersnaam is leeg');
-}
-if (!defined('_PARAM_CREATED_SUCCESS')) {
-    define('_PARAM_CREATED_SUCCESS', 'Instelling met succes aangemaakt');
-}
-if (!defined('_PARAM_UPDATED_SUCCESS')) {
-    define('_PARAM_UPDATED_SUCCESS', 'Update uitgevoerd');
-}
 if (!defined('_DELETE_CONFIRM')) {
     define('_DELETE_CONFIRM', 'Wilt u de instelling echt verwijderen');
-}
-if (!defined('_CONTROL_TECHNICAL_PARAMS')) {
-    define('_CONTROL_TECHNICAL_PARAMS', 'De technische instellingen controleren');
-}
-if (!defined('_DRAG_N_DROP_CHANGE_ORDER')) {
-    define('_DRAG_N_DROP_CHANGE_ORDER', 'Slepen/neerzetten om de circuitvolgorde te wijzigen');
-}
-if (!defined('_DRAG_N_DROP_CHANGE_ORDER')) {
-    define('_DRAG_N_DROP_CHANGE_ORDER', 'Slepen/neerzetten om de circuitvolgorde te wijzigen');
 }
 if (!defined('_NO_USER_SIGNED_DOC')) {
     define('_NO_USER_SIGNED_DOC', 'U heeft de bijlage NIET ondertekend!');
@@ -310,9 +292,6 @@ if (!defined('_SEND_TO_IPARAPHEUR')) {
 }
 if (!defined('_SEND_TO_FAST')) {
     define('_SEND_TO_FAST', 'Verzenden naar het FAST vloeiboek?');
-}
-if (!defined('_ERROR_CREATE_ZIP')) {
-    define('_ERROR_CREATE_ZIP', 'Bestand kan niet geopend worden');
 }
 if (!defined('_PROJECT_NUMBER')) {
     define('_PROJECT_NUMBER', 'Project brief nummer ');

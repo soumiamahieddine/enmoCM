@@ -502,7 +502,7 @@ class BasketController
         GroupBasketModel::update([
             'set'   => [
                 'list_display'      => $data['list_display'],
-                'list_event'        => $data['list_event'],
+                'list_event'        => empty($data['list_event']) ? 'documentDetails' : $data['list_event'],
                 'list_event_data'   => empty($listEventData) ? null : json_encode($listEventData)
             ],
             'where' => ['group_id = ?', 'basket_id = ?'],

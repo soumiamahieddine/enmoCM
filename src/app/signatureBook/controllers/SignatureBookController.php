@@ -144,13 +144,9 @@ class SignatureBookController
         $incomingMailAttachments = AttachmentModel::get([
             'select'    => ['res_id', 'title', 'format', 'attachment_type', 'path', 'filename'],
             'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
-            'data'      => [$resId, ['incoming_mail_attachment', 'converted_pdf']]
+            'data'      => [$resId, ['incoming_mail_attachment']]
         ]);
         foreach ($incomingMailAttachments as $value) {
-            if ($value['attachment_type'] == 'converted_pdf') {
-                continue;
-            }
-
             $realId = $value['res_id'];
 
             $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $realId, 'collId' => 'attachments_coll']);
@@ -199,14 +195,14 @@ class SignatureBookController
                 'origin', 'validation_date', 'origin_id'
             ],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
-            'data'      => [$args['resId'], ['incoming_mail_attachment', 'print_folder']],
+            'data'      => [$args['resId'], ['incoming_mail_attachment']],
             'orderBy'   => [$orderBy]
         ]);
 
         $canManageAttachment = PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $args['userId']]);
 
         foreach ($attachments as $key => $value) {
-            if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
+            if (($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
                 continue;
             }
 
@@ -224,7 +220,7 @@ class SignatureBookController
             }
 
             foreach ($attachments as $tmpKey => $tmpValue) {
-                if (strpos($value['format'], 'xl') !== 0 && $value['format'] != 'pptx' && $tmpValue['attachment_type'] == 'converted_pdf' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
+                if (strpos($value['format'], 'xl') !== 0 && $value['format'] != 'pptx' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
                     if ($value['status'] != 'SIGN') {
                         $viewerId = $tmpValue['res_id'];
                     }
@@ -289,7 +285,7 @@ class SignatureBookController
         $obsAttachments = AttachmentModel::get([
             'select'    => ['res_id', 'origin_id', 'relation', 'creation_date', 'title'],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status = ?'],
-            'data'      => [$args['resId'], ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'], 'OBS'],
+            'data'      => [$args['resId'], ['incoming_mail_attachment', 'signed_response'], 'OBS'],
             'orderBy'  => ['relation ASC']
         ]);
 
@@ -303,7 +299,7 @@ class SignatureBookController
         }
 
         foreach ($attachments as $key => $value) {
-            if ($value['attachment_type'] == 'converted_pdf' || $value['attachment_type'] == 'signed_response') {
+            if ($value['attachment_type'] == 'signed_response') {
                 unset($attachments[$key]);
                 continue;
             }
@@ -375,7 +371,7 @@ class SignatureBookController
 
         $attachmentsInResList = AttachmentModel::get([
             'select'    => ['res_id_master', 'status', 'attachment_type'],
-            'where'     => ['res_id_master in (?)', "attachment_type not in ('incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response')", "status not in ('DEL', 'TMP', 'OBS')"],
+            'where'     => ['res_id_master in (?)', "attachment_type not in ('incoming_mail_attachment', 'signed_response')", "status not in ('DEL', 'TMP', 'OBS')"],
             'data'      => [$resIds]
         ]);
 

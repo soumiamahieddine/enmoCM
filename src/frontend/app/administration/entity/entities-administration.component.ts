@@ -57,8 +57,8 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     @ViewChild('paginatorUsers', { static: false }) paginatorUsers: MatPaginator;
     @ViewChild('paginatorTemplates', { static: false }) paginatorTemplates: MatPaginator;
-    @ViewChild('tableUsers', { static: true }) sortUsers: MatSort;
-    @ViewChild('tableTemplates', { static: true }) sortTemplates: MatSort;
+    @ViewChild('tableUsers', { static: false }) sortUsers: MatSort;
+    @ViewChild('tableTemplates', { static: false }) sortTemplates: MatSort;
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
     @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
     @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;

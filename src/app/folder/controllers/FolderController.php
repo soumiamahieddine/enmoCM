@@ -680,11 +680,10 @@ class FolderController
 
             $formattedResources = [];
             if (!empty($resIds)) {
-                $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
                 $attachments = AttachmentModel::get([
                     'select'    => ['COUNT(res_id)', 'res_id_master'],
-                    'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
-                    'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['id'], 'TMP'],
+                    'where'     => ['res_id_master in (?)', 'status not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
+                    'data'      => [$resIds, ['DEL', 'OBS'], 'TMP', $GLOBALS['id'], 'TMP'],
                     'groupBy'   => ['res_id_master']
                 ]);
 

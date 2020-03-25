@@ -153,6 +153,7 @@ $app->get('/civilities', \Contact\controllers\ContactController::class . ':getCi
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
 $app->get('/convertedFile/{filename}', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileByFilename');
+$app->post('/convertedFile/encodedFile', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileFromEncodedFile');
 
 //ContentManagement
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
@@ -419,6 +420,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkRejectVisa', \Action\controllers\PreProcessActionController::class . ':checkRejectVisa');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkInterruptResetVisa', \Action\controllers\PreProcessActionController::class . ':checkInterruptResetVisa');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkCloseWithFieldsAction', \Action\controllers\PreProcessActionController::class . ':checkCloseWithFieldsAction');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkReconcile', \Action\controllers\PreProcessActionController::class . ':checkReconcile');
 
 //Search
 $app->get('/search', \Search\controllers\SearchController::class . ':get');
@@ -540,6 +542,7 @@ $app->post('/scriptNotification', \Notification\controllers\NotificationSchedule
 
 //External MessageExchanges
 $app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
+$app->delete('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':delete');
 $app->get('/messageExchanges/{id}/archiveContent', \MessageExchange\controllers\MessageExchangeController::class . ':getArchiveContentById');
 $app->post('/saveNumericPackage', \MessageExchange\controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
 $app->post('/saveMessageExchangeReturn', \MessageExchange\controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');

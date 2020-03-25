@@ -5,7 +5,7 @@ import { NotificationService } from '../../../../notification.service';
 import { HeaderService } from '../../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../../service/app.service';
-import { Observable, of as observableOf, of, empty } from 'rxjs';
+import { Observable, of} from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { switchMap, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { FormControl, Validators, ValidatorFn } from '@angular/forms';
@@ -278,7 +278,7 @@ export class ContactsFormComponent implements OnInit {
         class: 'warn',
         color: this.contactService.getFillingColor('first'),
         value: 0
-    }
+    };
 
     companyFound: any = null;
     communicationMeanInfo: string = '';
@@ -291,6 +291,8 @@ export class ContactsFormComponent implements OnInit {
     externalId_m2mLoading: boolean = false;
     externalId_m2mFilteredResult: Observable<any[]>;
     annuaryM2MId: any = null;
+
+    annuaryEnabled: boolean = false;
 
     constructor(
         public http: HttpClient,
@@ -318,6 +320,7 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
+                    this.annuaryEnabled = data.annuaryEnabled;
                 }),
                 exhaustMap(() => this.http.get("../../rest/civilities")),
                 tap((data: any) => {
@@ -347,7 +350,7 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
-
+                    this.annuaryEnabled = data.annuaryEnabled;
                 }),
                 exhaustMap(() => this.http.get("../../rest/civilities")),
                 tap((data: any) => {

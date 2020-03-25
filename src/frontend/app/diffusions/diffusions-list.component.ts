@@ -92,11 +92,12 @@ export class DiffusionsListComponent implements OnInit {
 
         await this.initRoles();
 
-        if (this.resId !== null && this.target !== 'redirect') {
+        if (this.resId !== null && this.resId != 0 && this.target !== 'redirect') {
             this.loadListinstance(this.resId);
-        } else if (this.resId === null && this.entityId !== null) {
+        } else if ((this.resId === null || this.resId == 0) && !this.functions.empty(this.entityId)) {
             this.loadListModel(this.entityId);
         }
+        this.loading = false;
     }
 
     drop(event: CdkDragDrop<string[]>) {
@@ -189,34 +190,38 @@ export class DiffusionsListComponent implements OnInit {
 
     getListinstance(resId: number) {
         return new Promise((resolve, reject) => {
-            this.http.get(`../../rest/resources/${resId}/listInstance`).pipe(
-                map((data: any) => {
-                    data.listInstance = data.listInstance.map((item: any) => {
-
-                        const obj: any = {
-                            listinstance_id: item.listinstance_id,
-                            item_mode: item.item_mode,
-                            item_type: item.item_type === 'user_id' ? 'user' : 'entity',
-                            itemSerialId: item.itemSerialId,
-                            itemId: item.item_id,
-                            itemLabel: item.labelToDisplay,
-                            itemSubLabel: item.descriptionToDisplay,
-                            difflist_type: item.difflist_type,
-                            process_date: null,
-                            process_comment: null,
-                        };
-                        return obj;
-                    });
-                    return data.listInstance;
-                }),
-                tap((listInstance: any) => {
-                    resolve(listInstance);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
+            if (resId != 0) {
+                this.http.get(`../../rest/resources/${resId}/listInstance`).pipe(
+                    map((data: any) => {
+                        data.listInstance = data.listInstance.map((item: any) => {
+    
+                            const obj: any = {
+                                listinstance_id: item.listinstance_id,
+                                item_mode: item.item_mode,
+                                item_type: item.item_type === 'user_id' ? 'user' : 'entity',
+                                itemSerialId: item.itemSerialId,
+                                itemId: item.item_id,
+                                itemLabel: item.labelToDisplay,
+                                itemSubLabel: item.descriptionToDisplay,
+                                difflist_type: item.difflist_type,
+                                process_date: null,
+                                process_comment: null,
+                            };
+                            return obj;
+                        });
+                        return data.listInstance;
+                    }),
+                    tap((listInstance: any) => {
+                        resolve(listInstance);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                resolve([]);
+            }
         });
     }
 
@@ -387,7 +392,11 @@ export class DiffusionsListComponent implements OnInit {
         let item_mode: any = 'cc';
 
         if (this.hasEmptyDest() && element.type == 'user') {
-            item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
+            if (this.currentEntityId) {
+                item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
+            } else {
+                item_mode = this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
+            }
         }
 
         let itemType = '';

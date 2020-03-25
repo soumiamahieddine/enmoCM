@@ -97,6 +97,34 @@ abstract class MessageExchangeModelAbstract
         return true;
     }
 
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'message_exchange',
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
+    }
+
+    public static function deleteUnitIdentifier(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::delete([
+            'table' => 'unit_identifier',
+            'where' => $args['where'],
+            'data'  => $args['data']
+        ]);
+
+        return true;
+    }
+
     public static function updateOperationDateMessage(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['operation_date','message_id']);

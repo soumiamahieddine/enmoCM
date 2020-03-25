@@ -8,6 +8,7 @@ import { XParaphComponent } from './x-paraph/x-paraph.component';
 import { MaarchParaphComponent } from './maarch-paraph/maarch-paraph.component';
 import { FastParaphComponent } from './fast-paraph/fast-paraph.component';
 import { IParaphComponent } from './i-paraph/i-paraph.component';
+import { IxbusParaphComponent } from './ixbus-paraph/ixbus-paraph.component';
 import { tap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -48,6 +49,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     @ViewChild('maarchParapheur', { static: false }) maarchParapheur: MaarchParaphComponent;
     @ViewChild('fastParapheur', { static: false }) fastParapheur: FastParaphComponent;
     @ViewChild('iParapheur', { static: false }) iParapheur: IParaphComponent;
+    @ViewChild('ixbus', { static: false }) ixbus: IxbusParaphComponent;
 
     constructor(
         public http: HttpClient,

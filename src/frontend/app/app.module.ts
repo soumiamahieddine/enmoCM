@@ -53,6 +53,7 @@ import { SendExternalNoteBookActionComponent }   from './actions/send-external-n
 import { XParaphComponent }                         from './actions/send-external-signatory-book-action/x-paraph/x-paraph.component';
 import { MaarchParaphComponent }                         from './actions/send-external-signatory-book-action/maarch-paraph/maarch-paraph.component';
 import { IParaphComponent }                  from './actions/send-external-signatory-book-action/i-paraph/i-paraph.component';
+import { IxbusParaphComponent }                  from './actions/send-external-signatory-book-action/ixbus-paraph/ixbus-paraph.component';
 import { FastParaphComponent }                  from './actions/send-external-signatory-book-action/fast-paraph/fast-paraph.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
@@ -66,6 +67,7 @@ import { SendAvisWorkflowComponent }               from './actions/avis-workflow
 import { SendAvisParallelComponent }               from './actions/avis-parallel-send-action/send-avis-parallel-action.component';
 import { GiveAvisParallelActionComponent }               from './actions/avis-give-parallel-action/give-avis-parallel-action.component';
 import { ValidateAvisParallelComponent }               from './actions/avis-parallel-validate-action/validate-avis-parallel-action.component';
+import { ReconcileActionComponent }               from './actions/reconciliation-action/reconcile-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -159,6 +161,7 @@ import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-
         XParaphComponent,
         MaarchParaphComponent,
         FastParaphComponent,
+        IxbusParaphComponent,
         IParaphComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
@@ -208,7 +211,8 @@ import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-
         SentResourcePageComponent,
         PrintedFolderModalComponent,
         SentNumericPackagePageComponent,
-        FolderCreateModalComponent
+        FolderCreateModalComponent,
+        ReconcileActionComponent
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,
@@ -254,7 +258,8 @@ import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-
         SentResourcePageComponent,
         PrintedFolderModalComponent,
         SentNumericPackagePageComponent,
-        FolderCreateModalComponent
+        FolderCreateModalComponent,
+        ReconcileActionComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

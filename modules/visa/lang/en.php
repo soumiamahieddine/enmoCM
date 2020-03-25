@@ -174,10 +174,6 @@ if (!defined('_DISPLAY_ATTACHMENTS')) {
 }
 /***** Signature Book *****/
 
-if (!defined('_DRAG_N_DROP_CHANGE_ORDER')) {
-    define('_DRAG_N_DROP_CHANGE_ORDER', 'Drag/Drop to change order');
-}
-
 if (!defined('_NO_USER_SIGNED_DOC')) {
     define('_NO_USER_SIGNED_DOC', 'you have NOT signed any attachment!');
 }

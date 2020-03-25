@@ -1136,10 +1136,8 @@ class Install extends functions
         exec('whereis nmap', $output2, $return2);
         $output2 = explode(':', $output2[0]);
 
-        if (empty($output[1])) {
+        if (empty($output[1]) && empty($output2[1])) {
             $error .= _NETCAT_OR_NMAP_NOT_INSTALLED;
-        } elseif (empty($output2[1])) {
-            $error .= _NETCAT_OR_NMAP_INSTALLED;
         } else {
             return true;
         }

@@ -19,13 +19,14 @@
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef style="width: 70px;flex: initial;">
                 <mat-checkbox color="primary"
+                    *ngIf="!singleMode"
                     [checked]="selectedRes.length == allResInSearch.length && selectedRes.length > 0"
                     [indeterminate]="selectedRes.length > 0 && selectedRes.length < allResInSearch.length"
                     title="{{lang.selectAllResInBasket}}" (change)="toggleAllRes($event)"></mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let row" style="width: 70px;flex: initial;">
                 <mat-checkbox color="primary" [checked]="this.selectedRes.indexOf(row.resId) !== -1" (change)="toggleRes($event,row)"
-                    (click)="$event.stopPropagation();" [disabled]="row.resId == currentResId">
+                    (click)="$event.stopPropagation();" [disabled]="excludeRes.indexOf(row.resId) > -1">
                 </mat-checkbox>
             </mat-cell>
         </ng-container>

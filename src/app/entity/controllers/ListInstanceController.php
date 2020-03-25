@@ -121,6 +121,11 @@ class ListInstanceController
             $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
             $listInstances[$key]['item_type'] = 'user';
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
+
+            $listInstances[$key]['hasPrivilege'] = true;
+            if (empty($value['process_date']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['id']])) {
+                $listInstances[$key]['hasPrivilege'] = false;
+            }
         }
 
         return $response->withJson($listInstances);
@@ -352,18 +357,28 @@ class ListInstanceController
             }
 
             $listInstances = ListInstanceModel::get([
-                'select'    => ['*'],
-                'where'     => ['res_id = ?', 'difflist_type = ?'],
-                'data'      => [$resource['resId'], self::MAPPING_TYPES[$args['type']]]
+                'select'  => ['*'],
+                'where'   => ['res_id = ?', 'difflist_type = ?'],
+                'data'    => [$resource['resId'], self::MAPPING_TYPES[$args['type']]],
+                'orderBy' => ['sequence']
             ]);
+
+
+            $newListSequenceOrdered = array_column($resource['listInstances'], null, 'sequence');
+
             ListInstanceModel::delete([
                 'where' => ['res_id = ?', 'difflist_type = ?'],
                 'data'  => [$resource['resId'], self::MAPPING_TYPES[$args['type']]]
             ]);
 
+            $minSequenceNoProcessDate = -1;
             foreach ($listInstances as $listInstanceKey => $listInstance) {
                 if (empty($listInstance['process_date'])) {
                     unset($listInstances[$listInstanceKey]);
+                } else {
+                    if ($listInstance['sequence'] > $minSequenceNoProcessDate) {
+                        $minSequenceNoProcessDate = $listInstance['sequence'];
+                    }
                 }
             }
             $listInstances =  array_values($listInstances);
@@ -377,6 +392,11 @@ class ListInstanceController
                 } elseif (!empty($listInstance['process_comment']) && !Validator::stringType()->length(1, 255)->validate($listInstance['process_comment'])) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] process_comment is too long"]);
+                }
+
+                if (!empty($newListSequenceOrdered['sequence']) && $listInstance['sequence'] < $minSequenceNoProcessDate) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] sequence is before already processed users"]);
                 }
 
                 if ($listInstance['item_type'] == 'user_id') {

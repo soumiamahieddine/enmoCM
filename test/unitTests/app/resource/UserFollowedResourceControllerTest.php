@@ -197,7 +197,7 @@ class UserFollowedResourceControllerTest extends TestCase
         $GLOBALS['id'] = $userInfo['id'];
 
         //  DELETE
-        \Resource\models\ResModel::delete(['resId' => self::$id]);
+        \Resource\models\ResModel::update(['set' => ['status' => 'DEL'], 'where' => ['res_id = ?'], 'data' => [self::$id]]);
 
         UserFollowedResourceModel::delete([
             'userId' => $GLOBALS['id'],

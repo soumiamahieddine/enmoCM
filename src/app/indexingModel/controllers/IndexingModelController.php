@@ -243,6 +243,8 @@ class IndexingModelController
                 $foundDoctype = true;
             } elseif ($field['identifier'] == 'subject') {
                 $foundSubject = true;
+            } elseif ($field['identifier'] == 'initiator') {
+                unset($body['fields'][$key]['default_value']);
             }
         }
 

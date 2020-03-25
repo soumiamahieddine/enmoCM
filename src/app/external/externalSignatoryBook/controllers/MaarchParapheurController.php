@@ -199,7 +199,7 @@ class MaarchParapheurController
                 return ['error' => 'steps is empty'];
             }
 
-            $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
+            $excludeAttachmentTypes = ['signed_response'];
 
             $attachments = AttachmentModel::get([
                 'select'    => [
@@ -967,7 +967,7 @@ class MaarchParapheurController
 
         if ($queryParams['type'] == 'resource') {
             if (!ResController::hasRightByResId(['resId' => [$args['id']], 'userId' => $GLOBALS['id']])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
+                return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
             }
             $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['external_id']]);
             if (empty($resource)) {
