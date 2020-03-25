@@ -1,5 +1,3 @@
-declare var angularGlobals: any;
-
 export const LANG_FR = {
     "ABS":                                         "Absence",
     "ADD":                                         "Ajout",
@@ -950,7 +948,7 @@ export const LANG_FR = {
     "modelDeleted":                                "Modèle supprimé",
     "modelName":                                   "Nom du modèle",
     "modelSaved":                                  "Modèle sauvegardé",
-    "modelUpdated":                                "Le Modèle a été mis à jour",
+    "modelUpdated":                                "Le modèle a été mis à jour",
     "modificationSaved":                           "Modification enregistrée",
     "modified":                                    "Modifiée",
     "modifiedBy":                                  "Modifié par",
@@ -1078,7 +1076,7 @@ export const LANG_FR = {
     "noUserDefinedInMaarchParapheur":              "Aucun utilisateur créé dans Maarch Parapheur",
     "noUserReplacement":                           "Aucun utilisateur de remplacement",
     "noVisaWorkflow":                              "Aucun circuit de visa paramétré.",
-    "noVisaWorkflowNoSignature":                   "Aucun circuit de visa paramétré.<br/><sub>Aucune signature possible.</sub>",
+    "noVisaWorkflowNoSignature":                   "Aucun circuit de visa paramétré.<br><sub>Aucune signature possible.</sub>",
     "none":                                        "Aucune",
     "notAllowedExtension":                         "Extension non autorisée",
     "notInAuthorizedEntities":                     "ne fait pas parti des <b>entités traitantes autorisées</b>.",
