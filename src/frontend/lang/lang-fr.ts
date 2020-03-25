@@ -1261,7 +1261,7 @@ export const LANG_FR = {
     "recipientShort":                              "À",
     "recipients":                                  "Destinataire(s)",
     "reconcileMsg":                                "Les courriers seront convertis en tant que <b>version signée</b> et liés au courrier qui sera sélectionné.",
-    "reconcileMsg2": "If an <b>outgoing mail</b> is selected, only the <b>last mail</b> will be converted into signed version. The others will be <b>removed</b> !",
+    "reconcileMsg2":                               "Si vous sélectionnez un <b>courrier départ</b>, seul le <b>dernier courrier</b> sera converti en tant de version signée. Les autres seront <b>supprimés</b> !",
     "record":                                      "élément(s)",
     "recordMail":                                  "Enregistrer un courrier",
     "recordingMail":                               "Enregistrement d'un courrier",
