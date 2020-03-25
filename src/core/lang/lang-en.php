@@ -251,8 +251,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Update visa date of current supervisor / sig
 define('_PROCEED_WORKFLOW', 'continue the visa flow');
 define('_PROCEED_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory in visa circuit of mail (\'process_date\' of listinstance table).');
 define('_VISA_MAIL', 'Aim the mail');
-define("_MODIFY_ATTACHMENTS", "Modify attachments");
-define("_DELETE_ATTACHMENTS", "Delete attachments");
 define("_SEND_DOCS_TO_RECOMMENDATION", "Sent a recommendation request (parallel)");
 define("_SEND_DOCS_TO_RECOMMENDATION_DESC", "Opens a modal to add or remove people to the opinion diffusion list.");
 define("_VALIDATE_RECOMMENDATION", 'Validate the recommendation request (parallel)');

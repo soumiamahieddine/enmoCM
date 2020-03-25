@@ -33,32 +33,9 @@ if (!defined("_ATTACH_ANSWER")) {
 if (!defined("_ATTACH")) {
     define("_ATTACH", "Attacher PJ");
 }
-if (!defined("_PLEASE_SELECT_FILE")) {
-    define("_PLEASE_SELECT_FILE", "Choisissez un fichier");
-}
 if (!defined("_NEW_ATTACH_ADDED")) {
     define("_NEW_ATTACH_ADDED", "Nouvelle pièce jointe");
 }
-if (!defined("_ATTACH_DELETED")) {
-    define("_ATTACH_DELETED", "Pièce jointe supprimée");
-}
-if (!defined("_ATTACHED_DOC")) {
-    define("_ATTACHED_DOC", "Pièces jointes");
-}
-
-if (!defined("_INDEX_ATTACHMENT")) {
-    define("_INDEX_ATTACHMENT", "Indexer une pièce jointe");
-}
-if (!defined("_VIEW_ATTACHMENTS")) {
-    define("_VIEW_ATTACHMENTS", "Voir les pièces jointes");
-}
-if (!defined("_VIEW_ATTACHMENTS_DESC")) {
-    define("_VIEW_ATTACHMENTS_DESC", "Voir les pièces jointes");
-}
-if (!defined("_MANAGE_ATTACHMENTS")) {
-    define("_MANAGE_ATTACHMENTS", "Gérer les pièces jointes");
-}
-
 if (!defined("_CREATED")) {
     define("_CREATED", "Créé le");
 }
@@ -131,39 +108,14 @@ if (!defined("_FILE_MISSING")) {
 if (!defined("_FILE_EMPTY")) {
     define("_FILE_EMPTY", "Le fichier est vide");
 }
-if (!defined("_EDIT_MODEL")) {
-    define("_EDIT_MODEL", "Editer");
-}
-if (!defined("_ALREADY_MODEL_SELECTED")) {
-    define("_ALREADY_MODEL_SELECTED", "Modèle déjà sélectionné");
-}
-if (!defined("_MODIFY_ANSWER")) {
-    define("_MODIFY_ANSWER", "Modifier une pièce jointe/un attachement");
-}
-if (!defined("_ATTACH_UPDATED")) {
-    define("_ATTACH_UPDATED", "Pièce jointe mise à jour");
-}
-if (!defined("_FINAL_VERSION")) {
-    define("_FINAL_VERSION", "Version finale");
-}
 if (!defined("_SHOW_PREVIOUS_VERSION")) {
     define("_SHOW_PREVIOUS_VERSION", "Voir les versions précédentes");
-}
-if (!defined("_DELETE_ATTACHMENTS")) {
-    define("_DELETE_ATTACHMENTS", "Supprimer les pièces jointes");
-}
-if (!defined("_MODIFY_ATTACHMENTS")) {
-    define("_MODIFY_ATTACHMENTS", "Modifier les pièces jointes");
 }
 if (!defined("_ATTACHEMENTS")) {
     define("_ATTACHEMENTS", "Attachements");
 }
 if (!defined("_WAYBILL")) {
     define("_WAYBILL", "Bordereau d'envoi");
-}
-
-if (!defined("_VIEW_MAIN_DOC")) {
-    define("_VIEW_MAIN_DOC", "Voir le courrier principal");
 }
 
 if (!defined("_NO_PREVIEW_AVAILABLE")) {
@@ -174,50 +126,8 @@ if (!defined("_FILE_HAS_NO_PDF")) {
     define("_FILE_HAS_NO_PDF", "La version PDF du fichier n'existe pas.");
 }
 
-// RECONCILIATION
-
-if (!defined('_RECONCILIATION')) {
-    define('_RECONCILIATION', 'Rattacher à un courrier');
-}
-if (!defined('_RECONCILIATION_COMMENT')) {
-    define('_RECONCILIATION_COMMENT', 'Module Réconciliation');
-}
-if (!defined('_RECONCILIATION_LABEL')) {
-    define('_RECONCILIATION_LABEL', 'Réconciliation');
-}
-if (!defined('_RECONCILIATION_MAIL')) {
-    define('_RECONCILIATION_MAIL', 'Rapprochement du courrier');
-}
-
 /************** Message d'erreur **************/
 
 if (!defined('_NO_RESPONSE_PROJECT')) {
     define('_NO_RESPONSE_PROJECT', 'Le courrier selectionné ne contient aucun projet de réponse. Veuillez entrer les informations manuellement');
-}
-if (!defined('_MULTIPLE_RES_ID_CHRONO')) {
-    define('_MULTIPLE_RES_ID_CHRONO', 'Plusieurs courrier ont été selectionné, merci de saisir le numéro de chrono du projet de réponse');
-}
-if (!defined('_MULTIPLE_RES_ID_DEST')) {
-    define('_MULTIPLE_RES_ID_DEST', 'Plusieurs courrier ont été selectionné, merci de saisir un destinataire');
-}
-if (!defined('_CHOOSE_ATTACH')) {
-    define('_CHOOSE_ATTACH', 'Merci de choisir un courrier auquel rattacher la pièce jointe');
-}
-if (!defined('_NO_DEST_INFOS')) {
-    define('_NO_DEST_INFOS', 'Merci de saisir un destinataire manuellement');
-}
-
-/************** INTERFACE ***********/
-
-if (!defined('_MAILING_INFO_1')) {
-    define('_MAILING_INFO_1', '<b>Publipostage activé</b> : ');
-}
-if (!defined('_MAILING_INFO_2')) {
-    define('_MAILING_INFO_2', 'Un attachement <b>maître</b> sera créé sans les champs de fusion <b>contacts</b> et <b>chrono</b>.');
-}
-if (!defined('_MAILING_INFO_3')) {
-    define('_MAILING_INFO_3', 'Si vous cliquez sur Publipostage, les attachements seront générés <b>TOUT DE SUITE</b>.<br>Si vous cliquez sur Valider ils seront générés <b>APRÈS</b> validation des <b>viseurs</b> du circuit de visa.');
-}
-if (!defined('_MAILING_INFO_4')) {
-    define('_MAILING_INFO_4', '<b>Un</b> attachement sera généré <b>par contact</b> associé au courrier.');
 }

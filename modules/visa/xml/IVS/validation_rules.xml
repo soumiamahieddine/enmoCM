@@ -9,17 +9,6 @@
 		<parameter name="pdfContent" type="string" />
 		<parameter name="errorCode" type="string" />
     </validationRule>
-    <validationRule name="vi_applet_launcher" extends="standardForm" mode="error">
-    	<parameter name="action" type="identifier" />
-    	<parameter name="objectType" type="identifier" />
-    	<parameter name="attachType" type="identifier" />
-		<parameter name="objectTable" type="cm_table_list" />
-		<parameter name="objectId" type="identifier" />
-		<parameter name="contactId" type="identifier" />
-		<parameter name="chronoAttachment" type="string" />
-		<parameter name="resMaster" type="identifier" />
-		<parameter name="modeSign" type="string" />
-    </validationRule>
     <validationRule name="vi_checkSignFile" extends="standardForm" mode="error">
     	<parameter name="res_id" type="integer" />
     </validationRule>
