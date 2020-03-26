@@ -140,7 +140,7 @@ export class NotificationsAdministrationComponent implements OnInit {
         this.dow = [
             {label:this.lang.eachDay,value:'*'},
             {label:this.lang.monday,value:"1"},
-            {label:this.lang.thuesday,value:"2"},
+            {label:this.lang.tuesday,value:"2"},
             {label:this.lang.wednesday,value:"3"},
             {label:this.lang.thursday,value:"4"},
             {label:this.lang.friday,value:"5"},

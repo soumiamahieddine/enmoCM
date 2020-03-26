@@ -164,8 +164,6 @@ define('_LINK_DELETED_TAG', 'Tag link deleted');//TRANSLATE
 define('_USERS', 'Gebruikers');
 define('_GROUPS', 'Gebruikersgroepen');
 define('_ENTITIES', 'Eenheden');
-define('_DOCTYPES', 'Soorten brieven');
-define('_FOLDERTYPES', 'Maptypes');
 define('_TAGS', 'Sleutelwoorden');
 define('_DOCSERVERS', 'Opslagruimtes');
 define('_REPORTS', 'Statistieken');

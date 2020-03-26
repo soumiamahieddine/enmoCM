@@ -45,7 +45,7 @@ export class PrintSeparatorComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.headerService.setHeader('Impression des séparateurs');
+        this.headerService.setHeader(this.lang.printSeparators);
 
         this.http.get("../../rest/entities")
             .subscribe((data: any) => {

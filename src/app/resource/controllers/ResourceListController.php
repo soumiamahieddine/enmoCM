@@ -1140,7 +1140,7 @@ class ResourceListController
 
         $folders = [];
 
-        $resIds = ResModel::get([
+        $resIds = ResModel::getOnView([
             'select' => ['res_id'],
             'where'  => $whereFolders,
             'data'   => $dataFolders

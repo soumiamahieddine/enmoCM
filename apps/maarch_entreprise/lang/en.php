@@ -1582,7 +1582,10 @@ if (!defined('_VISA_USER')) {
     define('_VISA_USER', 'For visa');
 }
 if (!defined('_VISA_USER_SEARCH')) {
-    define('_VISA_USER_SEARCH', 'Visa user');
+    define('_VISA_USER_SEARCH', 'Approver');
+}
+if (!defined('_VISA_USER_SEARCH_MIN')) {
+    define('_VISA_USER_SEARCH_MIN', 'Approver');
 }
 
 //Circuits d'avis
@@ -1609,7 +1612,7 @@ if (!defined('_ANSWER')) {
     define('_ANSWER', 'Response');
 }
 if (!defined('_DETAILS')) {
-    define('_DETAILS', 'Detailed sheet');
+    define('_DETAILS', 'Detail page');
 }
 if (!defined('_DOWNLOAD')) {
     define('_DOWNLOAD', 'Download the mail');
@@ -3464,6 +3467,9 @@ if (!defined('_EMAIL_DRAFT_SAVED')) {
 
 if (!defined('_INITIATOR')) {
     define('_INITIATOR', 'Initiating department');
+}
+if (!defined('_INITIATORS')) {
+    define('_INITIATORS', 'Entité(s) initiatrice(s)');
 }
 
 if (!defined('_QUALIF_BUSINESS')) {
