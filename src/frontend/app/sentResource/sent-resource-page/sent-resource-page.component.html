@@ -36,10 +36,10 @@
                     {{recipient.label}}{{recipient.label !== recipient.email ? ' (' + recipient.email + ')' : ''}}
                     <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
                 </mat-chip>
-                <input [formControl]="recipientsInput" [matChipInputFor]="recipientsList"
+                <input [formControl]="recipientsInput" #recipientsField [matChipInputFor]="recipientsList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
                     (matChipInputTokenEnd)="add($event, 'recipients')" [matAutocomplete]="autoEmails"
-                    (focus)="resetAutocomplete()">
+                    (focus)="resetAutocomplete()" (paste)="onPaste($event,'recipients')">
             </mat-chip-list>
             <mat-autocomplete #autoEmails="matAutocomplete"
                 (optionSelected)="addEmail($event.option.value, 'recipients')">
@@ -61,10 +61,10 @@
                     {{copy.label}}{{copy.label !== copy.email ? ' (' + copy.email + ')' : ''}}
                     <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
                 </mat-chip>
-                <input [formControl]="recipientsInput" [matChipInputFor]="copiesList"
+                <input [formControl]="recipientsInput" #copiesField [matChipInputFor]="copiesList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
                     (matChipInputTokenEnd)="add($event, 'copies')" [matAutocomplete]="autoEmails2"
-                    (focus)="resetAutocomplete()">
+                    (focus)="resetAutocomplete()" (paste)="onPaste($event,'copies')">
             </mat-chip-list>
             <mat-autocomplete #autoEmails2="matAutocomplete" (optionSelected)="addEmail($event.option.value, 'copies')">
                 <mat-option *ngFor="let option of filteredEmails | async" [value]="option">
@@ -85,10 +85,10 @@
                     {{invCopy.label}}{{invCopy.label !== invCopy.email ? ' (' + invCopy.email + ')' : ''}}
                     <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
                 </mat-chip>
-                <input [formControl]="recipientsInput" [matChipInputFor]="invCopiesList"
+                <input [formControl]="recipientsInput" #invisibleCopiesField [matChipInputFor]="invCopiesList"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
                     (matChipInputTokenEnd)="add($event, 'invisibleCopies')" [matAutocomplete]="autoEmails3"
-                    (focus)="resetAutocomplete()">
+                    (focus)="resetAutocomplete()" (paste)="onPaste($event,'invisibleCopies')">
             </mat-chip-list>
             <mat-autocomplete #autoEmails3="matAutocomplete"
                 (optionSelected)="addEmail($event.option.value, 'invisibleCopies')">

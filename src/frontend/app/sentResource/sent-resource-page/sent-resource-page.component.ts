@@ -1,5 +1,5 @@
 import { COMMA } from '@angular/cdk/keycodes';
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -82,6 +82,10 @@ export class SentResourcePageComponent implements OnInit {
     canManage: boolean = false;
     pdfMode: boolean = false;
     htmlMode: boolean = true;
+
+    @ViewChild('recipientsField', { static: true }) recipientsField: ElementRef<HTMLInputElement>;
+    @ViewChild('copiesField', { static: false }) copiesField: ElementRef<HTMLInputElement>;
+    @ViewChild('invisibleCopiesField', { static: false }) invisibleCopiesField: ElementRef<HTMLInputElement>;
 
     constructor(
         public http: HttpClient,
@@ -358,7 +362,7 @@ export class SentResourcePageComponent implements OnInit {
                         } else if (element === 'isLinked' && data.document.isLinked === true) {
                             this.emailAttach.document.isLinked = true;
                             this.emailAttach.document.format = data.document.original || data.document.original === undefined ? this.emailAttachTool.document.list[0].format : 'pdf',
-                            this.emailAttach.document.original = data.document.original;
+                                this.emailAttach.document.original = data.document.original;
                             this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
                         }
                     });
@@ -491,7 +495,7 @@ export class SentResourcePageComponent implements OnInit {
                             this.emailAttachTool[element].list = data[element].map((item: any) => {
                                 if (item.attachInMail) {
                                     this.toggleAttachMail(item, element, 'original');
-                                }                                
+                                }
                                 return {
                                     ...item,
                                     original: item.original !== undefined ? item.original : true,
@@ -697,7 +701,7 @@ export class SentResourcePageComponent implements OnInit {
             if (this.emailAttach.document.isLinked === false) {
                 this.emailAttach.document.isLinked = true;
                 this.emailAttach.document.format = mode !== 'pdf' ? item.format : 'pdf',
-                this.emailAttach.document.original = mode !== 'pdf';
+                    this.emailAttach.document.original = mode !== 'pdf';
                 this.emailAttach.document.size = mode === 'pdf' ? item.convertedDocument.size : item.size;
             }
         } else {
@@ -821,8 +825,36 @@ export class SentResourcePageComponent implements OnInit {
 
     b64DecodeUnicode(str: string) {
         // Going backwards: from bytestream, to percent-encoding, to original string.
-        return decodeURIComponent(atob(str).split('').map(function(c) {
+        return decodeURIComponent(atob(str).split('').map(function (c) {
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         }).join(''));
+    }
+
+    onPaste(event: ClipboardEvent, type: string) {
+        let clipboardData = event.clipboardData;
+        let pastedText = clipboardData.getData('text');
+        console.log(pastedText);
+        this.formatEmailAddress(pastedText, type);
+    }
+
+    formatEmailAddress(rawAddresses: string, type: string) {
+        let arrRawAdd: string[] = rawAddresses.split(/[,;]+/);
+
+        if (!this.functions.empty(arrRawAdd)) {
+
+            setTimeout(() => {
+                this.recipientsInput.setValue(null);
+
+                this[type + 'Field'].nativeElement.value = '';
+            }, 0);
+
+            arrRawAdd.forEach((rawAddress: any) => {
+                rawAddress = rawAddress.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gi);
+
+                if (!this.functions.empty(rawAddress)) {
+                    this[type].push({ label: rawAddress[0], email: rawAddress[0] });
+                }
+            });
+        }
     }
 }
