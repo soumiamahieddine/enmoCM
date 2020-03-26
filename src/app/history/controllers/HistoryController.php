@@ -179,7 +179,7 @@ class HistoryController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
+        $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info','record_id', 'event_date']]);
 
         return $response->withJson(['histories' => $aHistories]);
     }

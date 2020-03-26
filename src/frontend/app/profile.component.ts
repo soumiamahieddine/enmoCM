@@ -150,7 +150,7 @@ export class ProfileComponent implements OnInit {
     }
 
     //History
-    displayedColumns = ['event_date', 'info'];
+    displayedColumns = ['event_date', 'record_id', 'info'];
     dataSource: any;
     @ViewChild('paginatorHistory', { static: false }) paginatorHistory: MatPaginator;
     @ViewChild('tableHistorySort', { static: true }) sortHistory: MatSort;

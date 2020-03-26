@@ -80,7 +80,7 @@ export class UserAdministrationComponent implements OnInit {
         historyLastUse: { enabled: false, value: 0 }
     };
 
-    displayedColumns = ['event_date', 'event_type', 'info', 'remote_ip'];
+    displayedColumns = ['event_date', 'record_id', 'info', 'remote_ip'];
     dataSource = new MatTableDataSource(this.data);
     selectedTabIndex: number = 0;
     maarchParapheurConnectionStatus = true;
