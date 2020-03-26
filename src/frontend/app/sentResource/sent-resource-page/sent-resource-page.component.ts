@@ -833,7 +833,6 @@ export class SentResourcePageComponent implements OnInit {
     onPaste(event: ClipboardEvent, type: string) {
         let clipboardData = event.clipboardData;
         let pastedText = clipboardData.getData('text');
-        console.log(pastedText);
         this.formatEmailAddress(pastedText, type);
     }
 
