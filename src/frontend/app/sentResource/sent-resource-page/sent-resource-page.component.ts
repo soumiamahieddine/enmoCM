@@ -1,4 +1,4 @@
-import { COMMA } from '@angular/cdk/keycodes';
+import { COMMA, SEMICOLON, FF_SEMICOLON } from '@angular/cdk/keycodes';
 import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
@@ -29,7 +29,7 @@ export class SentResourcePageComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = true;
 
-    readonly separatorKeysCodes: number[] = [COMMA];
+    readonly separatorKeysCodes: number[] = [COMMA, SEMICOLON, FF_SEMICOLON, 190];
 
     availableEmailModels: any[] = [];
     availableSignEmailModels: any[] = [];
