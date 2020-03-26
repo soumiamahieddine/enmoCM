@@ -200,9 +200,9 @@ export class ExportComponent implements OnInit {
             isFunction: true
         },
         {
-            value: 'acknowledgementSendDate',
+            value: 'getAcknowledgementSendDate',
             label: this.lang.acknowledgementSendDate,
-            isFunction: false
+            isFunction: true
         },
         {
             value: '',

@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
@@ -95,10 +96,7 @@ class ExportController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$body['resources']]
         ]);
-        $allResourcesInBasket = [];
-        foreach ($rawResourcesInBasket as $resource) {
-            $allResourcesInBasket[] = $resource['res_id'];
-        }
+        $allResourcesInBasket = array_column($rawResourcesInBasket, 'res_id');
 
         $order = 'CASE res_view_letterbox.res_id ';
         foreach ($body['resources'] as $key => $resId) {
@@ -272,6 +270,9 @@ class ExportController
                     } elseif ($value['value'] == 'getDepartment') {
                         $department   = ExportController::getDepartment(['chunkedResIds' => $aArgs['chunkedResIds']]);
                         $csvContent[] = empty($department[$resource['res_id']]) ? '' : $department[$resource['res_id']];
+                    } elseif ($value['value'] == 'getAcknowledgementSendDate') {
+                        $acknwoledgementSendDate = ExportController::getAcknowledgementSendDate(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $csvContent[] = empty($acknwoledgementSendDate[$resource['res_id']]) ? '' : $acknwoledgementSendDate[$resource['res_id']];
                     } elseif (strpos($value['value'], 'custom_', 0) !== false) {
                         $csvContent[] = ExportController::getCustomFieldValue(['custom' => $value['value'], 'resId' => $resource['res_id']]);
                     }
@@ -381,6 +382,9 @@ class ExportController
                     } elseif ($value['value'] == 'getDepartment') {
                         $department = ExportController::getDepartment(['chunkedResIds' => $aArgs['chunkedResIds']]);
                         $content[]  = empty($department[$resource['res_id']]) ? '' : $department[$resource['res_id']];
+                    } elseif ($value['value'] == 'getAcknowledgementSendDate') {
+                        $acknwoledgementSendDate = ExportController::getAcknowledgementSendDate(['chunkedResIds' => $aArgs['chunkedResIds']]);
+                        $content[] = empty($acknwoledgementSendDate[$resource['res_id']]) ? '' : $acknwoledgementSendDate[$resource['res_id']];
                     } elseif (strpos($value['value'], 'custom_', 0) !== false) {
                         $content[] = ExportController::getCustomFieldValue(['custom' => $value['value'], 'resId' => $resource['res_id']]);
                     }
@@ -454,6 +458,33 @@ class ExportController
             $aCopies = ['empty'];
         }
         return $aCopies;
+    }
+
+    private static function getAcknowledgementSendDate(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['chunkedResIds']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
+
+        static $acknowledgementSendDate = [];
+        if (!empty($acknowledgementSendDate)) {
+            return $acknowledgementSendDate;
+        }
+
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $arSendDate = AcknowledgementReceiptModel::getByResIds([
+                'select'  => ['res_id', 'min(send_date) as send_date'],
+                'resIds'  => $resIds,
+                'where'   => ['send_date IS NOT NULL', 'send_date != \'\''],
+                'groupBy' => ['res_id']
+            ]);
+
+            $acknowledgementSendDate = [];
+            foreach ($arSendDate as $date) {
+                $acknowledgementSendDate[$date['res_id']] = TextFormatModel::formatDate($date['send_date']);
+            }
+        }
+
+        return $acknowledgementSendDate;
     }
 
     private static function getDepartment(array $args)
@@ -533,7 +564,7 @@ class ExportController
                 'order_by'  => ['res_id']
             ]);
 
-            foreach ($tagsRes as $key => $value) {
+            foreach ($tagsRes as $value) {
                 $tag = TagModel::getById(['id' => $value['tag_id'], 'select' => ['label']]);
                 if (!empty($tags[$value['res_id']])) {
                     $tags[$value['res_id']] .= "\n";
@@ -565,7 +596,7 @@ class ExportController
                 'order_by'  => ['res_id']
             ]);
 
-            foreach ($listInstances as $key => $listInstance) {
+            foreach ($listInstances as $listInstance) {
                 $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['firstname', 'lastname']]);
                 if (!empty($aSignatories[$listInstance['res_id']])) {
                     $aSignatories[$listInstance['res_id']] .= "\n";
@@ -597,7 +628,7 @@ class ExportController
                 'order_by'  => ['res_id']
             ]);
 
-            foreach ($attachments as $key => $attachment) {
+            foreach ($attachments as $attachment) {
                 $date  = new \DateTime($attachment['creation_date']);
                 if (!empty($aSignatureDates[$attachment['res_id']])) {
                     $aSignatureDates[$attachment['res_id']] .= "\n";

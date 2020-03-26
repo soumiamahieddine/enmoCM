@@ -42,7 +42,7 @@ export const LANG_FR = {
     "acknowledgementReceipt":                      "Accusé de réception",
     "acknowledgementReceiptType":                  "Type d'accusé de réception",
     "acknowledgementReceipts":                     "Accusés de réception",
-    "acknowledgementSendDate":                     "Date d'envoi de l'accusé de reception",
+    "acknowledgementSendDate":                     "Date d'envoi de l'accusé de réception",
     "action":                                      "Action",
     "actionAdded":                                 "Action ajoutée",
     "actionAvailable":                             "Actions disponibles",
