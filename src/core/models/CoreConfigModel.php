@@ -237,34 +237,17 @@ class CoreConfigModel
         return $xmlfile;
     }
 
-    public static function getFavIcon(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['path']);
-        ValidatorModel::stringType($aArgs, ['path']);
-
-        $customId = CoreConfigModel::getCustomId();
-
-        if (file_exists("custom/{$customId}/{$aArgs['path']}")) {
-            $path = "custom/{$customId}/{$aArgs['path']}";
-        } else {
-            $path = $aArgs['path'];
-        }
-
-        return $path;
-    }
-
     public static function initAngularStructure()
     {
         $lang = CoreConfigModel::getLanguage();
         $appName = CoreConfigModel::getApplicationName();
-        $favIconPath = CoreConfigModel::getFavIcon(["path" => "apps/maarch_entreprise/img/logo_only.svg"]);
 
         $structure = '<!doctype html>';
         $structure .= "<html lang='{$lang}'>";
         $structure .= '<head>';
         $structure .= "<meta charset='utf-8'>";
         $structure .= "<title>{$appName}</title>";
-        $structure .= "<link rel='icon' href='../../{$favIconPath}' />";
+        $structure .= "<link rel='icon' type=\"image/svg+xml\" href='static.php?filename=logo_only.svg' />";
 
         /* CSS PARTS */
         $structure .= '<link rel="stylesheet" href="../../node_modules/@fortawesome/fontawesome-free/css/all.css" media="screen" />';
