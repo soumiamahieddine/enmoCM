@@ -7,6 +7,9 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { ActionsService } from './actions.service';
 import { Subscription } from 'rxjs';
+import {ConfirmComponent} from "../../plugins/modal/confirm.component";
+import {exhaustMap, filter, tap} from "rxjs/operators";
+import {HeaderService} from "../../service/header.service";
 
 @Component({
     selector: 'app-actions-list',
@@ -47,7 +50,8 @@ export class ActionsListComponent implements OnInit {
         private notify: NotificationService,
         public dialog: MatDialog,
         private router: Router,
-        private actionService: ActionsService
+        private actionService: ActionsService,
+        private headerService: HeaderService
     ) { }
 
     dialogRef: MatDialogRef<any>;
@@ -125,5 +129,19 @@ export class ActionsListComponent implements OnInit {
 
     refreshFolders() {
         this.refreshPanelFolders.emit();
+    }
+
+    unFollow() {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.stopFollowingAlert } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: this.selectedRes } })),
+            tap((data: any) => {
+                this.notify.success(this.lang.removedFromFolder);
+                this.headerService.nbResourcesFollowed -= data.unFollowed;
+                this.refreshList();
+            })
+        ).subscribe();
     }
 }

@@ -1290,7 +1290,7 @@ export const LANG_EN = {
     "removeSignature":                             "Remove signature",
     "removeUserRedirect":                          "Remove the user from the diffusion lists",
     "removeUserRedirectInformations":              "<em>The user will be removed from the mails and entity's diffusion lists <b>except in the case where it is assignee</b></em>",
-    "removedFromFolder":                           "Mail removed from folder",
+    "removedFromFolder":                           "Mail(s) removed",
     "renewPsw":                                    "Enter the password again",
     "reports":                                     "Reports",
     "reportsAdmin":                                "Reports administration",

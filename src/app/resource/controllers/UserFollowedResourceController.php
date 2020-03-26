@@ -62,6 +62,8 @@ class UserFollowedResourceController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $nbUnFollowed = 0;
+
         foreach ($body['resources'] as $resId) {
             $following = UserFollowedResourceModel::get([
                 'where' => ['user_id = ?', 'res_id = ?'],
@@ -76,10 +78,12 @@ class UserFollowedResourceController
                 'userId' => $GLOBALS['id'],
                 'resId' => $resId
             ]);
+
+            $nbUnFollowed++;
         }
 
 
-        return $response->withStatus(204);
+        return $response->withJson(['unFollowed' => $nbUnFollowed]);
     }
 
     public function getFollowedResources(Request $request, Response $response)
