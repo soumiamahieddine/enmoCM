@@ -383,8 +383,8 @@ class ResourceControlController
                         }
                     } elseif ($customField['type'] == 'string' && !Validator::stringType()->notEmpty()->validate($body['customFields'][$customFieldId])) {
                         return ['errors' => "Body customFields[{$customFieldId}] is not a string"];
-                    } elseif ($customField['type'] == 'integer' && !Validator::intVal()->notEmpty()->validate($body['customFields'][$customFieldId])) {
-                        return ['errors' => "Body customFields[{$customFieldId}] is not an integer"];
+                    } elseif ($customField['type'] == 'integer' && !Validator::floatVal()->notEmpty()->validate($body['customFields'][$customFieldId])) {
+                        return ['errors' => "Body customFields[{$customFieldId}] is not a number"];
                     } elseif ($customField['type'] == 'date' && !Validator::date()->notEmpty()->validate($body['customFields'][$customFieldId])) {
                         return ['errors' => "Body customFields[{$customFieldId}] is not a date"];
                     }
