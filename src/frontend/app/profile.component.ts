@@ -14,6 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
 import { AppService } from '../service/app.service';
+import { FunctionsService } from '../service/functions.service';
 
 declare function $j(selector: any): any;
 
@@ -169,7 +170,8 @@ export class ProfileComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private headerService: HeaderService,
         public appService: AppService,
-        private viewContainerRef: ViewContainerRef
+        private viewContainerRef: ViewContainerRef,
+        private functions: FunctionsService
     ) {
         $j("link[href='merged_css.php']").remove();
         window['angularProfileComponent'] = {
@@ -207,6 +209,7 @@ export class ProfileComponent implements OnInit {
                     this.histories = data.histories;
                     setTimeout(() => {
                         this.dataSource = new MatTableDataSource(this.histories);
+                        this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
                         this.dataSource.paginator = this.paginatorHistory;
                         this.dataSource.sort = this.sortHistory;
                     }, 0);
