@@ -30,13 +30,13 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getContacts($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
-            $this->assertInternalType('int', $value->id);
-            $this->assertInternalType('string', $value->contact);
-            $this->assertInternalType('string', $value->address);
+            $this->assertIsInt($value->id);
+            $this->assertIsString($value->contact);
+            $this->assertIsString($value->address);
         }
     }
 
@@ -58,7 +58,7 @@ class AutocompleteControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         foreach ($responseBody as $value) {
-            $this->assertInternalType('int', $value->id);
+            $this->assertIsInt($value->id);
             // $this->assertInternalType('string', $value->idToDisplay);
             // $this->assertInternalType('string', $value->otherInfo);
             $this->assertNotEmpty($value->type);
@@ -88,16 +88,16 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getUsers($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
             $this->assertSame('user', $value->type);
-            $this->assertInternalType('string', $value->id);
+            $this->assertIsString($value->id);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertIsString($value->idToDisplay);
             $this->assertNotEmpty($value->idToDisplay);
-            $this->assertInternalType('string', $value->otherInfo);
+            $this->assertIsString($value->otherInfo);
         }
     }
 
@@ -117,14 +117,14 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getUsersForAdministration($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
             $this->assertSame('user', $value->type);
-            $this->assertInternalType('int', $value->id);
+            $this->assertIsInt($value->id);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertIsString($value->idToDisplay);
             $this->assertNotEmpty($value->idToDisplay);
         }
     }
@@ -145,16 +145,16 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getUsersForCircuit($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
             $this->assertSame('user', $value->type);
-            $this->assertInternalType('integer', $value->id);
+            $this->assertIsInt($value->id);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertIsString($value->idToDisplay);
             $this->assertNotEmpty($value->idToDisplay);
-            $this->assertInternalType('string', $value->otherInfo);
+            $this->assertIsString($value->otherInfo);
         }
     }
 
@@ -174,16 +174,16 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getEntities($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
             $this->assertSame('entity', $value->type);
-            $this->assertInternalType('string', $value->id);
+            $this->assertIsString($value->id);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertIsString($value->idToDisplay);
             $this->assertNotEmpty($value->idToDisplay);
-            $this->assertInternalType('string', $value->otherInfo);
+            $this->assertIsString($value->otherInfo);
         }
     }
 
@@ -198,16 +198,16 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getStatuses($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
             $this->assertSame('status', $value->type);
-            $this->assertInternalType('string', $value->id);
+            $this->assertIsString($value->id);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertIsString($value->idToDisplay);
             $this->assertNotEmpty($value->idToDisplay);
-            $this->assertInternalType('string', $value->otherInfo);
+            $this->assertIsString($value->otherInfo);
         }
     }
 
@@ -228,21 +228,21 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getBanAddresses($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
-            $this->assertInternalType('string', $value->banId);
+            $this->assertIsString($value->banId);
             $this->assertNotEmpty($value->banId);
-            $this->assertInternalType('string', $value->number);
+            $this->assertIsString($value->number);
             $this->assertNotEmpty($value->number);
-            $this->assertInternalType('string', $value->afnorName);
+            $this->assertIsString($value->afnorName);
             $this->assertNotEmpty($value->afnorName);
-            $this->assertInternalType('string', $value->postalCode);
+            $this->assertIsString($value->postalCode);
             $this->assertNotEmpty($value->postalCode);
-            $this->assertInternalType('string', $value->city);
+            $this->assertIsString($value->city);
             $this->assertNotEmpty($value->city);
-            $this->assertInternalType('string', $value->address);
+            $this->assertIsString($value->address);
             $this->assertNotEmpty($value->address);
         }
 
@@ -280,13 +280,13 @@ class AutocompleteControllerTest extends TestCase
         $response     = $autocompleteController->getTags($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertIsArray($responseBody);
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
-            $this->assertInternalType('int', $value->id);
+            $this->assertIsInt($value->id);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType('string', $value->idToDisplay);
+            $this->assertIsString($value->idToDisplay);
             $this->assertNotEmpty($value->idToDisplay);
         }
     }
