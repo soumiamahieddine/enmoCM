@@ -672,7 +672,7 @@ class EmailController
         return ['success' => 'success'];
     }
 
-    private static function getAvailableEmailsByUserId(array $args)
+    public static function getAvailableEmailsByUserId(array $args)
     {
         $currentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'user_id'], 'id' => $args['userId']]);
 

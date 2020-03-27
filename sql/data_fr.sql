@@ -1270,7 +1270,7 @@ INSERT INTO tags (label) VALUES ('SPORT');
 --TEMPLATES
 ------------
 TRUNCATE TABLE templates;
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'Appel téléphonique', 'Appel Téléphonique', '', 'OFFICE', '0000#', 'appel_telephonique.docx', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
+--INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'Appel téléphonique', 'Appel Téléphonique', '', 'OFFICE', '0000#', 'appel_telephonique.docx', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (2, '[notification] Notifications événement', 'Notifications des événements système', '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p><font face="verdana,geneva" size="1"> </font></p>
 <p><font face="verdana,geneva" size="1">Voici la liste des &eacute;v&eacute;nements de l''application qui vous sont notifi&eacute;s ([notification.description]) :</font></p>

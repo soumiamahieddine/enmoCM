@@ -21,6 +21,7 @@ use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Email\controllers\EmailController;
 use Entity\models\EntityModel;
+use Group\controllers\PrivilegeController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use SrcCore\models\DatabaseModel;
@@ -179,11 +180,25 @@ trait AcknowledgementReceiptTrait
         if (!empty($emailsToSend) && !empty($resource['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['email', 'id']]);
         }
+
+        if (empty($entity['email']) || !PrivilegeController::hasPrivilege(['privilegeId' => 'use_mail_services', 'userId' =>  $currentUser['id']])) {
+            $emailSender = ['email' => $currentUser['mail']];
+        } else {
+            $availableEmails = EmailController::getAvailableEmailsByUserId(['userId' => $currentUser['id']]);
+            $entities = array_column($availableEmails, 'entityId');
+
+            if (!in_array( $entity['id'], $entities)) {
+                $emailSender = ['email' => $currentUser['mail']];
+            } else {
+                $emailSender = ['email' => $entity['email'], 'entityId' => $entity['id']];
+            }
+        }
+
         foreach ($emailsToSend as $email) {
             $isSent = EmailController::createEmail([
                 'userId'    => $currentUser['id'],
                 'data'      => [
-                    'sender'        => empty($entity['email']) ? ['email' => $currentUser['mail']] : ['email' => $entity['email'], 'entityId' => $entity['id']],
+                    'sender'        => $emailSender,
                     'recipients'    => [$email['email']],
                     'object'        => '[AR] ' . substr($subjectToSend, 0, 100),
                     'body'          => base64_decode($email['encodedHtml']),

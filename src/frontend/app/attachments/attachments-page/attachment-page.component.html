@@ -191,7 +191,7 @@
                             </ng-template>
                             <app-document-viewer #appAttachmentViewer style="display:block;height:100%;width:100%;overflow: auto;" [editMode]="editMode"
                                 [resId]="data.resId" [resIdMaster]="attachment['resIdMaster'].value" [mode]="'attachment'"
-                                [format]="attachment['format'].value" [attachType]="attachment['type'].value" [infoPanel]="snavLeft"
+                                [format]="attachment['format'].value" [attachType]="attachment['type'].value"
                                 (triggerEvent)="setDatasViewer($event)"
                                 [title]="attachment.chrono.value + ' - ' + attachment.title.value">
                             </app-document-viewer>

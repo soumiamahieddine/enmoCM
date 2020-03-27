@@ -795,6 +795,13 @@ class ResController extends ResourceControlController
             return $response->withStatus(400)->withJson(['errors' => 'Body param integrations is missing or not an array']);
         }
 
+        $documents = ResModel::get([
+            'select' => ['alt_identifier', 'res_id'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$body['resources']]
+        ]);
+        $documents = array_column($documents, 'alt_identifier', 'res_id');
+
         if (isset($body['integrations']['inSignatureBook']) && Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
             $inSignatureBook = $body['integrations']['inSignatureBook'] ? 'true' : 'false';
 
@@ -805,6 +812,18 @@ class ResController extends ResourceControlController
                 'where' => ['res_id in (?)'],
                 'data'  => [$body['resources']]
             ]);
+
+            $info = $body['integrations']['inSignatureBook'] ? _DOC_ADD_TO_SIGNATORY_BOOK : _DOC_REMOVE_FROM_SIGNATORY_BOOK;
+            foreach ($body['resources'] as $resId) {
+                HistoryController::add([
+                    'tableName' => 'res_letterbox',
+                    'recordId'  => $resId,
+                    'eventType' => 'UP',
+                    'info'      => $info . " : " . $documents[$resId],
+                    'moduleId'  => 'resource',
+                    'eventId'   => 'resourceModification',
+                ]);
+            }
         }
 
         if (isset($body['integrations']['inShipping']) && Validator::boolType()->validate($body['integrations']['inShipping'])) {
@@ -817,6 +836,18 @@ class ResController extends ResourceControlController
                 'where' => ['res_id in (?)'],
                 'data'  => [$body['resources']]
             ]);
+
+            $info = $body['integrations']['inShipping'] ? _DOC_ADD_TO_MAILEVA : _DOC_REMOVE_FROM_MAILEVA;
+            foreach ($body['resources'] as $resId) {
+                HistoryController::add([
+                    'tableName' => 'res_letterbox',
+                    'recordId'  => $resId,
+                    'eventType' => 'UP',
+                    'info'      => $info . " : " . $documents[$resId],
+                    'moduleId'  => 'resource',
+                    'eventId'   => 'resourceModification',
+                ]);
+            }
         }
 
         return $response->withStatus(204);
