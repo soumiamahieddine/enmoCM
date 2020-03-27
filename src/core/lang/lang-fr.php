@@ -470,3 +470,13 @@ define("_SENT_BY", "Envoyé par");
 define('_TO_CCI', 'En copie caché');
 define('_PRIMARY_INFORMATION', 'Informations principales');
 define("_EMPTY_SUBJECT", "Objet vide");
+
+define("_ATTACH_REMOVE_FROM_SIGNATORY_BOOK", "Pièce jointe retirée du parapheur électronique");
+define("_ATTACH_ADD_TO_SIGNATORY_BOOK", "Pièce jointe intégrée au parapheur électronique");
+define("_ATTACH_REMOVE_FROM_SHIPPING", "Pièce jointe retirée des envois Maileva");
+define("_ATTACH_ADD_TO_SHIPPING", "Pièce jointe intégrée aux envois Maileva");
+
+define("_DOC_ADD_TO_SIGNATORY_BOOK", "Courrier intégré au parapheur électronique");
+define("_DOC_REMOVE_FROM_SIGNATORY_BOOK", "Courrier retiré du parapheur électronique");
+define("_DOC_ADD_TO_MAILEVA", "Courrier intégré aux envois Maileva");
+define("_DOC_REMOVE_FROM_MAILEVA", "Courrier retiré des envois Maileva");

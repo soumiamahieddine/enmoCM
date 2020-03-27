@@ -75,7 +75,7 @@ class AttachmentController
             'tableName' => 'res_letterbox',
             'recordId'  => $body['resIdMaster'],
             'eventType' => 'ADD',
-            'info'      => _ATTACHMENT_ADDED . " : {$id}",
+            'info'      => _ATTACHMENT_ADDED . " : {$body['title']}",
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentAdd'
         ]);
@@ -210,7 +210,7 @@ class AttachmentController
             'tableName' => 'res_letterbox',
             'recordId'  => $attachment['res_id_master'],
             'eventType' => 'UP',
-            'info'      => _ATTACHMENT_UPDATED . " : {$args['id']}",
+            'info'      => _ATTACHMENT_UPDATED . " : {$body['title']}",
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentModification'
         ]);
@@ -251,6 +251,15 @@ class AttachmentController
             'eventType' => 'DEL',
             'info'      =>  _ATTACHMENT_DELETED . " : {$attachment['title']}",
             'eventId'   => 'attachmentSuppression',
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $attachment['res_id_master'],
+            'eventType' => 'DEL',
+            'info'      => _ATTACHMENT_DELETED . " : {$attachment['title']}",
+            'moduleId'  => 'attachment',
+            'eventId'   => 'attachmentAdd'
         ]);
 
         return $response->withStatus(204);
@@ -321,7 +330,7 @@ class AttachmentController
 
     public function setInSignatureBook(Request $request, Response $response, array $aArgs)
     {
-        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'select' => ['in_signature_book', 'res_id_master']]);
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'select' => ['in_signature_book', 'res_id_master', 'title']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
@@ -332,12 +341,30 @@ class AttachmentController
 
         AttachmentModel::setInSignatureBook(['id' => $aArgs['id'], 'inSignatureBook' => !$attachment['in_signature_book']]);
 
+        $info = $attachment['in_signature_book'] ? _ATTACH_REMOVE_FROM_SIGNATORY_BOOK : _ATTACH_ADD_TO_SIGNATORY_BOOK;
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => $info . " : {$attachment['title']}",
+            'moduleId'  => 'attachment',
+            'eventId'   => 'attachmentModification',
+        ]);
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $attachment['res_id_master'],
+            'eventType' => 'UP',
+            'info'      => $info . " : " . $attachment['title'],
+            'moduleId'  => 'resource',
+            'eventId'   => 'resourceModification',
+        ]);
+
         return $response->withJson(['success' => 'success']);
     }
 
     public function setInSendAttachment(Request $request, Response $response, array $aArgs)
     {
-        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'select' => ['in_send_attach', 'res_id_master']]);
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'select' => ['in_send_attach', 'res_id_master', 'title']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
@@ -347,6 +374,24 @@ class AttachmentController
         }
 
         AttachmentModel::setInSendAttachment(['id' => $aArgs['id'], 'inSendAttachment' => !$attachment['in_send_attach']]);
+
+        $info = $attachment['in_send_attach'] ? _ATTACH_REMOVE_FROM_SHIPPING : _ATTACH_ADD_TO_SHIPPING;
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $aArgs['id'],
+            'eventType' => 'UP',
+            'info'      => $info . " : {$attachment['title']}",
+            'moduleId'  => 'attachment',
+            'eventId'   => 'attachmentModification',
+        ]);
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $attachment['res_id_master'],
+            'eventType' => 'UP',
+            'info'      => $info . " : " . $attachment['title'],
+            'moduleId'  => 'resource',
+            'eventId'   => 'resourceModification',
+        ]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -420,7 +465,7 @@ class AttachmentController
         }
 
         $attachment = AttachmentModel::get([
-            'select'    => ['res_id', 'docserver_id', 'res_id_master', 'format'],
+            'select'    => ['res_id', 'docserver_id', 'res_id_master', 'format', 'title'],
             'where'     => ['res_id = ?', 'status not in (?)'],
             'data'      => [$args['id'], ['DEL']],
             'limit'     => 1
@@ -469,8 +514,17 @@ class AttachmentController
             'recordId'  => $args['id'],
             'eventType' => 'VIEW',
             'info'      => _ATTACH_DISPLAYING . " : {$args['id']}",
-            'moduleId'  => 'attachments',
+            'moduleId'  => 'attachment',
             'eventId'   => 'resview',
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $attachment['res_id_master'],
+            'eventType' => 'VIEW',
+            'info'      => _ATTACH_DISPLAYING . " : {$attachment['title']}",
+            'moduleId'  => 'attachment',
+            'eventId'   => 'resview'
         ]);
 
         $data = $request->getQueryParams();
@@ -494,7 +548,7 @@ class AttachmentController
         }
 
         $attachment = AttachmentModel::get([
-            'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'res_id_master'],
+            'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'res_id_master', 'title'],
             'where'     => ['res_id = ?', 'status not in (?)'],
             'data'      => [$args['id'], ['DEL']],
             'limit'     => 1
@@ -551,8 +605,17 @@ class AttachmentController
             'recordId'  => $args['id'],
             'eventType' => 'VIEW',
             'info'      => _ATTACH_DISPLAYING . " : {$id}",
-            'moduleId'  => 'attachments',
+            'moduleId'  => 'attachment',
             'eventId'   => 'resview',
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $attachmentTodisplay['res_id_master'],
+            'eventType' => 'VIEW',
+            'info'      => _ATTACH_DISPLAYING . " : {$attachmentTodisplay['title']}",
+            'moduleId'  => 'attachment',
+            'eventId'   => 'resview'
         ]);
 
         return $response->withHeader('Content-Type', $mimeType);
