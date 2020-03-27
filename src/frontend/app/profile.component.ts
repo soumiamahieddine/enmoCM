@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone, ViewChild, QueryList, ViewChildren, Template
 import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
-import { HeaderService }        from '../service/header.service';
+import { HeaderService } from '../service/header.service';
 import { debounceTime, switchMap, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionPanel } from '@angular/material/expansion';
@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
         complexityNumber: { enabled: false, value: 0 },
         complexitySpecial: { enabled: false, value: 0 },
         renewal: { enabled: false, value: 0 },
-        historyLastUse: {enabled:false, value:0},
+        historyLastUse: { enabled: false, value: 0 },
     };
     signatureModel: any = {
         base64: "",
@@ -76,7 +76,7 @@ export class ProfileComponent implements OnInit {
     loading: boolean = false;
     selectedIndex: number = 0;
     selectedIndexContactsGrp: number = 0;
-    loadingSign : boolean = false;
+    loadingSign: boolean = false;
 
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
@@ -86,9 +86,9 @@ export class ProfileComponent implements OnInit {
     myBasketExpansionPanel: boolean = false;
     editorsList: any;
     masterToggleBaskets(event: any) {
-        if (event.checked) {  
+        if (event.checked) {
             this.user.baskets.forEach((basket: any) => {
-                if ( !basket.userToDisplay) {
+                if (!basket.userToDisplay) {
                     this.selectionBaskets.select(basket);
                 }
             });
@@ -101,10 +101,10 @@ export class ProfileComponent implements OnInit {
 
     //Groups contacts
     contactsGroups: any[] = [];
-    displayedColumnsGroupsList: string[] = ['label', 'description','nbContacts','public', 'actions'];
+    displayedColumnsGroupsList: string[] = ['label', 'description', 'nbContacts', 'public', 'actions'];
     dataSourceGroupsList: any;
     @ViewChild('paginatorGroupsList', { static: false }) paginatorGroupsList: MatPaginator;
-    @ViewChild('tableGroupsListSort', { static: true }) sortGroupsList: MatSort;
+    @ViewChild('tableGroupsListSort', { static: false }) sortGroupsList: MatSort;
     applyFilterGroupsList(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -142,7 +142,7 @@ export class ProfileComponent implements OnInit {
     displayedColumnsContactsList: string[] = ['contact', 'address', 'actions'];
     dataSourceContactsList: any;
     @ViewChild('paginatorContactsList', { static: false }) paginatorContactsList: MatPaginator;
-    @ViewChild('tableContactsListSort', { static: true }) sortContactsList: MatSort;
+    @ViewChild('tableContactsListSort', { static: false }) sortContactsList: MatSort;
     applyFilterContactsList(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -153,7 +153,7 @@ export class ProfileComponent implements OnInit {
     displayedColumns = ['event_date', 'record_id', 'info'];
     dataSource: any;
     @ViewChild('paginatorHistory', { static: false }) paginatorHistory: MatPaginator;
-    @ViewChild('tableHistorySort', { static: true }) sortHistory: MatSort;
+    @ViewChild('tableHistorySort', { static: false }) sortHistory: MatSort;
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -162,11 +162,11 @@ export class ProfileComponent implements OnInit {
 
 
     constructor(
-        public http: HttpClient, 
-        private zone: NgZone, 
-        private notify: NotificationService, 
-        public dialog: MatDialog, 
-        private _formBuilder: FormBuilder, 
+        public http: HttpClient,
+        private zone: NgZone,
+        private notify: NotificationService,
+        public dialog: MatDialog,
+        private _formBuilder: FormBuilder,
         private headerService: HeaderService,
         public appService: AppService,
         private viewContainerRef: ViewContainerRef
@@ -200,23 +200,23 @@ export class ProfileComponent implements OnInit {
         if (event.index == 2) {
             if (!this.appService.getViewMode()) {
                 this.sidenavRight.open();
-            } 
-            //if (this.histories.length == 0) {
-                this.http.get('../../rest/history/users/' + this.user.id)
-                    .subscribe((data: any) => {
-                        this.histories = data.histories;
-                        setTimeout(() => {
-                            this.dataSource = new MatTableDataSource(this.histories);
-                            this.dataSource.paginator = this.paginatorHistory;
-                            this.dataSource.sort = this.sortHistory;
-                        }, 0);
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
-            //}
-        } else if(event.index == 1) {
+            }
+
+            this.http.get('../../rest/history/users/' + this.user.id)
+                .subscribe((data: any) => {
+                    this.histories = data.histories;
+                    setTimeout(() => {
+                        this.dataSource = new MatTableDataSource(this.histories);
+                        this.dataSource.paginator = this.paginatorHistory;
+                        this.dataSource.sort = this.sortHistory;
+                    }, 0);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+
+        } else if (event.index == 1) {
             this.sidenavRight.close();
-        } else if(!this.appService.getViewMode()){
+        } else if (!this.appService.getViewMode()) {
             this.sidenavRight.open();
         }
     }
@@ -258,7 +258,7 @@ export class ProfileComponent implements OnInit {
         this.http.get('../../rest/contactsGroups')
             .subscribe((data) => {
                 this.contactsGroups = [];
-                this.contactsGroup = { public: false, contacts:[] };
+                this.contactsGroup = { public: false, contacts: [] };
                 let i = 0;
                 data['contactsGroups'].forEach((ct: any) => {
                     if (ct.owner == angularGlobals.user.id) {
@@ -292,7 +292,7 @@ export class ProfileComponent implements OnInit {
         this.http.put('../../rest/contactsGroups/' + this.contactsGroup.id, this.contactsGroup)
             .subscribe(() => {
                 this.notify.success(this.lang.contactsGroupUpdated);
-                this.initGroupsContact();    
+                this.initGroupsContact();
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -411,7 +411,7 @@ export class ProfileComponent implements OnInit {
         this.http.get('../../rest/currentUser/profile')
             .subscribe((data: any) => {
                 this.user = data;
-                
+
                 this.user.baskets.forEach((value: any, index: number) => {
                     this.user.baskets[index]['disabled'] = false;
                     this.user.redirectedBaskets.forEach((value2: any) => {
@@ -472,7 +472,7 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    dndUploadSignature(event:any) {
+    dndUploadSignature(event: any) {
         if (event.mouseEvent.dataTransfer.files && event.mouseEvent.dataTransfer.files[0]) {
             var reader = new FileReader();
 
@@ -513,14 +513,14 @@ export class ProfileComponent implements OnInit {
     }
 
     addBasketRedirection(newUser: any) {
-        let basketsRedirect:any[] = [];
+        let basketsRedirect: any[] = [];
 
         this.selectionBaskets.selected.forEach((elem: any) => {
             basketsRedirect.push(
                 {
                     actual_user_id: newUser.serialId,
-                    basket_id:elem.basket_id,
-                    group_id:elem.groupSerialId,
+                    basket_id: elem.basket_id,
+                    group_id: elem.groupSerialId,
                     originalOwner: null
                 }
             )
@@ -541,7 +541,7 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    delBasketRedirection(basket: any,i: number) {
+    delBasketRedirection(basket: any, i: number) {
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
@@ -556,7 +556,7 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    delBasketAssignRedirection(basket: any,i: number) {
+    delBasketAssignRedirection(basket: any, i: number) {
         let r = confirm(this.lang.confirmAction);
 
         if (r) {
@@ -576,11 +576,11 @@ export class ProfileComponent implements OnInit {
 
         if (r) {
             this.http.post("../../rest/users/" + this.user.id + "/redirectedBaskets", [
-                { 
-                    "actual_user_id": newUser.serialId, 
-                    "basket_id": basket.basket_id, 
+                {
+                    "actual_user_id": newUser.serialId,
+                    "basket_id": basket.basket_id,
                     "group_id": basket.group_id,
-                    "originalOwner": basket.owner_user_id, 
+                    "originalOwner": basket.owner_user_id,
                 }
             ])
                 .subscribe((data: any) => {
@@ -761,7 +761,7 @@ export class ProfileComponent implements OnInit {
     }
 
     updateUserPreferences() {
-        this.http.put('../../rest/currentUser/profile/preferences', {documentEdition: this.user.preferences.documentEdition})
+        this.http.put('../../rest/currentUser/profile/preferences', { documentEdition: this.user.preferences.documentEdition })
             .subscribe(() => {
                 this.notify.success(this.lang.modificationSaved);
                 this.headerService.resfreshCurrentUser();
@@ -783,7 +783,7 @@ export class ProfileComponent implements OnInit {
     changePasswd() {
         this.http.get('../../rest/passwordRules')
             .subscribe((data: any) => {
-                let valArr : ValidatorFn[] = [];
+                let valArr: ValidatorFn[] = [];
                 let ruleTextArr: String[] = [];
                 let otherRuleTextArr: String[] = [];
 
@@ -792,12 +792,12 @@ export class ProfileComponent implements OnInit {
                 data.rules.forEach((rule: any) => {
                     if (rule.label == 'minLength') {
                         this.passwordRules.minLength.enabled = rule.enabled;
-                        this.passwordRules.minLength.value = rule.value;   
+                        this.passwordRules.minLength.value = rule.value;
                         if (rule.enabled) {
                             valArr.push(Validators.minLength(this.passwordRules.minLength.value));
                             ruleTextArr.push(rule.value + ' ' + this.lang['password' + rule.label]);
                         }
-                        
+
 
                     } else if (rule.label == 'complexityUpper') {
                         this.passwordRules.complexityUpper.enabled = rule.enabled;
@@ -806,7 +806,7 @@ export class ProfileComponent implements OnInit {
                             valArr.push(this.regexValidator(new RegExp('[A-Z]'), { 'complexityUpper': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
-                        
+
 
                     } else if (rule.label == 'complexityNumber') {
                         this.passwordRules.complexityNumber.enabled = rule.enabled;
@@ -815,11 +815,11 @@ export class ProfileComponent implements OnInit {
                             valArr.push(this.regexValidator(new RegExp('[0-9]'), { 'complexityNumber': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
                         }
-                        
+
 
                     } else if (rule.label == 'complexitySpecial') {
                         this.passwordRules.complexitySpecial.enabled = rule.enabled;
-                        this.passwordRules.complexitySpecial.value = rule.value;  
+                        this.passwordRules.complexitySpecial.value = rule.value;
                         if (rule.enabled) {
                             valArr.push(this.regexValidator(new RegExp('[^A-Za-z0-9]'), { 'complexitySpecial': '' }));
                             ruleTextArr.push(this.lang['password' + rule.label]);
@@ -828,13 +828,13 @@ export class ProfileComponent implements OnInit {
                         this.passwordRules.renewal.enabled = rule.enabled;
                         this.passwordRules.renewal.value = rule.value;
                         if (rule.enabled) {
-                            otherRuleTextArr.push(this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label]+'.');
+                            otherRuleTextArr.push(this.lang['password' + rule.label] + ' <b>' + rule.value + ' ' + this.lang.days + '</b>. ' + this.lang['password2' + rule.label] + '.');
                         }
                     } else if (rule.label == 'historyLastUse') {
                         this.passwordRules.historyLastUse.enabled = rule.enabled;
                         this.passwordRules.historyLastUse.value = rule.value
                         if (rule.enabled) {
-                            otherRuleTextArr.push(this.lang['passwordhistoryLastUseDesc'] + ' <b>' + rule.value + '</b> ' + this.lang['passwordhistoryLastUseDesc2']+'.');
+                            otherRuleTextArr.push(this.lang['passwordhistoryLastUseDesc'] + ' <b>' + rule.value + '</b> ' + this.lang['passwordhistoryLastUseDesc2'] + '.');
                         }
                     }
 
@@ -846,23 +846,23 @@ export class ProfileComponent implements OnInit {
                 this.notify.error(err.error.errors);
             });
 
-            this.firstFormGroup = this._formBuilder.group({
-                newPasswordCtrl: [
-                    ''
-                ],
-                retypePasswordCtrl: [
-                    '',
-                    Validators.compose([Validators.required])
-                ],
-                currentPasswordCtrl: [
-                    '',
-                    Validators.compose([Validators.required])
-                ]
-    
-            }, {
-                    validator: this.matchValidator
-                });
-        this.validPassword =false;
+        this.firstFormGroup = this._formBuilder.group({
+            newPasswordCtrl: [
+                ''
+            ],
+            retypePasswordCtrl: [
+                '',
+                Validators.compose([Validators.required])
+            ],
+            currentPasswordCtrl: [
+                '',
+                Validators.compose([Validators.required])
+            ]
+
+        }, {
+            validator: this.matchValidator
+        });
+        this.validPassword = false;
         this.firstFormGroup.controls['currentPasswordCtrl'].setErrors(null)
         this.firstFormGroup.controls['newPasswordCtrl'].setErrors(null)
         this.firstFormGroup.controls['retypePasswordCtrl'].setErrors(null)
@@ -875,14 +875,14 @@ export class ProfileComponent implements OnInit {
         if (group.controls['newPasswordCtrl'].value == group.controls['retypePasswordCtrl'].value) {
             return false;
         } else {
-            group.controls['retypePasswordCtrl'].setErrors({'mismatch': true})
-            return {'mismatch': true};
+            group.controls['retypePasswordCtrl'].setErrors({ 'mismatch': true })
+            return { 'mismatch': true };
         }
     }
 
     getErrorMessage() {
         if (this.firstFormGroup.controls['newPasswordCtrl'].value != this.firstFormGroup.controls['retypePasswordCtrl'].value) {
-            this.firstFormGroup.controls['retypePasswordCtrl'].setErrors({'mismatch': true});
+            this.firstFormGroup.controls['retypePasswordCtrl'].setErrors({ 'mismatch': true });
         } else {
             this.firstFormGroup.controls['retypePasswordCtrl'].setErrors(null);
         }
@@ -908,12 +908,12 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    showActions(basket:any){
-        $j('#'+basket.basket_id+'_'+basket.group_id).show();
+    showActions(basket: any) {
+        $j('#' + basket.basket_id + '_' + basket.group_id).show();
     }
 
-    hideActions(basket:any){
-        $j('#'+basket.basket_id+'_'+basket.group_id).hide();
+    hideActions(basket: any) {
+        $j('#' + basket.basket_id + '_' + basket.group_id).hide();
     }
 
     toggleAddGrp() {
@@ -926,7 +926,7 @@ export class ProfileComponent implements OnInit {
         //$j('#contactsGroup').toggle();
     }
 
-    changeTabContactGrp(event:any) {
+    changeTabContactGrp(event: any) {
         this.selectedIndexContactsGrp = event;
         if (event == 0) {
             this.initGroupsContact();
