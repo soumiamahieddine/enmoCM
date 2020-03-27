@@ -21,7 +21,7 @@ class PasswordControllerTest extends TestCase
         $response     = $passwordController->getRules($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->rules);
+        $this->assertIsArray($responseBody->rules);
         $this->assertNotEmpty($responseBody->rules);
     }
 

@@ -117,8 +117,8 @@ class NotificationScheduleControllerTest extends TestCase
         $response = $NotificationScheduleController->get($request, new \Slim\Http\Response());
         $responseBody = json_decode((string) $response->getBody());
 
-        $this->assertInternalType('array', $responseBody->crontab);
-        $this->assertInternalType('array', $responseBody->authorizedNotification);
+        $this->assertIsArray($responseBody->crontab);
+        $this->assertIsArray($responseBody->authorizedNotification);
         $this->assertNotNull($responseBody->authorizedNotification);
         $this->assertNotNull($responseBody->crontab);
     }

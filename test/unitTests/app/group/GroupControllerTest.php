@@ -37,7 +37,7 @@ class GroupControllerTest extends TestCase
 
         self::$id = $responseBody->group;
 
-        $this->assertInternalType('int', $responseBody->group);
+        $this->assertIsInt($responseBody->group);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -49,8 +49,8 @@ class GroupControllerTest extends TestCase
         $this->assertSame('Beyond the darkness', $responseBody->group->group_desc);
         $this->assertSame('1=2', $responseBody->group->security->where_clause);
         $this->assertSame('commentateur du dimanche', $responseBody->group->security->maarch_comment);
-        $this->assertInternalType('array', $responseBody->group->users);
-        $this->assertInternalType('array', $responseBody->group->baskets);
+        $this->assertIsArray($responseBody->group->users);
+        $this->assertIsArray($responseBody->group->baskets);
         $this->assertEmpty($responseBody->group->users);
         $this->assertEmpty($responseBody->group->baskets);
         $this->assertSame(true, $responseBody->group->canAdminUsers);
@@ -89,8 +89,8 @@ class GroupControllerTest extends TestCase
         $this->assertSame('Beyond the darkness #2', $responseBody->group->group_desc);
         $this->assertSame('1=3', $responseBody->group->security->where_clause);
         $this->assertSame('commentateur du dimanche #2', $responseBody->group->security->maarch_comment);
-        $this->assertInternalType('array', $responseBody->group->users);
-        $this->assertInternalType('array', $responseBody->group->baskets);
+        $this->assertIsArray($responseBody->group->users);
+        $this->assertIsArray($responseBody->group->baskets);
         $this->assertEmpty($responseBody->group->users);
         $this->assertEmpty($responseBody->group->baskets);
         $this->assertSame(true, $responseBody->group->canAdminUsers);
@@ -136,7 +136,7 @@ class GroupControllerTest extends TestCase
             $this->assertNotEmpty($value->group_id);
             $this->assertNotEmpty($value->group_desc);
             $this->assertNotNull($value->users);
-            $this->assertInternalType("int", $value->id);
+            $this->assertIsInt($value->id);
         }
     }
 
@@ -170,7 +170,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Group not found', $responseBody->errors);
     }
 
@@ -204,7 +204,7 @@ class GroupControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody());
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Group not found', $responseBody->errors);
     }
 
@@ -218,7 +218,7 @@ class GroupControllerTest extends TestCase
         $response       = $groupController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertIsArray($responseBody->groups);
         $this->assertNotEmpty($responseBody->groups);
 
         //  READ

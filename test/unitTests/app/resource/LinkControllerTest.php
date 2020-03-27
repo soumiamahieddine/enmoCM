@@ -48,13 +48,13 @@ class LinkControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
         self::$firstResourceId = $responseBody->resId;
-        $this->assertInternalType('int', self::$firstResourceId);
+        $this->assertIsInt(self::$firstResourceId);
 
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
         self::$secondResourceId = $responseBody->resId;
-        $this->assertInternalType('int', self::$secondResourceId);
+        $this->assertIsInt(self::$secondResourceId);
 
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);

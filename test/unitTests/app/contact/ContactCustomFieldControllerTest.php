@@ -32,7 +32,7 @@ class ContactCustomFieldControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('int', $responseBody['id']);
+        $this->assertIsInt($responseBody['id']);
 
         self::$id = $responseBody['id'];
 

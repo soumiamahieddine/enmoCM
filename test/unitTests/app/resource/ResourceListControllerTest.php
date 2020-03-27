@@ -31,7 +31,7 @@ class ResourceListControllerTest extends TestCase
         $response     = $resListController->get($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->count);
+        $this->assertIsInt($responseBody->count);
         $this->assertNotNull($responseBody->basketLabel);
 
         //  GET
@@ -71,7 +71,7 @@ class ResourceListControllerTest extends TestCase
         $this->assertNotNull($responseBody->resources[0]->priorityColor);
         $this->assertNotNull($responseBody->resources[0]->statusImage);
         $this->assertNotNull($responseBody->resources[0]->statusLabel);
-        $this->assertInternalType('int', $responseBody->resources[0]->resId);
+        $this->assertIsInt($responseBody->resources[0]->resId);
         $this->assertSame('2 Breaking News : 12345 Superman is alive - PHP unit', $responseBody->resources[0]->subject);
 
         //  GET
@@ -131,11 +131,11 @@ class ResourceListControllerTest extends TestCase
         $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
-        $this->assertInternalType('array', $responseBody->priorities);
-        $this->assertInternalType('array', $responseBody->categories);
-        $this->assertInternalType('array', $responseBody->statuses);
-        $this->assertInternalType('array', $responseBody->entitiesChildren);
+        $this->assertIsArray($responseBody->entities);
+        $this->assertIsArray($responseBody->priorities);
+        $this->assertIsArray($responseBody->categories);
+        $this->assertIsArray($responseBody->statuses);
+        $this->assertIsArray($responseBody->entitiesChildren);
 
         //  GET
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -157,7 +157,7 @@ class ResourceListControllerTest extends TestCase
             foreach ($response as $value) {
                 $this->assertNotNull($value->id);
                 $this->assertNotNull($value->label);
-                $this->assertInternalType('int', $value->count);
+                $this->assertIsInt($value->count);
             }
         }
 
@@ -175,11 +175,11 @@ class ResourceListControllerTest extends TestCase
         $response     = $resListController->getFilters($fullRequest, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
-        $this->assertInternalType('array', $responseBody->priorities);
-        $this->assertInternalType('array', $responseBody->categories);
-        $this->assertInternalType('array', $responseBody->statuses);
-        $this->assertInternalType('array', $responseBody->entitiesChildren);
+        $this->assertIsArray($responseBody->entities);
+        $this->assertIsArray($responseBody->priorities);
+        $this->assertIsArray($responseBody->categories);
+        $this->assertIsArray($responseBody->statuses);
+        $this->assertIsArray($responseBody->entitiesChildren);
 
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
@@ -202,7 +202,7 @@ class ResourceListControllerTest extends TestCase
         $response     = $resListController->getActions($request, new \Slim\Http\Response(), ['userId' => 19, 'groupId' => 2, 'basketId' => $myBasket['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->actions);
+        $this->assertIsArray($responseBody->actions);
         $this->assertNotNull($responseBody->actions);
 
         $GLOBALS['userId'] = 'superadmin';

@@ -36,7 +36,7 @@ class EntityControllerTest extends TestCase
         $response     = $entityController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
 
         $entityInfo = \Entity\models\EntityModel::getByEntityId(['entityId' => 'TEST-ENTITY123', 'select' => ['id']]);
         self::$id = $entityInfo['id'];
@@ -74,7 +74,7 @@ class EntityControllerTest extends TestCase
         $response     = $entityController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -149,7 +149,7 @@ class EntityControllerTest extends TestCase
         $response       = $entityController->get($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
         $this->assertNotNull($responseBody->entities);
     }
 
@@ -175,12 +175,12 @@ class EntityControllerTest extends TestCase
         $this->assertSame('75016', $responseBody->entity->zipcode);
         $this->assertSame('PARIS', $responseBody->entity->city);
         $this->assertSame(null, $responseBody->entity->parent_entity_id);
-        $this->assertInternalType('array', (array) $responseBody->entity->listTemplate);
-        $this->assertInternalType('array', $responseBody->entity->visaCircuit);
+        $this->assertIsArray((array) $responseBody->entity->listTemplate);
+        $this->assertIsArray($responseBody->entity->visaCircuit);
         $this->assertSame(false, $responseBody->entity->hasChildren);
         $this->assertSame(0, $responseBody->entity->documents);
-        $this->assertInternalType('array', $responseBody->entity->users);
-        $this->assertInternalType('array', $responseBody->entity->templates);
+        $this->assertIsArray($responseBody->entity->users);
+        $this->assertIsArray($responseBody->entity->templates);
         $this->assertSame(0, $responseBody->entity->instances);
         $this->assertSame(0, $responseBody->entity->redirects);
     }
@@ -195,7 +195,7 @@ class EntityControllerTest extends TestCase
         $response       = $entityController->delete($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

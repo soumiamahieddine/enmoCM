@@ -42,6 +42,6 @@ class HomeControllerTest extends TestCase
         $response = $homeController->getLastRessources($request, new \Slim\Http\Response());
         $responseBody = json_decode((string) $response->getBody());
         
-        $this->assertInternalType('array', $responseBody->lastResources);
+        $this->assertIsArray($responseBody->lastResources);
     }
 }

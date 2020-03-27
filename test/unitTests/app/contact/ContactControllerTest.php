@@ -43,7 +43,7 @@ class ContactControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('int', $responseBody['id']);
+        $this->assertIsInt($responseBody['id']);
         self::$id = $responseBody['id'];
 
 
@@ -263,7 +263,7 @@ class ContactControllerTest extends TestCase
         $response = $contactController->getAvailableDepartments($request, new \Slim\Http\Response());
         $responseBody      = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody['departments']);
+        $this->assertIsArray($responseBody['departments']);
         $this->assertNotEmpty($responseBody['departments']);
     }
 
@@ -276,7 +276,7 @@ class ContactControllerTest extends TestCase
         $response          = $contactController->getContactsParameters($request, new \Slim\Http\Response());
         $responseBody      = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', (array)$responseBody->contactsFilling);
+        $this->assertIsArray((array)$responseBody->contactsFilling);
     }
 
 //    public function testUpdateFilling()

@@ -53,7 +53,7 @@ class ListTemplateControllerTest extends TestCase
         $response     = $listTemplateController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->id);
+        $this->assertIsInt($responseBody->id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -202,7 +202,7 @@ class ListTemplateControllerTest extends TestCase
         foreach ($responseBody->roles as $value) {
             $this->assertNotEmpty($value->id);
             $this->assertNotEmpty($value->label);
-            $this->assertInternalType("bool", $value->available);
+            $this->assertIsBool($value->available);
         }
     }
 }

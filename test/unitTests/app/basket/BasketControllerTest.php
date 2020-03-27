@@ -133,9 +133,9 @@ class BasketControllerTest extends TestCase
 
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
-        $this->assertInternalType('array', $responseBody->groups[0]->list_display);
+        $this->assertIsArray($responseBody->groups[0]->list_display);
         $this->assertEmpty($responseBody->groups[0]->list_display);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
+        $this->assertIsArray($responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
         foreach ($responseBody->groups[0]->groupActions as $groupAction) {
             if ($groupAction->id == 1) {
@@ -144,7 +144,7 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('N', $groupAction->used_in_basketlist);
                 $this->assertSame('Y', $groupAction->used_in_action_page);
                 $this->assertSame('Y', $groupAction->default_action_list);
-                $this->assertInternalType('array', $groupAction->redirects);
+                $this->assertIsArray($groupAction->redirects);
                 $this->assertNotNull($groupAction->redirects);
                 $this->assertSame('', $groupAction->redirects[0]->entity_id);
                 $this->assertSame('MY_ENTITIES', $groupAction->redirects[0]->keyword);
@@ -152,7 +152,7 @@ class BasketControllerTest extends TestCase
             }
         }
 
-        $this->assertInternalType('array', $responseBody->allGroups);
+        $this->assertIsArray($responseBody->allGroups);
         $this->assertNotNull($responseBody->allGroups);
 
         $users = \Group\models\GroupModel::getUsersById(['select' => ['id'], 'id' => 2]);
@@ -264,7 +264,7 @@ class BasketControllerTest extends TestCase
 
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('TEST-BASKET123', $responseBody->groups[0]->basket_id);
-        $this->assertInternalType('array', $responseBody->groups[0]->groupActions);
+        $this->assertIsArray($responseBody->groups[0]->groupActions);
         $this->assertNotNull($responseBody->groups[0]->groupActions);
 
         foreach ($responseBody->groups[0]->groupActions as $groupAction) {
@@ -274,7 +274,7 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('Y', $groupAction->used_in_basketlist);
                 $this->assertSame('Y', $groupAction->used_in_action_page);
                 $this->assertSame('Y', $groupAction->default_action_list);
-                $this->assertInternalType('array', $groupAction->redirects);
+                $this->assertIsArray($groupAction->redirects);
                 $this->assertNotNull($groupAction->redirects);
                 $this->assertSame('', $groupAction->redirects[0]->entity_id);
                 $this->assertSame('ALL_ENTITIES', $groupAction->redirects[0]->keyword);
@@ -285,7 +285,7 @@ class BasketControllerTest extends TestCase
                 $this->assertSame('N', $groupAction->used_in_basketlist);
                 $this->assertSame('Y', $groupAction->used_in_action_page);
                 $this->assertSame('N', $groupAction->default_action_list);
-                $this->assertInternalType('array', $groupAction->redirects);
+                $this->assertIsArray($groupAction->redirects);
                 $this->assertNotNull($groupAction->redirects);
                 $this->assertSame('PSO', $groupAction->redirects[0]->entity_id);
                 $this->assertSame('', $groupAction->redirects[0]->keyword);
@@ -328,7 +328,7 @@ class BasketControllerTest extends TestCase
         $response       = $basketController->get($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertIsArray($responseBody->baskets);
         $this->assertNotNull($responseBody->baskets);
     }
 
@@ -342,7 +342,7 @@ class BasketControllerTest extends TestCase
         $response       = $basketController->delete($request, new \Slim\Http\Response(), ['id' => 'TEST-BASKET123']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertIsArray($responseBody->baskets);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -363,7 +363,7 @@ class BasketControllerTest extends TestCase
         $response       = $basketController->getSorted($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertIsArray($responseBody->baskets);
 
         self::$id = $responseBody->baskets[0]->basket_id;
         self::$baskets = $responseBody->baskets;
@@ -389,7 +389,7 @@ class BasketControllerTest extends TestCase
         $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertIsArray($responseBody->baskets);
         $this->assertSame(self::$id, $responseBody->baskets[1]->basket_id);
 
         // UP
@@ -406,7 +406,7 @@ class BasketControllerTest extends TestCase
         $response       = $basketController->updateSort($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertIsArray($responseBody->baskets);
         $this->assertSame(self::$id, $responseBody->baskets[0]->basket_id);
     }
 }

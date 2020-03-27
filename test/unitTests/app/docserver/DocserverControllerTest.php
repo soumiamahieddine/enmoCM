@@ -54,7 +54,7 @@ class DocserverControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         self::$id = $responseBody->docserver;
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

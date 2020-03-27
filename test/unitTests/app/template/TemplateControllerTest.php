@@ -40,7 +40,7 @@ class TemplateControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         self::$id = $responseBody->template;
-        $this->assertInternalType("int", self::$id);
+        $this->assertIsInt(self::$id);
 
         ########## CREATE FAIL ##########
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
@@ -80,7 +80,7 @@ class TemplateControllerTest extends TestCase
         $response     = $entityController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
 
         //Create template
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -103,7 +103,7 @@ class TemplateControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         self::$idAcknowledgementReceipt = $responseBody->template;
-        $this->assertInternalType("int", self::$idAcknowledgementReceipt);
+        $this->assertIsInt(self::$idAcknowledgementReceipt);
 
         ########## CREATE FAIL ACKNOLEDGEMENT RECEIPT - entity already associated ##########
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
@@ -123,7 +123,7 @@ class TemplateControllerTest extends TestCase
         $response     = $templates->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->checkEntities);
+        $this->assertIsArray($responseBody->checkEntities);
 
         ########## CREATE FAIL ACKNOLEDGEMENT RECEIPT - no html and no office ##########
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
@@ -156,7 +156,7 @@ class TemplateControllerTest extends TestCase
         $response       = $templates->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->template->template_id);
+        $this->assertIsInt($responseBody->template->template_id);
         $this->assertSame('TEST TEMPLATE', $responseBody->template->template_label);
         $this->assertSame('DESCRIPTION OF THIS TEMPLATE', $responseBody->template->template_comment);
         $this->assertSame('sendmail', $responseBody->template->template_target);
@@ -219,7 +219,7 @@ class TemplateControllerTest extends TestCase
         $response       = $templates->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->template->template_id);
+        $this->assertIsInt($responseBody->template->template_id);
         $this->assertSame('TEST TEMPLATE UPDATE', $responseBody->template->template_label);
         $this->assertSame('DESCRIPTION OF THIS TEMPLATE UPDATE', $responseBody->template->template_comment);
         $this->assertSame('sendmail', $responseBody->template->template_target);
@@ -283,7 +283,7 @@ class TemplateControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         self::$idDuplicated = $responseBody->id;
-        $this->assertInternalType("int", self::$idDuplicated);
+        $this->assertIsInt(self::$idDuplicated);
 
         //  READ
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -291,7 +291,7 @@ class TemplateControllerTest extends TestCase
         $response     = $templates->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$idDuplicated]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->template->template_id);
+        $this->assertIsInt($responseBody->template->template_id);
         $this->assertSame('Copie de TEST TEMPLATE UPDATE', $responseBody->template->template_label);
         $this->assertSame('DESCRIPTION OF THIS TEMPLATE UPDATE', $responseBody->template->template_comment);
         $this->assertSame('sendmail', $responseBody->template->template_target);
@@ -323,7 +323,7 @@ class TemplateControllerTest extends TestCase
         $idFound = false;
         $idDuplicatedFound = false;
         foreach ($responseBody->templates as $template) {
-            $this->assertInternalType('int', $template->template_id);
+            $this->assertIsInt($template->template_id);
             $this->assertNotNull($template->template_label);
             $this->assertNotNull($template->template_comment);
             $this->assertNotNull($template->template_type);
@@ -383,7 +383,7 @@ class TemplateControllerTest extends TestCase
         $response       = $entityController->delete($request, new \Slim\Http\Response(), ['id' => 'TST_AR']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
 
 
         ########## DELETE FAIL ##########

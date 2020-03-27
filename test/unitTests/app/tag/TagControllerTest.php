@@ -33,7 +33,7 @@ class TagControllerTest extends TestCase
 
         $statusCode = $response->getStatusCode();
 
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
         $this->assertSame(200, $statusCode);
 
         //  READ
@@ -45,9 +45,9 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->id);
+        $this->assertIsInt($responseBody->id);
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('string', $responseBody->label);
+        $this->assertIsString($responseBody->label);
         $this->assertSame('TEST_LABEL', $responseBody->label);
 
         //  CREATE
@@ -66,7 +66,7 @@ class TagControllerTest extends TestCase
 
         $this->assertSame(400, $statusCode);
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Body label is empty or not a string', $responseBody->errors);
     }
 
@@ -83,8 +83,8 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->id);
-        $this->assertInternalType('string', $responseBody->label);
+        $this->assertIsInt($responseBody->id);
+        $this->assertIsString($responseBody->label);
 
         //  READ fail
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -95,7 +95,7 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
@@ -131,7 +131,7 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Body label is empty or not a string', $responseBody->errors);
 
         //  Update fail
@@ -143,7 +143,7 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
@@ -167,7 +167,7 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('id not found', $responseBody->errors);
 
         // FAIL DELETE
@@ -187,7 +187,7 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
@@ -204,14 +204,14 @@ class TagControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->tags);
+        $this->assertIsArray($responseBody->tags);
         $this->assertNotEmpty($responseBody->tags);
 
         $tags = $responseBody->tags;
 
         foreach ($tags as $value) {
-            $this->assertInternalType('int', $value->id);
-            $this->assertInternalType('string', $value->label);
+            $this->assertIsInt($value->id);
+            $this->assertIsString($value->label);
         }
     }
 }

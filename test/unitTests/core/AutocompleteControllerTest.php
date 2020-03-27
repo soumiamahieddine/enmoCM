@@ -59,8 +59,8 @@ class AutocompleteControllerTest extends TestCase
 
         foreach ($responseBody as $value) {
             $this->assertIsInt($value->id);
-            // $this->assertInternalType('string', $value->idToDisplay);
-            // $this->assertInternalType('string', $value->otherInfo);
+            // $this->assertIsString($value->idToDisplay);
+            // $this->assertIsString($value->otherInfo);
             $this->assertNotEmpty($value->type);
             $this->assertNotEmpty($value->id);
             // $this->assertNotEmpty($value->idToDisplay);

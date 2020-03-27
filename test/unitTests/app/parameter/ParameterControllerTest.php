@@ -82,7 +82,7 @@ class ParameterControllerTest extends TestCase
         $response       = $parameterController->get($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->parameters);
+        $this->assertIsArray($responseBody->parameters);
         $this->assertNotNull($responseBody->parameters);
     }
 
@@ -96,7 +96,7 @@ class ParameterControllerTest extends TestCase
         $response       = $parameterController->delete($request, new \Slim\Http\Response(), ['id' => 'TEST-PARAMETER123']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->parameters);
+        $this->assertIsArray($responseBody->parameters);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
