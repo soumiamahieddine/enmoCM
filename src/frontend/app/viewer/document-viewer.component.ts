@@ -7,7 +7,7 @@ import { AppService } from '../../service/app.service';
 import { tap, catchError, filter, map, exhaustMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
-import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
+import { MatDialogRef, MatDialog } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
 import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
@@ -16,7 +16,7 @@ import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/o
 import { FunctionsService } from '../../service/functions.service';
 import { DocumentViewerModalComponent } from './modal/document-viewer-modal.component';
 import { PrivilegeService } from '../../service/privileges.service';
-import {VisaWorkflowModalComponent} from "../visa/modal/visa-workflow-modal.component";
+import { VisaWorkflowModalComponent } from "../visa/modal/visa-workflow-modal.component";
 
 
 @Component({
@@ -31,8 +31,53 @@ import {VisaWorkflowModalComponent} from "../visa/modal/visa-workflow-modal.comp
 
 export class DocumentViewerComponent implements OnInit {
 
+    /**
+     * document name stored in server (in tmp folder)
+     */
     @Input('tmpFilename') tmpFilename: string;
-    @Output('refreshDatas') refreshDatas = new EventEmitter<string>();
+
+    /**
+     * base64 of document  (@format is required!)
+     */
+    @Input('base64') base64: any = null;
+    @Input('format') format: string = null;
+
+    /**
+     * Target of resource (document or attachment)
+     */
+    @Input('mode') mode: 'mainDocument' | 'attachment' = 'mainDocument';
+
+    /**
+     * Resource of document or attachment (based on @mode)
+     */
+    @Input('resId') resId: number = null;
+
+
+    /**
+     * Resource of document link to attachment (@mode = 'attachment' required!)
+     */
+    @Input('resIdMaster') resIdMaster: number = null;
+
+    /**
+     * Can manage document ? (create, delete, update)
+     */
+    @Input('editMode') editMode: boolean = false;
+
+    /**
+     * Title of new tab when open document in external tab
+     */
+    @Input('title') title: string = '';
+
+
+    /**
+     * To load specific attachment type in template list (to create document)
+     */
+    @Input('attachType') attachType: string = null;
+
+    /**
+     * Event emitter
+     */
+    @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
 
     lang: any = LANG;
 
@@ -63,21 +108,6 @@ export class DocumentViewerComponent implements OnInit {
     externalId: any = {};
 
     templateListForm = new FormControl();
-
-    @Input('base64') base64: any = null;
-    @Input('resId') resId: number = null;
-    @Input('resIdMaster') resIdMaster: number = null;
-    @Input('infoPanel') infoPanel: MatSidenav = null;
-    @Input('editMode') editMode: boolean = false;
-    @Input('title') title: string = '';
-    @Input('mode') mode: string = 'mainDocument';
-    @Input('attachType') attachType: string = null;
-    @Input('format') format: string = null;
-
-    @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
-
-    private eventAction = new Subject<any>();
-
 
     resourceDatas: any;
 
@@ -856,7 +886,7 @@ export class DocumentViewerComponent implements OnInit {
                         });
                         this.listTemplates = arrValues;
                     })
-    
+
                 ).subscribe();
             } else {
                 let arrTypes: any = [];
@@ -879,9 +909,9 @@ export class DocumentViewerComponent implements OnInit {
                     }),
                     tap((data: any) => {
                         this.listTemplates = data.templates;
-    
+
                         arrTypes = arrTypes.filter((type: any) => data.templates.map((template: any) => template.attachmentType).indexOf(type.id) > -1);
-    
+
                         arrTypes.forEach((arrType: any) => {
                             arrValues.push({
                                 id: arrType.id,
@@ -901,10 +931,10 @@ export class DocumentViewerComponent implements OnInit {
                                 });
                             });
                         });
-    
+
                         this.listTemplates = arrValues;
                     })
-    
+
                 ).subscribe();
             }
         }
@@ -954,7 +984,7 @@ export class DocumentViewerComponent implements OnInit {
 
     loadTmpDocument(base64Content: string, format: string) {
         return new Promise((resolve, reject) => {
-            this.http.post(`../../rest/convertedFile/encodedFile`, { format: format, encodedFile : base64Content}).pipe(
+            this.http.post(`../../rest/convertedFile/encodedFile`, { format: format, encodedFile: base64Content }).pipe(
                 tap((data: any) => {
                     console.log(data);
                     this.file = {
@@ -989,7 +1019,7 @@ export class DocumentViewerComponent implements OnInit {
                         src: null
                     };
                 }),
-                exhaustMap((data) => this.http.post(`../../rest/convertedFile/encodedFile`, { format: data.format, encodedFile : data.content})),
+                exhaustMap((data) => this.http.post(`../../rest/convertedFile/encodedFile`, { format: data.format, encodedFile: data.content })),
                 tap((data: any) => {
                     this.file.src = this.base64ToArrayBuffer(data.encodedResource);
                     this.closeEditor();
