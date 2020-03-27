@@ -479,7 +479,7 @@ class SignatureBookController
             'version'       => $resource['version'],
             'fingerprint'   => $storeResult['fingerPrint']
         ]);
-        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['data']['resId'], 'TNL', $resource['version']]]);
+        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['resId'], 'TNL', $resource['version']]]);
 
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
