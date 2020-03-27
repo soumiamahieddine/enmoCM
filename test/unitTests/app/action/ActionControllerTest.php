@@ -37,7 +37,7 @@ class ActionsControllerTest extends TestCase
 
         self::$id = $responseBody->actionId;
 
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         // FAIL CREATE
         $aArgs = [
@@ -67,7 +67,7 @@ class ActionsControllerTest extends TestCase
         $response         = $actionController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody     = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
         $this->assertSame(self::$id, $responseBody->action->id);
         $this->assertSame('indexing', $responseBody->action->keyword);
         $this->assertSame('TEST-LABEL', $responseBody->action->label_action);

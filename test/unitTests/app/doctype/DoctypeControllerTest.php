@@ -33,7 +33,7 @@ class DoctypeControllerTest extends TestCase
         $this->assertNotNull($responseBody->structure[0]->text);
         $this->assertNotNull($responseBody->structure[0]->parent);
         
-        $this->assertInternalType('int', $responseBody->structure[0]->doctypes_first_level_id);
+        $this->assertIsInt($responseBody->structure[0]->doctypes_first_level_id);
         $this->assertNotNull($responseBody->structure[0]->doctypes_first_level_id);
         $this->assertNotNull($responseBody->structure[0]->doctypes_first_level_label);
         $this->assertNotNull($responseBody->structure[0]->enabled);
@@ -75,7 +75,7 @@ class DoctypeControllerTest extends TestCase
 
         self::$firstLevelId = $responseBody->firstLevelId;
 
-        $this->assertInternalType('int', self::$firstLevelId);
+        $this->assertIsInt(self::$firstLevelId);
 
         // CREATE FAIL
         $aArgs = [
@@ -112,7 +112,7 @@ class DoctypeControllerTest extends TestCase
 
         self::$secondLevelId = $responseBody->secondLevelId;
 
-        $this->assertInternalType('int', self::$secondLevelId);
+        $this->assertIsInt(self::$secondLevelId);
 
         // CREATE FAIL
         $aArgs = [
@@ -193,7 +193,7 @@ class DoctypeControllerTest extends TestCase
 
         self::$doctypeId = $responseBody->doctypeId;
 
-        $this->assertInternalType('int', self::$doctypeId);
+        $this->assertIsInt(self::$doctypeId);
         $this->assertNotNull($responseBody->doctypeTree);
 
         // CREATE FAIL

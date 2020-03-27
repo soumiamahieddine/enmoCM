@@ -30,10 +30,10 @@ class CoreControllerTest extends TestCase
     //     $version = explode(".", $responseBody->applicationMinorVersion);
     //     $this->assertSame('18', $version[0]);
     //     $this->assertSame('10', $version[1]);
-    //     $this->assertInternalType('int', (int)$version[2]);
+    //     $this->assertIsInt((int)$version[2]);
     //     $this->assertSame('fr', $responseBody->lang);
     //     $this->assertNotEmpty($responseBody->user);
-    //     $this->assertInternalType('int', $responseBody->user->id);
+    //     $this->assertIsInt($responseBody->user->id);
     //     $this->assertSame('superadmin', $responseBody->user->user_id);
     //     $this->assertSame('Super', $responseBody->user->firstname);
     //     $this->assertNotEmpty($responseBody->scriptsToinject);
@@ -49,12 +49,12 @@ class CoreControllerTest extends TestCase
         $response     = $coreController->getHeader($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         $this->assertNotEmpty($responseBody->user);
-        $this->assertInternalType('int', $responseBody->user->id);
+        $this->assertIsInt($responseBody->user->id);
         $this->assertSame("superadmin", $responseBody->user->user_id);
         $this->assertSame("Super", $responseBody->user->firstname);
         $this->assertSame("ADMIN", $responseBody->user->lastname);
-        $this->assertInternalType('array', $responseBody->user->groups);
-        $this->assertInternalType('array', $responseBody->user->entities);
+        $this->assertIsArray($responseBody->user->groups);
+        $this->assertIsArray($responseBody->user->entities);
     }
 
     public function testrenderJnlp()

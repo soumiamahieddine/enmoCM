@@ -9,7 +9,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { startWith, switchMap, map, catchError, takeUntil, tap } from 'rxjs/operators';
+import { startWith, switchMap, map, catchError, takeUntil, tap, finalize } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
@@ -150,8 +150,8 @@ export class BasketListComponent implements OnInit {
                 groupId: params['groupSerialId'],
                 basketId: params['basketId']
             };
-            this.headerService.currentBasketInfo =  this.currentBasketInfo;
-            
+            this.headerService.currentBasketInfo = this.currentBasketInfo;
+
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
             this.sidenavRight.close();
@@ -189,6 +189,8 @@ export class BasketListComponent implements OnInit {
                 takeUntil(this.destroy$),
                 startWith({}),
                 switchMap(() => {
+                    // To Reset scroll
+                    this.data = [];
                     this.isLoadingResults = true;
                     return this.resultListDatabase!.getRepoIssues(
                         this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, this.filtersListService.getUrlFilters(), this.paginator.pageSize);
@@ -280,7 +282,7 @@ export class BasketListComponent implements OnInit {
             let timeStamp = +new Date();
             this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail?tsp=' + timeStamp;
             $j('#viewThumbnail').show();
-            $j('#listContent').css({"overflow": "hidden"});
+            $j('#listContent').css({ "overflow": "hidden" });
         }
     }
 
@@ -486,7 +488,7 @@ export class BasketListComponent implements OnInit {
 
     toggleMailTracking(row: any) {
         if (!row.mailTracking) {
-            this.http.post('../../rest/resources/follow', {resources: [row.resId]}).pipe(
+            this.http.post('../../rest/resources/follow', { resources: [row.resId] }).pipe(
                 tap(() => this.headerService.nbResourcesFollowed++),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);

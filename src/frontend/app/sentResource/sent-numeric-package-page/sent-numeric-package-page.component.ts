@@ -116,6 +116,7 @@ export class SentNumericPackagePageComponent implements OnInit {
             await this.getResourceData();
             await this.getM2MSenders();
 
+            this.setDefaultInfo();
         }
         this.loading = false;
     }
@@ -203,9 +204,6 @@ export class SentNumericPackagePageComponent implements OnInit {
                     });
                     this.messageReview = this.reversePipe.transform(this.messageReview);
 
-
-                    console.log(this.numericPackageAttachTool);
-
                     if (data.disposition.tablename === 'res_letterbox') {
                         this.numericPackage.mainExchangeDoc = {
                             ...this.numericPackageAttachTool['document'].list[0],
@@ -250,7 +248,6 @@ export class SentNumericPackagePageComponent implements OnInit {
                 tap((data: any) => {
                     this.resourceData = data;
                     this.numericPackage.object = this.resourceData.subject;
-
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -262,14 +259,24 @@ export class SentNumericPackagePageComponent implements OnInit {
         });
     }
 
+    setDefaultInfo() {
+        if (!this.functions.empty(this.resourceData.senders)) {
+            this.resourceData.senders.forEach((sender: any) => {
+                this.setSender(sender.id);
+            });
+        }
+    }
+
     setSender(id: number) {
         this.http.get(`../../rest/contacts/${id}`).pipe(
             tap((data: any) => {
-                if (!this.functions.empty(data.email)) {
+                if (!this.functions.empty(data.communicationMeans) && !this.functions.empty(data.externalId['m2m'])) {
                     this.recipients.push(
                         {
                             label: this.contactService.formatContact(data),
-                            email: data.email
+                            email: data.email,
+                            m2m : data.externalId['m2m'],
+                            communicationMeans : data.communicationMeans
                         }
                     )
                 }

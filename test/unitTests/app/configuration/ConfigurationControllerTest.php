@@ -44,7 +44,7 @@ class ConfigurationControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->configuration);
-        $this->assertInternalType('int', $responseBody->configuration->id);
+        $this->assertIsInt($responseBody->configuration->id);
         $this->assertSame('admin_email_server', $responseBody->configuration->service);
         $this->assertNotNull($responseBody->configuration->value);
 
@@ -93,7 +93,7 @@ class ConfigurationControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->configuration);
-        $this->assertInternalType('int', $responseBody->configuration->id);
+        $this->assertIsInt($responseBody->configuration->id);
         $this->assertSame('admin_email_server', $responseBody->configuration->service);
         $this->assertNotNull($responseBody->configuration->value);
 
@@ -136,7 +136,7 @@ class ConfigurationControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->configuration);
-        $this->assertInternalType('int', $responseBody->configuration->id);
+        $this->assertIsInt($responseBody->configuration->id);
         $this->assertSame('admin_email_server', $responseBody->configuration->service);
         $this->assertNotNull($responseBody->configuration->value);
 
@@ -233,7 +233,7 @@ class ConfigurationControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->configuration);
-        $this->assertInternalType('int', $responseBody->configuration->id);
+        $this->assertIsInt($responseBody->configuration->id);
         $this->assertSame('admin_email_server', $responseBody->configuration->service);
         $this->assertNotNull($responseBody->configuration->value);
 
@@ -283,7 +283,7 @@ class ConfigurationControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->configuration);
-        $this->assertInternalType('int', $responseBody->configuration->id);
+        $this->assertIsInt($responseBody->configuration->id);
         $this->assertSame('admin_email_server', $responseBody->configuration->service);
         $this->assertNotNull($responseBody->configuration->value);
 

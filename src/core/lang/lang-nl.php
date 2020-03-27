@@ -164,8 +164,6 @@ define('_LINK_DELETED_TAG', 'Tag link deleted');//TRANSLATE
 define('_USERS', 'Gebruikers');
 define('_GROUPS', 'Gebruikersgroepen');
 define('_ENTITIES', 'Eenheden');
-define('_DOCTYPES', 'Soorten brieven');
-define('_FOLDERTYPES', 'Maptypes');
 define('_TAGS', 'Sleutelwoorden');
 define('_DOCSERVERS', 'Opslagruimtes');
 define('_REPORTS', 'Statistieken');
@@ -251,8 +249,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurde
 define('_PROCEED_WORKFLOW', 'Het goedkeuringscircuit verderzetten');
 define('_PROCEED_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurder / ondertekenaar die in het goedkeuringscircuit van het brief aanwezig is (\process_date\ van de tabel listinstance).');
 define('_VISA_MAIL', 'De e-mail goedkeuren');
-define('_MODIFY_ATTACHMENTS', 'De bijlagen wijzigen');
-define('_DELETE_ATTACHMENTS', 'De bijlagen verwijderen');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Een (parallelle) berichtenvraag verzenden');
 define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Opent een modaliteit die toelaat personen in het bericht, in de verdelingslijst toe te voegen of te verwijderen.');
 define('_VALIDATE_RECOMMENDATION', 'Een (parallelle) berichtenvraag bevestigen');

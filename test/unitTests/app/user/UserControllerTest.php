@@ -27,12 +27,12 @@ class UserControllerTest extends TestCase
         $response     = $userController->get($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->users);
+        $this->assertIsArray($responseBody->users);
         $this->assertNotEmpty($responseBody->users);
 
         foreach ($responseBody->users as $value) {
             $this->assertNotNull($value->id);
-            $this->assertInternalType('integer', $value->id);
+            $this->assertIsInt($value->id);
             $this->assertNotNull($value->user_id);
             $this->assertNotNull($value->firstname);
             $this->assertNotNull($value->lastname);
@@ -62,7 +62,7 @@ class UserControllerTest extends TestCase
 
         self::$id = $responseBody->id;
 
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -133,8 +133,8 @@ class UserControllerTest extends TestCase
         $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->groups);
-        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertIsArray($responseBody->groups);
+        $this->assertIsArray($responseBody->baskets);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -143,7 +143,7 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertIsArray($responseBody->groups);
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('Douche', $responseBody->groups[0]->role);
     }
@@ -172,7 +172,7 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertIsArray($responseBody->groups);
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('role updated', $responseBody->groups[0]->role);
     }
@@ -187,9 +187,9 @@ class UserControllerTest extends TestCase
         $response     = $userController->deleteGroup($request, new \Slim\Http\Response(), ['id' => self::$id, 'groupId' => 'AGENT']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertIsArray($responseBody->groups);
         $this->assertEmpty($responseBody->groups);
-        $this->assertInternalType('array', $responseBody->baskets);
+        $this->assertIsArray($responseBody->baskets);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -198,7 +198,7 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertIsArray($responseBody->groups);
         $this->assertEmpty($responseBody->groups);
     }
 
@@ -218,8 +218,8 @@ class UserControllerTest extends TestCase
         $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
-        $this->assertInternalType('array', $responseBody->allEntities);
+        $this->assertIsArray($responseBody->entities);
+        $this->assertIsArray($responseBody->allEntities);
 
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -233,8 +233,8 @@ class UserControllerTest extends TestCase
         $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
-        $this->assertInternalType('array', $responseBody->allEntities);
+        $this->assertIsArray($responseBody->entities);
+        $this->assertIsArray($responseBody->allEntities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -243,7 +243,7 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
         $this->assertSame('DGS', $responseBody->entities[0]->entity_id);
         $this->assertSame('Warrior', $responseBody->entities[0]->user_role);
         $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
@@ -276,7 +276,7 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
         $this->assertSame('DGS', $responseBody->entities[0]->entity_id);
         $this->assertSame('Rogue', $responseBody->entities[0]->user_role);
         $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
@@ -302,7 +302,7 @@ class UserControllerTest extends TestCase
         $found = false;
         foreach ($responseBody->users as $value) {
             $this->assertNotNull($value->id);
-            $this->assertInternalType('integer', $value->id);
+            $this->assertIsInt($value->id);
             $this->assertNotNull($value->user_id);
             $this->assertNotNull($value->firstname);
             $this->assertNotNull($value->lastname);
@@ -338,9 +338,9 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(true, $responseBody->isDeletable);
-        $this->assertInternalType('array', $responseBody->listTemplates);
+        $this->assertIsArray($responseBody->listTemplates);
         $this->assertEmpty($responseBody->listTemplates);
-        $this->assertInternalType('array', $responseBody->listInstances);
+        $this->assertIsArray($responseBody->listInstances);
         $this->assertEmpty($responseBody->listInstances);
     }
 
@@ -370,7 +370,7 @@ class UserControllerTest extends TestCase
         $response     = $userController->updatePrimaryEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'FIN']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -379,7 +379,7 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
         $this->assertSame('FIN', $responseBody->entities[0]->entity_id);
         $this->assertSame('Hunter', $responseBody->entities[0]->user_role);
         $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
@@ -398,8 +398,8 @@ class UserControllerTest extends TestCase
         $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'FIN']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
-        $this->assertInternalType('array', $responseBody->allEntities);
+        $this->assertIsArray($responseBody->entities);
+        $this->assertIsArray($responseBody->allEntities);
 
         //  DELETE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
@@ -407,9 +407,9 @@ class UserControllerTest extends TestCase
         $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'DGS']);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
         $this->assertEmpty($responseBody->entities);
-        $this->assertInternalType('array', $responseBody->allEntities);
+        $this->assertIsArray($responseBody->allEntities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -418,7 +418,7 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->id);
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
         $this->assertEmpty($responseBody->entities);
     }
 
@@ -518,7 +518,7 @@ class UserControllerTest extends TestCase
         $this->assertNotNull($responseBody->quota);
         $this->assertSame(20, $responseBody->quota->userQuota);
         $this->assertNotNull($responseBody->quota->actives);
-        $this->assertInternalType('int', $responseBody->quota->inactives);
+        $this->assertIsInt($responseBody->quota->inactives);
 
         $aArgs = [
             'description'           => 'User quota',
@@ -554,7 +554,7 @@ class UserControllerTest extends TestCase
             }
         }
         $this->assertNotEmpty(self::$idEmailSignature);
-        $this->assertInternalType('int', self::$idEmailSignature);
+        $this->assertIsInt(self::$idEmailSignature);
         $this->assertSame('Titre email signature TU 12345', $titleEmailSignature);
         $this->assertSame('<p>Body Email Signature</p>', $htmlBodyEmailSignature);
 
@@ -588,7 +588,7 @@ class UserControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody->emailSignature);
         $this->assertNotEmpty($responseBody->emailSignature->id);
-        $this->assertInternalType('int', $responseBody->emailSignature->id);
+        $this->assertIsInt($responseBody->emailSignature->id);
         $this->assertSame('Titre email signature TU 12345 UPDATE', $responseBody->emailSignature->title);
         $this->assertSame('<p>Body Email Signature UPDATE</p>', $responseBody->emailSignature->html_body);
 
@@ -813,7 +813,7 @@ class UserControllerTest extends TestCase
             }
         }
         $this->assertNotNull(self::$redirectId);
-        $this->assertInternalType('int', self::$redirectId);
+        $this->assertIsInt(self::$redirectId);
 
         $aArgs = [
             [

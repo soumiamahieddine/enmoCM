@@ -34,7 +34,7 @@ class ContactGroupControllerTest extends TestCase
 
         self::$id = $responseBody->contactsGroup;
 
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -49,8 +49,8 @@ class ContactGroupControllerTest extends TestCase
         $this->assertSame(true, $responseBody->contactsGroup->public);
         $this->assertSame($user['id'], $responseBody->contactsGroup->owner);
         $this->assertSame('superadmin', $responseBody->contactsGroup->entity_owner);
-        $this->assertInternalType('string', $responseBody->contactsGroup->labelledOwner);
-        $this->assertInternalType('array', $responseBody->contactsGroup->contacts);
+        $this->assertIsString($responseBody->contactsGroup->labelledOwner);
+        $this->assertIsArray($responseBody->contactsGroup->contacts);
     }
 
     public function testGet()
@@ -63,7 +63,7 @@ class ContactGroupControllerTest extends TestCase
         $response       = $contactGroupController->get($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->contactsGroups);
+        $this->assertIsArray($responseBody->contactsGroups);
         $this->assertNotNull($responseBody->contactsGroups);
     }
 
@@ -98,8 +98,8 @@ class ContactGroupControllerTest extends TestCase
         $this->assertSame('Groupe de petition updated', $responseBody->contactsGroup->description);
         $this->assertSame(false, $responseBody->contactsGroup->public);
         $this->assertSame('superadmin', $responseBody->contactsGroup->entity_owner);
-        $this->assertInternalType('string', $responseBody->contactsGroup->labelledOwner);
-        $this->assertInternalType('array', $responseBody->contactsGroup->contacts);
+        $this->assertIsString($responseBody->contactsGroup->labelledOwner);
+        $this->assertIsArray($responseBody->contactsGroup->contacts);
     }
 
     public function testAddContacts()
@@ -129,8 +129,8 @@ class ContactGroupControllerTest extends TestCase
             $this->assertNotEmpty($responseBody->contactsGroup->contacts);
             $this->assertSame($contacts[0]['id'], $responseBody->contactsGroup->contacts[0]->id);
             $this->assertSame(0, $responseBody->contactsGroup->contacts[0]->position);
-            $this->assertInternalType('string', $responseBody->contactsGroup->contacts[0]->contact);
-            $this->assertInternalType('string', $responseBody->contactsGroup->contacts[0]->address);
+            $this->assertIsString($responseBody->contactsGroup->contacts[0]->contact);
+            $this->assertIsString($responseBody->contactsGroup->contacts[0]->address);
         }
     }
 
@@ -164,8 +164,8 @@ class ContactGroupControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->contactsGroup->id);
         $this->assertSame($user['id'], $responseBody->contactsGroup->owner);
         $this->assertSame('superadmin', $responseBody->contactsGroup->entity_owner);
-        $this->assertInternalType('string', $responseBody->contactsGroup->labelledOwner);
-        $this->assertInternalType('array', $responseBody->contactsGroup->contacts);
+        $this->assertIsString($responseBody->contactsGroup->labelledOwner);
+        $this->assertIsArray($responseBody->contactsGroup->contacts);
         $this->assertEmpty($responseBody->contactsGroup->contacts);
     }
 

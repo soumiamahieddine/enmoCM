@@ -484,11 +484,9 @@
                                             <mat-cell *matCellDef="let element" style="flex:1;">
                                                 {{element.event_date | date : "dd/MM/y HH:mm"}}</mat-cell>
                                         </ng-container>
-                                        <ng-container matColumnDef="event_type">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">
-                                                {{lang.event}}</mat-header-cell>
-                                            <mat-cell *matCellDef="let element" style="flex:1;"> {{element.event_type}}
-                                            </mat-cell>
+                                        <ng-container matColumnDef="record_id">
+                                            <mat-header-cell *matHeaderCellDef style="flex:1;">{{lang.technicalId}}</mat-header-cell>
+                                            <mat-cell *matCellDef="let element" style="flex:1;">{{element.record_id}}</mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="info">
                                             <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">

@@ -52,12 +52,12 @@ class UserFollowedResourceControllerTest extends TestCase
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         self::$id = $responseBody->resId;
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
 
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
 
         $this->assertSame('Breaking News : Superman is alive - PHP unit FOLLOW / UNFOLLOW', $res['subject']);
         $this->assertSame(102, $res['type_id']);
@@ -158,7 +158,7 @@ class UserFollowedResourceControllerTest extends TestCase
         $response     = $userFollowedResourceController->getFollowedResources($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->countResources);
+        $this->assertIsInt($responseBody->countResources);
         $this->assertSame(1, $responseBody->countResources);
         $this->assertSame(1, count($responseBody->resources));
 
@@ -166,7 +166,7 @@ class UserFollowedResourceControllerTest extends TestCase
         $this->assertNotNull($responseBody->resources[0]->priorityColor);
         $this->assertNotNull($responseBody->resources[0]->statusImage);
         $this->assertNotNull($responseBody->resources[0]->statusLabel);
-        $this->assertInternalType('int', $responseBody->resources[0]->resId);
+        $this->assertIsInt($responseBody->resources[0]->resId);
         $this->assertSame('Breaking News : Superman is alive - PHP unit FOLLOW / UNFOLLOW', $responseBody->resources[0]->subject);
 
         $GLOBALS['userId'] = 'bblier';
@@ -182,7 +182,7 @@ class UserFollowedResourceControllerTest extends TestCase
         $response     = $userFollowedResourceController->getFollowedResources($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->countResources);
+        $this->assertIsInt($responseBody->countResources);
         $this->assertSame(0, $responseBody->countResources);
 
         $GLOBALS['userId'] = 'superadmin';
@@ -210,7 +210,7 @@ class UserFollowedResourceControllerTest extends TestCase
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
         $this->assertSame('DEL', $res['status']);
     }
 }

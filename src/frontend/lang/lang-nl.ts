@@ -925,7 +925,7 @@ export const LANG_NL = {
     "thanksToCommunity"                     : "En de volledige Maarch-community!",
     "thanksToExtDev"                        : "Maarch Courrier steunt op enkele externe onderdelen. Hartelijk dank aan de ontwikkelaars ervan!",
     "thisRes"                               : "Following mail(s)", //_TO_TRANSLATE
-    "thuesday"                              : "Dinsdag",
+    "tuesday"                               : "Dinsdag",
     "thursday"                              : "Donderdag",
     "title"                                 : "Titel",
     "to"                                    : "naar",

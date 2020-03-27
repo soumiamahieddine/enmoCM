@@ -208,7 +208,7 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
 
-        $this->assertInternalType('int', $responseBody->id);
+        $this->assertIsInt($responseBody->id);
         self::$childId = $responseBody->id;
 
         $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
@@ -216,7 +216,7 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
 
-        $this->assertInternalType('int', $responseBody->id);
+        $this->assertIsInt($responseBody->id);
         self::$childId2 = $responseBody->id;
     }
 

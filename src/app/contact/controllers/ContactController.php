@@ -935,7 +935,7 @@ class ContactController
                     'addressCountry'     => $contactRaw['address_country'],
                     'email'              => $contactRaw['email'],
                     'phone'              => $contactRaw['phone'],
-                    'communicationMeans' => !empty($contactRaw['communication_means']) ? json_decode($contactRaw['communication_means']) : null,
+                    'communicationMeans' => null,
                     'notes'              => $contactRaw['notes'],
                     'creator'            => $contactRaw['creator'],
                     'creatorLabel'       => UserModel::getLabelledUserById(['id' => $contactRaw['creator']]),
@@ -945,6 +945,11 @@ class ContactController
                     'customFields'       => !empty($contactRaw['custom_fields']) ? json_decode($contactRaw['custom_fields'], true) : null,
                     'externalId'         => json_decode($contactRaw['external_id'], true)
                 ];
+
+                if (!empty($contactRaw['communication_means'])) {
+                    $communicationMeans = json_decode($contactRaw['communication_means'], true);
+                    $contact['communicationMeans'] = $communicationMeans['url'] ?? $communicationMeans['email'];
+                }
 
                 $filling = ContactController::getFillingRate(['contactId' => $resourceContact['item_id']]);
 

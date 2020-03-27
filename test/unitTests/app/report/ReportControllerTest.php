@@ -23,7 +23,7 @@ class ReportControllerTest extends TestCase
         $response       = $reportController->getGroups($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->groups);
+        $this->assertIsArray($responseBody->groups);
 
         self::$id = $responseBody->groups[0]->group_id;
     }
@@ -38,7 +38,7 @@ class ReportControllerTest extends TestCase
         $response       = $reportController->getByGroupId($request, new \Slim\Http\Response(), ['groupId' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->reports);
+        $this->assertIsArray($responseBody->reports);
 
         foreach ($responseBody->reports as $key => $report) {
             $responseBody->reports[$key]->checked = true;
@@ -61,7 +61,7 @@ class ReportControllerTest extends TestCase
         $response       = $reportController->getByGroupId($request, new \Slim\Http\Response(), ['groupId' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->reports);
+        $this->assertIsArray($responseBody->reports);
 
         foreach ($responseBody->reports as $key => $report) {
             $this->assertSame(true, $report->checked);
@@ -87,7 +87,7 @@ class ReportControllerTest extends TestCase
         $response       = $reportController->getByGroupId($request, new \Slim\Http\Response(), ['groupId' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->reports);
+        $this->assertIsArray($responseBody->reports);
 
         foreach ($responseBody->reports as $key => $report) {
             if ($key % 2) {

@@ -33,7 +33,7 @@ class PriorityControllerTest extends TestCase
 
         self::$id = $responseBody->priority;
 
-        $this->assertInternalType('string', self::$id);
+        $this->assertIsString(self::$id);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -57,7 +57,7 @@ class PriorityControllerTest extends TestCase
         $response       = $priorityController->get($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->priorities);
+        $this->assertIsArray($responseBody->priorities);
         $this->assertNotNull($responseBody->priorities);
     }
 
@@ -103,7 +103,7 @@ class PriorityControllerTest extends TestCase
         $response       = $priorityController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->priorities);
+        $this->assertIsArray($responseBody->priorities);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -124,7 +124,7 @@ class PriorityControllerTest extends TestCase
         $response       = $priorityController->getSorted($request, new \Slim\Http\Response());
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->priorities);
+        $this->assertIsArray($responseBody->priorities);
         $this->assertNotEmpty($responseBody->priorities);
         
         foreach ($responseBody->priorities as $value) {

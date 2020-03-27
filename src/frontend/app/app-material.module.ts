@@ -89,7 +89,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatRippleModule} from '@angular/material/core';
 
 import {MatTreeModule} from '@angular/material/tree';
-import { getFrenchPaginatorIntl } from './french-paginator-intl';
+import {getFrenchPaginatorIntl, getTranslatedPaginator} from './french-paginator-intl';
 
 @NgModule({
     imports: [
@@ -167,7 +167,7 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
         DndModule
     ],
     providers: [
-        { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() },
+        { provide: MatPaginatorIntl, useValue: getTranslatedPaginator(LANG.langISO) },
         { provide: MAT_DATE_LOCALE, useValue: LANG.langISO },
         { provide: DateAdapter, useClass: AppDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },

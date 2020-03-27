@@ -35,7 +35,7 @@ class ShippingTemplateControllerTest extends TestCase
         $response     = $shipping->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType("int", $responseBody->shippingId);
+        $this->assertIsInt($responseBody->shippingId);
         self::$id = $responseBody->shippingId;
 
         ####### FAIL ##########
@@ -97,7 +97,7 @@ class ShippingTemplateControllerTest extends TestCase
         $this->assertNotNull($responseBody->shippings);
 
         foreach ($responseBody->shippings as $value) {
-            $this->assertInternalType("int", $value->id);
+            $this->assertIsInt($value->id);
         }
     }
 
@@ -154,7 +154,7 @@ class ShippingTemplateControllerTest extends TestCase
         $response = $shipping->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType("array", $responseBody->shippings);
+        $this->assertIsArray($responseBody->shippings);
 
         ##### FAIL ######
         $response = $shipping->delete($request, new \Slim\Http\Response(), ['id' => 'myid']);

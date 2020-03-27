@@ -25,7 +25,7 @@ class PriorityController
 {
     public function get(Request $request, Response $response)
     {
-        return $response->withJson(['priorities' => PriorityModel::get()]);
+        return $response->withJson(['priorities' => PriorityModel::get(['orderBy' => ['"order"']])]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)

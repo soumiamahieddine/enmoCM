@@ -38,7 +38,7 @@ class AttachmentControllerTest extends TestCase
         $response     = $attachmentController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         self::$id = $responseBody->id;
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         // CHECK ERROR EMPTY TYPE
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -55,7 +55,7 @@ class AttachmentControllerTest extends TestCase
         //  READ
         $res = \Attachment\models\AttachmentModel::getById(['id' => self::$id, 'select' => ['*']]);
 
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
 
         $this->assertSame($aArgs['title'], $res['title']);
         $this->assertSame($aArgs['type'], $res['attachment_type']);
@@ -106,7 +106,7 @@ class AttachmentControllerTest extends TestCase
         //  READ
         $response = $attachmentController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $res = json_decode((string)$response->getBody(), true);
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
 
         $this->assertSame($aArgs['title'], $res['title']);
         $this->assertSame($aArgs['type'], $res['type']);

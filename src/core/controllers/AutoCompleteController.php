@@ -552,27 +552,34 @@ class AutoCompleteController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $searchItems = explode(' ', $data['search']);
+        $searchableParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['searchable = ?'], 'data' => [true]]);
 
-        $fields = '(firstname ilike ? OR lastname ilike ? OR company ilike ? 
-                    OR address_number ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postcode ilike ?)';
-        $where = [];
-        $requestData = [];
-        foreach ($searchItems as $item) {
-            if (strlen($item) >= 2) {
-                $where[] = $fields;
-                for ($i = 0; $i < 7; $i++) {
-                    $requestData[] = "%{$item}%";
-                }
+        $fields = [];
+        foreach ($searchableParameters as $searchableParameter) {
+            if (strpos($searchableParameter['identifier'], 'contactCustomField_') !== false) {
+                $customFieldId = explode('_', $searchableParameter['identifier'])[1];
+                $fields[] = "custom_fields->>'{$customFieldId}'";
+            } else {
+                $fields[] = ContactController::MAPPING_FIELDS[$searchableParameter['identifier']];
             }
         }
 
+        $fieldsNumber = count($fields);
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
+        $requestData = AutoCompleteController::getDataForRequest([
+            'search'        => $data['search'],
+            'fields'        => $fields,
+            'where'         => ['enabled = ?'],
+            'data'          => [true],
+            'fieldsNumber'  => $fieldsNumber
+        ]);
+
         $contacts = ContactModel::get([
-            'select'    => [
-                'id', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
-            ],
-            'where'     => $where,
-            'data'      => $requestData,
+            'select'    => ['id', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'],
+            'where'     => $requestData['where'],
+            'data'      => $requestData['data'],
+            'orderBy'   => ['company', 'lastname NULLS FIRST'],
             'limit'     => 1000
         ]);
 

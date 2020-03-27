@@ -64,6 +64,7 @@ export class ParametersAdministrationComponent implements OnInit {
 
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.parameters);
+                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);

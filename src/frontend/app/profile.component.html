@@ -864,6 +864,10 @@
                                         <mat-cell *matCellDef="let element">{{element.event_date | date : "dd/MM/y HH:mm"}}
                                         </mat-cell>
                                     </ng-container>
+                                    <ng-container matColumnDef="record_id">
+                                        <mat-header-cell *matHeaderCellDef>{{lang.technicalId}}</mat-header-cell>
+                                        <mat-cell *matCellDef="let element">{{element.record_id}}</mat-cell>
+                                    </ng-container>
                                     <ng-container matColumnDef="info">
                                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}
                                         </mat-header-cell>

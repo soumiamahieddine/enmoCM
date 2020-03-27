@@ -32,7 +32,7 @@ class FolderControllerTest extends TestCase
 
         self::$id = $responseBody->folder;
 
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         // Create SubFolder
         $aArgs = [
@@ -44,7 +44,7 @@ class FolderControllerTest extends TestCase
         $response     = $folderController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('int', $responseBody->folder);
+        $this->assertIsInt($responseBody->folder);
 
         //  Error
 
@@ -104,8 +104,8 @@ class FolderControllerTest extends TestCase
         $this->assertSame(false, $responseBody->folder->public);
         $this->assertSame(null, $responseBody->folder->parent_id);
         $this->assertSame(0, $responseBody->folder->level);
-        $this->assertInternalType('array', $responseBody->folder->sharing->entities);
-        $this->assertInternalType('integer', $responseBody->folder->user_id);
+        $this->assertIsArray($responseBody->folder->sharing->entities);
+        $this->assertIsInt($responseBody->folder->user_id);
         $this->assertNotEmpty($responseBody->folder->user_id);
         $this->assertNotEmpty($responseBody->folder->ownerDisplayName);
 
@@ -131,15 +131,15 @@ class FolderControllerTest extends TestCase
         foreach ($responseBody->folders as $value) {
             $this->assertNotEmpty($value->name);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType("integer", $value->id);
+            $this->assertIsInt($value->id);
             $this->assertNotEmpty($value->label);
-            $this->assertInternalType("boolean", $value->public);
-            $this->assertInternalType("integer", $value->user_id);
+            $this->assertIsBool($value->public);
+            $this->assertIsInt($value->user_id);
             if (!empty($value->parent_id)) {
-                $this->assertInternalType("integer", $value->parent_id);
+                $this->assertIsInt($value->parent_id);
             }
-            $this->assertInternalType("integer", $value->level);
-            $this->assertInternalType("integer", $value->countResources);
+            $this->assertIsInt($value->level);
+            $this->assertIsInt($value->countResources);
         }
     }
 
@@ -236,15 +236,15 @@ class FolderControllerTest extends TestCase
         foreach ($responseBody->folders as $value) {
             $this->assertNotEmpty($value->name);
             $this->assertNotEmpty($value->id);
-            $this->assertInternalType("integer", $value->id);
+            $this->assertIsInt($value->id);
             $this->assertNotEmpty($value->label);
-            $this->assertInternalType("boolean", $value->public);
-            $this->assertInternalType("integer", $value->user_id);
+            $this->assertIsBool($value->public);
+            $this->assertIsInt($value->user_id);
             if (!empty($value->parent_id)) {
-                $this->assertInternalType("integer", $value->parent_id);
+                $this->assertIsInt($value->parent_id);
             }
-            $this->assertInternalType("integer", $value->level);
-            $this->assertInternalType("integer", $value->countResources);
+            $this->assertIsInt($value->level);
+            $this->assertIsInt($value->countResources);
         }
     }
 

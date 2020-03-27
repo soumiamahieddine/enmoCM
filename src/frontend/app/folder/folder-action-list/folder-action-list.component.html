@@ -26,6 +26,11 @@
         </div>
     </mat-menu>
     <mat-divider></mat-divider>
+    <button mat-menu-item class="followAction" (click)="unFollow()" [disabled]="selectedRes.length === 0">
+        <mat-icon class="far fa-star fa-2x"></mat-icon>
+        <span>{{lang.untrackThisMail}}</span>
+    </button>
+    <mat-divider></mat-divider>
     <button mat-menu-item class="folderAction" (click)="unclassify()" [disabled]="selectedRes.length === 0">
         <mat-icon class="fa fa-folder-minus fa-2x"></mat-icon>
         <span>{{lang.removeFromFolder}}</span>

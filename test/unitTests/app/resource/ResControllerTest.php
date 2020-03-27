@@ -50,12 +50,12 @@ class ResControllerTest extends TestCase
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         self::$id = $responseBody->resId;
-        $this->assertInternalType('int', self::$id);
+        $this->assertIsInt(self::$id);
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
 
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
 
         $this->assertSame('Breaking News : Superman is alive - PHP unit', $res['subject']);
         $this->assertSame(102, $res['type_id']);
@@ -126,7 +126,7 @@ class ResControllerTest extends TestCase
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
         $this->assertSame('EVIS', $res['status']);
 
         //  UPDATE WITHOUT STATUS
@@ -146,7 +146,7 @@ class ResControllerTest extends TestCase
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
         $this->assertSame('COU', $res['status']);
     }
 
@@ -274,7 +274,7 @@ class ResControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
         $arr_res = $responseBody->resources;
         $this->assertNotNull($arr_res[0]->fileBase64Content);
-        $this->assertInternalType('int', $arr_res[0]->res_id);
+        $this->assertIsInt($arr_res[0]->res_id);
 
         $aArgs = [
             'select'        => 'res_id',
@@ -289,7 +289,7 @@ class ResControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
         $arr_res = $responseBody->resources;
         $this->assertSame(null, $arr_res[0]->fileBase64Content);
-        $this->assertInternalType('int', $arr_res[0]->res_id);
+        $this->assertIsInt($arr_res[0]->res_id);
 
         $aArgs = [
             'select'        => '',
@@ -325,7 +325,7 @@ class ResControllerTest extends TestCase
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
-        $this->assertInternalType('array', $res);
+        $this->assertIsArray($res);
         $this->assertSame('DEL', $res['status']);
     }
 
@@ -356,7 +356,7 @@ class ResControllerTest extends TestCase
         ];
 
         $entity = \Entity\models\EntityModel::getByEntityId(['entityId' => 'PJS', 'select' => ['id']]);
-        $this->assertInternalType('int', $entity['id']);
+        $this->assertIsInt($entity['id']);
 
         foreach ($aNewDocument as $key => $value) {
             $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -385,7 +385,7 @@ class ResControllerTest extends TestCase
             $response     = $resController->create($fullRequest, new \Slim\Http\Response());
             $responseBody = json_decode((string)$response->getBody());
             $newId = $responseBody->resId;
-            $this->assertInternalType('int', $newId);
+            $this->assertIsInt($newId);
             if ($key < 2) {
                 $GLOBALS['resources'][] = $newId;
             }

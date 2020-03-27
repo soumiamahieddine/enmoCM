@@ -41,7 +41,7 @@ class NotificationControllerTest extends TestCase
         $response = $NotificationController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string) $response->getBody());
 
-        $this->assertInternalType('int', $responseBody->notification_sid);
+        $this->assertIsInt($responseBody->notification_sid);
         self::$id = $responseBody->notification_sid;
 
         $this->assertSame('testcreatetu', $responseBody->notification_id);

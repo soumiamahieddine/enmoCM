@@ -32,15 +32,6 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
-                                <plugin-select-search [showLabel]="true" [class]="''" [label]="lang.associatedStatus"
-                                                      [placeholderLabel]="lang.associatedStatus" [formControlSelect]="selectStatusId"
-                                                      [datas]="statuses" (afterSelected)="action.id_status = selectStatusId.value"
-                                                      style="width:100%;">
-                                </plugin-select-search>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
                                 <plugin-select-search [showLabel]="true" [class]="''" [label]="lang.actionCarriedOut"
                                                       [placeholderLabel]="lang.actionCarriedOut" [formControlSelect]="selectActionPageId"
                                                       [datas]="actionPages" (afterSelected)="getCustomFields()" style="width:100%;">
@@ -75,6 +66,15 @@
                                         <mat-option value="both">{{lang.bothAR}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="action.actionPageId!='reconcile'">
+                            <div class="col-sm-12">
+                                <plugin-select-search [showLabel]="true" [class]="''" [label]="lang.associatedStatus"
+                                                      [placeholderLabel]="lang.associatedStatus" [formControlSelect]="selectStatusId"
+                                                      [datas]="statuses" (afterSelected)="action.id_status = selectStatusId.value"
+                                                      style="width:100%;">
+                                </plugin-select-search>
                             </div>
                         </div>
                         <div class="form-group">

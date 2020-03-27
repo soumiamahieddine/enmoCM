@@ -31,7 +31,7 @@ class IndexingControllerTest extends TestCase
         $this->assertNotEmpty($responseBody->actions);
         foreach ($responseBody->actions as $action) {
             $this->assertNotEmpty($action->id);
-            $this->assertInternalType('int', $action->id);
+            $this->assertIsInt($action->id);
             $this->assertNotEmpty($action->label);
             $this->assertNotEmpty($action->component);
         }
@@ -66,7 +66,7 @@ class IndexingControllerTest extends TestCase
         $this->assertNotEmpty($responseBody->entities);
         foreach ($responseBody->entities as $entity) {
             $this->assertNotEmpty($entity->id);
-            $this->assertInternalType('int', $entity->id);
+            $this->assertIsInt($entity->id);
             $this->assertNotEmpty($entity->entity_label);
             $this->assertNotEmpty($entity->entity_id);
         }

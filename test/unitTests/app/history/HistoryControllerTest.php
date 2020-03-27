@@ -43,7 +43,7 @@ class HistoryControllerTest extends TestCase
         $response = $history->get($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody['history']);
+        $this->assertIsArray($responseBody['history']);
         $this->assertNotEmpty($responseBody['history']);
     }
 
@@ -64,8 +64,8 @@ class HistoryControllerTest extends TestCase
         $response = $batchHistory->get($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody['history']);
-        $this->assertInternalType('integer', $responseBody['count']);
+        $this->assertIsArray($responseBody['history']);
+        $this->assertIsInt($responseBody['count']);
         $this->assertNotNull($responseBody['history']);
     }
 
@@ -91,7 +91,7 @@ class HistoryControllerTest extends TestCase
         //  READ
         foreach ($aNewResId as $resId) {
             $res = \Resource\models\ResModel::getById(['resId' => $resId, 'select' => ['*']]);
-            $this->assertInternalType('array', $res);
+            $this->assertIsArray($res);
             $this->assertEmpty($res);
         }
     }

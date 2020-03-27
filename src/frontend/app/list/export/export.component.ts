@@ -5,7 +5,7 @@ import { NotificationService } from '../../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SortPipe } from '../../../plugins/sorting.pipe';
-import {catchError, map, tap} from "rxjs/operators";
+import {catchError, map, tap, finalize} from "rxjs/operators";
 import {of} from "rxjs";
 
 declare function $j(selector: any): any;
@@ -200,6 +200,11 @@ export class ExportComponent implements OnInit {
             isFunction: true
         },
         {
+            value: 'getAcknowledgementSendDate',
+            label: this.lang.acknowledgementSendDate,
+            isFunction: true
+        },
+        {
             value: '',
             label: this.lang.comment,
             isFunction: true
@@ -284,8 +289,8 @@ export class ExportComponent implements OnInit {
 
     exportData() {
         this.loadingExport = true;
-        this.http.put('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/exports', this.exportModel, { responseType: "blob" })
-            .subscribe((data) => {
+        this.http.put('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/exports', this.exportModel, { responseType: "blob" }).pipe(
+            tap((data: any) => {
                 if (data.type !== 'text/html') {
                     let downloadLink = document.createElement('a');
                     downloadLink.href = window.URL.createObjectURL(data);
@@ -312,12 +317,14 @@ export class ExportComponent implements OnInit {
                     this.exportModelList[this.exportModel.format.toLowerCase()].data = this.exportModel.data;
                 } else {
                     alert(this.lang.tooMuchDatas);
-                }
-                
-                this.loadingExport = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
+                }                
+            }),
+            finalize(() => this.loadingExport = false),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     addData(item: any) {

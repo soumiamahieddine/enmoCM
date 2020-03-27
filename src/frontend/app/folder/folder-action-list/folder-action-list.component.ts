@@ -116,4 +116,18 @@ export class FolderActionListComponent implements OnInit {
             this.router.navigate(['/basketList/users/' + this.headerService.user.id + '/groups/' + basket.groupId + '/baskets/' + basket.basketId]);
         }
     }
+
+    unFollow() {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.stopFollowingAlert } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: this.selectedRes } })),
+            tap((data: any) => {
+                this.notify.success(this.lang.removedFromFolder);
+                this.headerService.nbResourcesFollowed -= data.unFollowed;
+                this.refreshDaoAfterAction();
+            })
+        ).subscribe();
+    }
 }

@@ -245,11 +245,13 @@ class MessageExchangeController
         }
 
         $message = MessageExchangeModel::getMessageByIdentifier([
-            'select'    => ['res_id_master'],
+            'select'    => ['res_id_master', 'status'],
             'messageId' => $args['id']
         ]);
         if (empty($message)) {
-            return $response->withStatus(404)->withJson(['errors' => 'Message not found']);
+            return $response->withStatus(400)->withJson(['errors' => 'Message not found']);
+        } elseif ($message['status'] != 'E') {
+            return $response->withStatus(400)->withJson(['errors' => 'Message can not be deleted']);
         }
 
         if (!ResController::hasRightByResId(['resId' => [$message['res_id_master']], 'userId' => $GLOBALS['id']])) {

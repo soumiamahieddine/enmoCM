@@ -28,7 +28,7 @@ class NoteControllerTest extends TestCase
 
         self::$resId = $getResId[0]['res_id'];
 
-        $this->assertInternalType('int', self::$resId);
+        $this->assertIsInt(self::$resId);
 
         $noteController = new \Note\controllers\NoteController();
 
@@ -49,7 +49,7 @@ class NoteControllerTest extends TestCase
 
         self::$noteId = $responseBody->noteId;
 
-        $this->assertInternalType('int', self::$noteId);
+        $this->assertIsInt(self::$noteId);
 
         // CREATE WITHOUT ENTITIES -> OK
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -67,7 +67,7 @@ class NoteControllerTest extends TestCase
 
         self::$noteId2 = $responseBody->noteId;
 
-        $this->assertInternalType('int', self::$noteId);
+        $this->assertIsInt(self::$noteId);
 
         // CREATE WITH NOTE_TEXT MISSING -> NOT OK
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -120,7 +120,7 @@ class NoteControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Body value is empty or not a string', $responseBody->errors);
     }
 
@@ -137,9 +137,9 @@ class NoteControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->value);
+        $this->assertIsString($responseBody->value);
         $this->assertSame("Test modification d'une note par php unit", $responseBody->value);
-        $this->assertInternalType('array', $responseBody->entities);
+        $this->assertIsArray($responseBody->entities);
 
         $response = $noteController->getById($request, new \Slim\Http\Response(), ['id' => 999999999]);
 
@@ -163,18 +163,18 @@ class NoteControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody->notes);
+        $this->assertIsArray($responseBody->notes);
         $this->assertNotEmpty($responseBody->notes);
 
         foreach ($responseBody->notes as $value) {
-            $this->assertInternalType('int', $value->id);
-            $this->assertInternalType('int', $value->identifier);
-            $this->assertInternalType('string', $value->value);
+            $this->assertIsInt($value->id);
+            $this->assertIsInt($value->identifier);
+            $this->assertIsString($value->value);
             $this->assertNotEmpty($value->value);
-            $this->assertInternalType('int', $value->user_id);
-            $this->assertInternalType('string', $value->firstname);
+            $this->assertIsInt($value->user_id);
+            $this->assertIsString($value->firstname);
             $this->assertNotEmpty($value->firstname);
-            $this->assertInternalType('string', $value->lastname);
+            $this->assertIsString($value->lastname);
             $this->assertNotEmpty($value->lastname);
         }
     }
@@ -199,7 +199,7 @@ class NoteControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertIsString($responseBody->errors);
         $this->assertSame('Note out of perimeter', $responseBody->errors);
 
         // FAIL DELETE

@@ -55,6 +55,7 @@ define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
 define('_DOCUMENT_OUT_PERIMETER', 'Courrier en dehors du périmètre');
 define('_EMAIL_ADDED', 'Courriel ajouté');
 define('_EMAIL_REMOVED', 'Courriel supprimé');
+define('_EMAIL_UPDATED', 'Courriel mis à jour');
 define('_ENTITY_CREATION', 'Création entité');
 define('_ENTITY_MODIFICATION', 'Modification entité');
 define('_ENTITY_SUPPRESSION', 'Suppression entité');
@@ -252,8 +253,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel vis
 define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
 define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
 define('_VISA_MAIL', 'Viser le courrier');
-define("_MODIFY_ATTACHMENTS", "Modifier les pièces jointes");
-define("_DELETE_ATTACHMENTS", "Supprimer les pièces jointes");
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
 define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Ouvre une modal permettant d\'ajouter ou de supprimer des personnes en avis dans la liste de diffusion.');
 define('_VALIDATE_RECOMMENDATION', 'Valider la demande d\'avis (parallèle)');
@@ -278,8 +277,8 @@ define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique');
 define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier');
 define('_FOR_ENTITY', 'pour l\'entité :');
 define('_NO_ENTITY', 'Pas d\'entité associée au courrier');
-define('_RECONCILE_RESOURCE', 'Réconcilier un document');
-define('_RECONCILE_RESOURCE_DESC', "Ajoute le fichier principal du document à un autre document");
+define('_RECONCILE_RESOURCE', 'Réconcilier un courrier');
+define('_RECONCILE_RESOURCE_DESC', "Ajoute le fichier principal du courrier à un autre courrier");
 
 // REPORTS
 define('_FOLDER_VIEW_STAT', 'Nombre de dossiers consultés');

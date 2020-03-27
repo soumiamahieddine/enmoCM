@@ -46,7 +46,7 @@ class ListInstanceControllerTest extends TestCase
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody(), true);
         self::$resourceId = $responseBody['resId'];
-        $this->assertInternalType('int', self::$resourceId);
+        $this->assertIsInt(self::$resourceId);
 
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);

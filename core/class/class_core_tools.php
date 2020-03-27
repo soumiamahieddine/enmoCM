@@ -1093,7 +1093,7 @@ class core_tools extends functions
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <meta http-equiv="Content-Language" content="<?php functions::xecho($_SESSION['config']['lang']); ?>" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
-            <link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=logo_only.svg"/>
+            <link rel="icon" type="image/svg+xml" href="static.php?filename=logo_only.svg"/>
             <?php
             if ($load_css) {
                 $this->load_css();

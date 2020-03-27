@@ -1010,6 +1010,8 @@ export class IndexingFormComponent implements OnInit {
     }
 
     loadDiffusionList(field: any, value: any) {
-        this.appDiffusionsList.loadListModel(value);
+        if (!this.functions.empty(this.appDiffusionsList)) {
+            this.appDiffusionsList.loadListModel(value);
+        }
     }
 }

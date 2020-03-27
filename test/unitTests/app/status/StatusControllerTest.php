@@ -32,7 +32,7 @@ class StatusControllerTest extends TestCase
         $response     = $status->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType("int", $responseBody->status->identifier);
+        $this->assertIsInt($responseBody->status->identifier);
         self::$id = $responseBody->status->identifier;
 
         unset($responseBody->status->identifier);
@@ -111,7 +111,7 @@ class StatusControllerTest extends TestCase
         $this->assertNotNull($responseBody->statuses);
 
         foreach ($responseBody->statuses as $value) {
-            $this->assertInternalType("int", $value->identifier);
+            $this->assertIsInt($value->identifier);
         }
 
         ########## GETBYIDENTIFIER ##########

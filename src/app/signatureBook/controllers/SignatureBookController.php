@@ -220,14 +220,6 @@ class SignatureBookController
             }
 
             foreach ($attachments as $tmpKey => $tmpValue) {
-                if (strpos($value['format'], 'xl') !== 0 && $value['format'] != 'pptx' && ($tmpValue['path'] . $tmpValue['filename'] == $pathToFind)) {
-                    if ($value['status'] != 'SIGN') {
-                        $viewerId = $tmpValue['res_id'];
-                    }
-                    $viewerNoSignId = $tmpValue['res_id'];
-                    $isConverted = true;
-                    unset($attachments[$tmpKey]);
-                }
                 if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
                     $signDaddy = explode(',', $tmpValue['origin']);
                     if (($signDaddy[0] == $value['res_id'] && $signDaddy[1] == "res_attachments")
@@ -487,12 +479,14 @@ class SignatureBookController
             'version'       => $resource['version'],
             'fingerprint'   => $storeResult['fingerPrint']
         ]);
+        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['resId'], 'TNL', $resource['version']]]);
 
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
             'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
             'data'  => [$args['resId'], $GLOBALS['userId'], 'VISA_CIRCUIT']
         ]);
+
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
