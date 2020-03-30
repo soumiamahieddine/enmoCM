@@ -31,7 +31,7 @@
             <file>test/unitTests/app/resource/ResourceListControllerTest.php</file>
             <file>test/unitTests/app/resource/ExportControllerTest.php</file>
             <file>test/unitTests/app/resource/LinkControllerTest.php</file>
-            <file>test/unitTests/app/resource/ListInstanceControllerTest.php</file>
+            <file>test/unitTests/app/entity/ListInstanceControllerTest.php</file>
             <file>test/unitTests/app/resource/SummarySheetControllerTest.php</file>
             <file>test/unitTests/app/status/StatusControllerTest.php</file>
             <file>test/unitTests/app/shipping/ShippingControllerTest.php</file>
@@ -42,7 +42,7 @@
             <file>test/unitTests/app/folder/FolderControllerTest.php</file>
             <file>test/unitTests/app/configuration/ConfigurationControllerTest.php</file>
             <file>test/unitTests/app/tag/TagControllerTest.php</file>
-            <file>test/unitTests/app/tag/UserFollowedResourceControllerTest.php</file>
+            <file>test/unitTests/app/resource/UserFollowedResourceControllerTest.php</file>
             <!-- The last one should be history -->
             <file>test/unitTests/app/history/HistoryControllerTest.php</file>
         </testsuite>
