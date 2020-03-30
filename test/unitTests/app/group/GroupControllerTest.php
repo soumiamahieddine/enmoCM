@@ -13,7 +13,6 @@ class GroupControllerTest extends TestCase
 {
     private static $id = null;
 
-
     public function testCreate()
     {
         $groupController = new \Group\controllers\GroupController();
@@ -140,7 +139,8 @@ class GroupControllerTest extends TestCase
         }
     }
 
-    public function testAddPrivilege() {
+    public function testAddPrivilege()
+    {
         $privilegeController = new \Group\controllers\PrivilegeController();
 
         //  Add privilege
@@ -148,7 +148,7 @@ class GroupControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $args = [
-            'privilegeId'      => 'reports',
+            'privilegeId'      => 'entities_print_sep_mlb',
             'id'    => self::$id
         ];
 
@@ -162,7 +162,7 @@ class GroupControllerTest extends TestCase
 
         // Error : group does not exist
         $args = [
-            'privilegeId'      => 'reports',
+            'privilegeId'      => 'entities_print_sep_mlb',
             'id'    => self::$id * 100
         ];
 
@@ -174,7 +174,8 @@ class GroupControllerTest extends TestCase
         $this->assertSame('Group not found', $responseBody->errors);
     }
 
-    public function testRemovePrivilege() {
+    public function testRemovePrivilege()
+    {
         $privilegeController = new \Group\controllers\PrivilegeController();
 
         //  Remove privilege
@@ -182,7 +183,7 @@ class GroupControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $args = [
-            'privilegeId'      => 'reports',
+            'privilegeId'      => 'entities_print_sep_mlb',
             'id'    => self::$id
         ];
 
@@ -196,7 +197,7 @@ class GroupControllerTest extends TestCase
 
         // Error : group does not exist
         $args = [
-            'privilegeId'      => 'reports',
+            'privilegeId'      => 'entities_print_sep_mlb',
             'id'    => self::$id * 100
         ];
 

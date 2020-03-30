@@ -26,7 +26,6 @@
             <file>test/unitTests/app/parameter/ParameterControllerTest.php</file>
             <file>test/unitTests/core/PasswordControllerTest.php</file>
             <file>test/unitTests/app/priority/PriorityControllerTest.php</file>
-            <file>test/unitTests/app/report/ReportControllerTest.php</file>
             <file>test/unitTests/app/resource/ResControllerTest.php</file>
             <file>test/unitTests/app/resource/ResourceListControllerTest.php</file>
             <file>test/unitTests/app/resource/ExportControllerTest.php</file>

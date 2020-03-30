@@ -343,11 +343,6 @@ $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class
 $app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
 $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
 
-//Reports
-$app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
-$app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
-$app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':updateForGroupId');
-
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
 $app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');

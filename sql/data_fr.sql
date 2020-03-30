@@ -57,7 +57,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'upda
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'entities_print_sep_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'use_mail_services');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'manage_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_new_version');
@@ -100,7 +99,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_diffusion_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'use_mail_services');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_version_letterbox');
@@ -118,7 +116,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'u
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_diffusion_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'use_mail_services');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'manage_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_new_version');
@@ -168,8 +165,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'entities_print_sep_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'use_mail_services');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'manage_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'add_new_version');
