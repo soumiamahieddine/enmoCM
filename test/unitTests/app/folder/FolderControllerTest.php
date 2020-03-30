@@ -13,6 +13,10 @@ class FolderControllerTest extends TestCase
 {
     private static $id = null;
 
+    private static $idFirstResource = null;
+    private static $idSecondResource = null;
+    private static $idThirdResource = null;
+
 
     public function testCreate()
     {
@@ -248,8 +252,135 @@ class FolderControllerTest extends TestCase
         }
     }
 
+    public function testAddResourceById()
+    {
+        // Create resources to add to folder
+
+        $GLOBALS['userId'] = 'cchaplin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $resController = new \Resource\controllers\ResController();
+
+        //  CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $fileContent = file_get_contents('test/unitTests/samples/test.txt');
+        $encodedFile = base64_encode($fileContent);
+
+        $argsMailNew = [
+            'modelId'          => 1,
+            'status'           => 'NEW',
+            'encodedFile'      => $encodedFile,
+            'format'           => 'txt',
+            'confidentiality'  => false,
+            'documentDate'     => '2019-01-01 17:18:47',
+            'arrivalDate'      => '2019-01-01 17:18:47',
+            'processLimitDate' => '2029-01-01',
+            'doctype'          => 102,
+            'destination'      => 15,
+            'initiator'        => 15,
+            'subject'          => 'Breaking News : Superman is alive - PHP unit',
+            'typist'           => 19,
+            'priority'         => 'poiuytre1357nbvc',
+            'followed'         => true,
+            'diffusionList'    => [
+                [
+                    'id'   => 11,
+                    'type' => 'user',
+                    'mode' => 'dest'
+                ]
+            ]
+        ];
+
+        $argsMailATra = [
+            'modelId'          => 1,
+            'status'           => 'A_TRA',
+            'encodedFile'      => $encodedFile,
+            'format'           => 'txt',
+            'confidentiality'  => false,
+            'documentDate'     => '2019-01-01 17:18:47',
+            'arrivalDate'      => '2019-01-01 17:18:47',
+            'processLimitDate' => '2029-01-01',
+            'doctype'          => 102,
+            'destination'      => 15,
+            'initiator'        => 15,
+            'subject'          => 'Breaking News : Superman is alive - PHP unit',
+            'typist'           => 19,
+            'priority'         => 'poiuytre1357nbvc',
+            'followed'         => true,
+            'diffusionList'    => [
+                [
+                    'id'   => 11,
+                    'type' => 'user',
+                    'mode' => 'dest'
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($argsMailNew, $request);
+
+        $response     = $resController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        self::$idFirstResource = $responseBody['resId'];
+        $this->assertIsInt(self::$idFirstResource);
+
+        $response     = $resController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        self::$idSecondResource = $responseBody['resId'];
+        $this->assertIsInt(self::$idFirstResource);
+
+        $fullRequest = \httpRequestCustom::addContentInBody($argsMailATra, $request);
+        $response     = $resController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        self::$idThirdResource = $responseBody['resId'];
+        $this->assertIsInt(self::$idFirstResource);
+
+        // Actual test
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $folderController = new \Folder\controllers\FolderController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        // Errors
+        $response     = $folderController->addResourcesById($request, new \Slim\Http\Response(), ['id' => 'wrong format']);
+        $this->assertNotEmpty(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Route id is not an integer', $responseBody['errors']);
+
+        $body = [];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderController->addResourcesById($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertNotEmpty(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body resources is empty or not an array', $responseBody['errors']);
+
+
+        $body = ['resources' => [self::$idFirstResource, self::$idSecondResource, self::$idThirdResource]];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderController->addResourcesById($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsInt($responseBody['countResources']);
+        $this->assertSame(3, $responseBody['countResources']);
+    }
+
     public function testDelete()
     {
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         $folderController = new \Folder\controllers\FolderController();
 
         //  DELETE
@@ -274,5 +405,23 @@ class FolderControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('Folder not found or out of your perimeter', $responseBody->errors);
+
+        // DELETE TEST RESOURCES
+        \Resource\models\ResModel::delete([
+            'where' => ['res_id in (?)'],
+            'data' => [[self::$idFirstResource, self::$idSecondResource, self::$idThirdResource]]
+        ]);
+
+        $res = \Resource\models\ResModel::getById(['resId' => self::$idFirstResource, 'select' => ['*']]);
+        $this->assertIsArray($res);
+        $this->assertEmpty($res);
+
+        $res = \Resource\models\ResModel::getById(['resId' => self::$idSecondResource, 'select' => ['*']]);
+        $this->assertIsArray($res);
+        $this->assertEmpty($res);
+
+        $res = \Resource\models\ResModel::getById(['resId' => self::$idThirdResource, 'select' => ['*']]);
+        $this->assertIsArray($res);
+        $this->assertEmpty($res);
     }
 }
