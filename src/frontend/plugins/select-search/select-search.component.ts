@@ -6,7 +6,8 @@ import {
     Output
 } from '@angular/core';
 import { ControlValueAccessor, FormControl } from '@angular/forms';
-import { MatOption, MatSelect } from '@angular/material';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 import { take, takeUntil, startWith, map } from 'rxjs/operators';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
 import { LatinisePipe } from 'ngx-pipes';
