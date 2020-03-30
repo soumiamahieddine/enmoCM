@@ -91,7 +91,7 @@ class UserFollowedResourceControllerTest extends TestCase
 
         $response     = $usersFollowedResourcesController->unFollow($fullRequest, new \Slim\Http\Response());
 
-        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
 
         $GLOBALS['userId'] = 'ccharles';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
