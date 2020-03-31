@@ -5,6 +5,7 @@
             <!--directory>test</directory-->
             <file>test/unitTests/app/home/HomeControllerTest.php</file>
             <file>test/unitTests/app/action/ActionControllerTest.php</file>
+            <file>test/unitTests/app/administration/AdministrationControllerTest.php</file>
             <file>test/unitTests/app/attachment/AttachmentControllerTest.php</file>
             <file>test/unitTests/core/AutocompleteControllerTest.php</file>
             <file>test/unitTests/core/AuthenticationControllerTest.php</file>
@@ -13,6 +14,7 @@
             <file>test/unitTests/app/contact/ContactCustomFieldControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactGroupControllerTest.php</file>
             <file>test/unitTests/app/customField/CustomFieldControllerTest.php</file>
+            <file>test/unitTests/app/contentManagement/ContentManagementControllerTest.php</file>
             <file>test/unitTests/core/CoreControllerTest.php</file>
             <file>test/unitTests/app/docserver/DocserverControllerTest.php</file>
             <file>test/unitTests/app/doctype/DoctypeControllerTest.php</file>
@@ -55,6 +57,6 @@
     <logging>
         <log type="coverage-clover" target="test/unitTests/build/tests-clover.xml"/>
         <log type="junit"           target="test/unitTests/build/tests-phpunit.xml"/>
-        <!-- <log type="coverage-html"   target="test/unitTests/build" lowUpperBound="35" highLowerBound="70"/> -->
+        <log type="coverage-html"   target="test/unitTests/build" lowUpperBound="35" highLowerBound="70"/>
     </logging>
 </phpunit>

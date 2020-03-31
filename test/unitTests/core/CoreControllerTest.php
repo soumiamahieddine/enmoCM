@@ -56,17 +56,4 @@ class CoreControllerTest extends TestCase
         $this->assertIsArray($responseBody->user->groups);
         $this->assertIsArray($responseBody->user->entities);
     }
-
-    public function testrenderJnlp()
-    {
-        $coreController = new \ContentManagement\controllers\JnlpController();
-
-        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $response     = $coreController->renderJnlp($request, new \Slim\Http\Response(), ['jnlpUniqueId' => 'superadmin_maarchCM_12345.js']);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('File extension forbidden', $responseBody->errors);
-    }
 }
