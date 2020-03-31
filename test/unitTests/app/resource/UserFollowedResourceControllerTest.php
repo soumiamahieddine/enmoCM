@@ -328,6 +328,14 @@ class UserFollowedResourceControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
+        // Errors
+        $response     = $userFollowedResourceController->getBaskets($request, new \Slim\Http\Response(), ['resId' => 'wrong format']);
+        $this->assertNotEmpty(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Route resId is not an integer', $responseBody['errors']);
+
+
+        // Success
         $response     = $userFollowedResourceController->getBaskets($request, new \Slim\Http\Response(), ['resId' => self::$idFirst]);
         $this->assertSame(200, $response->getStatusCode());
 
