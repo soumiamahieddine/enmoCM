@@ -114,6 +114,112 @@ class AttachmentControllerTest extends TestCase
         $this->assertSame(1, $res['relation']);
     }
 
+    public function testGetByResId()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $attachmentController->getByResId($request, new \Slim\Http\Response(), ['resId' => 100]);
+        $response = json_decode((string)$response->getBody(), true);
+
+        $this->assertNotNull($response['attachments']);
+        $this->assertIsArray($response['attachments']);
+
+        $this->assertIsBool($response['mailevaEnabled']);
+
+        foreach ($response['attachments'] as $value) {
+            if ($value == self::$id) {
+                $this->assertSame('La plus chétive cabane renferme plus de vertus que les palais des rois.', $value['title']);
+                $this->assertSame('response_project', $value['attachment_type']);
+                $this->assertSame('txt', $value['format']);
+                $this->assertSame('A_TRA', $value['status']);
+                $this->assertSame('superadmin', $value['typist']);
+                $this->assertSame(1, $value['relation']);
+                $this->assertSame('MAARCH/2019D/24', $value['identifier']);
+                $this->assertNotNull($value['path']);
+                $this->assertNotNull($value['filename']);
+                $this->assertNotNull($value['docserver_id']);
+                $this->assertNotNull($value['fingerprint']);
+                $this->assertNotNull($value['filesize']);
+                $this->assertNull($value['origin_id']);
+                $this->assertNotNull($value['modificationDate']);
+                $this->assertNotNull($value['modifiedBy']);
+                $this->assertNotNull($value['typeLabel']);
+                $this->assertIsBool($value['canConvert']);
+                break;
+            }
+        }
+
+        // ERROR
+        $GLOBALS['userId'] = 'bblier';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+        $response = $attachmentController->getByResId($request, new \Slim\Http\Response(), ['resId' => 123940595]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Document out of perimeter', $response['errors']);
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+    }
+
+    public function testSetInSignatureBook()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $attachmentController->setInSignatureBook($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('success', $response['success']);
+
+        // ERROR
+        $response = $attachmentController->setInSignatureBook($request, new \Slim\Http\Response(), ['id' => 123940595]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Attachment not found', $response['errors']);
+    }
+
+    public function testSetInSendAttachment()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $attachmentController->setInSendAttachment($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('success', $response['success']);
+
+        // ERROR
+        $response = $attachmentController->setInSendAttachment($request, new \Slim\Http\Response(), ['id' => 123940595]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Attachment not found', $response['errors']);
+    }
+
+    public function testGetAttachmentTypes()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $attachmentController->getAttachmentsTypes($request, new \Slim\Http\Response());
+        $response = json_decode((string)$response->getBody(), true);
+
+        $this->assertNotNull($response['attachmentsTypes']);
+        $this->assertIsArray($response['attachmentsTypes']);
+
+        foreach ($response['attachmentsTypes'] as $value) {
+            $this->assertNotNull($value['label']);
+            $this->assertIsBool($value['sign']);
+            $this->assertIsBool($value['chrono']);
+            $this->assertIsBool($value['attachInMail']);
+            $this->assertIsBool($value['show']);
+        }
+    }
+
     public function testDelete()
     {
         $attachmentController = new \Attachment\controllers\AttachmentController();
