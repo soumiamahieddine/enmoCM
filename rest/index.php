@@ -29,11 +29,10 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRo
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password', 'GET/passwordRules', 'GET/onlyOffice/mergedFile', 'POST/onlyOfficeCallback'];
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
-    if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
+    if (!in_array($currentMethod.$currentRoute, \SrcCore\controllers\AuthenticationController::ROUTES_WITHOUT_AUTHENTICATION)) {
         $login = \SrcCore\controllers\AuthenticationController::authentication();
         if (!empty($login)) {
             \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);
