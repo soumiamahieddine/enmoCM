@@ -9,8 +9,8 @@ exports.config = {
     capabilities: {
         browserName: 'chrome',
         chromeOptions: {
-            args: [ "--headless", "--disable-gpu", "--window-size=800,600" ]
+            args: ["--no-sandbox", "--headless", "--disable-gpu", "--window-size=800,600" ]
         },
-        chromeDriver: '/usr/bin/chromedriver',
-    }
+    },
+    chromeDriver: '/usr/bin/chromedriver'
 };
