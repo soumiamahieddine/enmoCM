@@ -201,7 +201,6 @@ class AttachmentControllerTest extends TestCase
         $fullRequest = $request->withQueryParams($aArgs);
         $response = $attachmentController->getFileContent($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $response = json_decode((string)$response->getBody(), true);
-        var_dump($response);
         $this->assertSame('txt', $response['originalFormat']);
         $this->assertNotEmpty($response['encodedDocument']);
     }
