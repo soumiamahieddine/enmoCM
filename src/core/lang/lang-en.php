@@ -159,6 +159,7 @@ define('_DOCUMENT_SIGNED', 'Document signed');
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');
 define('_LINK_ADDED_TAG', 'Tag link added');
 define('_LINK_DELETED_TAG', 'Tag link deleted');
+define('_LOGIN', 'User connection');
 
 // ADMINISTRATION
 define('_USERS', 'Users');

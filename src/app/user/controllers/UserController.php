@@ -633,7 +633,7 @@ class UserController
 
         if ($body['newPassword'] != $body['reNewPassword']) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        } elseif (!AuthenticationModel::authentication(['userId' => $user['user_id'], 'password' => $body['currentPassword']])) {
+        } elseif (!AuthenticationModel::authentication(['login' => $user['user_id'], 'password' => $body['currentPassword']])) {
             return $response->withStatus(401)->withJson(['errors' => _WRONG_PSW]);
         } elseif (!PasswordController::isPasswordValid(['password' => $body['newPassword']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Password does not match security criteria']);

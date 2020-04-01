@@ -10,3 +10,6 @@ UPDATE parameters SET param_value_string = '20.10' WHERE id = 'database_version'
 /*REPORTS*/
 DROP TABLE IF EXISTS usergroups_reports;
 DELETE FROM usergroups_services WHERE service_id IN ('reports', 'admin_reports');
+
+ALTER TABLE users DROP COLUMN IF EXISTS refresh_token;
+ALTER TABLE users ADD COLUMN refresh_token jsonb NOT NULL DEFAULT '[]';

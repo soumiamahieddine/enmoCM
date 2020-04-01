@@ -159,6 +159,7 @@ define('_DOCUMENT_SIGNED', 'Document signé');
 define('_DOCUMENT_UNSIGNED', 'Document dé-signé');
 define('_LINK_ADDED_TAG', 'Liaison de mot-clé ajoutée');
 define('_LINK_DELETED_TAG', 'Liaison de mot-clé supprimée');
+define('_LOGIN', 'Connexion de l\'utilisateur');
 
 // ADMINISTRATION
 define('_USERS', 'Utilisateurs');

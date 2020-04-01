@@ -684,7 +684,7 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('success', $responseBody->success);
 
-        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['userId' => $GLOBALS['userId'], 'password' => 'hcraam']);
+        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['login' => $GLOBALS['userId'], 'password' => 'hcraam']);
 
         $this->assertSame(true, $checkPassword);
 
@@ -703,7 +703,7 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('success', $responseBody->success);
 
-        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['userId' => $GLOBALS['userId'], 'password' => 'superadmin']);
+        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['login' => $GLOBALS['userId'], 'password' => 'superadmin']);
 
         $this->assertSame(true, $checkPassword);
     }

@@ -158,6 +158,7 @@ define('_DOCUMENT_SIGNED', 'Document signed');//TRANSLATE
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');//TRANSLATE
 define('_LINK_ADDED_TAG', 'Tag link added');//TRANSLATE
 define('_LINK_DELETED_TAG', 'Tag link deleted');//TRANSLATE
+define('_LOGIN', 'User connection');
 
 // ADMINISTRATION
 define('_USERS', 'Gebruikers');
