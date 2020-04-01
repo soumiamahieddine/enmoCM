@@ -1,5 +1,6 @@
 services:
   - postgres:10.1
+  - httpd:latest
 
 variables:
   POSTGRES_DB: "MaarchCourrier"
@@ -35,6 +36,7 @@ job_e2e:
  image: php:7.4-apache
  stage: test
  script:
+   - service apache2 start
    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
    - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
@@ -43,7 +45,6 @@ job_e2e:
    - mkdir -p /var/www/html/
    - cp -R /builds/maarch/MaarchCourrier/ /var/www/html/
    - cd /var/www/html/MaarchCourrier
-   - curl -o /dev/null --silent --head --write-out '%{http_code}\n' http://127.0.0.1/MaarchCourrier
    - mkdir -p /var/www/html/MaarchCourrier
    - curl -sL https://deb.nodesource.com/setup_13.x | bash - 
    - apt-get install -yqq nodejs 
