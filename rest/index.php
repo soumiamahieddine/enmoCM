@@ -188,7 +188,6 @@ $app->delete('/docservers/{id}', \Docserver\controllers\DocserverController::cla
 
 //DocserverTypes
 $app->get('/docserverTypes', \Docserver\controllers\DocserverTypeController::class . ':get');
-$app->get('/docserverTypes/{id}', \Docserver\controllers\DocserverTypeController::class . ':getById');
 
 //doctypes
 $app->get('/doctypes', \Doctype\controllers\FirstLevelController::class . ':getTree');
