@@ -471,7 +471,7 @@ class FolderControllerTest extends TestCase
 
     public function testGet()
     {
-        $GLOBALS['userId'] = 'superadmin';
+        $GLOBALS['userId'] = 'aackermann';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
@@ -498,6 +498,15 @@ class FolderControllerTest extends TestCase
             $this->assertIsInt($value->level);
             $this->assertIsInt($value->countResources);
         }
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $response     = $folderController->get($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertEmpty($responseBody->folders);
     }
 
     public function testUnpinFolder()
@@ -886,13 +895,14 @@ class FolderControllerTest extends TestCase
 
         $this->assertSame(2, $responseBody['groupsBaskets'][0]['groupId']);
         $this->assertSame('Utilisateur', $responseBody['groupsBaskets'][0]['groupName']);
-        $this->assertSame(6, $responseBody['groupsBaskets'][0]['basketId']);
-        $this->assertSame('AR en masse : non envoyés', $responseBody['groupsBaskets'][0]['basketName']);
+        $this->assertSame(4, $responseBody['groupsBaskets'][0]['basketId']);
+        $this->assertSame('Courriers à traiter', $responseBody['groupsBaskets'][0]['basketName']);
+
 
         $this->assertSame(2, $responseBody['groupsBaskets'][1]['groupId']);
         $this->assertSame('Utilisateur', $responseBody['groupsBaskets'][1]['groupName']);
-        $this->assertSame(4, $responseBody['groupsBaskets'][1]['basketId']);
-        $this->assertSame('Courriers à traiter', $responseBody['groupsBaskets'][1]['basketName']);
+        $this->assertSame(6, $responseBody['groupsBaskets'][1]['basketId']);
+        $this->assertSame('AR en masse : non envoyés', $responseBody['groupsBaskets'][1]['basketName']);
 
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);

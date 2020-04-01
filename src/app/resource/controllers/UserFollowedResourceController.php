@@ -179,7 +179,8 @@ class UserFollowedResourceController
         $baskets = BasketModel::getWithPreferences([
             'select'    => ['baskets.id', 'baskets.basket_name', 'baskets.basket_clause', 'users_baskets_preferences.group_serial_id', 'usergroups.group_desc'],
             'where'     => ['users_baskets_preferences.user_serial_id = ?'],
-            'data'      => [$GLOBALS['id']]
+            'data'      => [$GLOBALS['id']],
+            'orderBy'   => ['baskets.id']
         ]);
         $groupsBaskets = [];
         $inCheckedBaskets = [];
