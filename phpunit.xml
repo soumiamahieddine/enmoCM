@@ -2,20 +2,17 @@
 <phpunit colors="true" bootstrap="test/unitTests/define.php">
     <testsuites>
         <testsuite name="Maarch Test Suite">
-            <!--directory>test</directory-->
+            <directory>test/unitTests/core/</directory>
             <file>test/unitTests/app/home/HomeControllerTest.php</file>
             <file>test/unitTests/app/action/ActionControllerTest.php</file>
             <file>test/unitTests/app/administration/AdministrationControllerTest.php</file>
             <file>test/unitTests/app/attachment/AttachmentControllerTest.php</file>
-            <file>test/unitTests/core/AutocompleteControllerTest.php</file>
-            <file>test/unitTests/core/AuthenticationControllerTest.php</file>
             <file>test/unitTests/app/basket/BasketControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactCustomFieldControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactGroupControllerTest.php</file>
             <file>test/unitTests/app/customField/CustomFieldControllerTest.php</file>
             <file>test/unitTests/app/contentManagement/ContentManagementControllerTest.php</file>
-            <file>test/unitTests/core/CoreControllerTest.php</file>
             <file>test/unitTests/app/docserver/DocserverControllerTest.php</file>
             <file>test/unitTests/app/doctype/DoctypeControllerTest.php</file>
             <file>test/unitTests/app/entity/EntityControllerTest.php</file>
@@ -26,7 +23,6 @@
             <file>test/unitTests/app/notification/NotificationControllerTest.php</file>
             <file>test/unitTests/app/notification/NotificationScheduleControllerTest.php</file>
             <file>test/unitTests/app/parameter/ParameterControllerTest.php</file>
-            <file>test/unitTests/core/PasswordControllerTest.php</file>
             <file>test/unitTests/app/priority/PriorityControllerTest.php</file>
             <file>test/unitTests/app/resource/ResControllerTest.php</file>
             <file>test/unitTests/app/resource/ResourceListControllerTest.php</file>
