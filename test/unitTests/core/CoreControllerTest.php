@@ -56,4 +56,21 @@ class CoreControllerTest extends TestCase
         $this->assertIsArray($responseBody->user->groups);
         $this->assertIsArray($responseBody->user->entities);
     }
+
+    public function testGetLanguage()
+    {
+        $this->assertFileExists("src/core/lang/lang-en.php");
+        $this->assertStringNotEqualsFile("src/core/lang/lang-en.php", '');
+        include("src/core/lang/lang-en.php");
+        $this->assertFileExists("src/core/lang/lang-nl.php");
+        $this->assertStringNotEqualsFile("src/core/lang/lang-nl.php", '');
+        include("src/core/lang/lang-nl.php");
+
+        $language = \SrcCore\models\CoreConfigModel::getLanguage();
+        $this->assertFileExists("src/core/lang/lang-{$language}.php");
+        $this->assertStringNotEqualsFile("src/core/lang/lang-{$language}.php", '');
+        include("src/core/lang/lang-{$language}.php");
+        
+        $this->assertFileNotExists("src/core/lang/lang-zh.php");
+    }
 }

@@ -130,20 +130,15 @@ class AttachmentControllerTest extends TestCase
         $this->assertIsBool($response['mailevaEnabled']);
 
         foreach ($response['attachments'] as $value) {
-            if ($value == self::$id) {
+            if ($value['resId'] == self::$id) {
+                $userInfo = \User\models\UserModel::getByLogin(['login' => 'superadmin', 'select' => ['id']]);
                 $this->assertSame('La plus chétive cabane renferme plus de vertus que les palais des rois.', $value['title']);
-                $this->assertSame('response_project', $value['attachment_type']);
-                $this->assertSame('txt', $value['format']);
+                $this->assertSame('response_project', $value['type']);
                 $this->assertSame('A_TRA', $value['status']);
-                $this->assertSame('superadmin', $value['typist']);
+                $this->assertSame($userInfo['id'], $value['typist']);
                 $this->assertSame(1, $value['relation']);
-                $this->assertSame('MAARCH/2019D/24', $value['identifier']);
-                $this->assertNotNull($value['path']);
-                $this->assertNotNull($value['filename']);
-                $this->assertNotNull($value['docserver_id']);
-                $this->assertNotNull($value['fingerprint']);
-                $this->assertNotNull($value['filesize']);
-                $this->assertNull($value['origin_id']);
+                $this->assertSame('MAARCH/2019D/24', $value['chrono']);
+                $this->assertNull($value['originId']);
                 $this->assertNotNull($value['modificationDate']);
                 $this->assertNotNull($value['modifiedBy']);
                 $this->assertNotNull($value['typeLabel']);

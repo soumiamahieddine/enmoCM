@@ -237,6 +237,9 @@ class CoreConfigModel
         return $xmlfile;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     public static function initAngularStructure()
     {
         $lang = CoreConfigModel::getLanguage();
