@@ -60,6 +60,15 @@ class AuthenticationControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Bad Request', $responseBody->errors);
+
+        // MUST CONNECT WITH SUPERADMIN
+        $args = [
+            'login'     => 'superadmin',
+            'password'  => 'superadmin'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+        $response     = $authenticationController->authenticate($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(204, $response->getStatusCode());
     }
 
     public function testIsRouteAvailable()

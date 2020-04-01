@@ -73,4 +73,17 @@ class CoreControllerTest extends TestCase
         
         $this->assertFileNotExists("src/core/lang/lang-zh.php");
     }
+
+    public function testGetExternalConnectionsEnabled()
+    {
+        $coreController = new \SrcCore\controllers\CoreController();
+
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $coreController->externalConnectionsEnabled($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertIsBool($responseBody['connection']['maarchParapheur']);
+        $this->assertSame(true, $responseBody['connection']['maarchParapheur']);
+    }
 }

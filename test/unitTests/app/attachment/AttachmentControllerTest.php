@@ -151,12 +151,134 @@ class AttachmentControllerTest extends TestCase
         $GLOBALS['userId'] = 'bblier';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
+
         $response = $attachmentController->getByResId($request, new \Slim\Http\Response(), ['resId' => 123940595]);
         $response = json_decode((string)$response->getBody(), true);
         $this->assertSame('Document out of perimeter', $response['errors']);
+
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
+    }
+
+    public function testGetThumbnailContent()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        // ERROR
+        $response = $attachmentController->getThumbnailContent($request, new \Slim\Http\Response(), ['id' => 123940595]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Attachment not found', $response['errors']);
+    }
+
+    public function testGetOriginalFileContent()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        // ERROR
+        $response = $attachmentController->getOriginalFileContent($request, new \Slim\Http\Response(), ['id' => 123940595]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Attachment not found', $response['errors']);
+    }
+
+    public function testGetFileContent()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        // GET
+        $aArgs = [
+            "mode" => "base64"
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+        $response = $attachmentController->getFileContent($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('txt', $response['originalFormat']);
+        $this->assertNotEmpty($response['encodedDocument']);
+    }
+
+    public function testGetByChrono()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        // GET
+        $aArgs = [
+            "chrono" => "MAARCH/2019D/24"
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+        $response = $attachmentController->getByChrono($fullRequest, new \Slim\Http\Response());
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertIsInt($response['resId']);
+        $this->assertIsInt($response['resIdMaster']);
+        $this->assertSame('A_TRA', $response['status']);
+        $this->assertSame('La plus chétive cabane renferme plus de vertus que les palais des rois.', $response['title']);
+
+        //Error
+        $fullRequest = $request->withQueryParams([]);
+        $response = $attachmentController->getByChrono($fullRequest, new \Slim\Http\Response());
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Query chrono is not set', $response['errors']);
+
+        //Error
+        $aArgs = [
+            "chrono" => "MAARCH/2019D/249888765"
+        ];
+        $fullRequest = $request->withQueryParams($aArgs);
+        $response = $attachmentController->getByChrono($fullRequest, new \Slim\Http\Response());
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Attachment does not exist', $response['errors']);
+    }
+
+    public function testMailing()
+    {
+        $attachmentController = new \Attachment\controllers\AttachmentController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        // ERROR
+        $response = $attachmentController->getMailingById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Attachment is not candidate to mailing', $response['errors']);
+
+        // CREATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $fileContent = file_get_contents('modules/templates/templates/styles/AR_Masse_Simple.docx');
+        $encodedFile = base64_encode($fileContent);
+
+        $aArgs = [
+            'title'         => 'Sujet de Mailing',
+            'type'          => 'response_project',
+            'chrono'        => 'MAARCH/2019D/38',
+            'resIdMaster'   => 100,
+            'encodedFile'   => $encodedFile,
+            'format'        => 'docx',
+            'status'        => 'SEND_MASS'
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $attachmentController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+        $mailingId = $responseBody->id;
+        $this->assertIsInt($mailingId);
+
+        // GET
+        $response = $attachmentController->getMailingById($request, new \Slim\Http\Response(), ['id' => $mailingId]);
+        $this->assertSame(204, $response->getStatusCode());
     }
 
     public function testSetInSignatureBook()
