@@ -19,7 +19,7 @@ before_script:
   #- apt-get install wkhtmltopdf -yqq > /dev/null
   - apt-get install wget -yqq > /dev/null
   - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-  - apt install ./google-chrome-stable_current_amd64.deb
+  - apt install -yqq ./google-chrome-stable_current_amd64.deb
   #- wget https://downloads.wkhtmltopdf.org/0.12/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
   #- tar xvf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
   #- mv wkhtmltox/bin/wkhtmlto* /usr/bin
