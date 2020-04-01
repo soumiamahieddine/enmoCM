@@ -13,6 +13,7 @@ before_script:
   - apt-get update > /dev/null
   - mkdir -p /usr/share/man/man1
   - mkdir -p /usr/share/man/man7
+  - apt-cache search chromium
   #- apt-get install apt-utils -yqq > /dev/null
   - apt-get install cron -yqq > /dev/null
   #- apt-get install tar -yqq > /dev/null
