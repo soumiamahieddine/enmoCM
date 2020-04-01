@@ -45,7 +45,12 @@ job_e2e:
    - mkdir -p /var/www/html/
    - cp -R /builds/maarch/MaarchCourrier/ /var/www/html/
    - cd /var/www/html/MaarchCourrier
+   - touch installed.lck
    - mkdir -p /var/www/html/MaarchCourrier
+   - chown -R www-data. /opt/maarch/
+   - chown -R www-data. /var/www/html/
+   - chmod -R 775 /opt/maarch/
+   - chmod -R 775 /var/www/html/
    - curl -sL https://deb.nodesource.com/setup_13.x | bash - 
    - apt-get install -yqq nodejs 
    - npm install npm@latest -g 
