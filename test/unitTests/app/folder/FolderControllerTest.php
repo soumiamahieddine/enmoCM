@@ -14,6 +14,7 @@ class FolderControllerTest extends TestCase
     private static $id = null;
     private static $idSub = null;
     private static $idSubSub = null;
+    private static $idMoved = null;
 
     private static $idFirstResource = null;
     private static $idSecondResource = null;
@@ -113,7 +114,7 @@ class FolderControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $body = [
-            'label' => 'Mon deuxieme dossier renomme',
+            'label' => 'Mon premier dossier renomme',
             'parent_id'  => 0
         ];
 
@@ -429,6 +430,105 @@ class FolderControllerTest extends TestCase
         $this->assertSame(true, $responseBody['folder']['sharing']['entities'][0]['edition']);
         $this->assertSame(true, $responseBody['folder']['sharing']['entities'][0]['canDelete']);
 
+        // Make the folder private for next tests
+        $body = [
+            'public' => false,
+            'sharing' => [
+                'entities' => [
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderController->sharing($fullRequest, new \Slim\Http\Response(), ['id' => self::$idSubSub]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+    }
+
+    public function testUpdateMoveToFolder()
+    {
+        $GLOBALS['userId'] = 'aackermann';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $folderController = new \Folder\controllers\FolderController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //ERROR
+        $body = [
+            'label' => 'Mon troisieme dossier renomme 2',
+            'parent_id'  => self::$idSubSub
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+        $response     = $folderController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('parent_id does not exist or Id is a parent of parent_id', $responseBody['errors']);
+
+        $GLOBALS['userId'] = 'bblier';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $body = [
+            'label'     => 'Mon dossier'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsInt($responseBody['folder']);
+        self::$idMoved = $responseBody['folder'];
+
+        $body = [
+            'label' => 'Mon premier dossier deplace',
+            'parent_id'  => self::$idMoved
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+        $response     = $folderController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame(400, $response->getStatusCode(), true);
+
+        $this->assertSame('Cannot move folder because at least one folder is out of your perimeter', $responseBody['errors']);
+
+        $GLOBALS['userId'] = 'aackermann';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $body = [
+            'label' => 'Mon premier dossier deplace',
+            'parent_id'  => self::$idMoved
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+        $response     = $folderController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame(400, $response->getStatusCode(), true);
+        $this->assertSame('Parent Folder not found or out of your perimeter', $responseBody['errors']);
+
+        // Success
+        $body = [
+            'label' => 'Mon troisieme dossier deplace',
+            'parent_id'  => self::$id
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+        $response     = $folderController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$idSubSub]);
+
+        $this->assertSame(200, $response->getStatusCode(), true);
+
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
@@ -449,7 +549,7 @@ class FolderControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(self::$id, $responseBody->folder->id);
-        $this->assertSame('Mon deuxieme dossier renomme', $responseBody->folder->label);
+        $this->assertSame('Mon premier dossier renomme', $responseBody->folder->label);
         $this->assertSame(true, $responseBody->folder->public);
         $this->assertSame(null, $responseBody->folder->parent_id);
         $this->assertSame(0, $responseBody->folder->level);
@@ -1054,26 +1154,36 @@ class FolderControllerTest extends TestCase
 
     public function testDelete()
     {
-        $GLOBALS['userId'] = 'aackermann';
+        $GLOBALS['userId'] = 'bblier';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
         $folderController = new \Folder\controllers\FolderController();
 
-        //  DELETE
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $folderController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
-
-        $this->assertSame(204, $response->getStatusCode());
-
         //  DELETE ERROR
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $folderController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+
         $response       = $folderController->delete($request, new \Slim\Http\Response(), ['id' => 999999]);
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('Cannot delete because at least one folder is out of your perimeter', $responseBody->errors);
+
+        $response       = $folderController->delete($request, new \Slim\Http\Response(), ['id' => 'wrong format']);
+        $responseBody   = json_decode((string)$response->getBody());
+
+        $this->assertSame('Query id is empty or not an integer', $responseBody->errors);
+
+        $GLOBALS['userId'] = 'aackermann';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        //  DELETE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $folderController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
