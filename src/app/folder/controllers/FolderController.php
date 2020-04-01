@@ -157,7 +157,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         if (!empty($data['parent_id']) && !Validator::intval()->validate($data['parent_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not an integer']);
         }
 
         if (empty($data['parent_id'])) {
@@ -239,7 +239,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         if (!empty($data['parent_id']) && !Validator::intval()->validate($data['parent_id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not an integer']);
         }
         if ($data['parent_id'] == $args['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Parent_id and id can not be the same']);
