@@ -473,24 +473,15 @@ CREATE TABLE groupbasket_redirect
 )
 WITH (OIDS=FALSE);
 
-CREATE SEQUENCE email_signatures_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 7
-  CACHE 1;
-
 CREATE TABLE users_email_signatures
 (
-  id bigint NOT NULL DEFAULT nextval('email_signatures_id_seq'::regclass),
-  user_id character varying(255) NOT NULL,
+  id serial NOT NULL,
+  user_id INTEGER NOT NULL,
   html_body text NOT NULL,
   title character varying NOT NULL,
   CONSTRAINT email_signatures_pkey PRIMARY KEY (id)
 )
-WITH (
-  OIDS=FALSE
-);
+WITH (OIDS=FALSE);
 
 /* FOLDERS */
 CREATE TABLE folders

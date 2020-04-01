@@ -49,6 +49,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\PasswordModel;
 use Template\models\TemplateModel;
 use User\models\UserBasketPreferenceModel;
+use User\models\UserEmailSignatureModel;
 use User\models\UserEntityModel;
 use User\models\UserGroupModel;
 use User\models\UserModel;
@@ -117,7 +118,7 @@ class UserController
 
         if (PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']])) {
             $user['signatures'] = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
-            $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
+            $user['emailSignatures'] = UserEmailSignatureModel::getByUserId(['userId' => $user['id']]);
         } else {
             $user['signatures'] = [];
             $user['emailSignatures'] = [];
@@ -502,7 +503,7 @@ class UserController
         $user['external_id']        = json_decode($user['external_id'], true);
         $user['preferences']        = json_decode($user['preferences'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
-        $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
+        $user['emailSignatures']    = UserEmailSignatureModel::getByUserId(['userId' => $GLOBALS['id']]);
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $user['entities']           = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
         $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
@@ -1021,14 +1022,14 @@ class UserController
             return $response->withJson(['errors' => 'Bad Request']);
         }
 
-        UserModel::createEmailSignature([
-            'userId'    => $GLOBALS['userId'],
+        UserEmailSignatureModel::create([
+            'userId'    => $GLOBALS['id'],
             'title'     => $data['title'],
             'htmlBody'  => $data['htmlBody']
         ]);
 
         return $response->withJson([
-            'emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']])
+            'emailSignatures' => UserEmailSignatureModel::getByUserId(['userId' => $GLOBALS['id']])
         ]);
     }
 
@@ -1040,26 +1041,26 @@ class UserController
             return $response->withJson(['errors' => 'Bad Request']);
         }
 
-        UserModel::updateEmailSignature([
+        UserEmailSignatureModel::update([
             'id'        => $aArgs['id'],
-            'userId'    => $GLOBALS['userId'],
+            'userId'    => $GLOBALS['id'],
             'title'     => $data['title'],
             'htmlBody'  => $data['htmlBody']
         ]);
 
         return $response->withJson([
-            'emailSignature' => UserModel::getEmailSignatureWithSignatureIdById(['userId' => $GLOBALS['userId'], 'signatureId' => $aArgs['id']])
+            'emailSignature' => UserEmailSignatureModel::getById(['id' => $aArgs['id']])
         ]);
     }
 
     public function deleteCurrentUserEmailSignature(Request $request, Response $response, array $aArgs)
     {
-        UserModel::deleteEmailSignature([
+        UserEmailSignatureModel::delete([
             'id'        => $aArgs['id'],
-            'userId'    => $GLOBALS['userId']
+            'userId'    => $GLOBALS['id']
         ]);
 
-        return $response->withJson(['emailSignatures' => UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']])]);
+        return $response->withJson(['emailSignatures' => UserEmailSignatureModel::getByUserId(['userId' => $GLOBALS['id']])]);
     }
 
     public function addGroup(Request $request, Response $response, array $aArgs)
@@ -1737,7 +1738,7 @@ class UserController
 
     public static function getCurrentUserEmailSignatures(Request $request, Response $response)
     {
-        $signatureModels = UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']]);
+        $signatureModels = UserEmailSignatureModel::getByUserId(['userId' => $GLOBALS['id']]);
 
         $signatures = [];
 
@@ -1757,16 +1758,15 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Body param id is empty or not an integer']);
         }
 
-        $signatureModels = UserModel::getEmailSignatureWithSignatureIdById(['userId' => $GLOBALS['userId'], 'signatureId' => $args['id']]);
-
-        if (empty($signatureModels)) {
+        $signature = UserEmailSignatureModel::getById(['id' => $args['id']]);
+        if (empty($signature) || $signature['userId'] != $GLOBALS['id']) {
             return $response->withStatus(404)->withJson(['errors' => 'Signature not found']);
         }
 
         $signature = [
-            'id'      => $signatureModels['id'],
-            'label'   => $signatureModels['title'],
-            'content' => $signatureModels['html_body']
+            'id'      => $signature['id'],
+            'label'   => $signature['title'],
+            'content' => $signature['html_body']
         ];
 
         return $response->withJson(['emailSignature' => $signature]);
