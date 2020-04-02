@@ -375,7 +375,7 @@ class TemplateControllerTest extends TestCase
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'users_entities',
             'where' => ['user_id = ?', 'entity_id = ?'],
-            'data'  => ['bbain', 'TST_AR']
+            'data'  => [19, 'TST_AR']
         ]);
         $entityController = new \Entity\controllers\EntityController();
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

@@ -42,7 +42,7 @@ class FolderController
     {
         $folders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
 
-        $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['userId']]]);
+        $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
 
         $userEntities = array_column($userEntities, 'id');
         if (empty($userEntities)) {
@@ -125,7 +125,7 @@ class FolderController
         $userEntities = EntityModel::getWithUserEntities([
             'select' => ['id'],
             'where'  => ['user_id = ?'],
-            'data'   => [$GLOBALS['userId']]
+            'data'   => [$GLOBALS['id']]
         ]);
         $userEntities = array_column($userEntities, 'id');
 
@@ -277,7 +277,7 @@ class FolderController
             $userEntities = EntityModel::getWithUserEntities([
                 'select' => ['id'],
                 'where'  => ['user_id = ?'],
-                'data'   => [$GLOBALS['userId']]
+                'data'   => [$GLOBALS['id']]
             ]);
             $userEntities = array_column($userEntities, 'id');
 
@@ -562,7 +562,7 @@ class FolderController
         $userEntities = EntityModel::getWithUserEntities([
             'select' => ['id'],
             'where'  => ['user_id = ?'],
-            'data'   => [$GLOBALS['userId']]
+            'data'   => [$GLOBALS['id']]
         ]);
         $userEntities = array_column($userEntities, 'id');
 
@@ -950,7 +950,9 @@ class FolderController
     public static function getScopeFolders(array $args)
     {
         $login = $args['login'];
-        $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$login]]);
+
+        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
+        $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$user['id']]]);
 
         $userEntities = array_column($userEntities, 'id');
         if (empty($userEntities)) {
@@ -980,8 +982,6 @@ class FolderController
         if (empty($folderKeywords)) {
             $folderKeywords = [0];
         }
-
-        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
 
         $where = ['(user_id = ? OR (entity_id in (?) AND entities_folders.edition in (?)) OR folders.id in (?))'];
         $data = [$user['id'], $userEntities, $edition, $folderKeywords];
@@ -1101,9 +1101,7 @@ class FolderController
         ValidatorModel::arrayType($args, ['folders']);
         ValidatorModel::intVal($args, ['userId']);
 
-        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
-
-        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
+        $entities = UserModel::getEntitiesById(['id' => $args['userId'], 'select' => ['entities.id']]);
         $entities = array_column($entities, 'id');
 
         if (empty($entities)) {

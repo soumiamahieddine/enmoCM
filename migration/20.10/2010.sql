@@ -18,8 +18,19 @@ DO $$ BEGIN
     IF (SELECT count(column_name) from information_schema.columns where table_name = 'users_email_signatures' and column_name = 'user_id' and data_type != 'integer') THEN
         ALTER TABLE users_email_signatures ADD COLUMN user_id_tmp INTEGER;
         UPDATE users_email_signatures set user_id_tmp = (select id FROM users where users.user_id = users_email_signatures.user_id);
+        DELETE FROM users_email_signatures WHERE user_id_tmp IS NULL;
         ALTER TABLE users_email_signatures ALTER COLUMN user_id_tmp set not null;
         ALTER TABLE users_email_signatures DROP COLUMN IF EXISTS user_id;
         ALTER TABLE users_email_signatures RENAME COLUMN user_id_tmp TO user_id;
+    END IF;
+END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'users_entities' and column_name = 'user_id' and data_type != 'integer') THEN
+        ALTER TABLE users_entities ADD COLUMN user_id_tmp INTEGER;
+        UPDATE users_entities set user_id_tmp = (select id FROM users where users.user_id = users_entities.user_id);
+        DELETE FROM users_entities WHERE user_id_tmp IS NULL;
+        ALTER TABLE users_entities ALTER COLUMN user_id_tmp set not null;
+        ALTER TABLE users_entities DROP COLUMN IF EXISTS user_id;
+        ALTER TABLE users_entities RENAME COLUMN user_id_tmp TO user_id;
     END IF;
 END$$;

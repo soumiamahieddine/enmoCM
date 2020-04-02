@@ -219,7 +219,7 @@ class FolderPrintController
                         'orderBy' => ['creation_date desc']
                     ]);
 
-                    $userEntities = EntityModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['entity_id']]);
+                    $userEntities = EntityModel::getByUserId(['userId' => $GLOBALS['id'], 'select' => ['entity_id']]);
                     $userEntities = array_column($userEntities, 'entity_id');
 
                     $notes = [];

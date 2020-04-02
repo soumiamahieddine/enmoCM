@@ -310,25 +310,6 @@ abstract class UserModelAbstract
         return $aReturn[0]['process_comment'];
     }
 
-    public static function getPrimaryEntityByUserId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $aEntity = DatabaseModel::select([
-            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
-            'table'     => ['users_entities, entities'],
-            'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?', 'users_entities.primary_entity = ?'],
-            'data'      => [$aArgs['userId'], 'Y']
-        ]);
-
-        if (empty($aEntity[0])) {
-            return [];
-        }
-
-        return $aEntity[0];
-    }
-
     public static function getPrimaryEntityById(array $args)
     {
         ValidatorModel::notEmpty($args, ['id', 'select']);
@@ -338,7 +319,7 @@ abstract class UserModelAbstract
         $entity = DatabaseModel::select([
             'select'    => $args['select'],
             'table'     => ['users, users_entities, entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?', 'users_entities.primary_entity = ?'],
+            'where'     => ['users.id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?', 'users_entities.primary_entity = ?'],
             'data'      => [$args['id'], 'Y']
         ]);
 
@@ -357,7 +338,7 @@ abstract class UserModelAbstract
         $entities = DatabaseModel::select([
             'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
             'table'     => ['users, users_entities, entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?', 'users_entities.primary_entity = ?'],
+            'where'     => ['users.id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?', 'users_entities.primary_entity = ?'],
             'data'      => [$args['id'], 'N']
         ]);
 
@@ -400,22 +381,6 @@ abstract class UserModelAbstract
         return $aGroups;
     }
 
-    public static function getEntitiesByLogin(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['login']);
-        ValidatorModel::stringType($aArgs, ['login']);
-
-        $aEntities = DatabaseModel::select([
-            'select'    => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
-            'table'     => ['users_entities, entities'],
-            'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?'],
-            'data'      => [$aArgs['login']],
-            'order_by'  => ['users_entities.primary_entity DESC']
-        ]);
-
-        return $aEntities;
-    }
-
     public static function getEntitiesById(array $args)
     {
         ValidatorModel::notEmpty($args, ['id', 'select']);
@@ -425,7 +390,7 @@ abstract class UserModelAbstract
         $entities = DatabaseModel::select([
             'select'    => $args['select'],
             'table'     => ['users, users_entities, entities'],
-            'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?'],
+            'where'     => ['users.id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?'],
             'data'      => [$args['id']]
         ]);
 
@@ -467,16 +432,15 @@ abstract class UserModelAbstract
         return false;
     }
 
-    public static function hasEntity(array $aArgs)
+    public static function hasEntity(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'entityId']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['entityId']);
+        ValidatorModel::notEmpty($args, ['id', 'entityId']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::stringType($args, ['entityId']);
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
+        $entities = UserModel::getEntitiesById(['id' => $args['id'], 'select' => ['users_entities.entity_id']]);
         foreach ($entities as $value) {
-            if ($value['entity_id'] == $aArgs['entityId']) {
+            if ($value['entity_id'] == $args['entityId']) {
                 return true;
             }
         }

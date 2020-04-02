@@ -42,7 +42,7 @@ class SearchController
             $whereClause = '1=1';
             $dataClause = [];
         } else {
-            $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+            $entities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
             $entities = array_column($entities, 'id');
             $entities = empty($entities) ? [0] : $entities;
 

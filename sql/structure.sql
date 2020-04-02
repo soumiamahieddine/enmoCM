@@ -445,7 +445,7 @@ WITH (
 
 CREATE TABLE users_entities
 (
-  user_id character varying(128) NOT NULL,
+  user_id INTEGER NOT NULL,
   entity_id character varying(32) NOT NULL,
   user_role character varying(255),
   primary_entity character(1) NOT NULL DEFAULT 'N'::bpchar,

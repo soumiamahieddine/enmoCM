@@ -127,7 +127,7 @@ class UserController
 
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['id']]);
-        $user['entities']           = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
+        $user['entities']           = UserModel::getEntitiesById(['id' => $aArgs['id'], 'select' => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity']]);
         $user['allEntities']        = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
         $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
@@ -505,7 +505,7 @@ class UserController
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $user['emailSignatures']    = UserEmailSignatureModel::getByUserId(['userId' => $GLOBALS['id']]);
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
-        $user['entities']           = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
+        $user['entities']           = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity']]);
         $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
@@ -1203,7 +1203,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
         }
 
-        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
+        $entities = UserModel::getEntitiesById(['id' => $args['id'], 'select' => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity']]);
 
         return $response->withJson(['entities' => $entities]);
     }
@@ -1228,7 +1228,7 @@ class UserController
             $data['role'] = '';
         }
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
+        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $aArgs['id'], 'select' => [1]]);
         $pEntity = 'N';
         if (empty($primaryEntity)) {
             $pEntity = 'Y';
@@ -1245,7 +1245,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'entities'      => UserModel::getEntitiesByLogin(['login' => $user['user_id']]),
+            'entities'      => UserModel::getEntitiesById(['id' => $aArgs['id'], 'select' => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity']]),
             'allEntities'   => EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']])
         ]);
     }
@@ -1288,10 +1288,9 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         UserEntityModel::updateUserPrimaryEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
-        return $response->withJson(['entities' => UserModel::getEntitiesByLogin(['login' => $user['user_id']])]);
+        return $response->withJson(['entities' => UserModel::getEntitiesById(['id' => $aArgs['id'], 'select' => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity']])]);
     }
 
     public function deleteEntity(Request $request, Response $response, array $aArgs)
@@ -1376,11 +1375,11 @@ class UserController
             }
         }
 
-        $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
+        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $aArgs['id'], 'select' => ['entities.entity_label']]);
         UserEntityModel::deleteUserEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
         if (!empty($primaryEntity['entity_id']) && $primaryEntity['entity_id'] == $aArgs['entityId']) {
-            UserEntityModel::reassignUserPrimaryEntity(['userId' => $user['user_id']]);
+            UserEntityModel::reassignUserPrimaryEntity(['userId' => $aArgs['id']]);
         }
 
         HistoryController::add([
@@ -1393,7 +1392,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'entities'      => UserModel::getEntitiesByLogin(['login' => $user['user_id']]),
+            'entities'      => UserModel::getEntitiesById(['id' => $aArgs['id'], 'select' => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity']]),
             'allEntities'   => EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']])
         ]);
     }
@@ -1495,7 +1494,7 @@ class UserController
     {
         $queryParams = $request->getQueryParams();
 
-        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+        $entities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['users_entities.entity_id']]);
         $entities = array_column($entities, 'entity_id');
         if (empty($entities)) {
             $entities = [0];

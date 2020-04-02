@@ -61,7 +61,7 @@ class ListInstanceController
                 $user = UserModel::getByLogin(['login' => $value['item_id'], 'select' => ['id']]);
                 $listInstances[$key]['itemSerialId'] = $user['id'];
                 $listInstances[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
-                $listInstances[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+                $listInstances[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $user['id'], 'select' => ['entities.entity_label']])['entity_label'];
             }
         }
 
