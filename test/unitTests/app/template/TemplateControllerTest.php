@@ -112,7 +112,7 @@ class TemplateControllerTest extends TestCase
         self::$idAcknowledgementReceipt = $responseBody->template;
         $this->assertIsInt(self::$idAcknowledgementReceipt);
 
-        $fileContent = file_get_contents('test/unitTests/samples/test.docx');
+        $fileContent = file_get_contents('modules/templates/templates/styles/AR_Masse_Simple.docx');
         $encodedFile = base64_encode($fileContent);
 
         $aArgs = [
@@ -378,7 +378,7 @@ class TemplateControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $fileContent = file_get_contents('test/unitTests/samples/test.docx');
+        $fileContent = file_get_contents('modules/templates/templates/styles/AR_Masse_Simple.docx');
         $encodedFile = base64_encode($fileContent);
 
         $aArgs = [
