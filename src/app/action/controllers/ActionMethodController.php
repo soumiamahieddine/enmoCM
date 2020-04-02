@@ -231,12 +231,12 @@ class ActionMethodController
 
         ResMarkAsReadModel::delete([
             'where' => ['res_id = ?', 'user_id = ?', 'basket_id = ?'],
-            'data'  => [$aArgs['resId'], $GLOBALS['userId'], $aArgs['data']['basketId']]
+            'data'  => [$aArgs['resId'], $GLOBALS['id'], $aArgs['data']['basketId']]
         ]);
 
         ResMarkAsReadModel::create([
             'res_id'    => $aArgs['resId'],
-            'user_id'   => $GLOBALS['userId'],
+            'user_id'   => $GLOBALS['id'],
             'basket_id' => $aArgs['data']['basketId']
         ]);
 

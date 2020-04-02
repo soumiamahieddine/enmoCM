@@ -340,7 +340,7 @@ WITH (
 CREATE TABLE res_mark_as_read
 (
   res_id bigint,
-  user_id character varying(128),
+  user_id INTEGER NOT NULL,
   basket_id character varying(32)
 )
 WITH (

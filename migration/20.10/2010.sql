@@ -57,6 +57,17 @@ DO $$ BEGIN
         ALTER TABLE basket_persistent_mode RENAME COLUMN user_id_tmp TO user_id;
     END IF;
 END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_mark_as_read' and column_name = 'user_id' and data_type != 'integer') THEN
+        ALTER TABLE res_mark_as_read ADD COLUMN user_id_tmp INTEGER;
+        UPDATE res_mark_as_read set user_id_tmp = (select id FROM users where users.user_id = res_mark_as_read.user_id);
+        DELETE FROM res_mark_as_read WHERE user_id_tmp IS NULL;
+        ALTER TABLE res_mark_as_read ALTER COLUMN user_id_tmp set not null;
+        ALTER TABLE res_mark_as_read DROP COLUMN IF EXISTS user_id;
+        ALTER TABLE res_mark_as_read RENAME COLUMN user_id_tmp TO user_id;
+        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'from res_mark_as_read WHERE user_id(\s*)=(\s*)@user', 'from res_mark_as_read WHERE user_id = @user_id', 'gmi');
+    END IF;
+END$$;
 
 
 /* RE CREATE VIEWS */
