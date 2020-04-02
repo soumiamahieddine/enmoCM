@@ -592,7 +592,7 @@ class FolderPrintController
 
     private static function getAttachmentSeparator(array $args)
     {
-        ValidatorModel::notEmpty($args, ['attachment', 'chronoResource']);
+        ValidatorModel::notEmpty($args, ['attachment']);
         ValidatorModel::arrayType($args, ['attachment']);
         ValidatorModel::stringType($args, ['chronoResource']);
 
