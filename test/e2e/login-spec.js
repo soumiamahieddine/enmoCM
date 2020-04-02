@@ -19,7 +19,7 @@ describe('angular homepage todo list', function() {
 
     it('test 2', function() {
         browser.sleep(4000);
-        browser.waitForAngularEnabled(true);
+        browser.waitForAngularEnabled(false);
         var nbHeader = element.all(by.css('[class="bg-head-content"]'));
         expect(nbHeader.count()).toEqual(1);
 

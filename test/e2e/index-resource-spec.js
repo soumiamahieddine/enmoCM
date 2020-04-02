@@ -9,8 +9,8 @@ describe('index resource page', function() {
     });
 
     it('index a document whitout file', function() {
-        browser.sleep(10000);
-        browser.waitForAngularEnabled(true);
+        browser.sleep(5000);
+        browser.waitForAngularEnabled(false);
         element(by.id('indexing')).click();
         browser.sleep(500);
         element(by.id('doctype')).click();
