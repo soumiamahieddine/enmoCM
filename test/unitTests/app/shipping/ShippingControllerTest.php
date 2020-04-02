@@ -422,6 +422,15 @@ class ShippingTemplateControllerTest extends TestCase
         $this->assertSame('2', $responseBody[0]['fee']);
         $this->assertSame(13, $responseBody[0]['recipientEntityId']);
 
+        Resource\models\ResModel::delete([
+            'where' => ['res_id in (?)'],
+            'data' => [[self::$resId]]
+        ]);
+
+        $res = \Resource\models\ResModel::getById(['resId' => self::$resId, 'select' => ['*']]);
+        $this->assertIsArray($res);
+        $this->assertEmpty($res);
+
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
