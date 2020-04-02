@@ -63,7 +63,7 @@ job_e2e:
    - curl -o /dev/null --silent --head --write-out '%{http_code}\n' http://127.0.0.1/MaarchCourrier
    - npm run ee-launch
  only:
-   - develop
+   - schedules
 
 job_php-7.4:
  image: php:7.4-apache
