@@ -908,7 +908,7 @@ CREATE TABLE res_letterbox
   policy_id character varying(32) DEFAULT NULL::character varying,
   cycle_id character varying(32) DEFAULT NULL::character varying,
   initiator character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(128) DEFAULT NULL::character varying,
+  dest_user INTEGER,
   locker_user_id INTEGER DEFAULT NULL,
   locker_time timestamp without time zone,
   confidentiality character(1),

@@ -295,10 +295,11 @@ class ActionMethodController
                         'viewed'          => 0,
                         'difflist_type'   => 'entity_id'
                     ]);
-                    $destUser = $userInfo['user_id'];
+                    $destUser = $destUser[0]['item_id'];
                 } else {
-                    $destUser = '';
+                    $destUser = null;
                 }
+
                 ResModel::update([
                     'set'   => ['destination' => $resource['initiator'], 'dest_user' => $destUser],
                     'where' => ['res_id = ?'],

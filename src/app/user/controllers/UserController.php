@@ -478,10 +478,9 @@ class UserController
             'data'  => [$aArgs['id']]
         ]);
 
-        // Delete from entities
         UserEntityModel::delete([
             'where' => ['user_id = ?'],
-            'data'  => [$user['user_id']]
+            'data'  => [$aArgs['id']]
         ]);
 
         UserModel::delete(['id' => $aArgs['id']]);

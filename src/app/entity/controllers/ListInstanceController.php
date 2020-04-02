@@ -287,9 +287,9 @@ class ListInstanceController
                 ]);
 
                 if ($instance['item_mode'] == 'dest') {
-                    $set = ['dest_user' => $instance['item_id']];
+                    $set = ['dest_user' => $user['id']];
                     $changeDestination = true;
-                    $entities = UserEntityModel::get(['select' => ['entity_id', 'primary_entity'], 'where' => ['user_id = ?'], 'data' => [$instance['item_id']]]);
+                    $entities = UserEntityModel::get(['select' => ['entity_id', 'primary_entity'], 'where' => ['user_id = ?'], 'data' => [$user['id']]]);
                     $resource = ResModel::getById(['select' => ['destination'], 'resId' => $ListInstanceByRes['resId']]);
                     foreach ($entities as $entity) {
                         if ($entity['entity_id'] == $resource['destination']) {

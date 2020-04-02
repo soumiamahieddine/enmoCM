@@ -175,11 +175,10 @@ abstract class UserEntityModelAbstract
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::stringType($aArgs, ['entityId']);
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         DatabaseModel::delete([
             'table'     => 'users_entities',
             'where'     => ['entity_id = ?', 'user_id = ?'],
-            'data'      => [$aArgs['entityId'], $user['user_id']]
+            'data'      => [$aArgs['entityId'], $aArgs['id']]
         ]);
 
         return true;

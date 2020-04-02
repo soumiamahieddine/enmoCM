@@ -7,10 +7,13 @@
 -- *************************************************************************--
 UPDATE parameters SET param_value_string = '20.10' WHERE id = 'database_version';
 
-/*REPORTS*/
+DROP VIEW IF EXISTS res_view_letterbox;
+
+/* REPORTS */
 DROP TABLE IF EXISTS usergroups_reports;
 DELETE FROM usergroups_services WHERE service_id IN ('reports', 'admin_reports');
 
+/* USERS */
 ALTER TABLE users DROP COLUMN IF EXISTS refresh_token;
 ALTER TABLE users ADD COLUMN refresh_token jsonb NOT NULL DEFAULT '[]';
 
@@ -34,3 +37,70 @@ DO $$ BEGIN
         ALTER TABLE users_entities RENAME COLUMN user_id_tmp TO user_id;
     END IF;
 END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'dest_user' and data_type != 'integer') THEN
+        ALTER TABLE res_letterbox ADD COLUMN dest_user_tmp INTEGER;
+        UPDATE res_letterbox set dest_user_tmp = (select id FROM users where users.user_id = res_letterbox.dest_user);
+        ALTER TABLE res_letterbox DROP COLUMN IF EXISTS dest_user;
+        ALTER TABLE res_letterbox RENAME COLUMN dest_user_tmp TO dest_user;
+    END IF;
+END$$;
+UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
+UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
+
+
+/* RE CREATE VIEWS */
+CREATE OR REPLACE VIEW res_view_letterbox AS
+SELECT r.res_id,
+       r.type_id,
+       r.policy_id,
+       r.cycle_id,
+       d.description AS type_label,
+       d.doctypes_first_level_id,
+       dfl.doctypes_first_level_label,
+       dfl.css_style AS doctype_first_level_style,
+       d.doctypes_second_level_id,
+       dsl.doctypes_second_level_label,
+       dsl.css_style AS doctype_second_level_style,
+       r.format,
+       r.typist,
+       r.creation_date,
+       r.modification_date,
+       r.docserver_id,
+       r.path,
+       r.filename,
+       r.fingerprint,
+       r.filesize,
+       r.status,
+       r.work_batch,
+       r.doc_date,
+       r.external_id,
+       r.departure_date,
+       r.opinion_limit_date,
+       r.barcode,
+       r.initiator,
+       r.destination,
+       r.dest_user,
+       r.confidentiality,
+       r.category_id,
+       r.alt_identifier,
+       r.admission_date,
+       r.process_limit_date,
+       r.closing_date,
+       r.alarm1_date,
+       r.alarm2_date,
+       r.flag_alarm1,
+       r.flag_alarm2,
+       r.subject,
+       r.priority,
+       r.locker_user_id,
+       r.locker_time,
+       r.custom_fields,
+       en.entity_label,
+       en.entity_type AS entitytype
+FROM doctypes d,
+     doctypes_first_level dfl,
+     doctypes_second_level dsl,
+     res_letterbox r
+    LEFT JOIN entities en ON r.destination::text = en.entity_id::text
+WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;

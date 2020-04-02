@@ -1045,7 +1045,8 @@ class ResController extends ResourceControlController
                 }
 
                 if ($diffusion['mode'] == 'dest') {
-                    ResModel::update(['set' => ['dest_user' => $diffusion['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+                    $destUser = UserModel::getByLogin(['login' => $diffusion['id'], 'select' => ['id']]);
+                    ResModel::update(['set' => ['dest_user' => $destUser['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
                 }
                 ListInstanceModel::create([
                     'res_id'            => $args['resId'],

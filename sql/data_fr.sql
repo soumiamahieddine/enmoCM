@@ -550,11 +550,11 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'EenvBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'EenvBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'EenvBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('EenvBasket', 'Courriers à envoyer', 'Courriers visés/signés prêts à être envoyés', 'status=''EENV'' and dest_user = @user', 'letterbox_coll', 'Y', 'N', 'Y',30);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('EenvBasket', 'Courriers à envoyer', 'Courriers visés/signés prêts à être envoyés', 'status=''EENV'' and dest_user = @user_id', 'letterbox_coll', 'Y', 'N', 'Y',30);
 DELETE FROM baskets WHERE basket_id = 'MyBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'MyBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'MyBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('MyBasket', 'Courriers à traiter', 'Bannette de traitement', 'status in (''NEW'', ''COU'', ''STDBY'', ''ENVDONE'') and dest_user = @user', 'letterbox_coll', 'Y', 'Y', 'Y',40);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('MyBasket', 'Courriers à traiter', 'Bannette de traitement', 'status in (''NEW'', ''COU'', ''STDBY'', ''ENVDONE'') and dest_user = @user_id', 'letterbox_coll', 'Y', 'Y', 'Y',40);
 DELETE FROM baskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'CopyMailBasket';
@@ -562,11 +562,11 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'AR_Create';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'AR_Create';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'AR_Create';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('AR_Create', 'AR en masse : non envoyés', 'AR en masse : non envoyés', 'dest_user = @user AND res_id NOT IN(select distinct res_id from acknowledgement_receipts) and status not in (''END'') and category_id = ''incoming''', 'letterbox_coll', 'Y', 'N', 'Y',60);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('AR_Create', 'AR en masse : non envoyés', 'AR en masse : non envoyés', 'dest_user = @user_id AND res_id NOT IN(select distinct res_id from acknowledgement_receipts) and status not in (''END'') and category_id = ''incoming''', 'letterbox_coll', 'Y', 'N', 'Y',60);
 DELETE FROM baskets WHERE basket_id = 'AR_AlreadySend';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'AR_AlreadySend';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'AR_AlreadySend';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('AR_AlreadySend', 'AR en masse : transmis', 'AR en masse : transmis', 'dest_user = @user AND ((res_id IN(SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is not null) and status not in (''END'')) OR res_id IN (SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is null AND format = ''pdf'' and (filename is not null or filename <> '''')))', 'letterbox_coll', 'Y', 'N', 'Y',70);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('AR_AlreadySend', 'AR en masse : transmis', 'AR en masse : transmis', 'dest_user = @user_id AND ((res_id IN(SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is not null) and status not in (''END'')) OR res_id IN (SELECT distinct res_id FROM acknowledgement_receipts WHERE creation_date is not null AND send_date is null AND format = ''pdf'' and (filename is not null or filename <> '''')))', 'letterbox_coll', 'Y', 'N', 'Y',70);
 DELETE FROM baskets WHERE basket_id = 'RetourCourrier';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'RetourCourrier';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'RetourCourrier';
@@ -578,11 +578,11 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SupAvisBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SupAvisBasket', 'Avis : En attente de réponse', 'Courriers en attente d''avis', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id NOT IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id) AND res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',100);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SupAvisBasket', 'Avis : En attente de réponse', 'Courriers en attente d''avis', 'status=''EAVIS'' and ((dest_user = @user_id) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id NOT IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id) AND res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',100);
 DELETE FROM baskets WHERE basket_id = 'RetAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'RetAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'RetAvisBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('RetAvisBasket', 'Avis : Retours partiels', 'Courriers avec avis reçus', 'status=''EAVIS'' and ((DEST_USER = @user) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',110);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('RetAvisBasket', 'Avis : Retours partiels', 'Courriers avec avis reçus', 'status=''EAVIS'' and ((dest_user = @user_id) OR (DEST_USER IN (select user_id from users_entities WHERE entity_id IN( @my_entities)) or DESTINATION in (@subentities[@my_entities]))) and res_id IN (SELECT res_id FROM listinstance WHERE item_mode = ''avis'' and difflist_type = ''entity_id'' and process_date is not NULL and res_view_letterbox.res_id = res_id group by res_id)', 'letterbox_coll', 'Y', 'N', 'Y',110);
 DELETE FROM baskets WHERE basket_id = 'ValidationBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ValidationBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ValidationBasket';
@@ -606,15 +606,15 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'SuiviParafBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SuiviParafBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SuiviParafBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SuiviParafBasket', 'Courriers en circuit de visa/signature', 'Courriers en circulation dans les parapheurs électroniques', 'status in (''ESIG'', ''EVIS'') AND dest_user = @user', 'letterbox_coll', 'Y', 'N', 'Y',170);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SuiviParafBasket', 'Courriers en circuit de visa/signature', 'Courriers en circulation dans les parapheurs électroniques', 'status in (''ESIG'', ''EVIS'') AND dest_user = @user_id', 'letterbox_coll', 'Y', 'N', 'Y',170);
 DELETE FROM baskets WHERE basket_id = 'SendToSignatoryBook';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SendToSignatoryBook';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SendToSignatoryBook';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SendToSignatoryBook', 'Courriers envoyés au parapheur Maarch en attente ou rejetés', 'Courriers envoyés au parapheur Maarch en attente ou rejetés', '(status = ''ATT_MP'' or status = ''REJ_SIGN'') AND dest_user = @user', 'letterbox_coll', 'Y', 'Y', 'Y',180);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('SendToSignatoryBook', 'Courriers envoyés au parapheur Maarch en attente ou rejetés', 'Courriers envoyés au parapheur Maarch en attente ou rejetés', '(status = ''ATT_MP'' or status = ''REJ_SIGN'') AND dest_user = @user_id', 'letterbox_coll', 'Y', 'Y', 'Y',180);
 DELETE FROM baskets WHERE basket_id = 'Maileva_Sended';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'Maileva_Sended';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'Maileva_Sended';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('Maileva_Sended', 'Courriers transmis via Maileva', 'Courriers transmis via Maileva', 'dest_user = @user AND res_id IN(SELECT distinct r.res_id_master from res_attachments r inner join shippings s on s.document_id = r.res_id) and status not in (''END'')', 'letterbox_coll', 'Y', 'N', 'Y',190);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('Maileva_Sended', 'Courriers transmis via Maileva', 'Courriers transmis via Maileva', 'dest_user = @user_id AND res_id IN(SELECT distinct r.res_id_master from res_attachments r inner join shippings s on s.document_id = r.res_id) and status not in (''END'')', 'letterbox_coll', 'Y', 'N', 'Y',190);
 DELETE FROM baskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ToArcBasket';
@@ -634,7 +634,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'IntervBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'IntervBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'IntervBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('IntervBasket', 'Demandes d''''intervention voirie à traiter', 'Demandes d''''intervention voirie à traiter', 'status in (''NEW'', ''COU'', ''STDBY'', ''ENVDONE'') and dest_user = @user and type_id = 1202', 'letterbox_coll', 'Y', 'Y', 'Y',240);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('IntervBasket', 'Demandes d''''intervention voirie à traiter', 'Demandes d''''intervention voirie à traiter', 'status in (''NEW'', ''COU'', ''STDBY'', ''ENVDONE'') and dest_user = @user_id and type_id = 1202', 'letterbox_coll', 'Y', 'Y', 'Y',240);
 
 -- Create GROUPBASKET
 TRUNCATE TABLE groupbasket;
