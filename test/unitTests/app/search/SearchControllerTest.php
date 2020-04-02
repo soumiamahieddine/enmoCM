@@ -11,9 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class SearchControllerTest extends TestCase
 {
-
-    private static $id = null;
-
     public function testGet()
     {
         $GLOBALS['userId'] = 'bblier';
@@ -135,11 +132,14 @@ class SearchControllerTest extends TestCase
             $this->assertIsInt($resource->type);
             $this->assertIsArray($resource->senders);
             $this->assertNotEmpty($resource->senders);
+            foreach ($resource->senders as $sender) {
+                $this->assertNotEmpty($sender);
+            }
             $this->assertIsArray($resource->recipients);
             $this->assertIsInt($resource->attachments);
         }
-        
         $this->assertIsArray($responseBody->allResources);
+        
         $this->assertNotEmpty($responseBody->allResources);
         foreach ($responseBody->allResources as $resource) {
             $this->assertIsInt($resource);
