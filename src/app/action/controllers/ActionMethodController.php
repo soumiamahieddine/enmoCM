@@ -193,12 +193,12 @@ class ActionMethodController
 
         BasketPersistenceModel::delete([
             'where' => ['res_id = ?',  'user_id = ?'],
-            'data'  => [$aArgs['resId'], $GLOBALS['userId']]
+            'data'  => [$aArgs['resId'], $GLOBALS['id']]
         ]);
 
         BasketPersistenceModel::create([
             'res_id'        => $aArgs['resId'],
-            'user_id'       => $GLOBALS['userId'],
+            'user_id'       => $GLOBALS['id'],
             'is_persistent' => 'N'
         ]);
 
@@ -212,12 +212,12 @@ class ActionMethodController
 
         BasketPersistenceModel::delete([
             'where' => ['res_id = ?', 'user_id = ?'],
-            'data'  => [$aArgs['resId'], $GLOBALS['userId']]
+            'data'  => [$aArgs['resId'], $GLOBALS['id']]
         ]);
 
         BasketPersistenceModel::create([
             'res_id'        => $aArgs['resId'],
-            'user_id'       => $GLOBALS['userId'],
+            'user_id'       => $GLOBALS['id'],
             'is_persistent' => 'Y'
         ]);
 

@@ -43,10 +43,20 @@ DO $$ BEGIN
         UPDATE res_letterbox set dest_user_tmp = (select id FROM users where users.user_id = res_letterbox.dest_user);
         ALTER TABLE res_letterbox DROP COLUMN IF EXISTS dest_user;
         ALTER TABLE res_letterbox RENAME COLUMN dest_user_tmp TO dest_user;
+        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
+        UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
     END IF;
 END$$;
-UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
-UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'basket_persistent_mode' and column_name = 'user_id' and data_type != 'integer') THEN
+        ALTER TABLE basket_persistent_mode ADD COLUMN user_id_tmp INTEGER;
+        UPDATE basket_persistent_mode set user_id_tmp = (select id FROM users where users.user_id = basket_persistent_mode.user_id);
+        DELETE FROM basket_persistent_mode WHERE user_id_tmp IS NULL;
+        ALTER TABLE basket_persistent_mode ALTER COLUMN user_id_tmp set not null;
+        ALTER TABLE basket_persistent_mode DROP COLUMN IF EXISTS user_id;
+        ALTER TABLE basket_persistent_mode RENAME COLUMN user_id_tmp TO user_id;
+    END IF;
+END$$;
 
 
 /* RE CREATE VIEWS */

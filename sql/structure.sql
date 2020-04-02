@@ -330,7 +330,7 @@ WITH (OIDS=FALSE);
 CREATE TABLE basket_persistent_mode
 (
   res_id bigint,
-  user_id character varying(128),
+  user_id INTEGER not null,
   is_persistent character varying(1)
 )
 WITH (
