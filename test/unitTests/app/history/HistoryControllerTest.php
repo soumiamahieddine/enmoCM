@@ -104,11 +104,13 @@ class HistoryControllerTest extends TestCase
 
     public function testRealDelete()
     {
+        $userInfo = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
+
         $aResId = DatabaseModel::select([
             'select'    => ['res_id'],
             'table'     => ['res_letterbox'],
             'where'     => ['subject like ?','typist = ?', 'dest_user = ?'],
-            'data'      => ['%Superman is alive - PHP unit', 19, 'bbain'],
+            'data'      => ['%Superman is alive - PHP unit', 19, $userInfo['id']],
             'order_by'  => ['res_id DESC']
         ]);
 
