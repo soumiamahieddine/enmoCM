@@ -85,8 +85,8 @@ job_php-7.4:
    - phpunit --coverage-text --colors=never -c phpunit.xml
  only:
    - develop
-  except:
-    - schedules
+ except:
+   - schedules
 
 job_php-7.3:
  image: php:7.3-apache
@@ -108,8 +108,8 @@ job_php-7.3:
    - phpunit --coverage-text --colors=never -c phpunit.xml
  only:
    - develop
-  except:
-    - schedules
+ except:
+   - schedules
 
 job_php-7.2:
   image: php:7.2-apache
