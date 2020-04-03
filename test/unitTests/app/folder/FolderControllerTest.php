@@ -338,33 +338,6 @@ class FolderControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Cannot share/unshare folder because at least one folder is out of your perimeter', $responseBody['errors']);
 
-        // test sharing with keyword
-        $GLOBALS['userId'] = 'aackermann';
-        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $GLOBALS['id'] = $userInfo['id'];
-
-        $body = [
-            'public' => true,
-            'sharing' => [
-                'entities' => [
-                    [
-                        'keyword' => 'ALL_ENTITIES',
-                        'edition' => true
-                    ]
-                ]
-            ]
-        ];
-
-        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
-
-        $response     = $folderController->sharing($fullRequest, new \Slim\Http\Response(), ['id' => self::$idSub]);
-        $this->assertSame(204, $response->getStatusCode());
-
-        // bblier can pin folder
-        $GLOBALS['userId'] = 'bblier';
-        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $GLOBALS['id'] = $userInfo['id'];
-
         $response     = $folderController->pinFolder($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(204, $response->getStatusCode());
 
@@ -400,10 +373,10 @@ class FolderControllerTest extends TestCase
         $this->assertSame(false, $responseBody['folder']['sharing']['entities'][0]['canDelete']);
 
         // test that bblier cannot share sub-folder
-        $response     = $folderController->getById($request, new \Slim\Http\Response(), ['id' => self::$idSub]);
+        $response     = $folderController->sharing($fullRequest, new \Slim\Http\Response(), ['id' => self::$idSub]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Folder not found or out of your perimeter', $responseBody['errors']);
+        $this->assertSame('Cannot share/unshare folder because at least one folder is out of your perimeter', $responseBody['errors']);
 
         // test sub-folder creation, with keeping sharing rules from parent
         $GLOBALS['userId'] = 'aackermann';
@@ -426,9 +399,9 @@ class FolderControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertNotEmpty($responseBody['folder']['sharing']['entities']);
-        $this->assertSame(14, $responseBody['folder']['sharing']['entities'][0]['entity_id']);
-        $this->assertSame(true, $responseBody['folder']['sharing']['entities'][0]['edition']);
-        $this->assertSame(true, $responseBody['folder']['sharing']['entities'][0]['canDelete']);
+        $this->assertSame(13, $responseBody['folder']['sharing']['entities'][0]['entity_id']);
+        $this->assertSame(false, $responseBody['folder']['sharing']['entities'][0]['edition']);
+        $this->assertSame(false, $responseBody['folder']['sharing']['entities'][0]['canDelete']);
 
         // Make the folder private for next tests
         $body = [

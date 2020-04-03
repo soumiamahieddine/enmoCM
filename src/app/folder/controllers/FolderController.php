@@ -652,7 +652,7 @@ class FolderController
 
         if (!empty($children)) {
             foreach ($children as $child) {
-                if ($child['user_id'] != $GLOBALS['id'] && ($child['edition'] != true) && (!$allEntitiesCanDelete)) {
+                if (($child['edition'] == null || $child['edition'] == false) && (!$allEntitiesCanDelete)) {
                     return false;
                 }
                 if (!FolderController::areChildrenInPerimeter(['folderId' => $child['id'], 'entities' => $args['entities']])) {
