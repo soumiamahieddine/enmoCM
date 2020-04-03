@@ -44,6 +44,8 @@ DO $$ BEGIN
         ALTER TABLE res_letterbox DROP COLUMN IF EXISTS dest_user;
         ALTER TABLE res_letterbox RENAME COLUMN dest_user_tmp TO dest_user;
         UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
+        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'dest_user(\s*)=(\s*)''''', 'dest_user is null', 'gmi');
+        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'dest_user(\s*)=(\s*)""', 'dest_user is null', 'gmi');
         UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'dest_user(\s*)=(\s*)@user', 'dest_user = @user_id', 'gmi');
     END IF;
 END$$;
