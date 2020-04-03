@@ -38,7 +38,7 @@
             </div>
             <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
                 <app-filters-tool style="flex:1;overflow-x: auto;overflow-y: hidden;" #filtersTool
-                    [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
+                    [listProperties]="this.listProperties" [totalRes]="allResInBasket.length"
                     [selectedRes]="selectedRes" [routeDatas]="'/rest/folders/' + folderInfo.id + '/filters'"
                     (toggleAllRes)="toggleAllRes($event)" (refreshEventAfterAction)="refreshDaoAfterAction()"
                     (refreshEvent)="refreshDao()" [title]="lang.searchMailInFolder">

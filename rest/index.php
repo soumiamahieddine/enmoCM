@@ -33,7 +33,8 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
     if (!in_array($currentMethod.$currentRoute, \SrcCore\controllers\AuthenticationController::ROUTES_WITHOUT_AUTHENTICATION)) {
-        $login = \SrcCore\controllers\AuthenticationController::authentication();
+        $authorizationHeaders = $request->getHeader('Authorization');
+        $login = \SrcCore\controllers\AuthenticationController::authentication($authorizationHeaders);
         if (!empty($login)) {
             \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);
             if (!empty($currentRoute)) {

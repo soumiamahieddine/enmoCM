@@ -33,7 +33,7 @@ class AuthenticationController
     const MAX_DURATION_TOKEN = 30; //Minutes
     const ROUTES_WITHOUT_AUTHENTICATION = [
         'GET/authenticationInformations', 'GET/images', 'POST/password', 'PUT/password', 'GET/passwordRules',
-        'GET/jnlp/{jnlpUniqueId}', 'GET/onlyOffice/mergedFile', 'POST/onlyOfficeCallback'
+        'GET/jnlp/{jnlpUniqueId}', 'GET/onlyOffice/mergedFile', 'POST/onlyOfficeCallback', 'POST/authenticate'
     ];
 
     public function getInformations(Request $request, Response $response)
@@ -47,7 +47,7 @@ class AuthenticationController
         return $response->withJson(['instanceId' => null, 'applicationName' => $appName, 'loginMessage' => $parameter['param_value_string'] ?? null]);
     }
 
-    public static function authentication()
+    public static function authentication($authorizationHeaders = [])
     {
         $userId = null;
         if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
@@ -63,31 +63,33 @@ class AuthenticationController
                 }
             }
         } else {
-            $cookie = AuthenticationModel::getCookieAuth();
-            if (!empty($cookie) && AuthenticationModel::cookieAuthentication($cookie)) {
-                AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
-                $userId = $cookie['userId'];
-            }
+            // $cookie = AuthenticationModel::getCookieAuth();
+            // if (!empty($cookie) && AuthenticationModel::cookieAuthentication($cookie)) {
+            //     AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
+            //     $userId = $cookie['userId'];
+            // }
 
-//            if (!empty($authorizationHeaders)) {
-//                $token = null;
-//                foreach ($authorizationHeaders as $authorizationHeader) {
-//                    if (strpos($authorizationHeader, 'Bearer') === 0) {
-//                        $token = str_replace('Bearer ', '', $authorizationHeader);
-//                    }
-//                }
-//                if (!empty($token)) {
-//                    try {
-//                        $jwt = (array)JWT::decode($token, CoreConfigModel::getEncryptKey(), ['HS256']);
-//                    } catch (\Exception $e) {
-//                        return null;
-//                    }
-//                    $jwt['user'] = (array)$jwt['user'];
-//                    if (!empty($jwt) && !empty($jwt['user']['id'])) {
-//                        $id = $jwt['user']['id'];
-//                    }
-//                }
-//            }
+           if (!empty($authorizationHeaders)) {
+               $token = null;
+               foreach ($authorizationHeaders as $authorizationHeader) {
+                   if (strpos($authorizationHeader, 'Bearer') === 0) {
+                       $token = str_replace('Bearer ', '', $authorizationHeader);
+                   }
+               }
+               if (!empty($token)) {
+                   try {
+                       $jwt = (array)JWT::decode($token, CoreConfigModel::getEncryptKey(), ['HS256']);
+                   } catch (\Exception $e) {
+                       return null;
+                   }
+                   $jwt['user'] = (array)$jwt['user'];
+                   if (!empty($jwt) && !empty($jwt['user']['id'])) {
+                       $id = $jwt['user']['id'];
+                       $user = UserModel::getById(['select' => ['user_id'], 'id' => $id]);
+                       $userId = $user['user_id'];
+                   }
+               }
+           }
         }
 
         if (!empty($userId)) {
@@ -178,7 +180,7 @@ class AuthenticationController
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-
+        var_dump('ttotoi');
         $login = strtolower($body['login']);
         $authenticated = AuthenticationModel::authentication(['login' => $login, 'password' => $body['password']]);
         if (empty($authenticated)) {
@@ -215,14 +217,14 @@ class AuthenticationController
         $response = $response->withHeader('Token', AuthenticationController::getJWT());
         $response = $response->withHeader('Refresh-Token', $refreshToken);
 
-        HistoryController::add([
+        /* HistoryController::add([
             'tableName' => 'users',
             'recordId'  => $user['id'],
             'eventType' => 'LOGIN',
             'info'      => _LOGIN . ' : ' . $login,
             'moduleId'  => 'authentication',
             'eventId'   => 'login'
-        ]);
+        ]); */
 
         return $response->withStatus(204);
     }

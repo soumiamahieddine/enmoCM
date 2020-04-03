@@ -9,17 +9,17 @@ import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
 import { PrivilegeService } from '../../service/privileges.service';
 
-declare function $j(selector: any): any;
+declare var $: any;
 
 @Component({
-    selector: "main-header",
-    templateUrl: "main-header.component.html",
+    selector: 'main-header',
+    templateUrl: 'main-header.component.html',
     providers: [AppService],
 })
 export class MainHeaderComponent implements OnInit {
 
     lang: any = LANG;
-    user: any = { firstname: "", lastname: "" };
+    user: any = { firstname: '', lastname: '' };
     dialogRef: MatDialogRef<any>;
     config: any = {};
     titleHeader: string;
@@ -63,15 +63,15 @@ export class MainHeaderComponent implements OnInit {
 
     getSnavRight(snav2: MatSidenav) {
         if (snav2 == null) {
-            $j('#snav2Button').hide();
+            $('#snav2Button').hide();
         } else {
-            $j('#snav2Button').show();
+            $('#snav2Button').show();
             this.zone.run(() => this.snav2 = snav2);
         }
     }
 
     gotToMenu(shortcut: any) {
-        if (shortcut.id == 'indexing' && shortcut.groups.length > 1) {
+        if (shortcut.id === 'indexing' && shortcut.groups.length > 1) {
             this.config = { panelClass: 'maarch-modal', data: { indexingGroups: shortcut.groups, link: shortcut.route } };
             this.dialogRef = this.dialog.open(IndexingGroupModalComponent, this.config);
         } else if (shortcut.angular === true) {

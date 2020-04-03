@@ -148,7 +148,7 @@ class CoreController
         $pathInfo = pathinfo($path);
 
         $response->write($fileContent);
-        $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
         return $response->withHeader('Content-Type', $mimeType);
     }
