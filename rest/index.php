@@ -56,6 +56,7 @@ $app->post('/authenticate', \SrcCore\controllers\AuthenticationController::class
 $app->get('/authenticate/token', \SrcCore\controllers\AuthenticationController::class . ':getRefreshedToken');
 
 //Initialize
+$app->get('/images', \SrcCore\controllers\CoreController::class . ':getImages');
 $app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
 
 //Acknowledgement Receipt
