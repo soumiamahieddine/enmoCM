@@ -10,14 +10,14 @@ Gestionnaire Électronique de Correspondances – Libre et Open Source –
 
 Démonstration : http://demo.maarchcourrier.com/
 
-Documentation : https://docs.maarch.org/gitbook/html/MaarchCourrier/20.03/
+Documentation : https://docs.maarch.org/
 
 
 ## Installation
-1. Vérifiez que vous avez l'ensemble des [pré-requis](https://docs.maarch.org/gitbook/html/MaarchCourrier/20.03/guat/guat_prerequisites/home.html)
-2. Décompressez *MaarchCourrier-20.03.tar.gz* dans votre zone web
+1. Vérifiez que vous avez l'ensemble des [pré-requis](https://docs.maarch.org/gitbook/html/MaarchCourrier/develop/guat/guat_prerequisites/home.html)
+2. Décompressez *MaarchCourrier-develop.tar.gz* dans votre zone web
 3. Vérifiez votre vhost Apache
-4. Laissez-vous guider par notre installeur à [http://IP.ouDomaine.tld/MaarchCourrier/install/](https://docs.maarch.org/gitbook/html/MaarchCourrier/20.03/guat/guat_installation/online_install.html)
+4. Laissez-vous guider par notre installeur à [http://IP.ouDomaine.tld/MaarchCourrier/install/](https://docs.maarch.org/gitbook/html/MaarchCourrier/develop/guat/guat_installation/online_install.html)
 
 
 ## Requis techniques
