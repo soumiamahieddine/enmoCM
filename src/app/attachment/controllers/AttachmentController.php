@@ -132,7 +132,7 @@ class AttachmentController
             ]);
             if (!empty($signedResponse[0])) {
                 $attachment['signedResponse'] = $signedResponse[0]['res_id'];
-                $attachment['signatory'] = UserModel::getLabelledUserById(['login' => $signedResponse[0]['typist']]);
+                $attachment['signatory'] = UserModel::getLabelledUserById(['id' => $signedResponse[0]['typist']]);
                 $attachment['signDate'] = $signedResponse[0]['creation_date'];
             }
         }
@@ -308,7 +308,7 @@ class AttachmentController
                     'data'      => ["{$attachment['resId']},res_attachments", ['DEL']]
                 ]);
                 if (!empty($signedResponse[0])) {
-                    $attachments[$key]['signatory'] = UserModel::getLabelledUserById(['login' => $signedResponse[0]['typist']]);
+                    $attachments[$key]['signatory'] = UserModel::getLabelledUserById(['id' => $signedResponse[0]['typist']]);
                     $attachments[$key]['signDate'] = $signedResponse[0]['creation_date'];
                 }
             }
