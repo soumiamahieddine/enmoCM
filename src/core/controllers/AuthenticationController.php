@@ -63,12 +63,6 @@ class AuthenticationController
                 }
             }
         } else {
-            // $cookie = AuthenticationModel::getCookieAuth();
-            // if (!empty($cookie) && AuthenticationModel::cookieAuthentication($cookie)) {
-            //     AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
-            //     $userId = $cookie['userId'];
-            // }
-
            if (!empty($authorizationHeaders)) {
                $token = null;
                foreach ($authorizationHeaders as $authorizationHeader) {

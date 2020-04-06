@@ -383,12 +383,13 @@ class ReceiveMessageExchangeController
                 $BinaryDataObjectInfo = self::getBinaryDataObjectInfo(["binaryDataObject" => $dataObjectPackage->BinaryDataObject, "binaryDataObjectId" => $attachmentDataObjectId]);
                 $filename             = $BinaryDataObjectInfo->Attachment->filename;
                 $fileFormat           = substr($filename, strrpos($filename, '.') + 1);
-                
+
+                $user = UserModel::getByLogin(['login' => 'superadmin', 'select' => ['id']]);
                 $allDatas = [
                     'title'        => $attachmentContent->Title[0],
                     'encodedFile'  => $BinaryDataObjectInfo->Attachment->value,
                     'format'       => $fileFormat,
-                    'typist'       => 'superadmin',
+                    'typist'       => $user['id'],
                     'resIdMaster'  => $resIdMaster,
                     'type'         => $defaultConfig['attachment_type']
                 ];

@@ -61,7 +61,7 @@ class AttachmentControllerTest extends TestCase
         $this->assertSame($aArgs['type'], $res['attachment_type']);
         $this->assertSame('txt', $res['format']);
         $this->assertSame('A_TRA', $res['status']);
-        $this->assertSame('superadmin', $res['typist']);
+        $this->assertSame(24, $res['typist']);
         $this->assertSame(1, $res['relation']);
         $this->assertSame($aArgs['chrono'], $res['identifier']);
         $this->assertNotNull($res['path']);

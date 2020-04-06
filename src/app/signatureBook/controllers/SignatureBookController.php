@@ -650,7 +650,7 @@ class SignatureBookController
         $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'typist']]);
         if (empty($attachment) || !ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        } elseif ($attachment['typist'] != $GLOBALS['userId'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
+        } elseif ($attachment['typist'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
         }
 

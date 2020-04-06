@@ -321,8 +321,8 @@ class StoreController
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
             $shouldBeInSignatureBook = $relations[0]['in_signature_book'];
         }
-        $typist = $GLOBALS['userId'];
-        if (!empty($args['typist']) && !is_numeric($args['typist'])) {
+        $typist = $GLOBALS['id'];
+        if (!empty($args['typist']) && is_numeric($args['typist'])) {
             $typist = $args['typist'];
         }
 

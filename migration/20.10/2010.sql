@@ -70,6 +70,14 @@ DO $$ BEGIN
         UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'from res_mark_as_read WHERE user_id(\s*)=(\s*)@user', 'from res_mark_as_read WHERE user_id = @user_id', 'gmi');
     END IF;
 END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_attachments' and column_name = 'typist' and data_type != 'integer') THEN
+        ALTER TABLE res_attachments ADD COLUMN typist_tmp INTEGER;
+        UPDATE res_attachments set typist_tmp = (select id FROM users where users.user_id = res_attachments.typist);
+        ALTER TABLE res_attachments DROP COLUMN IF EXISTS typist;
+        ALTER TABLE res_attachments RENAME COLUMN typist_tmp TO typist;
+    END IF;
+END$$;
 
 
 /* RE CREATE VIEWS */
