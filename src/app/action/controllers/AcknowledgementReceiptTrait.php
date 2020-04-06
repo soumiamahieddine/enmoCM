@@ -93,7 +93,7 @@ trait AcknowledgementReceiptTrait
             $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template[0]['template_path']) . $template[0]['template_file_name'];
         }
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'mail']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id', 'mail']]);
         $ids          = [];
         $errors       = [];
         $emailsToSend = [];

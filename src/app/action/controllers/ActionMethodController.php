@@ -128,7 +128,7 @@ class ActionMethodController
                     'info'      => $info
                 ]);
 
-                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $args['id'], 'userId' => $GLOBALS['userId']]);
+                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $args['id'], 'userId' => $GLOBALS['login']]);
             }
         }
 
@@ -291,7 +291,7 @@ class ActionMethodController
                         'item_id'         => $userInfo['user_id'],
                         'item_type'       => 'user_id',
                         'item_mode'       => 'dest',
-                        'added_by_user'   => $GLOBALS['userId'],
+                        'added_by_user'   => $GLOBALS['login'],
                         'viewed'          => 0,
                         'difflist_type'   => 'entity_id'
                     ]);
@@ -436,7 +436,7 @@ class ActionMethodController
                 'resIdMaster'     => $args['resId'],
                 'processingUser'  => $args['data']['processingUser'],
                 'objectSent'      => 'mail',
-                'userId'          => $GLOBALS['userId'],
+                'userId'          => $GLOBALS['login'],
                 'note'            => $args['note']['content'] ?? null
             ]);
             if (!empty($sentInfo['error'])) {
@@ -676,7 +676,7 @@ class ActionMethodController
                 'item_id'               => $instance['item_id'],
                 'item_type'             => $instance['item_type'],
                 'item_mode'             => $instance['item_mode'],
-                'added_by_user'         => $GLOBALS['userId'],
+                'added_by_user'         => $GLOBALS['login'],
                 'difflist_type'         => 'entity_id',
                 'process_date'          => null,
                 'process_comment'       => null,
@@ -715,7 +715,7 @@ class ActionMethodController
         $currentStep = $currentStep[0];
 
         $message = null;
-        if ($currentStep['item_id'] != $GLOBALS['userId']) {
+        if ($currentStep['item_id'] != $GLOBALS['login']) {
             $currentUser = UserModel::getById(['select' => ['firstname', 'lastname'], 'id' => $GLOBALS['id']]);
             $stepUser = UserModel::get([
                 'select' => ['firstname', 'lastname'],
@@ -753,7 +753,7 @@ class ActionMethodController
         $currentStep = ListInstanceModel::get([
             'select'  => ['listinstance_id', 'item_id'],
             'where'   => ['res_id = ?', 'difflist_type = ?', 'item_id = ?', 'item_mode in (?)'],
-            'data'    => [$args['resId'], 'entity_id', $GLOBALS['userId'], ['avis', 'avis_copy', 'avis_info']],
+            'data'    => [$args['resId'], 'entity_id', $GLOBALS['login'], ['avis', 'avis_copy', 'avis_info']],
             'limit'   => 1
         ]);
 
@@ -869,7 +869,7 @@ class ActionMethodController
                     'item_id'             => $instance['item_id'],
                     'item_type'           => $instance['item_type'],
                     'item_mode'           => $instance['item_mode'],
-                    'added_by_user'       => $GLOBALS['userId'],
+                    'added_by_user'       => $GLOBALS['login'],
                     'difflist_type'       => 'entity_id',
                     'process_date'        => null,
                     'process_comment'     => null,

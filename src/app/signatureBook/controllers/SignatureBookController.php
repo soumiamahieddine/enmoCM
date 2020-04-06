@@ -67,7 +67,7 @@ class SignatureBookController
             'data'      => [$aArgs['resId'], ['visa', 'sign']]
         ]);
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $owner = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $owner['user_id']]);
         $resources = ResModel::getOnView([
@@ -79,14 +79,14 @@ class SignatureBookController
         $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['id']]);
         $datas['documents']             = $documents;
         $datas['resList']               = $resources;
-        $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['userId']]);
+        $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['login']]);
         $datas['nbLinks']               = 0;
         $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $currentUser['id']]);
         $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
         $datas['canSign']               = PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']]);
-        $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['userId'];
+        $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['login'];
 
         return $response->withJson($datas);
     }
@@ -484,7 +484,7 @@ class SignatureBookController
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
             'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-            'data'  => [$args['resId'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+            'data'  => [$args['resId'], $GLOBALS['login'], 'VISA_CIRCUIT']
         ]);
 
 
@@ -518,7 +518,7 @@ class SignatureBookController
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-                'data'  => [$args['resId'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+                'data'  => [$args['resId'], $GLOBALS['login'], 'VISA_CIRCUIT']
             ]);
         }
 
@@ -627,7 +627,7 @@ class SignatureBookController
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
             'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-            'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+            'data'  => [$attachment['res_id_master'], $GLOBALS['login'], 'VISA_CIRCUIT']
         ]);
 
         HistoryController::add([
@@ -669,7 +669,7 @@ class SignatureBookController
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-                'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+                'data'  => [$attachment['res_id_master'], $GLOBALS['login'], 'VISA_CIRCUIT']
             ]);
         }
 

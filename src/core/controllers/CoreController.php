@@ -30,8 +30,8 @@ class CoreController
         $aInit['applicationName']    = CoreConfigModel::getApplicationName();
         $aInit['applicationVersion'] = CoreConfigModel::getApplicationVersion();
         $aInit['lang']               = CoreConfigModel::getLanguage();
-        if (!empty($GLOBALS['userId'])) {
-            $aInit['user']               = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        if (!empty($GLOBALS['login'])) {
+            $aInit['user']               = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
         }
         $aInit['customLanguage']     = CoreConfigModel::getCustomLanguage(['lang' => $aInit['lang']]);
 
@@ -81,8 +81,8 @@ class CoreController
 
     public function getHeader(Request $request, Response $response)
     {
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
-        $user['groups'] = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+        $user = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        $user['groups'] = UserModel::getGroupsByLogin(['login' => $GLOBALS['login']]);
         $user['entities'] = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity']]);
 
         return $response->withJson(['user' => $user]);
@@ -90,12 +90,12 @@ class CoreController
 
     public static function setGlobals(array $args)
     {
-        ValidatorModel::notEmpty($args, ['login']);
-        ValidatorModel::stringType($args, ['login']);
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
 
-        $user = UserModel::getByLogin(['login' => $args['login'], 'select' => ['id']]);
-        $GLOBALS['userId'] = $args['login'];
-        $GLOBALS['id'] = $user['id'];
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+        $GLOBALS['login'] = $user['user_id'];
+        $GLOBALS['id'] = $args['userId'];
     }
 
     public function externalConnectionsEnabled(Request $request, Response $response)

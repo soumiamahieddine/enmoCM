@@ -441,7 +441,7 @@ class ListInstanceController
                     'item_id'               => $listInstance['item_id'],
                     'item_type'             => $listInstance['item_type'],
                     'item_mode'             => $listInstance['item_mode'],
-                    'added_by_user'         => $GLOBALS['userId'],
+                    'added_by_user'         => $GLOBALS['login'],
                     'difflist_type'         => $args['type'] == 'visaCircuit' ? 'VISA_CIRCUIT' : 'AVIS_CIRCUIT',
                     'process_date'          => $listInstance['process_date'],
                     'process_comment'       => $listInstance['process_comment'],

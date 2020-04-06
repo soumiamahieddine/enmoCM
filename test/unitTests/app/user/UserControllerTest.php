@@ -667,7 +667,7 @@ class UserControllerTest extends TestCase
     {
         $userController = new \User\controllers\UserController();
 
-        $user = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $user = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
 
         //  UPDATE PASSWORD
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -684,7 +684,7 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('success', $responseBody->success);
 
-        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['login' => $GLOBALS['userId'], 'password' => 'hcraam']);
+        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['login' => $GLOBALS['login'], 'password' => 'hcraam']);
 
         $this->assertSame(true, $checkPassword);
 
@@ -703,7 +703,7 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('success', $responseBody->success);
 
-        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['login' => $GLOBALS['userId'], 'password' => 'superadmin']);
+        $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['login' => $GLOBALS['login'], 'password' => 'superadmin']);
 
         $this->assertSame(true, $checkPassword);
     }

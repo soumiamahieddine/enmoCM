@@ -164,7 +164,7 @@ class ResourceListController
 
     public function getFilters(Request $request, Response $response, array $aArgs)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
 
         $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
         if (!empty($errors['errors'])) {
@@ -341,7 +341,7 @@ class ResourceListController
             foreach ($actions as $key => $action) {
                 if (!empty($queryParams['resId'])) {
                     if (!empty($actionsClauses[$action['id']])) {
-                        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $actionsClauses[$action['id']], 'login' => $GLOBALS['userId']]);
+                        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $actionsClauses[$action['id']], 'login' => $GLOBALS['login']]);
                         $ressource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', $whereClause], 'data' => [$queryParams['resId']]]);
                         if (empty($ressource)) {
                             unset($actions[$key]);
@@ -483,7 +483,7 @@ class ResourceListController
         }
         $body['resources'] = array_slice($body['resources'], 0, 500);
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
@@ -553,7 +553,7 @@ class ResourceListController
         }
         $body['resources'] = array_slice($body['resources'], 0, 500);
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);

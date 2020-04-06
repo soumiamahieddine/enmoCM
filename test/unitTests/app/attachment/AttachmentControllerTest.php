@@ -148,16 +148,16 @@ class AttachmentControllerTest extends TestCase
         }
 
         // ERROR
-        $GLOBALS['userId'] = 'bblier';
-        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['login'] = 'bblier';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
         $response = $attachmentController->getByResId($request, new \Slim\Http\Response(), ['resId' => 123940595]);
         $response = json_decode((string)$response->getBody(), true);
         $this->assertSame('Document out of perimeter', $response['errors']);
 
-        $GLOBALS['userId'] = 'superadmin';
-        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
     }
 

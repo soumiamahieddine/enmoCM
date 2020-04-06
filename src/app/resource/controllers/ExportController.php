@@ -62,7 +62,7 @@ class ExportController
     public function updateExport(Request $request, Response $response, array $aArgs)
     {
         set_time_limit(240);
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
 
         $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
         if (!empty($errors['errors'])) {

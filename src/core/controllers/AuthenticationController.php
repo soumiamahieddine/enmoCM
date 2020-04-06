@@ -53,13 +53,13 @@ class AuthenticationController
         if (!empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])) {
             if (AuthenticationModel::authentication(['login' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW']])) {
                 $loginMethod = CoreConfigModel::getLoggingMethod();
+                $user = UserModel::getByLogin(['select' => ['id', 'loginmode'], 'userId' => $_SERVER['PHP_AUTH_USER']]);
                 if ($loginMethod['id'] != 'standard') {
-                    $user = UserModel::getByLogin(['select' => ['loginmode'], 'userId' => $_SERVER['PHP_AUTH_USER']]);
                     if ($user['loginmode'] == 'restMode') {
-                        $userId = $_SERVER['PHP_AUTH_USER'];
+                        $userId = $user['id'];
                     }
                 } else {
-                    $userId = $_SERVER['PHP_AUTH_USER'];
+                    $userId = $user['id'];
                 }
             }
         } else {
@@ -78,9 +78,7 @@ class AuthenticationController
                    }
                    $jwt['user'] = (array)$jwt['user'];
                    if (!empty($jwt) && !empty($jwt['user']['id'])) {
-                       $id = $jwt['user']['id'];
-                       $user = UserModel::getById(['select' => ['user_id'], 'id' => $id]);
-                       $userId = $user['user_id'];
+                       $userId = $jwt['user']['id'];
                    }
                }
            }
@@ -89,7 +87,7 @@ class AuthenticationController
         if (!empty($userId)) {
             UserModel::update([
                 'set'   => ['reset_token' => null],
-                'where' => ['user_id = ?'],
+                'where' => ['id = ?'],
                 'data'  => [$userId]
             ]);
         }
@@ -97,19 +95,20 @@ class AuthenticationController
         return $userId;
     }
 
-    public static function isRouteAvailable(array $aArgs)
+    public static function isRouteAvailable(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['login', 'currentRoute']);
-        ValidatorModel::stringType($aArgs, ['login', 'currentRoute']);
+        ValidatorModel::notEmpty($args, ['userId', 'currentRoute']);
+        ValidatorModel::intVal($args, ['userId']);
+        ValidatorModel::stringType($args, ['currentRoute']);
 
-        if ($aArgs['currentRoute'] != '/initialize') {
-            $user = UserModel::getByLogin(['select' => ['status'], 'login' => $aArgs['login']]);
+        if ($args['currentRoute'] != '/initialize') {
+            $user = UserModel::getById(['select' => ['status'], 'id' => $args['userId']]);
 
-            if ($user['status'] == 'ABS' && !in_array($aArgs['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
+            if ($user['status'] == 'ABS' && !in_array($args['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
                 return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
             }
 
-            if (!in_array($aArgs['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
+            if (!in_array($args['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
                 $loggingMethod = CoreConfigModel::getLoggingMethod();
 
                 if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'])) {

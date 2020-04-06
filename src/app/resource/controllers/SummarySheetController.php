@@ -42,7 +42,7 @@ class SummarySheetController
     public function createList(Request $request, Response $response, array $aArgs)
     {
         set_time_limit(240);
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
 
         $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
         if (!empty($errors['errors'])) {
@@ -155,7 +155,7 @@ class SummarySheetController
             foreach ($resources as $resource) {
                 SummarySheetController::createSummarySheet($pdf, [
                     'resource'         => $resource, 'units' => $units,
-                    'login'            => $GLOBALS['userId'],
+                    'login'            => $GLOBALS['login'],
                     'data'             => $data,
                     'fieldsIdentifier' => $fieldsIdentifier
                 ]);
@@ -290,7 +290,7 @@ class SummarySheetController
                 SummarySheetController::createSummarySheet($pdf, [
                     'resource'         => $resource,
                     'units'            => $units,
-                    'login'            => $GLOBALS['userId'],
+                    'login'            => $GLOBALS['login'],
                     'data'             => $data,
                     'fieldsIdentifier' => $fieldsIdentifier
                 ]);

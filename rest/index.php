@@ -34,11 +34,11 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
     $currentRoute = empty($route) ? '' : $route->getPattern();
     if (!in_array($currentMethod.$currentRoute, \SrcCore\controllers\AuthenticationController::ROUTES_WITHOUT_AUTHENTICATION)) {
         $authorizationHeaders = $request->getHeader('Authorization');
-        $login = \SrcCore\controllers\AuthenticationController::authentication($authorizationHeaders);
-        if (!empty($login)) {
-            \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);
+        $userId = \SrcCore\controllers\AuthenticationController::authentication($authorizationHeaders);
+        if (!empty($userId)) {
+            \SrcCore\controllers\CoreController::setGlobals(['userId' => $userId]);
             if (!empty($currentRoute)) {
-                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['login' => $login, 'currentRoute' => $currentRoute]);
+                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
                 if (!$r['isRouteAvailable']) {
                     return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
                 }

@@ -68,7 +68,7 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => _ID. ' ' . _ALREADY_EXISTS]);
         }
 
-        if (!PreparedClauseController::isRequestValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
+        if (!PreparedClauseController::isRequestValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['login']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
@@ -100,7 +100,7 @@ class GroupController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if (!PreparedClauseController::isRequestValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['userId']])) {
+        if (!PreparedClauseController::isRequestValid(['clause' => $data['security']['where_clause'], 'userId' => $GLOBALS['login']])) {
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
@@ -158,7 +158,7 @@ class GroupController
 
         $group['privileges']         = PrivilegeModel::getPrivilegesByGroupId(['groupId' => $args['id']]);
 
-        if ($GLOBALS['userId'] == 'superadmin') {
+        if ($GLOBALS['login'] == 'superadmin') {
             $allowedUsers = UserModel::get([
                 'select'    => ['id'],
                 'where'     => ['user_id != ?', 'status != ?'],
@@ -166,7 +166,7 @@ class GroupController
             ]);
             $allowedUsers = array_column($allowedUsers, 'id');
         } else {
-            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['login']]);
             $allowedUsers = [];
             if (!empty($entities)) {
                 $allowedUsers = UserEntityModel::getWithUsers([
