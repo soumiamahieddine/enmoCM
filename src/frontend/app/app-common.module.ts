@@ -26,6 +26,7 @@ import { TimeLimitPipe } from '../plugins/timeLimit.pipe';
 import { FilterListPipe } from '../plugins/filterList.pipe';
 import { FullDatePipe } from '../plugins/fullDate.pipe';
 import { SafeHtmlPipe } from '../plugins/safeHtml.pipe';
+import { SecureUrlPipe } from '../plugins/secureUrl.pipe';
 import { EcplOnlyofficeViewerComponent } from '../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 
 /*FRONT IMPORTS*/
@@ -110,6 +111,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         FilterListPipe,
         FullDatePipe,
         SafeHtmlPipe,
+        SecureUrlPipe,
         IndexingGroupModalComponent,
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
@@ -156,6 +158,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         FilterListPipe,
         FullDatePipe,
         SafeHtmlPipe,
+        SecureUrlPipe,
         PdfViewerModule,
         NgStringPipesModule,
         SmdFabSpeedDialComponent,
