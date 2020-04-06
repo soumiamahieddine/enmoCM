@@ -61,7 +61,7 @@ class AttachmentControllerTest extends TestCase
         $this->assertSame($aArgs['type'], $res['attachment_type']);
         $this->assertSame('txt', $res['format']);
         $this->assertSame('A_TRA', $res['status']);
-        $this->assertSame(23, $res['typist']);
+        $this->assertSame(23, (int)$res['typist']);
         $this->assertSame(1, $res['relation']);
         $this->assertSame($aArgs['chrono'], $res['identifier']);
         $this->assertNotNull($res['path']);
@@ -135,7 +135,7 @@ class AttachmentControllerTest extends TestCase
                 $this->assertSame('La plus chétive cabane renferme plus de vertus que les palais des rois.', $value['title']);
                 $this->assertSame('response_project', $value['type']);
                 $this->assertSame('A_TRA', $value['status']);
-                $this->assertSame($userInfo['id'], $value['typist']);
+                $this->assertSame($userInfo['id'], (int)$value['typist']);
                 $this->assertSame(1, $value['relation']);
                 $this->assertSame('MAARCH/2019D/24', $value['chrono']);
                 $this->assertNull($value['originId']);
