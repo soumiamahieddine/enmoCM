@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     onSubmit() {
         this.loading = true;
         this.http.post(
-            '../rest/authenticate',
+            '../../rest/authenticate',
             {
                 'login': this.loginForm.get('login').value,
                 'password': this.loginForm.get('password').value
@@ -82,8 +82,7 @@ export class LoginComponent implements OnInit {
     }
 
     getLoginInformations() {
-        this.http.get(
-            '../rest/authenticationInformations').pipe(
+        this.http.get('../../rest/authenticationInformations').pipe(
                 tap((data: any) => {
                     this.applicationName = data.applicationName;
                     this.loginMessage = data.loginMessage;
