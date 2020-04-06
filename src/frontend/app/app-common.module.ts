@@ -38,8 +38,6 @@ import { SmdFabSpeedDialComponent, SmdFabSpeedDialTrigger, SmdFabSpeedDialAction
 import { HeaderRightComponent } from './header/header-right.component';
 import { HeaderLeftComponent } from './header/header-left.component';
 import { HeaderPanelComponent } from './header/header-panel.component';
-import { MainHeaderComponent } from './menu/main-header.component';
-import { MenuComponent } from './menu/menu.component';
 import { MenuNavComponent } from './menu/menu-nav.component';
 import { MenuShortcutComponent, IndexingGroupModalComponent } from './menu/menu-shortcut.component';
 
@@ -99,8 +97,6 @@ export class MyHammerConfig extends HammerGestureConfig {
         DragDropModule
     ],
     declarations: [
-        MainHeaderComponent,
-        MenuComponent,
         MenuNavComponent,
         MenuShortcutComponent,
         HeaderRightComponent,
@@ -140,8 +136,6 @@ export class MyHammerConfig extends HammerGestureConfig {
     ],
     exports: [
         CommonModule,
-        MainHeaderComponent,
-        MenuComponent,
         MenuNavComponent,
         MenuShortcutComponent,
         HeaderRightComponent,

@@ -7,6 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dial
 import { AppService } from '../service/app.service';
 import { Router } from '@angular/router';
 import { HeaderService } from '../service/header.service';
+import { AuthService } from '../service/auth.service';
 
 @Component({
     templateUrl: 'password-modification.component.html',
@@ -49,6 +50,7 @@ export class PasswordModificationComponent implements OnInit {
 
     constructor(
         public http: HttpClient,
+        private authService: AuthService,
         private headerService: HeaderService,
         private notify: NotificationService,
         private _formBuilder: FormBuilder,
@@ -195,7 +197,7 @@ export class PasswordModificationComponent implements OnInit {
     }
 
     logout() {
-        location.href = 'index.php?display=true&page=logout&logout=true';
+        this.authService.logout();
     }
 }
 

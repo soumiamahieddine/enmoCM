@@ -14,6 +14,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormBuilder } from '@angular/forms';
 import { AppService } from '../service/app.service';
 import { FunctionsService } from '../service/functions.service';
+import { AuthService } from '../service/auth.service';
+import { Router } from '@angular/router';
 
 declare var $: any;
 declare var tinymce: any;
@@ -165,6 +167,7 @@ export class ProfileComponent implements OnInit {
         private notify: NotificationService,
         public dialog: MatDialog,
         private _formBuilder: FormBuilder,
+        private authService: AuthService,
         private headerService: HeaderService,
         public appService: AppService,
         private viewContainerRef: ViewContainerRef,
@@ -608,7 +611,7 @@ export class ProfileComponent implements OnInit {
         if (r) {
             this.http.put('../../rest/users/' + this.user.id + '/status', { 'status': 'ABS' })
                 .subscribe(() => {
-                    location.search = '?display=true&page=logout&logout=true';
+                    this.authService.logout();
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
