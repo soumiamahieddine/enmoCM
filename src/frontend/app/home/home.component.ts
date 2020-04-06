@@ -1,4 +1,4 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +17,7 @@ declare var $: any;
     styleUrls: ['home.component.scss'],
     providers: [AppService]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 
     lang: any = LANG;
     loading: boolean = false;
@@ -78,7 +78,14 @@ export class HomeComponent implements OnInit {
     }
 
     viewDocument(row: any) {
-        window.open('../../rest/resources/' + row.res_id + '/content?mode=view', '_blank');
+        this.http.get(`../../rest/resources/${row.res_id}/content?mode=view`, { responseType: 'blob' })
+            .subscribe((data: any) => {
+                const file = new Blob([data], { type: 'application/pdf' });
+                const fileURL = URL.createObjectURL(file);
+                const newWindow = window.open();
+                newWindow.document.write(`<iframe style="width: 100%;height: 100%;margin: 0;padding: 0;" src="${fileURL}" frameborder="0" allowfullscreen></iframe>`);
+                newWindow.document.title = row.alt_identifier;
+            });
     }
 
     viewThumbnail(row: any) {
