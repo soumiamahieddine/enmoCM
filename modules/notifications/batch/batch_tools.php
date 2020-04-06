@@ -84,10 +84,10 @@ function Bt_exitBatch($returnCode, $message='')
             fwrite($semaphore, '1');
             fclose($semaphore);
         }
-        $GLOBALS['logger']->write($message, 'ERROR', $returnCode);
+        Bt_writeLog(['level' => 'ERROR', 'message' => $message]);
         Bt_logInDataBase($GLOBALS['totalProcessedResources'], 1, $message.' (return code: '. $returnCode.')');
     } elseif ($message <> '') {
-        $GLOBALS['logger']->write($message, 'INFO', $returnCode);
+        Bt_writeLog(['level' => 'INFO', 'message' => $message]);
         Bt_logInDataBase($GLOBALS['totalProcessedResources'], 0, $message.' (return code: '. $returnCode.')');
     }
     Bt_updateWorkBatch();
@@ -113,7 +113,7 @@ function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
  * 
  * @return nothing
  */
-function Bt_getWorkBatch() 
+function Bt_getWorkBatch()
 {
     $req = "SELECT param_value_int FROM parameters WHERE id = ? ";
     $stmt = $GLOBALS['db']->query($req, array($GLOBALS['batchName']."_id"));
@@ -148,8 +148,21 @@ function Bt_updateWorkBatch()
 function Bt_myInclude($file) 
 {
     if (file_exists($file)) {
-        include_once ($file);
+        include_once($file);
     } else {
         throw new IncludeFileError($file);
     }
+}
+
+function Bt_writeLog($args = [])
+{
+    \SrcCore\controllers\LogsController::add([
+        'isTech'    => true,
+        'moduleId'  => $GLOBALS['batchName'],
+        'level'     => $args['level'],
+        'tableName' => '',
+        'recordId'  => $GLOBALS['batchName'],
+        'eventType' => $GLOBALS['batchName'],
+        'eventId'   => $args['message']
+    ]);
 }
