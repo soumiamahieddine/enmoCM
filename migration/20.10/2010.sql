@@ -78,6 +78,23 @@ DO $$ BEGIN
         ALTER TABLE res_attachments RENAME COLUMN typist_tmp TO typist;
     END IF;
 END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'listinstance_history_details' and column_name = 'item_id' and data_type != 'integer') THEN
+        ALTER TABLE listinstance_history_details ADD COLUMN item_id_tmp INTEGER;
+        UPDATE listinstance_history_details set item_id_tmp = (select id FROM users where users.user_id = listinstance_history_details.item_id) WHERE item_type = 'user_id';
+        UPDATE listinstance_history_details set item_id_tmp = (select id FROM entities where entities.entity_id = listinstance_history_details.item_id) WHERE item_type = 'entity_id';
+        ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS item_id;
+        ALTER TABLE listinstance_history_details RENAME COLUMN item_id_tmp TO item_id;
+    END IF;
+END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'listinstance_history_details' and column_name = 'added_by_user' and data_type != 'integer') THEN
+        ALTER TABLE listinstance_history_details ADD COLUMN added_by_user_tmp INTEGER;
+        UPDATE listinstance_history_details set added_by_user_tmp = (select id FROM users where users.user_id = listinstance_history_details.added_by_user);
+        ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_user;
+        ALTER TABLE listinstance_history_details RENAME COLUMN added_by_user_tmp TO added_by_user;
+    END IF;
+END$$;
 
 
 /* RE CREATE VIEWS */
