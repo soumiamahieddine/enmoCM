@@ -211,9 +211,6 @@ while ($state != 'END') {
                     }
 
                     // Prepare e-mail for stack
-                    $emailConfiguration = \Configuration\models\ConfigurationModel::getByService(['select' => ['value'], 'service' => 'admin_email_server']);
-                    $emailConfiguration = json_decode($emailConfiguration['value'], true);
-                    $sender             = $emailConfiguration['from'];
                     $recipient_mail     = $tmpNotif['recipient']['mail'];
 
                     if (!empty($recipient_mail)) {
@@ -244,15 +241,12 @@ while ($state != 'END') {
                         Bt_writeLog(['level' => 'INFO', 'message' => '... adding e-mail to email stack']);
 
                         $arrayPDO = [
-                            'sender'    => $sender,
                             'recipient' => $recipient_mail,
                             'subject'   => $subject,
-                            'html_body' => $html,
-                            'charset'   => $emailConfiguration['charset'],
-                            'module'    => 'notifications',
+                            'html_body' => $html
                         ];
                         if (count($attachments) > 0) {
-                            $arrayPDO[] = implode(',', $attachments);
+                            $arrayPDO['attachments'] = implode(',', $attachments);
                         }
                         \Notification\models\NotificationsEmailsModel::create($arrayPDO);
 

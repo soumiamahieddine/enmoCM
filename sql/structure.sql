@@ -680,17 +680,13 @@ CREATE SEQUENCE notif_email_stack_seq
 CREATE TABLE notif_email_stack
 (
   email_stack_sid bigint NOT NULL DEFAULT nextval('notif_email_stack_seq'::regclass),
-  sender character varying(255) NOT NULL,
   reply_to character varying(255),
   recipient text NOT NULL,
   cc text,
   bcc text,
   subject character varying(255),
   html_body text,
-  text_body text,
-  charset character varying(50) NOT NULL,
   attachments text,
-  module character varying(50) NOT NULL,
   exec_date timestamp without time zone,
   exec_result character varying(50),
   CONSTRAINT notif_email_stack_pkey PRIMARY KEY (email_stack_sid)

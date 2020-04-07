@@ -5,14 +5,9 @@
         <Lang>fr</Lang> <!-- fr, en-->
         <MaarchDirectory>/var/www/html/MaarchCourrier/</MaarchDirectory>
         <customID></customID>
-        <MaarchUrl>http://demo.maarchcourrier.com</MaarchUrl>
+        <MaarchUrl>http://preview.maarchcourrier.com</MaarchUrl>
         <MaarchApps>maarch_entreprise</MaarchApps>
         <TmpDirectory>/var/www/html/MaarchCourrier/modules/notifications/batch/tmp/</TmpDirectory>
-        <debugmode>
-            <dontflag_mail>true</dontflag_mail>
-            <verbose_mode>false</verbose_mode>
-            <simulate_sendmail>false</simulate_sendmail>
-        </debugmode>
         <maxsize>5</maxsize> <!--In Mo: Taille maximum pour envoyer le courrier en pièce jointe afin d’éviter les erreurs du serveur mail-->
         <maxitem>90</maxitem> <!-- Nombre de pièce jointe maximum à envoyer si transfert en pièce jointe-->
     </CONFIG>

@@ -13,6 +13,12 @@ DROP VIEW IF EXISTS res_view_letterbox;
 DROP TABLE IF EXISTS usergroups_reports;
 DELETE FROM usergroups_services WHERE service_id IN ('reports', 'admin_reports');
 
+/*NOTIF_EMAIL_STACK*/
+ALTER TABLE notif_email_stack DROP COLUMN IF EXISTS sender;
+ALTER TABLE notif_email_stack DROP COLUMN IF EXISTS charset;
+ALTER TABLE notif_email_stack DROP COLUMN IF EXISTS text_body;
+ALTER TABLE notif_email_stack DROP COLUMN IF EXISTS module;
+
 /* USERS */
 ALTER TABLE users DROP COLUMN IF EXISTS refresh_token;
 ALTER TABLE users ADD COLUMN refresh_token jsonb NOT NULL DEFAULT '[]';
