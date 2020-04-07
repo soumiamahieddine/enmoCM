@@ -18,6 +18,16 @@ ALTER TABLE users DROP COLUMN IF EXISTS refresh_token;
 ALTER TABLE users ADD COLUMN refresh_token jsonb NOT NULL DEFAULT '[]';
 
 DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'notif_event_stack' and column_name = 'user_id' and data_type != 'integer') THEN
+        ALTER TABLE notif_event_stack ADD COLUMN user_id_tmp INTEGER;
+        UPDATE notif_event_stack set user_id_tmp = (select id FROM users where users.user_id = notif_event_stack.user_id);
+        DELETE FROM notif_event_stack WHERE user_id_tmp IS NULL;
+        ALTER TABLE notif_event_stack ALTER COLUMN user_id_tmp set not null;
+        ALTER TABLE notif_event_stack DROP COLUMN IF EXISTS user_id;
+        ALTER TABLE notif_event_stack RENAME COLUMN user_id_tmp TO user_id;
+    END IF;
+END$$;
+DO $$ BEGIN
     IF (SELECT count(column_name) from information_schema.columns where table_name = 'users_email_signatures' and column_name = 'user_id' and data_type != 'integer') THEN
         ALTER TABLE users_email_signatures ADD COLUMN user_id_tmp INTEGER;
         UPDATE users_email_signatures set user_id_tmp = (select id FROM users where users.user_id = users_email_signatures.user_id);

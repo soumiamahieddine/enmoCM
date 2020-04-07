@@ -216,7 +216,7 @@ class UserController
         if (!empty($userQuota['param_value_int'])) {
             $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'user_id <> ?'], 'data' => ['OK', 'superadmin']]);
             if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
-                NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+                NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => $GLOBALS['id'], 'info' => _QUOTA_EXCEEDED]);
             }
         }
 
@@ -286,7 +286,7 @@ class UserController
             if ($user['status'] == 'SPD' && $data['status'] == 'OK') {
                 $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'user_id != ?'], 'data' => ['OK', 'superadmin']]);
                 if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
-                    NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
+                    NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => $GLOBALS['id'], 'info' => _QUOTA_EXCEEDED]);
                 }
             }
         }

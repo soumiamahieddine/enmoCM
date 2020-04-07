@@ -658,7 +658,7 @@ CREATE TABLE notif_event_stack
   notification_sid bigint NOT NULL,
   table_name character varying(50) NOT NULL,
   record_id character varying(128) NOT NULL,
-  user_id character varying(128) NOT NULL,
+  user_id integer NOT NULL,
   event_info character varying(255) NOT NULL,
   event_date timestamp without time zone NOT NULL,
   exec_date timestamp without time zone,

@@ -39,8 +39,8 @@ abstract class NotificationsEventsModelAbstract
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['notification_sid', 'table_name', 'record_id', 'user_id', 'event_info']);
-        ValidatorModel::stringType($aArgs, ['table_name', 'user_id', 'event_info']);
-        ValidatorModel::intval($aArgs, ['notification_sid']);
+        ValidatorModel::stringType($aArgs, ['table_name', 'event_info']);
+        ValidatorModel::intval($aArgs, ['notification_sid', 'user_id']);
 
         $aArgs['event_date'] = 'CURRENT_TIMESTAMP';
 

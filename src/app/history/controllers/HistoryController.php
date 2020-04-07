@@ -167,7 +167,7 @@ class HistoryController
             "eventId"   => $aArgs['eventId'],
             "tableName" => $aArgs['tableName'],
             "recordId"  => $aArgs['recordId'],
-            "userId"    => $aArgs['userId'],
+            "userId"    => $GLOBALS['id'],
             "info"      => $aArgs['info'],
         ]);
     }

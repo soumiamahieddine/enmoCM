@@ -25,7 +25,6 @@ use Entity\models\EntityModel;
 use Resource\models\ResourceContactModel;
 use SrcCore\models\DatabaseModel;
 use User\models\UserBasketPreferenceModel;
-use User\models\UserModel;
 
 $datasources['recipient'][0]  = (array) $recipient;
 $datasources['res_letterbox'] = [];
@@ -33,12 +32,11 @@ $datasources['contact']       = [];
 
 $urlToApp = trim($maarchUrl, '/').'/apps/'.trim($maarchApps, '/').'/index.php?';
 
-$user   = UserModel::getByLogin(['login' => $datasources['recipient'][0]['user_id'], 'select' => ['id']]);
 $basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
 $preferenceBasket = UserBasketPreferenceModel::get([
     'select'  => ['group_serial_id'],
     'where'   => ['user_serial_id = ?', 'basket_id = ?'],
-    'data'    => [$user['id'], 'MyBasket']
+    'data'    => [$recipient['id'], 'MyBasket']
 ]);
 
 foreach ($events as $event) {
@@ -81,8 +79,8 @@ foreach ($events as $event) {
     // Lien vers la page detail
     $res['linktodoc']     = $urlToApp . 'linkToDoc='.$res['res_id'];
     $res['linktodetail']  = $urlToApp . 'linkToDetail='.$res['res_id'];
-    if (!empty($res['res_id']) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($user['id'])) {
-        $res['linktoprocess'] = $urlToApp . 'linkToProcess='.$res['res_id'].'&groupId='.$preferenceBasket[0]['group_serial_id'].'&basketId='.$basket['id'].'&userId='.$user['id'];
+    if (!empty($res['res_id']) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($recipient['user_id'])) {
+        $res['linktoprocess'] = $urlToApp . 'linkToProcess='.$res['res_id'].'&groupId='.$preferenceBasket[0]['group_serial_id'].'&basketId='.$basket['id'].'&userId='.$recipient['user_id'];
     }
 
     if (!empty($res['initiator'])) {
