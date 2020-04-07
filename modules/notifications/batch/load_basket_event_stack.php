@@ -1,22 +1,9 @@
 <?php
 
-/*
- *   Copyright 2008-2011 Maarch
- *
- *   This file is part of Maarch Framework.
- *
- *   Maarch Framework is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   Maarch Framework is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
  */
 
 /**
@@ -43,11 +30,10 @@ class IncludeFileError extends Exception
 }
 
 // Globals variables definition
-$GLOBALS['batchName'] = 'basket_event_stack';
-$GLOBALS['wb'] = '';
+$GLOBALS['batchName']    = 'basket_event_stack';
+$GLOBALS['wb']           = '';
 $totalProcessedResources = 0;
-$batchDirectory = '';
-$log4PhpEnabled = false;
+$batchDirectory          = '';
 
 // Load tools
 include('batch_tools.php');
@@ -101,27 +87,16 @@ if ($xmlconfig == false) {
 
 // Load config
 $config          = $xmlconfig->CONFIG;
-$lang            = (string)$config->Lang;
 $maarchDirectory = (string)$config->MaarchDirectory;
 $customID        = (string)$config->customID;
 $customIDPath    = '';
 
 if ($customID <> '') {
-    $_SESSION['config']['corepath'] = $maarchDirectory;
-    $_SESSION['custom_override_id'] = $customID;
     $customIDPath = $customID . '_';
 }
 chdir($maarchDirectory);
 $maarchUrl  = (string)$config->MaarchUrl;
 $maarchApps = (string) $config->MaarchApps;
-
-$_SESSION['config']['app_id'] = $maarchApps;
-$_SESSION['modules_loaded'] = array();
-
-$_SESSION['config']['tmppath'] = (string)$config->TmpDirectory;
-if (!is_dir($_SESSION['config']['tmppath'])) {
-    mkdir($_SESSION['config']['tmppath'], 0777);
-}
 
 $GLOBALS['batchDirectory'] = $maarchDirectory . 'modules'
                            . DIRECTORY_SEPARATOR . 'notifications'
@@ -129,44 +104,19 @@ $GLOBALS['batchDirectory'] = $maarchDirectory . 'modules'
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
 
-$mailerParams = $xmlconfig->MAILER;
-
-// INCLUDES
 try {
     Bt_myInclude('vendor/autoload.php');
-
-    // // Notifications
-    // Bt_myInclude(
-    //     "modules" . DIRECTORY_SEPARATOR . "notifications"
-    //     . DIRECTORY_SEPARATOR . "notifications_tables_definition.php"
-    // );
-    // Bt_myInclude(
-    //     "modules" . DIRECTORY_SEPARATOR . "notifications"
-    //     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "events_controler.php"
-    // );
-    // // Templates
-    // Bt_myInclude(
-    //     'modules' . DIRECTORY_SEPARATOR . 'templates'
-    //     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'templates_controler.php'
-    // );
 } catch (IncludeFileError $e) {
     Bt_writeLog(['level' => 'ERROR', 'message' => 'Problem with the php include path:' .$e .' '. get_include_path()]);
     exit();
 }
 
-// $events_controler         = new events_controler();
-// $templates_controler      = new templates_controler();
-
 \SrcCore\models\DatabasePDO::reset();
-new \SrcCore\models\DatabasePDO(['customId' => $_SESSION['custom_override_id']]);
+new \SrcCore\models\DatabasePDO(['customId' => $customID]);
 
-$databasetype = (string)$xmlconfig->CONFIG_BASE->databasetype;
-
-// Collection for res
-$collparams = $xmlconfig->COLLECTION;
-$coll_id    = $collparams->Id;
-$coll_table = $collparams->Table;
-$coll_view  = $collparams->View;
+$coll_id    = 'letterbox_coll';
+$coll_table = 'res_letterbox';
+$coll_view  = 'res_view_letterbox';
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR
                          . $customIDPath . $GLOBALS['batchName'] . '_error.lck';
@@ -174,11 +124,7 @@ $GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR
                     . $customIDPath . $GLOBALS['batchName'] . '.lck';
                     
 if (file_exists($GLOBALS['errorLckFile'])) {
-    $logger->write(
-        'Error persists, please solve this before launching a new batch',
-        'ERROR',
-        13
-    );
+    Bt_writeLog(['level' => 'ERROR', 'message' => 'Error persists, please solve this before launching a new batch']);
     exit(13);
 }
 

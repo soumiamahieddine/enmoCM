@@ -16,13 +16,11 @@
 	[recipient]		= one user recipient array
 	[events]		= array of events arrays
 */
+
 $datasources['notification'][0] = (array)$notification;
+$datasources['recipient'][0]    = (array)$recipient;
+$datasources['events']          = [];
 
-$datasources['recipient'][0] = (array)$recipient;
-
-$datasources['events'] = array();
-foreach($events as $event) {
-	$datasources['events'][] = (array)$event;
+foreach ($events as $event) {
+    $datasources['events'][] = (array)$event;
 }
-
-?>

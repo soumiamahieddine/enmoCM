@@ -69,4 +69,20 @@ abstract class NotificationsEventsModelAbstract
 
         return $aNotification[0];
     }
+
+    public static function update(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
+        DatabaseModel::update([
+            'table'   => 'notif_event_stack',
+            'set'     => !empty($args['set']) ? $args['set'] : [],
+            'postSet' => !empty($args['postSet']) ? $args['postSet'] : [],
+            'where'   => $args['where'],
+            'data'    => $args['data'],
+        ]);
+
+        return true;
+    }
 }

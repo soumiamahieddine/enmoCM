@@ -11,74 +11,43 @@
     [notes] = detail of notes added
 */
 
+use Basket\models\BasketModel;
 use Contact\models\ContactModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use User\models\UserModel;
 
-$dbDatasource = new Database();
-
 $datasources['recipient'][0] = (array)$recipient;
-
 $datasources['notes'] = array();
 
 foreach ($events as $event) {
-    $note = array();
+    $note = [];
     
-    // Query
-    switch ($event->table_name) {
-        case 'notes':
-            $query = "SELECT mlb.*, notes.*, users.* "
-                . "FROM " . $res_view . " mlb "
-                . "JOIN notes on notes.identifier = mlb.res_id "
-                . "JOIN users on users.id = notes.user_id "
-                . "WHERE notes.id = ? ";
-            $arrayPDO = array($event->record_id);
-            break;
-        
-        case "res_letterbox":
-        case "res_view_letterbox":
-            $query = "SELECT mlb.*, "
-                . "notes.*, "
-                . "users.* "
-                . "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
-                . "JOIN notes on notes.identifier = li.res_id "
-                . "JOIN users on users.id = notes.user_id "
-                . "WHERE li.item_id = ? "
-                . "AND li.item_mode = 'dest' "
-                . "AND li.item_type = 'user_id' "
-                . "AND li.res_id = ? ";
-            $arrayPDO = array($recipient->user_id, $event->record_id);
-            break;
-    }
-    
-    if ($GLOBALS['logger']) {
-        $GLOBALS['logger']->write($query, 'DEBUG');
-    }
-    
-    $stmt = $dbDatasource->query($query, $arrayPDO);
-
-    if ($event->table_name != 'notes') {
-        $note = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($event['table_name'] != 'notes') {
+        $note = DatabaseModel::select([
+            'select'    => ['mlb.*', 'notes.*', 'users.*'],
+            'table'     => ['listinstance', $res_view . ' mlb', 'notes', 'users'],
+            'left_join' => ['mlb.res_id = li.res_id', 'notes.identifier = li.res_id', 'users.id = notes.user_id'],
+            'where'     => ['li.item_id = ?', 'li.item_mode = \'dest\'', 'li.item_type = \'user_id\'', 'li.res_id = ?'],
+            'data'      => [$recipient['user_id'], $event['record_id']],
+        ])[0];
         $resId = $note['identifier'];
     } else {
-        $note = NoteModel::getById(['id' => $event->record_id]);
-        $resId = $note['identifier'];
-        $resLetterbox = ResModel::getById([
-            'select' => ['*'],
-            'resId'  => $resId
-        ]);
+        $note         = NoteModel::getById(['id' => $event['record_id']]);
+        $resId        = $note['identifier'];
+        $resLetterbox = ResModel::getById(['select' => ['*'], 'resId'  => $resId]);
         $datasources['res_letterbox'][] = $resLetterbox;
     }
     
-    // Lien vers la page détail
+    // Link to detail page
     $urlToApp = trim($maarchUrl, '/').'/apps/'.trim($maarchApps, '/').'/index.php?';
 
-    $user   = \User\models\UserModel::getByLogin(['login' => $datasources['recipient'][0]['user_id'], 'select' => ['id']]);
-    $basket = \Basket\models\BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
-    $preferenceBasket = \User\models\UserBasketPreferenceModel::get([
+    $user   = UserModel::getByLogin(['login' => $datasources['recipient'][0]['user_id'], 'select' => ['id']]);
+    $basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
+    $preferenceBasket = UserBasketPreferenceModel::get([
         'select'  => ['group_serial_id'],
         'where'   => ['user_serial_id = ?', 'basket_id = ?'],
         'data'    => [$user['id'], 'MyBasket']
@@ -98,9 +67,9 @@ foreach ($events as $event) {
     ]);
     $resourceContacts = $resourceContacts[0];
 
-    if ($event->table_name == 'notes') {
-        $datasources['res_letterbox'][0]['linktodoc'] = $note['linktodoc'];
-        $datasources['res_letterbox'][0]['linktodetail'] = $note['linktodetail'];
+    if ($event['table_name'] == 'notes') {
+        $datasources['res_letterbox'][0]['linktodoc']     = $note['linktodoc'];
+        $datasources['res_letterbox'][0]['linktodetail']  = $note['linktodetail'];
         $datasources['res_letterbox'][0]['linktoprocess'] = $note['linktodoc'];
 
         $labelledUser = UserModel::getLabelledUserById(['id' => $note['user_id']]);
@@ -116,6 +85,3 @@ foreach ($events as $event) {
     // Insertion
     $datasources['notes'] = $note;
 }
-
-$datasources['images'][0]['imgdetail'] = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/img/object.gif');
-$datasources['images'][0]['imgdoc'] = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/img/picto_dld.gif');

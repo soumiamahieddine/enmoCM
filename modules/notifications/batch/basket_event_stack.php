@@ -17,9 +17,7 @@
 include 'load_basket_event_stack.php';
 $state = 'LOAD_NOTIFICATIONS';
 while ($state != 'END') {
-    if (isset($logger)) {
-        Bt_writeLog(['level' => 'INFO', 'message' => 'STATE:'.$state]);
-    }
+    Bt_writeLog(['level' => 'INFO', 'message' => 'STATE:'.$state]);
     switch ($state) {
         /**********************************************************************/
         /*                          LOAD_NOTIFICATIONS                        */
@@ -50,8 +48,6 @@ while ($state != 'END') {
         /* Checking if the stack has notifications to proceed                 */
         /**********************************************************************/
         case 'ADD_EVENTS':
-            $db = new Database();
-
             $baskets = \Basket\models\BasketModel::get(['select' => ['basket_id', 'basket_clause'], 'where' => ['flag_notif = ?'], 'data' => ['Y']]);
 
             foreach ($baskets as $basket) {
@@ -62,12 +58,11 @@ while ($state != 'END') {
 
                 $u = 1;
                 foreach ($groups as $group) {
-                    $groupInfo = \Group\models\GroupModel::getByGroupId(['groupId' => $group['group_id'], 'select' => ['id']]);
-                    if ($notification['diffusion_type'] == 'group') {
-                        $users = \Group\models\GroupModel::getUsersById(['select' => ['users.user_id', 'users.id'], 'id' => $groupInfo['id']]);
-                    } else {
-                        $users = \Group\models\GroupModel::getUsersById(['select' => ['users.user_id', 'users.id'], 'id' => 0]);
+                    if ($notification['diffusion_type'] == 'group' && !in_array($group['group_id'], explode(",", $notification['diffusion_properties']))) {
+                        continue;
                     }
+                    $groupInfo = \Group\models\GroupModel::getByGroupId(['groupId' => $group['group_id'], 'select' => ['id']]);
+                    $users = \Group\models\GroupModel::getUsersById(['select' => ['users.user_id', 'users.id'], 'id' => $groupInfo['id']]);
 
                     $countUsersToNotify = count($users);
                     Bt_writeLog(['level' => 'INFO', 'message' => 'GROUP: '.$group['group_id'].' ... '.$countUsersToNotify.' user(s) to notify']);
@@ -77,9 +72,9 @@ while ($state != 'END') {
                         $whereClause  = \SrcCore\controllers\PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $userToNotify['user_id']]);
                         $user_id      = $userToNotify['user_id'];
                         $redirectedBasket = \Basket\models\RedirectBasketModel::get([
-                            'select'    => ['actual_user_id'],
-                            'where'     => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
-                            'data'      => [$userToNotify['id'], $basket['basket_id'], $groupInfo['id']]
+                            'select' => ['actual_user_id'],
+                            'where'  => ['owner_user_id = ?', 'basket_id = ?', 'group_id = ?'],
+                            'data'   => [$userToNotify['id'], $basket['basket_id'], $groupInfo['id']]
                         ]);
                         if (!empty($redirectedBasket)) {
                             $real_user_id = $user_id;
@@ -88,9 +83,9 @@ while ($state != 'END') {
                         }
 
                         $resources = \Resource\models\ResModel::getOnView([
-                            'select'    => ['res_id'],
-                            'where'     => [$whereClause],
-                            'data'      => []
+                            'select' => ['res_id'],
+                            'where'  => [$whereClause],
+                            'data'   => []
                         ]);
                         if (!empty($resources)) {
                             $userNbDoc = count($resources);
@@ -98,30 +93,32 @@ while ($state != 'END') {
                             $i = 1;
                             $info = 'Notification ['.$basket['basket_id'].'] pour '.$userToNotify['user_id'];
                             if (!empty($real_user_id)) {
-                                $notificationEvents = \Notification\models\NotificationsEventsModel::get(['select' => ['record_id'], 'where' => ['event_info', '(user_id = ? OR user_id = ?)'], 'data' => [$info, $userToNotify['user_id'], $user_id]]);
+                                $notificationEvents = \Notification\models\NotificationsEventsModel::get(['select' => ['record_id'], 'where' => ['event_info = ?', '(user_id = ? OR user_id = ?)'], 'data' => [$info, $userToNotify['user_id'], $user_id]]);
                             } else {
-                                $notificationEvents = \Notification\models\NotificationsEventsModel::get(['select' => ['record_id'], 'where' => ['event_info', 'user_id = ?'], 'data' => [$info, $userToNotify['user_id']]]);
+                                $notificationEvents = \Notification\models\NotificationsEventsModel::get(['select' => ['record_id'], 'where' => ['event_info = ?', 'user_id = ?'], 'data' => [$info, $userToNotify['user_id']]]);
                             }
 
-                            $aValues = [];
+                            $aRecordId = array_column($notificationEvents, 'record_id', 'record_id');
+                            $aValues   = [];
                             foreach ($resources as $resource) {
-                                echo 'DOCUMENT '.$i.'/'.$userNbDoc.' for USER '.$z.'/'.$countUsersToNotify.' and GROUP '.$u.'/'.$nbGroups."\n";
+                                // echo 'DOCUMENT '.$i.'/'.$userNbDoc.' for USER '.$z.'/'.$countUsersToNotify.' and GROUP '.$u.'/'.$nbGroups."\n";
                                 if (empty($aRecordId[$resource['res_id']])) {
                                     $aValues[] = [
                                         'res_letterbox',
                                         '500',
                                         $resource['res_id'],
                                         $user_id,
-                                        $info
+                                        $info,
+                                        'CURRENT_TIMESTAMP'
                                     ];
                                 }
                                 ++$i;
                             }
                             if (!empty($aValues)) {
                                 \SrcCore\models\DatabaseModel::insertMultiple([
-                                    'table'     => 'notif_event_stack',
-                                    'columns'   => ['table_name', 'notification_sid', 'record_id', 'user_id', 'event_info'],
-                                    'values'    => $aValues
+                                    'table'   => 'notif_event_stack',
+                                    'columns' => ['table_name', 'notification_sid', 'record_id', 'user_id', 'event_info', 'event_date'],
+                                    'values'  => $aValues
                                 ]);
                             }
                         }
@@ -131,15 +128,15 @@ while ($state != 'END') {
                 }
             }
             Bt_writeLog(['level' => 'INFO', 'message' => 'Scanning events for notification sid '.$notification['notification_sid']]);
-            $events = \Notification\models\NotificationsEventsModel::getById(['select' => ['*'], 'notificationSid' => '500']);
+            $events               = \Notification\models\NotificationsEventsModel::get(['select' => ['*'], 'where' => ['notification_sid = ?', 'exec_date is NULL'], 'data' => ['500']]);
             $totalEventsToProcess = count($events);
-            $currentEvent = 0;
+            $currentEvent         = 0;
             if ($totalEventsToProcess === 0) {
                 Bt_exitBatch(0, 'No event to process');
             }
             Bt_writeLog(['level' => 'INFO', 'message' => $totalEventsToProcess.' event(s) to scan']);
             $tmpNotifs = array();
-            $state = 'SCAN_EVENT';
+            $state     = 'SCAN_EVENT';
             break;
 
         /**********************************************************************/
@@ -152,24 +149,21 @@ while ($state != 'END') {
             foreach ($events as $event) {
                 preg_match_all('#\[(\w+)]#', $event['event_info'], $result);
                 $basket_id = $result[1];
-                Bt_writeLog(['level' => 'INFO', 'message' => 'scanning EVENT : '.$i.'/'.$totalEventsToProcess.' (BASKET => '.$basket_id[0].', DOCUMENT => '.$res_id.', RECIPIENT => '.$user_id.')']);
+                //Bt_writeLog(['level' => 'INFO', 'message' => 'scanning EVENT : '.$i.'/'.$totalEventsToProcess.' (BASKET => '.$basket_id[0].', DOCUMENT => '.$res_id.', RECIPIENT => '.$user_id.')']);
 
-                // Diffusion type specific res_id
-                $res_id = false;
                 if ($event['table_name'] == $coll_table || $event['table_name'] == $coll_view) {
                     $res_id = $event['record_id'];
                 } else {
-                    $res_id = $diffusion_type_controler->getResId($notification, $event);
+                    continue;
                 }
 
                 $event['res_id'] = $res_id;
-                $user_id = $event['user_id'];
+                $user_id         = $event['user_id'];
 
                 if (!isset($tmpNotifs[$user_id])) {
                     $tmpNotifs[$user_id]['recipient'] = \User\models\UserModel::getByLogin(['select' => ['*'], 'login' => $user_id]);
                 }
-                preg_match_all('#\[(\w+)]#', $event['event_info'], $result);
-                $basket_id = $result[1];
+
                 $tmpNotifs[$user_id]['baskets'][$basket_id[0]]['events'][] = $event;
 
                 ++$i;
@@ -181,7 +175,7 @@ while ($state != 'END') {
         /*                      FILL_EMAIL_STACK                              */
         /* Merge template and fill notif_email_stack                          */
         /**********************************************************************/
-            $logger->write('STATE:MERGE NOTIF', 'INFO');
+            Bt_writeLog(['level' => 'INFO', 'message' => 'STATE:MERGE NOTIF']);
             $i = 1;
             foreach ($tmpNotifs as $user_id => $tmpNotif) {
                 foreach ($tmpNotif['baskets'] as $basketId => $basket_list) {
@@ -201,18 +195,25 @@ while ($state != 'END') {
                         'res_table'    => $coll_table,
                         'res_view'     => $coll_view,
                     );
-                    $html = $templates_controler->merge($notification['template_id'], $params, 'content');
+
+                    $html = \ContentManagement\controllers\MergeController::mergeNotification(['templateId' => $notification['template_id'], 'params' => $params]);
 
                     if (strlen($html) === 0) {
                         foreach ($tmpNotif['events'] as $event) {
-                            $events_controler->commitEvent($event->event_stack_sid, 'FAILED: Error when merging template');
+                            \Notification\models\NotificationsEventsModel::update([
+                                'set'   => ['exec_date' => 'CURRENT_TIMESTAMP', 'exec_result' => 'FAILED: Error when merging template'],
+                                'where' => ['event_stack_sid = ?'],
+                                'data'  => [$event->event_stack_sid]
+                            ]);
                         }
                         Bt_exitBatch(8, 'Could not merge template with the data');
                     }
 
                     // Prepare e-mail for stack
-                    $sender = (string) $mailerParams->mailfrom;
-                    $recipient_mail = $tmpNotif['recipient']->mail;
+                    $emailConfiguration = \Configuration\models\ConfigurationModel::getByService(['select' => ['value'], 'service' => 'admin_email_server']);
+                    $emailConfiguration = json_decode($emailConfiguration['value'], true);
+                    $sender             = $emailConfiguration['from'];
+                    $recipient_mail     = $tmpNotif['recipient']['mail'];
 
                     if (!empty($recipient_mail)) {
                         $html = str_replace("&#039;", "'", $html);
@@ -223,62 +224,60 @@ while ($state != 'END') {
                         // Attachments
                         $attachments = array();
                         if ($attachMode) {
-                            $logger->write('Adding attachments', 'INFO');
+                            Bt_writeLog(['level' => 'INFO', 'message' => 'Adding attachments']);
                             foreach ($basket_list['events'] as $event) {
                                 // Check if event is related to document in collection
-                                if ($event->res_id != '') {
-                                    $query = 'SELECT '
-                                        .'ds.path_template ,'
-                                        .'mlb.path, '
-                                        .'mlb.filename '
-                                        .'FROM '.$coll_view.' mlb LEFT JOIN docservers ds ON mlb.docserver_id = ds.docserver_id '
-                                        .'WHERE mlb.res_id = ?';
-                                    $stmt = Bt_doQuery($db, $query, array($event->res_id));
-                                    $path_parts = $stmt->fetchObject();
-                                    $path = $path_parts->path_template.str_replace('#', '/', $path_parts->path).$path_parts->filename;
-                                    $path = str_replace('//', '/', $path);
-                                    $path = str_replace('\\', '/', $path);
-                                    $attachments[] = $path;
+                                if ($event['res_id'] != '') {
+                                    $resourceToAttach = \Resource\models\ResModel::getById(['resId' => $event['res_id'], 'select' => ['path', 'filename', 'docserver_id']]);
+                                    if (!empty($resourceToAttach['docserver_id'])) {
+                                        $docserver        = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $resourceToAttach['docserver_id'], 'select' => ['path_template']]);
+                                        $path             = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resourceToAttach['path']) . $resourceToAttach['filename'];
+                                        $path = str_replace('//', '/', $path);
+                                        $path = str_replace('\\', '/', $path);
+                                        $attachments[] = $path;
+                                    }
                                 }
                             }
-                            $logger->write(count($attachments).' attachment(s) added', 'INFO');
+                            Bt_writeLog(['level' => 'INFO', 'message' => count($attachments).' attachment(s) added']);
                         }
                     
                         if (in_array($user_id, $exceptUsers[$basketId])) {
-                            $logger->write('Notification disabled for '.$user_id, 'WARNING');
+                            Bt_writeLog(['level' => 'WARNING', 'message' => 'Notification disabled for '.$user_id]);
                         } else {
-                            $logger->write('... adding e-mail to email stack', 'INFO');
-                            if ($_SESSION['config']['databasetype'] == 'ORACLE') {
-                                $query = "DECLARE
-                                        vString notif_email_stack.html_body%type;
-                                        BEGIN
-                                        vString := '".$html."';
-                                        INSERT INTO "._NOTIF_EMAIL_STACK_TABLE_NAME."
-                                        (sender, recipient, subject, html_body, charset, attachments, module) 
-                                        VALUES (?, ?, ?, vString, ?, '".implode(',', $attachments)."', 'notifications');
-                                        END;";
-                                $arrayPDO = array($sender, $recipient_mail, $subject, $mailerParams->charset);
-                            } else {
-                                if (count($attachments) > 0) {
-                                    $query = 'INSERT INTO '._NOTIF_EMAIL_STACK_TABLE_NAME
-                                    .' (sender, recipient, subject, html_body, charset, attachments, module) '
-                                    ."VALUES (?, ?, ?, ?, ?, '".implode(',', $attachments)."', 'notifications')";
-                                } else {
-                                    $query = 'INSERT INTO '._NOTIF_EMAIL_STACK_TABLE_NAME
-                                    .' (sender, recipient, subject, html_body, charset, module) '
-                                    ."VALUES (?, ?, ?, ?, ?, 'notifications')";
-                                }
-                                $arrayPDO = array($sender, $recipient_mail, $subject, $html, $mailerParams->charset);
+                            Bt_writeLog(['level' => 'INFO', 'message' => '... adding e-mail to email stack']);
+
+                            $arrayPDO = [
+                                'sender'    => $sender,
+                                'recipient' => $recipient_mail,
+                                'subject'   => $subject,
+                                'html_body' => $html,
+                                'charset'   => $emailConfiguration['charset'],
+                                'module'    => 'notifications',
+                            ];
+                            if (count($attachments) > 0) {
+                                $arrayPDO[] = implode(',', $attachments);
                             }
-    
-                            $db->query($query, $arrayPDO);
+                            \Notification\models\NotificationsEmailsModel::create($arrayPDO);
                         }
+
+                        $notificationSuccess = [];
                         foreach ($basket_list['events'] as $event) {
                             if (in_array($event->user_id, $exceptUsers[$basketId])) {
-                                $events_controler->commitEvent($event->event_stack_sid, 'WARNING : Notification disabled for '.$event->user_id);
+                                \Notification\models\NotificationsEventsModel::update([
+                                    'set'   => ['exec_date' => 'CURRENT_TIMESTAMP', 'exec_result' => 'WARNING : Notification disabled for '.$event->user_id],
+                                    'where' => ['event_stack_sid = ?'],
+                                    'data'  => [$event->event_stack_sid]
+                                ]);
                             } else {
-                                $events_controler->commitEvent($event->event_stack_sid, 'SUCCESS');
+                                $notificationSuccess[] = $event->event_stack_sid;
                             }
+                        }
+                        if (!empty($notificationSuccess)) {
+                            \Notification\models\NotificationsEventsModel::update([
+                                'set'   => ['exec_date' => 'CURRENT_TIMESTAMP', 'exec_result' => 'SUCCESS'],
+                                'where' => ['event_stack_sid IN (?)'],
+                                'data'  => [$notificationSuccess]
+                            ]);
                         }
                     }
                 }
@@ -288,11 +287,7 @@ while ($state != 'END') {
     }
 }
 
-//clean tmp directory
-echo "clean tmp path ....\n";
-array_map('unlink', glob($_SESSION['config']['tmppath'].'/*.html'));
-
-$logger->write('End of process', 'INFO');
+Bt_writeLog(['level' => 'INFO', 'message' => 'End of process']);
 Bt_logInDataBase(
     $totalEventsToProcess,
     0,
