@@ -1237,8 +1237,6 @@ class PreProcessActionController
         }
         $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
-        $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $GLOBALS['id']]);
-
         $resourcesInformation = [];
         foreach ($body['resources'] as $resId) {
             $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'opinion_limit_date']]);
@@ -1274,7 +1272,7 @@ class PreProcessActionController
             $isInCircuit = ListInstanceModel::get([
                 'select'  => [1],
                 'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null', 'item_id = ?', 'item_mode = ?'],
-                'data'    => [$resId, 'entity_id', $currentUser['user_id'], 'avis']
+                'data'    => [$resId, 'entity_id', $GLOBALS['id'], 'avis']
             ]);
             if (empty($isInCircuit)) {
                 $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userNotInDiffusionList'];

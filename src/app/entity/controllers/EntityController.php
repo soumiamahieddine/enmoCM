@@ -136,7 +136,7 @@ class EntityController
         $entity['hasChildren'] = count($children) > 0;
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $entity['documents'] = count($documents);
-        $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
+        $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$entity['id'], 'entity_id']]);
         $entity['instances'] = count($instances);
         $redirects = GroupBasketRedirectModel::get(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['redirects'] = count($redirects);
@@ -302,7 +302,7 @@ class EntityController
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
         $users     = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
         $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
-        $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
+        $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$entity['id'], 'entity_id']]);
         $redirects = GroupBasketRedirectModel::get(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
 
         $allowedCount = count($children) + count($documents) + count($users) + count($templates) + count($instances) + count($redirects);
@@ -357,7 +357,7 @@ class EntityController
         }
 
         $dyingEntity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['id', 'parent_entity_id', 'business_id']]);
-        $successorEntity = EntityModel::getByEntityId(['entityId' => $aArgs['newEntityId'], 'select' => [1]]);
+        $successorEntity = EntityModel::getByEntityId(['entityId' => $aArgs['newEntityId'], 'select' => ['id']]);
         if (empty($dyingEntity) || empty($successorEntity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
         }
@@ -414,7 +414,7 @@ class EntityController
         //Baskets
         GroupBasketRedirectModel::update(['set' => ['entity_id' => $aArgs['newEntityId']], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
         //ListInstances
-        ListInstanceModel::update(['set' => ['item_id' => $aArgs['newEntityId']], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
+        ListInstanceModel::update(['set' => ['item_id' => $successorEntity['id']], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$dyingEntity['id'], 'entity_id']]);
         //ListTemplates
         $templateLists = ListTemplateModel::get(['select' => ['id'], 'where' => ['entity_id = ?'], 'data' => [$dyingEntity['id']]]);
         if (!empty($templateLists)) {

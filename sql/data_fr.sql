@@ -558,7 +558,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'CopyMailBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('CopyMailBasket', 'Courriers en copie', 'Courriers en copie non clos ou sans suite', '(res_id in (select res_id from listinstance WHERE item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status not in ( ''DEL'', ''END'', ''SSUITE'') and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user_id)', 'letterbox_coll', 'Y', 'N', 'Y',50);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('CopyMailBasket', 'Courriers en copie', 'Courriers en copie non clos ou sans suite', '(res_id in (select res_id from listinstance WHERE item_type = ''user_id'' and item_id = @user_id and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status not in ( ''DEL'', ''END'', ''SSUITE'') and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user_id)', 'letterbox_coll', 'Y', 'N', 'Y',50);
 DELETE FROM baskets WHERE basket_id = 'AR_Create';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'AR_Create';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'AR_Create';
@@ -574,7 +574,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'DdeAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'DdeAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'DdeAvisBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE item_type = ''user_id'' AND item_id = @user AND item_mode = ''avis'' and process_date is NULL)', 'letterbox_coll', 'Y', 'N', 'Y',90);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE item_type = ''user_id'' AND item_id = @user_id AND item_mode = ''avis'' and process_date is NULL)', 'letterbox_coll', 'Y', 'N', 'Y',90);
 DELETE FROM baskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SupAvisBasket';
@@ -602,7 +602,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'ParafBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ParafBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ParafBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('ParafBasket', 'Parapheur électronique', 'Courriers à viser ou signer dans mon parapheur', 'status in (''ESIG'', ''EVIS'') AND ((res_id, @user) IN (SELECT res_id, item_id FROM listinstance WHERE difflist_type = ''VISA_CIRCUIT'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1))', 'letterbox_coll', 'Y', 'N', 'Y',160);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('ParafBasket', 'Parapheur électronique', 'Courriers à viser ou signer dans mon parapheur', 'status in (''ESIG'', ''EVIS'') AND ((res_id, @user_id) IN (SELECT res_id, item_id FROM listinstance WHERE difflist_type = ''VISA_CIRCUIT'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1))', 'letterbox_coll', 'Y', 'N', 'Y',160);
 DELETE FROM baskets WHERE basket_id = 'SuiviParafBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SuiviParafBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SuiviParafBasket';

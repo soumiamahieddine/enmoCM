@@ -484,9 +484,8 @@ class SignatureBookController
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
             'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-            'data'  => [$args['resId'], $GLOBALS['login'], 'VISA_CIRCUIT']
+            'data'  => [$args['resId'], $GLOBALS['id'], 'VISA_CIRCUIT']
         ]);
-
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
@@ -518,7 +517,7 @@ class SignatureBookController
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-                'data'  => [$args['resId'], $GLOBALS['login'], 'VISA_CIRCUIT']
+                'data'  => [$args['resId'], $GLOBALS['id'], 'VISA_CIRCUIT']
             ]);
         }
 
@@ -627,7 +626,7 @@ class SignatureBookController
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
             'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-            'data'  => [$attachment['res_id_master'], $GLOBALS['login'], 'VISA_CIRCUIT']
+            'data'  => [$attachment['res_id_master'], $GLOBALS['id'], 'VISA_CIRCUIT']
         ]);
 
         HistoryController::add([
@@ -669,7 +668,7 @@ class SignatureBookController
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-                'data'  => [$attachment['res_id_master'], $GLOBALS['login'], 'VISA_CIRCUIT']
+                'data'  => [$attachment['res_id_master'], $GLOBALS['id'], 'VISA_CIRCUIT']
             ]);
         }
 

@@ -443,9 +443,9 @@ class ExportController
                         $copies = '';
                     }
                     if ($listInstance['item_type'] == 'user_id') {
-                        $copies .= UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
+                        $copies .= UserModel::getLabelledUserById(['id' => $listInstance['item_id']]);
                     } elseif ($listInstance['item_type'] == 'entity_id') {
-                        $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
+                        $entity = EntityModel::getById(['id' => $listInstance['item_id'], 'select' => ['short_label']]);
                         $copies .= $entity['short_label'];
                     }
                     $resId = $listInstance['res_id'];
@@ -597,7 +597,7 @@ class ExportController
             ]);
 
             foreach ($listInstances as $listInstance) {
-                $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['firstname', 'lastname']]);
+                $user = UserModel::getById(['id' => $listInstance['item_id'], 'select' => ['firstname', 'lastname']]);
                 if (!empty($aSignatories[$listInstance['res_id']])) {
                     $aSignatories[$listInstance['res_id']] .= "\n";
                 } else {

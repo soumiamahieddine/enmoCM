@@ -316,7 +316,7 @@ class UserController
 
         $listInstanceEntities = [];
         $listInstanceResIds = [];
-        $listInstances = ListInstanceModel::getWhenOpenMailsByLogin(['select' => ['listinstance.res_id', 'res_letterbox.destination'], 'login' => $user['user_id'], 'itemMode' => 'dest']);
+        $listInstances = ListInstanceModel::getWhenOpenMailsByUserId(['select' => ['listinstance.res_id', 'res_letterbox.destination'], 'userId' => $aArgs['id'], 'itemMode' => 'dest']);
         foreach ($listInstances as $listInstance) {
             if (!ResController::hasRightByResId(['resId' => [$listInstance['res_id']], 'userId' => $GLOBALS['id']])) {
                 $isListInstanceDeletable = false;
@@ -388,7 +388,7 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
 
-        $listInstances = ListInstanceModel::getWhenOpenMailsByLogin(['select' => [1], 'login' => $user['user_id'], 'itemMode' => 'dest']);
+        $listInstances = ListInstanceModel::getWhenOpenMailsByUserId(['select' => [1], 'userId' => $aArgs['id'], 'itemMode' => 'dest']);
         if (!empty($listInstances)) {
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listInstances']);
         }
@@ -404,7 +404,7 @@ class UserController
 
         ListInstanceModel::delete([
             'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode != ?'],
-            'data'  => [$user['user_id'], 'entity_id', 'user_id', 'dest']
+            'data'  => [$aArgs['id'], 'entity_id', 'user_id', 'dest']
         ]);
         RedirectBasketModel::delete([
             'where' => ['owner_user_id = ? OR actual_user_id = ?'],
@@ -439,7 +439,7 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
 
-        $listInstances = ListInstanceModel::getWhenOpenMailsByLogin(['select' => [1], 'login' => $user['user_id'], 'itemMode' => 'dest']);
+        $listInstances = ListInstanceModel::getWhenOpenMailsByUserId(['select' => [1], 'userId' => $aArgs['id'], 'itemMode' => 'dest']);
         if (!empty($listInstances)) {
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listInstances']);
         }
@@ -455,7 +455,7 @@ class UserController
 
         ListInstanceModel::delete([
             'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode != ?'],
-            'data'  => [$user['user_id'], 'entity_id', 'user_id', 'dest']
+            'data'  => [$aArgs['id'], 'entity_id', 'user_id', 'dest']
         ]);
         ListTemplateItemModel::delete([
             'where' => ['item_id = ?', 'item_type = ?'],
@@ -1315,16 +1315,17 @@ class UserController
             }
 
             if ($data['mode'] == 'reaffect') {
-                $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id'], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
+                $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id'], 'entityId' => $aArgs['entityId'], 'userId' => $aArgs['id']]);
                 $resIdsToReplace = [];
                 foreach ($listInstances as $listInstance) {
                     $resIdsToReplace[] = $listInstance['res_id'];
                 }
                 if (!empty($resIdsToReplace)) {
+                    $newUser = UserModel::getByLogin(['login' => $data['newUser'], 'select' => ['id']]);
                     ListInstanceModel::update([
-                        'set'   => ['item_id' => $data['newUser']],
+                        'set'   => ['item_id' => $newUser['id']],
                         'where' => ['res_id in (?)', 'item_id = ?', 'process_date is null'],
-                        'data'  => [$resIdsToReplace, $user['user_id']]
+                        'data'  => [$resIdsToReplace, $aArgs['id']]
                     ]);
                 }
             } else {
@@ -1337,7 +1338,7 @@ class UserController
                     $listInstanceId = ListInstanceModel::get([
                         'select'    => ['listinstance_id'],
                         'where'     => ['res_id = ?', 'item_id = ?', 'item_type = ?', 'difflist_type = ?', 'item_mode = ?', 'process_date is null'],
-                        'data'      => [$ressource['res_id'], $user['user_id'], 'user_id', 'VISA_CIRCUIT', 'sign']
+                        'data'      => [$ressource['res_id'], $aArgs['id'], 'user_id', 'VISA_CIRCUIT', 'sign']
                     ]);
 
                     if (!empty($listInstanceId)) {
@@ -1359,7 +1360,7 @@ class UserController
                     }
                 }
 
-                $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id', 'listinstance.difflist_type'], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
+                $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id', 'listinstance.difflist_type'], 'entityId' => $aArgs['entityId'], 'userId' => $aArgs['id']]);
                 $resIdsToReplace = [];
                 foreach ($listInstances as $listInstance) {
                     $resIdsToReplace[] = $listInstance['res_id'];
@@ -1368,7 +1369,7 @@ class UserController
                     ListInstanceModel::update([
                         'set'   => ['process_comment' => '[DEL] supprimé - changement d\'entité', 'process_date' => 'CURRENT_TIMESTAMP'],
                         'where' => ['res_id in (?)', 'item_id = ?'],
-                        'data'  => [$resIdsToReplace, $user['user_id']]
+                        'data'  => [$resIdsToReplace, $aArgs['id']]
                     ]);
                 }
             }
@@ -1407,8 +1408,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
         }
 
-        $user = UserModel::getById(['id' => $args['id'], 'select' => ['user_id']]);
-        $listInstances = ListInstanceModel::getWithConfidentiality(['select' => [1], 'entityId' => $args['entityId'], 'userId' => $user['user_id']]);
+        $listInstances = ListInstanceModel::getWithConfidentiality(['select' => [1], 'entityId' => $args['entityId'], 'userId' => $args['id']]);
 
         $listTemplates = ListTemplateModel::getWithItems(['select' => [1], 'where' => ['entity_id = ?', 'item_type = ?', 'item_id = ?'], 'data' => [$entity['id'], 'user', $args['id']]]);
 

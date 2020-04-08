@@ -623,7 +623,7 @@ class SummarySheetController
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
                         $item = '';
                         if ($listInstance['item_type'] == 'user_id') {
-                            $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
+                            $user = UserModel::getById(['id' => $listInstance['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
                             $entity = UserModel::getPrimaryEntityById(['id' => $user['id'], 'select' => ['entities.entity_label']]);
 
                             if ($listInstance['item_mode'] == 'dest') {
@@ -633,7 +633,7 @@ class SummarySheetController
                             }
                         } elseif ($listInstance['item_type'] == 'entity_id') {
                             $item = $listInstance['item_id'];
-                            $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
+                            $entity = EntityModel::getById(['id' => $listInstance['item_id'], 'select' => ['short_label']]);
                             if (!empty($entity)) {
                                 $item = "{$entity['short_label']} ({$item})";
                             }
@@ -706,7 +706,7 @@ class SummarySheetController
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
                         $users[] = [
-                            'user'  => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                            'user'  => UserModel::getLabelledUserById(['id' => $listInstance['item_id']]),
                             'mode'  => $listInstance['requested_signature'] ? 'Signataire' : 'Viseur',
                             'date'  => TextFormatModel::formatDate($listInstance['process_date']),
                         ];
@@ -739,7 +739,7 @@ class SummarySheetController
                     if ($found && $listInstance['res_id'] != $resource['res_id']) {
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
-                        $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
+                        $user = UserModel::getById(['id' => $listInstance['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
                         $entity = UserModel::getPrimaryEntityById(['id' => $user['id'], 'select' => ['entities.entity_label']]);
 
                         $userLabel = $user['firstname'] . ' ' .$user['lastname'] . " (" . $entity['entity_label'] . ")";

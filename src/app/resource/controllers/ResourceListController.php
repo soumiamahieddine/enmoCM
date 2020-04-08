@@ -653,7 +653,7 @@ class ResourceListController
 
         $assignee = '';
         if (!empty($listInstances[0])) {
-            $assignee .= UserModel::getLabelledUserById(['login' => $listInstances[0]['item_id']]);
+            $assignee .= UserModel::getLabelledUserById(['id' => $listInstances[0]['item_id']]);
         }
         if (!empty($res['destination'])) {
             $entityLabel = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $res['destination']]);
@@ -679,7 +679,7 @@ class ResourceListController
         $currentFound = false;
         foreach ($listInstances as $listInstance) {
             $users[] = [
-                'user'      => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                'user'      => UserModel::getLabelledUserById(['id' => $listInstance['item_id']]),
                 'mode'      => $listInstance['requested_signature'] ? 'sign' : 'visa',
                 'date'      => TextFormatModel::formatDate($listInstance['process_date']),
                 'current'   => empty($listInstance['process_date']) && !$currentFound
@@ -707,7 +707,7 @@ class ResourceListController
         $users = [];
         foreach ($listInstances as $listInstance) {
             $users[] = [
-                'user'      => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                'user'      => UserModel::getLabelledUserById(['id' => $listInstance['item_id']]),
                 'date'      => TextFormatModel::formatDate($listInstance['process_date']),
             ];
         }

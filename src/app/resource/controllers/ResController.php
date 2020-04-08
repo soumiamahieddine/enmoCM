@@ -1036,17 +1036,8 @@ class ResController extends ResourceControlController
 
         if (!empty($body['diffusionList'])) {
             foreach ($body['diffusionList'] as $diffusion) {
-                if ($diffusion['type'] == 'user') {
-                    $item = UserModel::getById(['id' => $diffusion['id'], 'select' => ['user_id']]);
-                    $diffusion['id'] = $item['user_id'];
-                } else {
-                    $item = EntityModel::getById(['id' => $diffusion['id'], 'select' => ['entity_id']]);
-                    $diffusion['id'] = $item['entity_id'];
-                }
-
                 if ($diffusion['mode'] == 'dest') {
-                    $destUser = UserModel::getByLogin(['login' => $diffusion['id'], 'select' => ['id']]);
-                    ResModel::update(['set' => ['dest_user' => $destUser['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+                    ResModel::update(['set' => ['dest_user' => $diffusion['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
                 }
                 ListInstanceModel::create([
                     'res_id'            => $args['resId'],
@@ -1054,7 +1045,7 @@ class ResController extends ResourceControlController
                     'item_id'           => $diffusion['id'],
                     'item_type'         => $diffusion['type'] == 'user' ? 'user_id' : 'entity_id',
                     'item_mode'         => $diffusion['mode'],
-                    'added_by_user'     => $GLOBALS['login'],
+                    'added_by_user'     => $GLOBALS['id'],
                     'difflist_type'     => 'entity_id'
                 ]);
             }

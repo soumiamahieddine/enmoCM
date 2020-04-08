@@ -216,8 +216,8 @@ class MergeController
                 'orderBy'   => ['listinstance_id']
             ]);
             foreach ($visaWorkflow as $value) {
-                $user = UserModel::getByLogin(['login' => $value['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
-                $primaryentity = UserModel::getPrimaryEntityById(['id' => $user['id'], 'select' => ['entities.entity_label']]);
+                $user = UserModel::getById(['id' => $value['item_id'], 'select' => ['firstname', 'lastname']]);
+                $primaryentity = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entities.entity_label']]);
                 $visas .= "{$user['firstname']} {$user['lastname']} ({$primaryentity['entity_label']})\n";
             }
         }
@@ -232,8 +232,8 @@ class MergeController
                 'orderBy'   => ['listinstance_id']
             ]);
             foreach ($opinionWorkflow as $value) {
-                $user = UserModel::getByLogin(['login' => $value['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
-                $primaryentity = UserModel::getPrimaryEntityById(['id' => $user['id'], 'select' => ['entities.entity_label']]);
+                $user = UserModel::getById(['id' => $value['item_id'], 'select' => ['firstname', 'lastname']]);
+                $primaryentity = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entities.entity_label']]);
                 $opinions .= "{$user['firstname']} {$user['lastname']} ({$primaryentity['entity_label']})\n";
             }
         }
@@ -249,11 +249,11 @@ class MergeController
             ]);
             foreach ($copyWorkflow as $value) {
                 if ($value['item_type'] == 'user_id') {
-                    $user = UserModel::getByLogin(['login' => $value['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
-                    $primaryentity = UserModel::getPrimaryEntityById(['id' => $user['id'], 'select' => ['entities.entity_label']]);
+                    $user = UserModel::getById(['id' => $value['item_id'], 'select' => ['firstname', 'lastname']]);
+                    $primaryentity = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entities.entity_label']]);
                     $label = "{$user['firstname']} {$user['lastname']} ({$primaryentity['entity_label']})";
                 } else {
-                    $entity = EntityModel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']]);
+                    $entity = EntityModel::getById(['id' => $value['item_id'], 'select' => ['entity_label']]);
                     $label = $entity['entity_label'];
                 }
                 $copies .= "{$label}\n";

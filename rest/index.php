@@ -302,7 +302,6 @@ $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingMode
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
 //ListInstances
-$app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
 
 //ListTemplates
