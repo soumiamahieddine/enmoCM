@@ -244,7 +244,7 @@ abstract class TemplateModelAbstract
         'table'     => ['templates t','templates_association ta', 'entities e'],
         'left_join' => ['ta.template_id = t.template_id', 'e.entity_id = ta.value_field'],
         'where'     => empty($data['template_id']) ? ['t.template_target = ?', 't.template_attachment_type = ?', 'value_field in (?)'] : ['t.template_target = ?', 't.template_attachment_type = ?', 'value_field in (?)', 't.template_id != ?' ],
-        'data'      => empty($data['template_id']) ? [$data['template_target'], $data['template_attachment_type'], $data['entities']]   : [$data['template_target'], $data['template_attachment_type'], $data['entities'], $data['template_id']],
+        'data'      => empty($data['template_id']) ? [$data['target'], $data['template_attachment_type'], $data['entities']]   : [$data['target'], $data['template_attachment_type'], $data['entities'], $data['template_id']],
         'groupBy'   => ['ta.value_field', 'e.entity_label']
         ]);
         
