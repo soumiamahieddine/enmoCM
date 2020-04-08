@@ -1279,7 +1279,7 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
 <td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[sender.company] [sender.firstname] [sender.lastname][sender.function][sender.address_number][sender.address_street][sender.address_postcode][sender.address_town]</font></p>
 </td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
@@ -1309,7 +1309,7 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
 <td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[sender.company] [sender.firstname] [sender.lastname][sender.function][sender.address_number][sender.address_street][sender.address_postcode][sender.address_town]</font></p>
 </td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
@@ -1335,7 +1335,7 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 <tr>
 <td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.res_id]</td>
 <td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.typist]</td>
-<td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</td>
+<td style="border: 1px solid #ddd; padding: 8px;">[sender.company] [sender.firstname] [sender.lastname][sender.function][sender.address_number][sender.address_street][sender.address_postcode][sender.address_town]</td>
 <td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]</td>
 <td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.subject]</td>
 <td style="border: 1px solid #ddd; padding: 8px;">[res_letterbox.type_label]</td>

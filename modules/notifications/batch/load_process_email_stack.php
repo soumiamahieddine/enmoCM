@@ -87,9 +87,7 @@ if ($customID <> '') {
     $customIDPath = $customID . '_';
 }
 chdir($maarchDirectory);
-$maarchApps = (string) $config->MaarchApps;
 
-$GLOBALS['TmpDirectory'] = (string)$config->TmpDirectory;
 $GLOBALS['batchDirectory'] = $GLOBALS['maarchDirectory'] . 'modules'
                            . DIRECTORY_SEPARATOR . 'notifications'
                            . DIRECTORY_SEPARATOR . 'batch';

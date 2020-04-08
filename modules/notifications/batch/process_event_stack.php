@@ -62,15 +62,14 @@ while ($state != 'END') {
             foreach ($events as $event) {
                 Bt_writeLog(['level' => 'INFO', 'message' => "Getting recipients using diffusion type '".$notification['diffusion_type']."'"]);
                 // Diffusion type specific recipients
-                $recipients = array();
-                $recipients = $diffusion_type_controler->getRecipients($notification, $event);
+                $recipients = \Notification\controllers\DiffusionTypesController::getRecipients(['request' => 'recipients', 'notification' => $notification, 'event' => $event]);
                 // Diffusion type specific res_id
                 Bt_writeLog(['level' => 'INFO', 'message' => "Getting document ids using diffusion type '".$notification['diffusion_type']."'"]);
                 $res_id = false;
                 if ($event['table_name'] == $coll_table || $event['table_name'] == $coll_view) {
                     $res_id = $event['record_id'];
                 } else {
-                    $res_id = $diffusion_type_controler->getResId($notification, $event);
+                    $res_id = \Notification\controllers\DiffusionTypesController::getRecipients(['request' => 'res_id', 'notification' => $notification, 'event' => $event]);
                 }
                 $event['res_id'] = $res_id;
 
@@ -87,17 +86,14 @@ while ($state != 'END') {
                 Bt_writeLog(['level' => 'INFO', 'message' => $nbRecipients.' recipients found, checking active and absences']);
 
                 if ($notification['diffusion_type'] === 'dest_entity') {
-                    for ($i = 0; $i < $nbRecipients; ++$i) {
-                        $recipient = $recipients[$i];
-                        $entity_id = $recipient->entity_id;
+                    foreach ($recipients as $key => $recipient) {
+                        $entity_id = $recipient['entity_id'];
                         Bt_writeLog(['level' => 'INFO', 'message' => 'Recipient entity '.$entity_id]);
 
-                        $db = new Database();
-                        $query = 'SELECT param_value_int FROM parameters WHERE id = ?';
-                        $stmt = $db -> query($query, array('user_quota'));
-                        if (($recipient->enabled == 'N' && $stmt -> fetchColumn() == 0) || $recipient->mail == '') {
+                        $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'user_quota']);
+                        if (($recipient['enabled'] == 'N' && (empty($parameter) || $parameter['param_value_int'] == 0)) || $recipient['mail'] == '') {
                             Bt_writeLog(['level' => 'INFO', 'message' => $entity_id.' is disabled or mail is invalid, this notification will not be send']);
-                            unset($recipients[$i]);
+                            unset($recipients[$key]);
                             continue;
                         }
 
@@ -107,17 +103,14 @@ while ($state != 'END') {
                         $tmpNotifs[$entity_id]['events'][] = $event;
                     }
                 } else {
-                    for ($i = 0; $i < $nbRecipients; ++$i) {
-                        $recipient = $recipients[$i];
-                        $user_id = $recipient->user_id;
+                    foreach ($recipients as $key => $recipient) {
+                        $user_id = $recipient['user_id'];
                         Bt_writeLog(['level' => 'INFO', 'message' => 'Recipient '.$user_id]);
 
-                        $db = new Database();
-                        $query = 'SELECT param_value_int FROM parameters WHERE id = ?';
-                        $stmt = $db -> query($query, array('user_quota'));
-                        if (($recipient->status == 'SPD' && $stmt -> fetchColumn() == 0) || $recipient->status == 'DEL') {
+                        $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'user_quota']);
+                        if (($recipient['status'] == 'SPD' && (empty($parameter) || $parameter['param_value_int'] == 0)) || $recipient['status'] == 'DEL') {
                             Bt_writeLog(['level' => 'INFO', 'message' => $user_id.' is disabled or deleted, this notification will not be send']);
-                            unset($recipients[$i]);
+                            unset($recipients[$key]);
                             continue;
                         }
 
@@ -161,7 +154,6 @@ while ($state != 'END') {
                     'events'       => $tmpNotif['events'],
                     'notification' => $notification,
                     'maarchUrl'    => $maarchUrl,
-                    'maarchApps'   => $maarchApps,
                     'coll_id'      => $coll_id,
                     'res_table'    => $coll_table,
                     'res_view'     => $coll_view,
@@ -180,7 +172,7 @@ while ($state != 'END') {
                 }
 
                 // Prepare e-mail for stack
-                $recipient_mail = $tmpNotif['recipient']->mail;
+                $recipient_mail = $tmpNotif['recipient']['mail'];
                 $subject        = $notification['description'];
 
                 if (!empty($recipient_mail)) {
@@ -199,10 +191,10 @@ while ($state != 'END') {
                             if ($event['res_id'] != '') {
                                 $resourceToAttach = \Resource\models\ResModel::getById(['resId' => $event['res_id'], 'select' => ['path', 'filename', 'docserver_id']]);
                                 if (!empty($resourceToAttach['docserver_id'])) {
-                                    $docserver        = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $resourceToAttach['docserver_id'], 'select' => ['path_template']]);
-                                    $path             = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resourceToAttach['path']) . $resourceToAttach['filename'];
-                                    $path = str_replace('//', '/', $path);
-                                    $path = str_replace('\\', '/', $path);
+                                    $docserver     = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $resourceToAttach['docserver_id'], 'select' => ['path_template']]);
+                                    $path          = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resourceToAttach['path']) . $resourceToAttach['filename'];
+                                    $path          = str_replace('//', '/', $path);
+                                    $path          = str_replace('\\', '/', $path);
                                     $attachments[] = $path;
                                 }
                             }

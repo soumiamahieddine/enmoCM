@@ -191,7 +191,6 @@ while ($state != 'END') {
                         'events'       => $basket_list['events'],
                         'notification' => $notification,
                         'maarchUrl'    => $maarchUrl,
-                        'maarchApps'   => $maarchApps,
                         'coll_id'      => $coll_id,
                         'res_table'    => $coll_table,
                         'res_view'     => $coll_view,

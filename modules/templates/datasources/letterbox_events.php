@@ -9,7 +9,6 @@
 /*
 * @requires
 *   $res_view   = Name of res view
-*   $maarchApps = name of app
 *   $maarchUrl  = Url to maarch (root url)
 *   $recipient  = recipient of notification
 *   $events     = array of events related to letterbox mails
@@ -30,7 +29,7 @@ $datasources['recipient'][0]  = (array) $recipient;
 $datasources['res_letterbox'] = [];
 $datasources['contact']       = [];
 
-$urlToApp = trim($maarchUrl, '/').'/apps/'.trim($maarchApps, '/').'/index.php?';
+$urlToApp = trim($maarchUrl, '/').'/apps/maarch_entreprise/index.php?';
 
 $basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
 $preferenceBasket = UserBasketPreferenceModel::get([
@@ -106,6 +105,6 @@ foreach ($events as $event) {
         unset($postalAddress[0]);
         $contact['postal_address'] = implode("\n", $postalAddress);
 
-        $datasources['contact'][] = $contact;
+        $datasources['sender'][] = $contact;
     }
 }

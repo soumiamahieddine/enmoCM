@@ -2,7 +2,6 @@
 /*
 * @requires
 *   $res_view	= Name of res view
-*   $maarchApps = name of app
 *   $maarchUrl	= Url to maarch (root url)
 * 	$recipient	= recipient of notification
 *	$events 	= array of events related to letterbox mails
@@ -23,6 +22,16 @@ use User\models\UserModel;
 $datasources['recipient'][0] = (array)$recipient;
 $datasources['notes'] = array();
 
+// Link to detail page
+$urlToApp = trim($maarchUrl, '/').'/apps/maarch_entreprise/index.php?';
+
+$basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
+$preferenceBasket = UserBasketPreferenceModel::get([
+    'select'  => ['group_serial_id'],
+    'where'   => ['user_serial_id = ?', 'basket_id = ?'],
+    'data'    => [$recipient['user_id'], 'MyBasket']
+]);
+
 foreach ($events as $event) {
     $note = [];
     
@@ -41,16 +50,6 @@ foreach ($events as $event) {
         $resLetterbox = ResModel::getById(['select' => ['*'], 'resId'  => $resId]);
         $datasources['res_letterbox'][] = $resLetterbox;
     }
-    
-    // Link to detail page
-    $urlToApp = trim($maarchUrl, '/').'/apps/'.trim($maarchApps, '/').'/index.php?';
-
-    $basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
-    $preferenceBasket = UserBasketPreferenceModel::get([
-        'select'  => ['group_serial_id'],
-        'where'   => ['user_serial_id = ?', 'basket_id = ?'],
-        'data'    => [$recipient['user_id'], 'MyBasket']
-    ]);
 
     $note['linktodoc']     = $urlToApp . 'linkToDoc='.$resId;
     $note['linktodetail']  = $urlToApp . 'linkToDetail='.$resId;
@@ -78,9 +77,8 @@ foreach ($events as $event) {
 
     if (!empty($resourceContacts)) {
         $contact = ContactModel::getById(['id' => $resourceContacts['item_id'], 'select' => ['*']]);
-        $datasources['contact'][] = $contact;
+        $datasources['sender'][] = $contact;
     }
     
-    // Insertion
     $datasources['notes'] = $note;
 }

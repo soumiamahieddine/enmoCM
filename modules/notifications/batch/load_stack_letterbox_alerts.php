@@ -91,7 +91,6 @@ if ($customID <> '') {
 chdir($maarchDirectory);
 
 $maarchUrl = (string)$config->MaarchUrl;
-$maarchApps = (string) $config->MaarchApps;
 
 $GLOBALS['batchDirectory'] = $maarchDirectory . 'modules'
                            . DIRECTORY_SEPARATOR . 'notifications'

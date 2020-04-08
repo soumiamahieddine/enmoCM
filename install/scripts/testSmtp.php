@@ -40,8 +40,6 @@
      $maarchUrl = rtrim($chemin, "install");
      $maarchUrl = $maarchUrl . 'cs_'.$_SESSION['config']['databasename'].'/';
      $CONFIG->MaarchUrl = $maarchUrl;
-     $CONFIG->MaarchApps = 'maarch_entreprise';
-     $CONFIG->TmpDirectory = realpath('.').'/modules/notifications/batch/tmp/';
 
      $res = $xmlconfig->asXML();
      $fp = @fopen(realpath('.')."/custom/cs_".$_SESSION['config']['databasename']."/modules/notifications/batch/config/config.xml", "w+");
