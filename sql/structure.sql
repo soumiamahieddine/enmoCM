@@ -248,7 +248,7 @@ CREATE TABLE res_attachments
   res_id bigint NOT NULL DEFAULT nextval('res_attachment_res_id_seq'::regclass),
   title character varying(255) DEFAULT NULL::character varying,
   format character varying(50) NOT NULL,
-  typist character varying(128) NOT NULL,
+  typist INTEGER,
   creation_date timestamp without time zone NOT NULL,
   modification_date timestamp without time zone DEFAULT NOW(),
   modified_by INTEGER,

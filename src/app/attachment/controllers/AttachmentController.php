@@ -293,8 +293,11 @@ class AttachmentController
             if ($attachment['modificationDate'] == $attachment['creationDate']) {
                 $attachments[$key]['modificationDate'] = null;
             }
-            $typist = UserModel::getById(['id' => $attachment['typist'], 'select' => ['firstname', 'lastname']]);
-            $attachments[$key]['typistLabel'] = $typist['firstname']. ' ' .$typist['lastname'];
+            $attachments[$key]['typistLabel'] = '';
+            if (!empty($attachment['typist'])) {
+                $typist = UserModel::getById(['id' => $attachment['typist'], 'select' => ['firstname', 'lastname']]);
+                $attachments[$key]['typistLabel'] = $typist['firstname']. ' ' .$typist['lastname'];
+            }
             $attachments[$key]['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
 
             if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
