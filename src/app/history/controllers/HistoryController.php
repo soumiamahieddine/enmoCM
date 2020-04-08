@@ -153,6 +153,8 @@ class HistoryController
             $aArgs['userId'] = $GLOBALS['login'];
         }
 
+        $user = UserModel::getBylogin(['select' => ['id'], 'login' => $aArgs['userId']]);
+
         HistoryModel::create([
             'tableName' => $aArgs['tableName'],
             'recordId'  => $aArgs['recordId'],
@@ -167,7 +169,7 @@ class HistoryController
             "eventId"   => $aArgs['eventId'],
             "tableName" => $aArgs['tableName'],
             "recordId"  => $aArgs['recordId'],
-            "userId"    => $GLOBALS['id'],
+            "userId"    => $user['id'],
             "info"      => $aArgs['info'],
         ]);
     }

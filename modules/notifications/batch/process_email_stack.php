@@ -112,11 +112,12 @@ while ($state <> 'END') {
                 $phpmailer->SMTPDebug = 1;
                 $phpmailer->Debugoutput = function ($str) {
                     if (strpos($str, 'SMTP ERROR') !== false) {
-                        HistoryController::add([
+                        \History\controllers\HistoryController::add([
                             'tableName'    => 'emails',
                             'recordId'     => 'email',
                             'eventType'    => 'ERROR',
                             'eventId'      => 'sendEmail',
+                            'userId'       => 'superadmin',
                             'info'         => $str
                         ]);
                     }
@@ -137,7 +138,7 @@ while ($state <> 'END') {
                 \Notification\models\NotificationsEmailsModel::update([
                     'set'   => ['exec_date' => 'CURRENT_TIMESTAMP', 'exec_result' => $exec_result],
                     'where' => ['email_stack_sid = ?'],
-                    'data'  => [$email->email_stack_sid]
+                    'data'  => [$email['email_stack_sid']]
                 ]);
                 $state = 'SEND_AN_EMAIL';
             }
@@ -151,7 +152,9 @@ Bt_writeLog(['level' => 'INFO', 'message' => $emailSent.' notification(s) sent']
 Bt_writeLog(['level' => 'INFO', 'message' => 'End of process']);
 
 Bt_logInDataBase(
-    $totalEmailsToProcess, $err, $emailSent.' notification(s) sent'.$errTxt
+    $totalEmailsToProcess,
+    $err,
+    $emailSent.' notification(s) sent'.$errTxt
 );
 Bt_updateWorkBatch();
 

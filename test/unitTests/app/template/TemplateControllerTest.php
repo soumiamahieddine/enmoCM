@@ -304,7 +304,7 @@ class TemplateControllerTest extends TestCase
         $this->assertNotNull($responseBody->datasources);
         $this->assertNotNull($responseBody->datasources[0]->id);
         $this->assertNotNull($responseBody->datasources[0]->label);
-        $this->assertNotNull($responseBody->datasources[0]->script);
+        $this->assertNotNull($responseBody->datasources[0]->function);
         $this->assertNotNull($responseBody->datasources[0]->target);
         $this->assertNotNull($responseBody->entities);
         $this->assertNotNull($responseBody->entities[0]->entity_id);
@@ -723,7 +723,7 @@ class TemplateControllerTest extends TestCase
         $this->assertNotNull($responseBody->datasources);
         $this->assertNotNull($responseBody->datasources[0]->id);
         $this->assertNotNull($responseBody->datasources[0]->label);
-        $this->assertNotNull($responseBody->datasources[0]->script);
+        $this->assertNotNull($responseBody->datasources[0]->function);
         $this->assertNotNull($responseBody->datasources[0]->target);
         $this->assertNotNull($responseBody->entities);
         $this->assertNotNull($responseBody->entities[0]->entity_id);

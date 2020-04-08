@@ -63,25 +63,25 @@ class AuthenticationController
                 }
             }
         } else {
-           if (!empty($authorizationHeaders)) {
-               $token = null;
-               foreach ($authorizationHeaders as $authorizationHeader) {
-                   if (strpos($authorizationHeader, 'Bearer') === 0) {
-                       $token = str_replace('Bearer ', '', $authorizationHeader);
-                   }
-               }
-               if (!empty($token)) {
-                   try {
-                       $jwt = (array)JWT::decode($token, CoreConfigModel::getEncryptKey(), ['HS256']);
-                   } catch (\Exception $e) {
-                       return null;
-                   }
-                   $jwt['user'] = (array)$jwt['user'];
-                   if (!empty($jwt) && !empty($jwt['user']['id'])) {
-                       $userId = $jwt['user']['id'];
-                   }
-               }
-           }
+            if (!empty($authorizationHeaders)) {
+                $token = null;
+                foreach ($authorizationHeaders as $authorizationHeader) {
+                    if (strpos($authorizationHeader, 'Bearer') === 0) {
+                        $token = str_replace('Bearer ', '', $authorizationHeader);
+                    }
+                }
+                if (!empty($token)) {
+                    try {
+                        $jwt = (array)JWT::decode($token, CoreConfigModel::getEncryptKey(), ['HS256']);
+                    } catch (\Exception $e) {
+                        return null;
+                    }
+                    $jwt['user'] = (array)$jwt['user'];
+                    if (!empty($jwt) && !empty($jwt['user']['id'])) {
+                        $userId = $jwt['user']['id'];
+                    }
+                }
+            }
         }
 
         if (!empty($userId)) {
@@ -173,7 +173,7 @@ class AuthenticationController
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        var_dump('ttotoi');
+
         $login = strtolower($body['login']);
         $authenticated = AuthenticationModel::authentication(['login' => $login, 'password' => $body['password']]);
         if (empty($authenticated)) {
