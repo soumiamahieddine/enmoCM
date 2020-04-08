@@ -164,7 +164,7 @@ export class ShippingAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        this.shipping.entities = $('#jstree').jstree(true).get_checked([true]);
+        this.shipping.entities = $('#jstree').jstree('get_checked', null, true);
 
         if (this.creationMode) {
             this.http.post('../../rest/administration/shippings', this.shipping)

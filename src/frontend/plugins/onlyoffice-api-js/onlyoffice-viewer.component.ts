@@ -160,7 +160,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
             return true;
         } else {
             this.notify.error(this.lang.onlyofficeEditDenied + ' <b>' + this.file.format + '</b> ' + this.lang.onlyofficeEditDenied2);
-            this.closeEditor();
+            this.triggerCloseEditor.emit();
             return false;
         }
     }
@@ -176,12 +176,12 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
                         this.appUrl = data.coreUrl;
                         resolve(true);
                     } else {
-                        this.closeEditor();
+                        this.triggerCloseEditor.emit();
                     }
                 }),
                 catchError((err) => {
                     this.notify.handleErrors(err);
-                    this.closeEditor();
+                    this.triggerCloseEditor.emit();
                     return of(false);
                 }),
             ).subscribe();
@@ -195,7 +195,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
             const regex2 = /localhost/g;
             if (this.appUrl.match(regex) !== null || this.appUrl.match(regex2) !== null) {
                 this.notify.error(`${this.lang.errorOnlyoffice1}`);
-                this.closeEditor();
+                this.triggerCloseEditor.emit();
             } else {
                 this.http.get(`../../rest/onlyOffice/available`).pipe(
                     tap((data: any) => {
@@ -203,12 +203,12 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
                             resolve(true);
                         } else {
                             this.notify.error(`${this.lang.errorOnlyoffice2} ${this.onlyOfficeUrl}`);
-                            this.closeEditor();
+                            this.triggerCloseEditor.emit();
                         }
                     }),
                     catchError((err) => {
                         this.notify.error(`${this.lang[err.error.lang]}`);
-                        this.closeEditor();
+                        this.triggerCloseEditor.emit();
                         return of(false);
                     }),
                 ).subscribe();

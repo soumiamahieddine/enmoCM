@@ -32,6 +32,7 @@ export class TemplateAdministrationComponent implements OnInit {
     creationMode: boolean;
 
     template: any = {
+        id: 0,
         label: '',
         description: '',
         datasource: 'letterbox_attachment',
@@ -124,11 +125,13 @@ export class TemplateAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template = {
+                            id: data.template.template_id,
                             label: data.template.template_label,
                             description: data.template.template_comment,
                             datasource: data.template.template_datasource,
                             target: data.template.template_target,
                             type: data.template.template_type,
+                            template_attachment_type: data.template.template_attachment_type,
                             file: {}
                         };
                         this.updateTemplateType();
@@ -143,7 +146,6 @@ export class TemplateAdministrationComponent implements OnInit {
                             this.template.file.paper.format = data.template.template_file_name.split('.').pop();
                             this.template.file.paper.name = data.template.template_file_name;
                             this.template.file.electronic.content = data.template.template_content;
-                            this.template.template_attachment_type = data.template.template_attachment_type;
                         }
 
                         this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
@@ -322,8 +324,9 @@ export class TemplateAdministrationComponent implements OnInit {
 
         } else {
             editorOptions.objectType = 'templateModification';
-            editorOptions.objectId = this.template.template_id;
-            editorOptions.extension = this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.name : this.template.file.name;
+            editorOptions.docUrl = `rest/onlyOffice/mergedFile`;
+            editorOptions.objectId = this.template.id;
+            editorOptions.extension = this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.name.toLowerCase().split('.').pop() : this.template.file.name.toLowerCase().split('.').pop();
         }
 
         if (this.headerService.user.preferences.documentEdition === 'java') {
@@ -432,7 +435,7 @@ export class TemplateAdministrationComponent implements OnInit {
             const r = confirm(this.lang.confirmDuplicate);
 
             if (r) {
-                this.http.post('../../rest/templates/' + this.template.template_id + '/duplicate', { 'id': this.template.template_id })
+                this.http.post('../../rest/templates/' + this.template.id + '/duplicate', { 'id': this.template.id })
                     .subscribe((data: any) => {
                         this.notify.success(this.lang.templateDuplicated);
                         this.router.navigate(['/administration/templates/' + data.id]);
@@ -444,9 +447,8 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        this.formatTemplate();
 
-        /*this.template.entities = $('#jstree').jstree(true).get_checked([true]);
+        /*
         if (this.template.type === 'HTML') {
             this.template.template_content = tinymce.get('templateHtml').getContent();
 
@@ -456,8 +458,8 @@ export class TemplateAdministrationComponent implements OnInit {
 
         if (this.isValidTemplate()) {
             if (this.creationMode) {
-                this.http.post('../../rest/templates', this.template)
-                    .subscribe((data: any) => {
+                this.http.post('../../rest/templates', this.formatTemplate()).pipe(
+                    tap((data: any) => {
                         if (data.checkEntities) {
                             this.config = {
                                 panelClass: 'maarch-modal',
@@ -471,12 +473,15 @@ export class TemplateAdministrationComponent implements OnInit {
                             this.router.navigate(['/administration/templates']);
                             this.notify.success(this.lang.templateAdded);
                         }
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
             } else {
-                this.http.put('../../rest/templates/' + this.template.template_id, this.template)
-                    .subscribe((data: any) => {
+                this.http.put('../../rest/templates/' + this.template.id, this.formatTemplate()).pipe(
+                    tap((data: any) => {
                         if (data.checkEntities) {
                             this.config = {
                                 panelClass: 'maarch-modal',
@@ -490,9 +495,12 @@ export class TemplateAdministrationComponent implements OnInit {
                             this.router.navigate(['/administration/templates']);
                             this.notify.success(this.lang.templateUpdated);
                         }
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
             }
         }
 
@@ -500,21 +508,18 @@ export class TemplateAdministrationComponent implements OnInit {
 
     formatTemplate() {
         const template = { ...this.template };
-        console.log(template);
-
+        template.entities = $('#jstree').jstree('get_checked', null, true);
+        return template;
     }
 
     isValidTemplate() {
-        if (this.template.target === 'acknowledgementReceipt') {
-            if (this.functionsService.empty(this.template.file.paper.name) && this.functionsService.empty(this.template.file.electronic.content)) {
-                alert(this.lang.mustCompleteAR);
-                return false;
-            }
-        } else if (this.template.target !== 'acknowledgementReceipt' && this.template.type === 'OFFICE') {
-            if (this.functionsService.empty(this.template.file.name)) {
-                alert(this.lang.editModelFirst);
-                return false;
-            }
+        if (this.template.target === 'acknowledgementReceipt' && this.functionsService.empty(this.template.file.paper.name) && this.functionsService.empty(this.template.file.electronic.content)) {
+            alert(this.lang.mustCompleteAR);
+            return false;
+
+        } else if (this.template.target !== 'acknowledgementReceipt' && this.template.type === 'OFFICE' && this.functionsService.empty(this.template.file.name)) {
+            alert(this.lang.editModelFirst);
+            return false;
         } else {
             return true;
         }
