@@ -172,13 +172,13 @@ abstract class NotificationModelAbstract
             'id'             => 'group',
             'label'          => 'Groupe',
             'add_attachment' => 'true',
-            'function'       => 'getRecipientsByContact'
+            'function'       => 'getRecipientsByGroup'
         );
         $diffusionTypes[] = array(
             'id'             => 'entity',
             'label'          => 'Entité',
             'add_attachment' => 'true',
-            'function'       => 'getRecipientsByCopie'
+            'function'       => 'getRecipientsByEntity'
         );
         $diffusionTypes[] = array(
             'id'             => 'dest_entity',
@@ -190,7 +190,7 @@ abstract class NotificationModelAbstract
             'id'             => 'dest_user',
             'label'          => 'Liste de diffusion du document',
             'add_attachment' => 'false',
-            'function'       => 'getRecipientsByDestUserSign'
+            'function'       => 'getRecipientsByDestUser'
         );
         $diffusionTypes[] = array(
             'id'             => 'dest_user_visa',
@@ -202,27 +202,27 @@ abstract class NotificationModelAbstract
             'id'             => 'dest_user_sign',
             'label'          => 'Signataire actuel du document',
             'add_attachment' => 'true',
-            'function'       => 'getRecipientsByDestUser'
+            'function'       => 'getRecipientsByDestUserSign'
         );
         $diffusionTypes[] = array(
             'id'             => 'user',
             'label'          => 'Utilisateur désigné',
             'add_attachment' => 'true',
-            'function'       => 'getRecipientsByEntity'
+            'function'       => 'getRecipientsByUser'
         );
 
         $diffusionTypes[] = array(
             'id'             => 'copy_list',
             'label'          => 'Liste de diffusion du document',
             'add_attachment' => 'false',
-            'function'       => 'getRecipientsByGroup'
+            'function'       => 'getRecipientsByCopie'
         );
 
         $diffusionTypes[] = array(
             'id'             => 'contact',
             'label'          => 'Contact du document',
             'add_attachment' => 'true',
-            'function'       => 'getRecipientsByUser'
+            'function'       => 'getRecipientsByContact'
         );
 
         return $diffusionTypes;

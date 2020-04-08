@@ -21,20 +21,20 @@ use User\models\UserModel;
 
 class DiffusionTypesController
 {
-    public function getRecipients($args = [])
+    public static function getRecipients($args = [])
     {
         $diffusionTypes = NotificationModel::getDiffusionType();
         foreach ($diffusionTypes as $diffusionType) {
-            if ($diffusionType['id'] == $args['notification']['diffusionType']) {
-                $diffusionInfo = $diffusionType;
+            if ($diffusionType['id'] == $args['notification']['diffusion_type']) {
+                $function = $diffusionType['function'];
                 break;
             }
         }
-        $recipients = DiffusionTypesController::$diffusionInfo['function'](['request' => $args['request'], 'notification' => $args['notification']]);
+        $recipients = DiffusionTypesController::$function(['request' => $args['request'], 'notification' => $args['notification']]);
         return $recipients;
     }
 
-    public function getRecipientsByContact($args = [])
+    public static function getRecipientsByContact($args = [])
     {
         if ($args['request'] == 'recipients') {
             $contactsMatch = DatabaseModel::select([
@@ -50,7 +50,7 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByCopie($args = [])
+    public static function getRecipientsByCopie($args = [])
     {
         switch ($request) {
             case 'recipients':
@@ -171,7 +171,7 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByDestEntity($args = [])
+    public static function getRecipientsByDestEntity($args = [])
     {
         switch ($request) {
             case 'recipients':
@@ -243,7 +243,7 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByDestUserSign($args = [])
+    public static function getRecipientsByDestUserSign($args = [])
     {
         switch ($request) {
             case 'recipients':
@@ -355,7 +355,7 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByDestUserVisa($args = [])
+    public static function getRecipientsByDestUserVisa($args = [])
     {
         switch ($request) {
             case 'recipients':
@@ -467,7 +467,7 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByDestUser($args = [])
+    public static function getRecipientsByDestUser($args = [])
     {
         switch ($request) {
             case 'recipients':
@@ -577,7 +577,7 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByEntity($args = [])
+    public static function getRecipientsByEntity($args = [])
     {
         if ($args['request'] == 'recipients') {
             $aEntities  = explode(",", $args['notification']['diffusion_properties']);
@@ -593,14 +593,14 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByGroup($args = [])
+    public static function getRecipientsByGroup($args = [])
     {
         if ($args['request'] == 'recipients') {
             $aGroups  = explode(",", $args['notification']['diffusion_properties']);
             $recipients = DatabaseModel::select([
                 'select'    => ['us.*'],
                 'table'     => ['usergroup_content ug, users us, usergroups'],
-                'where'     => ['us.id = ug.user_id', 'ug.group_id = usergroups.group_id', 'usergroups.group_id in (?)', 'us.status != ?'],
+                'where'     => ['us.id = ug.user_id', 'ug.group_id = usergroups.id', 'usergroups.group_id in (?)', 'us.status != ?'],
                 'data'      => [$aGroups, 'DEL']
             ]);
             return $recipients;
@@ -609,7 +609,7 @@ class DiffusionTypesController
         }
     }
 
-    public function getRecipientsByUser($args = [])
+    public static function getRecipientsByUser($args = [])
     {
         if ($args['request'] == 'recipients') {
             $aUsers     = explode(",", $args['notification']['diffusion_properties']);

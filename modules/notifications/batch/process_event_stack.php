@@ -85,12 +85,12 @@ while ($state != 'END') {
 
                 Bt_writeLog(['level' => 'INFO', 'message' => $nbRecipients.' recipients found, checking active and absences']);
 
+                $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'user_quota']);
                 if ($notification['diffusion_type'] === 'dest_entity') {
                     foreach ($recipients as $key => $recipient) {
                         $entity_id = $recipient['entity_id'];
                         Bt_writeLog(['level' => 'INFO', 'message' => 'Recipient entity '.$entity_id]);
 
-                        $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'user_quota']);
                         if (($recipient['enabled'] == 'N' && (empty($parameter) || $parameter['param_value_int'] == 0)) || $recipient['mail'] == '') {
                             Bt_writeLog(['level' => 'INFO', 'message' => $entity_id.' is disabled or mail is invalid, this notification will not be send']);
                             unset($recipients[$key]);
@@ -106,8 +106,7 @@ while ($state != 'END') {
                     foreach ($recipients as $key => $recipient) {
                         $user_id = $recipient['user_id'];
                         Bt_writeLog(['level' => 'INFO', 'message' => 'Recipient '.$user_id]);
-
-                        $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'user_quota']);
+                        
                         if (($recipient['status'] == 'SPD' && (empty($parameter) || $parameter['param_value_int'] == 0)) || $recipient['status'] == 'DEL') {
                             Bt_writeLog(['level' => 'INFO', 'message' => $user_id.' is disabled or deleted, this notification will not be send']);
                             unset($recipients[$key]);
@@ -181,7 +180,7 @@ while ($state != 'END') {
                     $html = str_replace('&amp;', '&', $html);
                     $html = str_replace('&', '#and#', $html);
 
-                    $recipient_mail     = $tmpNotif['recipient']['mail'];
+                    $recipient_mail = $tmpNotif['recipient']['mail'];
 
                     // Attachments
                     $attachments = array();
