@@ -93,7 +93,7 @@ export class AuthInterceptor implements HttpInterceptor {
                             })
                         );
                     } else {
-                        return of(false);
+                        return next.handle(request);
                     }
                 })
             );

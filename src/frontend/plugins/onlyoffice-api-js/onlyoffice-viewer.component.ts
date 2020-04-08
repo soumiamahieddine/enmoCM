@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import './onlyoffice-api.js';
 import { HttpClient } from '@angular/common/http';
-import { catchError, tap, filter } from 'rxjs/operators';
+import { catchError, tap, filter, finalize } from 'rxjs/operators';
 import { LANG } from '../../app/translate.component';
 import { ConfirmComponent } from '../modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -36,6 +36,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
     @Input() editMode: boolean = false;
     @Input() file: any = {};
     @Input() params: any = {};
+    @Input() hideCloseEditor: any = false;
 
     @Output() triggerAfterUpdatedDoc = new EventEmitter<string>();
     @Output() triggerCloseEditor = new EventEmitter<string>();
@@ -62,7 +63,13 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
         'ott',
         'rtf',
         'txt',
-        'html'
+        'html',
+        'xlsl',
+        'xlsx',
+        'xltx',
+        'ods',
+        'ots',
+        'csv',
     ];
 
     private eventAction = new Subject<any>();
@@ -227,7 +234,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
                 }),
                 catchError((err) => {
                     this.notify.handleErrors(err);
-                    this.closeEditor();
+                    this.triggerCloseEditor.emit();
                     return of(false);
                 }),
             ).subscribe();

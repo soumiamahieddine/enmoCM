@@ -70,7 +70,11 @@ class OnlyOfficeController
             }
 
             $path = $body['objectId'];
-            $fileContent = file_get_contents($path);
+            
+            $fileContent = @file_get_contents($path);
+            if ($fileContent == false) {
+                return $response->withStatus(400)->withJson(['errors' => 'No content found']);
+            }
         } elseif ($body['objectType'] == 'templateModification') {
             $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
             $template = TemplateModel::getById(['id' => $body['objectId'], 'select' => ['template_path', 'template_file_name']]);
