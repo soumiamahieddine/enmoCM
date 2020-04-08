@@ -65,10 +65,10 @@ export class PrintSeparatorComponent implements OnInit {
         setTimeout(() => {
             $('#jstree')
                 .on('select_node.jstree', (e: any, data: any) => {
-                    this.separator.entities = $('#jstree').jstree(true).get_checked([true]); // to trigger disable button if no entities
+                    this.separator.entities = $('#jstree').jstree('get_checked', null, true); // to trigger disable button if no entities
                 })
                 .on('deselect_node.jstree', (e: any, data: any) => {
-                    this.separator.entities = $('#jstree').jstree(true).get_checked([true]); // to trigger disable button if no entities
+                    this.separator.entities = $('#jstree').jstree('get_checked', null, true); // to trigger disable button if no entities
                 })
                 .jstree({
                     'checkbox': {
@@ -100,7 +100,7 @@ export class PrintSeparatorComponent implements OnInit {
 
     generateSeparators() {
         this.loading = true;
-        this.separator.entities = $('#jstree').jstree(true).get_checked([true]);
+        this.separator.entities = $('#jstree').jstree('get_checked', null, true);
         this.http.post('../../rest/entitySeparators', this.separator)
             .subscribe((data: any) => {
                 this.docData = data;

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, CanDeactivate } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, exhaustMap } from 'rxjs/operators';
 import { HeaderService } from './header.service';
 import { ProcessComponent } from '../app/process/process.component';
 import { PrivilegeService } from './privileges.service';
@@ -74,13 +74,31 @@ export class AppGuard implements CanActivate {
                         tokenInfo = this.authService.getToken();
 
                         if (tokenInfo !== null) {
-                            this.authService.user = JSON.parse(atob(tokenInfo.split('.')[1])).user;
+                            this.http.get('../../rest/currentUser/profile')
+                                .pipe(
+                                    map((dataUser: any) => {
+                                        this.headerService.user = {
+                                            id: dataUser.id,
+                                            userId: dataUser.user_id,
+                                            firstname: dataUser.firstname,
+                                            lastname: dataUser.lastname,
+                                            entities: dataUser.entities,
+                                            groups: dataUser.groups,
+                                            preferences: dataUser.preferences,
+                                            privileges: dataUser.privileges[0] === 'ALL_PRIVILEGES' ? this.privilegeService.getAllPrivileges() : dataUser.privileges
+                                        };
+
+                                        this.headerService.nbResourcesFollowed = dataUser.nbFollowedResources;
+                                        this.privilegeService.resfreshUserShortcuts();
+                                        return true;
+                                    })
+                                ).subscribe();
                             return true;
                         } else {
                             this.authService.logout();
                             return false;
                         }
-                    })
+                    }),
                 );
 
         }

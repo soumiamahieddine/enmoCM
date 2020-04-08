@@ -62,8 +62,6 @@ export class BasketHomeComponent implements OnInit, OnDestroy {
         this.http.get('../../rest/home').pipe(
             tap((data: any) => {
                 this.homeData = data;
-            }),
-            finalize(() => {
                 this.loading = false;
             })
         ).subscribe();

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHandler, HttpInterceptor, HttpRequest, HttpClient } from '@angular/common/http';
 import { LANG } from '../app/translate.component';
-import { Router } from '@angular/router';
 import { catchError, switchMap } from 'rxjs/operators';
 import { NotificationService } from '../app/notification.service';
 import { AuthService } from './auth.service';
@@ -11,11 +10,10 @@ import { of } from 'rxjs/internal/observable/of';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     lang: any = LANG;
-    excludeUrls: string[] = ['../rest/authenticate', '../rest/authenticate/token', '../rest/authenticationInformations', '../rest/password', '../rest/passwordRules'];
+    excludeUrls: string[] = ['../../rest/authenticate', '../../rest/authenticate/token', '../../rest/authenticationInformations', '../../rest/password', '../../rest/passwordRules'];
 
     constructor(
         public http: HttpClient,
-        private router: Router,
         public notificationService: NotificationService,
         public authService: AuthService
     ) { }
@@ -55,7 +53,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     // Disconnect user if bad token process
                     if (error.status === 401) {
                         console.log('Auth error !');
-                        return this.http.get('../rest/authenticate/token', {
+                        return this.http.get('../../rest/authenticate/token', {
                             params: {
                                 refreshToken: this.authService.getRefreshToken()
                             }
