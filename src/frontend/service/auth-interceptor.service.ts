@@ -36,8 +36,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
 
-        console.log(request.url);
-
         // We don't want to intercept some routes
         if (this.excludeUrls.indexOf(request.url) > -1 || request.url.indexOf('/password') > -1) {
             return next.handle(request);

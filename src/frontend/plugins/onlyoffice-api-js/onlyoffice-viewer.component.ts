@@ -218,7 +218,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
 
     getMergedFileTemplate() {
         return new Promise((resolve, reject) => {
-            this.http.post(`../../${this.params.docUrl}`, { objectId: this.params.objectId, objectType: this.params.objectType, onlyOfficeKey: this.key, data: this.params.dataToMerge }).pipe(
+            this.http.post(`../${this.params.docUrl}`, { objectId: this.params.objectId, objectType: this.params.objectType, format: this.file.format, onlyOfficeKey: this.key, data: this.params.dataToMerge }).pipe(
                 tap((data: any) => {
                     this.tmpFilename = data.filename;
 

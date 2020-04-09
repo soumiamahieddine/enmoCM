@@ -140,7 +140,7 @@ class TemplateController
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($fileContent);
             if (!in_array($mimeType, self::AUTHORIZED_MIMETYPES)) {
-                return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
+                return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE . ' : '.$mimeType]);
             }
 
             $storeResult = DocserverController::storeResourceOnDocServer([

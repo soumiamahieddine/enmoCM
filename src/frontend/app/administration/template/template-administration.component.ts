@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
@@ -21,7 +21,7 @@ declare var tinymce: any;
     styleUrls: ['template-administration.component.scss'],
     providers: [AppService]
 })
-export class TemplateAdministrationComponent implements OnInit {
+export class TemplateAdministrationComponent implements OnInit, OnDestroy {
 
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
@@ -143,7 +143,7 @@ export class TemplateAdministrationComponent implements OnInit {
                             this.template.file.format = data.template.template_file_name.split('.').pop();
                             this.template.file.name = data.template.template_file_name;
                         } else if (this.template.target === 'acknowledgementReceipt') {
-                            if (!this.functionsService.empty(this.template.file.paper.format)) {
+                            if (!this.functionsService.empty(data.template.template_file_name)) {
                                 this.template.file.paper.format = data.template.template_file_name.split('.').pop();
                             }
                             this.template.file.paper.name = data.template.template_file_name;
@@ -308,22 +308,59 @@ export class TemplateAdministrationComponent implements OnInit {
 
     editFile() {
         const editorOptions: any = {};
-
-        if (this.creationMode || ((this.template.target !== 'acknowledgementReceipt' && this.functionsService.empty(this.template.file.name) || (this.template.target === 'acknowledgementReceipt' && this.functionsService.empty(this.template.file.paper.name))))) {
-            for (const element of this.defaultTemplatesList) {
-                if (this.selectedModelFile === element.fileExt + ': ' + element.fileName) {
-                    editorOptions.objectId = element.filePath;
+        editorOptions.docUrl = `rest/onlyOffice/mergedFile`;
+        if (this.creationMode) {
+            if (this.template.target !== 'acknowledgementReceipt') {
+                if (!this.functionsService.empty(this.template.file.content)) {
+                    editorOptions.objectType = 'encodedResource';
+                    editorOptions.objectId = this.template.file.content;
+                    editorOptions.extension = this.template.file.format;
+                } else {
+                    editorOptions.objectType = 'templateCreation';
+                    for (const element of this.defaultTemplatesList) {
+                        if (this.selectedModelFile === element.fileExt + ': ' + element.fileName) {
+                            editorOptions.objectId = element.filePath;
+                        }
+                    }
+                    editorOptions.extension = editorOptions.objectId.toLowerCase().split('.').pop();
+                }
+            } else if (this.template.target === 'acknowledgementReceipt') {
+                if (!this.functionsService.empty(this.template.file.paper.content)) {
+                    editorOptions.objectType = 'encodedResource';
+                    editorOptions.objectId = this.template.file.paper.content;
+                    editorOptions.extension = this.template.file.paper.format;
+                } else {
+                    editorOptions.objectType = 'templateCreation';
+                    for (const element of this.defaultTemplatesList) {
+                        if (this.selectedModelFile === element.fileExt + ': ' + element.fileName) {
+                            editorOptions.objectId = element.filePath;
+                        }
+                    }
+                    editorOptions.extension = editorOptions.objectId.toLowerCase().split('.').pop();
                 }
             }
-            editorOptions.objectType = 'templateCreation';
-            editorOptions.docUrl = `rest/onlyOffice/mergedFile`;
-            editorOptions.extension = editorOptions.objectId.toLowerCase().split('.').pop();
-
         } else {
-            editorOptions.objectType = 'templateModification';
-            editorOptions.docUrl = `rest/onlyOffice/mergedFile`;
-            editorOptions.objectId = this.template.id;
-            editorOptions.extension = this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.name.toLowerCase().split('.').pop() : this.template.file.name.toLowerCase().split('.').pop();
+            if (this.template.target !== 'acknowledgementReceipt') {
+                if (!this.functionsService.empty(this.template.file.content)) {
+                    editorOptions.objectType = 'encodedResource';
+                    editorOptions.objectId = this.template.file.content;
+                    editorOptions.extension = this.template.file.format;
+                } else {
+                    editorOptions.objectType = 'templateModification';
+                    editorOptions.objectId = this.template.id;
+                    editorOptions.extension = this.template.file.name.toLowerCase().split('.').pop();
+                }
+            } else if (this.template.target === 'acknowledgementReceipt') {
+                if (!this.functionsService.empty(this.template.file.paper.content)) {
+                    editorOptions.objectType = 'encodedResource';
+                    editorOptions.objectId = this.template.file.paper.content;
+                    editorOptions.extension = this.template.file.paper.format;
+                } else {
+                    editorOptions.objectType = 'templateModification';
+                    editorOptions.objectId = this.template.id;
+                    editorOptions.extension = this.template.file.paper.name.toLowerCase().split('.').pop();
+                }
+            }
         }
 
         if (this.headerService.user.preferences.documentEdition === 'java') {
@@ -587,6 +624,10 @@ export class TemplateAdministrationComponent implements OnInit {
                 this.buttonFileName = this.lang.importFile;
             }
         }
+    }
+
+    ngOnDestroy() {
+        tinymce.remove('textarea');
     }
 }
 @Component({
