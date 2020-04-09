@@ -62,14 +62,14 @@ while ($state != 'END') {
             foreach ($events as $event) {
                 Bt_writeLog(['level' => 'INFO', 'message' => "Getting recipients using diffusion type '".$notification['diffusion_type']."'"]);
                 // Diffusion type specific recipients
-                $recipients = \Notification\controllers\DiffusionTypesController::getRecipients(['request' => 'recipients', 'notification' => $notification, 'event' => $event]);
+                $recipients = \Notification\controllers\DiffusionTypesController::getItemsToNotify(['request' => 'recipients', 'notification' => $notification, 'event' => $event]);
                 // Diffusion type specific res_id
                 Bt_writeLog(['level' => 'INFO', 'message' => "Getting document ids using diffusion type '".$notification['diffusion_type']."'"]);
                 $res_id = false;
                 if ($event['table_name'] == $coll_table || $event['table_name'] == $coll_view) {
                     $res_id = $event['record_id'];
                 } else {
-                    $res_id = \Notification\controllers\DiffusionTypesController::getRecipients(['request' => 'res_id', 'notification' => $notification, 'event' => $event]);
+                    $res_id = \Notification\controllers\DiffusionTypesController::getItemsToNotify(['request' => 'res_id', 'notification' => $notification, 'event' => $event]);
                 }
                 $event['res_id'] = $res_id;
 
