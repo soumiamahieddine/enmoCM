@@ -53,8 +53,8 @@ export class ActivateUserComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-
-        this.http.get('../rest/currentUser/profile')
+        if (this.headerService.user.status === 'ABS') {
+            this.http.get('../rest/currentUser/profile')
             .subscribe((data: any) => {
                 this.user = data;
 
@@ -68,6 +68,9 @@ export class ActivateUserComponent implements OnInit {
                 });
                 this.loading = false;
             });
+        } else {
+            this.router.navigate(['/home']);
+        }
     }
 
     showActions(basket: any) {
@@ -83,7 +86,7 @@ export class ActivateUserComponent implements OnInit {
 
         this.http.put('../rest/users/' + this.headerService.user.id + '/status', { 'status': 'OK' })
             .subscribe(() => {
-
+                this.headerService.user.status = 'OK';
                 let basketsRedirectedIds: any = '';
 
                 this.user.redirectedBaskets.forEach((elem: any) => {

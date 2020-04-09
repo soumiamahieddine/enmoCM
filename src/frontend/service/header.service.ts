@@ -114,11 +114,10 @@ export class HeaderService {
             this.showMenuNav = true;
             this.sideBarAdmin = false;
             this.sideBarButton = null;
-            this.hideSideBar = false;
+            this.hideSideBar = true;
     }
 
     injectInSideBarLeft(template: TemplateRef<any>, viewContainerRef: ViewContainerRef, id: string = 'adminMenu', mode: string = '') {
-        
 
         if (mode === 'form') {
             this.sideBarForm = true;
