@@ -47,7 +47,11 @@ export class LoginComponent implements OnInit {
 
         this.environment = environment;
         if (this.authService.isAuth()) {
-            this.router.navigate(['/home']);
+            if (!this.functionsService.empty(this.authService.getUrl(JSON.parse(atob(this.authService.getToken().split('.')[1])).user.id))) {
+                this.router.navigate([this.authService.getUrl(JSON.parse(atob(this.authService.getToken().split('.')[1])).user.id)]);
+            } else {
+                this.router.navigate(['/home']);
+            }
         } else {
             this.getLoginInformations();
         }
@@ -68,7 +72,11 @@ export class LoginComponent implements OnInit {
             tap((data: any) => {
                 this.authService.saveTokens(data.headers.get('Token'), data.headers.get('Refresh-Token'));
                 this.authService.setUser({});
-                this.router.navigate(['/home']);
+                if (!this.functionsService.empty(this.authService.getUrl(JSON.parse(atob(data.headers.get('Token').split('.')[1])).user.id))) {
+                    this.router.navigate([this.authService.getUrl(JSON.parse(atob(data.headers.get('Token').split('.')[1])).user.id)]);
+                } else {
+                    this.router.navigate(['/home']);
+                }
             }),
             catchError((err: any) => {
                 this.loading = false;

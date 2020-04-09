@@ -47,7 +47,7 @@ export class AppComponent implements OnInit {
         this.headerService.hideSideBar = true;
         setTimeout(() => {
             this.headerService.sideNavLeft = this.snavLeft;
-        }, 0);
+        }, 200);
 
         this.headerService.sideNavLeft = this.snavLeft;
     }

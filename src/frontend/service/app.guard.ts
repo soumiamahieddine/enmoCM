@@ -26,13 +26,15 @@ export class AppGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
         console.log('guard');
-        
+
         this.headerService.resetSideNavSelection();
 
         let tokenInfo = this.authService.getToken();
 
         if (tokenInfo !== null) {
             console.log('Token trouvé !');
+
+            this.authService.setUrl(route.url.join('/'));
             if (this.headerService.user.id === undefined) {
                 console.log('Récupération données user...');
                 return this.http.get('../rest/currentUser/profile')
@@ -104,6 +106,7 @@ export class AppGuard implements CanActivate {
                         tokenInfo = this.authService.getToken();
 
                         if (tokenInfo !== null) {
+                            this.authService.setUrl(route.url.join('/'));
                             console.log('Token trouvé !');
                             console.log('Récupération données user...');
                             this.http.get('../rest/currentUser/profile')
