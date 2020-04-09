@@ -142,12 +142,14 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
                         } else if (this.template.type === 'OFFICE') {
                             this.template.file.format = data.template.template_file_name.split('.').pop();
                             this.template.file.name = data.template.template_file_name;
+                            this.getViewTemplateContent();
                         } else if (this.template.target === 'acknowledgementReceipt') {
                             if (!this.functionsService.empty(data.template.template_file_name)) {
                                 this.template.file.paper.format = data.template.template_file_name.split('.').pop();
                             }
                             this.template.file.paper.name = data.template.template_file_name;
                             this.template.file.electronic.content = data.template.template_content;
+                            this.getViewTemplateContent();
                         }
 
                         this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
@@ -158,6 +160,18 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
                 this.template.template_attachment_type = 'all';
             }
         });
+    }
+
+    getViewTemplateContent() {
+        this.http.get(`../rest/templates/${this.template.id}/content`).pipe(
+            tap((data: any) => {
+                this.templateDocView = this.sanitizer.bypassSecurityTrustResourceUrl('data:application/pdf;base64,' + data.encodedDocument);
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     initMce(selectorId: string) {
@@ -420,7 +434,6 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
     }
 
     getViewTemplateFile() {
-
         this.http.post('../rest/convertedFile/encodedFile', { encodedFile: this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.content : this.template.file.content, format: this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.format : this.template.file.format }).pipe(
             tap((data: any) => {
                 this.templateDocView = this.sanitizer.bypassSecurityTrustResourceUrl('data:application/pdf;base64,' + data.encodedResource);
@@ -430,7 +443,6 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
                 return of(false);
             })
         ).subscribe();
-
     }
 
     checkLockFile(id: string, extension: string) {
