@@ -403,38 +403,19 @@ class TemplateControllerTest extends TestCase
 
         $this->assertSame('Template does not exist', $responseBody->errors);
 
-        $aArgs = [
-            'template_label'            => 'TEST TEMPLATE AR OFFICE',
-            'template_comment'          => 'DESCRIPTION OF THIS TEMPLATE',
-            'template_target'           => 'OFFICE',
-            'template_attachment_type'  => 'ARsimple',
-            'template_type'             => 'OFFICE',
-            'template_datasource'       => 'letterbox_attachment',
-            'entities'                  => ['TST', 'BAD'],
-            'uploadedFile'              => 'missing base64 + name'
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $templates->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
-        $this->assertSame(400, $response->getStatusCode());
-        $responseBody = json_decode((string)$response->getBody(), true);
-
-        $this->assertSame("Uploaded file is missing", $responseBody['errors']);
-
         $fileContent = file_get_contents('test/unitTests/samples/test.txt');
         $encodedFile = base64_encode($fileContent);
 
         $aArgs = [
-            'template_label'           => 'TEST TEMPLATE AR OFFICE',
-            'template_comment'         => 'DESCRIPTION OF THIS TEMPLATE',
-            'template_target'          => 'OFFICE',
-            'template_attachment_type' => 'ARsimple',
-            'template_type'            => 'OFFICE',
-            'template_datasource'      => 'letterbox_attachment',
-            'entities'                 => ['TST', 'BAD'],
-            'uploadedFile'             => [
-                'name'   => 'test_template.txt',
-                'base64' => $encodedFile
+            'label'                     => 'TEST TEMPLATE AR OFFICE',
+            'description'               => 'DESCRIPTION OF THIS TEMPLATE',
+            'target'                    => 'OFFICE',
+            'template_attachment_type'  => 'ARsimple',
+            'type'                      => 'OFFICE',
+            'entities'                  => ['TST', 'BAD'],
+            'file'                      => [
+                'content'               => $encodedFile,
+                'format'                => 'txt'
             ]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);

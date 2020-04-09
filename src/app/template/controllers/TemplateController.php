@@ -15,6 +15,7 @@
 namespace Template\controllers;
 
 use ContentManagement\controllers\MergeController;
+use Convert\controllers\ConvertPdfController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Group\controllers\PrivilegeController;
@@ -277,6 +278,37 @@ class TemplateController
         ]);
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public function getContentById(Request $request, Response $response, array $aArgs)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $template = TemplateModel::getById(['id' => $aArgs['id']]);
+        if (empty($template)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+        }
+        if (empty($template['template_path'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template has no office content']);
+        }
+
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+        $pathToTemplate = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+        $extension = pathinfo($pathToTemplate, PATHINFO_EXTENSION);
+
+        if (!ConvertPdfController::canConvert(['extension' => $extension])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template can not be converted']);
+        }
+
+        $resource =  file_get_contents($pathToTemplate);
+        $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => base64_encode($resource), 'extension' => $extension]);
+        if (!empty($convertion['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template convertion failed : ' . $convertion['errors']]);
+        }
+
+        return $response->withJson(['encodedDocument' => $convertion['encodedResource']]);
     }
 
     public function duplicate(Request $request, Response $response, array $aArgs)

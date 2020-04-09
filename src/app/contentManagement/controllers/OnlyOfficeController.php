@@ -83,6 +83,9 @@ class OnlyOfficeController
             }
 
             $path = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+            if (!is_file($path)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Template does not exist on docserver']);
+            }
             $fileContent = file_get_contents($path);
         } elseif ($body['objectType'] == 'resourceCreation' || $body['objectType'] == 'attachmentCreation') {
             $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
