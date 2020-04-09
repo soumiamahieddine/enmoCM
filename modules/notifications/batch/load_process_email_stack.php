@@ -88,6 +88,7 @@ if ($customID <> '') {
 }
 chdir($maarchDirectory);
 
+$GLOBALS['customId']  = $customID;
 $GLOBALS['batchDirectory'] = $GLOBALS['maarchDirectory'] . 'modules'
                            . DIRECTORY_SEPARATOR . 'notifications'
                            . DIRECTORY_SEPARATOR . 'batch';
