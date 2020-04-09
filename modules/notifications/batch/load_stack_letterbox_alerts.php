@@ -98,10 +98,6 @@ $GLOBALS['batchDirectory'] = $maarchDirectory . 'modules'
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
   
-// COLLECTION
-$collTable = 'res_letterbox';
-$collView = 'res_view_letterbox';
-  
 // INCLUDES
 try {
     Bt_myInclude($GLOBALS['maarchDirectory'] . 'vendor/autoload.php');
@@ -112,8 +108,6 @@ try {
     );
     exit();
 }
-
-$alert_engine = new alert_engine($GLOBALS['configFile']);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR
                          . $customIDPath . $GLOBALS['batchName'] . '_error.lck';

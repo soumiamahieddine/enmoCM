@@ -66,7 +66,7 @@ while ($state != 'END') {
                 // Diffusion type specific res_id
                 Bt_writeLog(['level' => 'INFO', 'message' => "Getting document ids using diffusion type '".$notification['diffusion_type']."'"]);
                 $res_id = false;
-                if ($event['table_name'] == $coll_table || $event['table_name'] == $coll_view) {
+                if ($event['table_name'] == 'res_letterbox' || $event['table_name'] == 'res_view_letterbox') {
                     $res_id = $event['record_id'];
                 } else {
                     $res_id = \Notification\controllers\DiffusionTypesController::getItemsToNotify(['request' => 'res_id', 'notification' => $notification, 'event' => $event]);
@@ -121,7 +121,7 @@ while ($state != 'END') {
                 }
 
                 if (count($recipients) === 0) {
-                    Bt_writeLog(['level' => 'WARNING', 'message' => 'No recipient found']);
+                    Bt_writeLog(['level' => 'WARN', 'message' => 'No recipient found']);
                     \Notification\models\NotificationsEventsModel::update([
                         'set'   => ['exec_date' => 'CURRENT_TIMESTAMP', 'exec_result' => 'INFO: no recipient found'],
                         'where' => ['event_stack_sid = ?'],
@@ -153,9 +153,9 @@ while ($state != 'END') {
                     'events'       => $tmpNotif['events'],
                     'notification' => $notification,
                     'maarchUrl'    => $maarchUrl,
-                    'coll_id'      => $coll_id,
-                    'res_table'    => $coll_table,
-                    'res_view'     => $coll_view,
+                    'coll_id'      => 'letterbox_coll',
+                    'res_table'    => 'res_letterbox',
+                    'res_view'     => 'res_view_letterbox',
                 );
                 $html = \ContentManagement\controllers\MergeController::mergeNotification(['templateId' => $notification['template_id'], 'params' => $params]);
                 if (strlen($html) === 0) {

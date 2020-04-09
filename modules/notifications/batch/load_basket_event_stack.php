@@ -113,10 +113,6 @@ try {
 \SrcCore\models\DatabasePDO::reset();
 new \SrcCore\models\DatabasePDO(['customId' => $customID]);
 
-$coll_id    = 'letterbox_coll';
-$coll_table = 'res_letterbox';
-$coll_view  = 'res_view_letterbox';
-
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR
                          . $customIDPath . $GLOBALS['batchName'] . '_error.lck';
 $GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR

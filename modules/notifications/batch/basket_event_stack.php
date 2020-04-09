@@ -151,7 +151,7 @@ while ($state != 'END') {
                 preg_match_all('#\[(\w+)]#', $event['event_info'], $result);
                 $basket_id = $result[1];
 
-                if ($event['table_name'] == $coll_table || $event['table_name'] == $coll_view) {
+                if ($event['table_name'] == 'res_letterbox' || $event['table_name'] == 'res_view_letterbox') {
                     $res_id = $event['record_id'];
                 } else {
                     continue;
@@ -191,9 +191,9 @@ while ($state != 'END') {
                         'events'       => $basket_list['events'],
                         'notification' => $notification,
                         'maarchUrl'    => $maarchUrl,
-                        'coll_id'      => $coll_id,
-                        'res_table'    => $coll_table,
-                        'res_view'     => $coll_view,
+                        'coll_id'      => 'letterbox_coll',
+                        'res_table'    => 'res_letterbox',
+                        'res_view'     => 'res_view_letterbox',
                     );
 
                     $html = \ContentManagement\controllers\MergeController::mergeNotification(['templateId' => $notification['template_id'], 'params' => $params]);
