@@ -143,6 +143,30 @@ class TemplateControllerTest extends TestCase
         $this->assertIsInt($responseBody['template']);
         self::$id2 = $responseBody['template'];
 
+        ########## CREATE FAIL ##########
+        $fileContent = file_get_contents('test/unitTests/samples/test.txt');
+        $encodedFile = base64_encode($fileContent);
+
+        $aArgs = [
+            'label'                     => 'TEST TEMPLATE AR OFFICE',
+            'description'               => 'DESCRIPTION OF THIS TEMPLATE',
+            'target'                    => 'OFFICE',
+            'template_attachment_type'  => 'ARsimple',
+            'type'                      => 'OFFICE',
+            'datasource'                => 'letterbox_attachment',
+            'entities'                  => ['TST', 'BAD'],
+            'file'                      => [
+                'content'               => $encodedFile,
+                'format'                => 'txt'
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $templates->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(_WRONG_FILE_TYPE, $responseBody['errors']);
+
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
@@ -336,9 +360,6 @@ class TemplateControllerTest extends TestCase
 
         $response     = $templates->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
         $this->assertSame(204, $response->getStatusCode());
-        $responseBody = json_decode((string)$response->getBody(), true);
-
-        $this->assertSame("success", $responseBody['success']);
 
         ########## UPDATE FAIL MISSING PARAMETERS ##########
 

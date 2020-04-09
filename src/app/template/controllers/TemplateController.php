@@ -134,6 +134,14 @@ class TemplateController
         if ($body['type'] == 'OFFICE' || ($body['type'] == 'OFFICE_HTML' && !empty($body['file']['paper']['content']))) {
             $content = $body['type'] == 'OFFICE_HTML' ? $body['file']['paper']['content'] : $body['file']['content'];
             $format = $body['type'] == 'OFFICE_HTML' ? $body['file']['paper']['format'] : $body['file']['format'];
+
+            $fileContent = base64_decode($content);
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($fileContent);
+            if (!in_array($mimeType, self::AUTHORIZED_MIMETYPES)) {
+                return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
+            }
+
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'templates',
                 'docserverTypeId'   => 'TEMPLATES',
@@ -203,6 +211,14 @@ class TemplateController
         if (($body['type'] == 'OFFICE' && !empty($body['file']['content'])) || ($body['type'] == 'OFFICE_HTML' && !empty($body['file']['paper']['content']))) {
             $content = $body['type'] == 'OFFICE_HTML' ? $body['file']['paper']['content'] : $body['file']['content'];
             $format = $body['type'] == 'OFFICE_HTML' ? $body['file']['paper']['format'] : $body['file']['format'];
+
+            $fileContent = base64_decode($content);
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($fileContent);
+            if (!in_array($mimeType, self::AUTHORIZED_MIMETYPES)) {
+                return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
+            }
+
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'templates',
                 'docserverTypeId'   => 'TEMPLATES',
