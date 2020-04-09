@@ -180,12 +180,13 @@ class AuthenticationController
             return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
         }
 
-        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'loginmode', 'refresh_token']]);
+        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'loginmode', 'refresh_token', 'user_id']]);
         if (empty($user) || $user['loginmode'] == 'restMode') {
             return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
         }
 
         $GLOBALS['id'] = $user['id'];
+        $GLOBALS['login'] = $user['user_id'];
 
         $user['refresh_token'] = json_decode($user['refresh_token'], true);
         foreach ($user['refresh_token'] as $key => $refreshToken) {
@@ -210,14 +211,14 @@ class AuthenticationController
         $response = $response->withHeader('Token', AuthenticationController::getJWT());
         $response = $response->withHeader('Refresh-Token', $refreshToken);
 
-        /* HistoryController::add([
+        HistoryController::add([
             'tableName' => 'users',
             'recordId'  => $user['id'],
             'eventType' => 'LOGIN',
             'info'      => _LOGIN . ' : ' . $login,
             'moduleId'  => 'authentication',
             'eventId'   => 'login'
-        ]); */
+        ]);
 
         return $response->withStatus(204);
     }
