@@ -1,12 +1,4 @@
 <requestDefinitions>
-	<requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="manage_notifications_controler" >
-        <parameter name="page" value="manage_notifications_controler"/>
-        <parameter name="module" value="notifications"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="manage_notifications_controler" >
-        <parameter name="page" value="manage_notifications_controler"/>
-        <parameter name="module" value="notifications"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="manage_notifs_list_by_name" >
         <parameter name="page" value="manage_notifs_list_by_name"/>
         <parameter name="display" value="true"/>
