@@ -59,7 +59,7 @@ export class BasketHomeComponent implements OnInit, OnDestroy {
     getMyBaskets() {
         this.loading = true;
 
-        this.http.get('../../rest/home').pipe(
+        this.http.get('../rest/home').pipe(
             tap((data: any) => {
                 this.homeData = data;
                 this.loading = false;
@@ -83,7 +83,7 @@ export class BasketHomeComponent implements OnInit, OnDestroy {
     }
 
     refreshBasketHome() {
-        this.http.get('../../rest/home')
+        this.http.get('../rest/home')
             .subscribe((data: any) => {
                 this.homeData = data;
             });
@@ -103,7 +103,7 @@ export class BasketHomeComponent implements OnInit, OnDestroy {
 
     updateGroupsOrder() {
         const groupsOrder = this.homeData.regroupedBaskets.map((element: any) => element.groupSerialId);
-        this.http.put('../../rest/currentUser/profile/preferences', { homeGroups: groupsOrder }).pipe(
+        this.http.put('../rest/currentUser/profile/preferences', { homeGroups: groupsOrder }).pipe(
             tap(() => this.notify.success(this.lang.parameterUpdated)),
             catchError((err) => {
                 this.notify.handleErrors(err);

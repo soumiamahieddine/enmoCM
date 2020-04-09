@@ -45,7 +45,7 @@ export class HeaderService {
 
     loadHeader() {
         return new Promise((resolve, reject) => {
-            this.http.get('../../rest/header').pipe(
+            this.http.get('../rest/header').pipe(
                 tap((data: any) => {
                     this.setUser(data.user);
                     resolve(true);
@@ -62,7 +62,7 @@ export class HeaderService {
 
     resfreshCurrentUser() {
         return new Promise((resolve, reject) => {
-            this.http.get('../../rest/currentUser/profile')
+            this.http.get('../rest/currentUser/profile')
                 .pipe(
                     map((data: any) => {
                         this.user = {

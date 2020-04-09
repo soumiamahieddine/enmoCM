@@ -118,7 +118,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
     }
 
     getEncodedDocument(data: any) {
-        this.http.get('../../rest/onlyOffice/encodedFile', { params: { url: data } }).pipe(
+        this.http.get('../rest/onlyOffice/encodedFile', { params: { url: data } }).pipe(
             tap((result: any) => {
                 this.file.content = result.encodedFile;
                 this.isSaving = false;
@@ -167,7 +167,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
 
     getServerConfiguration() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../../rest/onlyOffice/configuration`).pipe(
+            this.http.get(`../rest/onlyOffice/configuration`).pipe(
                 tap((data: any) => {
                     if (data.enabled) {
                         const protocol = data.serverSsl ? 'https://' : 'http://';
@@ -197,7 +197,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
                 this.notify.error(`${this.lang.errorOnlyoffice1}`);
                 this.triggerCloseEditor.emit();
             } else {
-                this.http.get(`../../rest/onlyOffice/available`).pipe(
+                this.http.get(`../rest/onlyOffice/available`).pipe(
                     tap((data: any) => {
                         if (data.isAvailable) {
                             resolve(true);

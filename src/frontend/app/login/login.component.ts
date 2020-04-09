@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 import { LangService } from '../../service/app-lang.service';
 import { of } from 'rxjs/internal/observable/of';
 import { HeaderService } from '../../service/header.service';
+import { FunctionsService } from '../../service/functions.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private headerService: HeaderService,
         public authService: AuthService,
+        private functionsService: FunctionsService,
         private notify: NotificationService,
         public dialog: MatDialog,
         private formBuilder: FormBuilder
@@ -54,7 +56,7 @@ export class LoginComponent implements OnInit {
     onSubmit() {
         this.loading = true;
         this.http.post(
-            '../../rest/authenticate',
+            '../rest/authenticate',
             {
                 'login': this.loginForm.get('login').value,
                 'password': this.loginForm.get('password').value
@@ -82,14 +84,33 @@ export class LoginComponent implements OnInit {
     }
 
     getLoginInformations() {
-        this.http.get('../../rest/authenticationInformations').pipe(
+        this.http.get('../rest/authenticationInformations').pipe(
                 tap((data: any) => {
                     this.applicationName = data.applicationName;
                     this.loginMessage = data.loginMessage;
                 }),
                 finalize(() => this.showForm = true),
                 catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
+                    // TO DO : CONVERT custom.xml to json
+                    /*if (err.error.exception[0].message === 'Argument driver is empty') {
+                        const configs = [{
+                            custom_id : 'cs_recette',
+                            ip : '',
+                            external_domain : '',
+                            path: 'cs_recette'
+                        }];
+                        const firstConfig = configs.map(item => item.custom_id).filter((customId) => !this.functionsService.empty(customId));
+
+                        if (firstConfig.length > 0) {
+                            const url = document.URL;
+                            const splitUrl = url.split('/dist/');
+                            window.location.href = `${splitUrl[0]}/${firstConfig[0]}/dist/${splitUrl[1]}`;
+                        } else {
+                            this.notify.error('Aucun custom ou fichier de configuration trouvé!');
+                        }
+                    } else {
+                        this.notify.handleSoftErrors(err);
+                    }*/
                     return of(false);
                 })
             ).subscribe();

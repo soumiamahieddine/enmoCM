@@ -54,7 +54,7 @@ export class ActivateUserComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.get('../../rest/currentUser/profile')
+        this.http.get('../rest/currentUser/profile')
             .subscribe((data: any) => {
                 this.user = data;
 
@@ -81,7 +81,7 @@ export class ActivateUserComponent implements OnInit {
     // action on user
     activateUser(): void {
 
-        this.http.put('../../rest/users/' + this.headerService.user.id + '/status', { 'status': 'OK' })
+        this.http.put('../rest/users/' + this.headerService.user.id + '/status', { 'status': 'OK' })
             .subscribe(() => {
 
                 let basketsRedirectedIds: any = '';
@@ -97,7 +97,7 @@ export class ActivateUserComponent implements OnInit {
                 });
 
                 if (basketsRedirectedIds !== '') {
-                    this.http.delete('../../rest/users/' + this.headerService.user.id + '/redirectedBaskets?redirectedBasketIds[]=' + basketsRedirectedIds)
+                    this.http.delete('../rest/users/' + this.headerService.user.id + '/redirectedBaskets?redirectedBasketIds[]=' + basketsRedirectedIds)
                         .subscribe((data: any) => {
                             this.router.navigate(['/home']);
                             this.notify.success(this.lang.absOff);

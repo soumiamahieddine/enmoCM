@@ -223,7 +223,6 @@
                                                     name="template_style" title="{{lang.defaultTemplate}}"
                                                     placeholder="{{lang.chosenModel}}"
                                                     [(ngModel)]="selectedModelFile"
-                                                    (ngModelChange)="resetFileUploaded()"
                                                     [required]="template.target!='acknowledgementReceipt'">
                                                     <mat-optgroup label="{{lang.loadedFile}} :">
                                                         <mat-option

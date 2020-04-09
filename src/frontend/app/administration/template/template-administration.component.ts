@@ -112,7 +112,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
                 this.creationMode = true;
 
-                this.http.get('../../rest/administration/templates/new')
+                this.http.get('../rest/administration/templates/new')
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.loading = false;
@@ -121,7 +121,7 @@ export class TemplateAdministrationComponent implements OnInit {
             } else {
 
                 this.creationMode = false;
-                this.http.get('../../rest/templates/' + params['id'] + '/details')
+                this.http.get('../rest/templates/' + params['id'] + '/details')
                     .subscribe((data: any) => {
                         this.setInitialValue(data);
                         this.template = {
@@ -131,30 +131,27 @@ export class TemplateAdministrationComponent implements OnInit {
                             datasource: data.template.template_datasource,
                             target: data.template.template_target,
                             type: data.template.template_type,
-                            template_attachment_type: data.template.template_attachment_type,
                             file: {}
                         };
                         this.updateTemplateType();
 
                         this.selectedModelFile = data.template.template_file_name;
+                        this.template.template_attachment_type = data.template.template_attachment_type;
                         if (this.template.type === 'HTML' || this.template.type === 'TXT') {
                             this.template.file.content = data.template.template_content;
                         } else if (this.template.type === 'OFFICE') {
                             this.template.file.format = data.template.template_file_name.split('.').pop();
                             this.template.file.name = data.template.template_file_name;
                         } else if (this.template.target === 'acknowledgementReceipt') {
-                            this.template.file.paper.format = data.template.template_file_name.split('.').pop();
+                            if (!this.functionsService.empty(this.template.file.paper.format)) {
+                                this.template.file.paper.format = data.template.template_file_name.split('.').pop();
+                            }
                             this.template.file.paper.name = data.template.template_file_name;
                             this.template.file.electronic.content = data.template.template_content;
                         }
 
                         this.headerService.setHeader(this.lang.templateModification, this.template.template_label);
                         this.loading = false;
-
-                        console.log(this.selectedModelFile);
-                        console.log(this.template);
-                        console.log(data);
-
                     });
             }
             if (!this.template.template_attachment_type) {
@@ -337,9 +334,9 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     launchJavaEditor(params: any) {
-        this.http.post('../../rest/jnlp', params).pipe(
+        this.http.post('../rest/jnlp', params).pipe(
             tap((data: any) => {
-                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                window.location.href = '../rest/jnlp/' + data.generatedJnlp;
                 this.checkLockFile(data.jnlpUniqueId, params.extension);
             }),
             catchError((err: any) => {
@@ -387,7 +384,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
     getViewTemplateFile() {
 
-        this.http.post('../../rest/convertedFile/encodedFile', { encodedFile: this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.content : this.template.file.content, format: this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.format : this.template.file.format }).pipe(
+        this.http.post('../rest/convertedFile/encodedFile', { encodedFile: this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.content : this.template.file.content, format: this.template.target === 'acknowledgementReceipt' ? this.template.file.paper.format : this.template.file.format }).pipe(
             tap((data: any) => {
                 this.templateDocView = this.sanitizer.bypassSecurityTrustResourceUrl('data:application/pdf;base64,' + data.encodedResource);
             }),
@@ -401,7 +398,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
     checkLockFile(id: string, extension: string) {
         this.intervalLockFile = setInterval(() => {
-            this.http.get('../../rest/jnlp/lock/' + id).pipe(
+            this.http.get('../rest/jnlp/lock/' + id).pipe(
                 tap((data: any) => {
                     this.lockFound = data.lockFileFound;
                     if (!this.lockFound) {
@@ -414,7 +411,7 @@ export class TemplateAdministrationComponent implements OnInit {
     }
 
     loadTmpFile(filenameOnTmp: string) {
-        this.http.get(`../../rest/convertedFile/${filenameOnTmp}?convert=true`).pipe(
+        this.http.get(`../rest/convertedFile/${filenameOnTmp}?convert=true`).pipe(
             tap((data: any) => {
                 if (this.template.target === 'acknowledgementReceipt') {
                     this.template.file.paper.name = this.selectedModelFile;
@@ -435,7 +432,7 @@ export class TemplateAdministrationComponent implements OnInit {
             const r = confirm(this.lang.confirmDuplicate);
 
             if (r) {
-                this.http.post('../../rest/templates/' + this.template.id + '/duplicate', { 'id': this.template.id })
+                this.http.post('../rest/templates/' + this.template.id + '/duplicate', { 'id': this.template.id })
                     .subscribe((data: any) => {
                         this.notify.success(this.lang.templateDuplicated);
                         this.router.navigate(['/administration/templates/' + data.id]);
@@ -458,7 +455,7 @@ export class TemplateAdministrationComponent implements OnInit {
 
         if (this.isValidTemplate()) {
             if (this.creationMode) {
-                this.http.post('../../rest/templates', this.formatTemplate()).pipe(
+                this.http.post('../rest/templates', this.formatTemplate()).pipe(
                     tap((data: any) => {
                         if (data.checkEntities) {
                             this.config = {
@@ -480,9 +477,9 @@ export class TemplateAdministrationComponent implements OnInit {
                     })
                 ).subscribe();
             } else {
-                this.http.put('../../rest/templates/' + this.template.id, this.formatTemplate()).pipe(
+                this.http.put('../rest/templates/' + this.template.id, this.formatTemplate()).pipe(
                     tap((data: any) => {
-                        if (data.checkEntities) {
+                        if (!this.functionsService.empty(data) && data.checkEntities) {
                             this.config = {
                                 panelClass: 'maarch-modal',
                                 data: {

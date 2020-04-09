@@ -47,7 +47,7 @@ export class PrintSeparatorComponent implements OnInit {
 
         this.headerService.setHeader(this.lang.printSeparators);
 
-        this.http.get('../../rest/entities')
+        this.http.get('../rest/entities')
             .subscribe((data: any) => {
                 this.entities = data['entities'];
                 this.entities.forEach(entity => {
@@ -101,7 +101,7 @@ export class PrintSeparatorComponent implements OnInit {
     generateSeparators() {
         this.loading = true;
         this.separator.entities = $('#jstree').jstree('get_checked', null, true);
-        this.http.post('../../rest/entitySeparators', this.separator)
+        this.http.post('../rest/entitySeparators', this.separator)
             .subscribe((data: any) => {
                 this.docData = data;
                 this.docBuffer = this.base64ToArrayBuffer(this.docData);

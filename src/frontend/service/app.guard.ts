@@ -42,7 +42,7 @@ export class AppGuard implements CanActivate {
 
         if (tokenInfo !== null) {
             if (this.headerService.user.id === undefined) {
-                return this.http.get('../../rest/currentUser/profile')
+                return this.http.get('../rest/currentUser/profile')
                     .pipe(
                         map((data: any) => {
                             this.headerService.user = {
@@ -74,7 +74,7 @@ export class AppGuard implements CanActivate {
                         tokenInfo = this.authService.getToken();
 
                         if (tokenInfo !== null) {
-                            this.http.get('../../rest/currentUser/profile')
+                            this.http.get('../rest/currentUser/profile')
                                 .pipe(
                                     map((dataUser: any) => {
                                         this.headerService.user = {
@@ -103,7 +103,7 @@ export class AppGuard implements CanActivate {
 
         }
         if (this.headerService.user.id === undefined) {
-            return this.http.get('../../rest/currentUser/profile')
+            return this.http.get('../rest/currentUser/profile')
                 .pipe(
                     map((data: any) => {
                         this.headerService.user = {

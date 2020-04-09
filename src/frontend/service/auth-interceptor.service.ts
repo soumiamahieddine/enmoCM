@@ -10,7 +10,7 @@ import { of } from 'rxjs/internal/observable/of';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     lang: any = LANG;
-    excludeUrls: string[] = ['../../rest/authenticate', '../../rest/authenticate/token', '../../rest/authenticationInformations', '../../rest/password', '../../rest/passwordRules'];
+    excludeUrls: string[] = ['../rest/authenticate', '../rest/authenticate/token', '../rest/authenticationInformations', '../rest/password', '../rest/passwordRules'];
 
     constructor(
         public http: HttpClient,
@@ -35,6 +35,9 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
+
+        console.log(request.url);
+
         // We don't want to intercept some routes
         if (this.excludeUrls.indexOf(request.url) > -1 || request.url.indexOf('/password') > -1) {
             return next.handle(request);
@@ -53,7 +56,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     // Disconnect user if bad token process
                     if (error.status === 401) {
                         console.log('Auth error !');
-                        return this.http.get('../../rest/authenticate/token', {
+                        return this.http.get('../rest/authenticate/token', {
                             params: {
                                 refreshToken: this.authService.getRefreshToken()
                             }
