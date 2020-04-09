@@ -220,8 +220,6 @@ CREATE TABLE users
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   password_modification_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
   loginmode character varying(50) DEFAULT NULL::character varying,
-  cookie_key character varying(255) DEFAULT NULL::character varying,
-  cookie_date timestamp without time zone,
   refresh_token jsonb NOT NULL DEFAULT '[]',
   reset_token text,
   failed_authentication INTEGER DEFAULT 0,

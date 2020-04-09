@@ -20,6 +20,8 @@ ALTER TABLE notif_email_stack DROP COLUMN IF EXISTS text_body;
 ALTER TABLE notif_email_stack DROP COLUMN IF EXISTS module;
 
 /* USERS */
+ALTER TABLE users DROP COLUMN IF EXISTS cookie_key;
+ALTER TABLE users DROP COLUMN IF EXISTS cookie_date;
 ALTER TABLE users DROP COLUMN IF EXISTS refresh_token;
 ALTER TABLE users ADD COLUMN refresh_token jsonb NOT NULL DEFAULT '[]';
 
