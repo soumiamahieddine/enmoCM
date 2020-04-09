@@ -165,7 +165,7 @@ class TemplateControllerTest extends TestCase
         $response     = $templates->create($fullRequest, new \Slim\Http\Response());
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame(_WRONG_FILE_TYPE, $responseBody['errors']);
+        $this->assertSame(_WRONG_FILE_TYPE . ' : text/plain', $responseBody['errors']);
 
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -423,7 +423,7 @@ class TemplateControllerTest extends TestCase
         $response     = $templates->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame(_WRONG_FILE_TYPE, $responseBody['errors']);
+        $this->assertSame(_WRONG_FILE_TYPE . ' : text/plain', $responseBody['errors']);
 
         // Fail
         $GLOBALS['login'] = 'bbain';
