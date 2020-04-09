@@ -108,7 +108,7 @@ class TemplateController
         }
 
         $body = $request->getParsedBody();
-        if (!TemplateController::checkData(['data' => $body])) {
+        if (!TemplateController::controlCreateTemplate(['data' => $body])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
@@ -178,90 +178,63 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }
 
-        $data = $request->getParams();
-        $data['template_type'] = $template['template_type'];
-        $data['template_target'] = $template['template_target'];
-        $data['template_id'] = $aArgs['id'];
+        $body = $request->getParsedBody();
+        $body['type'] = $template['template_type'];
 
-        if (!TemplateController::checkData(['data' => $data])) {
+        if (!TemplateController::controlUpdateTemplate(['data' => $body])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        if ($data['template_type'] == 'OFFICE_HTML' && empty($data['jnlpUniqueId']) && empty($data['uploadedFile']) && empty($data['template_content']) && empty($template['template_file_name'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'You must complete at least one of the two templates']);
-        }
-
-        if ($data['template_target'] == 'acknowledgementReceipt' && !empty($data['entities'])) {
-            $checkEntities = TemplateModel::checkEntities(['data' => $data]);
-            
+        if ($template['template_target'] == 'acknowledgementReceipt' && !empty($body['entities'])) {
+            $checkEntities = TemplateModel::checkEntities(['data' => $body]);
             if (!empty($checkEntities)) {
                 return $response->withJson(['checkEntities' => $checkEntities]);
             }
         }
 
-        if (($data['template_type'] == 'OFFICE' || $data['template_type'] == 'OFFICE_HTML') && (!empty($data['jnlpUniqueId']) || !empty($data['uploadedFile']))) {
-            if (!empty($data['jnlpUniqueId'])) {
-                if (!empty($data['template_style'])) {
-                    $explodeStyle = explode(':', $data['template_style']);
-                    $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
-                } elseif (!empty($data['template_file_name'])) {
-                    $explodeStyle = explode('.', $data['template_file_name']);
-                    $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
-                }
-            } else {
-                if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
-                }
-                $fileContent = base64_decode($data['uploadedFile']['base64']);
-                $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-                $mimeType = $finfo->buffer($fileContent);
-                if (!in_array($mimeType, self::AUTHORIZED_MIMETYPES)) {
-                    return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);
-                }
-
-                $fileOnTmp = rand() . $data['uploadedFile']['name'];
-                $file = fopen(CoreConfigModel::getTmpPath() . $fileOnTmp, 'w');
-                fwrite($file, $fileContent);
-                fclose($file);
-            }
-
-            $resource = file_get_contents(CoreConfigModel::getTmpPath() . $fileOnTmp);
-            $pathInfo = pathinfo(CoreConfigModel::getTmpPath() . $fileOnTmp);
+        $template = [
+            'template_label'            => $body['label'],
+            'template_comment'          => $body['description'],
+            'template_attachment_type'  => $body['template_attachment_type']
+        ];
+        if ($body['type'] == 'TXT' || $body['type'] == 'HTML' || ($body['type'] == 'OFFICE_HTML' && !empty($body['file']['electronic']['content']))) {
+            $template['template_content'] = $body['type'] == 'OFFICE_HTML' ? $body['file']['electronic']['content'] : $body['file']['content'];
+        }
+        if (($body['type'] == 'OFFICE' && !empty($body['file']['content'])) || ($body['type'] == 'OFFICE_HTML' && !empty($body['file']['paper']['content']))) {
+            $content = $body['type'] == 'OFFICE_HTML' ? $body['file']['paper']['content'] : $body['file']['content'];
+            $format = $body['type'] == 'OFFICE_HTML' ? $body['file']['paper']['format'] : $body['file']['format'];
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'templates',
                 'docserverTypeId'   => 'TEMPLATES',
-                'encodedResource'   => base64_encode($resource),
-                'format'            => $pathInfo['extension']
+                'encodedResource'   => $content,
+                'format'            => $format
             ]);
             if (!empty($storeResult['errors'])) {
                 return $response->withStatus(500)->withJson(['errors' => '[storeResource] ' . $storeResult['errors']]);
             }
 
-            $data['template_path'] = $storeResult['destination_dir'];
-            $data['template_file_name'] = $storeResult['file_destination_name'];
+            $template['template_path'] = $storeResult['destination_dir'];
+            $template['template_file_name'] = $storeResult['file_destination_name'];
         }
 
         TemplateAssociationModel::delete(['where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
-        if (!empty($data['entities']) && is_array($data['entities'])) {
-            foreach ($data['entities'] as $entity) {
+        if (!empty($body['entities']) && is_array($body['entities'])) {
+            foreach ($body['entities'] as $entity) {
                 TemplateAssociationModel::create(['templateId' => $aArgs['id'], 'entityId' => $entity]);
             }
         }
-        unset($data['uploadedFile']);
-        unset($data['jnlpUniqueId']);
-        unset($data['entities']);
-        TemplateModel::update(['set' => $data, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
+        TemplateModel::update(['set' => $template, 'where' => ['template_id = ?'], 'data' => [$aArgs['id']]]);
 
         HistoryController::add([
             'tableName' => 'templates',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _TEMPLATE_UPDATED . " : {$data['template_label']}",
+            'info'      => _TEMPLATE_UPDATED . " : {$template['template_label']}",
             'moduleId'  => 'template',
             'eventId'   => 'templateModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withStatus(204);
     }
 
     public function delete(Request $request, Response $response, array $aArgs)
@@ -501,7 +474,7 @@ class TemplateController
         return $response->withJson(['mergedDocument' => $fileContent]);
     }
 
-    private static function checkData(array $aArgs)
+    private static function controlCreateTemplate(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['data']);
         ValidatorModel::arrayType($aArgs, ['data']);
@@ -520,6 +493,31 @@ class TemplateController
 
         if ($data['type'] == 'OFFICE_HTML') {
             $check = $check && (Validator::notEmpty()->validate($data['file']['paper']['content']) || Validator::notEmpty()->validate($data['file']['electronic']['content']));
+            $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
+        }
+
+        if (!empty($data['entities'])) {
+            $check = $check && Validator::arrayType()->validate($data['entities']);
+        }
+
+        return $check;
+    }
+
+    private static function controlUpdateTemplate(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['data']);
+        ValidatorModel::arrayType($args, ['data']);
+
+        $data = $args['data'];
+
+        $check = Validator::stringType()->notEmpty()->validate($data['label']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
+
+        if ($data['type'] == 'HTML' || $data['type'] == 'TXT') {
+            $check = $check && Validator::notEmpty()->validate($data['file']['content']);
+        }
+
+        if ($data['type'] == 'OFFICE_HTML') {
             $check = $check && Validator::stringType()->notEmpty()->validate($data['template_attachment_type']);
         }
 
