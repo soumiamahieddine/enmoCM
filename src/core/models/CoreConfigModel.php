@@ -32,11 +32,7 @@ class CoreConfigModel
 
         $explodeUrl = explode('/', $_SERVER['SCRIPT_NAME']);
 
-        if (strpos($_SERVER['SCRIPT_NAME'], 'apps/maarch_entreprise') === false) {
-            $path = $explodeUrl[count($explodeUrl) - 3];
-        } else {
-            $path = $explodeUrl[count($explodeUrl) - 4];
-        }
+        $path = $explodeUrl[count($explodeUrl) - 3];
 
         $xmlfile = simplexml_load_file('custom/custom.xml');
         foreach ($xmlfile->custom as $value) {
