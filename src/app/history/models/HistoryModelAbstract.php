@@ -65,7 +65,7 @@ abstract class HistoryModelAbstract
     public static function getByUserId(array $args)
     {
         ValidatorModel::notEmpty($args, ['userId']);
-        ValidatorModel::stringType($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
 
         $aHistories = DatabaseModel::select([
             'select'   => empty($args['select']) ? ['*'] : $args['select'],
