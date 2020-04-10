@@ -282,7 +282,7 @@ class TemplateController
 
     public function getContentById(Request $request, Response $response, array $aArgs)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
+        if (!Validator::intVal()->validate($aArgs['id']) || !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
