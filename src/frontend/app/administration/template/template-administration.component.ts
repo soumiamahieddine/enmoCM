@@ -625,6 +625,22 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
         this.template.type = ev.value;
     }
 
+    changeModel() {
+        this.template.file = {
+            name: '',
+            type: '',
+            content: ''
+        };
+
+        this.template.file = {
+            electronic: {
+                name: '',
+                type: '',
+                content: ''
+            }
+        };
+    }
+
     loadTab(event: any) {
         if (event.index === 0) {
             this.initMce('textarea#templateOfficeHtml');
