@@ -56,8 +56,6 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
         'dotx',
         'odt',
         'ott',
-        'rtf',
-        'txt',
         'html',
         'xlsl',
         'xlsx',
