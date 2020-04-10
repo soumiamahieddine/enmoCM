@@ -275,7 +275,7 @@ class IParapheurController
                     <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.adullact.org/spring-ws/iparapheur/1.0">
                         <soapenv:Header/> 
                         <soapenv:Body> 
-                            <ns:GetHistoDossierRequest>' . $value->external_id . '</ns:GetHistoDossierRequest> 
+                            <ns:GetHistoDossierRequest>' . $value['external_id'] . '</ns:GetHistoDossierRequest> 
                         </soapenv:Body> 
                     </soapenv:Envelope>';
 
@@ -298,25 +298,25 @@ class IParapheurController
 
                                 $response = IParapheurController::download([
                                     'config'     => $aArgs['config'],
-                                    'documentId' => $value->external_id
+                                    'documentId' => $value['external_id']
                                 ]);
                                 if (!empty($response['error'])) {
                                     return ['error' => $response['error']];
                                 }
-                                $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                                $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
-                                $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $response['b64FileContent'];
-                                $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $noteContent;
+                                $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'validated';
+                                $aArgs['idsToRetrieve'][$version][$resId]['format'] = 'pdf';
+                                $aArgs['idsToRetrieve'][$version][$resId]['encodedFile'] = $response['b64FileContent'];
+                                $aArgs['idsToRetrieve'][$version][$resId]['noteContent'] = $noteContent;
                                 if ($status == $aArgs['config']['data']['signState']) {
                                     break;
                                 }
                             } elseif ($status == $aArgs['config']['data']['refusedVisa'] || $status == $aArgs['config']['data']['refusedSign']) {
                                 $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
-                                $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                                $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $noteContent;
+                                $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'refused';
+                                $aArgs['idsToRetrieve'][$version][$resId]['noteContent'] = $noteContent;
                                 break;
                             } else {
-                                $aArgs['idsToRetrieve'][$version][$resId]->status = 'waiting';
+                                $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'waiting';
                             }
                         }
                     }

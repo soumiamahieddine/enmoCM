@@ -380,8 +380,8 @@ class XParaphController
         foreach (['noVersion'] as $version) {
             $depotsBySiret = [];
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                $externalId = json_decode($value->xparaphdepot, true);
-                $depotsBySiret[$externalId['siret']][$value->external_id] = ['resId' => $resId, 'login' => $externalId['login']];
+                $externalId = json_decode($value['xparaphdepot'], true);
+                $depotsBySiret[$externalId['siret']][$value['external_id']] = ['resId' => $resId, 'login' => $externalId['login']];
             }
 
             foreach ($depotsBySiret as $siret => $depotids) {
@@ -406,16 +406,16 @@ class XParaphController
                 }
     
                 foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-                    $xParaphDepot = json_decode($value->xparaphdepot, true);
-                    $avancement = $avancements[$value->external_id];
+                    $xParaphDepot = json_decode($value['xparaphdepot'], true);
+                    $avancement = $avancements[$value['external_id']];
     
                     $state = XParaphController::getState(['avancement' => $avancement]);
     
                     if ($state['id'] == 'refused') {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                        $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                        $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'refused';
+                        $aArgs['idsToRetrieve'][$version][$resId]['noteContent'] = $state['note'];
     
-                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id, 'userGeneric' => $userGeneric, 'depotLogin' => $xParaphDepot['login']]);
+                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value['external_id'], 'userGeneric' => $userGeneric, 'depotLogin' => $xParaphDepot['login']]);
                         if (!empty($processedFile['errors'])) {
                             unset($aArgs['idsToRetrieve'][$version][$resId]);
                             continue;
@@ -435,15 +435,15 @@ class XParaphController
                         }
                         unlink($tmpPath . $tmpName);
     
-                        $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
+                        $aArgs['idsToRetrieve'][$version][$resId]['log'] = $log;
                     } elseif ($state['id'] == 'validateSignature' || $state['id'] == 'validateOnlyVisa') {
-                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value->external_id, 'userGeneric' => $userGeneric, 'depotLogin' => $xParaphDepot['login']]);
+                        $processedFile = XParaphController::getFile(['config' => $aArgs['config'], 'depotId' => $value['external_id'], 'userGeneric' => $userGeneric, 'depotLogin' => $xParaphDepot['login']]);
                         if (!empty($processedFile['errors'])) {
                             unset($aArgs['idsToRetrieve'][$version][$resId]);
                             continue;
                         }
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                        $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
+                        $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'validated';
+                        $aArgs['idsToRetrieve'][$version][$resId]['format'] = 'pdf';
     
                         $file      = base64_decode($processedFile['zip']);
                         $unzipName = 'tmp_file_' .rand(). '_xParaph_' .rand();
@@ -463,12 +463,12 @@ class XParaphController
                         }
                         unlink($tmpPath . $tmpName);
     
-                        $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $encodedFile;
-                        $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
+                        $aArgs['idsToRetrieve'][$version][$resId]['encodedFile'] = $encodedFile;
+                        $aArgs['idsToRetrieve'][$version][$resId]['noteContent'] = $state['note'];
                         if ($state['id'] == 'validateOnlyVisa') {
-                            $aArgs['idsToRetrieve'][$version][$resId]->onlyVisa = true;
+                            $aArgs['idsToRetrieve'][$version][$resId]['onlyVisa'] = true;
                         }
-                        $aArgs['idsToRetrieve'][$version][$resId]->log = $log;
+                        $aArgs['idsToRetrieve'][$version][$resId]['log'] = $log;
                     } else {
                         unset($aArgs['idsToRetrieve'][$version][$resId]);
                     }

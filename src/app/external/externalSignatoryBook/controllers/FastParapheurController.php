@@ -37,7 +37,7 @@ class FastParapheurController
                     <soapenv:Header/>
                         <soapenv:Body>
                             <sei:history>
-                                <documentId>' .  $value->external_id . '</documentId>
+                                <documentId>' .  $value['external_id'] . '</documentId>
                             </sei:history>
                         </soapenv:Body>
                 </soapenv:Envelope>';
@@ -57,10 +57,10 @@ class FastParapheurController
                 }
 
                 $isError = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
-                if (!empty($isError ->Fault[0]) && !empty($value->res_id_master)) {
-                    echo 'PJ n° ' . $resId . ' et document original n° ' . $value->res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
+                if (!empty($isError ->Fault[0]) && !empty($value['res_id_master'])) {
+                    echo 'PJ n° ' . $resId . ' et document original n° ' . $value['res_id_master'] . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
                     continue;
-                } elseif (!empty($isError ->Fault[0])) {
+                } elseif (!empty($isError->Fault[0])) {
                     echo 'Document principal n° ' . $resId . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
                     continue;
                 }
@@ -70,10 +70,10 @@ class FastParapheurController
                 foreach ($response->return as $res) {    // Loop on all steps of the documents (prepared, send to signature, signed etc...)
                     $state      = (string) $res->stateName;
                     if ($state == $aArgs['config']['data']['validatedState']) {
-                        $response = FastParapheurController::download(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'validated';
-                        $aArgs['idsToRetrieve'][$version][$resId]->format = 'pdf';
-                        $aArgs['idsToRetrieve'][$version][$resId]->encodedFile = $response['b64FileContent'];
+                        $response = FastParapheurController::download(['config' => $aArgs['config'], 'documentId' => $value['external_id']]);
+                        $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'validated';
+                        $aArgs['idsToRetrieve'][$version][$resId]['format'] = 'pdf';
+                        $aArgs['idsToRetrieve'][$version][$resId]['encodedFile'] = $response['b64FileContent'];
                         break;
                     } elseif ($state == $aArgs['config']['data']['refusedState']) {
                         $res = DatabaseModel::select([
@@ -81,15 +81,15 @@ class FastParapheurController
                             'table'     => ['listinstance', 'users'],
                             'left_join' => ['listinstance.item_id = users.user_id'],
                             'where'     => ['res_id = ?', 'item_mode = ?'],
-                            'data'      => [$aArgs['idsToRetrieve'][$version][$resId]->res_id_master, 'sign']
+                            'data'      => [$aArgs['idsToRetrieve'][$version][$resId]['res_id_master'], 'sign']
                         ])[0];
 
-                        $response = FastParapheurController::getRefusalMessage(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'refused';
-                        $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $res['lastname'] . ' ' . $res['firstname'] . ' : ' . $response;
+                        $response = FastParapheurController::getRefusalMessage(['config' => $aArgs['config'], 'documentId' => $value['external_id']]);
+                        $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'refused';
+                        $aArgs['idsToRetrieve'][$version][$resId]['noteContent'] = $res['lastname'] . ' ' . $res['firstname'] . ' : ' . $response;
                         break;
                     } else {
-                        $aArgs['idsToRetrieve'][$version][$resId]->status = 'waiting';
+                        $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'waiting';
                     }
                 }
             }
