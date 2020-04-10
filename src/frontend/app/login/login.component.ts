@@ -85,10 +85,10 @@ export class LoginComponent implements OnInit {
                 this.loading = false;
                 if (err.error.errors === 'Authentication Failed') {
                     this.notify.error(this.lang.wrongLoginPassword);
-                } else if (err.error.errors === 'Account suspended') {
+                } else if (err.error.errors === 'Account Suspended') {
                     this.notify.error(this.lang.accountSuspended);
-                } else if (err.error.errors === 'Account locked') {
-                    this.notify.error(this.lang.accountLocked + ' ' + this.timeLimit.transform(err.error.time));
+                } else if (err.error.errors === 'Account Locked') {
+                    this.notify.error(this.lang.accountLocked + ' ' + this.timeLimit.transform(err.error.date));
                 } else {
                     this.notify.handleSoftErrors(err);
                 }
