@@ -417,7 +417,7 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
+        $pathToThumbnail = 'dist/assets/noThumbnail.png';
 
         $tnlAdr = AdrModel::getTypedAttachAdrByResId([
             'select'    => ['docserver_id', 'path', 'filename'],
