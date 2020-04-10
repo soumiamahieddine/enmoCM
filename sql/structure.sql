@@ -95,7 +95,7 @@ CREATE TABLE history
   table_name character varying(32) DEFAULT NULL::character varying,
   record_id character varying(255) DEFAULT NULL::character varying,
   event_type character varying(32) NOT NULL,
-  user_id character varying(128) NOT NULL,
+  user_id INTEGER,
   event_date timestamp without time zone NOT NULL,
   info text,
   id_module character varying(50) NOT NULL DEFAULT 'admin'::character varying,

@@ -132,7 +132,7 @@ class UserController
         $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
-        $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['record_id', 'event_date', 'info', 'remote_ip']]);
+        $user['history']            = HistoryModel::getByUserId(['userId' => $aArgs['id'], 'select' => ['record_id', 'event_date', 'info', 'remote_ip']]);
         $user['canModifyPassword']              = false;
         $user['canSendActivationNotification']  = false;
         $user['canCreateMaarchParapheurUser']   = false;
