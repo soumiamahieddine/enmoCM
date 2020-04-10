@@ -146,8 +146,9 @@ export class AppGuard implements CanActivate {
                                 ).subscribe();
                             return true;
                         } else {
+                            this.authService.setCachedUrl(route.url.join('/'));
                             console.log('Aucun token trouvé ! Redirection sur login ...');
-                            this.authService.logout();
+                            this.authService.logout(false);
                             return false;
                         }
                     }),
