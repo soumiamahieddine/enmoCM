@@ -1653,7 +1653,7 @@ class UserController
         $resetToken = AuthenticationController::getResetJWT(['id' => $user['id'], 'expirationTime' => 3600]); // 1 hour
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
 
-        $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
+        $url = UrlController::getCoreUrl() . 'dist/index.html#/update-password?token=' . $resetToken;
         $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
         $configuration = json_decode($configuration['value'], true);
         if (!empty($configuration['from'])) {
