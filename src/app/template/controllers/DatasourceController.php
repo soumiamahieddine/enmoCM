@@ -47,8 +47,6 @@ class DatasourceController
         $datasources['res_letterbox'] = [];
         $datasources['contact']       = [];
         
-        $urlToApp = trim($aArgs['params']['maarchUrl'], '/').'/apps/maarch_entreprise/index.php?';
-        
         $basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
         $preferenceBasket = UserBasketPreferenceModel::get([
             'select'  => ['group_serial_id'],
@@ -94,10 +92,10 @@ class DatasourceController
             ])[0];
         
             // Lien vers la page detail
-            $res['linktodoc']     = $urlToApp . 'linkToDoc='.$res['res_id'];
-            $res['linktodetail']  = $urlToApp . 'linkToDetail='.$res['res_id'];
-            if (!empty($res['res_id']) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($aArgs['params']['recipient']['user_id'])) {
-                $res['linktoprocess'] = $urlToApp . 'linkToProcess='.$res['res_id'].'&groupId='.$preferenceBasket[0]['group_serial_id'].'&basketId='.$basket['id'].'&userId='.$aArgs['params']['recipient']['user_id'];
+            $res['linktodoc']     = trim($aArgs['params']['maarchUrl'], '/') . '/rest/resources/'.$res['res_id'].'/content?mode=view';
+            $res['linktodetail']  = trim($aArgs['params']['maarchUrl'], '/') . '/dist/index.html#/resources/'.$res['res_id'];
+            if (!empty($res['res_id']) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($aArgs['params']['recipient']['id'])) {
+                $res['linktoprocess'] = trim($aArgs['params']['maarchUrl'], '/') . '/dist/index.html#/process/users/'.$aArgs['params']['recipient']['id'].'/groups/'.$preferenceBasket[0]['group_serial_id'].'/baskets/'.$basket['id'].'/resId/'.$res['res_id'];
             }
         
             if (!empty($res['initiator'])) {
@@ -135,9 +133,6 @@ class DatasourceController
         $datasources['recipient'][0] = $aArgs['params']['recipient'];
         $datasources['notes']        = array();
         
-        // Link to detail page
-        $urlToApp = trim($aArgs['params']['maarchUrl'], '/').'/apps/maarch_entreprise/index.php?';
-        
         $basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
         $preferenceBasket = UserBasketPreferenceModel::get([
             'select'  => ['group_serial_id'],
@@ -164,11 +159,11 @@ class DatasourceController
                 $datasources['res_letterbox'][] = $resLetterbox;
             }
         
-            $note['linktodoc']     = $urlToApp . 'linkToDoc='.$resId;
-            $note['linktodetail']  = $urlToApp . 'linkToDetail='.$resId;
+            $note['linktodoc']     = trim($aArgs['params']['maarchUrl'], '/') . '/rest/resources/'.$resId.'/content?mode=view';
+            $note['linktodetail']  = trim($aArgs['params']['maarchUrl'], '/') . '/dist/index.html#/resources/'.$resId;
         
-            if (!empty($resId) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($aArgs['params']['recipient']['user_id'])) {
-                $note['linktoprocess'] = $urlToApp . 'linkToProcess='.$resId.'&groupId='.$preferenceBasket[0]['group_serial_id'].'&basketId='.$basket['id'].'&userId='.$aArgs['params']['recipient']['user_id'];
+            if (!empty($resId) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($aArgs['params']['recipient']['id'])) {
+                $note['linktoprocess'] = trim($aArgs['params']['maarchUrl'], '/') . '/dist/index.html#/process/users/'.$aArgs['params']['recipient']['id'].'/groups/'.$preferenceBasket[0]['group_serial_id'].'/baskets/'.$basket['id'].'/resId/'.$resId;
             }
         
             $resourceContacts = ResourceContactModel::get([
