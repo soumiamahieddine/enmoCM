@@ -1141,7 +1141,7 @@ CREATE TABLE message_exchange
   date timestamp NOT NULL,
   reference text NOT NULL,
   
-  account_id text,
+  account_id integer,
   sender_org_identifier text NOT NULL,
   sender_org_name text,
   recipient_org_identifier text NOT NULL,
