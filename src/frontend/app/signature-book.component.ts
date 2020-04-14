@@ -34,7 +34,6 @@ export class SafeUrlPipe implements PipeTransform {
 })
 export class SignatureBookComponent implements OnInit {
 
-    coreUrl: string;
     resId: number;
     basketId: number;
     groupId: number;
@@ -174,11 +173,11 @@ export class SignatureBookComponent implements OnInit {
 
                     setTimeout(() => {
                         $('#rightPanelContent').niceScroll({ touchbehavior: false, cursorcolor: '#666', cursoropacitymax: 0.6, cursorwidth: '4' });
-                        if ($('.tooltipstered').length == 0) {
-                            $('#obsVersion').tooltipster({
-                                interactive: true
-                            });
-                        }
+                        // if ($('.tooltipstered').length == 0) {
+                        //     $('#obsVersion').tooltipster({
+                        //         interactive: true
+                        //     });
+                        // }
                     }, 0);
                     this.loadBadges();
                     this.loadActions();
