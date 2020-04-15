@@ -276,7 +276,7 @@ class IParapheurController
     {
         $version = $aArgs['version'];
         foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
-            if (!empty($value->external_id)) {
+            if (!empty($value['external_id'])) {
                 $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
                 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.adullact.org/spring-ws/iparapheur/1.0">
                     <soapenv:Header/> 
@@ -321,6 +321,7 @@ class IParapheurController
                             $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
                             $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'refused';
                             $aArgs['idsToRetrieve'][$version][$resId]['noteContent'] = $noteContent;
+                            IParapheurController::processVisaWorkflow(['res_id_master' => $value['res_id_master'], 'res_id' => $value['res_id']]);
                             break;
                         } else {
                             $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'waiting';
