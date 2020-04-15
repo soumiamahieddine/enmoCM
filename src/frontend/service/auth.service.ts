@@ -24,6 +24,10 @@ export class AuthService {
         return this.localStorage.get('MaarchCourrierToken');
     }
 
+    setAppSession(id: string) {
+        this.localStorage.setAppSession(id);
+    }
+
     setCachedUrl(url: string) {
         this.localStorage.save('MaarchCourrierCachedUrl', url);
     }

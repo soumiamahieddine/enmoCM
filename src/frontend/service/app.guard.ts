@@ -100,8 +100,9 @@ export class AppGuard implements CanActivate {
             return this.http.get('../rest/authenticationInformations')
                 .pipe(
                     map((data: any) => {
-                        this.authService.authMode = data.connection;
-                        this.authService.changeKey = data.changeKey;
+                        this.authService.setAppSession(data.instanceId);
+                        // this.authService.authMode = data.connection;
+                        // this.authService.changeKey = data.changeKey;
                         this.localStorage.setAppSession(data.instanceId);
                         tokenInfo = this.authService.getToken();
 

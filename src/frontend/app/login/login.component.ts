@@ -103,6 +103,9 @@ export class LoginComponent implements OnInit {
     getLoginInformations() {
         this.http.get('../rest/authenticationInformations').pipe(
             tap((data: any) => {
+                this.authService.setAppSession(data.instanceId);
+                // this.authService.authMode = data.connection;
+                // this.authService.changeKey = data.changeKey;
                 this.applicationName = data.applicationName;
                 this.loginMessage = data.loginMessage;
             }),
