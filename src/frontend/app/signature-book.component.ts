@@ -173,11 +173,13 @@ export class SignatureBookComponent implements OnInit {
 
                     setTimeout(() => {
                         $('#rightPanelContent').niceScroll({ touchbehavior: false, cursorcolor: '#666', cursoropacitymax: 0.6, cursorwidth: '4' });
-                        // if ($('.tooltipstered').length == 0) {
-                        //     $('#obsVersion').tooltipster({
-                        //         interactive: true
-                        //     });
-                        // }
+
+                        if ($('.tooltipstered').length === 0) {
+                            $('#obsVersion').tooltipster({
+                                theme: 'tooltipster-light',
+                                interactive: true
+                            });
+                        }
                     }, 0);
                     this.loadBadges();
                     this.loadActions();
