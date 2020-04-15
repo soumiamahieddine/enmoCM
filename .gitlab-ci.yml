@@ -54,8 +54,8 @@ job_e2e:
    - curl -sL https://deb.nodesource.com/setup_13.x | bash - 
    - apt-get install -yqq nodejs 
    - npm install npm@latest -g 
-  #  - npm set registry https://registry.npmjs.org/ 
-  #  - npm install
+   - npm set registry https://registry.npmjs.org/ 
+   - npm install
   #  - npm run build-prod
    - apt-get install -yqq openjdk-11-jdk
    - apt-get install -yqq chromium
