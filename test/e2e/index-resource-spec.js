@@ -11,7 +11,7 @@ describe('index resource page', function() {
     });
 
     it('index a document whitout file', function() {
-        browser.sleep(500);
+        browser.sleep(4000);
         element(by.id('indexing')).click();
         browser.sleep(500);
         element(by.id('doctype')).click();
