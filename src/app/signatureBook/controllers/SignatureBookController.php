@@ -67,7 +67,6 @@ class SignatureBookController
             'data'      => [$aArgs['resId'], ['visa', 'sign']]
         ]);
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $owner = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $owner['user_id']]);
         $resources = ResModel::getOnView([
@@ -81,7 +80,7 @@ class SignatureBookController
         $datas['resList']               = $resources;
         $datas['nbNotes']               = NoteModel::countByResId(['resId' => $resId, 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['login']]);
         $datas['nbLinks']               = 0;
-        $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $currentUser['id']]);
+        $datas['signatures']            = UserSignatureModel::getByUserSerialId(['userSerialid' => $GLOBALS['id']]);
         $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);

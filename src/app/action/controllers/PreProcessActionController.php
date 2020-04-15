@@ -51,9 +51,7 @@ class PreProcessActionController
 {
     public static function getRedirectInformations(Request $request, Response $response, array $args)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -178,9 +176,7 @@ class PreProcessActionController
             $currentMode = 'auto';
         }
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -220,7 +216,7 @@ class PreProcessActionController
             $lock = true;
             if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
                 $lock = false;
-            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+            } elseif ($resource['locker_user_id'] == $GLOBALS['id']) {
                 $lock = false;
             } elseif (strtotime($resource['locker_time']) < time()) {
                 $lock = false;
@@ -380,9 +376,7 @@ class PreProcessActionController
 
     public function checkExternalSignatoryBook(Request $request, Response $response, array $aArgs)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -511,7 +505,7 @@ class PreProcessActionController
                     }
                 }
             } elseif ($signatureBookEnabled == 'xParaph') {
-                $userInfos  = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['external_id']]);
+                $userInfos  = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['external_id']]);
                 $externalId = json_decode($userInfos['external_id'], true);
                 $additionalsInfos['accounts'] = [];
                 if (!empty($externalId['xParaph'])) {
@@ -572,9 +566,7 @@ class PreProcessActionController
 
     public function checkExternalNoteBook(Request $request, Response $response, array $aArgs)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -846,9 +838,7 @@ class PreProcessActionController
 
     public function checkInitiatorEntity(Request $request, Response $response, array $args)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -885,9 +875,7 @@ class PreProcessActionController
 
     public function checkAttachmentsAndNotes(Request $request, Response $response, array $args)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }

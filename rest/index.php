@@ -58,7 +58,6 @@ $app->get('/authenticate/token', \SrcCore\controllers\AuthenticationController::
 
 //Initialize
 $app->get('/images', \SrcCore\controllers\CoreController::class . ':getImages');
-$app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
 
 //Acknowledgement Receipt
 $app->post('/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');

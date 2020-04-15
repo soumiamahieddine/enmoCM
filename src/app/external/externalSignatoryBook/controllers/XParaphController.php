@@ -601,7 +601,7 @@ class XParaphController
             }
         }
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
         if (empty($user)) {
             return $response->withStatus(400)->withJson(['errors' => 'User not found']);
         }
@@ -617,7 +617,7 @@ class XParaphController
                 $accountFound = true;
                 HistoryController::add([
                     'tableName'    => 'users',
-                    'recordId'     => $GLOBALS['login'],
+                    'recordId'     => $GLOBALS['id'],
                     'eventType'    => 'UP',
                     'eventId'      => 'userModification',
                     'info'         => _USER_UPDATED . " {$user['firstname']} {$user['lastname']}. " . _XPARAPH_ACCOUNT_CREATED
@@ -643,7 +643,7 @@ class XParaphController
             }
         }
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['external_id', 'id', 'firstname', 'lastname']]);
         if (empty($user)) {
             return $response->withStatus(400)->withJson(['errors' => 'User not found']);
         }
@@ -655,7 +655,7 @@ class XParaphController
 
         HistoryController::add([
             'tableName'    => 'users',
-            'recordId'     => $GLOBALS['login'],
+            'recordId'     => $GLOBALS['id'],
             'eventType'    => 'UP',
             'eventId'      => 'userModification',
             'info'         => _USER_UPDATED . " {$user['firstname']} {$user['lastname']}. " . _XPARAPH_ACCOUNT_DELETED

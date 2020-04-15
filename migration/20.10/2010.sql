@@ -141,6 +141,7 @@ DO $$ BEGIN
         UPDATE history set user_id_tmp = (select id FROM users where users.user_id = history.user_id);
         ALTER TABLE history DROP COLUMN IF EXISTS user_id;
         ALTER TABLE history RENAME COLUMN user_id_tmp TO user_id;
+        UPDATE history set record_id = (select id FROM users where users.user_id = history.record_id) WHERE table_name = 'users';
     END IF;
 END$$;
 DO $$ BEGIN

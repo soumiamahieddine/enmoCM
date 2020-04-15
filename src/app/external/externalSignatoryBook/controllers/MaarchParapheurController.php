@@ -697,7 +697,7 @@ class MaarchParapheurController
 
         HistoryController::add([
             'tableName'    => 'users',
-            'recordId'     => $GLOBALS['login'],
+            'recordId'     => $GLOBALS['id'],
             'eventType'    => 'ADD',
             'eventId'      => 'userCreation',
             'info'         => _USER_CREATED_IN_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
@@ -777,7 +777,7 @@ class MaarchParapheurController
 
         HistoryController::add([
             'tableName'    => 'users',
-            'recordId'     => $GLOBALS['login'],
+            'recordId'     => $GLOBALS['id'],
             'eventType'    => 'ADD',
             'eventId'      => 'userCreation',
             'info'         => _USER_LINKED_TO_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
@@ -803,7 +803,7 @@ class MaarchParapheurController
 
         HistoryController::add([
             'tableName'    => 'users',
-            'recordId'     => $GLOBALS['login'],
+            'recordId'     => $GLOBALS['id'],
             'eventType'    => 'ADD',
             'eventId'      => 'userCreation',
             'info'         => _USER_UNLINKED_TO_MAARCHPARAPHEUR . " {$userInfo['firstname']} {$userInfo['lastname']}"
@@ -952,7 +952,7 @@ class MaarchParapheurController
 
         HistoryController::add([
             'tableName'    => 'users',
-            'recordId'     => $userInfo['user_id'],
+            'recordId'     => $aArgs['id'],
             'eventType'    => 'UP',
             'eventId'      => 'signatureSync',
             'info'         => _SIGNATURES_SEND_TO_MAARCHPARAPHEUR . " : " . implode(", ", $signaturesId)
