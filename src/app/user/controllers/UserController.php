@@ -1375,7 +1375,7 @@ class UserController
             }
         }
 
-        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $aArgs['id'], 'select' => ['entities.entity_label']]);
+        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $aArgs['id'], 'select' => ['entities.entity_label', 'entities.entity_id']]);
         UserEntityModel::deleteUserEntity(['id' => $aArgs['id'], 'entityId' => $aArgs['entityId']]);
 
         if (!empty($primaryEntity['entity_id']) && $primaryEntity['entity_id'] == $aArgs['entityId']) {
