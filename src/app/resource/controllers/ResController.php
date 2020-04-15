@@ -365,7 +365,7 @@ class ResController extends ResourceControlController
                 'recordId'  => $document['res_id'],
                 'eventType' => 'UP',
                 'info'      => $data['historyMessage'],
-                'moduleId'  => 'res',
+                'moduleId'  => 'resource',
                 'eventId'   => 'resup',
             ]);
         }
@@ -425,7 +425,7 @@ class ResController extends ResourceControlController
             'recordId'  => $aArgs['resId'],
             'eventType' => 'VIEW',
             'info'      => _DOC_DISPLAYING . " : {$aArgs['resId']}",
-            'moduleId'  => 'res',
+            'moduleId'  => 'resource',
             'eventId'   => 'resview',
         ]);
 
@@ -601,7 +601,7 @@ class ResController extends ResourceControlController
             'recordId'  => $args['resId'],
             'eventType' => 'VIEW',
             'info'      => _DOC_DISPLAYING . " : {$args['resId']}",
-            'moduleId'  => 'res',
+            'moduleId'  => 'resource',
             'eventId'   => 'resview',
         ]);
 
