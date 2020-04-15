@@ -430,11 +430,14 @@ class ResController extends ResourceControlController
         ]);
 
         $data = $request->getQueryParams();
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+
         if ($data['mode'] == 'base64') {
-            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $originalFormat, 'originalCreatorId' => $creatorId]);
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $originalFormat, 'mimeType' => $mimeType,'originalCreatorId' => $creatorId]);
         } else {
-            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-            $mimeType = $finfo->buffer($fileContent);
+
             $pathInfo = pathinfo($pathToDocument);
 
             $response->write($fileContent);
@@ -593,13 +596,6 @@ class ResController extends ResourceControlController
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($fileContent);
-        $pathInfo = pathinfo($pathToDocument);
-
-        $response->write($fileContent);
-        $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
-
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $args['resId'],
@@ -609,7 +605,19 @@ class ResController extends ResourceControlController
             'eventId'   => 'resview',
         ]);
 
-        return $response->withHeader('Content-Type', $mimeType);
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+        $data = $request->getQueryParams();
+
+        if ($data['mode'] == 'base64') {
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'mimeType' => $mimeType]);
+        } else {
+            $pathInfo = pathinfo($pathToDocument);
+
+            $response->write($fileContent);
+            $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
+            return $response->withHeader('Content-Type', $mimeType);
+        }
     }
 
     public function getThumbnailContent(Request $request, Response $response, array $args)

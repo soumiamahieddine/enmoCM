@@ -113,6 +113,7 @@ import { SentResourceListComponent } from './sentResource/sent-resource-list.com
 import { SentResourcePageComponent } from './sentResource/sent-resource-page/sent-resource-page.component';
 import { SentNumericPackagePageComponent } from './sentResource/sent-numeric-package-page/sent-numeric-package-page.component';
 import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-create-modal.component';
+import { DocumentViewerPageComponent } from './viewer/page/document-viewer-page.component';
 
 
 
@@ -214,7 +215,8 @@ import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-
         PrintedFolderModalComponent,
         SentNumericPackagePageComponent,
         FolderCreateModalComponent,
-        ReconcileActionComponent
+        ReconcileActionComponent,
+        DocumentViewerPageComponent
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,

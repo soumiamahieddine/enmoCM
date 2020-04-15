@@ -59,7 +59,7 @@ export class AppGuard implements CanActivate {
                                 console.log('ABS!');
                                 return this.router.navigate(['/activate-user']);
                             } else {
-                                if (route.url.map((url: any) => url.path).filter((url: any) => url === 'signatureBook').length > 0) {
+                                if (route.url.map((url: any) => url.path).filter((url: any) => ['signatureBook', 'content'].indexOf(url) > -1).length > 0) {
                                     this.headerService.hideSideBar = true;
                                 } else {
                                     this.headerService.hideSideBar = false;
@@ -81,7 +81,7 @@ export class AppGuard implements CanActivate {
                     console.log('ABS!');
                     return this.router.navigate(['/activate-user']);
                 } else {
-                    if (route.url.map((url: any) => url.path).filter((url: any) => url === 'signatureBook').length > 0) {
+                    if (route.url.map((url: any) => url.path).filter((url: any) => ['signatureBook', 'content'].indexOf(url) > -1).length > 0) {
                         this.headerService.hideSideBar = true;
                     } else {
                         this.headerService.hideSideBar = false;
@@ -130,7 +130,7 @@ export class AppGuard implements CanActivate {
                                             console.log('ABS!');
                                             return this.router.navigate(['/activate-user']);
                                         } else {
-                                            if (route.url.map((url: any) => url.path).filter((url: any) => url === 'signatureBook').length > 0) {
+                                            if (route.url.map((url: any) => url.path).filter((url: any) => ['signatureBook', 'content'].indexOf(url) > -1).length > 0) {
                                                 this.headerService.hideSideBar = true;
                                             } else {
                                                 this.headerService.hideSideBar = false;
