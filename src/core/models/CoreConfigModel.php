@@ -91,13 +91,10 @@ class CoreConfigModel
 
     public static function getApplicationVersion()
     {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/applicationVersion.xml']);
+        $file = file_get_contents('package.json');
+        $file = json_decode($file, true);
 
-        if (empty($loadedXml)) {
-            return '';
-        }
-
-        return (string)$loadedXml->version;
+        return $file['version'];
     }
 
     public static function getLanguage()
