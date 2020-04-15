@@ -118,7 +118,7 @@ while ($state <> 'END') {
                             'recordId'     => 'email',
                             'eventType'    => 'ERROR',
                             'eventId'      => 'sendEmail',
-                            'userId'       => $user['id'],
+                            'userId'       => $user[0]['id'],
                             'info'         => $str
                         ]);
                     }

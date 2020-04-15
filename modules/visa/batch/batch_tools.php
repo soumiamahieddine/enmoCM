@@ -81,7 +81,7 @@ function Bt_history($aArgs = [])
         'recordId'     => $aArgs['record_id'],
         'eventType'    => $aArgs['event_type'],
         'eventId'      => $aArgs['event_id'],
-        'userId'       => $user['id'],
+        'userId'       => $user[0]['id'],
         'info'         => $aArgs['info']
     ]);
 }
@@ -149,7 +149,7 @@ function Bt_createNote($aArgs = [])
             $creatorId = $aArgs['creatorId'];
         } else {
             $users = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ["user_id='superadmin' desc"], 'limit' => 1]);
-            $creatorId   = $users['id'];
+            $creatorId   = $users[0]['id'];
         }
         if (!empty($aArgs['creatorName'])) {
             $creatorName = $aArgs['creatorName'] . ' (Maarch Parapheur) : ';
