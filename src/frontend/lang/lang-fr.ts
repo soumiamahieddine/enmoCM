@@ -1666,4 +1666,5 @@ export const LANG_FR = {
     "sessionExpired": "Votre session a expirée",
     "accountSuspended": "Votre compte utilisateur a été suspendu",
     "accountLocked": "Nombre de tentatives de connexion dépassée. Réessayez dans",
+    "modelUsedByResources": "Le modèle est utilisé par des courriers, vous ne pouvez pas le supprimer.",
 };
