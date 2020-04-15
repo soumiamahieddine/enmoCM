@@ -1,8 +1,19 @@
+var fs = require('fs');
+
+// abstract writing screen shot to a file
+function writeScreenShot(data, filename) {
+    var stream = fs.createWriteStream(filename);
+    stream.write(new Buffer(data, 'base64'));
+    stream.end();
+}
+
 describe('index resource page', function() {
     it('login to app', function() {
         browser.waitForAngularEnabled(true);
         browser.get(browser.baseUrl+ '/dist/index.html#/login');
-
+        browser.takeScreenshot().then(function (png) {
+            writeScreenShot(png, 'exception.png');
+        });
         element(by.id('login')).sendKeys('bblier');
         browser.sleep(500);
         element(by.id('password')).sendKeys('maarch');
@@ -12,8 +23,14 @@ describe('index resource page', function() {
 
     it('index a document whitout file', function() {
         browser.sleep(4000);
+        browser.takeScreenshot().then(function (png) {
+            writeScreenShot(png, 'exception.png');
+        });
         element(by.id('indexing')).click();
         browser.sleep(500);
+        browser.takeScreenshot().then(function (png) {
+            writeScreenShot(png, 'exception.png');
+        });
         element(by.id('doctype')).click();
         browser.sleep(500);
         element(by.css('[title="Demande de renseignements"]')).click();
@@ -48,4 +65,3 @@ describe('index resource page', function() {
         browser.sleep(4000);
     });
 });
-
