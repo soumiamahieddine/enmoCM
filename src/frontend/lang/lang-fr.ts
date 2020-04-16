@@ -116,7 +116,7 @@ export const LANG_FR = {
     "admissionDate":                               "Date d'admission",
     "adrPriority":                                 "Priorité de séquence",
     "missingAlfrescoConfig"                 : "La configuration Alfresco est désactivée ou incomplète",
-    "alreadySentToAlfresco"                 : "Courrier deja envoyé à Alfresco",
+    "alreadySentToAlfresco"                 : "Courrier déjà envoyé à Alfresco",
     "notEnoughAlfrescoInformations"         : "Des informations Alfresco sont manquantes pour l'entité primaire de l'utilisateur",
     "afterClickingSendLinkChangePassword":         "Après avoir cliqué sur <b>Envoyer</b>, vous recevrez un courriel contenant un lien pour modifier votre mot de passe. Ce lien sera actif <b>1 heure</b>.",
     "alignCenter":                                 "Centre",
