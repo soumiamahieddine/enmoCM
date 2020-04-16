@@ -583,6 +583,22 @@ export class SignatureBookComponent implements OnInit {
         this.appVisaWorkflow.saveVisaWorkflow();
     }
 
+    downloadOriginalFile(resId: any) {
+        const downloadLink = document.createElement('a');
+        this.http.get(`../rest/attachments/${resId}/originalContent?mode=base64`).pipe(
+            tap((data: any) => {
+                downloadLink.href = `data:${data.mimeType};base64,${data.encodedDocument}`;
+                downloadLink.setAttribute('download', `${resId}.${data.extension}`);
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     ngOnDestroy() {
         // unsubscribe to ensure no memory leaks
         this.subscription.unsubscribe();

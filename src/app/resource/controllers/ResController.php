@@ -607,13 +607,12 @@ class ResController extends ResourceControlController
 
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($pathToDocument);
         $data = $request->getQueryParams();
 
         if ($data['mode'] == 'base64') {
-            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'mimeType' => $mimeType]);
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'extension' => $pathInfo['extension'], 'mimeType' => $mimeType]);
         } else {
-            $pathInfo = pathinfo($pathToDocument);
-
             $response->write($fileContent);
             $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
             return $response->withHeader('Content-Type', $mimeType);
