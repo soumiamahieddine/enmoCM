@@ -69,6 +69,7 @@ import { SendAvisParallelComponent }               from './actions/avis-parallel
 import { GiveAvisParallelActionComponent }               from './actions/avis-give-parallel-action/give-avis-parallel-action.component';
 import { ValidateAvisParallelComponent }               from './actions/avis-parallel-validate-action/validate-avis-parallel-action.component';
 import { ReconcileActionComponent }               from './actions/reconciliation-action/reconcile-action.component';
+import { SendAlfrescoActionComponent }               from './actions/send-alfresco-action/send-alfresco-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -178,6 +179,7 @@ import { DocumentViewerPageComponent } from './viewer/page/document-viewer-page.
         SendAvisParallelComponent,
         GiveAvisParallelActionComponent,
         ValidateAvisParallelComponent,
+        SendAlfrescoActionComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderPinnedComponent,
@@ -247,6 +249,7 @@ import { DocumentViewerPageComponent } from './viewer/page/document-viewer-page.
         redirectInitiatorEntityActionComponent,
         closeMailWithAttachmentsOrNotesActionComponent,
         SendSignatureBookActionComponent,
+        SendAlfrescoActionComponent,
         ViewDocActionComponent,
         FolderUpdateComponent,
         AddPrivateIndexingModelModalComponent,
