@@ -1317,7 +1317,7 @@ docserver_id CHARACTER VARYING(128) NOT NULL,
 path CHARACTER VARYING(256) NOT NULL,
 filename CHARACTER VARYING(256) NOT NULL,
 fingerprint CHARACTER VARYING(256) NOT NULL,
-CONSTRAINT acknowledgment_receipts_pkey PRIMARY KEY (id)
+CONSTRAINT acknowledgement_receipts_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
