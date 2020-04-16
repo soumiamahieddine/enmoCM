@@ -37,8 +37,8 @@ job_e2e:
  stage: test
  script:
    - service apache2 start
-   - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll,acknowledgement_receipts}
-   - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
+   - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
+   - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates,acknowledgement_receipts}
    - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
    - mkdir -p /opt/maarch/docservers/{fulltext_attachments,fulltext_attachments_version,fulltext_mlb}
    - mkdir -p /opt/maarch/docservers/{thumbnails_attachments,thumbnails_attachments_version,thumbnails_mlb}
@@ -69,8 +69,8 @@ job_php-7.4:
  image: php:7.4-apache
  stage: test
  script:
-   - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll,acknowledgement_receipts}
-   - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
+   - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
+   - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates,acknowledgement_receipts}
    - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
    - mkdir -p /opt/maarch/docservers/{fulltext_attachments,fulltext_attachments_version,fulltext_mlb}
    - mkdir -p /opt/maarch/docservers/{thumbnails_attachments,thumbnails_attachments_version,thumbnails_mlb}
@@ -92,8 +92,8 @@ job_php-7.3:
  image: php:7.3-apache
  stage: test
  script:
-   - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll,acknowledgement_receipts}
-   - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
+   - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
+   - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates,acknowledgement_receipts}
    - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
    - mkdir -p /opt/maarch/docservers/{fulltext_attachments,fulltext_attachments_version,fulltext_mlb}
    - mkdir -p /opt/maarch/docservers/{thumbnails_attachments,thumbnails_attachments_version,thumbnails_mlb}
@@ -115,8 +115,8 @@ job_php-7.2:
   image: php:7.2-apache
   stage: test
   script:
-    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll,acknowledgement_receipts}
-    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
+    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
+    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates,acknowledgement_receipts}
     - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
     - mkdir -p /opt/maarch/docservers/{fulltext_attachments,fulltext_attachments_version,fulltext_mlb}
     - mkdir -p /opt/maarch/docservers/{thumbnails_attachments,thumbnails_attachments_version,thumbnails_mlb}
