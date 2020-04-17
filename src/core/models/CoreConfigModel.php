@@ -46,10 +46,7 @@ class CoreConfigModel
             if (!empty($value['path']) && $value['path'] == $path) {
                 $customId = $value['id'];
                 return $customId;
-            } elseif ($value['ip'] == $_SERVER['SERVER_ADDR']) {
-                $customId = $value['id'];
-                return $customId;
-            } elseif ($value['externalDomain'] == $_SERVER['HTTP_HOST'] || $value['domain'] == $_SERVER['HTTP_HOST']) {
+            } elseif ($value['ip'] == $_SERVER['HTTP_HOST'] || ($_SERVER['HTTP_HOST'] == $_SERVER['SERVER_ADDR'] && $value['ip'] == $_SERVER['SERVER_ADDR'])) {
                 $customId = $value['id'];
                 return $customId;
             }

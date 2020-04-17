@@ -17,11 +17,17 @@ if (is_file($file)) {
     $jsonFile = [];
     if ($loadedXml) {
         foreach ($loadedXml->custom as $value) {
+            $ip = null;
+            if (!empty((string)$value->ip)) {
+                $ip = (string)$value->ip;
+            } elseif ((string)$value->external_domain) {
+                $ip = (string)$value->external_domain;
+            } elseif ((string)$value->domain) {
+                $ip = (string)$value->domain;
+            }
             $jsonFile[] = [
                 'id'                => (string)$value->custom_id,
-                'ip'                => (string)$value->ip,
-                'externalDomain'    => (string)$value->external_domain,
-                'domain'            => (string)$value->domain,
+                'ip'                => $ip,
                 'path'              => (string)$value->path
             ];
         }

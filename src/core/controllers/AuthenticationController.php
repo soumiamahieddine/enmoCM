@@ -32,7 +32,7 @@ class AuthenticationController
 {
     const MAX_DURATION_TOKEN = 30; //Minutes
     const ROUTES_WITHOUT_AUTHENTICATION = [
-        'GET/authenticationInformations', 'GET/authenticate/token', 'GET/images', 'POST/password', 'PUT/password', 'GET/passwordRules',
+        'GET/authenticationInformations', 'GET/validUrl', 'GET/authenticate/token', 'GET/images', 'POST/password', 'PUT/password', 'GET/passwordRules',
         'GET/jnlp/{jnlpUniqueId}', 'GET/onlyOffice/mergedFile', 'POST/onlyOfficeCallback', 'POST/authenticate'
     ];
 
@@ -45,6 +45,29 @@ class AuthenticationController
         $parameter = ParameterModel::getById(['id' => 'loginpage_message', 'select' => ['param_value_string']]);
 
         return $response->withJson(['instanceId' => $hashedPath, 'applicationName' => $appName, 'loginMessage' => $parameter['param_value_string'] ?? null]);
+    }
+
+    public function getValidUrl(Request $request, Response $response)
+    {
+        if (!is_file('custom/custom.json')) {
+            return $response->withJson(['url' => null]);
+        }
+
+        $jsonFile = file_get_contents('custom/custom.json');
+        $jsonFile = json_decode($jsonFile, true);
+        if (count($jsonFile) != 1) {
+            return $response->withJson(['url' => null]);
+        }
+
+        $url = null;
+        if (!empty($jsonFile[0]['path'])) {
+            $coreUrl = UrlController::getCoreUrl();
+            $url = $coreUrl . $jsonFile[0]['path'] . "/dist/index.html";
+        } elseif (!empty($jsonFile[0]['ip'])) {
+            $url = $jsonFile[0]['ip'] . "/dist/index.html";
+        }
+
+        return $response->withJson(['url' => $url]);
     }
 
     public static function authentication($authorizationHeaders = [])
