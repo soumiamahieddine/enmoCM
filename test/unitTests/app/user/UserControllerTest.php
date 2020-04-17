@@ -25,21 +25,71 @@ class UserControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $response     = $userController->get($request, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertIsArray($responseBody->users);
-        $this->assertNotEmpty($responseBody->users);
+        $this->assertIsArray($responseBody['users']);
+        $this->assertNotEmpty($responseBody['users']);
 
-        foreach ($responseBody->users as $value) {
-            $this->assertNotNull($value->id);
-            $this->assertIsInt($value->id);
-            $this->assertNotNull($value->user_id);
-            $this->assertNotNull($value->firstname);
-            $this->assertNotNull($value->lastname);
-            $this->assertNotNull($value->status);
-            $this->assertNotNull($value->mail);
-            $this->assertNotNull($value->loginmode);
+        foreach ($responseBody['users'] as $value) {
+            $this->assertNotNull($value['id']);
+            $this->assertIsInt($value['id']);
+            $this->assertNotNull($value['user_id']);
+            $this->assertIsString($value['user_id']);
+            $this->assertNotNull($value['firstname']);
+            $this->assertIsString($value['firstname']);
+            $this->assertNotNull($value['lastname']);
+            $this->assertIsString($value['lastname']);
+            $this->assertNotNull($value['status']);
+            $this->assertIsString($value['status']);
+            $this->assertNotNull($value['mail']);
+            $this->assertIsString($value['mail']);
+            $this->assertNotNull($value['loginmode']);
+            $this->assertIsString($value['loginmode']);
         }
+
+        $GLOBALS['login'] = 'bblier';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->get($request, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['users']);
+        $this->assertNotEmpty($responseBody['users']);
+
+        foreach ($responseBody['users'] as $value) {
+            $this->assertNotNull($value['id']);
+            $this->assertIsInt($value['id']);
+            $this->assertNotNull($value['user_id']);
+            $this->assertIsString($value['user_id']);
+            $this->assertNotNull($value['firstname']);
+            $this->assertIsString($value['firstname']);
+            $this->assertNotNull($value['lastname']);
+            $this->assertIsString($value['lastname']);
+            $this->assertNotNull($value['status']);
+            $this->assertIsString($value['status']);
+            $this->assertNotNull($value['mail']);
+            $this->assertIsString($value['mail']);
+            $this->assertNotNull($value['loginmode']);
+            $this->assertIsString($value['loginmode']);
+        }
+
+        // Fail
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->get($request, new \Slim\Http\Response());
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
     }
 
     public function testCreate()
@@ -78,6 +128,98 @@ class UserControllerTest extends TestCase
         $this->assertSame(null, $responseBody->phone);
         $this->assertSame(null, $responseBody->mail);
         $this->assertSame(null, $responseBody->initials);
+
+        // Delete user then reactivate it
+        \User\models\UserModel::update([
+            'set'   => ['status' => 'DEL'],
+            'where' => ['id = ?'],
+            'data'  => [self::$id]
+        ]);
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $aArgs = [
+            'userId'    => 'test-ckent',
+            'firstname' => 'TEST-CLARK',
+            'lastname'  => 'TEST-KENT'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame(self::$id, $responseBody['id']);
+
+        // Fail
+        $body = [
+            'userId'    => 'test-ckent',
+            'firstname' => 'TEST-CLARK',
+            'lastname'  => 'TEST-KENT'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame(_USER_ID_ALREADY_EXISTS, $responseBody['errors']);
+
+        $body = [
+            'userId'    => 'test-ckent',
+            'firstname' => 12, // wrong format
+            'lastname'  => 'TEST-KENT'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+    }
+
+    public function testGetById()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $userController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody);
+        $this->assertNotEmpty($responseBody);
+
+        $this->assertSame(self::$id, $responseBody['id']);
+        $this->assertSame('TEST-CLARK', $responseBody['firstname']);
+        $this->assertSame('TEST-KENT', $responseBody['lastname']);
+
+        // Fail
+        $response     = $userController->getById($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame('User does not exist', $responseBody['errors']);
+
     }
 
     public function testUpdate()
@@ -115,6 +257,39 @@ class UserControllerTest extends TestCase
         $this->assertSame('0122334455', $responseBody->phone);
         $this->assertSame('ck@dailyP.com', $responseBody->mail);
         $this->assertSame('CK', $responseBody->initials);
+
+        // Fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $body = [
+            'user_id'    => 'test-ckent',
+            'firstname' => 'TEST-CLARK2',
+            'lastname'  => 'TEST-KENT2',
+            'mail'      => 'ck@dailyP.com',
+            'phone'     => '0122334455',
+            'initials'  => 'CK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'wrong format']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('id must be an integer', $responseBody['errors']);
+
+        $body = [
+            'user_id'    => 'test-ckent',
+            'firstname' => 'TEST-CLARK2',
+            'lastname'  => 'TEST-KENT2',
+            'mail'      => 'ck@dailyP.com',
+            'phone'     => 'wrong format',
+            'initials'  => 'CK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
     }
 
     public function testAddGroup()
@@ -124,11 +299,11 @@ class UserControllerTest extends TestCase
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $aArgs = [
+        $body = [
             'groupId'   => 'AGENT',
             'role'      => 'Douche'
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
         $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -146,6 +321,65 @@ class UserControllerTest extends TestCase
         $this->assertIsArray($responseBody->groups);
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('Douche', $responseBody->groups[0]->role);
+
+        // Fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $body = [
+            'role'      => 'Douche'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        $body = [
+            'groupId'   => 'SECRET_AGENT',
+            'role'      => 'Douche'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Group not found', $responseBody['errors']);
+
+        $body = [
+            'groupId'   => 'AGENT',
+            'role'      => 'Douche'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(_USER_ALREADY_LINK_GROUP, $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $body = [
+            'groupId'   => 'COURRIER',
+            'role'      => 'Douche'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
     }
 
     public function testUpdateGroup()
@@ -175,6 +409,17 @@ class UserControllerTest extends TestCase
         $this->assertIsArray($responseBody->groups);
         $this->assertSame('AGENT', $responseBody->groups[0]->group_id);
         $this->assertSame('role updated', $responseBody->groups[0]->role);
+
+        // Fail
+        $response     = $userController->updateGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->updateGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'groupId' => 'SECRET_AGENT']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Group not found', $responseBody['errors']);
     }
 
     public function testDeleteGroup()
@@ -200,6 +445,20 @@ class UserControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->id);
         $this->assertIsArray($responseBody->groups);
         $this->assertEmpty($responseBody->groups);
+
+        // Fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $userController->deleteGroup($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->deleteGroup($request, new \Slim\Http\Response(), ['id' => self::$id, 'groupId' => 'SECRET_AGENT']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Group not found', $responseBody['errors']);
     }
 
     public function testAddEntity()
@@ -209,11 +468,11 @@ class UserControllerTest extends TestCase
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $aArgs = [
+        $body = [
             'entityId'  => 'DGS',
             'role'      => 'Warrior'
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
         $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -224,11 +483,11 @@ class UserControllerTest extends TestCase
         //  CREATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $aArgs = [
+        $body = [
             'entityId'  => 'FIN',
             'role'      => 'Hunter'
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
         $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
@@ -250,6 +509,73 @@ class UserControllerTest extends TestCase
         $this->assertSame('FIN', $responseBody->entities[1]->entity_id);
         $this->assertSame('Hunter', $responseBody->entities[1]->user_role);
         $this->assertSame('N', $responseBody->entities[1]->primary_entity);
+
+        // Fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $body = [
+            'entityId'  => 'SECRET_SERVICE',
+            'role'      => 'Hunter'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Entity not found', $responseBody['errors']);
+
+        $body = [
+            'entityId'  => 'FIN',
+            'role'      => 'Hunter'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(_USER_ALREADY_LINK_ENTITY, $responseBody['errors']);
+
+        $body = [
+            'role'      => 'Hunter'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+    }
+
+    public function testGetEntities()
+    {
+        $userController = new \User\controllers\UserController();
+
+        //  READ
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->getEntities($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['entities']);
+        $this->assertSame('DGS', $responseBody['entities'][0]['entity_id']);
+        $this->assertSame('Warrior', $responseBody['entities'][0]['user_role']);
+        $this->assertSame('Y', $responseBody['entities'][0]['primary_entity']);
+        $this->assertSame('FIN', $responseBody['entities'][1]['entity_id']);
+        $this->assertSame('Hunter', $responseBody['entities'][1]['user_role']);
+        $this->assertSame('N', $responseBody['entities'][1]['primary_entity']);
+
+        // Fail
+
+        $response     = $userController->getEntities($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User does not exist', $responseBody['errors']);
     }
 
     public function testUpdateEntity()
@@ -259,6 +585,16 @@ class UserControllerTest extends TestCase
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'DGS']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('success', $responseBody->success);
+
         $aArgs = [
             'user_role'      => 'Rogue'
         ];
@@ -280,6 +616,24 @@ class UserControllerTest extends TestCase
         $this->assertSame('DGS', $responseBody->entities[0]->entity_id);
         $this->assertSame('Rogue', $responseBody->entities[0]->user_role);
         $this->assertSame('Y', $responseBody->entities[0]->primary_entity);
+
+        // Fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $body = [
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'entityId' => 'DGS']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->updateEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'SECRET_SERVICE']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Entity not found', $responseBody['errors']);
     }
 
     public function testGetUsersById()
@@ -342,6 +696,12 @@ class UserControllerTest extends TestCase
         $this->assertEmpty($responseBody->listTemplates);
         $this->assertIsArray($responseBody->listInstances);
         $this->assertEmpty($responseBody->listInstances);
+
+        // Fail
+        $response     = $userController->isDeletable($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
     }
 
     public function testIsEntityDeletable()
@@ -357,6 +717,17 @@ class UserControllerTest extends TestCase
 
         $this->assertSame(false, $responseBody->hasConfidentialityInstances);
         $this->assertSame(false, $responseBody->hasListTemplates);
+
+        // Fail
+        $response     = $userController->isEntityDeletable($request, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'entityId' => 'DGS']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->isEntityDeletable($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'SECRET_SERVICE']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Entity does not exist', $responseBody['errors']);
     }
 
     public function testUpdatePrimaryEntity()
@@ -386,6 +757,17 @@ class UserControllerTest extends TestCase
         $this->assertSame('DGS', $responseBody->entities[1]->entity_id);
         $this->assertSame('Rogue', $responseBody->entities[1]->user_role);
         $this->assertSame('N', $responseBody->entities[1]->primary_entity);
+
+        // Fail
+        $response     = $userController->updatePrimaryEntity($request, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'entityId' => 'DGS']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->updatePrimaryEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'SECRET_SERVICE']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Entity not found', $responseBody['errors']);
     }
 
     public function testDeleteEntity()
@@ -429,9 +811,29 @@ class UserControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $userController->getStatusByUserId($request, new \Slim\Http\Response(), ['userId' => 'test-ckent']);
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertSame('OK', $responseBody->status);
+        $this->assertSame('OK', $responseBody['status']);
+
+        // Fail
+        $response     = $userController->getStatusByUserId($request, new \Slim\Http\Response(), ['userId' => 'test-ckent1234']);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertNull($responseBody['status']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->getStatusByUserId($request, new \Slim\Http\Response(), ['userId' => 'test-ckent']);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
     }
 
     public function testUpdateStatus()
@@ -459,6 +861,35 @@ class UserControllerTest extends TestCase
 
         $this->assertSame(self::$id, $responseBody->id);
         $this->assertSame('ABS', $responseBody->status);
+
+        // Fail
+        $aArgs = [
+            'status'    => 42 // Wrong format
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateStatus($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $aArgs = [
+            'status'    => 'ABS'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateStatus($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
     }
 
     public function testGetStatusByUserIdAfterUpdate()
@@ -688,7 +1119,77 @@ class UserControllerTest extends TestCase
 
         $this->assertSame(true, $checkPassword);
 
-        //  UPDATE PASSWORD
+        // Fail
+        $aArgs = [
+            'currentPassword'   => 'superadmin',
+            'newPassword'       => 42, // wrong format
+            'reNewPassword'     => 'hcraam'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bblier';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $user = \User\models\UserModel::getByLogin(['login' => 'ggrand', 'select' => ['id']]);
+
+        $aArgs = [
+            'currentPassword'   => 'superadmin',
+            'newPassword'       => 'hcraam',
+            'reNewPassword'     => 'hcraam2'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Not allowed', $responseBody['errors']);
+
+        // Passwords not matching
+        $aArgs = [
+            'currentPassword'   => 'superadmin',
+            'newPassword'       => 'hcraam',
+            'reNewPassword'     => 'hcraam2'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $GLOBALS['id']]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        // wrong current password
+        $aArgs = [
+            'currentPassword'   => 'superadmin',
+            'newPassword'       => 'hcraam',
+            'reNewPassword'     => 'hcraam'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $GLOBALS['id']]);
+        $this->assertSame(401, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(_WRONG_PSW, $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        //  UPDATE RESET PASSWORD
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
@@ -698,7 +1199,7 @@ class UserControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $response     = $userController->updatePassword($fullRequest, new \Slim\Http\Response(), ['id' => $GLOBALS['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('success', $responseBody->success);
@@ -784,6 +1285,47 @@ class UserControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Body mail is empty or not a valid email', $responseBody['errors']);
+
+        $aArgs = [
+            'firstname' => '',
+            'lastname'  => 'ADMIN',
+            'initials'  => 'SU'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body firstname is empty or not a string', $responseBody['errors']);
+
+        $aArgs = [
+            'firstname' => 'Super',
+            'lastname'  => '',
+            'initials'  => 'SU'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body lastname is empty or not a string', $responseBody['errors']);
+
+        $aArgs = [
+            'firstname' => 'Super',
+            'lastname'  => 'ADMIN',
+            'initials'  => 'SU',
+            'mail'      => 'dev@maarch.org',
+            'phone'     => 'wrong format'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body phone is not a valid phone number', $responseBody['errors']);
     }
 
     public function testSetRedirectedBasket()
