@@ -16,6 +16,7 @@ namespace ContentManagement\controllers;
 
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
+use Firebase\JWT\JWT;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
@@ -61,32 +62,18 @@ class OnlyOfficeController
             return $response->withStatus(400)->withJson(['errors' => 'OnlyOffice server is disabled']);
         }
 
-        $token = null;
-        $serverToken = (string)$loadedXml->onlyoffice->server_token;
-        if (!empty($serverToken)) {
+        $jwt = null;
+        $serverSecret = (string)$loadedXml->onlyoffice->server_secret;
+        if (!empty($serverSecret)) {
             $header = [
                 "alg" => "HS256",
                 "typ" => "JWT"
             ];
 
-            $encHeader  = OnlyOfficeController::base64UrlEncode(json_encode($header));
-            $encPayload = OnlyOfficeController::base64UrlEncode(json_encode($body['config']));
-            $hash       = OnlyOfficeController::base64UrlEncode(OnlyOfficeController::calculateHash(['header' => $encHeader, 'payload' => $encPayload, 'serverToken' => $serverToken]));
-        
-            $token = "$encHeader.$encPayload.$hash";
+            $jwt = JWT::encode($body['config'], $serverSecret, 'HS256', null, $header);
         }
 
-        return $response->withJson($token);
-    }
-
-    public static function calculateHash($args = [])
-    {
-        return hash_hmac("sha256", $args['header'] . "." . $args['payload'], $args['serverToken'], true);
-    }
-    
-    public static function base64UrlEncode($str)
-    {
-        return str_replace("/", "_", str_replace("+", "-", trim(base64_encode($str), "=")));
+        return $response->withJson($jwt);
     }
 
     public static function saveMergedFile(Request $request, Response $response)
