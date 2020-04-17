@@ -48,14 +48,55 @@ class OnlyOfficeController
         return $response->withJson($configurations);
     }
 
+    public static function getToken(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::notEmpty()->validate($body['config'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body params config is empty']);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
+
+        if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false' || empty($loadedXml->onlyoffice->server_uri)) {
+            return $response->withStatus(400)->withJson(['errors' => 'OnlyOffice server is disabled']);
+        }
+
+        $token = null;
+        $serverToken = (string)$loadedXml->onlyoffice->server_token;
+        if (!empty($serverToken)) {
+            $header = [
+                "alg" => "HS256",
+                "typ" => "JWT"
+            ];
+
+            $encHeader  = OnlyOfficeController::base64UrlEncode(json_encode($header));
+            $encPayload = OnlyOfficeController::base64UrlEncode(json_encode($body['config']));
+            $hash       = OnlyOfficeController::base64UrlEncode(OnlyOfficeController::calculateHash(['header' => $encHeader, 'payload' => $encPayload, 'serverToken' => $serverToken]));
+        
+            $token = "$encHeader.$encPayload.$hash";
+        }
+
+        return $response->withJson($token);
+    }
+
+    public static function calculateHash($args = [])
+    {
+        return hash_hmac("sha256", $args['header'] . "." . $args['payload'], $args['serverToken'], true);
+    }
+    
+    public static function base64UrlEncode($str)
+    {
+        return str_replace("/", "_", str_replace("+", "-", trim(base64_encode($str), "=")));
+    }
+
     public static function saveMergedFile(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['onlyOfficeKey'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Query params onlyOfficeKey is empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body params onlyOfficeKey is empty']);
         } elseif (!preg_match('/[A-Za-z0-9]/i', $body['onlyOfficeKey'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Query params onlyOfficeKey is forbidden']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body params onlyOfficeKey is forbidden']);
         }
 
         if ($body['objectType'] == 'templateCreation') {
@@ -233,7 +274,8 @@ class OnlyOfficeController
         $uri = (string)$loadedXml->onlyoffice->server_uri;
         $port = (string)$loadedXml->onlyoffice->server_port;
 
-        $exec = shell_exec("nc -vz -w 5 {$uri} {$port} 2>&1");
+        $aUri = explode("/", $uri);
+        $exec = shell_exec("nc -vz -w 5 {$aUri[0]} {$port} 2>&1");
 
         if (strpos($exec, 'not found') !== false) {
             return $response->withStatus(400)->withJson(['errors' => 'Netcat command not found', 'lang' => 'preRequisiteMissing']);
