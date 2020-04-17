@@ -39,11 +39,11 @@ class OnlyOfficeController
         $coreUrl = str_replace('rest/', '', UrlController::getCoreUrl());
 
         $configurations = [
-            'enabled'       => true,
-            'serverUri'     => (string)$loadedXml->onlyoffice->server_uri,
-            'serverPort'    => (int)$loadedXml->onlyoffice->server_port,
-            'serverSsl'     => filter_var((string)$loadedXml->onlyoffice->server_ssl, FILTER_VALIDATE_BOOLEAN),
-            'coreUrl'       => $coreUrl
+            'enabled'    => true,
+            'serverUri'  => (string)$loadedXml->onlyoffice->server_uri,
+            'serverPort' => (int)$loadedXml->onlyoffice->server_port,
+            'serverSsl'  => filter_var((string)$loadedXml->onlyoffice->server_ssl, FILTER_VALIDATE_BOOLEAN),
+            'coreUrl'    => $coreUrl
         ];
 
         return $response->withJson($configurations);
@@ -163,9 +163,9 @@ class OnlyOfficeController
             if (empty($body['format'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body format is empty']);
             }
-            $path = null;
+            $path        = null;
             $fileContent = base64_decode($body['objectId']);
-            $extension = $body['format'];
+            $extension   = $body['format'];
         } else {
             return $response->withStatus(400)->withJson(['errors' => 'Query param objectType does not exist']);
         }
@@ -195,7 +195,7 @@ class OnlyOfficeController
             return $response->withStatus(400)->withJson(['errors' => 'Query params filename forbidden']);
         }
 
-        $tmpPath = CoreConfigModel::getTmpPath();
+        $tmpPath  = CoreConfigModel::getTmpPath();
         $filename = "onlyOffice_{$queryParams['filename']}";
 
         $fileContent = file_get_contents($tmpPath . $filename);
@@ -203,8 +203,8 @@ class OnlyOfficeController
             return $response->withStatus(400)->withJson(['errors' => 'No content found']);
         }
 
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($fileContent);
+        $finfo     = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType  = $finfo->buffer($fileContent);
         $extension = pathinfo($tmpPath . $filename, PATHINFO_EXTENSION);
         unlink($tmpPath . $filename);
 
@@ -227,13 +227,13 @@ class OnlyOfficeController
             return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled']);
         }
 
-        $checkUrl = str_replace('http://', '', $queryParams['url']);
-        $checkUrl = str_replace('https://', '', $checkUrl);
-        $uri = (string)$loadedXml->onlyoffice->server_uri;
-        $uriPaths = explode('/', $uri, 2);
+        $checkUrl   = str_replace('http://', '', $queryParams['url']);
+        $checkUrl   = str_replace('https://', '', $checkUrl);
+        $uri        = (string)$loadedXml->onlyoffice->server_uri;
+        $uriPaths   = explode('/', $uri, 2);
         $masterPath = $uriPaths[0];
-        $lastPath = !empty($uriPaths[1]) ? "/{$uriPaths[1]}" : '';
-        $port = (string)$loadedXml->onlyoffice->server_port;
+        $lastPath   = !empty($uriPaths[1]) ? rtrim("/{$uriPaths[1]}", '/') : '';
+        $port       = (string)$loadedXml->onlyoffice->server_port;
 
         if (strpos($checkUrl, "{$masterPath}:{$port}{$lastPath}/cache/files/") !== 0 && (($port != 80 && $port != 443) || strpos($checkUrl, "{$masterPath}{$lastPath}/cache/files/") !== 0)) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params url is not allowed']);
@@ -258,7 +258,7 @@ class OnlyOfficeController
             return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice server_port is empty', 'lang' => 'portIsEmpty']);
         }
 
-        $uri = (string)$loadedXml->onlyoffice->server_uri;
+        $uri  = (string)$loadedXml->onlyoffice->server_uri;
         $port = (string)$loadedXml->onlyoffice->server_port;
 
         $aUri = explode("/", $uri);
