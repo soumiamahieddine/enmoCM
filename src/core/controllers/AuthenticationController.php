@@ -101,26 +101,24 @@ class AuthenticationController
         ValidatorModel::intVal($args, ['userId']);
         ValidatorModel::stringType($args, ['currentRoute']);
 
-        if ($args['currentRoute'] != '/initialize') {
-            $user = UserModel::getById(['select' => ['status'], 'id' => $args['userId']]);
+        $user = UserModel::getById(['select' => ['status', 'password_modification_date'], 'id' => $args['userId']]);
 
-            if ($user['status'] == 'ABS' && !in_array($args['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
-                return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
-            }
+        if ($user['status'] == 'ABS' && !in_array($args['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
+            return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
+        }
 
-            if (!in_array($args['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
-                $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if (!in_array($args['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
+            $loggingMethod = CoreConfigModel::getLoggingMethod();
 
-                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'])) {
-                    $passwordRules = PasswordModel::getEnabledRules();
-                    if (!empty($passwordRules['renewal'])) {
-                        $currentDate = new \DateTime();
-                        $lastModificationDate = new \DateTime($user['password_modification_date']);
-                        $lastModificationDate->add(new \DateInterval("P{$passwordRules['renewal']}D"));
+            if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'])) {
+                $passwordRules = PasswordModel::getEnabledRules();
+                if (!empty($passwordRules['renewal'])) {
+                    $currentDate = new \DateTime();
+                    $lastModificationDate = new \DateTime($user['password_modification_date']);
+                    $lastModificationDate->add(new \DateInterval("P{$passwordRules['renewal']}D"));
 
-                        if ($currentDate > $lastModificationDate) {
-                            return ['isRouteAvailable' => false, 'errors' => 'User must change his password'];
-                        }
+                    if ($currentDate > $lastModificationDate) {
+                        return ['isRouteAvailable' => false, 'errors' => 'User must change his password'];
                     }
                 }
             }
@@ -155,7 +153,7 @@ class AuthenticationController
                     'where'     => ['id = ?'],
                     'data'      => [$args['userId']]
                 ]);
-                return ['accountLocked' => true];
+                return ['accountLocked' => true, 'lockedDate' => date('Y-m-d H:i:s', $lockedUntil)];
             }
         }
 
@@ -183,7 +181,7 @@ class AuthenticationController
             } else {
                 $handle = AuthenticationController::handleFailedAuthentication(['userId' => $user['id']]);
                 if (!empty($handle['accountLocked'])) {
-                    return $response->withStatus(401)->withJson(['errors' => 'Account Locked', 'date' => $handle['lockedDate'] ?? null]);
+                    return $response->withStatus(401)->withJson(['errors' => 'Account Locked', 'date' => $handle['lockedDate']]);
                 }
                 return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
             }
