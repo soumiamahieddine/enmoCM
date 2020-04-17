@@ -176,13 +176,13 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             tinymce.remove('textarea');
             // LOAD EDITOR TINYMCE for MAIL SIGN
-            tinymce.baseURL = '../../node_modules/tinymce';
+            tinymce.baseURL = '../node_modules/tinymce';
             tinymce.suffix = '.min';
             tinymce.init({
                 selector: selectorId,
                 statusbar: false,
                 language: this.lang.langISO.replace('-', '_'),
-                language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
+                language_url: `../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
                 height: '200',
                 plugins: [
                     'autoresize',

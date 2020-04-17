@@ -33,4 +33,3 @@ if (is_file($file)) {
     unlink($file);
     printf("Fichier custom/custom.xml migré en fichier json.\n");
 }
-

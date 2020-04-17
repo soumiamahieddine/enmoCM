@@ -1316,14 +1316,10 @@ class UserController
 
             if ($data['mode'] == 'reaffect') {
                 $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id'], 'entityId' => $aArgs['entityId'], 'userId' => $aArgs['id']]);
-                $resIdsToReplace = [];
-                foreach ($listInstances as $listInstance) {
-                    $resIdsToReplace[] = $listInstance['res_id'];
-                }
+                $resIdsToReplace = array_column($listInstances, 'res_id');
                 if (!empty($resIdsToReplace)) {
-                    $newUser = UserModel::getByLogin(['login' => $data['newUser'], 'select' => ['id']]);
                     ListInstanceModel::update([
-                        'set'   => ['item_id' => $newUser['id']],
+                        'set'   => ['item_id' => $data['newUser']['serialId']],
                         'where' => ['res_id in (?)', 'item_id = ?', 'process_date is null'],
                         'data'  => [$resIdsToReplace, $aArgs['id']]
                     ]);
