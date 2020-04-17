@@ -26,8 +26,10 @@ foreach ($customs as $custom) {
             $users = array_column($users, 'id');
             if (!empty($users)) {
                 $users = implode(',', $users);
-                \Notification\models\NotificationModel::update(['notification_sid' => $notification['notification_sid'], 'diffusion_properties' => $users]);
+            } else {
+                $users = null;
             }
+            \Notification\models\NotificationModel::update(['notification_sid' => $notification['notification_sid'], 'diffusion_properties' => $users]);
         }
     }
     $migrated++;
