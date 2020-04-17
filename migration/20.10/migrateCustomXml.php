@@ -26,8 +26,9 @@ if (is_file($file)) {
             ];
         }
 
-        $jsonFile = json_encode($jsonFile);
-        file_put_contents('custom/custom.json', $jsonFile);
+        $fp = fopen('custom/custom.json', 'w');
+        fwrite($fp, json_encode($jsonFile, JSON_PRETTY_PRINT));
+        fclose($fp);
     }
     unlink($file);
     printf("Fichier custom/custom.xml migré en fichier json.\n");
