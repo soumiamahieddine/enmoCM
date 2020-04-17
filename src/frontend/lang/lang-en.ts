@@ -1672,4 +1672,5 @@ export const LANG_EN = {
     "accountSuspended": "Your user account has been suspended",
     "accountLocked": "Too many connections attemps. Retry in",
     "modelUsedByResources": "This model is used by resources, you can't delete it.",
+    "mustChangePassword": "Please, you must change your password.",
 };

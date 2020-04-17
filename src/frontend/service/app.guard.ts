@@ -25,7 +25,7 @@ export class AppGuard implements CanActivate {
     ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-        console.log('guard');
+        console.log('guard : ' + route.url.join('/'));
 
         this.headerService.resetSideNavSelection();
 
@@ -72,6 +72,14 @@ export class AppGuard implements CanActivate {
                                 return true;
                             }
 
+                        }),
+                        catchError((err: any) => {
+                            console.log(err);
+                            if (err.error.errors === 'User must change his password') {
+                                return this.router.navigate(['/update-password']);
+                            } else {
+                                return of(false);
+                            }
                         })
                     );
             } else {
@@ -152,6 +160,14 @@ export class AppGuard implements CanActivate {
                             return true;
                         }
                     }),
+                    catchError((err: any) => {
+                        console.log(err);
+                        if (err.error.errors === 'User must change his password') {
+                            return this.router.navigate(['/update-password']);
+                        } else {
+                            return of(false);
+                        }
+                    })
                 );
 
         }

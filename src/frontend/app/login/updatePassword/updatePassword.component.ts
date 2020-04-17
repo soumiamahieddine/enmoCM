@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from '../../notification.service';
 import { LANG } from '../../translate.component';
 import { finalize } from 'rxjs/operators';
+import { AuthService } from '../../../service/auth.service';
 
 @Component({
     templateUrl: 'updatePassword.component.html',
@@ -45,20 +46,36 @@ export class UpdatePasswordComponent implements OnInit {
     otherRuleText = '';
 
 
-    constructor(private router: Router, private route: ActivatedRoute, public http: HttpClient, public notificationService: NotificationService) {
-        this.route.queryParams
-            .subscribe(params => {
-                this.token = params.token;
-            });
-    }
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        public http: HttpClient,
+        public notificationService: NotificationService,
+        private authService: AuthService,
+    ) { }
 
     ngOnInit(): void {
-        this.getPassRules();
+        this.route.queryParams
+            .subscribe(params => {
+                if (typeof params['token'] !== 'undefined') {
+                    this.token = params.token;
+                    this.notificationService.success(this.lang.mustChangePassword);
+                    this.getPassRules();
+                } else if (this.authService.getToken() !== null) {
+                    this.token = this.authService.getToken();
+                    this.notificationService.success(this.lang.mustChangePassword);
+                    this.getPassRules();
+                } else {
+                    this.router.navigate(['/login']);
+                }
+            });
     }
 
     updatePassword() {
         this.labelButton = this.lang.emailSendInProgress;
         this.loading = true;
+        this.token = this.authService.getToken();
+        console.log(this.token);
 
         this.http.put('../rest/password', { 'token': this.token, 'password': this.password.newPassword })
             .pipe(
@@ -72,7 +89,7 @@ export class UpdatePasswordComponent implements OnInit {
                 this.notificationService.success(this.lang.passwordChanged);
                 this.router.navigate(['/login']);
             }, (err: any) => {
-                this.notificationService.error(this.lang[err.error.lang]);
+                this.notificationService.handleSoftErrors(err);
             });
     }
 
@@ -162,6 +179,6 @@ export class UpdatePasswordComponent implements OnInit {
     }
 
     cancel() {
-        this.router.navigate(['/login']);
+        this.authService.logout();
     }
 }

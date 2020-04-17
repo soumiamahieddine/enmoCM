@@ -1672,4 +1672,5 @@ export const LANG_FR = {
     "accountSuspended": "Votre compte utilisateur a été suspendu",
     "accountLocked": "Nombre de tentatives de connexion dépassée. Réessayez dans",
     "modelUsedByResources": "Le modèle est utilisé par des courriers, vous ne pouvez pas le supprimer.",
+    "mustChangePassword": "Vous êtes invité à changer votre mot de passe.",
 };

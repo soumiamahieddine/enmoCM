@@ -1656,4 +1656,5 @@ export const LANG_NL = {
     "accountSuspended": "Your user account has been suspended", //_TO_TRANSLATE
     "accountLocked": "Too many connections attemps. Retry in", //_TO_TRANSLATE
     "modelUsedByResources": "This model is used by resources, you can't delete it.", //_TO_TRANSLATE
+    "mustChangePassword": "Please, you must change your password.", //_TO_TRANSLATE
 };
