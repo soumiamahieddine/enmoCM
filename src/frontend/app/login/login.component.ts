@@ -92,6 +92,8 @@ export class LoginComponent implements OnInit {
                     this.notify.error(this.lang.accountSuspended);
                 } else if (err.error.errors === 'Account Locked') {
                     this.notify.error(this.lang.accountLocked + ' ' + this.timeLimit.transform(err.error.date));
+                } else if (err.error.errors === 'User must change his password') {
+                    this.router.navigate(['/update-password']);
                 } else {
                     this.notify.handleSoftErrors(err);
                 }
