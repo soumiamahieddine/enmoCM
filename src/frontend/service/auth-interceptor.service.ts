@@ -114,7 +114,7 @@ export class AuthInterceptor implements HttpInterceptor {
                             })
                         );
                     } else if (error.status === 405) {
-                        return this.router.navigate(['/update-password']);
+                        return this.router.navigate(['/password-modification']);
                     } else {
                         return next.handle(request);
                     }

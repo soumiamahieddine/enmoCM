@@ -76,7 +76,7 @@ export class AppGuard implements CanActivate {
                         catchError((err: any) => {
                             console.log(err);
                             if (err.error.errors === 'User must change his password') {
-                                return this.router.navigate(['/update-password']);
+                                return this.router.navigate(['/password-modification']);
                             } else {
                                 return of(false);
                             }
@@ -163,7 +163,7 @@ export class AppGuard implements CanActivate {
                     catchError((err: any) => {
                         console.log(err);
                         if (err.error.errors === 'User must change his password') {
-                            return this.router.navigate(['/update-password']);
+                            return this.router.navigate(['/password-modification']);
                         } else {
                             return of(false);
                         }

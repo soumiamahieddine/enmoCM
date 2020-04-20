@@ -112,6 +112,15 @@ export class LoginComponent implements OnInit {
             }),
             finalize(() => this.showForm = true),
             catchError((err: any) => {
+                this.http.get('../rest/validUrl').pipe(
+                    tap((data: any) => {
+                        if (data.url !== null) {
+                            window.location.href = data.url;
+                        } else {
+                            this.notify.handleSoftErrors(err);
+                        }
+                    })
+                ).subscribe();
                 // TO DO : CONVERT custom.xml to json
                 /*if (err.error.exception[0].message === 'Argument driver is empty') {
                     const configs = [{

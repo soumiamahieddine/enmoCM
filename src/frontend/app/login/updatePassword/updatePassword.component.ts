@@ -52,30 +52,20 @@ export class UpdatePasswordComponent implements OnInit {
         public http: HttpClient,
         public notificationService: NotificationService,
         private authService: AuthService,
-    ) { }
+    ) {
+        this.route.queryParams.subscribe(params => {
+            this.token = params.token;
+        });
+    }
 
     ngOnInit(): void {
-        this.route.queryParams
-            .subscribe(params => {
-                if (typeof params['token'] !== 'undefined') {
-                    this.token = params.token;
-                    this.notificationService.success(this.lang.mustChangePassword);
-                    this.getPassRules();
-                } else if (this.authService.getToken() !== null) {
-                    this.token = this.authService.getToken();
-                    this.notificationService.success(this.lang.mustChangePassword);
-                    this.getPassRules();
-                } else {
-                    this.router.navigate(['/login']);
-                }
-            });
+        this.getPassRules();
     }
+
 
     updatePassword() {
         this.labelButton = this.lang.emailSendInProgress;
         this.loading = true;
-        this.token = this.authService.getToken();
-        console.log(this.token);
 
         this.http.put('../rest/password', { 'token': this.token, 'password': this.password.newPassword })
             .pipe(
@@ -179,6 +169,6 @@ export class UpdatePasswordComponent implements OnInit {
     }
 
     cancel() {
-        this.authService.logout();
+        this.router.navigate(['/login']);
     }
 }

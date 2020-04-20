@@ -11,7 +11,7 @@ import { AuthService } from '../service/auth.service';
 
 @Component({
     templateUrl: 'password-modification.component.html',
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class PasswordModificationComponent implements OnInit {
 
