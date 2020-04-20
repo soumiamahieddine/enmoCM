@@ -63,8 +63,8 @@ class AuthenticationController
         if (!empty($jsonFile[0]['path'])) {
             $coreUrl = UrlController::getCoreUrl();
             $url = $coreUrl . $jsonFile[0]['path'] . "/dist/index.html";
-        } elseif (!empty($jsonFile[0]['ip'])) {
-            $url = $jsonFile[0]['ip'] . "/dist/index.html";
+        } elseif (!empty($jsonFile[0]['uri'])) {
+            $url = $jsonFile[0]['uri'] . "/dist/index.html";
         }
 
         return $response->withJson(['url' => $url]);

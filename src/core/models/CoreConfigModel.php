@@ -46,7 +46,7 @@ class CoreConfigModel
             if (!empty($value['path']) && $value['path'] == $path) {
                 $customId = $value['id'];
                 return $customId;
-            } elseif ($value['ip'] == $_SERVER['HTTP_HOST'] || ($_SERVER['HTTP_HOST'] == $_SERVER['SERVER_ADDR'] && $value['ip'] == $_SERVER['SERVER_ADDR'])) {
+            } elseif ($value['uri'] == $_SERVER['HTTP_HOST'] || ($_SERVER['HTTP_HOST'] == $_SERVER['SERVER_ADDR'] && $value['uri'] == $_SERVER['SERVER_ADDR'])) {
                 $customId = $value['id'];
                 return $customId;
             }

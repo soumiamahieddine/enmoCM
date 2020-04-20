@@ -27,7 +27,7 @@ if (is_file($file)) {
             }
             $jsonFile[] = [
                 'id'                => (string)$value->custom_id,
-                'ip'                => $ip,
+                'uri'               => $ip,
                 'path'              => (string)$value->path
             ];
         }
