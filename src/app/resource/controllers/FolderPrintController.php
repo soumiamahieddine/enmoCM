@@ -373,7 +373,7 @@ class FolderPrintController
                 if (!Validator::intVal()->validate($linkedResource['resId'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'LinkedResources resId is not an integer']);
                 }
-                if (!in_array($linkedResource['resId'], $controlResource['linkedResources'])) {
+                if (!in_array($linkedResource['resId'], $controlResource['linked_resources'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'LinkedResources resId is not linked to resource']);
                 }
                 if (!ResController::hasRightByResId(['resId' => $linkedResource['resId'], 'userId' => $GLOBALS['id']])) {
