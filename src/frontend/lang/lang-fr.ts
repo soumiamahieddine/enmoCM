@@ -1673,4 +1673,5 @@ export const LANG_FR = {
     "accountLocked": "Nombre de tentatives de connexion dépassée. Réessayez dans",
     "modelUsedByResources": "Le modèle est utilisé par des courriers, vous ne pouvez pas le supprimer.",
     "mustChangePassword": "Vous êtes invité à changer votre mot de passe.",
+    "linkedResources": "Pièces jointes (courriers liés)",
 };
