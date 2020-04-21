@@ -50,13 +50,15 @@ class AuthenticationController
     public function getValidUrl(Request $request, Response $response)
     {
         if (!is_file('custom/custom.json')) {
-            return $response->withJson(['url' => null]);
+            return $response->withJson(['lang' => '']);
         }
 
         $jsonFile = file_get_contents('custom/custom.json');
         $jsonFile = json_decode($jsonFile, true);
-        if (count($jsonFile) != 1) {
-            return $response->withJson(['url' => null]);
+        if (count($jsonFile) == 0) {
+            return $response->withJson(['lang' => '']);
+        } elseif (count($jsonFile) > 1) {
+            return $response->withJson(['lang' => '']);
         }
 
         $url = null;
@@ -296,11 +298,11 @@ class AuthenticationController
             }
         }
 
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['id', 'firstname', 'lastname', 'status', 'user_id as login']]);
+
         $token = [
             'exp'   => time() + 60 * $sessionTime,
-            'user'  => [
-                'id' => $GLOBALS['id']
-            ]
+            'user'  => $user
         ];
 
         $jwt = JWT::encode($token, CoreConfigModel::getEncryptKey());
