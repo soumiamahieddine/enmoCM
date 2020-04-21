@@ -50,15 +50,15 @@ class AuthenticationController
     public function getValidUrl(Request $request, Response $response)
     {
         if (!is_file('custom/custom.json')) {
-            return $response->withJson(['lang' => '']);
+            return $response->withJson(['message' => 'No custom file', 'lang' => '']);
         }
 
         $jsonFile = file_get_contents('custom/custom.json');
         $jsonFile = json_decode($jsonFile, true);
         if (count($jsonFile) == 0) {
-            return $response->withJson(['lang' => '']);
+            return $response->withJson(['message' => 'No custom', 'lang' => '']);
         } elseif (count($jsonFile) > 1) {
-            return $response->withJson(['lang' => '']);
+            return $response->withJson(['message' => 'There is more than 1 custom', 'lang' => '']);
         }
 
         $url = null;
