@@ -1524,10 +1524,11 @@ class UserControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Invalid token', $responseBody['errors']);
 
-        $tmpId = $GLOBALS['id'];
-        $GLOBALS['id'] = $GLOBALS['id'] * 1000;
-        $token = \SrcCore\controllers\AuthenticationController::getJWT();
-        $GLOBALS['id'] = $tmpId;
+        $token = [
+            'exp'  => time() + 60 * \SrcCore\controllers\AuthenticationController::MAX_DURATION_TOKEN,
+            'user' => ['id' => self::$id * 1000]
+        ];
+        $token = \Firebase\JWT\JWT::encode($token, \SrcCore\models\CoreConfigModel::getEncryptKey());
 
         $body = [
             'token'    => $token,
