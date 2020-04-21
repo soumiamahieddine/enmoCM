@@ -40,7 +40,9 @@ foreach ($customs as $custom) {
         if ($loadedXml && $loadedNotificationXml) {
             $loadedXml->CONFIG->MaarchDirectory = (string)$loadedNotificationXml->CONFIG->MaarchDirectory;
             $loadedXml->CONFIG->customID        = (string)$loadedNotificationXml->CONFIG->customID;
-            $loadedXml->CONFIG->MaarchUrl       = (string)$loadedNotificationXml->CONFIG->MaarchUrl;
+            if (empty($loadedXml->CONFIG->MaarchUrl)) {
+                $loadedXml->CONFIG->MaarchUrl = (string)$loadedNotificationXml->CONFIG->MaarchUrl;
+            }
 
             $res = formatXml($loadedXml);
             $fp  = fopen($configPath, "w+");
