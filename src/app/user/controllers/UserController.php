@@ -1563,7 +1563,7 @@ class UserController
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if ($loggingMethod['id'] != 'standard') {
-            return $response->withStatus($control['status'])->withJson(['errors' => $control['error']]);
+            return $response->withStatus(403)->withJson(['errors' => 'Cannot send activation notification when not using standard connection']);
         }
 
         $user = UserModel::getById(['id' => $args['id'], 'select' => ['mail']]);
@@ -1683,7 +1683,7 @@ class UserController
         return $response->withStatus(204);
     }
 
-    public static function passwordInitialization(Request $request, Response $response)
+    public function passwordInitialization(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 
@@ -1728,7 +1728,7 @@ class UserController
         return $response->withStatus(204);
     }
 
-    public static function getCurrentUserEmailSignatures(Request $request, Response $response)
+    public function getCurrentUserEmailSignatures(Request $request, Response $response)
     {
         $signatureModels = UserEmailSignatureModel::getByUserId(['userId' => $GLOBALS['id']]);
 
@@ -1744,14 +1744,14 @@ class UserController
         return $response->withJson(['emailSignatures' => $signatures]);
     }
 
-    public static function getCurrentUserEmailSignatureById(Request $request, Response $response, array $args)
+    public function getCurrentUserEmailSignatureById(Request $request, Response $response, array $args)
     {
         if (!Validator::notEmpty()->intVal()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body param id is empty or not an integer']);
         }
 
         $signature = UserEmailSignatureModel::getById(['id' => $args['id']]);
-        if (empty($signature) || $signature['userId'] != $GLOBALS['id']) {
+        if (empty($signature) || $signature['user_id'] != $GLOBALS['id']) {
             return $response->withStatus(404)->withJson(['errors' => 'Signature not found']);
         }
 

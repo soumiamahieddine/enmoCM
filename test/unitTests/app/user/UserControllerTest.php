@@ -14,7 +14,7 @@ class UserControllerTest extends TestCase
     private static $id = null;
     private static $idEmailSignature = null;
     private static $redirectId = null;
-
+    private static $signatureId = null;
 
     public function testGet()
     {
@@ -235,7 +235,8 @@ class UserControllerTest extends TestCase
             'lastname'  => 'TEST-KENT2',
             'mail'      => 'ck@dailyP.com',
             'phone'     => '0122334455',
-            'initials'  => 'CK'
+            'initials'  => 'CK',
+            'status'    => 'OK'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -697,6 +698,17 @@ class UserControllerTest extends TestCase
         $this->assertIsArray($responseBody->listInstances);
         $this->assertEmpty($responseBody->listInstances);
 
+        $user = \User\models\UserModel::getByLogin(['login' => 'ggrand', 'select' => ['id']]);
+
+        $response     = $userController->isDeletable($request, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(true, $responseBody['isDeletable']);
+        $this->assertIsArray($responseBody['listTemplates']);
+        $this->assertNotEmpty($responseBody['listTemplates']);
+        $this->assertIsArray($responseBody['listInstances']);
+        $this->assertEmpty($responseBody['listInstances']);
+
         // Fail
         $response     = $userController->isDeletable($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
         $this->assertSame(400, $response->getStatusCode());
@@ -777,7 +789,13 @@ class UserControllerTest extends TestCase
         //  DELETE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'FIN']);
+
+        $body = [
+            'mode' => 'anything_but_reaffect'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->deleteEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'FIN']);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertIsArray($responseBody->entities);
@@ -786,7 +804,13 @@ class UserControllerTest extends TestCase
         //  DELETE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'DGS']);
+
+        $body = [
+            'mode' => 'reaffect'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->deleteEntity($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'DGS']);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertIsArray($responseBody->entities);
@@ -802,6 +826,19 @@ class UserControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->id);
         $this->assertIsArray($responseBody->entities);
         $this->assertEmpty($responseBody->entities);
+
+        // Fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'entityId' => 'DGS']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->deleteEntity($request, new \Slim\Http\Response(), ['id' => self::$id, 'entityId' => 'SECRET_ENTITY']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Entity not found', $responseBody['errors']);
     }
 
     public function testGetStatusByUserId()
@@ -1036,6 +1073,51 @@ class UserControllerTest extends TestCase
         $this->assertSame('Bad Request', $responseBody->errors);
     }
 
+    public function testGetCurrentUserEmailSignatures()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $response     = $userController->getCurrentUserEmailSignatures($request, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['emailSignatures']);
+        $this->assertSame(self::$idEmailSignature, $responseBody['emailSignatures'][0]['id']);
+        $this->assertSame('Titre email signature TU 12345 UPDATE', $responseBody['emailSignatures'][0]['label']);
+    }
+
+    public function testGetCurrentUserEmailSignatureById()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $response     = $userController->getCurrentUserEmailSignatureById($request, new \Slim\Http\Response(), ['id' => self::$idEmailSignature]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['emailSignature']);
+        $this->assertSame(self::$idEmailSignature, $responseBody['emailSignature']['id']);
+        $this->assertSame('Titre email signature TU 12345 UPDATE', $responseBody['emailSignature']['label']);
+
+        // Fail
+        $response     = $userController->getCurrentUserEmailSignatureById($request, new \Slim\Http\Response(), ['id' => 'wrong format']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body param id is empty or not an integer', $responseBody['errors']);
+
+        $response     = $userController->getCurrentUserEmailSignatureById($request, new \Slim\Http\Response(), ['id' => self::$idEmailSignature * 1000]);
+        $this->assertSame(404, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Signature not found', $responseBody['errors']);
+    }
+
     public function testDeleteEmailSignature()
     {
         $userController = new \User\controllers\UserController();
@@ -1059,6 +1141,646 @@ class UserControllerTest extends TestCase
         }
         $this->assertSame('', $titleEmailSignature);
         $this->assertSame('', $htmlBodyEmailSignature);
+    }
+
+    public function testSuspend()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $response     = $userController->suspend($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // set status OK
+        $body = [
+            'status' => 'OK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateStatus($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame('OK', $responseBody['user']['status']);
+
+        // Fail
+        $response     = $userController->suspend($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $user = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
+
+        $response     = $userController->suspend($request, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User is still present in listInstances', $responseBody['errors']);
+
+        $response     = $userController->suspend($request, new \Slim\Http\Response(), ['id' => 15]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User is still present in listTemplates', $responseBody['errors']);
+    }
+
+    public function testUpdateCurrentUserPreferences()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $body = [
+            'documentEdition' => 'onlyoffice',
+            'homeGroups'      => [2, 1]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateCurrentUserPreferences($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Fail
+        $body = [
+            'documentEdition' => 'GoogleDocs'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateCurrentUserPreferences($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body preferences[documentEdition] is not allowed', $responseBody['errors']);
+    }
+
+    public function testAddSignature()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $fileContent = file_get_contents('src/frontend/assets/noThumbnail.png');
+        $encodedFile = base64_encode($fileContent);
+
+        $body = [
+            'name'   => 'signature1.png',
+            'label'  => 'Signature1',
+            'base64' => $encodedFile
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['signatures']);
+        $this->assertNotEmpty($responseBody['signatures']);
+        $this->assertSame(1, count($responseBody['signatures']));
+        $this->assertIsInt($responseBody['signatures'][0]['id']);
+
+        self::$signatureId = $responseBody['signatures'][0]['id'];
+
+        // Fail
+        $body = [
+
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+
+        $response     = $userController->addSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        $fileContent = file_get_contents('test/unitTests/samples/test.txt');
+        $encodedFile = base64_encode($fileContent);
+
+        $body = [
+            'name'   => 'signature1.png',
+            'label'  => 'Signature1',
+            'base64' => $encodedFile
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->addSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(_WRONG_FILE_TYPE, $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->addSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+    }
+
+    public function testGetImageContent()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $response     = $userController->getImageContent($request, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId]);
+        $this->assertSame(200, $response->getStatusCode());
+        $headers = $response->getHeaders();
+
+        $this->assertSame('image/png', $headers['Content-Type'][0]);
+
+        // Fail
+        $response     = $userController->getImageContent($request, new \Slim\Http\Response(), ['id' => 'wrong format', 'signatureId' => 'wrong format']);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        $response     = $userController->getImageContent($request, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'signatureId' => self::$signatureId]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+
+        $response     = $userController->getImageContent($request, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Signature does not exist', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->getImageContent($request, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+    }
+
+    public function testUpdateSignature()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $body = [
+            'label'  => 'Signature1 - UPDATED'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['signature']);
+        $this->assertNotEmpty($responseBody['signature']);
+
+        // Fail
+        $body = [
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'signatureId' => self::$signatureId]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+
+        $response     = $userController->updateSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->updateSignature($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+    }
+
+    public function testDeleteSignature()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $response     = $userController->deleteSignature($request, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['signatures']);
+        $this->assertEmpty($responseBody['signatures']);
+
+        // Fail
+        $response     = $userController->deleteSignature($request, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'signatureId' => self::$signatureId]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response     = $userController->deleteSignature($request, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+    }
+
+    public function testSendAccountActivationNotification()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $response     = $userController->sendAccountActivationNotification($request, new \Slim\Http\Response(), ['id' => self::$id, 'signatureId' => self::$signatureId]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Fail
+        $response     = $userController->sendAccountActivationNotification($request, new \Slim\Http\Response(), ['id' => self::$id * 1000, 'signatureId' => self::$signatureId]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+    }
+
+    public function testForgotPassword()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        // User does not exist
+        $body = [
+            'login' => 'mscott'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->forgotPassword($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(204, $response->getStatusCode());
+
+        // User exist
+        $body = [
+            'login' => 'bbain'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->forgotPassword($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Fail
+        $body = [
+
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->forgotPassword($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body login is empty', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+    }
+
+    public function testPasswordInitialization()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $token = \SrcCore\controllers\AuthenticationController::getJWT();
+        \User\models\UserModel::update([
+            'set'   => ['reset_token' => $token],
+            'where' => ['id = ?'],
+            'data'  => [$GLOBALS['id']]
+        ]);
+
+        $body = [
+            'token'    => $token,
+            'password' => 'superadmin'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->passwordInitialization($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Fail
+        $body = [
+
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->passwordInitialization($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body token or body password is empty', $responseBody['errors']);
+
+        $body = [
+            'token'    => 'wrong token format',
+            'password' => 'maarch'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->passwordInitialization($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Invalid token', $responseBody['errors']);
+
+        $tmpId = $GLOBALS['id'];
+        $GLOBALS['id'] = $GLOBALS['id'] * 1000;
+        $token = \SrcCore\controllers\AuthenticationController::getJWT();
+        $GLOBALS['id'] = $tmpId;
+
+        $body = [
+            'token'    => $token,
+            'password' => 'maarch'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->passwordInitialization($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User does not exist', $responseBody['errors']);
+
+        $token = \SrcCore\controllers\AuthenticationController::getJWT();
+        $body = [
+            'token'    => $token,
+            'password' => 'maarch'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->passwordInitialization($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Invalid token', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+    }
+
+    public function testUpdateBasketsDisplay()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $user = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
+        $body = [
+            'baskets' => [
+                [
+                    'basketId'      => 'MyBasket',
+                    'groupSerialId' => 2,
+                    'allowed'       => false
+                ]
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('success', $responseBody['success']);
+
+        $body = [
+            'baskets' => [
+                [
+                    'basketId'      => 'MyBasket',
+                    'groupSerialId' => 2,
+                    'allowed'       => true
+                ]
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('success', $responseBody['success']);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Preference already exists', $responseBody['errors']);
+
+        // Fail
+        $body = [
+
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('User not found', $responseBody['errors']);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Bad Request', $responseBody['errors']);
+
+        $body = [
+            'baskets' => [
+                [
+                    'basketId'      => 'MyBasket',
+                    'groupSerialId' => 1,
+                ]
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Element is missing', $responseBody['errors']);
+
+        $body = [
+            'baskets' => [
+                [
+                    'basketId'      => 'MyBasket',
+                    'groupSerialId' => 100000,
+                    'allowed'       => true
+                ]
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Group or basket does not exist', $responseBody['errors']);
+
+        $body = [
+            'baskets' => [
+                [
+                    'basketId'      => 'MyBasket',
+                    'groupSerialId' => 1,
+                    'allowed'       => true
+                ]
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Group is not linked to this user', $responseBody['errors']);
+
+        $body = [
+            'baskets' => [
+                [
+                    'basketId'      => 'QualificationBasket',
+                    'groupSerialId' => 2,
+                    'allowed'       => true
+                ]
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateBasketsDisplay($fullRequest, new \Slim\Http\Response(), ['id' => $user['id']]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Group is not linked to this basket', $responseBody['errors']);
+    }
+
+    public function testGetTemplates()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $query = [
+            'target' => 'sendmail',
+            'type'   => 'HTML'
+        ];
+        $fullRequest = $request->withQueryParams($query);
+
+        $response     = $userController->getTemplates($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertIsArray($responseBody['templates']);
+        $this->assertNotEmpty($responseBody['templates']);
+
+        foreach ($responseBody['templates'] as $template) {
+            $this->assertIsInt($template['id']);
+            $this->assertIsString($template['label']);
+            $this->assertEmpty($template['extension']);
+            $this->assertEmpty($template['exists']);
+            $this->assertIsString($template['target']);
+            $this->assertIsString($template['attachmentType']);
+        }
+    }
+
+    public function testUpdateCurrentUserBasketPreferences()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        //  Success
+        $body = [
+            'color' => 'red'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateCurrentUserBasketPreferences($fullRequest, new \Slim\Http\Response(), ['basketId' => 'MyBasket', 'groupSerialId' => 1]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertIsArray($responseBody['userBaskets']);
+        $this->assertEmpty($responseBody['userBaskets']);
+
+        $body = [
+            'color' => ''
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $userController->updateCurrentUserBasketPreferences($fullRequest, new \Slim\Http\Response(), ['basketId' => 'MyBasket', 'groupSerialId' => 1]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertIsArray($responseBody['userBaskets']);
+        $this->assertEmpty($responseBody['userBaskets']);
+
+    }
+
+    public function testGetDetailledById()
+    {
+        $userController = new \User\controllers\UserController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response       = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'bblier';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $response       = $userController->getDetailledById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame(self::$id, $responseBody['id']);
+        $this->assertSame('test-ckent', $responseBody['user_id']);
+        $this->assertSame('TEST-CLARK2', $responseBody['firstname']);
+        $this->assertSame('TEST-KENT2', $responseBody['lastname']);
+        $this->assertSame('OK', $responseBody['status']);
+        $this->assertSame(null, $responseBody['phone']);
+        $this->assertSame('ck@dailyP.com', $responseBody['mail']);
+        $this->assertSame('CK', $responseBody['initials']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
     }
 
     public function testDelete()
@@ -1085,6 +1807,14 @@ class UserControllerTest extends TestCase
         $this->assertSame('0122334455', $responseBody->phone);
         $this->assertSame('ck@dailyP.com', $responseBody->mail);
         $this->assertSame('CK', $responseBody->initials);
+
+        // Fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response       = $userController->delete($request, new \Slim\Http\Response(), ['id' => $GLOBALS['id']]);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody   = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Can not delete yourself', $responseBody['errors']);
 
         //  REAL DELETE
         \SrcCore\models\DatabaseModel::delete([
@@ -1334,7 +2064,7 @@ class UserControllerTest extends TestCase
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $aArgs = [
+        $body = [
             [
                 'actual_user_id'    =>  21,
                 'basket_id'         =>  'MyBasket',
@@ -1343,7 +2073,7 @@ class UserControllerTest extends TestCase
         ];
 
         $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
         $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
         
@@ -1357,7 +2087,7 @@ class UserControllerTest extends TestCase
         $this->assertNotNull(self::$redirectId);
         $this->assertIsInt(self::$redirectId);
 
-        $aArgs = [
+        $body = [
             [
                 'newUser'       =>  null,
                 'basketId'      =>  'MyBasket',
@@ -1371,21 +2101,34 @@ class UserControllerTest extends TestCase
                 'virtual'       =>  'Y'
             ]
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
         $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Some data are empty', $responseBody->errors);
 
-        $aArgs = [
+        $body = [
             [
                 'actual_user_id'    =>  -1,
                 'basket_id'         =>  'MyBasket',
                 'group_id'          =>  2
             ]
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
         $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('User not found', $responseBody->errors);
+
+        $body = [
+            [
+                'actual_user_id'    =>  -1,
+                'basket_id'         =>  'MyBasket',
+                'group_id'          =>  2
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+        $response     = $userController->setRedirectedBaskets($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'] * 1000]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('User not found', $responseBody->errors);
@@ -1401,11 +2144,11 @@ class UserControllerTest extends TestCase
         $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
        
         //DELETE MANY WITH ONE ON ERROR
-        $aArgs = [
+        $body = [
             'redirectedBasketIds' => [ self::$redirectId, -1 ]
         ];
 
-        $fullRequest = $request->withQueryParams($aArgs);
+        $fullRequest = $request->withQueryParams($body);
 
         $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
@@ -1413,27 +2156,57 @@ class UserControllerTest extends TestCase
         $this->assertSame('Redirected basket out of perimeter', $responseBody->errors);
 
         //DELETE OK
-        $aArgs = [
+        $GLOBALS['login'] = 'bbain';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
+        $body = [
             'redirectedBasketIds' => [ self::$redirectId ]
         ];
 
-        $fullRequest = $request->withQueryParams($aArgs);
+        $fullRequest = $request->withQueryParams($body);
 
         $response  = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotNull($responseBody->baskets);
 
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id']     = $userInfo['id'];
+
         //DELETE NOT OK
-        $aArgs = [
+        $body = [
             'redirectedBasketIds' => [ -1 ]
         ];
 
-        $fullRequest = $request->withQueryParams($aArgs);
+        $fullRequest = $request->withQueryParams($body);
 
         $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Redirected basket out of perimeter', $responseBody->errors);
+
+        $body = [
+            'redirectedBasketIds' => [ -1 ]
+        ];
+
+        $fullRequest = $request->withQueryParams($body);
+
+        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id'] * 1000]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('User not found', $responseBody->errors);
+
+        $body = [
+            'redirectedBasketIds' => 'wrong format'
+        ];
+
+        $fullRequest = $request->withQueryParams($body);
+
+        $response     = $userController->deleteRedirectedBasket($fullRequest, new \Slim\Http\Response(), ['id' => $user_id['id']]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('RedirectedBasketIds is empty or not an array', $responseBody->errors);
     }
 }
