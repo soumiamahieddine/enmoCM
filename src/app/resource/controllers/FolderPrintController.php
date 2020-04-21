@@ -376,7 +376,7 @@ class FolderPrintController
                 if (!in_array($linkedResource['resId'], $controlResource['linked_resources'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'LinkedResources resId is not linked to resource']);
                 }
-                if (!ResController::hasRightByResId(['resId' => $linkedResource['resId'], 'userId' => $GLOBALS['id']])) {
+                if (!ResController::hasRightByResId(['resId' => [$linkedResource['resId']], 'userId' => $GLOBALS['id']])) {
                     return $response->withStatus(403)->withJson(['errors' => 'LinkedResources out of perimeter']);
                 }
 
