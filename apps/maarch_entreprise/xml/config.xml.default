@@ -20,6 +20,9 @@
         <timezone>Europe/Paris</timezone>
         <userdefaultpassword>maarch</userdefaultpassword> <!-- default user's password -->
         <usePHPIDS>true</usePHPIDS>
+        <MaarchDirectory>/var/www/html/MaarchCourrier/</MaarchDirectory>
+        <customID></customID>
+        <MaarchUrl>http://preview.maarchcourrier.com/</MaarchUrl>
     </CONFIG>
     <CRYPT>
         <encrypt>false</encrypt>
