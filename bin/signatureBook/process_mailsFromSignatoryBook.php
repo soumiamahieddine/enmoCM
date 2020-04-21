@@ -86,6 +86,8 @@ $refusedStatus                     = (string)$config->refusedStatus;
 $validatedStatusAnnot              = (string)$config->validatedStatusAnnot;
 $refusedStatusAnnot                = (string)$config->refusedStatusAnnot;
 
+chdir($GLOBALS['MaarchDirectory']);
+
 set_include_path(get_include_path() . PATH_SEPARATOR . $GLOBALS['MaarchDirectory']);
 
 try {
