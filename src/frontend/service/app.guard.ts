@@ -26,6 +26,7 @@ export class AppGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
         console.log('guard : ' + route.url.join('/'));
+        console.log(state.url.replace(/^\//g, ""));
 
         this.headerService.resetSideNavSelection();
 
@@ -120,7 +121,7 @@ export class AppGuard implements CanActivate {
                             this.authService.setUrl(route.url.join('/'));
                             return tokenInfo;
                         } else {
-                            this.authService.setCachedUrl(route.url.join('/'));
+                            this.authService.setCachedUrl(state.url.replace(/^\//g, ""));
                             console.log('Aucun token trouvé ! Redirection sur login ...');
                             this.authService.logout(false);
                             return false;

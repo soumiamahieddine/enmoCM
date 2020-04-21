@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
                 this.authService.saveTokens(data.headers.get('Token'), data.headers.get('Refresh-Token'));
                 this.authService.setUser({});
                 if (this.authService.getCachedUrl()) {
-                    this.router.navigate([this.authService.getCachedUrl()]);
+                    this.router.navigateByUrl(this.authService.getCachedUrl());
                     this.authService.cleanCachedUrl();
                 } else if (!this.functionsService.empty(this.authService.getUrl(JSON.parse(atob(data.headers.get('Token').split('.')[1])).user.id))) {
                     this.router.navigate([this.authService.getUrl(JSON.parse(atob(data.headers.get('Token').split('.')[1])).user.id)]);
