@@ -1659,4 +1659,6 @@ export const LANG_NL = {
     "modelUsedByResources": "This model is used by resources, you can't delete it.", //_TO_TRANSLATE
     "mustChangePassword": "Please, you must change your password.", //_TO_TRANSLATE
     "linkedResources": "Attachments (linked mails)", //_TO_TRANSLATE
+    "accessNotFound": "Access not found", //_TO_TRANSLATE
+    "moreOneCustom": "This url is not an available instance of this application, please verify your address.", //_TO_TRANSLATE
 };

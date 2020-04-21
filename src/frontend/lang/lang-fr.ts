@@ -1675,4 +1675,6 @@ export const LANG_FR = {
     "modelUsedByResources": "Le modèle est utilisé par des courriers, vous ne pouvez pas le supprimer.",
     "mustChangePassword": "Vous êtes invité à changer votre mot de passe.",
     "linkedResources": "Pièces jointes (courriers liés)",
+    "accessNotFound": "Accès introuvable",
+    "moreOneCustom": "Cette url ne correspond à aucune instance configurée, veuillez vérifier l'adresse.",
 };

@@ -1675,4 +1675,6 @@ export const LANG_EN = {
     "modelUsedByResources": "This model is used by resources, you can't delete it.",
     "mustChangePassword": "Please, you must change your password.",
     "linkedResources": "Attachments (linked mails)",
+    "accessNotFound": "Access not found",
+    "moreOneCustom": "This url is not an available instance of this application, please verify your address.",
 };

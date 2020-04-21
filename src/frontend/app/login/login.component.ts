@@ -12,6 +12,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { HeaderService } from '../../service/header.service';
 import { FunctionsService } from '../../service/functions.service';
 import { TimeLimitPipe } from '../../plugins/timeLimit.pipe';
+import { AlertComponent } from '../../plugins/modal/alert.component';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -114,33 +115,17 @@ export class LoginComponent implements OnInit {
             catchError((err: any) => {
                 this.http.get('../rest/validUrl').pipe(
                     tap((data: any) => {
-                        if (data.url !== null) {
+                        if (!this.functionsService.empty(data.url)) {
                             window.location.href = data.url;
+                        } else if (data.lang === 'moreOneCustom') {
+                            this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.accessNotFound, msg: this.lang.moreOneCustom, hideButton: true } });
+                        } else if (data.lang === 'noConfiguration') {
+                            // TO DO : LAUNCH INSTALLER
                         } else {
                             this.notify.handleSoftErrors(err);
                         }
                     })
                 ).subscribe();
-                // TO DO : CONVERT custom.xml to json
-                /*if (err.error.exception[0].message === 'Argument driver is empty') {
-                    const configs = [{
-                        custom_id : 'cs_recette',
-                        ip : '',
-                        external_domain : '',
-                        path: 'cs_recette'
-                    }];
-                    const firstConfig = configs.map(item => item.custom_id).filter((customId) => !this.functionsService.empty(customId));
-
-                    if (firstConfig.length > 0) {
-                        const url = document.URL;
-                        const splitUrl = url.split('/dist/');
-                        window.location.href = `${splitUrl[0]}/${firstConfig[0]}/dist/${splitUrl[1]}`;
-                    } else {
-                        this.notify.error('Aucun custom ou fichier de configuration trouvé!');
-                    }
-                } else {
-                    this.notify.handleSoftErrors(err);
-                }*/
                 return of(false);
             })
         ).subscribe();
