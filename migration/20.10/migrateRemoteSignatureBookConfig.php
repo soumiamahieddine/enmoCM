@@ -9,7 +9,7 @@ $migrated = 0;
 $customs =  scandir('custom');
 
 foreach ($customs as $custom) {
-    if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
+    if (in_array($custom, ['custom.json', 'custom.xml', '.', '..'])) {
         continue;
     }
 
@@ -53,6 +53,8 @@ foreach ($customs as $custom) {
                 fwrite($fp, $res);
             }
 
+            createScript();
+
             $migrated++;
         }
     }
@@ -72,4 +74,34 @@ function formatXml($simpleXMLElement)
     $xmlDocument->loadXML($simpleXMLElement->asXML());
 
     return $xmlDocument->saveXML();
+}
+
+function createScript()
+{
+    $corePath = str_replace('migration/20.10', '', __DIR__);
+    $config   = $corePath . \SrcCore\models\CoreConfigModel::getConfigPath();
+
+    if (!empty($GLOBALS['customId'])) {
+        $folderScript = $corePath.'custom/'.$GLOBALS['customId'].'/bin/signatureBook/scripts/';
+        if (!file_exists($folderScript)) {
+            mkdir($folderScript, 0777, true);
+        }
+        $scriptPath = $folderScript . 'retrieveMailFromExternalSignatoryBook.sh';
+    } else {
+        $scriptPath = $corePath.'bin/signatureBook/scripts/retrieveMailFromExternalSignatoryBook.sh';
+    }
+    $fileToOpen = fopen($scriptPath, 'w+');
+
+    fwrite($fileToOpen, '#!/bin/sh');
+    fwrite($fileToOpen, "\n");
+    fwrite($fileToOpen, 'cd ' . $corePath . 'bin/signatureBook/');
+    fwrite($fileToOpen, "\n");
+    fwrite($fileToOpen, 'filePath=\''.$corePath.'bin/signatureBook/process_mailsFromSignatoryBook.php\'');
+    fwrite($fileToOpen, "\n");
+    fwrite($fileToOpen, 'php $filePath -c ' . $config);
+    fwrite($fileToOpen, "\n");
+    fclose($fileToOpen);
+    shell_exec('chmod +x '. $scriptPath);
+
+    printf("Si le script process_mailsFromSignatoryBook.php est lancé dans la crontab, il faut modifier le chemin comme ceci : " . $scriptPath . "\n");
 }

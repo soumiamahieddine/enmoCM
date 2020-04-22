@@ -7,7 +7,7 @@ chdir('../..');
 $customs =  scandir('custom');
 $migrated = 0;
 foreach ($customs as $custom) {
-    if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
+    if (in_array($custom, ['custom.json', 'custom.xml', '.', '..'])) {
         continue;
     }
 

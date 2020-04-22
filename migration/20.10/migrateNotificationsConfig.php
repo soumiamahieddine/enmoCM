@@ -9,7 +9,7 @@ $migrated = 0;
 $customs =  scandir('custom');
 
 foreach ($customs as $custom) {
-    if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
+    if (in_array($custom, ['custom.json', 'custom.xml', '.', '..'])) {
         continue;
     }
 
@@ -61,6 +61,7 @@ foreach ($customs as $custom) {
             foreach ($notifications as $notification) {
                 \Notification\models\NotificationScheduleModel::createScriptNotification(['notification_sid' => $notification['notification_sid'], 'notification_id' => $notification['notification_id']]);
             }
+            printf("Si les scripts de notifications sont lancés dans la crontab, il faut modifier les chemins. Tous les scripts sont dans le dossier : bin/notification/scripts/ \n");
 
             $migrated++;
         }
