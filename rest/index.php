@@ -561,6 +561,7 @@ $app->get('/externalSummary/{resId}', \ExternalSummary\controllers\SummaryContro
 $app->get('/externalConnectionsEnabled', \SrcCore\controllers\CoreController::class . ':externalConnectionsEnabled');
 
 //Alfresco
+$app->get('/alfresco/accounts', \Alfresco\controllers\AlfrescoController::class . ':getAccounts');
 $app->get('/alfresco/rootFolders', \Alfresco\controllers\AlfrescoController::class . ':getRootFolders');
 $app->get('/alfresco/folders/{id}/children', \Alfresco\controllers\AlfrescoController::class . ':getChildrenFoldersById');
 $app->get('/alfresco/autocomplete/folders', \Alfresco\controllers\AlfrescoController::class . ':getFolders');
