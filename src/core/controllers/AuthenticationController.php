@@ -161,12 +161,21 @@ class AuthenticationController
 
         if (!empty($passwordRules['lockAttempts'])) {
             $user = UserModel::getById(['select' => ['failed_authentication', 'locked_until'], 'id' => $args['userId']]);
+            $set = [];
             if (!empty($user['locked_until'])) {
-                return ['accountLocked' => true, 'lockedDate' => $user['locked_until']];
+                $currentDate = new \DateTime();
+                $lockedUntil = new \DateTime($user['locked_until']);
+                if ($lockedUntil < $currentDate) {
+                    $set['locked_until'] = null;
+                    $user['failed_authentication'] = 0;
+                } else {
+                    return ['accountLocked' => true, 'lockedDate' => $user['locked_until']];
+                }
             }
 
+            $set['failed_authentication'] = $user['failed_authentication'] + 1;
             UserModel::update([
-                'set'       => ['failed_authentication' => $user['failed_authentication'] + 1],
+                'set'       => $set,
                 'where'     => ['id = ?'],
                 'data'      => [$args['userId']]
             ]);
@@ -174,7 +183,7 @@ class AuthenticationController
             if (!empty($user['failed_authentication']) && ($user['failed_authentication'] + 1) >= $passwordRules['lockAttempts'] && !empty($passwordRules['lockTime'])) {
                 $lockedUntil = time() + 60 * $passwordRules['lockTime'];
                 UserModel::update([
-                    'set'   => ['locked_until'  => date('Y-m-d H:i:s', $lockedUntil)],
+                    'set'       => ['locked_until'  => date('Y-m-d H:i:s', $lockedUntil)],
                     'where'     => ['id = ?'],
                     'data'      => [$args['userId']]
                 ]);
