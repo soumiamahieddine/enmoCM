@@ -1661,4 +1661,14 @@ export const LANG_NL = {
     "linkedResources": "Attachments (linked mails)", //_TO_TRANSLATE
     "accessNotFound": "Access not found", //_TO_TRANSLATE
     "moreOneCustom": "This url is not an available instance of this application, please verify your address.", //_TO_TRANSLATE
+    "linkedEntities": "Linked entities", //_TO_TRANSLATE
+    "accounts": "Accounts", //_TO_TRANSLATE
+    "alfrescoCreation": "Alfresco account creation", //_TO_TRANSLATE
+    "alfrescoModification": "Alfresco account modification", //_TO_TRANSLATE
+    "showTreeMsg": "Click here to show the Alfresco tree", //_TO_TRANSLATE
+    "mustFillAccountMsg": "Please fill the Alfresco account information in order to choose a root folder.", //_TO_TRANSLATE
+    "accountUpdated": "Account updated", //_TO_TRANSLATE
+    "alfrescoAccount": "Alfresco account", //_TO_TRANSLATE
+    "rootFolder": "Dossier racine", //_TO_TRANSLATE
+    "chooseEntityAssociationAccount": "Choose entities who will be able to use this account", //_TO_TRANSLATE
 };
