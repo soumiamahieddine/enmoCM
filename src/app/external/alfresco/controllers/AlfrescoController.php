@@ -79,6 +79,7 @@ class AlfrescoController
             'id'        => $alfresco['alfresco']['id'],
             'label'     => $alfresco['alfresco']['label'],
             'login'     => $alfresco['alfresco']['login'],
+            'nodeId'    => $alfresco['alfresco']['nodeId'],
             'entities'  => []
         ];
 
@@ -109,6 +110,16 @@ class AlfrescoController
             return $response->withStatus(400)->withJson(['errors' => 'Body entities is empty or not an array']);
         }
 
+        foreach ($body['entities'] as $entity) {
+            if (!Validator::intVal()->notEmpty()->validate($entity)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities contains no integer values']);
+            }
+        }
+        $entities = EntityModel::get(['select' => ['id'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
+        if (count($entities) != count($body['entities'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Some entities do not exist']);
+        }
+
         $id = CoreConfigModel::uniqueId();
         $account = [
             'id'        => $id,
@@ -123,6 +134,89 @@ class AlfrescoController
             'postSet'   => ['external_id' => "jsonb_set(external_id, '{alfresco}', '{$account}')"],
             'where'     => ['id in (?)'],
             'data'      => [$body['entities']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function updateAccount(Request $request, Response $response, array $args)
+    {
+//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+//        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['login'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body login is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['nodeId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body nodeId is empty or not a string']);
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['entities'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body entities is empty or not an array']);
+        }
+
+        $accounts = EntityModel::get(['select' => ['external_id', 'id'], 'where' => ["external_id->'alfresco'->>'id' = ?"], 'data' => [$args['id']]]);
+        if (empty($accounts[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Account not found']);
+        }
+
+        foreach ($body['entities'] as $entity) {
+            if (!Validator::intVal()->notEmpty()->validate($entity)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities contains no integer values']);
+            }
+        }
+        $entities = EntityModel::get(['select' => ['id'], 'where' => ['id in (?)'], 'data' => [$body['entities']]]);
+        if (count($entities) != count($body['entities'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Some entities do not exist']);
+        }
+
+        $alfresco = json_decode($accounts[0]['external_id'], true);
+        $account = [
+            'id'        => $args['id'],
+            'label'     => $body['label'],
+            'login'     => $body['login'],
+            'password'  => empty($body['password']) ? $alfresco['alfresco']['password'] : PasswordModel::encrypt(['password' => $body['password']]),
+            'nodeId'    => $body['nodeId']
+        ];
+        $account = json_encode($account);
+
+        EntityModel::update([
+            'postSet'   => ['external_id' => "jsonb_set(external_id, '{alfresco}', '{$account}')"],
+            'where'     => ['id in (?)'],
+            'data'      => [$body['entities']]
+        ]);
+
+        $previousEntities = array_column($accounts, 'id');
+        $entitiesToRemove = array_diff($previousEntities, $body['entities']);
+        if (!empty($entitiesToRemove)) {
+            EntityModel::update([
+                'postSet'   => ['external_id' => "external_id - 'alfresco'"],
+                'where'     => ['id in (?)'],
+                'data'      => [$entitiesToRemove]
+            ]);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public function deleteAccount(Request $request, Response $response, array $args)
+    {
+//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+//        }
+
+        $accounts = EntityModel::get(['select' => ['external_id', 'id'], 'where' => ["external_id->'alfresco'->>'id' = ?"], 'data' => [$args['id']]]);
+        if (empty($accounts[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Account not found']);
+        }
+
+        $entitiesToRemove = array_column($accounts, 'id');
+        EntityModel::update([
+            'postSet'   => ['external_id' => "external_id - 'alfresco'"],
+            'where'     => ['id in (?)'],
+            'data'      => [$entitiesToRemove]
         ]);
 
         return $response->withStatus(204);

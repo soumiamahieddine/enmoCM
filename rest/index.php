@@ -564,6 +564,8 @@ $app->get('/externalConnectionsEnabled', \SrcCore\controllers\CoreController::cl
 $app->get('/alfresco/accounts', \Alfresco\controllers\AlfrescoController::class . ':getAccounts');
 $app->post('/alfresco/accounts', \Alfresco\controllers\AlfrescoController::class . ':createAccount');
 $app->get('/alfresco/accounts/{id}', \Alfresco\controllers\AlfrescoController::class . ':getAccountById');
+$app->put('/alfresco/accounts/{id}', \Alfresco\controllers\AlfrescoController::class . ':updateAccount');
+$app->delete('/alfresco/accounts/{id}', \Alfresco\controllers\AlfrescoController::class . ':deleteAccount');
 $app->get('/alfresco/rootFolders', \Alfresco\controllers\AlfrescoController::class . ':getRootFolders');
 $app->get('/alfresco/folders/{id}/children', \Alfresco\controllers\AlfrescoController::class . ':getChildrenFoldersById');
 $app->get('/alfresco/autocomplete/folders', \Alfresco\controllers\AlfrescoController::class . ':getFolders');
