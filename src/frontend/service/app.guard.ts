@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, CanDeactivate } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, CanDeactivate, UrlTree } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, tap, catchError, exhaustMap, filter } from 'rxjs/operators';
@@ -181,8 +181,8 @@ export class AppGuard implements CanActivate {
 export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
     constructor() { }
 
-    async canDeactivate(component: ProcessComponent): Promise<boolean> {
-        if (!component.isActionEnded() && !component.detailMode) {
+    async canDeactivate(component: ProcessComponent, currentRoute: ActivatedRouteSnapshot, currentState: RouterStateSnapshot, nextState: RouterStateSnapshot): Promise<boolean> {
+        if (nextState.url != '/login' && !component.isActionEnded() && !component.detailMode) {
             component.unlockResource();
         }
 

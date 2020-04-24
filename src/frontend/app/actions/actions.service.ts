@@ -71,6 +71,12 @@ export class ActionsService {
     ) {
     }
 
+    ngOnDestroy(): void {
+        if (this.currentResourceLock) {
+            clearInterval(this.currentResourceLock);
+        }
+    }
+
     catchAction(): Observable<any> {
         return this.eventAction.asObservable();
     }
