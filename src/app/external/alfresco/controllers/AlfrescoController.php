@@ -244,9 +244,9 @@ class AlfrescoController
 
     public function deleteAccount(Request $request, Response $response, array $args)
     {
-//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $accounts = EntityModel::get(['select' => ['external_id', 'id'], 'where' => ["external_id->'alfresco'->>'id' = ?"], 'data' => [$args['id']]]);
         if (empty($accounts[0])) {
@@ -265,28 +265,30 @@ class AlfrescoController
 
     public function getRootFolders(Request $request, Response $response)
     {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/alfrescoConfig.xml']);
-
-        if (empty($loadedXml) || (string)$loadedXml->ENABLED != 'true') {
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
+        if (empty($configuration)) {
             return $response->withStatus(400)->withJson(['errors' => 'Alfresco configuration is not enabled']);
-        } elseif (empty((string)$loadedXml->URI)) {
+        }
+
+        $configuration = json_decode($configuration['value'], true);
+        if (empty($configuration['uri'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Alfresco configuration URI is empty']);
         }
-        $alfrescoUri = rtrim((string)$loadedXml->URI, '/');
+        $alfrescoUri = rtrim($configuration['uri'], '/');
 
         $entity = UserModel::getPrimaryEntityById(['id' => $GLOBALS['id'], 'select' => ['entities.external_id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'User has no primary entity']);
         }
         $entityInformations = json_decode($entity['external_id'], true);
-        if (empty($entityInformations['alfrescoNodeId']) || empty($entityInformations['alfrescoLogin']) || empty($entityInformations['alfrescoPassword'])) {
+        if (empty($entityInformations['alfresco'])) {
             return $response->withStatus(400)->withJson(['errors' => 'User primary entity has not enough alfresco informations']);
         }
-        $entityInformations['alfrescoPassword'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfrescoPassword']]);
+        $entityInformations['alfresco']['password'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfresco']['password']]);
 
         $curlResponse = CurlModel::execSimple([
-            'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$entityInformations['alfrescoNodeId']}/children",
-            'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+            'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$entityInformations['alfresco']['nodeId']}/children",
+            'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
             'headers'       => ['content-type:application/json'],
             'method'        => 'GET',
             'queryParams'   => ['where' => '(isFolder=true)']
@@ -313,28 +315,30 @@ class AlfrescoController
 
     public function getChildrenFoldersById(Request $request, Response $response, array $args)
     {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/alfrescoConfig.xml']);
-
-        if (empty($loadedXml) || (string)$loadedXml->ENABLED != 'true') {
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
+        if (empty($configuration)) {
             return $response->withStatus(400)->withJson(['errors' => 'Alfresco configuration is not enabled']);
-        } elseif (empty((string)$loadedXml->URI)) {
+        }
+
+        $configuration = json_decode($configuration['value'], true);
+        if (empty($configuration['uri'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Alfresco configuration URI is empty']);
         }
-        $alfrescoUri = rtrim((string)$loadedXml->URI, '/');
+        $alfrescoUri = rtrim($configuration['uri'], '/');
 
         $entity = UserModel::getPrimaryEntityById(['id' => $GLOBALS['id'], 'select' => ['entities.external_id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'User has no primary entity']);
         }
         $entityInformations = json_decode($entity['external_id'], true);
-        if (empty($entityInformations['alfrescoNodeId']) || empty($entityInformations['alfrescoLogin']) || empty($entityInformations['alfrescoPassword'])) {
+        if (empty($entityInformations['alfresco'])) {
             return $response->withStatus(400)->withJson(['errors' => 'User primary entity has not enough alfresco informations']);
         }
-        $entityInformations['alfrescoPassword'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfrescoPassword']]);
+        $entityInformations['alfresco']['password'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfresco']['password']]);
 
         $curlResponse = CurlModel::execSimple([
             'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$args['id']}/children",
-            'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+            'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
             'headers'       => ['content-type:application/json'],
             'method'        => 'GET',
             'queryParams'   => ['where' => '(isFolder=true)']
@@ -368,36 +372,38 @@ class AlfrescoController
             return $response->withStatus(400)->withJson(['errors' => 'Query params search is too short']);
         }
 
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/alfrescoConfig.xml']);
-
-        if (empty($loadedXml) || (string)$loadedXml->ENABLED != 'true') {
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
+        if (empty($configuration)) {
             return $response->withStatus(400)->withJson(['errors' => 'Alfresco configuration is not enabled']);
-        } elseif (empty((string)$loadedXml->URI)) {
+        }
+
+        $configuration = json_decode($configuration['value'], true);
+        if (empty($configuration['uri'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Alfresco configuration URI is empty']);
         }
-        $alfrescoUri = rtrim((string)$loadedXml->URI, '/');
+        $alfrescoUri = rtrim($configuration['uri'], '/');
 
         $entity = UserModel::getPrimaryEntityById(['id' => $GLOBALS['id'], 'select' => ['entities.external_id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'User has no primary entity']);
         }
         $entityInformations = json_decode($entity['external_id'], true);
-        if (empty($entityInformations['alfrescoNodeId']) || empty($entityInformations['alfrescoLogin']) || empty($entityInformations['alfrescoPassword'])) {
+        if (empty($entityInformations['alfresco'])) {
             return $response->withStatus(400)->withJson(['errors' => 'User primary entity has not enough alfresco informations']);
         }
-        $entityInformations['alfrescoPassword'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfrescoPassword']]);
+        $entityInformations['alfresco']['password'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfresco']['password']]);
 
         $search = addslashes($queryParams['search']);
         $body = [
             'query' => [
-                'query'     => "select * from cmis:folder where CONTAINS ('cmis:name:*{$search}*') and IN_TREE('{$entityInformations['alfrescoNodeId']}')",
+                'query'     => "select * from cmis:folder where CONTAINS ('cmis:name:*{$search}*') and IN_TREE('{$entityInformations['alfresco']['nodeId']}')",
                 'language'  => 'cmis',
             ],
             'fields' => ['id', 'name']
         ];
         $curlResponse = CurlModel::execSimple([
             'url'           => "{$alfrescoUri}/search/versions/1/search",
-            'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+            'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
             'headers'       => ['content-type:application/json', 'Accept: application/json'],
             'method'        => 'POST',
             'body'          => json_encode($body)
@@ -428,24 +434,25 @@ class AlfrescoController
         ValidatorModel::intVal($args, ['resId', 'userId']);
         ValidatorModel::stringType($args, ['folderId', 'folderName']);
 
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/alfrescoConfig.xml']);
-
-        if (empty($loadedXml) || (string)$loadedXml->ENABLED != 'true') {
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
+        if (empty($configuration)) {
             return ['errors' => 'Alfresco configuration is not enabled'];
-        } elseif (empty((string)$loadedXml->URI)) {
+        }
+
+        $configuration = json_decode($configuration['value'], true);
+        if (empty($configuration['uri'])) {
             return ['errors' => 'Alfresco configuration URI is empty'];
         }
-        $alfrescoUri = rtrim((string)$loadedXml->URI, '/');
+        $alfrescoUri = rtrim($configuration['uri'], '/');
 
         $entity = UserModel::getPrimaryEntityById(['id' => $args['userId'], 'select' => ['entities.external_id']]);
         if (empty($entity)) {
             return ['errors' => 'User has no primary entity'];
         }
-        $entityInformations = json_decode($entity['external_id'], true);
-        if (empty($entityInformations['alfrescoNodeId']) || empty($entityInformations['alfrescoLogin']) || empty($entityInformations['alfrescoPassword'])) {
+        if (empty($entityInformations['alfresco'])) {
             return ['errors' => 'User primary entity has not enough alfresco informations'];
         }
-        $entityInformations['alfrescoPassword'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfrescoPassword']]);
+        $entityInformations['alfresco']['password'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfresco']['password']]);
 
         $document = ResModel::getById(['select' => ['filename', 'subject', 'alt_identifier', 'external_id'], 'resId' => $args['resId']]);
         if (empty($document)) {
@@ -476,7 +483,7 @@ class AlfrescoController
 
         $curlResponse = CurlModel::execSimple([
             'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$args['folderId']}/children",
-            'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+            'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
             'headers'       => ['content-type:application/json', 'Accept: application/json'],
             'method'        => 'POST',
             'body'          => json_encode(['name' => str_replace('/', '_', $document['alt_identifier']), 'nodeType' => 'cm:folder'])
@@ -491,7 +498,7 @@ class AlfrescoController
         ];
         $curlResponse = CurlModel::execSimple([
             'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$resourceFolderId}/children",
-            'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+            'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
             'method'        => 'POST',
             'multipartBody' => $multipartBody
         ]);
@@ -507,7 +514,7 @@ class AlfrescoController
         ];
         $curlResponse = CurlModel::execSimple([
             'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$documentId}",
-            'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+            'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
             'headers'       => ['content-type:application/json', 'Accept: application/json'],
             'method'        => 'PUT',
             'body'          => json_encode($body)
@@ -556,7 +563,7 @@ class AlfrescoController
             if ($firstAttachment) {
                 $curlResponse = CurlModel::execSimple([
                     'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$resourceFolderId}/children",
-                    'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+                    'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
                     'headers'       => ['content-type:application/json', 'Accept: application/json'],
                     'method'        => 'POST',
                     'body'          => json_encode(['name' => 'Pièces jointes', 'nodeType' => 'cm:folder'])
@@ -585,7 +592,7 @@ class AlfrescoController
             ];
             $curlResponse = CurlModel::execSimple([
                 'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$attachmentsFolderId}/children",
-                'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+                'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
                 'method'        => 'POST',
                 'multipartBody' => $multipartBody
             ]);
@@ -602,7 +609,7 @@ class AlfrescoController
             ];
             $curlResponse = CurlModel::execSimple([
                 'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$attachmentId}",
-                'basicAuth'     => ['user' => $entityInformations['alfrescoLogin'], 'password' => $entityInformations['alfrescoPassword']],
+                'basicAuth'     => ['user' => $entityInformations['alfresco']['login'], 'password' => $entityInformations['alfresco']['password']],
                 'headers'       => ['content-type:application/json', 'Accept: application/json'],
                 'method'        => 'PUT',
                 'body'          => json_encode($body)
