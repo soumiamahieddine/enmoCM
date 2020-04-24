@@ -561,6 +561,8 @@ $app->get('/externalSummary/{resId}', \ExternalSummary\controllers\SummaryContro
 $app->get('/externalConnectionsEnabled', \SrcCore\controllers\CoreController::class . ':externalConnectionsEnabled');
 
 //Alfresco
+$app->get('/alfresco/configuration', \Alfresco\controllers\AlfrescoController::class . ':getConfiguration');
+$app->put('/alfresco/configuration', \Alfresco\controllers\AlfrescoController::class . ':updateConfiguration');
 $app->get('/alfresco/accounts', \Alfresco\controllers\AlfrescoController::class . ':getAccounts');
 $app->post('/alfresco/accounts', \Alfresco\controllers\AlfrescoController::class . ':createAccount');
 $app->get('/alfresco/accounts/{id}', \Alfresco\controllers\AlfrescoController::class . ':getAccountById');

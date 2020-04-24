@@ -15,6 +15,7 @@
 namespace Alfresco\controllers;
 
 use Attachment\models\AttachmentModel;
+use Configuration\models\ConfigurationModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
@@ -31,6 +32,46 @@ use User\models\UserModel;
 
 class AlfrescoController
 {
+    public function getConfiguration(Request $request, Response $response)
+    {
+        //        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+//        }
+
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
+        if (empty($configuration)) {
+            return $response->withJson(['configuration' => null]);
+        }
+
+        $configuration['value'] = json_decode($configuration['value'], true);
+
+        return $response->withJson(['configuration' => ['uri' => $configuration['value']['uri']]]);
+    }
+
+    public function updateConfiguration(Request $request, Response $response)
+    {
+//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+//        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['uri'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body uri is empty or not a string']);
+        }
+
+        $value = json_encode(['uri' => $body['uri']]);
+
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
+        if (empty($configuration)) {
+            ConfigurationModel::create(['service' => 'admin_alfresco', 'value' => $value]);
+        } else {
+            ConfigurationModel::update(['set' => ['value' => $value], 'where' => ['service = ?'], 'data' => ['admin_alfresco']]);
+        }
+
+        return $response->withStatus(204);
+    }
+
     public function getAccounts(Request $request, Response $response)
     {
 //        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
