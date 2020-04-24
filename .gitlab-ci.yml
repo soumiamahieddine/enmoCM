@@ -1,6 +1,7 @@
 services:
   - postgres:10.1
   - httpd:latest
+  - selenium/standalone-firefox
 
 variables:
   POSTGRES_DB: "MaarchCourrier"
@@ -35,8 +36,6 @@ before_script:
 job_e2e:
  image: php:7.4-apache
  stage: test
- services:
-    - selenium/standalone-firefox
  script:
    - service apache2 start
   #  - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
