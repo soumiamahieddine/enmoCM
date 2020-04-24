@@ -56,7 +56,7 @@ job_e2e:
    - npm install npm@latest -g 
    - npm set registry https://registry.npmjs.org/ 
    - npm install
-   - npm run build
+   - npm run build-prod
    - apt-get install -yqq openjdk-11-jdk
   #  - apt-get install -yqq firefox
    - sed 's/<databaseserver>.*<\/databaseserver>/<databaseserver>postgres<\/databaseserver>/;s/<databasepassword>.*<\/databasepassword>/<databasepassword><\/databasepassword>/;s/<databasename>.*<\/databasename>/<databasename>MaarchCourrier<\/databasename>/;s/<databaseuser>.*<\/databaseuser>/<databaseuser>maarch<\/databaseuser>/' apps/maarch_entreprise/xml/config.xml.default > apps/maarch_entreprise/xml/config.xml
