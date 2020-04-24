@@ -38,7 +38,7 @@ job_e2e:
  services:
     - selenium/standalone-firefox
  script:
-  #  - service apache2 start
+   - service apache2 start
   #  - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
   #  - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates,acknowledgement_receipts}
   #  - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
