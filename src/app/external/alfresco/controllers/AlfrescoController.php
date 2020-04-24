@@ -34,9 +34,9 @@ class AlfrescoController
 {
     public function getConfiguration(Request $request, Response $response)
     {
-        //        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
         if (empty($configuration)) {
@@ -50,9 +50,9 @@ class AlfrescoController
 
     public function updateConfiguration(Request $request, Response $response)
     {
-//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $body = $request->getParsedBody();
 
@@ -72,11 +72,24 @@ class AlfrescoController
         return $response->withStatus(204);
     }
 
+    public function getAvailableEntities(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $entities = EntityModel::get(['select' => ['id'], 'where' => ["external_id->>'alfresco' is null"]]);
+
+        $availableEntities = array_column($entities, 'id');
+
+        return $response->withJson(['availableEntities' => $availableEntities]);
+    }
+
     public function getAccounts(Request $request, Response $response)
     {
-//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $entities = EntityModel::get(['select' => ['external_id', 'short_label'], 'where' => ["external_id->>'alfresco' is not null"]]);
 
@@ -106,9 +119,9 @@ class AlfrescoController
 
     public function getAccountById(Request $request, Response $response, array $args)
     {
-//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $entities = EntityModel::get(['select' => ['external_id', 'id'], 'where' => ["external_id->'alfresco'->>'id' = ?"], 'data' => [$args['id']]]);
         if (empty($entities[0])) {
@@ -133,9 +146,9 @@ class AlfrescoController
 
     public function createAccount(Request $request, Response $response)
     {
-//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $body = $request->getParsedBody();
 
@@ -182,9 +195,9 @@ class AlfrescoController
 
     public function updateAccount(Request $request, Response $response, array $args)
     {
-//        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-//        }
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_alfresco', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $body = $request->getParsedBody();
 
