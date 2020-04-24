@@ -1,5 +1,14 @@
 <mat-sidenav-container autosize class="maarch-container">
     <ng-template #adminMenuTemplate>
+        <mat-list>
+            <a mat-list-item>
+                <mat-form-field style="padding-top: 10px;">
+                    <mat-label>Url API Alfresco</mat-label>
+                    <input matInput required name="accountId" [(ngModel)]="alfrescoUrl"
+                        id="accountId" [title]="alfrescoUrl" type="text" placeholder="https://alfresco/api/" (blur)="saveUrl()">
+                </mat-form-field>
+            </a>
+        </mat-list>
         <mat-nav-list>
             <h3 mat-subheader>{{lang.actions}}</h3>
             <a mat-list-item routerLink="/administration/alfresco/new">
@@ -51,7 +60,8 @@
                         <ng-container matColumnDef="entitiesLabel">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.linkedEntities}}</mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                {{element.entitiesLabel}} </mat-cell>
+                                <span class="label" *ngFor="let entity of element.entitiesLabel">{{entity}}</span>
+                            </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <mat-header-cell *matHeaderCellDef></mat-header-cell>

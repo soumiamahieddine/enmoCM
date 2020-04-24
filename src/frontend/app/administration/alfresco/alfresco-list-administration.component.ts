@@ -19,6 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     templateUrl: 'alfresco-list-administration.component.html',
+    styleUrls: ['./alfresco-list-administration.component.scss'],
     providers: [AppService]
 })
 export class AlfrescoListAdministrationComponent implements OnInit {
@@ -26,6 +27,8 @@ export class AlfrescoListAdministrationComponent implements OnInit {
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
+
+    alfrescoUrl: string = '';
 
     accounts: any[] = [];
 
@@ -65,6 +68,13 @@ export class AlfrescoListAdministrationComponent implements OnInit {
 
         this.loading = true;
 
+        this.http.get('../rest/alfresco/configuration').pipe(
+            filter((data: any) => !this.functions.empty(data.configuration)),
+            tap((data: any) => {
+                this.alfrescoUrl = data.configuration.uri;
+            })
+        ).subscribe();
+
         this.http.get('../rest/alfresco/accounts')
             .subscribe((data: any) => {
                 this.accounts = data.accounts;
@@ -82,20 +92,29 @@ export class AlfrescoListAdministrationComponent implements OnInit {
 
         this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
-            this.dialogRef.afterClosed().pipe(
-                filter((data: string) => data === 'ok'),
-                exhaustMap(() => this.http.delete('../rest/alfresco/accounts/' + id)),
-                tap(() => {
-                    this.accounts = this.accounts.filter((account: any) => account.id !== id);
-                    this.dataSource = new MatTableDataSource(this.accounts);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.accountDeleted);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete('../rest/alfresco/accounts/' + id)),
+            tap(() => {
+                this.accounts = this.accounts.filter((account: any) => account.id !== id);
+                this.dataSource = new MatTableDataSource(this.accounts);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+                this.notify.success(this.lang.accountDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    saveUrl() {
+        this.http.put('../rest/alfresco/configuration', { uri: this.alfrescoUrl }).pipe(
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }

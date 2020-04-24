@@ -56,14 +56,15 @@
                                     style="text-align: center;font-weight: bold;opacity: 0.5;">
                                     <div>{{lang.mustFillAccountMsg}}</div>
                                 </div>
-                                <div *ngIf="alfrescoTreeLoaded && functionsService.empty(alfresco.rootFolder)">
-                                    <div id="jstreeAlfresco"></div>
+                                <div *ngIf="alfrescoTreeLoaded && functionsService.empty(alfresco.rootFolder)" style="width: 100%;">
+                                    <app-maaarch-tree *ngIf="entities.length > 0" (afterSelectNode)="alfresco.rootFolder=$event.id" [rawData]="entities"></app-maaarch-tree>
+                                    <!--<div id="jstreeAlfresco"></div>-->
                                 </div>
                                 <div *ngIf="!functionsService.empty(alfresco.rootFolder)" style="width: 100%;">
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="alfresco.rootFolder" required name="rootFolder"
                                             id="rootFolder" title="Dépôt racine" type="text" placeholder="Dépôt racine"
-                                            disabled>
+                                            >
                                         <button mat-icon-button matSuffix color="warn"
                                             (click)="alfresco.rootFolder=null">
                                             <mat-icon class="fa fa-trash"></mat-icon>

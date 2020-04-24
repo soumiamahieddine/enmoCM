@@ -4,10 +4,11 @@ import {
     DataSource
 } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { Component, Injectable, Input, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { BehaviorSubject, merge, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, filter, finalize } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { trigger, transition, style, animate, state } from '@angular/animations';
 
 /** Flat node with expandable and level information */
 export class DynamicFlatNode {
@@ -23,7 +24,7 @@ export class DynamicFlatNode {
  * Database for dynamic data. When expanding a node in the tree, the data source will need to fetch
  * the descendants data from the database.
  */
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class DynamicDatabase {
     dataMap = new Map<string, string[]>([]);
 
@@ -35,7 +36,6 @@ export class DynamicDatabase {
     }
 
     setData(node: any) {
-        console.log(node.childrens);
         return this.dataMap.set(node.id, node.childrens);
     }
 
@@ -73,6 +73,7 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
         private _treeControl: FlatTreeControl<DynamicFlatNode>,
         private _database: DynamicDatabase,
         private rawData: any,
+        private childrenRoute: string,
         private httpClient: HttpClient
     ) { }
 
@@ -112,7 +113,7 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
     toggleNode(node: DynamicFlatNode, expand: boolean) {
         let children = this._database.getChildren(node.item);
         let index = this.data.indexOf(node);
-        if (!this.rawData[index].hasChildren) {
+        if (!this.rawData[index].children) {
             // If no children, or cannot find the node, no op
             return;
         }
@@ -122,16 +123,28 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
         if (expand) {
             if (children === undefined) {
                 this.httpClient
-                    .get('../rest/entities')
+                    .get(this.childrenRoute.replace('__node', node.item))
                     .pipe(
-                        tap(() => {
-                            console.log(node);
-                            this.rawData.push({
-                                id: 34,
-                                label: 'cool',
-                                parent_id: node.item,
-                                hasChildren: false
+                        filter((data: any) => data.length > 0),
+                        tap((data: any) => {
+                            data.forEach((element: any) => {
+                                this.rawData.push(element);
                             });
+                            // TO DO : SAMPLE
+                            /*this.rawData.push({
+                                id: '432',
+                                label: 'cool',
+                                parent: node.item,
+                                icon: 'fa fa-building',
+                                children: true
+                            });
+                            this.rawData.push({
+                                id: '3465',
+                                label: 'good',
+                                parent: node.item,
+                                icon: 'fa fa-building',
+                                children: false
+                            });*/
 
                             const folders = this.rawData.map((elem: any) => elem.id);
 
@@ -139,14 +152,15 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
                                 const node = {
                                     id: element.id,
                                     childrens: this.rawData
-                                        .filter((elem: any) => elem.parent_id === element.id)
+                                        .filter((elem: any) => elem.parent === element.id)
                                         .map((elem: any) => elem.id)
                                 };
                                 if (
-                                    this.rawData.filter((elem: any) => elem.parent_id === element.id).length > 0
+                                    this.rawData.filter((elem: any) => elem.parent === element.id).length > 0
                                 ) {
                                     this._database.setData(node);
                                 }
+
                             });
 
                             children = this._database.getChildren(node.item);
@@ -160,14 +174,12 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
                                         this._database.isExpandable(name)
                                     )
                             );
-                            console.log(nodes);
                             this.data.splice(index + 1, 0, ...nodes);
                             // notify the change
                             this.dataChange.next(this.data);
-                            node.isLoading = false;
-                        })
-                    )
-                    .subscribe();
+                        }),
+                        finalize(() => node.isLoading = false),
+                    ).subscribe();
             } else {
                 const nodes = children.map(
                     name =>
@@ -177,7 +189,6 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
                             this._database.isExpandable(name)
                         )
                 );
-                console.log(nodes);
                 this.data.splice(index + 1, 0, ...nodes);
                 // notify the change
                 this.dataChange.next(this.data);
@@ -204,20 +215,22 @@ export class DynamicDataSource implements DataSource<DynamicFlatNode> {
 @Component({
     selector: 'app-maaarch-tree',
     templateUrl: 'maarch-tree.component.html',
-    styleUrls: ['maarch-tree.component.scss']
+    styleUrls: ['maarch-tree.component.scss'],
+    providers: [DynamicDatabase],
 })
 export class MaarchTreeComponent implements OnInit {
 
     @Input() rawData: any = [];
+    @Input() childrenRoute: string = '';
+    @Input() multiple: boolean = false;
+
+    @Output() afterSelectNode = new EventEmitter<any>();
+    @Output() afterDeselectNode = new EventEmitter<any>();
 
     constructor(
         private database: DynamicDatabase,
         private httpClient: HttpClient
     ) {
-        this.treeControl = new FlatTreeControl<DynamicFlatNode>(
-            this.getLevel,
-            this.isExpandable
-        );
     }
 
     treeControl: FlatTreeControl<DynamicFlatNode>;
@@ -229,29 +242,46 @@ export class MaarchTreeComponent implements OnInit {
     isExpandable = (node: DynamicFlatNode) => node.expandable;
 
     hasChild = (_: number, _nodeData: DynamicFlatNode) =>
-        this.getData(_nodeData.item).hasChildren
+        this.getData(_nodeData.item).children
 
     ngOnInit(): void {
-        console.log('init!');
+        this.treeControl = new FlatTreeControl<DynamicFlatNode>(
+            this.getLevel,
+            this.isExpandable
+        );
         // SAMPLE
-        this.rawData = [
+        /*this.rawData = [
             {
                 id: '46',
                 label: 'bonjour',
-                parent_id: null,
-                hasChildren: true
+                parent: null,
+                icon: 'fa fa-building',
+                children: true,
+                selected : true,
             },
             {
                 id: '1',
                 label: 'Compétences fonctionnelles',
-                parent_id: null,
-                hasChildren: false
+                parent: null,
+                icon: 'fa fa-building',
+                children: false,
+                selected : true,
+            },
+            {
+                id: '232',
+                label: 'Compétences technique',
+                parent: null,
+                icon: 'fa fa-building',
+                children: false,
+                selected : true,
             }
-        ];
+        ];*/
+
         this.dataSource = new DynamicDataSource(
             this.treeControl,
             this.database,
             this.rawData,
+            this.childrenRoute,
             this.httpClient
         );
         this.initTree();
@@ -262,23 +292,52 @@ export class MaarchTreeComponent implements OnInit {
             const node = {
                 id: element.id,
                 childrens: this.rawData
-                    .filter((elem: any) => elem.parent_id === element.id)
+                    .filter((elem: any) => elem.parent === element.id)
                     .map((elem: any) => elem.id)
             };
             if (
-                this.rawData.filter((elem: any) => elem.parent_id === element.id).length > 0
+                this.rawData.filter((elem: any) => elem.parent === element.id).length > 0
             ) {
                 this.database.setData(node);
             }
         });
 
         this.database.setRootNode(
-            this.rawData.filter((elem: any) => elem.parent_id === null).map((elem: any) => elem.id)
+            this.rawData.filter((elem: any) => elem.parent === '#').map((elem: any) => elem.id)
         );
         this.dataSource.data = this.database.initialData();
     }
 
     getData(id: any) {
         return this.rawData.filter((elem: any) => elem.id === id)[0];
+    }
+
+    toggleNode(item: any) {
+        if (item.selected) {
+            this.afterDeselectNode.emit(item);
+        } else {
+            this.afterSelectNode.emit(item);
+        }
+
+        if (!this.multiple) {
+            this.rawData.forEach((elem: any) => {
+                if (elem.id === item.id) {
+                    elem.selected = !item.selected;
+                } else {
+                    elem.selected = false;
+                }
+            });
+        } else {
+            item.selected = !item.selected;
+        }
+
+    }
+
+    getIteration(it: number) {
+        return Array(it).fill(0).map((x, i) => i);
+    }
+
+    getTreeData() {
+        return this.rawData;
     }
 }
