@@ -23,7 +23,8 @@ describe('index resource page', function () {
     });
 
     it('index a document whitout file', function () {
-        browser.sleep(1000);
+        browser.sleep(4000);
+        expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + "/dist/index.html#/home");
         browser.takeScreenshot().then(function (png) {
             writeScreenShot(png, 'test/e2e/screenshots/home_' + browser.browserName + '.png');
         });
