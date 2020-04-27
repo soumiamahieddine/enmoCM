@@ -241,7 +241,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
     }
 
     validAccount() {
-        if (this.functionsService.empty(this.alfresco.rootFolder) || this.alfresco.linkedEntities.length === 0) {
+        if (this.functionsService.empty(this.alfresco.rootFolder) || $('#jstree').jstree('get_checked', null, true).length === 0) {
             return false;
         } else {
             return true;
