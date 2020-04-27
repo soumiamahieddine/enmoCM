@@ -18,4 +18,11 @@ apt-get install -y libpq-dev libxml2-dev libxslt1-dev libpng-dev unoconv xpdf-ut
 && curl --silent --show-error --location --fail --retry 3 --output /tmp/firefox.tar.bz2 $ACTUAL_URL \
 && tar -xvjf /tmp/firefox.tar.bz2 -C /opt \
 && ln -s /opt/firefox/firefox /usr/local/bin/firefox \
-&& firefox --version
+&& a2enmod rewrite \
+&& touch directory.txt \
+&& echo "<Directory /var/www/html>" >> directory.txt \
+&& echo "Options Indexes FollowSymLinks" >> directory.txt \
+&& echo "AllowOverride All" >> directory.txt \
+&& echo "Require all granted" >> directory.txt \
+&& echo "</Directory>" >> directory.txt \
+&& sed -i -e '/CustomLog/r directory.txt' /etc/apache2/sites-available/000-default.conf
