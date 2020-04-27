@@ -134,12 +134,7 @@ class FolderPrintControllerTest extends TestCase
                     "notes"                   => [self::$noteId],
                     "acknowledgementReceipts" => [],
                     "emails"                  => [],
-                    "linkedResources"         => [
-                        [
-                            'resId'    => $GLOBALS['resources'][1],
-                            'document' => true
-                        ]
-                    ],
+                    "linkedResources"         => [$GLOBALS['resources'][1]],
                 ], [
                     "resId"                   => $GLOBALS['resources'][0] * 1000,
                     "document"                => true,
@@ -147,12 +142,7 @@ class FolderPrintControllerTest extends TestCase
                     "notes"                   => [self::$noteId],
                     "acknowledgementReceipts" => [],
                     "emails"                  => [],
-                    "linkedResources"         => [
-                        [
-                            'resId'    => $GLOBALS['resources'][1],
-                            'document' => true
-                        ]
-                    ],
+                    "linkedResources"         => [$GLOBALS['resources'][1]],
                 ]
             ]
         ];
