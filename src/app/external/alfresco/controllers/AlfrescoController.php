@@ -409,7 +409,7 @@ class AlfrescoController
         $search = addslashes($queryParams['search']);
         $body = [
             'query' => [
-                'query'     => "select * from cmis:folder where CONTAINS ('cmis:name:*{$search}*') and IN_TREE('{$entityInformations['alfresco']['nodeId']}')",
+                'query'     => "select * from cmis:folder where CONTAINS ('cmis:name:*{$search}*')",
                 'language'  => 'cmis',
             ],
             'fields' => ['id', 'name']
