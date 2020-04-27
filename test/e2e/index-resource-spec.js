@@ -12,26 +12,8 @@ function writeScreenShot(data, filename) {
 }
 
 describe('index resource page', function () {
-    it('login to app', function () {
-        browser.waitForAngularEnabled(true);
-        browser.get(browser.baseUrl + '/dist/index.html#/login');
-        browser.sleep(500);
-        browser.takeScreenshot().then(function (png) {
-            writeScreenShot(png, 'test/e2e/screenshots/login_to_app_' + browser.browserName);
-        });
-        element(by.id('login')).sendKeys('bblier');
-        browser.sleep(500);
-        element(by.id('password')).sendKeys('maarch');
-        browser.sleep(500);
-        element(by.id('submit')).click();
-        browser.sleep(100);
-        browser.takeScreenshot().then(function (png) {
-            writeScreenShot(png, 'test/e2e/screenshots/submitLogin_' + browser.browserName);
-        });
-    });
-
     it('index a document whitout file', function () {
-        browser.sleep(4000);
+        browser.sleep(2000);
         expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + "/dist/index.html#/home");
         browser.takeScreenshot().then(function (png) {
             writeScreenShot(png, 'test/e2e/screenshots/home_' + browser.browserName);

@@ -2,8 +2,8 @@ exports.config = {
     baseUrl: 'http://127.0.0.1/MaarchCourrier',
     seleniumAddress: 'http://localhost:4444/wd/hub',
     specs: [
+        'login-spec.js',
         'index-resource-spec.js',
-        //'login-spec.js',
         //'about-us-spec.js'
     ],
     multiCapabilities: [
