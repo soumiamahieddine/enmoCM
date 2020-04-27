@@ -13,6 +13,8 @@ class FolderPrintControllerTest extends TestCase
 {
     private static $noteId = null;
     private static $attachmentId = null;
+    private static $emailId = null;
+    private static $acknowledgementReceiptId = null;
 
     public function testGenerateFile()
     {
@@ -65,6 +67,41 @@ class FolderPrintControllerTest extends TestCase
         self::$attachmentId = $responseBody->id;
         $this->assertIsInt(self::$attachmentId);
 
+        // CREATE EMAIL
+        self::$emailId = \Email\controllers\EmailController::createEmail([
+            'userId'    => $GLOBALS['id'],
+            'data'      => [
+                'sender'        => ['email' => 'support@maarch.fr'],
+                'recipients'    => ['dev@maarch.org'],
+                'object'        => 'TU Folder Print Email',
+                'body'          => 'TU Folder Print Email' . '<a href="#">'._CLICK_HERE.'</a>',
+                'document'      => ['id' => $GLOBALS['resources'][0], 'isLinked' => true, 'original' => true],
+                'isHtml'        => true,
+                'status'        => 'WAITING'
+            ]
+        ]);
+
+        // CREATE ACKNOWLEDGEMENT RECEIPT
+        $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+            'collId'            => 'letterbox_coll',
+            'docserverTypeId'   => 'ACKNOWLEDGEMENT_RECEIPTS',
+            'encodedResource'   => $encodedFile,
+            'format'            => 'txt'
+        ]);
+
+        $this->assertEmpty($storeResult['errors']);
+
+        self::$acknowledgementReceiptId = \AcknowledgementReceipt\models\AcknowledgementReceiptModel::create([
+            'resId'             => $GLOBALS['resources'][0],
+            'type'              => 'simple',
+            'format'            => 'html',
+            'userId'            => $GLOBALS['id'],
+            'contactId'         => 1,
+            'docserverId'       => 'ACKNOWLEDGEMENT_RECEIPTS',
+            'path'              => $storeResult['directory'],
+            'filename'          => $storeResult['file_destination_name'],
+            'fingerprint'       => $storeResult['fingerPrint']
+        ]);
 
         //  CREATE LINK
         \Resource\models\ResModel::update(['set' => ['linked_resources' => json_encode([$GLOBALS['resources'][1], $GLOBALS['resources'][1] * 1000])], 'where' => ['res_id = ?'], 'data' => [$GLOBALS['resources'][0]]]);
@@ -279,6 +316,27 @@ class FolderPrintControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Note(s) not found', $responseBody['errors']);
 
+        $body = [
+            "resources" => [
+                [
+                    "resId"                   => $GLOBALS['resources'][1],
+                    "document"                => false,
+                    "attachments"             => [],
+                    "notes"                   => [self::$noteId],
+                    "acknowledgementReceipts" => [],
+                    "emails"                  => [],
+                    "linkedResources"         => []
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Note not linked to resource', $responseBody['errors']);
+
         // Linked resources errors
         $body = [
             "resources" => [
@@ -474,6 +532,134 @@ class FolderPrintControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('LinkedResources attachment is not linked to resource', $responseBody['errors']);
 
+        // Acknowledgement receipt errors
+        $body = [
+            "resources" => [
+                [
+                    "resId"                   => $GLOBALS['resources'][0],
+                    "document"                => false,
+                    "attachments"             => [],
+                    "notes"                   => [],
+                    "acknowledgementReceipts" => ['wrong format'],
+                    "emails"                  => [],
+                    "linkedResources"         => []
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Acknowledgement Receipt id is not an integer', $responseBody['errors']);
+
+        $body = [
+            "resources" => [
+                [
+                    "resId"                   => $GLOBALS['resources'][0],
+                    "document"                => false,
+                    "attachments"             => [],
+                    "notes"                   => [],
+                    "acknowledgementReceipts" => [self::$acknowledgementReceiptId, self::$acknowledgementReceiptId * 1000],
+                    "emails"                  => [],
+                    "linkedResources"         => []
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Acknowledgement Receipt(s) not found', $responseBody['errors']);
+
+        $body = [
+            "resources" => [
+                [
+                    "resId"                   => $GLOBALS['resources'][1],
+                    "document"                => false,
+                    "attachments"             => [],
+                    "notes"                   => [],
+                    "acknowledgementReceipts" => [self::$acknowledgementReceiptId],
+                    "emails"                  => [],
+                    "linkedResources"         => []
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Acknowledgement Receipt not linked to resource', $responseBody['errors']);
+
+        // Email errors
+        $body = [
+            "resources" => [
+                [
+                    "resId"                   => $GLOBALS['resources'][0],
+                    "document"                => false,
+                    "attachments"             => [],
+                    "notes"                   => [],
+                    "acknowledgementReceipts" => [],
+                    "emails"                  => ['wrong format'],
+                    "linkedResources"         => []
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Email id is not an integer', $responseBody['errors']);
+
+        $body = [
+            "resources" => [
+                [
+                    "resId"                   => $GLOBALS['resources'][0],
+                    "document"                => false,
+                    "attachments"             => [],
+                    "notes"                   => [],
+                    "acknowledgementReceipts" => [],
+                    "emails"                  => [self::$emailId, self::$emailId * 1000],
+                    "linkedResources"         => []
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Email(s) not found', $responseBody['errors']);
+
+        $body = [
+            "resources" => [
+                [
+                    "resId"                   => $GLOBALS['resources'][1],
+                    "document"                => false,
+                    "attachments"             => [],
+                    "notes"                   => [],
+                    "acknowledgementReceipts" => [],
+                    "emails"                  => [self::$emailId],
+                    "linkedResources"         => []
+                ]
+            ]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Email not linked to resource', $responseBody['errors']);
+
         // Success
         $body = [
             "resources" => [[
@@ -481,8 +667,8 @@ class FolderPrintControllerTest extends TestCase
                 "document"                => true,
                 "attachments"             => [self::$attachmentId],
                 "notes"                   => [self::$noteId],
-                "acknowledgementReceipts" => [],
-                "emails"                  => [],
+                "acknowledgementReceipts" => [self::$acknowledgementReceiptId],
+                "emails"                  => [self::$emailId],
                 "linkedResources"         => [
                     [
                         'resId'     => $GLOBALS['resources'][1],
@@ -526,11 +712,10 @@ class FolderPrintControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
         $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-        print_r($responseBody);
         $this->assertSame(200, $response->getStatusCode());
 
-        $this->assertSame(null, $responseBody);
+        $headers = $response->getHeaders();
+        $this->assertSame('application/pdf', $headers['Content-Type'][0]);
 
         // GENERATE FOLDER PRINT 2
 
@@ -585,9 +770,9 @@ class FolderPrintControllerTest extends TestCase
 
         $response     = $folderPrintController->generateFile($fullRequest, new \Slim\Http\Response());
         $this->assertSame(200, $response->getStatusCode());
-        $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(null, $responseBody);
+        $headers = $response->getHeaders();
+        $this->assertSame('application/pdf', $headers['Content-Type'][0]);
 
         // DELETE NOTE
         $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

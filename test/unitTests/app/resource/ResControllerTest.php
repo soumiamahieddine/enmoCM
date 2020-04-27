@@ -1078,7 +1078,7 @@ class ResControllerTest extends TestCase
         $this->assertIsString($responseBody['information']['fingerprint']);
         $this->assertNotEmpty($responseBody['information']['fingerprint']);
         $this->assertSame(46, $responseBody['information']['filesize']);
-        $this->assertSame('ERROR', $responseBody['information']['fulltext_result']);
+        $this->assertIsString($responseBody['information']['fulltext_result']);
         $this->assertSame(true, $responseBody['information']['canConvert']);
     }
 
