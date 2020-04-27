@@ -409,7 +409,7 @@ class AlfrescoController
         $search = addslashes($queryParams['search']);
         $body = [
             'query' => [
-                'query'     => "select * from cmis:folder where CONTAINS ('cmis:name:*{$search}*')",
+                'query'     => "select * from cmis:folder where CONTAINS ('cmis:name:*{$search}*') and IN_TREE('{$entityInformations['alfresco']['nodeId']}')",
                 'language'  => 'cmis',
             ],
             'fields' => ['id', 'name']
@@ -462,6 +462,7 @@ class AlfrescoController
         if (empty($entity)) {
             return ['errors' => 'User has no primary entity'];
         }
+        $entityInformations = json_decode($entity['external_id'], true);
         if (empty($entityInformations['alfresco'])) {
             return ['errors' => 'User primary entity has not enough alfresco informations'];
         }
@@ -506,6 +507,7 @@ class AlfrescoController
         }
         $resourceFolderId = $curlResponse['response']['entry']['id'];
 
+        $document['subject'] = str_replace([':', '*', '\'', '"', '>', '<'], ' ', $document['subject']);
         $multipartBody = [
             'filedata' => ['isFile' => true, 'filename' => $document['subject'], 'content' => $fileContent],
         ];
