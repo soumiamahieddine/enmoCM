@@ -73,7 +73,7 @@ export class ActionsService {
 
     ngOnDestroy(): void {
         if (this.currentResourceLock) {
-            clearInterval(this.currentResourceLock);
+            this.unlockResourceAfterActionModal(this.currentResIds);
         }
     }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, TemplateRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -36,7 +36,7 @@ import { PrintedFolderModalComponent } from '../printedFolder/printed-folder-mod
     ],
     providers: [AppService, ActionsService, ContactService],
 })
-export class ProcessComponent implements OnInit {
+export class ProcessComponent implements OnInit, OnDestroy {
 
     lang: any = LANG;
 
@@ -684,7 +684,7 @@ export class ProcessComponent implements OnInit {
 
     ngOnDestroy() {
         if (this.currentResourceLock) {
-            clearInterval(this.currentResourceLock);
+            this.unlockResource();
         }
         // unsubscribe to ensure no memory leaks
         this.subscription.unsubscribe();
