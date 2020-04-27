@@ -1,5 +1,5 @@
 exports.config = {
-    baseUrl: 'http://127.0.0.1/maarch_v2',
+    baseUrl: 'http://127.0.0.1/MaarchCourrier',
     seleniumAddress: 'http://localhost:4444/wd/hub',
     specs: [
         'index-resource-spec.js',
