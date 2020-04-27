@@ -1680,7 +1680,7 @@ export const LANG_FR = {
     "moreOneCustom": "Cette url ne correspond à aucune instance configurée, veuillez vérifier l'adresse.",
     "alfresco": "Alfresco",
     "adminAlfrescoDesc": "Administrer les comptes alfresco liés aux entités",
-    "linkedEntities": "Entités associés",
+    "linkedEntities": "Entités associées",
     "accounts": "Comptes",
     "alfrescoCreation": "Création d'un compte Alfresco",
     "alfrescoModification": "Modification du compte Alfresco",
