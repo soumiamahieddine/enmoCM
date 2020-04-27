@@ -97,7 +97,10 @@ class LinkController
                     $linkedResources[$key]['visaCircuit'][$keyCircuit]['userLabel'] = UserModel::getLabelledUserById(['id' => $valueCircuit['item_id']]);
                 }
 
-                $linkedResources[$key]['canConvert'] = ConvertPdfController::canConvert(['extension' => $value['format']]);
+                $linkedResources[$key]['canConvert'] = false;
+                if (!empty($value['format'])) {
+                    $linkedResources[$key]['canConvert'] = ConvertPdfController::canConvert(['extension' => $value['format']]);
+                }
             }
         }
 
