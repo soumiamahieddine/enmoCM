@@ -36,6 +36,10 @@ job_e2e:
  image: php:7.4-apache
  stage: test
  script:
+   - service postgresql restart
+   - sed -i -e "s/error_reporting = E_ALL \& ~E_DEPRECATED \& ~E_STRICT/error_reporting = E_ALL \& ~E_NOTICE \& ~E_DEPRECATED \& ~E_STRICT/g" /etc/php/7.4/apache2/php.ini \
+   - sed -i -e "s/display_errors = Off/display_errors = On/g" /etc/php/7.4/apache2/php.ini \
+   - sed -i -e "s/short_open_tag = Off/short_open_tag = On/g" /etc/php/7.4/apache2/php.ini
    - service apache2 start
    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates,acknowledgement_receipts}
