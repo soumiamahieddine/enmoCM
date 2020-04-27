@@ -35,8 +35,11 @@
                                     </mat-form-field>
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="alfresco.account.password" [required]="creationMode" name="password"
-                                            id="password" [title]="creationMode ? lang.password : lang.changePassword" type="password"
+                                            id="password" [title]="creationMode ? lang.password : lang.changePassword" [type]="hidePassword ? 'password' : 'text'"
                                             [placeholder]="creationMode ? lang.password : lang.changePassword">
+                                        <mat-icon color="primary" style="cursor: pointer;" matSuffix
+                                            (click)="hidePassword = !hidePassword" class="fa fa-2x"
+                                            [ngClass]="[hidePassword ? 'fa-eye-slash' : 'fa-eye']"></mat-icon>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -44,7 +47,7 @@
                                 <div class="formType-title">
                                     {{lang.rootFolder}}
                                 </div>
-                                <div *ngIf="alfresco.account.id !== '' && alfresco.account.password !== '' && functionsService.empty(alfresco.rootFolder) && !alfrescoTreeLoaded"
+                                <!--<div *ngIf="alfresco.account.id !== '' && alfresco.account.password !== '' && functionsService.empty(alfresco.rootFolder) && !alfrescoTreeLoaded"
                                     (click)="getAlfrescoFolders()"
                                     style="text-align: center;font-weight: bold;opacity: 0.5;width: 100%;">
                                     <div>{{lang.showTreeMsg}}</div>
@@ -58,24 +61,23 @@
                                 </div>
                                 <div *ngIf="alfrescoTreeLoaded && functionsService.empty(alfresco.rootFolder)" style="width: 100%;">
                                     <app-maaarch-tree *ngIf="entities.length > 0" (afterSelectNode)="alfresco.rootFolder=$event.id" [rawData]="entities"></app-maaarch-tree>
-                                    <!--<div id="jstreeAlfresco"></div>-->
-                                </div>
-                                <div *ngIf="!functionsService.empty(alfresco.rootFolder)" style="width: 100%;">
+                                </div>-->
+                                <!--<div *ngIf="!functionsService.empty(alfresco.rootFolder)" style="width: 100%;"> -->
                                     <mat-form-field>
                                         <input matInput [(ngModel)]="alfresco.rootFolder" required name="rootFolder"
-                                            id="rootFolder" title="Dépôt racine" type="text" placeholder="Dépôt racine"
+                                            id="rootFolder" [title]="lang.id" type="text" placeholder="Dépôt racine"
                                             >
-                                        <button mat-icon-button matSuffix color="warn"
+                                        <!--<button mat-icon-button matSuffix color="warn"
                                             (click)="alfresco.rootFolder=null">
                                             <mat-icon class="fa fa-trash"></mat-icon>
-                                        </button>
+                                        </button>-->
                                     </mat-form-field>
-                                </div>
+                                <!--</div> -->
                             </div>
                         </div>
                         <div class="col-sm-12 text-center" style="padding:10px;">
                             <button mat-raised-button type="submit" color="primary"
-                                [disabled]="!alfrescoForm.valid">{{lang.validate}}</button>
+                                [disabled]="!alfrescoForm.valid || !validAccount()">{{lang.validate}}</button>
                         </div>
                     </form>
                 </mat-card>

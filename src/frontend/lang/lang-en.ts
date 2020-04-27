@@ -1688,4 +1688,5 @@ export const LANG_EN = {
     "alfrescoAccount": "Alfresco account",
     "rootFolder": "Dossier racine",
     "chooseEntityAssociationAccount": "Choose entities who will be able to use this account",
+    "alfrescoAPI": "API Alfresco address",
 };

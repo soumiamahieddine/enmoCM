@@ -46,7 +46,7 @@ export class SendAlfrescoActionComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.loading = true;
-        // await this.checkAlfresco();
+        await this.checkAlfresco();
         this.loading = false;
         this.getRootFolders();
 

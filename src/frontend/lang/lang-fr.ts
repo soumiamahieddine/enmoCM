@@ -1690,4 +1690,5 @@ export const LANG_FR = {
     "alfrescoAccount": "Compte Alfresco",
     "rootFolder": "Dépôt racine",
     "chooseEntityAssociationAccount": "Attribuer le compte au(x) service(s)",
+    "alfrescoAPI": "Adresse de l'API Alfresco",
 };
