@@ -280,7 +280,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
     }
 
     checkAccount() {
-        this.http.post(`../rest/alfresco/checkAccounts`, { login: this.alfresco.account.id, password: this.alfresco.account.password }).pipe(
+        this.http.post(`../rest/alfresco/checkAccounts`, { login: this.alfresco.account.id, password: this.alfresco.account.password, nodeId : this.alfresco.rootFolder }).pipe(
             tap(() => {
                 this.notify.success(this.lang.testSucceeded);
             }),
