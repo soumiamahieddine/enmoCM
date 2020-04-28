@@ -86,7 +86,7 @@ import { PrintSeparatorComponent } from './separator/print-separator/print-separ
 
 import { IndexationComponent } from './indexation/indexation.component';
 import { ForgotPasswordComponent } from './login/forgotPassword/forgotPassword.component';
-import { UpdatePasswordComponent } from './login/updatePassword/updatePassword.component';
+import { ResetPasswordComponent } from './login/resetPassword/reset-password.component';
 import { HistoryWorkflowResumeComponent } from './history/history-workflow-resume/history-workflow-resume.component';
 import { NoteResumeComponent } from './notes/note-resume/note-resume.component';
 import { AttachmentsResumeComponent } from './attachments/attachments-resume/attachments-resume.component';
@@ -191,7 +191,7 @@ import { DocumentViewerPageComponent } from './viewer/page/document-viewer-page.
         FolderActionListComponent,
         IndexationComponent,
         ForgotPasswordComponent,
-        UpdatePasswordComponent,
+        ResetPasswordComponent,
         HistoryWorkflowResumeComponent,
         NoteResumeComponent,
         AttachmentsResumeComponent,
