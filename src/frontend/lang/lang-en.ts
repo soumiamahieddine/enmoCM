@@ -1674,7 +1674,7 @@ export const LANG_EN = {
     "accountLocked": "Too many connections attemps. Retry in",
     "modelUsedByResources": "This model is used by resources, you can't delete it.",
     "mustChangePassword": "Please, you must change your password.",
-    "linkedResources": "Linked mails",
+    "linkedResources": "Main document (Linked mails)",
     "linkedResourcesAttachments": "Attachments (linked mails)",
     "accessNotFound": "Access not found",
     "moreOneCustom": "This url is not an available instance of this application, please verify your address.",

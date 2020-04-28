@@ -1674,7 +1674,7 @@ export const LANG_FR = {
     "accountLocked": "Nombre de tentatives de connexion dépassée. Réessayez dans",
     "modelUsedByResources": "Le modèle est utilisé par des courriers, vous ne pouvez pas le supprimer.",
     "mustChangePassword": "Vous êtes invités à changer votre mot de passe.",
-    "linkedResources": "Courriers liés",
+    "linkedResources": "Document principal (Courriers liés)",
     "linkedResourcesAttachments": "Pièces jointes (courriers liés)",
     "accessNotFound": "Accès introuvable",
     "moreOneCustom": "Cette url ne correspond à aucune instance configurée, veuillez vérifier l'adresse.",
@@ -1691,7 +1691,7 @@ export const LANG_FR = {
     "rootFolder": "Dépôt racine",
     "chooseEntityAssociationAccount": "Attribuer le compte au(x) service(s)",
     "alfrescoAPI": "Adresse de l'API Alfresco",
-    "accountOk": "Le compte éxiste",
-    "accountFailed": "Le compte n'éxiste pas",
+    "accountOk": "Le compte existe",
+    "accountFailed": "Le compte n'existe pas",
     "test": "Tester",
 };
