@@ -136,7 +136,6 @@ $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . '
 $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
 $app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
 $app->get('/ban/availableDepartments', \Contact\controllers\ContactController::class . ':getAvailableDepartments');
-$app->post('/contacts/formatV1', \Contact\controllers\ContactController::class . ':getFormattedContactsForSearchV1');
 
 //ContactsCustomFields
 $app->get('/contactsCustomFields', \Contact\controllers\ContactCustomFieldController::class . ':get');
@@ -401,7 +400,6 @@ $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exp
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
-$app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetController::class . ':createListWithAll');
 $app->put('/resourcesList/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
 
 //PreProcess
