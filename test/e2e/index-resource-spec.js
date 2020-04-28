@@ -1,14 +1,18 @@
 var fs = require('fs');
 
 // abstract writing screen shot to a file
-function writeScreenShot(data, filename) {
-    var stream = fs.createWriteStream(filename+'.png');
-    stream.write(new Buffer.from(data, 'base64'));
-    stream.end();
-    // var stream = fs.createWriteStream(filename+'.txt');
-    // stream.write(data);
-    // stream.end();
-    // console.log(data);
+function writeScreenShot(data, filename, mode = 'base64') {
+    if (mode === 'base64') {
+        var stream = fs.createWriteStream(filename+'.png');
+        stream.write(new Buffer.from(data, 'base64'));
+        stream.end();
+    } else if (mode === 'txt') {
+        var stream = fs.createWriteStream(filename+'.txt');
+        stream.write(data);
+        stream.end();
+    } else if (mode === 'console') {
+        console.log(data);
+    }
 }
 
 describe('index resource page', function () {
@@ -52,6 +56,10 @@ describe('index resource page', function () {
         element(by.css('[placeholder="Ajouter une annotation"]')).sendKeys('test ee');
         browser.sleep(500);
         element(by.cssContainingText('.mat-dialog-content-container .mat-button-wrapper', 'Valider')).click();
+        browser.sleep(100);
+        browser.takeScreenshot().then(function (png) {
+            writeScreenShot(png, 'test/e2e/screenshots/validate_indexation_' + browser.browserName, 'console');
+        });
         browser.sleep(500);
         expect(browser.getCurrentUrl()).toContain('/resources/');
         browser.sleep(4000);
