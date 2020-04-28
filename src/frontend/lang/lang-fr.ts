@@ -1691,7 +1691,6 @@ export const LANG_FR = {
     "rootFolder": "Dépôt racine",
     "chooseEntityAssociationAccount": "Attribuer le compte au(x) service(s)",
     "alfrescoAPI": "Adresse de l'API Alfresco",
-    "accountOk": "Le compte existe",
-    "accountFailed": "Le compte n'existe pas",
+    "testSucceeded": "Le test à réussi",
     "test": "Tester",
 };

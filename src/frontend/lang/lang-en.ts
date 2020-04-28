@@ -1689,7 +1689,6 @@ export const LANG_EN = {
     "rootFolder": "Root folder",
     "chooseEntityAssociationAccount": "Choose entities who will be able to use this account",
     "alfrescoAPI": "API Alfresco address",
-    "accountOk": "This account exists",
-    "accountFailed": "This account does not exist",
+    "testSucceeded": "Test succeeded",
     "test": "Test",
 };
