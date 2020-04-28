@@ -1675,5 +1675,5 @@ export const LANG_NL = {
     "alfrescoAPI": "API Alfresco address", //_TO_TRANSLATE
     "accountOk": "This account exists", //_TO_TRANSLATE
     "accountFailed": "This account does not exist", //_TO_TRANSLATE
-    "test": "test", //_TO_TRANSLATE
+    "test": "Test", //_TO_TRANSLATE
 };
