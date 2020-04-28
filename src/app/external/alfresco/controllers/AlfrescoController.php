@@ -300,25 +300,43 @@ class AlfrescoController
         }
         $alfrescoUri = rtrim($configuration['uri'], '/');
 
-        $requestBody = [
-            'query' => [
-                'query'     => "select * from cmis:folder",
-                'language'  => 'cmis',
-            ],
-            "paging" => [
-                'maxItems' => '1'
-            ],
-            'fields' => ['id', 'name']
-        ];
-        $curlResponse = CurlModel::execSimple([
-            'url'           => "{$alfrescoUri}/search/versions/1/search",
-            'basicAuth'     => ['user' => $body['login'], 'password' => $body['password']],
-            'headers'       => ['content-type:application/json', 'Accept: application/json'],
-            'method'        => 'POST',
-            'body'          => json_encode($requestBody)
-        ]);
+        if (empty($body['nodeId'])) {
+            $requestBody = [
+                'query' => [
+                    'query'     => "select * from cmis:folder",
+                    'language'  => 'cmis',
+                ],
+                "paging" => [
+                    'maxItems' => '1'
+                ],
+                'fields' => ['id', 'name']
+            ];
+            $curlResponse = CurlModel::execSimple([
+                'url'           => "{$alfrescoUri}/search/versions/1/search",
+                'basicAuth'     => ['user' => $body['login'], 'password' => $body['password']],
+                'headers'       => ['content-type:application/json', 'Accept: application/json'],
+                'method'        => 'POST',
+                'body'          => json_encode($requestBody)
+            ]);
+
+        } else {
+            $curlResponse = CurlModel::execSimple([
+                'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$body['nodeId']}/children",
+                'basicAuth'     => ['user' => $body['login'], 'password' => $body['password']],
+                'headers'       => ['content-type:application/json'],
+                'method'        => 'GET',
+                'queryParams'   => ['where' => '(isFolder=true)']
+            ]);
+        }
+
         if ($curlResponse['code'] != 200) {
-            return $response->withStatus(400)->withJson(['errors' => json_encode($curlResponse['response'])]);
+            if ($curlResponse['code'] == 404) {
+                return $response->withStatus(400)->withJson(['errors' => 'Page not found', 'lang' => 'pageNotFound']);
+            } elseif (!empty($curlResponse['response']['error']['briefSummary'])) {
+                return $response->withStatus(400)->withJson(['errors' => $curlResponse['response']['error']['briefSummary']]);
+            } else {
+                return $response->withStatus(400)->withJson(['errors' => json_encode($curlResponse['response'])]);
+            }
         }
 
         return $response->withStatus(204);
