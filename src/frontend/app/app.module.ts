@@ -115,6 +115,7 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
 import { SentNumericPackagePageComponent } from './sentResource/sent-numeric-package-page/sent-numeric-package-page.component';
 import { FolderCreateModalComponent } from './folder/folder-create-modal/folder-create-modal.component';
 import { DocumentViewerPageComponent } from './viewer/page/document-viewer-page.component';
+import { SelectIndexingModelComponent } from './indexation/select-indexing-model/select-indexing-model.component';
 
 
 
@@ -218,7 +219,8 @@ import { DocumentViewerPageComponent } from './viewer/page/document-viewer-page.
         SentNumericPackagePageComponent,
         FolderCreateModalComponent,
         ReconcileActionComponent,
-        DocumentViewerPageComponent
+        DocumentViewerPageComponent,
+        SelectIndexingModelComponent
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,
