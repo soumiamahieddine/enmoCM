@@ -625,7 +625,6 @@ export class IndexingFormComponent implements OnInit {
         }));
 
         if (this.resId !== null) {
-            console.log('set resource');
 
             await this.setResource(saveResourceState);
         }
@@ -641,7 +640,6 @@ export class IndexingFormComponent implements OnInit {
 
                         // this.fieldCategories.forEach(async element => {
                         await Promise.all(this['indexingModels_' + element].map(async (elem: any) => {
-                            console.log(elem);
                             // this['indexingModels_' + element].forEach((elem: any) => {
                             const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
 
@@ -865,9 +863,9 @@ export class IndexingFormComponent implements OnInit {
                 const controlErrors: ValidationErrors = this.indexingFormGroup.get(key).errors;
                 if (controlErrors != null) {
                     this.indexingFormGroup.controls[key].markAsTouched();
-                    Object.keys(controlErrors).forEach(keyError => {
+                    /*Object.keys(controlErrors).forEach(keyError => {
                         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-                    });
+                    });*/
                 }
             });
         }
