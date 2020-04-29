@@ -16,6 +16,7 @@
             <file>test/unitTests/app/docserver/DocserverControllerTest.php</file>
             <file>test/unitTests/app/doctype/DoctypeControllerTest.php</file>
             <file>test/unitTests/app/entity/EntityControllerTest.php</file>
+            <file>test/unitTests/app/entity/EntitySeparatorControllerTest.php</file>
             <file>test/unitTests/app/group/GroupControllerTest.php</file>
             <file>test/unitTests/app/group/PrivilegeControllerTest.php</file>
             <file>test/unitTests/app/entity/ListTemplateControllerTest.php</file>
