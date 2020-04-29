@@ -32,6 +32,7 @@ before_script:
 job_e2e:
  image: php:7.4-apache
  services:
+   - postgres:10.1
    - httpd:latest
    - selenium/standalone-firefox
  stage: test
