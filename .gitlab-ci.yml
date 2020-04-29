@@ -57,7 +57,7 @@ job_e2e:
    - npm install npm@latest -g 
    - npm set registry https://registry.npmjs.org/ 
    - npm install
-   - npm run build-prod
+   - npm run build
    - apt-get install -yqq openjdk-11-jdk
    - sed 's/<databaseserver>.*<\/databaseserver>/<databaseserver>postgres<\/databaseserver>/;s/<databasepassword>.*<\/databasepassword>/<databasepassword><\/databasepassword>/;s/<databasename>.*<\/databasename>/<databasename>MaarchCourrier<\/databasename>/;s/<databaseuser>.*<\/databaseuser>/<databaseuser>maarch<\/databaseuser>/' apps/maarch_entreprise/xml/config.xml.default > apps/maarch_entreprise/xml/config.xml
    - curl -o /dev/null --silent --head --write-out '%{http_code}\n' http://127.0.0.1/MaarchCourrier
@@ -66,6 +66,7 @@ job_e2e:
  artifacts:
    paths:
      - test/e2e/screenshots/*.png
+     - queries_error.log
    expire_in: 1 week  
   #  when: on_failure
  allow_failure: true
