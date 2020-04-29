@@ -23,6 +23,7 @@ export class SelectIndexingModelComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = true;
 
+    @Input() defaultIndexingModelId: number = null;
     @Input() indexingModels: any = [];
     @Input() indexingForm: IndexingFormComponent;
     @Input() adminMode: boolean = false;
@@ -49,7 +50,8 @@ export class SelectIndexingModelComponent implements OnInit {
             tap((data: any) => {
                 this.indexingModels = data.indexingModels;
                 if (this.indexingModels.length > 0) {
-                    this.currentIndexingModel = this.indexingModels.filter((model: any) => model.default === true)[0];
+                    this.currentIndexingModel = this.defaultIndexingModelId === null ? this.indexingModels.filter((model: any) => model.default === true)[0] : this.indexingModels.filter((model: any) => model.id === this.defaultIndexingModelId)[0];
+
                     if (this.currentIndexingModel === undefined) {
                         this.currentIndexingModel = this.indexingModels[0];
                         this.notify.error(this.lang.noDefaultIndexingModel);
