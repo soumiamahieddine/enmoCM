@@ -61,8 +61,8 @@ job_e2e:
    - firefox --version
    - npm run ee-launch
  allow_failure: true
- only:
-   - schedules
+#  only:
+#    - schedules
 
 job_php-7.4:
  image: php:7.4-apache
