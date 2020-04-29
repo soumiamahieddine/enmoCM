@@ -498,7 +498,7 @@ export class IndexingFormComponent implements OnInit {
             return {
                 id: entity.id,
                 label: entity.entity_label
-            }
+            };
         });
     }
 
@@ -639,15 +639,14 @@ export class IndexingFormComponent implements OnInit {
                 tap(async (data: any) => {
                     await Promise.all(this.fieldCategories.map(async (element: any) => {
 
-                        //this.fieldCategories.forEach(async element => {
+                        // this.fieldCategories.forEach(async element => {
                         await Promise.all(this['indexingModels_' + element].map(async (elem: any) => {
-
-                            //this['indexingModels_' + element].forEach((elem: any) => {
+                            console.log(elem);
+                            // this['indexingModels_' + element].forEach((elem: any) => {
                             const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
 
                             if (Object.keys(data).indexOf(elem.identifier) > -1 || customId !== undefined) {
                                 let fieldValue: any = '';
-
                                 if (customId !== undefined) {
                                     fieldValue = data.customFields[customId];
                                 } else {
@@ -671,7 +670,12 @@ export class IndexingFormComponent implements OnInit {
                                     fieldValue = new Date(fieldValue);
                                 }
                                 this.arrFormControl[elem.identifier].setValue(fieldValue);
+                            } else if (!saveResourceState && elem.identifier === 'destination') {
+                                this.arrFormControl[elem.identifier].disable();
+                                this.arrFormControl[elem.identifier].setValidators([]);
+                                this.arrFormControl['diffusionList'].disable();
                             }
+
                             if (!this.canEdit) {
                                 this.arrFormControl[elem.identifier].disable();
                             }
@@ -861,9 +865,9 @@ export class IndexingFormComponent implements OnInit {
                 const controlErrors: ValidationErrors = this.indexingFormGroup.get(key).errors;
                 if (controlErrors != null) {
                     this.indexingFormGroup.controls[key].markAsTouched();
-                    /*Object.keys(controlErrors).forEach(keyError => {
+                    Object.keys(controlErrors).forEach(keyError => {
                         console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-                    });*/
+                    });
                 }
             });
         }
