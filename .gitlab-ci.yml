@@ -43,6 +43,7 @@ job_e2e:
    - mkdir -p /opt/maarch/docservers/{thumbnails_attachments,thumbnails_attachments_version,thumbnails_mlb}
    - mkdir -p /var/www/html/
    - cp -R /builds/maarch/MaarchCourrier/ /var/www/html/
+   - ln -s /var/www/html/MaarchCourrier $CI_PROJECT_DIR/html
    - cd /var/www/html/MaarchCourrier
    - touch installed.lck
    - mkdir -p /var/www/html/MaarchCourrier
@@ -63,6 +64,7 @@ job_e2e:
    - npm run ee-launch
  artifacts:
    paths:
+     - html/test/e2e/screenshots/
      - ../../../var/www/html/
      - ./../../../
      - ../
