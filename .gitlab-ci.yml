@@ -68,7 +68,7 @@ job_e2e:
      - ../../../var/www/html/
      - ./../../../
      - ../
-   expire_in: 1 week  
+   expire_in: 1 week
    when: always
  allow_failure: true
 #  only:
@@ -96,6 +96,13 @@ job_php-7.4:
    - develop
  except:
    - schedules
+ artifacts:
+   paths:
+     - html/test/unitTests/build/
+     - html/test/unitTests/build/tests-phpunit.xml
+   reports:
+     junit: html/test/unitTests/build/tests-phpunit.xml
+   expire_in: 1 week
 
 job_php-7.3:
  image: php:7.3-apache
