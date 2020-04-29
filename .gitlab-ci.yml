@@ -65,7 +65,7 @@ job_e2e:
      - test/e2e/screenshots/*.png
      - queries_error.log
    expire_in: 1 week  
-  #  when: on_failure
+   when: always
  allow_failure: true
 #  only:
 #    - schedules
