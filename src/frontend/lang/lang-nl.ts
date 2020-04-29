@@ -1674,5 +1674,7 @@ export const LANG_NL = {
     "chooseEntityAssociationAccount": "Choose entities who will be able to use this account", //_TO_TRANSLATE
     "alfrescoAPI": "API Alfresco address", //_TO_TRANSLATE
     "testSucceeded": "Test succeeded",  //_TO_TRANSLATE
-    "test": "Test",  //_TO_TRANSLATE
+    "test": "Test", //_TO_TRANSLATE
+    "canUpdateIndexingModel": "Can change indexing model", //_TO_TRANSLATE
+    "options": "Options", //_TO_TRANSLATE
 };

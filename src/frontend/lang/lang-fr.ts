@@ -1693,4 +1693,6 @@ export const LANG_FR = {
     "alfrescoAPI": "Adresse de l'API Alfresco",
     "testSucceeded": "Le test à réussi",
     "test": "Tester",
+    "canUpdateIndexingModel": "Pouvoir changer le modèle d'indexation",
+    "options": "Options",
 };
