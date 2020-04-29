@@ -51,7 +51,7 @@ describe('index resource page', function () {
         element(by.cssContainingText('.mat-dialog-content-container .mat-button-wrapper', 'Valider')).click();
         browser.sleep(100);
         browser.takeScreenshot().then(function (png) {
-            ScreenshotReporter(png, 'test/e2e/screenshots/validate_indexation_' + browser.browserName, 'console');
+            ScreenshotReporter(png, 'test/e2e/screenshots/validate_indexation_' + browser.browserName);
         });
         browser.sleep(500);
         expect(browser.getCurrentUrl()).toContain('/resources/');

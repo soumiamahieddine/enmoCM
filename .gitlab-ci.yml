@@ -1,6 +1,5 @@
 services:
   - postgres:10.1
-  - httpd:latest
 
 variables:
   POSTGRES_DB: "MaarchCourrier"
@@ -32,6 +31,9 @@ before_script:
 
 job_e2e:
  image: php:7.4-apache
+ services:
+   - httpd:latest
+   - selenium/standalone-firefox
  stage: test
  script:
    - service apache2 start
@@ -60,6 +62,11 @@ job_e2e:
    - curl -o /dev/null --silent --head --write-out '%{http_code}\n' http://127.0.0.1/MaarchCourrier
    - firefox --version
    - npm run ee-launch
+ artifacts:
+   paths:
+     - test/e2e/screenshots/*.png
+   expire_in: 1 week  
+  #  when: on_failure
  allow_failure: true
 #  only:
 #    - schedules
