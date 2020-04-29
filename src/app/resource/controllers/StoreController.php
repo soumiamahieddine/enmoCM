@@ -229,6 +229,9 @@ class StoreController
 
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version', 'alt_identifier', 'external_id', 'category_id', 'type_id', 'destination']]);
 
+        if (!empty($args['modelId'])) {
+            $preparedData['model_id'] = $args['modelId'];
+        }
         if (empty($resource['alt_identifier'])) {
             $chrono = ChronoModel::getChrono(['id' => $resource['category_id'], 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $args['resId']]);
             $preparedData['alt_identifier'] = $chrono;
