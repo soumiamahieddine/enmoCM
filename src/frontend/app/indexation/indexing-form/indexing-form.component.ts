@@ -576,7 +576,7 @@ export class IndexingFormComponent implements OnInit {
         });
     }
 
-    async initElemForm() {
+    async initElemForm(saveResourceState: boolean = true) {
         this.loading = true;
 
         if (!this.adminMode) {
@@ -625,13 +625,15 @@ export class IndexingFormComponent implements OnInit {
         }));
 
         if (this.resId !== null) {
-            await this.setResource();
+            console.log('set resource');
+
+            await this.setResource(saveResourceState);
         }
 
         this.loading = false;
     }
 
-    setResource() {
+    setResource(saveResourceState: boolean = true) {
         return new Promise((resolve, reject) => {
             this.http.get(`../rest/resources/${this.resId}`).pipe(
                 tap(async (data: any) => {
@@ -676,7 +678,9 @@ export class IndexingFormComponent implements OnInit {
                         }));
                     }));
                     this.arrFormControl['mail­tracking'].setValue(data.followed);
-                    this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
+                    if (saveResourceState) {
+                        this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
+                    }
                     resolve(true);
                 }),
                 catchError((err: any) => {
@@ -723,7 +727,7 @@ export class IndexingFormComponent implements OnInit {
         }
     }
 
-    async loadForm(indexModelId: number) {
+    async loadForm(indexModelId: number, saveResourceState: boolean = true) {
         this.loading = true;
 
         this.indexingFormId = indexModelId;
@@ -798,7 +802,7 @@ export class IndexingFormComponent implements OnInit {
                     });
                 }
 
-                await this.initElemForm();
+                await this.initElemForm(saveResourceState);
                 this.createForm();
 
             }),
