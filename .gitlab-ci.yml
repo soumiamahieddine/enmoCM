@@ -34,6 +34,7 @@ job_e2e:
  image: php:7.4-apache
  stage: test
  script:
+   - echo $CI_PROJECT_DIR
    - service apache2 start
    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates,acknowledgement_receipts}
@@ -62,8 +63,8 @@ job_e2e:
    - npm run ee-launch --host=selenium__standalone-firefox
  artifacts:
    paths:
-     - test/e2e/screenshots/*.png
-     - queries_error.log
+     - /var/www/html/MaarchCourrier/test/e2e/screenshots/*.png
+     - /var/www/html/MaarchCourrier/queries_error.log
    expire_in: 1 week  
    when: always
  allow_failure: true
