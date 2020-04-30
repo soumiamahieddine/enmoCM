@@ -10,6 +10,7 @@ variables:
 
 stages:
   - test
+  - deploy
 
 before_script:
   - apt-get update -yqq > /dev/null
@@ -64,7 +65,7 @@ job_e2e:
    paths:
      - queries_error.log
      - test/e2e/screenshots/
-   expire_in: 3 days
+   expire_in: 2 days
    when: always
  allow_failure: true
 #  only:
@@ -94,7 +95,7 @@ job_php-7.4:
  artifacts:
    paths:
      - test/unitTests/build/
-   expire_in: 1 week
+   expire_in: 2h
 
 job_php-7.3:
  image: php:7.3-apache
@@ -139,3 +140,16 @@ job_php-7.2:
     - develop
   except:
     - schedules
+
+pages:
+  stage: deploy
+  dependencies:
+    - job_php-7.4
+  script:
+    - mv test/unitTests/build/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - develop
