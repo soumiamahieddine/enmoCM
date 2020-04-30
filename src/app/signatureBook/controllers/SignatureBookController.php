@@ -55,8 +55,8 @@ class SignatureBookController
         }
 
         $documents = SignatureBookController::getIncomingMailAndAttachmentsForSignatureBook(['resId' => $resId]);
-        if (!empty($documents['error'])) {
-            return $response->withJson($documents);
+        if (!empty($documents['errors'])) {
+            return $response->withStatus(400)->withJson($documents);
         }
 
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_id', 'basket_clause']]);
@@ -117,7 +117,7 @@ class SignatureBookController
             'select'    => ['res_id', 'subject', 'alt_identifier', 'category_id', 'filename', 'integrations']
         ]);
         if (empty($incomingMail)) {
-            return ['error' => 'No Document Found'];
+            return ['errors' => 'No Document Found'];
         }
 
         $integrations = json_decode($incomingMail['integrations'], true);
