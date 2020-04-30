@@ -1,6 +1,6 @@
 services:
   - name: postgres:10.1
-    command: ["-c", "datestyle=\'iso,dmy\'"]
+    command: ["-c", "datestyle=iso,dmy"]
   - httpd:latest
 
 variables:
