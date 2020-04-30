@@ -1,6 +1,6 @@
 services:
-  - postgres:10.1
-    entrypoint: ["-e"]
+  - name: postgres:10.1
+    command: ["-c", "datestyle='iso,dmy'"]
   - httpd:latest
 
 variables:
