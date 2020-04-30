@@ -62,7 +62,6 @@ job_e2e:
    - npm run ee-launch
  artifacts:
    paths:
-     - package.json
      - queries_error.log
      - test/e2e/screenshots/
    expire_in: 1 week
