@@ -87,7 +87,7 @@ job_php-7.4:
    - cp modules/visa/xml/remoteSignatoryBooks.xml.default modules/visa/xml/remoteSignatoryBooks.xml
    - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-9.phar
    - chmod +x /usr/local/bin/phpunit
-   - phpunit --coverage-text --colors=never -c phpunit.xml
+   - phpunit --coverage-text --colors=never
  only:
    - develop
  except:
@@ -113,7 +113,7 @@ job_php-7.3:
    - cp modules/visa/xml/remoteSignatoryBooks.xml.default modules/visa/xml/remoteSignatoryBooks.xml
    - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-9.phar
    - chmod +x /usr/local/bin/phpunit
-   - phpunit --coverage-text --colors=never -c phpunit.xml
+   - phpunit --coverage-text --colors=never
  only:
    - develop
  except:
@@ -135,21 +135,8 @@ job_php-7.2:
     - cp modules/visa/xml/remoteSignatoryBooks.xml.default modules/visa/xml/remoteSignatoryBooks.xml
     - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-8.phar
     - chmod +x /usr/local/bin/phpunit
-    - phpunit --coverage-text --colors=never -c phpunit.xml
+    - phpunit --coverage-text --colors=never
   only:
     - develop
   except:
     - schedules
-
-pages:
-  stage: deploy
-  dependencies:
-    - job_php-7.4
-  script:
-    - mv test/unitTests/build/ public/
-  artifacts:
-    paths:
-      - public
-    expire_in: 1 day
-  only:
-    - develop
