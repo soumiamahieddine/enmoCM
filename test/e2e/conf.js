@@ -21,6 +21,7 @@ exports.config = {
         }
     ],
     chromeDriver: '/usr/bin/chromedriver',
+    maxSessions: 1,
 
     onPrepare: () => {
         browser.driver.getCapabilities().then(function(caps){

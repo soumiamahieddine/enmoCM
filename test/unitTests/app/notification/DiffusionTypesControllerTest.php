@@ -118,7 +118,7 @@ class DiffusionTypesControllerTest extends TestCase
             $args = [
                 'notification' => [
                     'diffusion_type' => 'dest_user',
-                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT'
+                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT,ESIG'
                 ],
                 'request' => 'recipients',
                 'event' => [
@@ -169,7 +169,7 @@ class DiffusionTypesControllerTest extends TestCase
             $args = [
                 'notification' => [
                     'diffusion_type' => 'dest_user',
-                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT'
+                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT,ESIG'
                 ],
                 'request' => 'res_id',
                 'event' => [
@@ -220,7 +220,7 @@ class DiffusionTypesControllerTest extends TestCase
             $args = [
                 'notification' => [
                     'diffusion_type' => 'dest_entity',
-                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT'
+                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT,ESIG'
                 ],
                 'request' => 'res_id',
                 'event' => [
@@ -279,7 +279,7 @@ class DiffusionTypesControllerTest extends TestCase
             $args = [
                 'notification' => [
                     'diffusion_type' => 'dest_user_sign',
-                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT'
+                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT,ESIG'
                 ],
                 'request' => 'res_id',
                 'event' => [
@@ -338,7 +338,7 @@ class DiffusionTypesControllerTest extends TestCase
             $args = [
                 'notification' => [
                     'diffusion_type' => 'dest_user_visa',
-                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT'
+                    'diffusion_properties' => 'NEW,COU,CLO,END,ATT,VAL,INIT,ESIG'
                 ],
                 'request' => 'res_id',
                 'event' => [

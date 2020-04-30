@@ -103,7 +103,7 @@ class SignatureBookControllerTest extends TestCase
             'sequence'        => 0,
             'item_id'         => $userInfo['id'],
             'item_type'       => 'user_id',
-            'item_mode'       => 'dest',
+            'item_mode'       => 'sign',
             'added_by_user'   => $GLOBALS['id'],
             'viewed'          => 0,
             'difflist_type'   => 'VISA_CIRCUIT'
@@ -445,7 +445,7 @@ class SignatureBookControllerTest extends TestCase
             'sequence'        => 0,
             'item_id'         => $userInfo['id'],
             'item_type'       => 'user_id',
-            'item_mode'       => 'dest',
+            'item_mode'       => 'sign',
             'added_by_user'   => $GLOBALS['id'],
             'viewed'          => 0,
             'difflist_type'   => 'VISA_CIRCUIT'
