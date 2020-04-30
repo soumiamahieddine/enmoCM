@@ -75,7 +75,7 @@ class EntitySeparatorControllerTest extends TestCase
         $this->assertSame('Body type is not set or empty', $responseBody['errors']);
 
 
-        $GLOBALS['login'] = 'ddaull';
+        $GLOBALS['login'] = 'sstar';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
