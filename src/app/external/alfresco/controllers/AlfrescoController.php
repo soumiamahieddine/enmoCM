@@ -330,10 +330,10 @@ class AlfrescoController
         }
 
         if ($curlResponse['code'] != 200) {
-            if ($curlResponse['code'] == 404) {
-                return $response->withStatus(400)->withJson(['errors' => 'Page not found', 'lang' => 'pageNotFound']);
-            } elseif (!empty($curlResponse['response']['error']['briefSummary'])) {
+            if (!empty($curlResponse['response']['error']['briefSummary'])) {
                 return $response->withStatus(400)->withJson(['errors' => $curlResponse['response']['error']['briefSummary']]);
+            } elseif ($curlResponse['code'] == 404) {
+                return $response->withStatus(400)->withJson(['errors' => 'Page not found', 'lang' => 'pageNotFound']);
             } else {
                 return $response->withStatus(400)->withJson(['errors' => json_encode($curlResponse['response'])]);
             }
