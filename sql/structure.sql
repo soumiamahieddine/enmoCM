@@ -1403,3 +1403,5 @@ CREATE TABLE users_followed_resources
     CONSTRAINT users_followed_resources_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+SHOW datestyle;
