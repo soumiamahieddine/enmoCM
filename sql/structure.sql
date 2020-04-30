@@ -12,7 +12,6 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
-SET datestyle TO 'iso, dmy';
 
 CREATE TABLE actions
 (
@@ -1403,5 +1402,3 @@ CREATE TABLE users_followed_resources
     CONSTRAINT users_followed_resources_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-
-SHOW datestyle;

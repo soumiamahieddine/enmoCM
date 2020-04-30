@@ -7,12 +7,12 @@ exports.config = {
         //'about-us-spec.js'
     ],
     multiCapabilities: [
-        // {
-        //     'browserName': 'chrome',
-        //     'chromeOptions': {
-        //         'args': ["--no-sandbox", "--headless", "--disable-gpu",  "--window-size=1920,1080"]
-        //     },
-        // },
+        {
+            'browserName': 'chrome',
+            'chromeOptions': {
+                'args': ["--no-sandbox", "--headless", "--disable-gpu",  "--window-size=1920,1080"]
+            },
+        },
         {
             'browserName': 'firefox',
             'moz:firefoxOptions': {

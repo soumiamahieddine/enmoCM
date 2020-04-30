@@ -29,7 +29,7 @@ before_script:
   #- apt-get install npm -yqq > /dev/null 
   - apt-get install git -yqq > /dev/null
   - bash ci/docker_install_php.sh > /dev/null
-  - bash ci/docker_install_database.sh
+  - bash ci/docker_install_database.sh > /dev/null
 
 job_e2e:
  image: php:7.4-apache
@@ -64,7 +64,7 @@ job_e2e:
    paths:
      - queries_error.log
      - test/e2e/screenshots/
-   expire_in: 1 week
+   expire_in: 3 days
    when: always
  allow_failure: true
 #  only:
@@ -94,9 +94,6 @@ job_php-7.4:
  artifacts:
    paths:
      - test/unitTests/build/
-     - test/unitTests/build/tests-phpunit.xml
-   reports:
-     junit: test/unitTests/build/tests-phpunit.xml
    expire_in: 1 week
 
 job_php-7.3:
