@@ -113,6 +113,8 @@ pages:
   stage: deploy
   dependencies:
     - job_php-7.4
+  before_script:
+    - pwd
   script:
     - mv test/unitTests/build/ public/
   artifacts:
