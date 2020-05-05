@@ -10,6 +10,7 @@ variables:
 
 stages:
   - test
+  - deploy
 
 before_script:
   - apt-get update -yqq > /dev/null
@@ -107,3 +108,16 @@ job_php-7.2:
     - develop
   except:
     - schedules
+
+pages:
+  stage: deploy
+  dependencies:
+    - job_php-7.4
+  script:
+    - mv test/unitTests/build/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - develop
