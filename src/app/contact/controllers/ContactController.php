@@ -33,6 +33,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\AutoCompleteController;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -824,54 +825,79 @@ class ContactController
 
         $queryParams = $request->getQueryParams();
 
-        $allowedFields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2',
-                          'address_postcode', 'address_town', 'address_country'];
+        // [fieldNameInFront] => field_name_in_db
+        $allowedFields = [
+            'firstname'          => 'firstname',
+            'lastname'           => 'lastname',
+            'company'            => 'company',
+            'addressNumber'      => 'address_number',
+            'addressStreet'      => 'address_street',
+            'addressAdditional1' => 'address_additional1',
+            'addressAdditional2' => 'address_additional2',
+            'addressPostcode'    => 'address_postcode',
+            'addressTown'        => 'address_town',
+            'addressCountry'     => 'address_country',
+            'department'         => 'department',
+            'function'           => 'function',
+            'email'              => 'email',
+            'phone'              => 'phone'
+        ];
 
         if (!Validator::arrayType()->notEmpty()->validate($queryParams['criteria'])) {
             return $response->withStatus(400)->withJson(['errors' => 'criteria is empty or not an array']);
         }
-        if (!empty($queryParams['order']) && !Validator::stringType()->validate($queryParams['order']) && !in_array($queryParams['order'], $allowedFields)) {
-            return $response->withStatus(400)->withJson(['errors' => 'order is not a string or not an allowed field']);
-        }
 
+        $allowedFieldsKeys = array_keys($allowedFields);
         foreach ($queryParams['criteria'] as $criterion) {
-            if (!in_array($criterion, $allowedFields)) {
+            if (!in_array($criterion, $allowedFieldsKeys)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Criteria does not exist']);
             }
         }
 
-        $order = $queryParams['criteria'];
+        // Construct the query to get all duplicates on criteria
+        $criteria = [];
+        $order = [];
+        foreach ($queryParams['criteria'] as $criterion) {
+            $order[] = $allowedFields[$criterion];
+            $criteria[] = "replace(lower(translate(" . $allowedFields[$criterion] . ", 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                           'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr') ), ' ', '')";
+        }
 
-        $fields = ['distinct(id)'];
+        $fields = ['distinct(id)', 'enabled', 'dense_rank() over (order by ' . implode(',', $criteria) . ') duplicate_id'];
         foreach ($allowedFields as $field) {
             $fields[] = $field;
         }
-        $fields[] = 'enabled';
-        $fields[] = 'dense_rank() over (order by ' . implode(',', $queryParams['criteria']) . ') duplicate_id';
 
         $where = [];
 
-        foreach ($queryParams['criteria'] as $criterion) {
-            $unSensitiveCriterion = "lower(translate(" . $criterion . ", 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
-                           'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr') )";
+        foreach ($criteria as $criterion) {
+            $subQuery = "SELECT " . $criterion . ' as field FROM contacts c GROUP BY field HAVING count(*) > 1';
 
-            $subQuery = "SELECT " . $unSensitiveCriterion . "as field
-                FROM contacts c GROUP BY field HAVING count(*) > 1";
-
-            $where[] = "replace(" . $unSensitiveCriterion . ", ' ', '')
-                in (" . $subQuery . ") ";
+            $where[] = $criterion . " in (" . $subQuery . ") ";
         }
 
-        $duplicates = ContactModel::get([
-            'select'  => $fields,
-            'where'   => $where,
-            'orderBy' => $order,
-            'limit'   => 500
+        $duplicatesQuery = "SELECT " . implode(', ', $fields) . ' FROM contacts WHERE ' . implode(' AND ', $where);
+
+        // Create a query that will have the number of duplicates for each duplicate group
+        // this is needed to avoid getting result that only appears once in the result list (and the function dense_rank cannot be used in group by)
+        $duplicatesCountQuery = 'SELECT duplicate_id, count(*) as duplicate_count FROM (' . $duplicatesQuery . ') as duplicates_id group by duplicate_id';
+
+        $fields = ['distinct(id)', 'count(*) over () as total', 'duplicates_info.duplicate_id', 'enabled'];
+        foreach ($allowedFields as $field) {
+            $fields[] = $field;
+        }
+
+        // Get all the duplicates
+        $duplicates = DatabaseModel::select([
+            'select'   => $fields,
+            'table'    => ['( ' . $duplicatesQuery . ') as duplicates_info, (' . $duplicatesCountQuery . ') as duplicates_ids'],
+            'where'    => ['duplicates_ids.duplicate_id = duplicates_info.duplicate_id', 'duplicate_count > 1'],
+            'order_by' => $order,
+            'limit'    => 500
         ]);
 
-
         if (empty($duplicates)) {
-            return $response->withJson(['contacts' => [], 'count' => 0]);
+            return $response->withJson(['returnedCount' => 0, 'realCount' => 0, 'contacts' => []]);
         }
 
         $contactIds = array_column($duplicates, 'id');
@@ -896,13 +922,18 @@ class ContactController
                 'addressTown'        => $contact['address_town'],
                 'addressCountry'     => $contact['address_country'],
                 'enabled'            => $contact['enabled'],
+                'function'           => $contact['function'],
+                'department'         => $contact['department'],
+                'email'              => $contact['email'],
+                'phone'              => $contact['phone'],
                 'isUsed'             => $contactsUsed[$contact['id']],
                 'filling'            => $filling,
                 'customFields'       => !empty($contact['custom_fields']) ? json_decode($contact['custom_fields'], true) : null,
             ];
         }
+        $count = $duplicates[0]['total'];
 
-        return $response->withJson(['contacts' => $contacts, 'count' => count($contacts)]);
+        return $response->withJson(['returnedCount' => count($contacts), 'realCount' => $count, 'contacts' => $contacts]);
     }
 
     public static function getParsedContacts(array $args)
