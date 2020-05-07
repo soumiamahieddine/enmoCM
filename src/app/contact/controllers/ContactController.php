@@ -860,15 +860,19 @@ class ContactController
 
             $where[] = "replace(" . $unSensitiveCriterion . ", ' ', '')
                 in (" . $subQuery . ") ";
-
-            $where[] = $criterion . " is not null";
         }
 
         $duplicates = ContactModel::get([
             'select'  => $fields,
             'where'   => $where,
-            'orderBy' => $order
+            'orderBy' => $order,
+            'limit'   => 500
         ]);
+
+
+        if (empty($duplicates)) {
+            return $response->withJson(['contacts' => [], 'count' => 0]);
+        }
 
         $contactIds = array_column($duplicates, 'id');
         $contactsUsed = ContactController::isContactUsed(['ids' => $contactIds]);
