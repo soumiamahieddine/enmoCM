@@ -847,10 +847,20 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'criteria is empty or not an array']);
         }
 
+        $contactCustoms = ContactCustomFieldListModel::get(['select' => ['id']]);
+        $contactCustoms = array_column($contactCustoms, 'id');
+
         $allowedFieldsKeys = array_keys($allowedFields);
         foreach ($queryParams['criteria'] as $criterion) {
-            if (!in_array($criterion, $allowedFieldsKeys)) {
-                return $response->withStatus(400)->withJson(['errors' => 'Criteria does not exist']);
+            if (strpos($criterion, 'contactCustomField_') !== false) {
+                $customId = explode('_', $criterion)[1];
+                if (!in_array($customId, $contactCustoms)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Custom criteria does not exist']);
+                }
+            } else {
+                if (!in_array($criterion, $allowedFieldsKeys)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'criteria does not exist']);
+                }
             }
         }
 
@@ -858,12 +868,21 @@ class ContactController
         $criteria = [];
         $order = [];
         foreach ($queryParams['criteria'] as $criterion) {
-            $order[] = $allowedFields[$criterion];
-            $criteria[] = "replace(lower(translate(" . $allowedFields[$criterion] . ", 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+            if (strpos($criterion, 'contactCustomField_') !== false) {
+                if (!in_array('custom_fields', $order)) {
+                    $order[] = 'custom_fields';
+                }
+                $customId = explode('_', $criterion)[1];
+                $criteria[] = "replace(lower(translate(custom_fields->>'" . $customId . "', 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
                            'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr') ), ' ', '')";
+            } else {
+                $order[] = $allowedFields[$criterion];
+                $criteria[] = "replace(lower(translate(" . $allowedFields[$criterion] . ", 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                           'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr') ), ' ', '')";
+            }
         }
 
-        $fields = ['distinct(id)', 'enabled', 'dense_rank() over (order by ' . implode(',', $criteria) . ') duplicate_id'];
+        $fields = ['distinct(id)', 'enabled', 'dense_rank() over (order by ' . implode(',', $criteria) . ') duplicate_id', 'custom_fields'];
         foreach ($allowedFields as $field) {
             $fields[] = $field;
         }
@@ -882,7 +901,7 @@ class ContactController
         // this is needed to avoid getting result that only appears once in the result list (and the function dense_rank cannot be used in group by)
         $duplicatesCountQuery = 'SELECT duplicate_id, count(*) as duplicate_count FROM (' . $duplicatesQuery . ') as duplicates_id group by duplicate_id';
 
-        $fields = ['distinct(id)', 'count(*) over () as total', 'duplicates_info.duplicate_id', 'enabled'];
+        $fields = ['distinct(id)', 'count(*) over () as total', 'duplicates_info.duplicate_id', 'enabled', 'custom_fields'];
         foreach ($allowedFields as $field) {
             $fields[] = $field;
         }
