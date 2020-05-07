@@ -4,7 +4,7 @@
 .contact-list-container {
     padding: 10px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 33%);
     grid-gap: 10px;
 }
 
@@ -104,4 +104,8 @@
     overflow: hidden;
     justify-content: center;
     align-items: center;
+}
+
+.newData {
+    color : #F99830;
 }

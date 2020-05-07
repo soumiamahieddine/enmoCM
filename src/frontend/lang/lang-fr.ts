@@ -1691,8 +1691,9 @@ export const LANG_FR = {
     "rootFolder": "Dépôt racine",
     "chooseEntityAssociationAccount": "Attribuer le compte au(x) service(s)",
     "alfrescoAPI": "Adresse de l'API Alfresco",
-    "testSucceeded": "Le test à réussi",
+    "testSucceeded": "Le test a réussi",
     "test": "Tester",
     "canUpdateIndexingModel": "Pouvoir changer le modèle d'indexation",
     "options": "Options",
+    "contactsDuplicates": "Doublons de contacts",
 };

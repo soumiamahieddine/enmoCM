@@ -4,17 +4,15 @@ import { LANG } from '../../../translate.component';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-    templateUrl: 'contacts-list-modal.component.html',
-    styleUrls: ['contacts-list-modal.component.scss'],
+    templateUrl: 'contact-resource-modal.component.html',
+    styleUrls: ['contact-resource-modal.component.scss'],
 })
-export class ContactsListModalComponent {
+export class ContactResourceModalComponent {
     lang: any = LANG;
 
     constructor(
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        public dialogRef: MatDialogRef<ContactsListModalComponent>) {
+        public dialogRef: MatDialogRef<ContactResourceModalComponent>) {
     }
-
-    ngOnInit(): void { }
 }

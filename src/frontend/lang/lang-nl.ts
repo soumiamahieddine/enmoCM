@@ -1677,4 +1677,5 @@ export const LANG_NL = {
     "test": "Test", //_TO_TRANSLATE
     "canUpdateIndexingModel": "Can change indexing model", //_TO_TRANSLATE
     "options": "Options", //_TO_TRANSLATE
+    "contactsDuplicates": "Contacts duplicates", //_TO_TRANSLATE
 };

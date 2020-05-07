@@ -30,6 +30,12 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     customFieldsTypes: any[] = [
         {
+            icon: 'fas fa-magic',
+            route: '/administration/contacts/duplicates',
+            label: 'Gerer les doublons de contact',
+            current: false
+        },
+        {
             label: this.lang.stringInput,
             type: 'string'
         },

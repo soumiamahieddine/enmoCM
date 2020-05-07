@@ -1693,4 +1693,5 @@ export const LANG_EN = {
     "test": "Test",
     "canUpdateIndexingModel": "Can change indexing model",
     "options": "Options",
+    "contactsDuplicates": "Contacts duplicates",
 };
