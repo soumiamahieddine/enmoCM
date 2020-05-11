@@ -12,7 +12,6 @@ import { SortPipe } from '../../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { ManageDuplicateComponent } from './manage-duplicate/manage-duplicate.component';
 
 @Component({
@@ -79,9 +78,6 @@ export class ContactDuplicateComponent implements OnInit {
     isLoadingResults: boolean = false;
     openedSearchTool: boolean = true;
 
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
-
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -123,7 +119,8 @@ export class ContactDuplicateComponent implements OnInit {
                     data.customFields = data.customFields.map((field: any) => {
                         return {
                             ...field,
-                            id: `customField_${field.id}`
+                            id: `contactCustomField_${field.id}`,
+                            identifier: `contactCustomField_${field.id}`
                         };
                     });
                     return data.customFields;
@@ -157,9 +154,6 @@ export class ContactDuplicateComponent implements OnInit {
     }
 
     removeCriteria(field: any) {
-        // this.currentFieldsSearch = this.contactFields.filter((contact: any) => contact.id !== id);
-
-        // const index = this.contactFields.map((field: any) => field.id).indexOf(id);
         this.contactFields.forEach((contact: any, index: number) => {
             if (contact.id === field.id) {
                 this.currentFieldsSearch = this.currentFieldsSearch.filter((currField: any) => currField.id !== field.id);
@@ -169,7 +163,7 @@ export class ContactDuplicateComponent implements OnInit {
     }
 
     searchDuplicates() {
-        this.dataSource = new MatTableDataSource();
+        this.duplicatesContacts = [];
         this.isLoadingResults = true;
         const queryParam = '?criteria[]=' + this.currentFieldsSearch.map((field: any) => field.identifier).join('&criteria[]=');
         this.http.get(`../rest/duplicatedContacts${queryParam}`).pipe(
@@ -199,12 +193,6 @@ export class ContactDuplicateComponent implements OnInit {
 
                 this.duplicatesContacts = contacts;
                 setTimeout(() => {
-                    /*this.dataSource = new MatTableDataSource(this.duplicatesContacts);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                    this.sort.active = 'duplicateId';
-                    this.sort.direction = 'asc';
-                    this.dataSource.sort = this.sort;*/
                     this.displayedColumns = this.currentFieldsSearch.map((field: any) => field.identifier);
                     this.displayedColumns.push('address');
                     this.openedSearchTool = false;
@@ -231,10 +219,9 @@ export class ContactDuplicateComponent implements OnInit {
             filter((data: any) => data === 'success'),
             tap(() => {
                 this.notify.success('Contact fusionné');
+                this.duplicatesContactsCount--;
+                this.duplicatesContactsRealCount--;
                 this.duplicatesContacts = this.duplicatesContacts.filter((contact: any) => contact.duplicateId !== duplicateId);
-                this.dataSource = new MatTableDataSource(this.duplicatesContacts);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

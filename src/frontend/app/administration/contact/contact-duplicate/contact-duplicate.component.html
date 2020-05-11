@@ -47,7 +47,7 @@
                             </mat-chip-list>
                             <div class="col-md-12 text-center">
                                 <button mat-raised-button color="primary" type="button" (click)="searchDuplicates()"
-                                    [disabled]="currentFieldsSearch.length === 0">Lancer la recherche</button>
+                                    [disabled]="currentFieldsSearch.length === 0 || isLoadingResults">Lancer la recherche</button>
                             </div>
                         </mat-expansion-panel>
                     </mat-accordion>
