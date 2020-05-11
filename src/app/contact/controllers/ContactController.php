@@ -955,6 +955,93 @@ class ContactController
         return $response->withJson(['returnedCount' => count($contacts), 'realCount' => $count, 'contacts' => $contacts]);
     }
 
+    public function mergeContacts(Request $request, Response $response, array $args)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body['duplicates'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body duplicates is empty or not an array']);
+        }
+
+        $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2',
+                   'address_postcode', 'address_town', 'address_country', 'department', 'function', 'email', 'phone'];
+
+        $master = ContactModel::getById([
+            'select' => $fields,
+            'id'     => $args['id']
+        ]);
+
+        if (empty($master)) {
+            return $response->withStatus(400)->withJson(['errors' => 'master does not exist']);
+        }
+
+        $duplicates = ContactModel::get([
+            'select' => $fields,
+            'where'  => ['id in (?)'],
+            'data'   => [$body['duplicates']]
+        ]);
+
+        if (count($duplicates) != count($body['duplicates'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'duplicates do not exist']);
+        }
+
+        $set = [];
+        foreach ($fields as $field) {
+            if (empty($master[$field])) {
+                foreach ($duplicates as $duplicate) {
+                    if (!empty($duplicate[$field])) {
+                        $set[$field] = $duplicate[$field];
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!empty($set)) {
+            ContactModel::update([
+                'set'   => $set,
+                'where' => ['id = ?'],
+                'data'  => [$args['id']]
+            ]);
+        }
+
+        ResourceContactModel::update([
+            'set'   => ['item_id' => $args['id']],
+            'where' => ['item_id in (?)', "type = 'contact'"],
+            'data'  => [$body['duplicates']]
+        ]);
+
+        AcknowledgementReceiptModel::update([
+            'set'   => ['contact_id' => $args['id']],
+            'where' => ['contact_id in (?)'],
+            'data'  => [$body['duplicates']]
+        ]);
+
+        AttachmentModel::update([
+            'set'   => ['recipient_id' => $args['id']],
+            'where' => ['recipient_id in (?)', "recipient_type = 'contact'"],
+            'data'  => [$body['duplicates']]
+        ]);
+
+        foreach ($body['duplicates'] as $duplicate) {
+            ContactGroupModel::deleteByContactId(['contactId' => $duplicate]);
+        }
+
+        ContactModel::delete([
+            'where' => ['id in (?)'],
+            'data'  => [$body['duplicates']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
     public static function getParsedContacts(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId', 'mode']);

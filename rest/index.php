@@ -137,6 +137,7 @@ $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::c
 $app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
 $app->get('/ban/availableDepartments', \Contact\controllers\ContactController::class . ':getAvailableDepartments');
 $app->get('/duplicatedContacts', \Contact\controllers\ContactController::class . ':getDuplicatedContacts');
+$app->put('/contacts/{id}/merge', \Contact\controllers\ContactController::class . ':mergeContacts');
 
 //ContactsCustomFields
 $app->get('/contactsCustomFields', \Contact\controllers\ContactCustomFieldController::class . ':get');
