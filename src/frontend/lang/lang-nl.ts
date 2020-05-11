@@ -1683,4 +1683,5 @@ export const LANG_NL = {
     "launchSearch": "Launch search", //_TO_TRANSLATE
     "duplicatesContactDisplayed": "{0} duplicates ({1} displayed)", //_TO_TRANSLATE
     "duplicatesContactsAdmin": "Manage contacts duplicates", //_TO_TRANSLATE
+    "merge": "Merge", //_TO_TRANSLATE
 };

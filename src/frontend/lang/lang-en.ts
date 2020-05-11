@@ -1699,4 +1699,5 @@ export const LANG_EN = {
     "launchSearch": "Launch search",
     "duplicatesContactDisplayed": "{0} duplicates ({1} displayed)",
     "duplicatesContactsAdmin": "Manage contacts duplicates",
+    "merge": "Merge",
 };

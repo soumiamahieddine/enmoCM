@@ -1701,4 +1701,5 @@ export const LANG_FR = {
     "launchSearch": "Lancer la recherche",
     "duplicatesContactDisplayed": "{0} doulons ({1} affichés)",
     "duplicatesContactsAdmin": "Gérer les doublons de contacts",
+    "merge": "Fusionner",
 };
