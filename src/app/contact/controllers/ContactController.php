@@ -844,7 +844,7 @@ class ContactController
         ];
 
         if (!Validator::arrayType()->notEmpty()->validate($queryParams['criteria'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'criteria is empty or not an array']);
+            return $response->withStatus(400)->withJson(['errors' => 'Query criteria is empty or not an array']);
         }
 
         $contactCustoms = ContactCustomFieldListModel::get(['select' => ['id']]);
