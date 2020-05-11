@@ -1696,4 +1696,9 @@ export const LANG_FR = {
     "canUpdateIndexingModel": "Pouvoir changer le modèle d'indexation",
     "options": "Options",
     "contactsDuplicates": "Doublons de contacts",
+    "contactsMerged": "Contacts fusionnés",
+    "addCriteria": "Ajouter un critère",
+    "launchSearch": "Lancer la recherche",
+    "duplicatesContactDisplayed": "{0} doulons ({1} affichés)",
+    "duplicatesContactsAdmin": "Gérer les doublons de contacts",
 };

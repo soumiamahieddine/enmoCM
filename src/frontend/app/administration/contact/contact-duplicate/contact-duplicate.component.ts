@@ -10,8 +10,6 @@ import { of } from 'rxjs/internal/observable/of';
 import { catchError, tap, map, exhaustMap, filter, finalize } from 'rxjs/operators';
 import { SortPipe } from '../../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { ManageDuplicateComponent } from './manage-duplicate/manage-duplicate.component';
 
 @Component({
@@ -31,7 +29,7 @@ export class ContactDuplicateComponent implements OnInit {
         {
             icon: 'fas fa-magic',
             route: '/administration/contacts/duplicates',
-            label: 'Gerer les doublons de contact',
+            label: this.lang.duplicatesContactsAdmin,
             current: true
         },
         {
@@ -218,7 +216,7 @@ export class ContactDuplicateComponent implements OnInit {
         dialogRef.afterClosed().pipe(
             filter((data: any) => data === 'success'),
             tap(() => {
-                this.notify.success('Contact fusionné');
+                this.notify.success(this.lang.contactsMerged);
                 this.duplicatesContactsCount--;
                 this.duplicatesContactsRealCount--;
                 this.duplicatesContacts = this.duplicatesContacts.filter((contact: any) => contact.duplicateId !== duplicateId);

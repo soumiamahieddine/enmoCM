@@ -1694,4 +1694,9 @@ export const LANG_EN = {
     "canUpdateIndexingModel": "Can change indexing model",
     "options": "Options",
     "contactsDuplicates": "Contacts duplicates",
+    "contactsMerged": "Contacts merged",
+    "addCriteria": "Add a criteria",
+    "launchSearch": "Launch search",
+    "duplicatesContactDisplayed": "{0} duplicates ({1} displayed)",
+    "duplicatesContactsAdmin": "Manage contacts duplicates",
 };

@@ -29,11 +29,11 @@
                         <mat-expansion-panel [expanded]="openedSearchTool">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    Critère de recherche
+                                    {{lang.criteriaSearch}}
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
-                            <plugin-select-search [label]="'Ajouter un critère'" [formControlSelect]="addCriteriaSelect"
-                                [placeholderLabel]="'Ajouter un critère'" [datas]="contactFields"
+                            <plugin-select-search [label]="lang.addCriteria" [formControlSelect]="addCriteriaSelect"
+                                [placeholderLabel]="lang.addCriteria" [datas]="contactFields"
                                 (afterSelected)="addCriteria($event)">
                             </plugin-select-search>
                             <mat-divider style="margin-top:20px;margin-bottom:20px;"></mat-divider>
@@ -47,13 +47,13 @@
                             </mat-chip-list>
                             <div class="col-md-12 text-center">
                                 <button mat-raised-button color="primary" type="button" (click)="searchDuplicates()"
-                                    [disabled]="currentFieldsSearch.length === 0 || isLoadingResults">Lancer la recherche</button>
+                                    [disabled]="currentFieldsSearch.length === 0 || isLoadingResults">{{lang.launchSearch}}</button>
                             </div>
                         </mat-expansion-panel>
                     </mat-accordion>
                 </div>
                 <div *ngIf="duplicatesContacts.length > 0" style="padding: 10px;text-align: right;color: rgba(0,0,0,0.54);">
-                    {{this.duplicatesContactsRealCount}} doulons ({{this.duplicatesContactsCount}} affichés)
+                    {{lang.duplicatesContactDisplayed | scan: [duplicatesContactsRealCount, duplicatesContactsCount]}}
                 </div>
                 <mat-list role="list" *ngIf="duplicatesContacts.length > 0">
                     <mat-list-item role="listitem">
@@ -85,23 +85,6 @@
                             </ng-container>
                         </mat-list>
                     </cdk-virtual-scroll-viewport>
-                    <!--<mat-table #table [dataSource]="dataSource" matSort matSortActive="duplicateId"
-                        matSortDirection="asc">
-                        <ng-container *ngFor="let item of displayedColumns">
-                            <ng-container [matColumnDef]="item">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>
-                                    {{lang['contactsParameters_' + item] !== undefined ? lang['contactsParameters_' + item] : lang[item]}}
-                                </mat-header-cell>
-                                <mat-cell *matCellDef="let element">
-                                    {{element[item]}} </mat-cell>
-                            </ng-container>
-                        </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                        <mat-row class="item" [class.hovered]="row.duplicateId === currentDuplicateId"
-                            *matRowDef="let row; columns: displayedColumns;" style="cursor:pointer;"
-                            (mouseover)="selectDuplicates(row.duplicateId)" (click)="manageDuplicate(row.duplicateId)">
-                        </mat-row>
-                    </mat-table>-->
                     <div *ngIf="isLoadingResults" class="example-loading-shade">
                         <mat-spinner></mat-spinner>
                     </div>

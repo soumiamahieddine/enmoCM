@@ -24,7 +24,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
         {
             icon: 'fas fa-magic',
             route: '/administration/contacts/duplicates',
-            label: 'Gerer les doublons de contact',
+            label: this.lang.duplicatesContactsAdmin,
             current: false
         },
         {
