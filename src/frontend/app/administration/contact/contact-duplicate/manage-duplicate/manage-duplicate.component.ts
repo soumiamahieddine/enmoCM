@@ -61,7 +61,7 @@ export class ManageDuplicateComponent implements OnInit {
         console.log(masterContact);
         console.log(slaveContacts);
 
-        this.http.post('../rest/contacts/merged', { master : masterContact, saves : slaveContacts}).pipe(
+        this.http.put(`../rest/contacts/${masterContact}/merge`, { duplicates : slaveContacts}).pipe(
             tap(() => {
                 this.dialogRef.close('success');
             }),
