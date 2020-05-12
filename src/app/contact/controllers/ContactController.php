@@ -278,6 +278,26 @@ class ContactController
         $filling = ContactController::getFillingRate(['contactId' => $rawContact['id']]);
         $contact['fillingRate'] = empty($filling) ? null : $filling;
 
+        $inResources = ResourceContactModel::get([
+            'select' => ['item_id'],
+            'where'  => ['item_id = ?', 'type = ?'],
+            'data'   => [$args['id'], 'contact']
+        ]);
+
+        $inAcknowledgementReceipts = AcknowledgementReceiptModel::get([
+            'select' => ['contact_id'],
+            'where'  => ['contact_id = ?'],
+            'data'   => [$args['id']]
+        ]);
+
+        $inAttachments = AttachmentModel::get([
+            'select' => ['recipient_id'],
+            'where'  => ['recipient_id = ?', 'recipient_type = ?'],
+            'data'   => [$args['id'], 'contact']
+        ]);
+
+        $contact['usageCount'] = count($inResources) + count($inAcknowledgementReceipts) + count($inAttachments);
+
         return $response->withJson($contact);
     }
 
@@ -970,7 +990,7 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Body duplicates is empty or not an array']);
         }
 
-        $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2',
+        $fields = ['title', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2',
                    'address_postcode', 'address_town', 'address_country', 'department', 'function', 'email', 'phone'];
 
         $master = ContactModel::getById([
