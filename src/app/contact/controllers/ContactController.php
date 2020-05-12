@@ -993,8 +993,8 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Body duplicates is empty or not an array']);
         }
 
-        $fields = ['title', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2',
-                   'address_postcode', 'address_town', 'address_country', 'department', 'function', 'email', 'phone'];
+        $fields = ['civility', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2',
+                   'address_postcode', 'address_town', 'address_country', 'department', 'function', 'email', 'phone', 'custom_fields'];
 
         $master = ContactModel::getById([
             'select' => $fields,
@@ -1017,7 +1017,21 @@ class ContactController
 
         $set = [];
         foreach ($fields as $field) {
-            if (empty($master[$field])) {
+            if ($field == 'custom_fields') {
+                $master[$field] = json_decode($master[$field], true);
+                $masterCustomsKeys = array_keys($master[$field]);
+                $set['custom_fields'] = $master['custom_fields'];
+
+                foreach ($duplicates as $duplicate) {
+                    $duplicateCustoms = json_decode($duplicate[$field], true);
+                    foreach ($duplicateCustoms as $key => $duplicateCustom) {
+                        if (!in_array($key, $masterCustomsKeys)) {
+                            $set['custom_fields'][$key] = $duplicateCustom;
+                        }
+                    }
+                }
+                $set['custom_fields'] = json_encode($set['custom_fields']);
+            } elseif (empty($master[$field])) {
                 foreach ($duplicates as $duplicate) {
                     if (!empty($duplicate[$field])) {
                         $set[$field] = $duplicate[$field];
