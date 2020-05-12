@@ -15,6 +15,7 @@
 namespace Resource\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
@@ -344,6 +345,14 @@ class ResController extends ResourceControlController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $closedActions = ActionModel::get([
+            'select' => ['distinct id_status'],
+            'where'  => ['component in (?)'],
+            'data'   => [['closeMailAction', 'closeMailWithAttachmentsOrNotesAction', 'closeAndIndexAction']]
+        ]);
+        $closedStatus  = array_column($closedActions, 'id_status');
+        $closingDate   = in_array($data['status'], $closedStatus) ? 'CURRENT_TIMESTAMP' : null;
+
         $identifiers = !empty($data['chrono']) ? $data['chrono'] : $data['resId'];
         foreach ($identifiers as $id) {
             if (!empty($data['chrono'])) {
@@ -357,8 +366,8 @@ class ResController extends ResourceControlController
             if (!ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
-    
-            ResModel::update(['set' => ['status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+
+            ResModel::update(['set' => ['status' => $data['status'], 'closing_date' => $closingDate], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
     
             HistoryController::add([
                 'tableName' => 'res_letterbox',
@@ -437,7 +446,6 @@ class ResController extends ResourceControlController
         if ($data['mode'] == 'base64') {
             return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $originalFormat, 'mimeType' => $mimeType,'originalCreatorId' => $creatorId]);
         } else {
-
             $pathInfo = pathinfo($pathToDocument);
 
             $response->write($fileContent);
