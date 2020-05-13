@@ -1702,4 +1702,6 @@ export const LANG_FR = {
     "duplicatesContactDisplayed": "{0} doulons ({1} affichés)",
     "duplicatesContactsAdmin": "Gérer les doublons de contacts",
     "merge": "Fusionner",
+    "associatedElements": "élement(s) associé(s)",
+    "selectedContact": "contact sélectionné",
 };

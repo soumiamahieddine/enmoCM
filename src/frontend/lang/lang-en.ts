@@ -1700,4 +1700,6 @@ export const LANG_EN = {
     "duplicatesContactDisplayed": "{0} duplicates ({1} displayed)",
     "duplicatesContactsAdmin": "Manage contacts duplicates",
     "merge": "Merge",
+    "associatedElements": "associated elements",
+    "selectedContact": "selected contact",
 };

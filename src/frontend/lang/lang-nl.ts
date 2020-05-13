@@ -1684,4 +1684,6 @@ export const LANG_NL = {
     "duplicatesContactDisplayed": "{0} duplicates ({1} displayed)", //_TO_TRANSLATE
     "duplicatesContactsAdmin": "Manage contacts duplicates", //_TO_TRANSLATE
     "merge": "Merge", //_TO_TRANSLATE
+    "associatedElements": "associated elements", //_TO_TRANSLATE
+    "selectedContact": "selected contact", //_TO_TRANSLATE
 };

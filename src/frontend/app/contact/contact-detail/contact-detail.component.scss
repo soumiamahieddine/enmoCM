@@ -132,9 +132,6 @@
 }
 
 .contact-card:hover {
-    .mat-card-content, .mat-card-header {
-        opacity: 0.5;
-    }
     .selectable {
         opacity: 1;
         transition: opacity 0.2s;
