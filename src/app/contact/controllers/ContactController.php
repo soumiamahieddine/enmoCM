@@ -994,7 +994,7 @@ class ContactController
         }
 
         $fields = ['civility', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2',
-                   'address_postcode', 'address_town', 'address_country', 'department', 'function', 'email', 'phone', 'custom_fields'];
+                   'address_postcode', 'address_town', 'address_country', 'department', 'function', 'email', 'phone', 'custom_fields', 'external_id'];
 
         $master = ContactModel::getById([
             'select' => $fields,
@@ -1017,20 +1017,20 @@ class ContactController
 
         $set = [];
         foreach ($fields as $field) {
-            if ($field == 'custom_fields') {
+            if ($field == 'custom_fields' || $field == 'external_id') {
                 $master[$field] = json_decode($master[$field], true);
                 $masterCustomsKeys = array_keys($master[$field]);
-                $set['custom_fields'] = $master['custom_fields'];
+                $set[$field] = $master[$field];
 
                 foreach ($duplicates as $duplicate) {
                     $duplicateCustoms = json_decode($duplicate[$field], true);
                     foreach ($duplicateCustoms as $key => $duplicateCustom) {
                         if (!in_array($key, $masterCustomsKeys)) {
-                            $set['custom_fields'][$key] = $duplicateCustom;
+                            $set[$field][$key] = $duplicateCustom;
                         }
                     }
                 }
-                $set['custom_fields'] = json_encode($set['custom_fields']);
+                $set[$field] = json_encode($set[$field]);
             } elseif (empty($master[$field])) {
                 foreach ($duplicates as $duplicate) {
                     if (!empty($duplicate[$field])) {
