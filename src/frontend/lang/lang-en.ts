@@ -1308,7 +1308,6 @@ export const LANG_EN = {
     "restrictedEntity":                            "Restricted entity",
     "restrictions":                                "Restrictions",
     "resultPage":                                  "Result page",
-    "resultPageUpdated":                           "Result page updated",
     "retentionFinalDisposition":                   "Fate",
     "retentionRule":                               "Retention rules",
     "returnDate":                                  "Return date",
@@ -1702,4 +1701,5 @@ export const LANG_EN = {
     "merge": "Merge",
     "associatedElements": "associated elements",
     "selectedContact": "selected contact",
+    "modificationsProcessed": "Modifications processed",
 };

@@ -801,7 +801,6 @@ export const LANG_NL = {
     "resId"                                 : "GED gebruikersnaam",
     "restrictedEntity"                      : "Restricted entity", //_TO_TRANSLATE
     "resultPage"                            : "Resultaatpagina",
-    "resultPageUpdated"                     : "Gewijzigde resultaatpagina",
     "retentionFinalDisposition"             : "Uiteindelijke lot",
     "retentionRule"                         : "Bewaringsregel",
     "returnDate"                            : "Datum van terugkeer", //_TO_TRANSLATE
@@ -1686,4 +1685,5 @@ export const LANG_NL = {
     "merge": "Merge", //_TO_TRANSLATE
     "associatedElements": "associated elements", //_TO_TRANSLATE
     "selectedContact": "selected contact", //_TO_TRANSLATE
+    "modificationsProcessed": "Modifications processed", //_TO_TRANSLATE
 };

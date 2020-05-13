@@ -1308,7 +1308,6 @@ export const LANG_FR = {
     "restrictedEntity":                            "Entité restreinte",
     "restrictions":                                "Restrictions",
     "resultPage":                                  "Liste de résultats",
-    "resultPageUpdated":                           "Liste de résultats modifiée",
     "retentionFinalDisposition":                   "Sort final",
     "retentionRule":                               "Règle de conservation",
     "returnDate":                                  "Date de retour",
@@ -1704,4 +1703,5 @@ export const LANG_FR = {
     "merge": "Fusionner",
     "associatedElements": "élement(s) associé(s)",
     "selectedContact": "contact sélectionné",
+    "modificationsProcessed": "Modifications effectuées",
 };
