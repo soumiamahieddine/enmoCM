@@ -77,10 +77,12 @@ class DatabasePDO
             $dsn = "{$formattedDriver}:host={$server};port={$port};dbname={$name}";
             try {
                 self::$pdo = new \PDO($dsn, $user, $password, $options);
+                break;
             } catch (\PDOException $PDOException) {
                 try {
                     $options[\PDO::ATTR_PERSISTENT] = false;
                     self::$pdo = new \PDO($dsn, $user, $password, $options);
+                    break;
                 } catch (\PDOException $PDOException) {
                     if (!empty($jsonFile['database'][$key + 1])) {
                         continue;
