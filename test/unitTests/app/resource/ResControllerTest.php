@@ -1220,7 +1220,7 @@ class ResControllerTest extends TestCase
         $GLOBALS['id'] = $userInfo['id'];
 
         $body = [
-            'modelId'          => 3,
+            'modelId'          => 4,
             'doctype'          => 102,
             'priority'         => 'poiuytre1357nbvc',
             'documentDate'     => 'wrong format',
