@@ -135,7 +135,7 @@ class ResourceControlController
         }
 
         if (!empty($body['modelId']) && $resource['model_id'] != $body['modelId']) {
-            if (!PrivilegeController::isResourceInProcess(['userId' => $GLOBALS['id'], 'resId' => $args['resId'], 'canUpdate' => true, 'canUpdateModel' => true])) {
+            if (!PrivilegeController::isResourceInProcess(['userId' => $GLOBALS['id'], 'resId' => $args['resId'], 'canUpdateData' => true, 'canUpdateModel' => true])) {
                 return ['errors' => 'Model can not be modified'];
             }
             $indexingModel = IndexingModelModel::getById(['id' => $body['modelId'], 'select' => ['master', 'enabled']]);

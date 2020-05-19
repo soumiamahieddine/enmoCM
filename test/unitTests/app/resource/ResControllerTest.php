@@ -666,7 +666,7 @@ class ResControllerTest extends TestCase
         $this->assertSame(204, $response->getStatusCode());
 
         \Basket\models\GroupBasketModel::update([
-            'set'   => ['list_event_data' => '{"canUpdate": true, "defaultTab": "info", "canUpdateModel": true}'],
+            'set'   => ['list_event_data' => '{"canUpdateData": true, "defaultTab": "info", "canUpdateModel": true}'],
             'where' => ['group_id = ?', 'basket_id = ?'],
             'data'  => ['COURRIER', 'QualificationBasket']
         ]);
