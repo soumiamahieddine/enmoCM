@@ -277,38 +277,7 @@ class ResController extends ResourceControlController
             ]);
             $newModelFields = array_column($newModelFields, 'identifier');
 
-            $set = [];
-            $setToNull = [
-                'confidentiality'    => 'confidentiality',
-                'admission_date'     => 'arrivalDate',
-                'departure_date'     => 'departureDate',
-                'doc_date'           => 'documentDate',
-                'process_limit_date' => 'processLimitDate',
-                'initiator'          => 'initiator',
-                'destination'        => 'destination',
-                'priority'           => 'priority'
-            ];
-            foreach ($setToNull as $key => $field) {
-                if (in_array($field, $resourceModelFields) && !in_array($field, $newModelFields)) {
-                    $set[$key] = null;
-                }
-            }
-
-            $newModelHasCustomFields = false;
-            foreach ($newModelFields as $newModelField) {
-                if (strpos($newModelField, 'indexingCustomField_') !== false) {
-                    $newModelHasCustomFields = true;
-                    break;
-                }
-            }
-
-            if (!empty($resource['custom_fields']) && !$newModelHasCustomFields) {
-                $set['custom_fields'] = '{}';
-            }
-
-            if (!empty($set)) {
-                ResModel::update(['set' => $set, 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-            }
+            ResController::resetResourceFields(['oldFieldList' => $resourceModelFields, 'newFieldList' => $newModelFields, 'resId' => $args['resId']]);
         }
 
         if (!empty($resource['filename']) && !empty($body['encodedFile'])) {
@@ -1352,5 +1321,64 @@ class ResController extends ResourceControlController
         $resource['canConvert'] = !empty($allowedFiles[$format]);
 
         return $response->withJson(['information' => $resource]);
+    }
+
+    public static function resetResourceFields(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['oldFieldList', 'newFieldList']);
+        ValidatorModel::arrayType($args, ['oldFieldList', 'newFieldList']);
+        ValidatorModel::intVal($args, ['resId', 'modelId']);
+
+        if (empty($args['resId']) && empty($args['modelId'])) {
+            return false;
+        }
+
+        $resourceModelFields = $args['oldFieldList'];
+        $newModelFields = $args['newFieldList'];
+
+        // Set res_letterbox fields to null
+        $set = [];
+        $setToNull = [
+            'confidentiality'    => 'confidentiality',
+            'admission_date'     => 'arrivalDate',
+            'departure_date'     => 'departureDate',
+            'doc_date'           => 'documentDate',
+            'process_limit_date' => 'processLimitDate',
+            'initiator'          => 'initiator',
+            'destination'        => 'destination',
+            'priority'           => 'priority'
+        ];
+        foreach ($setToNull as $key => $field) {
+            if (in_array($field, $resourceModelFields) && !in_array($field, $newModelFields)) {
+                $set[$key] = null;
+            }
+        }
+
+        // Checking if model has a custom field. If yes, the customs are reset in the update, if not, we set it to an empty JSON object
+        $newModelHasCustomFields = false;
+        foreach ($newModelFields as $newModelField) {
+            if (strpos($newModelField, 'indexingCustomField_') !== false) {
+                $newModelHasCustomFields = true;
+                break;
+            }
+        }
+        if (!empty($resource['custom_fields']) && !$newModelHasCustomFields) {
+            $set['custom_fields'] = '{}';
+        }
+
+        if (!empty($set)) {
+            $where = [];
+            $data = [];
+            if (!empty($args['resId'])) {
+                $where = ['res_id = ?'];
+                $data = [$args['resId']];
+            } elseif (!empty($args['modelId'])) {
+                $where = ['model_id = ?'];
+                $data = [$args['modelId']];
+            }
+            ResModel::update(['set' => $set, 'where' => $where, 'data' => $data]);
+        }
+
+        return true;
     }
 }
