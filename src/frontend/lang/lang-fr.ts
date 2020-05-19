@@ -1704,4 +1704,5 @@ export const LANG_FR = {
     "associatedElements": "élement(s) associé(s)",
     "selectedContact": "contact sélectionné",
     "modificationsProcessed": "Modifications effectuées",
+    'updateIndexingFieldWarning': 'Attention si vous supprimez un champ du modèle, ce champ sera réinitialisé pour <b>TOUS</b> les courriers associés au modèle. Voulez-vous continuer ?'
 };
