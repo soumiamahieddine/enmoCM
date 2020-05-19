@@ -353,9 +353,6 @@ class ResourceControlController
                 return ['errors' => 'Body diffusion has no dest'];
             }
         }
-        if (!$args['isWebServiceUser'] && !empty($body['destination']) && empty($destFound)) {
-            return ['errors' => 'Body diffusion has no dest'];
-        }
 
         return true;
     }
