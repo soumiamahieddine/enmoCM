@@ -139,7 +139,15 @@ class ContactController
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
-        
+
+        $currentUser = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['loginmode']]);
+        if (!empty($body['email']) && $currentUser['loginmode'] == 'restMode') {
+            $contact = ContactModel::get(['select' => ['id'], 'where' => ['email = ?'], 'data' => [$body['email']]]);
+            if (!empty($contact[0]['id'])) {
+                return $response->withJson(['id' => $contact[0]['id']]);
+            }
+        }
+
         if (!empty($body['communicationMeans'])) {
             if (filter_var($body['communicationMeans'], FILTER_VALIDATE_EMAIL)) {
                 $body['communicationMeans'] = ['email' => $body['communicationMeans']];
