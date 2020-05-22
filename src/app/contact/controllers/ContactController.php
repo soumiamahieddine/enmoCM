@@ -851,6 +851,7 @@ class ContactController
 
         // [fieldNameInFront] => field_name_in_db
         $allowedFields = [
+            'civility'           => 'civility',
             'firstname'          => 'firstname',
             'lastname'           => 'lastname',
             'company'            => 'company',
@@ -946,6 +947,8 @@ class ContactController
         $contactIds = array_column($duplicates, 'id');
         $contactsUsed = ContactController::isContactUsed(['ids' => $contactIds]);
 
+
+        $civilities = ContactModel::getCivilities();
         $contacts = [];
         foreach ($duplicates as $key => $contact) {
             unset($duplicates[$key]['count']);
@@ -972,6 +975,7 @@ class ContactController
                 'isUsed'             => $contactsUsed[$contact['id']],
                 'filling'            => $filling,
                 'customFields'       => !empty($contact['custom_fields']) ? json_decode($contact['custom_fields'], true) : null,
+                'civility'           => !empty($contact['civility']) ? $civilities[$contact['civility']]['label'] : null
             ];
         }
         $count = $duplicates[0]['total'];
