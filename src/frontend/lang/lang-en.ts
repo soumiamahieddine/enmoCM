@@ -1704,4 +1704,5 @@ export const LANG_EN = {
     "modificationsProcessed": "Modifications processed",
     'updateIndexingFieldWarning': 'Warning:  if you remove a field from the model, this field will be reset for <b>ALL</b> resources linked to this model. Do you want to continue ?',
     'selectDuplicatedContact': 'Merge with this contact',
+    'noDuplicatesFound': 'No duplicates found',
 };

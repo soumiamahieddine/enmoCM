@@ -1688,4 +1688,5 @@ export const LANG_NL = {
     "modificationsProcessed": "Modifications processed", //_TO_TRANSLATE,
     'updateIndexingFieldWarning': 'Warning:  if you remove a field from the model, this field will be reset for <b>ALL</b> resources linked to this model. Do you want to continue ?', //_TO_TRANSLATE
     'selectDuplicatedContact': 'Merge with this contact', // _TO_TRANSLATE
+    'noDuplicatesFound': 'No duplicates found', // _TO_TRANSLATE
 };
