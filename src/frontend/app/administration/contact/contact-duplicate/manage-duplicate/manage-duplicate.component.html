@@ -11,7 +11,7 @@
     </div>
     <span class="divider-modal"></span>
     <div mat-dialog-actions class="actions">
-        <button mat-raised-button mat-button color="primary" [disabled]="contactSelected===null || loading"
+        <button mat-raised-button mat-button color="primary" [disabled]="contactSelected===null || loading || contactsExcluded.length === data.duplicate.length -1"
             (click)="onSubmit()">{{lang.merge}}</button>
         <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
     </div>
