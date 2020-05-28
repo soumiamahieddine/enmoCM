@@ -10,6 +10,7 @@ import { map, tap, finalize, catchError } from 'rxjs/operators';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { FunctionsService } from '../../../service/functions.service';
 
 declare var $: any;
 
@@ -46,41 +47,74 @@ export class RedirectActionComponent implements OnInit {
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
     @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<RedirectActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialogRef: MatDialogRef<RedirectActionComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private functionsService: FunctionsService
+    ) { }
 
-    ngOnInit(): void {
-        let noEntity = true;
+    async ngOnInit(): Promise<void> {
+
         this.loading = true;
-        this.http.get('../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/getRedirect')
-            .subscribe((data: any) => {
-                this.entities = data['entities'];
-                this.userListRedirect = data.users;
-                this.keepDestForRedirection = data.keepDestForRedirection;
-                this.injectDatasParam.keepDestForRedirection = data.keepDestForRedirection;
 
-                this.entities.forEach(entity => {
-                    if (entity.state.selected) {
-                        this.currentEntity = entity;
-                    }
-                    if (entity.allowed) {
-                        noEntity = false;
-                    }
-                });
+        await this.getEntities();
+        await this.getDefaultEntity();
 
-                if (this.userListRedirect.length === 0 && noEntity) {
-                    this.redirectMode = 'none';
-                    this.loading = false;
-                } else if (this.userListRedirect.length === 0 && !noEntity) {
-                    this.loadEntities();
-                } else if (this.userListRedirect.length > 0 && noEntity) {
-                    this.loadDestUser();
-                } else {
-                    this.loading = false;
-                }
+        if (this.userListRedirect.length === 0 && this.entities.filter((entity: any) => entity.allowed).length === 0) {
+            this.redirectMode = 'none';
+            this.loading = false;
+        } else if (this.userListRedirect.length === 0 && this.entities.filter((entity: any) => entity.allowed).length > 0) {
+            this.loadEntities();
+        } else if (this.userListRedirect.length > 0 && this.entities.filter((entity: any) => entity.allowed).length === 0) {
+            this.loadDestUser();
+        } else {
+            this.loading = false;
+        }
+    }
 
-            }, (err) => {
-                this.notify.handleErrors(err);
-            });
+    getEntities() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/getRedirect`).pipe(
+                tap((data: any) => {
+                    console.log(data);
+                    this.entities = data['entities'];
+                    this.userListRedirect = data.users;
+                    this.keepDestForRedirection = data.keepDestForRedirection;
+                    this.injectDatasParam.keepDestForRedirection = data.keepDestForRedirection;
+
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getDefaultEntity() {
+        return new Promise((resolve, reject) => {
+            if (this.data.resIds.length === 1) {
+                this.http.get(`../rest/resources/${this.data.resIds[0]}/fields/destination?alt=true`).pipe(
+                    tap((data: any) => {
+                        if (!this.functionsService.empty(data.field)) {
+                            this.currentEntity = this.entities.filter((entity: any) => entity.serialId === data.field)[0];
+                        } else {
+                            this.currentEntity = this.entities.filter((entity: any) => entity.state.selected)[0];
+                        }
+                        resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.currentEntity = this.entities.filter((entity: any) => entity.state.selected)[0];
+            }
+        });
     }
 
     loadEntities() {

@@ -55,7 +55,7 @@ export class ContactExportComponent implements OnInit {
                     const regex = /contactCustomField_[.]*/g;
                     data.contactsParameters = data.contactsParameters.filter((field: any) => field.identifier.match(regex) === null).map((field: any) => {
                         return {
-                            ...field,
+                            value : field.identifier,
                             label: this.lang['contactsParameters_' + field.identifier]
                         };
                     });
@@ -68,9 +68,8 @@ export class ContactExportComponent implements OnInit {
                 map((data: any) => {
                     data.customFields = data.customFields.map((field: any) => {
                         return {
-                            ...field,
-                            id: `contactCustomField_${field.id}`,
-                            identifier: `contactCustomField_${field.id}`
+                            value: `contactCustomField_${field.id}`,
+                            label: field.label
                         };
                     });
                     return data.customFields;
@@ -115,10 +114,8 @@ export class ContactExportComponent implements OnInit {
     }
 
     exportData() {
-        console.log(this.exportModel);
-
-        /*this.loadingExport = true;
-        this.http.put('../rest/contacts/exports', this.exportModel, { responseType: 'blob' }).pipe(
+        this.loadingExport = true;
+        this.http.put('../rest/exportContacts', this.exportModel, { responseType: 'blob' }).pipe(
             tap((data: any) => {
                 if (data.type !== 'text/html') {
                     const downloadLink = document.createElement('a');
@@ -140,10 +137,9 @@ export class ContactExportComponent implements OnInit {
                         mm = '0' + mm;
                     }
                     today = dd + '-' + mm + '-' + yyyy;
-                    downloadLink.setAttribute('download', 'export_maarch_' + today + '.' + this.exportModel.format.toLowerCase());
+                    downloadLink.setAttribute('download', 'export_contact_maarch_' + today + '.' + this.exportModel.format.toLowerCase());
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
-                    this.exportModelList[this.exportModel.format.toLowerCase()].data = this.exportModel.data;
                 } else {
                     alert(this.lang.tooMuchDatas);
                 }
@@ -153,7 +149,7 @@ export class ContactExportComponent implements OnInit {
                 this.notify.handleSoftErrors(err);
                 return of(false);
             })
-        ).subscribe();*/
+        ).subscribe();
     }
 
     addData(item: any) {
