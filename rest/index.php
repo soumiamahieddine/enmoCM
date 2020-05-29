@@ -40,7 +40,7 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
             if (!empty($currentRoute)) {
                 $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
                 if (!$r['isRouteAvailable']) {
-                    return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
+                    return $response->withStatus(403)->withJson(['errors' => $r['errors']]);
                 }
             }
         } elseif ($currentMethod.$currentRoute != 'GET/initialize') {
