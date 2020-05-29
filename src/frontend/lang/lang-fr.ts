@@ -1709,4 +1709,5 @@ export const LANG_FR = {
     "noDuplicatesFound": "Aucun doublon trouvé",
     "exludeContact": "Exclure ce contact",
     "contactExcluded": "Contact exclu",
+    "exportContacts": "Exporter les contacts",
 };

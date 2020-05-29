@@ -1707,4 +1707,5 @@ export const LANG_EN = {
     "noDuplicatesFound": "No duplicates found",
     "exludeContact": "Exclude contact",
     "contactExcluded": "Contact excluded",
+    "exportContacts": "Export contacts",
 };
