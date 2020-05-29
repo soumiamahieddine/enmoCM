@@ -1162,7 +1162,6 @@ class ContactController
             $csvHead[] = $field['label'];
         }
 
-
         $file = fopen('php://temp', 'w');
         $delimiter = ($body['delimiter'] == 'TAB' ? "\t" : $body['delimiter']);
 
