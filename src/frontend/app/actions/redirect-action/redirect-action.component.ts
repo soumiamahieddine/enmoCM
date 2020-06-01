@@ -102,7 +102,9 @@ export class RedirectActionComponent implements OnInit {
                         if (!this.functionsService.empty(data.field)) {
                             this.currentEntity = this.entities.filter((entity: any) => entity.serialId === data.field)[0];
                         } else {
-                            this.currentEntity = this.entities.filter((entity: any) => entity.state.selected)[0];
+                            if (this.entities.filter((entity: any) => entity.state.selected).length > 0) {
+                                this.currentEntity = this.entities.filter((entity: any) => entity.state.selected)[0];
+                            }
                         }
                         resolve(true);
                     }),
@@ -159,11 +161,13 @@ export class RedirectActionComponent implements OnInit {
                 // create the instance
                 .jstree();
         }, 0);
-        setTimeout(() => {
-            $('#jstree').jstree('select_node', this.currentEntity);
-            this.selectEntity(this.currentEntity);
 
-        }, 200);
+        if (this.currentEntity.serialId > 0) {
+            setTimeout(() => {
+                $('#jstree').jstree('select_node', this.currentEntity);
+                this.selectEntity(this.currentEntity, true);
+            }, 200);
+        }
     }
 
     loadDestUser() {
@@ -251,9 +255,9 @@ export class RedirectActionComponent implements OnInit {
         }
     }
 
-    selectEntity(entity: any) {
+    selectEntity(entity: any, initLoad: boolean = false) {
         this.currentEntity = entity;
-        this.appDiffusionsList.loadListModel(entity.serialId);
+        this.appDiffusionsList.loadListModel(entity.serialId, initLoad);
     }
 
     onSubmit() {
