@@ -78,7 +78,6 @@ export class RedirectActionComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/getRedirect`).pipe(
                 tap((data: any) => {
-                    console.log(data);
                     this.entities = data['entities'];
                     this.userListRedirect = data.users;
                     this.keepDestForRedirection = data.keepDestForRedirection;
@@ -101,6 +100,15 @@ export class RedirectActionComponent implements OnInit {
                     tap((data: any) => {
                         if (!this.functionsService.empty(data.field)) {
                             this.currentEntity = this.entities.filter((entity: any) => entity.serialId === data.field)[0];
+                            this.entities = this.entities.map((entity: any) => {
+                                return {
+                                    ...entity,
+                                    state : {
+                                        selected : false,
+                                        opened: false
+                                    }
+                                };
+                            });
                         } else {
                             if (this.entities.filter((entity: any) => entity.state.selected).length > 0) {
                                 this.currentEntity = this.entities.filter((entity: any) => entity.state.selected)[0];
