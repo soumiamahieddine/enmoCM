@@ -10,6 +10,7 @@ import { tap, catchError, filter, exhaustMap, map, finalize } from 'rxjs/operato
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { of } from 'rxjs/internal/observable/of';
+import { FunctionsService } from '../../../service/functions.service';
 
 @Component({
     templateUrl: 'custom-fields-administration.component.html',
@@ -71,6 +72,18 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     sampleIncrement: number[] = [1, 2, 3, 4];
 
+    bddMode: boolean = false;
+    availaibleTables: string[] = [
+        'users',
+        'entities',
+    ];
+
+    availaibleColumns: string[] = [
+        'id',
+        'firstname',
+        'lastname',
+    ];
+
 
     dialogRef: MatDialogRef<any>;
 
@@ -80,7 +93,8 @@ export class CustomFieldsAdministrationComponent implements OnInit {
         public dialog: MatDialog,
         private headerService: HeaderService,
         public appService: AppService,
-        private sortPipe: SortPipe
+        private sortPipe: SortPipe,
+        private functionsService: FunctionsService
     ) {
 
     }
@@ -92,12 +106,16 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES
             map((data: any) => {
                 data.customFields.forEach((element: any) => {
-                    element.values = element.values.map((info: any) => {
-                        return {
-                            label: info
-                        };
-                    });
-
+                    if (this.functionsService.empty(element.values.id)) {
+                        element.bddMode = false;
+                        element.values = element.values.map((info: any) => {
+                            return {
+                                label: info
+                            };
+                        });
+                    } else {
+                        element.bddMode = true;
+                    }
                 });
                 return data;
             }),
@@ -203,7 +221,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     }
 
     isModified(customField: any, indexCustomField: number) {
-        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField]) || customField.label === '') {
+        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField]) || customField.label === '' || this.bddMode) {
             return true;
         } else {
             return false;
