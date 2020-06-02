@@ -370,7 +370,11 @@ class ResourceControlController
                 }
                 if (!empty($body['customFields'][$customFieldId])) {
                     $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type', 'values']]);
-                    $possibleValues = empty($customField['values']) ? [] : json_decode($customField['values']);
+                    $possibleValues = empty($customField['values']) ? [] : json_decode($customField['values'], true);
+                    if (!empty($possibleValues['table'])) {
+                        $possibleValues = CustomFieldModel::getValuesSQL($possibleValues);
+                        $possibleValues = array_keys($possibleValues);
+                    }
                     if (($customField['type'] == 'select' || $customField['type'] == 'radio') && !in_array($body['customFields'][$customFieldId], $possibleValues)) {
                         return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
                     } elseif ($customField['type'] == 'checkbox') {
