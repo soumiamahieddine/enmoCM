@@ -1170,10 +1170,14 @@ class ContactController
         fputcsv($file, $csvHead, $delimiter);
 
         $contacts = ContactModel::get(['select' => $fields]);
+        $civilities = ContactModel::getCivilities();
 
         foreach ($contacts as $contact) {
             if (!empty($contact['creator_label'])) {
                 $contact['creator_label'] = UserModel::getLabelledUserById(['id' => $contact['creator_label']]);
+            }
+            if (!empty($contact['civility'])) {
+                $contact['civility'] = $civilities[$contact['civility']]['label'];
             }
             fputcsv($file, $contact, $delimiter);
         }
