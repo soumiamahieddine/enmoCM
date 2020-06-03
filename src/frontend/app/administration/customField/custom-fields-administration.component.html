@@ -82,7 +82,7 @@
                                             </mat-expansion-panel>
                                         </div>
                                         <div>
-                                            <button *ngIf="!custom.bddMode" mat-mini-fab color="primary" (click)="custom.bddMode=!custom.bddMode">
+                                            <button *ngIf="!custom.bddMode" mat-mini-fab color="primary" (click)="switchBddMode(custom)">
                                                 <mat-icon class="fas fa-database" style="height: auto;"></mat-icon>
                                             </button>
                                         </div>
@@ -99,7 +99,7 @@
                                                     <div style="display: flex;">
                                                         <mat-form-field>
                                                             <mat-label>Table cible</mat-label>
-                                                            <mat-select>
+                                                            <mat-select [(ngModel)]="custom.values.table">
                                                                 <mat-option *ngFor="let table of availaibleTables"
                                                                     [value]="table">
                                                                     {{lang[table]}}
@@ -108,7 +108,7 @@
                                                         </mat-form-field>
                                                         <mat-form-field>
                                                             <mat-label>Label cible</mat-label>
-                                                            <mat-select multiple>
+                                                            <mat-select [(ngModel)]="custom.values.label">
                                                                 <mat-option *ngFor="let column of availaibleColumns"
                                                                     [value]="column">
                                                                     {{column}}
@@ -117,7 +117,7 @@
                                                         </mat-form-field>
                                                         <mat-form-field>
                                                             <mat-label>Identifiant cible</mat-label>
-                                                            <mat-select>
+                                                            <mat-select [(ngModel)]="custom.values.key">
                                                                 <mat-option *ngFor="let column of availaibleColumns"
                                                                     [value]="column">
                                                                     {{column}}
@@ -127,14 +127,14 @@
                                                     </div>
                                                     <mat-form-field>
                                                         <mat-label>Clause where</mat-label>
-                                                        <textarea matInput
+                                                        <textarea matInput [(ngModel)]="custom.values.clause"
                                                             placeholder="Ex. status='OK'"></textarea>
                                                     </mat-form-field>
                                                 </div>
                                             </mat-expansion-panel>
                                         </div>
                                         <div>
-                                            <button mat-mini-fab color="primary" (click)="custom.bddMode=!custom.bddMode">
+                                            <button mat-mini-fab color="primary" (click)="switchBddMode(custom)">
                                                 <mat-icon class="fas fa-list-ol" style="height: auto;"></mat-icon>
                                             </button>
                                         </div>

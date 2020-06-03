@@ -108,7 +108,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 data.customFields.forEach((element: any) => {
                     if (this.functionsService.empty(element.values.id)) {
                         element.bddMode = false;
-                        element.values = element.values.map((info: any) => {
+                        element.values = Object.values(element.values).map((info: any) => {
                             return {
                                 label: info
                             };
@@ -191,17 +191,19 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     updateCustomField(customField: any, indexCustom: number) {
 
-        customField.values = customField.values.filter((x: any, i: any, a: any) => a.map((info: any) => info.label).indexOf(x.label) === i);
-
-        // TO FIX DATA BINDING SIMPLE ARRAY VALUES
+        console.log(customField);
         const customFieldToUpdate = { ...customField };
 
-        customFieldToUpdate.values = customField.values.map((data: any) => data.label);
+        if (!customField.bddMode) {
+            customField.values = customField.values.filter((x: any, i: any, a: any) => a.map((info: any) => info.label).indexOf(x.label) === i);
 
-        const alreadyExists = this.customFields.filter(customFieldItem => customFieldItem.label === customFieldToUpdate.label);
-        if (alreadyExists.length > 1) {
-            this.notify.handleErrors(this.lang.customFieldAlreadyExists);
-            return of(false);
+            // TO FIX DATA BINDING SIMPLE ARRAY VALUES
+            customFieldToUpdate.values = customField.values.map((data: any) => data.label);
+            const alreadyExists = this.customFields.filter(customFieldItem => customFieldItem.label === customFieldToUpdate.label);
+            if (alreadyExists.length > 1) {
+                this.notify.handleErrors(this.lang.customFieldAlreadyExists);
+                return of(false);
+            }
         }
 
         this.http.put('../rest/customFields/' + customField.id, customFieldToUpdate).pipe(
@@ -226,5 +228,18 @@ export class CustomFieldsAdministrationComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    switchBddMode(custom: any) {
+        custom.bddMode = !custom.bddMode;
+        if (custom.bddMode) {
+            custom.values = {
+                key: '',
+                label: '',
+                table: '',
+                clause: ''
+            };
+        }
+
     }
 }
