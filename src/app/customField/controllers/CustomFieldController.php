@@ -32,17 +32,21 @@ class CustomFieldController
 {
     public function get(Request $request, Response $response)
     {
+        $queryParams = $request->getQueryParams();
+
         $customFields = CustomFieldModel::get(['orderBy' => ['label']]);
 
         foreach ($customFields as $key => $customField) {
             $customFields[$key]['values'] = json_decode($customField['values'], true);
-            if (!empty($customFields[$key]['values']['table'])) {
-                $customFields[$key]['values'] = CustomFieldModel::getValuesSQL($customFields[$key]['values']);
-            } elseif (!empty($customFields[$key]['values'])) {
-                $values = $customFields[$key]['values'];
-                $customFields[$key]['values'] = [];
-                foreach ($values as $value) {
-                    $customFields[$key]['values'][$value] = $value;
+            if (empty($queryParams['admin']) || !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
+                if (!empty($customFields[$key]['values']['table'])) {
+                    $customFields[$key]['values'] = CustomFieldModel::getValuesSQL($customFields[$key]['values']);
+                } elseif (!empty($customFields[$key]['values'])) {
+                    $values = $customFields[$key]['values'];
+                    $customFields[$key]['values'] = [];
+                    foreach ($values as $value) {
+                        $customFields[$key]['values'][$value] = $value;
+                    }
                 }
             }
         }
@@ -222,6 +226,17 @@ class CustomFieldController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    public function getWhiteList(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $allowedTables = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/customFieldsWhiteList.json']);
+
+        return $response->withJson(['allowedTables' => $allowedTables]);
     }
 
     public static function controlSQLMode(array $args)
