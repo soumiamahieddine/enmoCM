@@ -242,15 +242,10 @@ export class TagAdministrationComponent implements OnInit {
             }
         });
 
-        console.log(this.tags);
-        
-
         setTimeout(() => {
             $('#jstree')
                 .on('select_node.jstree', (e: any, item: any) => {
-                    console.log(item.node.id);
                     this.tag.parentId.setValue(parseInt(item.node.id));
-
                 })
                 .jstree({
                     'checkbox': {

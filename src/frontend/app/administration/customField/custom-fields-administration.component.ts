@@ -73,10 +73,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     sampleIncrement: number[] = [1, 2, 3, 4];
 
     bddMode: boolean = false;
-    availaibleTables: string[] = [
-        'users',
-        'entities',
-    ];
+    availaibleTables: string[] = [];
 
     availaibleColumns: string[] = [
         'id',
@@ -102,11 +99,13 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.customFieldsAdmin);
 
-        this.http.get('../rest/customFields').pipe(
+        this.getTables();
+
+        this.http.get('../rest/customFields?admin=true').pipe(
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES
             map((data: any) => {
                 data.customFields.forEach((element: any) => {
-                    if (this.functionsService.empty(element.values.id)) {
+                    if (this.functionsService.empty(element.values.key)) {
                         element.bddMode = false;
                         element.values = Object.values(element.values).map((info: any) => {
                             return {
@@ -240,6 +239,17 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 clause: ''
             };
         }
+    }
 
+    getTables() {
+        this.http.get('../rest/customFieldsWhiteList').pipe(
+            tap((data: any) => {
+                this.availaibleTables = data.allowedTables;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }

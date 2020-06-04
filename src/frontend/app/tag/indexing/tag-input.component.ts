@@ -11,6 +11,8 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
+import { FunctionsService } from '../../../service/functions.service';
+import { ThesaurusModalComponent } from './thesaurus/thesaurus-modal.component';
 
 @Component({
     selector: 'app-tag-input',
@@ -40,6 +42,8 @@ export class TagInputComponent implements OnInit {
     dialogRef: MatDialogRef<any>;
     newIds: number[] = [];
 
+    tags: any[] = [];
+
 
     /**
      * FormControl used when autocomplete is used in form and must be catched in a form control.
@@ -55,7 +59,8 @@ export class TagInputComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         private latinisePipe: LatinisePipe,
-        private privilegeService: PrivilegeService
+        private privilegeService: PrivilegeService,
+        private functionsService: FunctionsService
     ) {
 
     }
@@ -177,6 +182,21 @@ export class TagInputComponent implements OnInit {
                 }
                 this.setFormValue(newElem);
                 this.myControl.setValue('');
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    openThesaurus() {
+        const dialogRef = this.dialog.open(ThesaurusModalComponent, {
+            panelClass: 'maarch-modal',
+            width: '600px',
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
