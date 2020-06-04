@@ -69,18 +69,21 @@ if (!file_exists($GLOBALS['configFile'])) {
     exit(102);
 }
 // Loading config file
-print("Load xml config file:" . $GLOBALS['configFile'] . "\n");
-$xmlconfig = simplexml_load_file($GLOBALS['configFile']);
+print("Load json config file:" . $GLOBALS['configFile'] . "\n");
+$file = file_get_contents($GLOBALS['configFile']);
+$file = json_decode($file, true);
 
-if ($xmlconfig == false) {
+
+if (empty($file)) {
     print("Error on loading config file:" . $GLOBALS['configFile'] . "\n");
     exit(103);
 }
 
 // Load config
-$config          = $xmlconfig->CONFIG;
-$maarchDirectory = (string)$config->maarchDirectory;
-$customID        = (string)$config->customID;
+$config = $file['config'];
+$maarchDirectory        = $config['maarchDirectory'];
+$customID               = $config['customID'];
+
 $customIDPath    = '';
 
 if ($customID <> '') {
@@ -88,8 +91,7 @@ if ($customID <> '') {
 }
 
 chdir($maarchDirectory);
-
-$maarchUrl = (string)$config->maarchUrl;
+$maarchUrl         = $config['maarchUrl'];
 
 $GLOBALS['customId']  = $customID;
 $GLOBALS['batchDirectory'] = $maarchDirectory . 'bin'

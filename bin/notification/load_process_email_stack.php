@@ -69,17 +69,19 @@ if (!file_exists($GLOBALS['configFile'])) {
 }
 // Loading config file
 print("Load xml config file:" . $GLOBALS['configFile'] . "\n");
-$xmlconfig = simplexml_load_file($GLOBALS['configFile']);
+$file = file_get_contents($GLOBALS['configFile']);
+$file = json_decode($file, true);
 
-if ($xmlconfig == false) {
+if (empty($file)) {
     print("Error on loading config file:" . $GLOBALS['configFile'] . "\n");
     exit(103);
 }
 
 // Load config
-$config                     = $xmlconfig->CONFIG;
-$GLOBALS['maarchDirectory'] = (string)$config->maarchDirectory;
-$customID                   = (string)$config->customID;
+$config = $file['config'];
+$GLOBALS['maarchDirectory']        = $config['maarchDirectory'];
+$customID               = $config['customID'];
+$maarchUrl         = $config['maarchUrl'];
 $customIDPath               = '';
 
 if ($customID <> '') {
