@@ -1174,9 +1174,11 @@ class ContactController
 
         foreach ($contacts as $contact) {
             foreach ($contact as $field => $value) {
-                $decoded = json_decode($value, true);
-                if (is_array($decoded)) {
-                    $contact[$field] = implode("\n", $decoded);
+                if (strpos($field, 'contactCustomField_') !== false) {
+                    $decoded = json_decode($value, true);
+                    if (is_array($decoded)) {
+                        $contact[$field] = implode("\n", $decoded);
+                    }
                 }
             }
             if (!empty($contact['creator_label'])) {
