@@ -1708,4 +1708,8 @@ export const LANG_EN = {
     "exludeContact": "Exclude contact",
     "contactExcluded": "Contact excluded",
     "exportContacts": "Export contacts",
+    "advancedMode": "Advanced mode",
+    "defaultMode": "Default mode",
+    "linkedTags": "Linked tags",
+    "selectParentTag": "Select a parent tag",
 };

@@ -32,7 +32,7 @@ export class TagAdministrationComponent implements OnInit {
     tag: any = {
         label: new FormControl({ value: '', disabled: false }, [Validators.required]),
         description: new FormControl({ value: '', disabled: false }),
-        parent_id: new FormControl({ value: '', disabled: false }),
+        parentId: new FormControl({ value: '', disabled: false }),
         links: new FormControl({ value: [], disabled: false }),
         usage: new FormControl({ value: '', disabled: false }),
         canMerge: new FormControl({ value: true, disabled: false }),
@@ -59,8 +59,10 @@ export class TagAdministrationComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.loading = true;
+
+        await this.getTags();
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] === 'undefined') {
@@ -72,14 +74,13 @@ export class TagAdministrationComponent implements OnInit {
                 this.id = params['id'];
                 this.http.get(`../rest/tags/${this.id}`).pipe(
                     tap((data: any) => {
-                        this.getTags();
                         Object.keys(this.tag).forEach(element => {
                             if (!this.functions.empty(data[element])) {
                                 this.tag[element].setValue(data[element]);
                             }
                         });
 
-                        if (!this.functions.empty(this.tag.parent_id.value)) {
+                        if (!this.functions.empty(this.tag.parentId.value)) {
                             this.toggleAdvancedTag();
                         }
 
@@ -126,6 +127,7 @@ export class TagAdministrationComponent implements OnInit {
     }
 
     updateTag() {
+
         this.http.put(`../rest/tags/${this.id}`, this.formatTag()).pipe(
             tap(() => {
                 this.notify.success(this.lang.tagUpdated);
@@ -139,22 +141,26 @@ export class TagAdministrationComponent implements OnInit {
     }
 
     getTags() {
-        this.http.get('../rest/tags').pipe(
-            tap((data: any) => {
-                this.tags = data.tags.filter((tag: any) => tag.id !== this.id).map((tag: any) => {
-                    return {
-                        id: tag.id,
-                        label: tag.label,
-                        countResources: tag.countResources
-                    };
-                });
-            }),
-            finalize(() => this.loadingTags = false),
-            catchError((err: any) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        return new Promise((resolve) => {
+            this.http.get('../rest/tags').pipe(
+                tap((data: any) => {
+                    this.tags = data.tags.filter((tag: any) => tag.id !== this.id).map((tag: any) => {
+                        return {
+                            id: tag.id,
+                            label: tag.label,
+                            parentId : tag.parentId,
+                            countResources: tag.countResources
+                        };
+                    });
+                    resolve(true);
+                }),
+                finalize(() => this.loadingTags = false),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     mergeTag(tagId: any) {
@@ -178,7 +184,7 @@ export class TagAdministrationComponent implements OnInit {
         ).subscribe();
     }
 
-    toggleAdvancedTag() {
+    async toggleAdvancedTag() {
         this.advancedMode = !this.advancedMode;
         this.getTagsTree();
         this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -187,11 +193,15 @@ export class TagAdministrationComponent implements OnInit {
     }
 
     private _filter(value: string): string[] {
-        let filterValue =  value;
+        let filterValue = value;
         if (typeof value === 'string') {
             filterValue = value.toLowerCase();
         }
-        return this.tags.filter(tag => tag.label.toLowerCase().indexOf(filterValue) === 0);
+        return this.tags.filter(tag => tag.label.toLowerCase().indexOf(filterValue) > -1);
+    }
+
+    isSelected(tag: any) {
+        return this.tag.links.value.filter((tagItem: any) => tagItem == tag.id).length > 0;
     }
 
     remove(tag: string): void {
@@ -212,67 +222,61 @@ export class TagAdministrationComponent implements OnInit {
     }
 
     getTagsTree() {
-        this.http.get('../rest/tags').pipe(
-            map((data: any) => {
-                data.tags = data.tags.filter((tag: any) => tag.id != this.id).map((tag: any) => {
-                    if (this.tag.parent_id.value == tag.id) {
-                        return {
-                            id: tag.id,
-                            text: tag.label,
-                            parent: this.functions.empty(tag.parent_id) ? '#' : tag.parent_id,
-                            state: {
-                                opened: true,
-                                selected: true
-                            }
-                        };
-                    } else {
-                        return {
-                            id: tag.id,
-                            text: tag.label,
-                            parent: this.functions.empty(tag.parent_id) ? '#' : tag.parent_id,
-                        };
+        const tagsTree = this.tags.filter((tag: any) => tag.id != this.id).map((tag: any) => {
+            if (this.tag.parentId.value == tag.id) {
+                return {
+                    id: tag.id,
+                    text: tag.label,
+                    parent: this.functions.empty(tag.parentId) ? '#' : tag.parentId,
+                    state: {
+                        opened: true,
+                        selected: true
                     }
+                };
+            } else {
+                return {
+                    id: tag.id,
+                    text: tag.label,
+                    parent: this.functions.empty(tag.parentId) ? '#' : tag.parentId,
+                };
+            }
+        });
+
+        console.log(this.tags);
+        
+
+        setTimeout(() => {
+            $('#jstree')
+                .on('select_node.jstree', (e: any, item: any) => {
+                    console.log(item.node.id);
+                    this.tag.parentId.setValue(parseInt(item.node.id));
+
+                })
+                .jstree({
+                    'checkbox': {
+                        'deselect_all': true,
+                        'three_state': false // no cascade selection
+                    },
+                    'core': {
+                        force_text: true,
+                        'themes': {
+                            'name': 'proton',
+                            'responsive': true
+                        },
+                        'multiple': false,
+                        'data': tagsTree
+                    },
+                    'plugins': ['checkbox', 'search', 'sort']
                 });
-                return data.tags;
-            }),
-            tap((tags: any) => {
-                console.log(tags);
-
-                setTimeout(() => {
-                    $('#jstree')
-                        .on('select_node.jstree', (e: any, item: any) => {
-                            console.log(item.node.id);
-                            this.tag.parent_id.setValue(parseInt(item.node.id));
-
-                        })
-                        .jstree({
-                            'checkbox': {
-                                'deselect_all': true,
-                                'three_state': false // no cascade selection
-                            },
-                            'core': {
-                                force_text: true,
-                                'themes': {
-                                    'name': 'proton',
-                                    'responsive': true
-                                },
-                                'multiple': false,
-                                'data': tags
-                            },
-                            'plugins': ['checkbox', 'search', 'sort']
-                        });
-                    let to: any = false;
-                    $('#jstree_search').keyup(function () {
-                        if (to) { clearTimeout(to); }
-                        to = setTimeout(function () {
-                            const v: any = $('#jstree_search').val();
-                            $('#jstree').jstree(true).search(v);
-                        }, 250);
-                    });
-                }, 0);
-            }),
-            finalize(() => this.loading = false)
-        ).subscribe();
+            let to: any = false;
+            $('#jstree_search').keyup(function () {
+                if (to) { clearTimeout(to); }
+                to = setTimeout(function () {
+                    const v: any = $('#jstree_search').val();
+                    $('#jstree').jstree(true).search(v);
+                }, 250);
+            });
+        }, 0);
     }
 
     getTagLabel(id: any) {

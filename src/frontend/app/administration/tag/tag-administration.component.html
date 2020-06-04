@@ -30,15 +30,15 @@
                         <mat-form-field *ngIf="advancedMode">
                             <mat-chip-list #chipList>
                                 <mat-chip *ngFor="let linkedTag of tag.links.value" [selectable]="selectable"
-                                    (removed)="remove(linkedTag)">
+                                    (click)="remove(linkedTag)" style="cursor: pointer;">
                                     {{getTagLabel(linkedTag)}}
                                     <mat-icon matChipRemove class="fa fa-times-circle"></mat-icon>
                                 </mat-chip>
-                                <input placeholder="mots-clés associés" #linkedTagInput [formControl]="myControl"
+                                <input [placeholder]="lang.linkedTags" #linkedTagInput [formControl]="myControl"
                                     [matAutocomplete]="auto" [matChipInputFor]="chipList">
                             </mat-chip-list>
                             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                                <mat-option *ngFor="let tag of filteredOptions | async" [value]="tag">
+                                <mat-option *ngFor="let tag of filteredOptions | async" [value]="tag"  [disabled]="isSelected(tag)">
                                     {{tag.label}}
                                 </mat-option>
                             </mat-autocomplete>
@@ -55,8 +55,9 @@
                         <div class="text-center">
                             <button mat-raised-button [disabled]="!tagFormGroup.valid"
                                 color="primary">{{lang.validate}}</button>
-                            <button type="button" mat-raised-button color="default" (click)="toggleAdvancedTag()">Mode
-                                avancée...</button>
+                            <button type="button" mat-raised-button color="default" (click)="toggleAdvancedTag()">
+                                {{advancedMode ? lang.defaultMode : lang.advancedMode}}
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -64,13 +65,13 @@
         </div>
     </mat-sidenav-content>
     <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" position='end' [opened]="advancedMode" style="overflow-x:hidden;max-width:500px;">
+        fixedTopGap="56" position='end' [opened]="advancedMode" style="overflow-x:hidden;width:450px;">
         <mat-list>
-            <h3 mat-subheader>Imbriquer le mot-clé dans :</h3>
+            <h3 mat-subheader>{{lang.selectParentTag}} :</h3>
             <div style="padding:10px;">
                 <mat-form-field>
                     <input matInput id="jstree_search" name="jstree_search" type="text"
-                        placeholder="{{lang.searchEntities}}">
+                        placeholder="{{lang.searchTag}}">
                 </mat-form-field>
                 <div id="jstree"></div>
             </div>

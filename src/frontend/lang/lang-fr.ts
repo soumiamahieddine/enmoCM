@@ -1710,4 +1710,8 @@ export const LANG_FR = {
     "exludeContact": "Exclure ce contact",
     "contactExcluded": "Contact exclu",
     "exportContacts": "Exporter les contacts",
+    "advancedMode": "Mode avancé",
+    "defaultMode": "Mode standard",
+    "linkedTags": "Mots-clés asscociés",
+    "selectParentTag": "Imbriquer le mot-clé dans"
 };
