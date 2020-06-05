@@ -7,7 +7,6 @@ import { catchError } from 'rxjs/internal/operators/catchError';
 import { NotificationService } from '../../../notification.service';
 import { of } from 'rxjs/internal/observable/of';
 import { FunctionsService } from '../../../../service/functions.service';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
     templateUrl: 'thesaurus-modal.component.html',
@@ -61,8 +60,6 @@ export class ThesaurusModalComponent implements OnInit {
         this.http.get(`../rest/tags/${id}`).pipe(
             tap((data: any) => {
                 this.tag = data;
-                console.log(this.tag);
-                
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -79,6 +76,11 @@ export class ThesaurusModalComponent implements OnInit {
                 id: tag.id,
                 text: tag.label,
                 parent: this.functionsService.empty(tag.parentId) ? '#' : tag.parentId,
+                state: {
+                    opened: this.data.id == tag.id,
+                    selected: this.data.id == tag.id,
+                    disabled: !this.functionsService.empty(this.data.id)
+                }
             };
         });
 
@@ -105,9 +107,24 @@ export class ThesaurusModalComponent implements OnInit {
                     'plugins': ['checkbox', 'search', 'sort']
                 });
         }, 0);
+
+        if (!this.functionsService.empty(this.data.id)) {
+            this.getTag(this.data.id);
+        }
+    }
+
+    selectTag(id: any) {
+        if (this.functionsService.empty(this.data.id)) {
+            $('#jstree').jstree('deselect_all');
+            $('#jstree').jstree('select_node', id);
+        }
     }
 
     getTagLabel(id: any) {
         return this.tags.filter((tag: any) => tag.id == id)[0].label;
+    }
+
+    onSubmit() {
+        this.dialogRef.close(this.tag);
     }
 }

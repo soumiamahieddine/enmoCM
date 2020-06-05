@@ -1696,4 +1696,5 @@ export const LANG_NL = {
     "defaultMode": "Default mode", // _TO_TRANSLATE
     "linkedTags": "Linked tags", // _TO_TRANSLATE
     "selectParentTag": "Select a parent tag", // _TO_TRANSLATE
+    "openThesaurus": "Open the thesaurus", // _TO_TRANSLATE
 };

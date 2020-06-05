@@ -1713,5 +1713,6 @@ export const LANG_FR = {
     "advancedMode": "Mode avancé",
     "defaultMode": "Mode standard",
     "linkedTags": "Mots-clés asscociés",
-    "selectParentTag": "Imbriquer le mot-clé dans"
+    "selectParentTag": "Imbriquer le mot-clé dans",
+    "openThesaurus": "Ouvrir le thesaurus"
 };

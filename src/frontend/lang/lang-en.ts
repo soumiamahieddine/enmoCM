@@ -1712,4 +1712,5 @@ export const LANG_EN = {
     "defaultMode": "Default mode",
     "linkedTags": "Linked tags",
     "selectParentTag": "Select a parent tag",
+    "openThesaurus": "Open the thesaurus"
 };

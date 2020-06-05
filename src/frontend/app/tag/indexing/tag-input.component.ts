@@ -8,7 +8,7 @@ import { AppService } from '../../../service/app.service';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError } from 'rxjs/operators';
+import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { FunctionsService } from '../../../service/functions.service';
@@ -190,13 +190,27 @@ export class TagInputComponent implements OnInit {
         ).subscribe();
     }
 
-    openThesaurus() {
+    openThesaurus(tagId: number = null) {
+        
         const dialogRef = this.dialog.open(ThesaurusModalComponent, {
             panelClass: 'maarch-modal',
             width: '600px',
+            data: {
+                id : tagId
+            }
         });
         dialogRef.afterClosed().pipe(
-            tap((data: any) => {
+            filter((data: any) => !this.functionsService.empty(data)),
+            map((data: any) => {
+                return {
+                    id : data.id,
+                    idToDisplay : data.label
+                };
+            }),
+            tap((tagItem: any) => {
+                console.log(tagItem);
+
+                this.setFormValue(tagItem);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
