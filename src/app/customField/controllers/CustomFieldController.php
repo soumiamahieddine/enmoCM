@@ -137,6 +137,10 @@ class CustomFieldController
             if (!empty($control['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
             }
+        } else {
+            if (count(array_unique($body['values'])) < count($body['values'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Some values have the same name']);
+            }
         }
 
         $values = json_decode($field['values'], true);
