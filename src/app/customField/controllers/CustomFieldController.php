@@ -45,7 +45,7 @@ class CustomFieldController
                     $values = $customFields[$key]['values'];
                     $customFields[$key]['values'] = [];
                     foreach ($values as $value) {
-                        $customFields[$key]['values'][$value] = $value;
+                        $customFields[$key]['values'][] = ['key' => $value, 'label' => $value];
                     }
                 }
             }

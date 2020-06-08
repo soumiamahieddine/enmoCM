@@ -110,13 +110,17 @@ class CustomFieldModel
         ValidatorModel::notEmpty($args, ['key', 'label', 'table', 'clause']);
         ValidatorModel::stringType($args, ['key', 'label', 'table', 'clause']);
 
-        $values = DatabaseModel::select([
+        $rawValues = DatabaseModel::select([
             'select'    => [$args['key'], $args['label']],
             'table'     => [$args['table']],
             'where'     => [$args['clause']],
         ]);
 
-        $values = array_column($values, $args['label'], $args['key']);
+        $values = [];
+        foreach ($rawValues as $rawValue) {
+            $values[] = ['key' => $rawValue[$args['key']], 'label' => $rawValue[$args['label']]];
+        }
+
         return $values;
     }
 }
