@@ -1714,5 +1714,6 @@ export const LANG_FR = {
     "defaultMode": "Mode standard",
     "linkedTags": "Mots-clés asscociés",
     "selectParentTag": "Imbriquer le mot-clé dans",
-    "openThesaurus": "Ouvrir le thesaurus"
+    "openThesaurus": "Ouvrir le thesaurus",
+    "bddModeCustomFieldMsg": "Ce champ utilise des valeurs de base de données (voir la configuration du champ dans l'administration des champs personnalisés)"
 };

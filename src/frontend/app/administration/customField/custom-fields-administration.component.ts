@@ -31,12 +31,6 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     customFieldsTypes: any[] = [
         {
-            icon: 'fas fa-magic',
-            route: '/administration/contacts/duplicates',
-            label: this.lang.duplicatesContactsAdmin,
-            current: false
-        },
-        {
             label: this.lang.stringInput,
             type: 'string'
         },
