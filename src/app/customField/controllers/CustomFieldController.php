@@ -38,6 +38,7 @@ class CustomFieldController
 
         foreach ($customFields as $key => $customField) {
             $customFields[$key]['values'] = json_decode($customField['values'], true);
+            $customFields[$key]['SQLMode'] = !empty($customFields[$key]['values']['table']);
             if (empty($queryParams['admin']) || !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
                 if (!empty($customFields[$key]['values']['table'])) {
                     $customFields[$key]['values'] = CustomFieldModel::getValuesSQL($customFields[$key]['values']);
