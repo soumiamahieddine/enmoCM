@@ -53,7 +53,7 @@ foreach (array_keys($options) as $key) {
 print($txt . "\n");
 $GLOBALS['configFile'] = $options['config'];
 
-print("Load xml config file:" . $GLOBALS['configFile'] . "\n");
+print("Load json config file:" . $GLOBALS['configFile'] . "\n");
 // Tests existence of config file
 if (!file_exists($GLOBALS['configFile'])) {
     print(
