@@ -1712,8 +1712,8 @@ export const LANG_FR = {
     "exportContacts": "Exporter les contacts",
     "advancedMode": "Mode avancé",
     "defaultMode": "Mode standard",
-    "linkedTags": "Mots-clés asscociés",
+    "linkedTags": "Mots-clés associés",
     "selectParentTag": "Imbriquer le mot-clé dans",
-    "openThesaurus": "Ouvrir le thesaurus",
+    "openThesaurus": "Ouvrir le thésaurus",
     "bddModeCustomFieldMsg": "Ce champ utilise des valeurs de base de données (voir la configuration du champ dans l'administration des champs personnalisés)"
 };

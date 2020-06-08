@@ -45,6 +45,8 @@ export class TagAdministrationComponent implements OnInit {
 
     tagFormGroup = new FormGroup(this.tag);
 
+    currTagChildren: any = [];
+
     @ViewChild('linkedTagInput') linkedTagInput: ElementRef<HTMLInputElement>;
 
     constructor(
@@ -148,7 +150,7 @@ export class TagAdministrationComponent implements OnInit {
                         return {
                             id: tag.id,
                             label: tag.label,
-                            parentId : tag.parentId,
+                            parentId: tag.parentId,
                             countResources: tag.countResources
                         };
                     });
@@ -222,30 +224,29 @@ export class TagAdministrationComponent implements OnInit {
     }
 
     getTagsTree() {
-        const tagsTree = this.tags.filter((tag: any) => tag.id != this.id).map((tag: any) => {
-            if (this.tag.parentId.value == tag.id) {
-                return {
-                    id: tag.id,
-                    text: tag.label,
-                    parent: this.functions.empty(tag.parentId) ? '#' : tag.parentId,
-                    state: {
-                        opened: true,
-                        selected: true
-                    }
-                };
-            } else {
-                return {
-                    id: tag.id,
-                    text: tag.label,
-                    parent: this.functions.empty(tag.parentId) ? '#' : tag.parentId,
-                };
-            }
+        this.getChildrens(this.id);
+
+        const tagsTree = this.tags.map((tag: any) => {
+            return {
+                id: tag.id,
+                text: tag.label,
+                parent: this.functions.empty(tag.parentId) ? '#' : tag.parentId,
+                state: {
+                    opened: this.tag.parentId.value == tag.id,
+                    selected: this.tag.parentId.value == tag.id,
+                    disabled : this.currTagChildren.indexOf(tag.id.toString()) > -1
+                }
+            };
+
         });
 
         setTimeout(() => {
             $('#jstree')
                 .on('select_node.jstree', (e: any, item: any) => {
                     this.tag.parentId.setValue(parseInt(item.node.id));
+                })
+                .on('deselect_node.jstree', (e: any, item: any) => {
+                    this.tag.parentId.setValue(null);
                 })
                 .jstree({
                     'checkbox': {
@@ -272,6 +273,13 @@ export class TagAdministrationComponent implements OnInit {
                 }, 250);
             });
         }, 0);
+    }
+
+    getChildrens(id: any) {
+        this.currTagChildren.push(id.toString());
+        this.tags.filter((tag: any) => tag.parentId == id).forEach(element => {
+            this.getChildrens(element.id);
+        });
     }
 
     getTagLabel(id: any) {

@@ -44,7 +44,7 @@
                             </mat-autocomplete>
                         </mat-form-field>
 
-                        <div *ngIf="!creationMode && !tag.canMerge.value" class="alert-message alert-message-danger">
+                        <div *ngIf="!creationMode && !tag.canMerge.value" class="alert-message alert-message-danger" style="min-width: 100%;">
                             {{this.lang.cannotMergeTags}}
                         </div>
                         <plugin-select-search *ngIf="!loadingTags && tag.canMerge.value"
