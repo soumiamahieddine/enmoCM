@@ -26,7 +26,7 @@ export class ThesaurusModalComponent implements OnInit {
         private notify: NotificationService,
         public dialogRef: MatDialogRef<ThesaurusModalComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        private functionsService: FunctionsService
+        public functionsService: FunctionsService
     ) { }
 
     ngOnInit(): void {
