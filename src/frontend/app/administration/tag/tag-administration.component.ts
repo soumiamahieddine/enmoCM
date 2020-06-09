@@ -224,7 +224,9 @@ export class TagAdministrationComponent implements OnInit {
     }
 
     getTagsTree() {
-        this.getChildrens(this.id);
+        if (!this.functions.empty(this.id)) {
+            this.getChildrens(this.id);
+        }
 
         const tagsTree = this.tags.map((tag: any) => {
             return {
