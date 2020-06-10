@@ -329,7 +329,7 @@ class DatabaseModel
         ValidatorModel::notEmpty($args, ['table']);
         ValidatorModel::stringType($args, ['table']);
 
-        $query = "SELECT column_name FROM information_schema.columns WHERE table_name = ?";
+        $query = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = ?";
 
         $db = new DatabasePDO();
         $stmt = $db->query($query, [$args['table']]);

@@ -252,7 +252,7 @@ class CustomFieldController
             $columns = CoreConfigModel::getColumns(['table' => $table]);
             $columns = array_column($columns, 'column_name');
             foreach ($columns as $key => $column) {
-                if (strpos($column, 'password') !== false || strpos($column, 'token') !== false) {
+                if (stripos($column, 'password') !== false || stripos($column, 'token') !== false) {
                     unset($columns[$key]);
                 }
             }
@@ -281,12 +281,25 @@ class CustomFieldController
         } elseif (!Validator::stringType()->notEmpty()->validate($body['values']['clause'])) {
             return ['errors' => 'Body values[clause] is empty or not a string'];
         }
-        if (strpos($body['values']['key'], 'password') !== false || strpos($body['values']['key'], 'token') !== false) {
+        if (stripos($body['values']['key'], 'password') !== false || stripos($body['values']['key'], 'token') !== false) {
             return ['errors' => 'Body values[key] is not allowed'];
         }
+        $allowedTables = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/customFieldsWhiteList.json']);
+        if (!in_array($body['values']['table'], $allowedTables)) {
+            return ['errors' => 'Body values[table] is not allowed'];
+        }
+
+        if ($body['type'] == 'date' && count($body['values']['label']) !== 1) {
+            return ['errors' => 'Body values[label] count is wrong for type date'];
+        }
+        $columns = CoreConfigModel::getColumns(['table' => $body['values']['table']]);
+        $columns = array_column($columns, 'data_type', 'column_name');
+
         foreach ($body['values']['label'] as $value) {
             if (!Validator::stringType()->notEmpty()->validate($value['column'])) {
                 return ['errors' => 'Body values[label] column is empty or not a string'];
+            } elseif (empty($columns[$value['column']])) {
+                return ['errors' => 'Body values[label] column is not valid'];
             } elseif (!isset($value['delimiterStart'])) {
                 return ['errors' => 'Body values[label] delimiterStart is not set'];
             } elseif (!isset($value['delimiterEnd'])) {
@@ -294,12 +307,11 @@ class CustomFieldController
             } elseif (strpos($value['column'], 'password') !== false || strpos($value['column'], 'token') !== false) {
                 return ['errors' => 'Body values[label] column is not allowed'];
             }
+            if ($body['type'] == 'date' && stripos($columns[$value['column']], 'timestamp') === false) {
+                return ['errors' => 'Body values[label] column is not a date'];
+            }
         }
-        $allowedTables = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/customFieldsWhiteList.json']);
-        if (!in_array($body['values']['table'], $allowedTables)) {
-            return ['errors' => 'Body values[table] is not allowed'];
-        }
-        if (strpos($body['values']['clause'], 'select') !== false) {
+        if (stripos($body['values']['clause'], 'select') !== false) {
             return ['errors' => 'Clause is not valid', 'lang' => 'invalidClause'];
         }
         try {
