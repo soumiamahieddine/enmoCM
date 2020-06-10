@@ -126,7 +126,11 @@ class AuthenticationController
         ValidatorModel::intVal($args, ['userId']);
         ValidatorModel::stringType($args, ['currentRoute']);
 
-        $user = UserModel::getById(['select' => ['status', 'password_modification_date'], 'id' => $args['userId']]);
+        $user = UserModel::getById(['select' => ['status', 'password_modification_date', 'loginmode'], 'id' => $args['userId']]);
+
+        if ($user['loginmode'] == 'restMode') {
+            return ['isRouteAvailable' => true];
+        }
 
         if ($user['status'] == 'ABS' && !in_array($args['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
             return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
