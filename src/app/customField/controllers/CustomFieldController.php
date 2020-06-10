@@ -274,8 +274,8 @@ class CustomFieldController
         }
         if (!Validator::stringType()->notEmpty()->validate($body['values']['key'])) {
             return ['errors' => 'Body values[key] is empty or not a string'];
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['values']['label'])) {
-            return ['errors' => 'Body values[label] is empty or not a string'];
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['values']['label'])) {
+            return ['errors' => 'Body values[label] is empty or not an array'];
         } elseif (!Validator::stringType()->notEmpty()->validate($body['values']['table'])) {
             return ['errors' => 'Body values[table] is empty or not a string'];
         } elseif (!Validator::stringType()->notEmpty()->validate($body['values']['clause'])) {
@@ -283,8 +283,17 @@ class CustomFieldController
         }
         if (strpos($body['values']['key'], 'password') !== false || strpos($body['values']['key'], 'token') !== false) {
             return ['errors' => 'Body values[key] is not allowed'];
-        } elseif (strpos($body['values']['label'], 'password') !== false || strpos($body['values']['label'], 'token') !== false) {
-            return ['errors' => 'Body values[key] is not allowed'];
+        }
+        foreach ($body['values']['label'] as $value) {
+            if (!Validator::stringType()->notEmpty()->validate($value['column'])) {
+                return ['errors' => 'Body values[label] column is empty or not a string'];
+            } elseif (!isset($value['delimiterStart'])) {
+                return ['errors' => 'Body values[label] delimiterStart is not set'];
+            } elseif (!isset($value['delimiterEnd'])) {
+                return ['errors' => 'Body values[label] delimiterEnd is not set'];
+            } elseif (strpos($value['column'], 'password') !== false || strpos($value['column'], 'token') !== false) {
+                return ['errors' => 'Body values[label] column is not allowed'];
+            }
         }
         $allowedTables = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/customFieldsWhiteList.json']);
         if (!in_array($body['values']['table'], $allowedTables)) {
