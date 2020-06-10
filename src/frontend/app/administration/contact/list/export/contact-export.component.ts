@@ -209,8 +209,10 @@ export class ContactExportComponent implements OnInit {
     }
 
     setConfiguration() {
-        JSON.parse(this.localStorage.get('exportContactFields')).data.forEach((element: any) => {
-            this.addData(element);
-        });
+        if (this.localStorage.get('exportContactFields') !== null) {
+            JSON.parse(this.localStorage.get('exportContactFields')).data.forEach((element: any) => {
+                this.addData(element);
+            });
+        }
     }
 }
