@@ -1714,5 +1714,9 @@ export const LANG_EN = {
     "linkedTags": "Linked tags",
     "selectParentTag": "Select a parent tag",
     "openThesaurus": "Open the thesaurus",
-    "bddModeCustomFieldMsg": "This field use database values (see the custom's configration in custom fields administration)"
+    "bddModeCustomFieldMsg": "This field use database values (see the custom's configration in custom fields administration)",
+    "database": "Database",
+    "targetLabel": "Target label",
+    "targetTable": "Target table",
+    "targetIdentifier": "Target identifier",
 };

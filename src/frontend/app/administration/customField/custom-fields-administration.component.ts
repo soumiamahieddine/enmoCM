@@ -108,6 +108,24 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                         });
                     } else {
                         element.bddMode = true;
+                        // FOR TEST
+                        element.values = {
+                            key: element.values.key,
+                            label: [
+                                {
+                                    delimiterStart: '',
+                                    delimiterEnd: ' ',
+                                    column: 'firstname'
+                                },
+                                {
+                                    delimiterStart: '(',
+                                    delimiterEnd: ')',
+                                    column: 'lastname'
+                                },
+                            ],
+                            table: element.values.table,
+                            clause: element.values.clause
+                        };
                     }
                 });
                 return data;
@@ -245,5 +263,18 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    addColumnLabel(field: any, column: any) {
+        field.push({
+            delimiterStart: '',
+            delimiterEnd: '',
+            column: column
+
+        });
+    }
+
+    removeColumnLabel(field: any, index: number) {
+        field.splice(index, 1);
     }
 }

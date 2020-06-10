@@ -1716,5 +1716,9 @@ export const LANG_FR = {
     "linkedTags": "Mots-clés associés",
     "selectParentTag": "Imbriquer le mot-clé dans",
     "openThesaurus": "Ouvrir le thésaurus",
-    "bddModeCustomFieldMsg": "Ce champ utilise des valeurs de base de données (voir la configuration du champ dans l'administration des champs personnalisés)"
+    "bddModeCustomFieldMsg": "Ce champ utilise des valeurs de base de données (voir la configuration du champ dans l'administration des champs personnalisés)",
+    "database": "Base de données",
+    "targetLabel": "Label cible",
+    "targetTable": "Table cible",
+    "targetIdentifier": "Identifiant cible",
 };

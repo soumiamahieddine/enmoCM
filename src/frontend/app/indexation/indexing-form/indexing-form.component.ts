@@ -233,18 +233,7 @@ export class IndexingFormComponent implements OnInit {
                     this.availableCustomFields = data.customFields.map((info: any) => {
                         info.identifier = 'indexingCustomField_' + info.id;
                         info.system = false;
-                        info.bddMode = true;
-                        // FOR TEST
-                        /*info.values = [
-                            {
-                                key: 'azerty',
-                                label: 'tata'
-                            },
-                            {
-                                key: 'bidule',
-                                label: 'chouette'
-                            }
-                        ];*/
+                        info.SQLMode = info.SQLMode;
 
                         info.default_value = ['integer', 'string', 'date'].indexOf(info.type) > -1 && !this.functions.empty(info.values) ? info.values[0].key : null;
                         info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
@@ -798,7 +787,7 @@ export class IndexingFormComponent implements OnInit {
                             field.default_value = this.availableCustomFields[indexFound].default_value;
                             field.values = this.availableCustomFields[indexFound].values;
                             field.type = this.availableCustomFields[indexFound].type;
-                            field.bddMode = this.availableCustomFields[indexFound].bddMode;
+                            field.SQLMode = this.availableCustomFields[indexFound].SQLMode;
                             this.availableCustomFields.splice(indexFound, 1);
                             fieldExist = true;
                         }
