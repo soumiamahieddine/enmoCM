@@ -1721,4 +1721,5 @@ export const LANG_FR = {
     "targetLabel": "Label cible",
     "targetTable": "Table cible",
     "targetIdentifier": "Identifiant cible",
+    "companyLastname": "Organisation / Nom",
 };

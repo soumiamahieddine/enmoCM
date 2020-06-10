@@ -1702,4 +1702,5 @@ export const LANG_NL = {
     "targetLabel": "Target label", // _TO_TRANSLATE
     "targetTable": "Target table", // _TO_TRANSLATE
     "targetIdentifier": "Target identifier", // _TO_TRANSLATE
+    "companyLastname": "Company / Lastname", // _TO_TRANSLATE
 };

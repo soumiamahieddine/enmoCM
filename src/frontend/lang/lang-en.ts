@@ -1719,4 +1719,5 @@ export const LANG_EN = {
     "targetLabel": "Target label",
     "targetTable": "Target table",
     "targetIdentifier": "Target identifier",
+    "companyLastname": "Company / Lastname",
 };
