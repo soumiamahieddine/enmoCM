@@ -76,11 +76,13 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Custom field with this label already exists']);
         }
 
-        if (!empty($body['values']['table'])) {
+        if (!empty($body['SQLMode'])) {
             $control = CustomFieldController::controlSQLMode(['body' => $body]);
             if (!empty($control['errors'])) {
-                return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+                return $response->withStatus(400)->withJson($control);
             }
+        } else {
+            unset($body['values']['key'], $body['values']['label'], $body['values']['table'], $body['values']['clause']);
         }
 
         $id = CustomFieldModel::create([
@@ -119,10 +121,6 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Body values is not an array']);
         }
 
-        if (count(array_unique($body['values'])) < count($body['values'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Some values have the same name']);
-        }
-
         $field = CustomFieldModel::getById(['select' => ['type', 'values'], 'id' => $args['id']]);
         if (empty($field)) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom field not found']);
@@ -133,19 +131,28 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Custom field with this label already exists']);
         }
 
-        if (!empty($body['values']['table'])) {
+        if (!empty($body['SQLMode'])) {
             $control = CustomFieldController::controlSQLMode(['body' => $body]);
             if (!empty($control['errors'])) {
-                return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+                return $response->withStatus(400)->withJson($control);
+            }
+            if (in_array($body['type'], ['string', 'date', 'int'])) {
+                $limitPos = stripos($body['values']['clause'], 'limit');
+                if (!empty($limitPos)) {
+                    $body['values']['clause'] = substr_replace($body['values']['clause'], 'LIMIT 1', $limitPos);
+                } else {
+                    $body['values']['clause'] .= ' LIMIT 1';
+                }
             }
         } else {
+            unset($body['values']['key'], $body['values']['label'], $body['values']['table'], $body['values']['clause']);
             if (count(array_unique($body['values'])) < count($body['values'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Some values have the same name']);
             }
         }
 
         $values = json_decode($field['values'], true);
-        if (empty($body['values']['table']) && empty($values['table'])) {
+        if (empty($body['SQLMode']) && empty($values['table'])) {
             if (in_array($field['type'], ['checkbox'])) {
                 foreach ($values as $key => $value) {
                     if (!empty($body['values'][$key]) && $body['values'][$key] != $value) {
@@ -269,18 +276,13 @@ class CustomFieldController
         if (!in_array($body['values']['table'], $allowedTables)) {
             return ['errors' => 'Body values[table] is not allowed'];
         }
-        if (in_array($body['values']['type'], ['string', 'date', 'int'])) {
-            $limitPos = stripos($body['values']['clause'], 'limit');
-            if (!empty($limitPos)) {
-                $body['values']['clause'] = substr_replace($body['values']['clause'], 'LIMIT 1', $limitPos);
-            } else {
-                $body['values']['clause'] .= ' LIMIT 1';
-            }
+        if (strpos($body['values']['clause'], 'select') !== false) {
+            return ['errors' => 'Clause is not valid', 'lang' => 'invalidClause'];
         }
         try {
             CustomFieldModel::getValuesSQL($body['values']);
         } catch (\Exception $e) {
-            return ['errors' => 'Clause is not valid'];
+            return ['errors' => 'Clause is not valid', 'lang' => 'invalidClause'];
         }
 
         return true;

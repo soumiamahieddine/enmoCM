@@ -1690,6 +1690,7 @@ export const LANG_EN = {
     "alfrescoAPI": "API Alfresco address",
     "testSucceeded": "Test succeeded",
     "test": "Test",
+    "invalidClause" : "Invalid clause",
     "canUpdateIndexingModel": "Can change indexing model",
     "options": "Options",
     "contactsDuplicates": "Contacts duplicates",
