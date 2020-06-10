@@ -784,7 +784,7 @@ export class IndexingFormComponent implements OnInit {
 
                         if (indexFound > -1) {
                             field.label = this.availableCustomFields[indexFound].label;
-                            field.default_value = this.availableCustomFields[indexFound].default_value;
+                            field.default_value = !this.functions.empty(field.default_value) ? field.default_value : this.availableCustomFields[indexFound].default_value;
                             field.values = this.availableCustomFields[indexFound].values;
                             field.type = this.availableCustomFields[indexFound].type;
                             field.SQLMode = this.availableCustomFields[indexFound].SQLMode;
@@ -838,8 +838,6 @@ export class IndexingFormComponent implements OnInit {
         let valArr: ValidatorFn[] = [];
 
         let disabledState: boolean = false;
-
-        console.log(field);
 
         if (this.adminMode && ((['integer', 'string', 'date'].indexOf(field.type) > -1 && !this.functions.empty(field.values)) || (field.today && this.adminMode))) {
             disabledState = true;
@@ -1047,5 +1045,9 @@ export class IndexingFormComponent implements OnInit {
         if (!this.functions.empty(this.appDiffusionsList)) {
             this.appDiffusionsList.loadListModel(value);
         }
+    }
+
+    getCheckboxListLabel(selectedItemId: any, items: any) {
+        return items.filter((item: any) => item.id === selectedItemId)[0].label;
     }
 }

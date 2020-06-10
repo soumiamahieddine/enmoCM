@@ -66,15 +66,8 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     sampleIncrement: number[] = [1, 2, 3, 4];
 
-    bddMode: boolean = false;
-    availaibleTables: string[] = [];
-
-    availaibleColumns: string[] = [
-        'id',
-        'firstname',
-        'lastname',
-    ];
-
+    SQLMode: boolean = false;
+    availaibleTables: any = {};
 
     dialogRef: MatDialogRef<any>;
 
@@ -100,14 +93,14 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             map((data: any) => {
                 data.customFields.forEach((element: any) => {
                     if (this.functionsService.empty(element.values.key)) {
-                        element.bddMode = false;
+                        element.SQLMode = false;
                         element.values = Object.values(element.values).map((info: any) => {
                             return {
                                 label: info
                             };
                         });
                     } else {
-                        element.bddMode = true;
+                        element.SQLMode = true;
                         // FOR TEST
                         element.values = {
                             key: element.values.key,
@@ -202,10 +195,9 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     updateCustomField(customField: any, indexCustom: number) {
 
-        console.log(customField);
         const customFieldToUpdate = { ...customField };
 
-        if (!customField.bddMode) {
+        if (!customField.SQLMode) {
             customField.values = customField.values.filter((x: any, i: any, a: any) => a.map((info: any) => info.label).indexOf(x.label) === i);
 
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES
@@ -234,29 +226,33 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     }
 
     isModified(customField: any, indexCustomField: number) {
-        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField]) || customField.label === '' || this.bddMode) {
+        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField]) || customField.label === '' || this.SQLMode) {
             return true;
         } else {
             return false;
         }
     }
 
-    switchBddMode(custom: any) {
-        custom.bddMode = !custom.bddMode;
-        if (custom.bddMode) {
+    switchSQLMode(custom: any) {
+        custom.SQLMode = !custom.SQLMode;
+        if (custom.SQLMode) {
             custom.values = {
-                key: '',
-                label: '',
-                table: '',
-                clause: ''
+                key: 'id',
+                label: [],
+                table: 'users',
+                clause: '1=1'
             };
+        } else {
+            custom.values = [];
         }
     }
 
     getTables() {
         this.http.get('../rest/customFieldsWhiteList').pipe(
             tap((data: any) => {
-                this.availaibleTables = data.allowedTables;
+                data.allowedTables.forEach((table: any) => {
+                    this.availaibleTables[table.name] = table.columns;
+                });
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -276,5 +272,13 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     removeColumnLabel(field: any, index: number) {
         field.splice(index, 1);
+    }
+
+    isValidField(field: any) {
+        if (field.SQLMode) {
+            return !this.functionsService.empty(field.values.key) &&  !this.functionsService.empty(field.values.label) && !this.functionsService.empty(field.values.table) && !this.functionsService.empty(field.values.clause)
+        } else {
+            return true;
+        }
     }
 }
