@@ -333,6 +333,8 @@ class ContactController
                 $body['communicationMeans'] = ['email' => $body['communicationMeans']];
             } elseif (filter_var($body['communicationMeans'], FILTER_VALIDATE_URL)) {
                 $body['communicationMeans'] = ['url' => $body['communicationMeans']];
+            } else {
+                unset($body['communicationMeans']);
             }
         }
 
