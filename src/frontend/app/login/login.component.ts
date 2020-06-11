@@ -107,7 +107,7 @@ export class LoginComponent implements OnInit {
             tap((data: any) => {
                 this.authService.setAppSession(data.instanceId);
                 // this.authService.authMode = data.connection;
-                // this.authService.changeKey = data.changeKey;
+                this.authService.changeKey = data.changeKey;
                 this.applicationName = data.applicationName;
                 this.loginMessage = data.loginMessage;
             }),

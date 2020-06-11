@@ -1723,4 +1723,6 @@ export const LANG_FR = {
     "targetTable": "Table cible",
     "targetIdentifier": "Identifiant cible",
     "companyLastname": "Organisation / Nom",
+    "warnPrivateKeyTitle": "La clé privée de chiffrement n'a pas été modifiée !",
+    "warnPrivateKey": "Cela compromet la sécurité de l'application.",
 };

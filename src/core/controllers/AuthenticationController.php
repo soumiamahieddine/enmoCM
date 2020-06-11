@@ -44,7 +44,14 @@ class AuthenticationController
         $appName = CoreConfigModel::getApplicationName();
         $parameter = ParameterModel::getById(['id' => 'loginpage_message', 'select' => ['param_value_string']]);
 
-        return $response->withJson(['instanceId' => $hashedPath, 'applicationName' => $appName, 'loginMessage' => $parameter['param_value_string'] ?? null]);
+        $encryptKey = CoreConfigModel::getEncryptKey();
+
+        return $response->withJson([
+            'instanceId'      => $hashedPath,
+            'applicationName' => $appName,
+            'loginMessage'    => $parameter['param_value_string'] ?? null,
+            'changeKey'       => $encryptKey == 'Security Key Maarch Courrier #2008'
+        ]);
     }
 
     public function getValidUrl(Request $request, Response $response)

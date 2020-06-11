@@ -1721,4 +1721,6 @@ export const LANG_EN = {
     "targetTable": "Target table",
     "targetIdentifier": "Target identifier",
     "companyLastname": "Company / Lastname",
+    "warnPrivateKeyTitle": "The private key has not been updated !",
+    "warnPrivateKey": "This compromises the security of the application.",
 };

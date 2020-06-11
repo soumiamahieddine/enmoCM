@@ -111,7 +111,7 @@ export class AppGuard implements CanActivate {
                     map((data: any) => {
                         this.authService.setAppSession(data.instanceId);
                         // this.authService.authMode = data.connection;
-                        // this.authService.changeKey = data.changeKey;
+                        this.authService.changeKey = data.changeKey;
                         this.localStorage.setAppSession(data.instanceId);
                         tokenInfo = this.authService.getToken();
 
