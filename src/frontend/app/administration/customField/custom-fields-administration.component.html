@@ -127,8 +127,8 @@
                                                                     [style.width.px]="(item.delimiterEnd.length + 1) * 8"
                                                                     [(ngModel)]="item.delimiterEnd" />
                                                             </span>
-                                                            <button mat-icon-button [matMenuTriggerFor]="menu" color="primary">
-                                                                <mat-icon class="fa fa-plus-circle"></mat-icon>
+                                                            <button mat-button [matMenuTriggerFor]="menu" color="primary">
+                                                                <i class="fa fa-plus-circle"></i> Ajouter une colonne
                                                             </button>
                                                             <mat-menu #menu="matMenu">
                                                                 <button mat-menu-item
