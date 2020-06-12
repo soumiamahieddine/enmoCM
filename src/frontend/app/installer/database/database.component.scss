@@ -1,5 +1,9 @@
-.stepContentTitle {
-    margin-bottom: 30px;
-    border-bottom: solid 1px;
-    padding: 0;
+.stepContent {
+    max-width: 850px;
+    margin: auto;
+    .stepContentTitle {
+        margin-bottom: 30px;
+        border-bottom: solid 1px;
+        padding: 0;
+    }
 }

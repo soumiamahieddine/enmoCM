@@ -8,16 +8,6 @@
         padding: 0;
     }
     
-    .maarchLogoWhiteFull{
-        width: 300px;
-        height: 100px;
-    }
-    
-    .mat-divider {
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-    
     ::ng-deep .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
         /*change color of label*/
         color: white !important;
@@ -41,4 +31,24 @@
     ::ng-deep.mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label, .mat-form-field-appearance-outline.mat-form-field-can-float .mat-input-server:focus + .mat-form-field-label-wrapper .mat-form-field-label {
         color: white;
     }
+}
+
+.backgroundList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
+
+.selected {
+    opacity: 1 !important;
+}
+
+.backgroundItem {
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.backgroundItem:hover {
+    transition: all 0.3s;
+    opacity: 1 !important;
 }

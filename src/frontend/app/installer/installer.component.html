@@ -1,11 +1,11 @@
-<mat-horizontal-stepper linear #stepper style="height: 100vh;overflow: auto;">
+<mat-horizontal-stepper linear #stepper style="height: 100vh;overflow: auto;" (selectionChange)="initStep($event)">
     <mat-step>
         <ng-template matStepLabel>Installation</ng-template>
         <div class="stepContainer">
             <div class="stepContent">
                 <app-welcome></app-welcome>
             </div>
-            <div style="display: flex;">
+            <div style="display: flex;padding: 10px;">
                 <div style="flex: 1;text-align: left;">
 
                 </div>
@@ -23,7 +23,7 @@
             <div class="stepContent">
                 <app-prerequisite #appPrerequisite></app-prerequisite>
             </div>
-            <div style="display: flex;">
+            <div style="display: flex;padding: 10px;">
                 <div style="flex: 1;text-align: left;">
                     <button mat-button matStepperPrevious style="font-size: 35px;">
                         <i class="fa fa-arrow-circle-left"></i> précédent
@@ -44,7 +44,7 @@
             <div class="stepContent">
                 <app-database #appDatabase></app-database>
             </div>
-            <div style="display: flex;">
+            <div style="display: flex;padding: 10px;">
                 <div style="flex: 1;text-align: left;">
                     <button mat-button matStepperPrevious style="font-size: 35px;">
                         <i class="fa fa-arrow-circle-left"></i> précédent
@@ -59,20 +59,46 @@
             </div>
         </div>
     </mat-step>
-    <mat-step>
+    <mat-step [stepControl]="appDocservers.getFormGroup()">
         <ng-template matStepLabel>Stockage</ng-template>
-        Bonjour
-        <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
+        <div class="stepContainer">
+            <div class="stepContent">
+                <app-docservers #appDocservers></app-docservers>
+            </div>
+            <div style="display: flex;padding: 10px;">
+                <div style="flex: 1;text-align: left;">
+                    <button mat-button matStepperPrevious style="font-size: 35px;">
+                        <i class="fa fa-arrow-circle-left"></i> précédent
+                    </button>
+                </div>
+                <div style="flex: 1;text-align: right;">
+                    <button mat-button matStepperNext style="font-size: 35px;"
+                        [disabled]="!appDocservers.isValidStep()">
+                        suivant <i class="fa fa-arrow-circle-right"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </mat-step>
-    <mat-step>
+    <mat-step [stepControl]="appCustomization.getFormGroup()">
         <ng-template matStepLabel>Personnalisation</ng-template>
-        Bonjour
-        <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
+        <div class="stepContainer">
+            <div class="stepContent">
+                <app-customization #appCustomization></app-customization>
+            </div>
+            <div style="display: flex;padding: 10px;">
+                <div style="flex: 1;text-align: left;">
+                    <button mat-button matStepperPrevious style="font-size: 35px;">
+                        <i class="fa fa-arrow-circle-left"></i> précédent
+                    </button>
+                </div>
+                <div style="flex: 1;text-align: right;">
+                    <button mat-button matStepperNext style="font-size: 35px;"
+                        [disabled]="!appCustomization.isValidStep()">
+                        suivant <i class="fa fa-arrow-circle-right"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </mat-step>
     <mat-step>

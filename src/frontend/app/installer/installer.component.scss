@@ -36,13 +36,14 @@
 }
 
 ::ng-deep.mat-horizontal-stepper-content {
-    max-width: 850px;
-    margin: auto;
     height: 100%;
 }
 
 ::ng-deep.mat-horizontal-content-container {
     flex: 1;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-bottom: 0px !important;
 }
 
 .stepContainer{

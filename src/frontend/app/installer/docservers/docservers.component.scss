@@ -1,21 +1,10 @@
 .stepContent {
     max-width: 850px;
     margin: auto;
-
     .stepContentTitle {
         margin-bottom: 30px;
         border-bottom: solid 1px;
         padding: 0;
-    }
-    
-    .maarchLogoWhiteFull{
-        width: 300px;
-        height: 100px;
-    }
-    
-    .mat-divider {
-        margin-top: 10px;
-        margin-bottom: 10px;
     }
     
     ::ng-deep .mat-form-field-appearance-outline.mat-form-field-invalid.mat-form-field-invalid .mat-form-field-outline-thick {
@@ -42,3 +31,4 @@
         color: white;
     }
 }
+

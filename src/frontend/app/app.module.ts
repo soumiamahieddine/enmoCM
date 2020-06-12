@@ -120,6 +120,8 @@ import { InstallerComponent } from './installer/installer.component';
 import { WelcomeComponent } from './installer/welcome/welcome.component';
 import { PrerequisiteComponent } from './installer/prerequisite/prerequisite.component';
 import { DatabaseComponent } from './installer/database/database.component';
+import { DocserversComponent } from './installer/docservers/docservers.component';
+import { CustomizationComponent } from './installer/customization/customization.component';
 
 
 
@@ -228,7 +230,9 @@ import { DatabaseComponent } from './installer/database/database.component';
         InstallerComponent,
         WelcomeComponent,
         PrerequisiteComponent,
-        DatabaseComponent
+        DatabaseComponent,
+        DocserversComponent,
+        CustomizationComponent
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,

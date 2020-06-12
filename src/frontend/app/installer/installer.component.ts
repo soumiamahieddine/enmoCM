@@ -32,4 +32,8 @@ export class InstallerComponent implements OnInit {
         return false;
     }
 
+    initStep(ev: any) {
+        console.log(ev.selectedStep.content);
+    }
+
 }
