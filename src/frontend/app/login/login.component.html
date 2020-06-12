@@ -26,10 +26,6 @@
         <div class="login-form">
             <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
                 <mat-icon svgIcon="maarchLogoFull" class="maarchLogo"></mat-icon>
-                <div *ngIf="authService.changeKey">
-                    <p  style="color: white;font-size: 30px;font-weight: bold;">{{lang.warnPrivateKeyTitle}}</p>
-                    <p  style="color: white;font-size: 18px;font-weight: bold;">{{lang.warnPrivateKey}}</p>
-                </div>
                 <div style="color: white;font-size: 14px;" [innerHTML]="loginMessage | safeHtml"></div>
                 <p style="color: white;font-size: 14px;font-weight: bold;">{{applicationName}}</p>
                 <div style="padding-left: 30px;padding-right: 30px;">

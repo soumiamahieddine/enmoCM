@@ -77,6 +77,17 @@ export class LoginComponent implements OnInit {
             tap((data: any) => {
                 this.authService.saveTokens(data.headers.get('Token'), data.headers.get('Refresh-Token'));
                 this.authService.setUser({});
+                if (this.authService.changeKey) {
+                    this.dialog.open(AlertComponent, {
+                        panelClass: 'maarch-modal',
+                        autoFocus: false,
+                        disableClose: true,
+                        data: {
+                            mode: 'danger',
+                            title: this.lang.warnPrivateKeyTitle,
+                            msg: this.lang.warnPrivateKey
+                        } });
+                }
                 if (this.authService.getCachedUrl()) {
                     this.router.navigateByUrl(this.authService.getCachedUrl());
                     this.authService.cleanCachedUrl();
