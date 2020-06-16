@@ -77,17 +77,6 @@ export class LoginComponent implements OnInit {
             tap((data: any) => {
                 this.authService.saveTokens(data.headers.get('Token'), data.headers.get('Refresh-Token'));
                 this.authService.setUser({});
-                if (this.authService.changeKey) {
-                    this.dialog.open(AlertComponent, {
-                        panelClass: 'maarch-modal',
-                        autoFocus: false,
-                        disableClose: true,
-                        data: {
-                            mode: 'danger',
-                            title: this.lang.warnPrivateKeyTitle,
-                            msg: this.lang.warnPrivateKey
-                        } });
-                }
                 if (this.authService.getCachedUrl()) {
                     this.router.navigateByUrl(this.authService.getCachedUrl());
                     this.authService.cleanCachedUrl();
@@ -121,6 +110,18 @@ export class LoginComponent implements OnInit {
                 this.authService.changeKey = data.changeKey;
                 this.applicationName = data.applicationName;
                 this.loginMessage = data.loginMessage;
+
+                if (this.authService.changeKey) {
+                    this.dialog.open(AlertComponent, {
+                        panelClass: 'maarch-modal',
+                        autoFocus: false,
+                        disableClose: true,
+                        data: {
+                            mode: 'danger',
+                            title: this.lang.warnPrivateKeyTitle,
+                            msg: this.lang.warnPrivateKey
+                        } });
+                }
             }),
             finalize(() => this.showForm = true),
             catchError((err: any) => {
