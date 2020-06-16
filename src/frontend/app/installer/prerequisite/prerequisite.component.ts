@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/internal/operators/tap';
+import { NotificationService } from '../../notification.service';
+import { of } from 'rxjs/internal/observable/of';
+import { catchError } from 'rxjs/internal/operators/catchError';
 
 @Component({
     selector: 'app-prerequisite',
@@ -10,12 +15,7 @@ export class PrerequisiteComponent implements OnInit {
 
     stepFormGroup: FormGroup;
 
-    requiredPackages: any = {
-        php: 'ok',
-        rights: 'warning',
-        unoconv: 'ko',
-        netcat: 'ok'
-    };
+    prerequisites: any = {};
 
     packagesList: any = {
         general: [
@@ -24,15 +24,15 @@ export class PrerequisiteComponent implements OnInit {
                 description: 'Version de PHP (7.2, 7.3, ou 7.4) -> 7.2.31-1+ubuntu18.04.1+deb.sury.org+1'
             },
             {
-                label: 'appRights',
+                label: 'writable',
                 description: 'Droits de lecture et d\'écriture du répertoire racine de Maarch Courrier'
             },
             {
-                label: 'appConversion',
+                label: 'unoconv',
                 description: 'Outils de conversion de documents bureautiques soffice/unoconv installés'
             },
             {
-                label: 'networkUtils',
+                label: 'netcatOrNmap',
                 description: 'Utilitaire permettant d\'ouvrir des connexions réseau (netcat / nmap)'
             }
         ],
@@ -42,7 +42,10 @@ export class PrerequisiteComponent implements OnInit {
                 description: ''
             },
             {
-                label: 'pdo_pgsql',
+                label: 'fileinfo',
+                description: ''
+            },            {
+                label: 'pdoPgsql',
                 description: ''
             },
             {
@@ -66,7 +69,7 @@ export class PrerequisiteComponent implements OnInit {
                 description: ''
             },
             {
-                label: 'XML-RPC',
+                label: 'xmlrpc',
                 description: ''
             },
             {
@@ -78,28 +81,30 @@ export class PrerequisiteComponent implements OnInit {
                 description: ''
             },
             {
-                label: 'Imagick',
+                label: 'imagick',
                 description: ''
             },
 
         ],
         phpini: [
             {
-                label: 'error_reporting',
+                label: 'errorReporting',
                 description: 'error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT '
             },
             {
-                label: 'display_errors',
+                label: 'displayErrors',
                 description: 'display_errors = On'
             },
             {
-                label: 'short_open_tags',
+                label: 'shortOpenTag',
                 description: 'short_open_tags = On'
             },
         ],
     };
 
     constructor(
+        public http: HttpClient,
+        private notify: NotificationService,
         private _formBuilder: FormBuilder
     ) { }
 
@@ -109,18 +114,27 @@ export class PrerequisiteComponent implements OnInit {
         });
 
         // FOR TEST
-        Object.keys(this.packagesList).forEach((group: any) => {
-            this.packagesList[group] = this.packagesList[group].map(
-                (item: any) => {
-                    return {
-                        ...item,
-                        state: 'ok'
-                    };
-                }
-            );
-        });
+        this.getStepData();
         this.stepFormGroup.controls['firstCtrl'].setValue(this.checkStep());
         this.stepFormGroup.controls['firstCtrl'].markAsUntouched();
+    }
+
+    getStepData() {
+        this.http.get(`../rest/installer/prerequisites`).pipe(
+            tap((data: any) => {
+                this.prerequisites = data.prerequisites;
+                Object.keys(this.packagesList).forEach(group => {
+                    this.packagesList[group].forEach((item: any, key: number) => {
+                        this.packagesList[group][key].state = this.prerequisites[this.packagesList[group][key].label] ? 'ok' : 'ko';
+                    });
+                });
+
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     checkStep() {
