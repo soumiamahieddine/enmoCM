@@ -21,7 +21,8 @@ class InstallerController
 {
     public function getPrerequisites(Request $request, Response $response)
     {
-        $phpVersion = (version_compare(PHP_VERSION, '7.2') >= 0);
+        $phpVersion = phpversion();
+        $phpVersionValid = (version_compare(PHP_VERSION, '7.2') >= 0);
 
         exec('whereis unoconv', $output, $return);
         $output = explode(':', $output[0]);
@@ -54,6 +55,7 @@ class InstallerController
 
         $prerequisites = [
             'phpVersion'        => $phpVersion,
+            'phpVersionValid'   => $phpVersionValid,
             'unoconv'           => $unoconv,
             'pdoPgsql'          => $pdoPgsql,
             'pgsql'             => $pgsql,
