@@ -972,7 +972,7 @@ class ResController extends ResourceControlController
             $document['fingerprint'] = $fingerprint;
         }
         if ($document['fingerprint'] != $fingerprint) {
-            ['errors' => 'Fingerprints do not match'];
+            return ['errors' => 'Fingerprints do not match'];
         }
 
         $fileContent = file_get_contents($pathToDocument);

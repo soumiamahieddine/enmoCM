@@ -308,6 +308,9 @@ $app->put('/indexingModels/{id}/disable', \IndexingModel\controllers\IndexingMod
 $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingModelController::class . ':enable');
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
+//Installer
+$app->get('/installer/prerequisites', \SrcCore\controllers\InstallerController::class . ':getPrerequisites');
+
 //ListInstances
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
 
