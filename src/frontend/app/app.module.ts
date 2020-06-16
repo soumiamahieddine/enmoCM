@@ -122,6 +122,7 @@ import { PrerequisiteComponent } from './installer/prerequisite/prerequisite.com
 import { DatabaseComponent } from './installer/database/database.component';
 import { DocserversComponent } from './installer/docservers/docservers.component';
 import { CustomizationComponent } from './installer/customization/customization.component';
+import { UseradminComponent } from './installer/useradmin/useradmin.component';
 
 
 
@@ -232,7 +233,8 @@ import { CustomizationComponent } from './installer/customization/customization.
         PrerequisiteComponent,
         DatabaseComponent,
         DocserversComponent,
-        CustomizationComponent
+        CustomizationComponent,
+        UseradminComponent
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,

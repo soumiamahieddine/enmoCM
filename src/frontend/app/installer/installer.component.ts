@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { NotificationService } from '../notification.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { PrerequisiteComponent } from './prerequisite/prerequisite.component';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
     templateUrl: './installer.component.html',
@@ -15,7 +15,7 @@ import { PrerequisiteComponent } from './prerequisite/prerequisite.component';
 })
 export class InstallerComponent implements OnInit {
 
-    @ViewChild('appPrerequisite', { static: true }) appPrerequisite: PrerequisiteComponent;
+    @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
     constructor(
         private http: HttpClient,
@@ -34,6 +34,10 @@ export class InstallerComponent implements OnInit {
 
     initStep(ev: any) {
         console.log(ev.selectedStep.content);
+    }
+
+    endInstall() {
+        this.stepper.next();
     }
 
 }

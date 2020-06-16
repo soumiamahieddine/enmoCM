@@ -101,12 +101,25 @@
             </div>
         </div>
     </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Utilisateur sytème</ng-template>
-        Bonjour
-        <div>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
+    <mat-step [stepControl]="appUseradmin.getFormGroup()">
+        <ng-template matStepLabel>Utilisateur système</ng-template>
+        <div class="stepContainer">
+            <div class="stepContent">
+                <app-useradmin #appUseradmin></app-useradmin>
+            </div>
+            <div style="display: flex;padding: 10px;">
+                <div style="flex: 1;text-align: left;">
+                    <button mat-button matStepperPrevious style="font-size: 35px;">
+                        <i class="fa fa-arrow-circle-left"></i> précédent
+                    </button>
+                </div>
+                <div style="flex: 1;text-align: right;">
+                    <button (click)="endInstall();" mat-button style="font-size: 35px;"
+                        [disabled]="!appUseradmin.isValidStep()">
+                        suivant <i class="fa fa-arrow-circle-right"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </mat-step>
     <mat-step optional>
