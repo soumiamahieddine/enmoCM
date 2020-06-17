@@ -310,6 +310,7 @@ $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelCon
 
 //Installer
 $app->get('/installer/prerequisites', \SrcCore\controllers\InstallerController::class . ':getPrerequisites');
+$app->get('/installer/databaseConnection', \SrcCore\controllers\InstallerController::class . ':checkDatabaseConnection');
 
 //ListInstances
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');

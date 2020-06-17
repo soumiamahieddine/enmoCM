@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -77,5 +78,35 @@ class InstallerController
         ];
 
         return $response->withJson(['prerequisites' => $prerequisites]);
+    }
+
+    public function checkDatabaseConnection(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['server'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body server is empty or not a string']);
+        } elseif (!Validator::intVal()->notEmpty()->validate($queryParams['port'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body port is empty or not an integer']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['user'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body user is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['password'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body name is empty or not a string']);
+        }
+
+        $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname={$queryParams['name']}";
+        if (!@pg_connect($connection)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Connexion failed']);
+        }
+
+        $request = "select datname from pg_database where datname = '{$queryParams['name']}'";
+        $result = @pg_query($request);
+        if (!$result) {
+            return $response->withStatus(400)->withJson(['errors' => 'Connexion failed']);
+        }
+
+        return $response->withStatus(204);
     }
 }
