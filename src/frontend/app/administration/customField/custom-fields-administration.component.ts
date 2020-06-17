@@ -101,24 +101,6 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                         });
                     } else {
                         element.SQLMode = true;
-                        // FOR TEST
-                        element.values = {
-                            key: element.values.key,
-                            label: [
-                                {
-                                    delimiterStart: '',
-                                    delimiterEnd: ' ',
-                                    column: 'firstname'
-                                },
-                                {
-                                    delimiterStart: '(',
-                                    delimiterEnd: ')',
-                                    column: 'lastname'
-                                },
-                            ],
-                            table: element.values.table,
-                            clause: element.values.clause
-                        };
                     }
                 });
                 return data;
