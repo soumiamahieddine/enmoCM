@@ -123,6 +123,7 @@ import { DatabaseComponent } from './installer/database/database.component';
 import { DocserversComponent } from './installer/docservers/docservers.component';
 import { CustomizationComponent } from './installer/customization/customization.component';
 import { UseradminComponent } from './installer/useradmin/useradmin.component';
+import {RedirectIndexingModelComponent} from './administration/indexingModel/redirectIndexingModel/redirect-indexing-model.component';
 
 
 
@@ -234,7 +235,8 @@ import { UseradminComponent } from './installer/useradmin/useradmin.component';
         DatabaseComponent,
         DocserversComponent,
         CustomizationComponent,
-        UseradminComponent
+        UseradminComponent,
+        RedirectIndexingModelComponent
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,
@@ -283,7 +285,8 @@ import { UseradminComponent } from './installer/useradmin/useradmin.component';
         SentNumericPackagePageComponent,
         FolderCreateModalComponent,
         ReconcileActionComponent,
-        ThesaurusModalComponent
+        ThesaurusModalComponent,
+        RedirectIndexingModelComponent
     ],
     providers: [FiltersListService, FoldersService, ActionsService, PrivilegeService],
     bootstrap: [AppComponent]
