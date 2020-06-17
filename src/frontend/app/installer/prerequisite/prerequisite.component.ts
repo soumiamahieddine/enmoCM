@@ -5,6 +5,8 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { NotificationService } from '../../notification.service';
 import { of } from 'rxjs/internal/observable/of';
 import { catchError } from 'rxjs/internal/operators/catchError';
+import { LANG } from '../../translate.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-prerequisite',
@@ -13,6 +15,8 @@ import { catchError } from 'rxjs/internal/operators/catchError';
 })
 export class PrerequisiteComponent implements OnInit {
 
+    lang: any = LANG;
+
     stepFormGroup: FormGroup;
 
     prerequisites: any = {};
@@ -20,87 +24,91 @@ export class PrerequisiteComponent implements OnInit {
     packagesList: any = {
         general: [
             {
-                label: 'phpVersion',
-                description: 'Version de PHP (7.2, 7.3, ou 7.4) -> 7.2.31-1+ubuntu18.04.1+deb.sury.org+1'
+                label: 'phpVersionValid',
+                required: true
             },
             {
                 label: 'writable',
-                description: 'Droits de lecture et d\'écriture du répertoire racine de Maarch Courrier'
+                required: true
             },
+        ],
+        tools: [
             {
                 label: 'unoconv',
-                description: 'Outils de conversion de documents bureautiques soffice/unoconv installés'
+                required: true
             },
             {
                 label: 'netcatOrNmap',
-                description: 'Utilitaire permettant d\'ouvrir des connexions réseau (netcat / nmap)'
-            }
-        ],
-        libraries: [
+                required: true
+            },
             {
                 label: 'pgsql',
-                description: ''
-            },
-            {
-                label: 'fileinfo',
-                description: ''
-            },            {
-                label: 'pdoPgsql',
-                description: ''
-            },
-            {
-                label: 'gd',
-                description: ''
-            },
-            {
-                label: 'imap',
-                description: ''
-            },
-            {
-                label: 'mbstring',
-                description: ''
-            },
-            {
-                label: 'xsl',
-                description: ''
-            },
-            {
-                label: 'gettext',
-                description: ''
-            },
-            {
-                label: 'xmlrpc',
-                description: ''
+                required: true
             },
             {
                 label: 'curl',
-                description: ''
+                required: true
             },
             {
                 label: 'zip',
-                description: ''
+                required: true
             },
             {
                 label: 'imagick',
-                description: ''
+                required: true
             },
 
         ],
-        phpini: [
+        phpExtensions: [
+            {
+                label: 'fileinfo',
+                required: true
+            },            {
+                label: 'pdoPgsql',
+                required: true
+            },
+            {
+                label: 'gd',
+                required: true
+            },
+            {
+                label: 'imap',
+                required: true
+            },
+            {
+                label: 'mbstring',
+                required: true
+            },
+            {
+                label: 'xsl',
+                required: true
+            },
+            {
+                label: 'gettext',
+                required: true
+            },
+            {
+                label: 'xmlrpc',
+                required: true
+            },
+        ],
+        phpConfiguration: [
             {
                 label: 'errorReporting',
-                description: 'error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT '
+                required: true
             },
             {
                 label: 'displayErrors',
-                description: 'display_errors = On'
+                required: true
             },
             {
                 label: 'shortOpenTag',
-                description: 'short_open_tags = On'
+                required: true
             },
         ],
     };
+
+    docMaarchUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${environment.VERSION.split('.')[0] + '.' + environment.VERSION.split('.')[1]}/guat/guat_prerequisites/home.html`;
 
     constructor(
         public http: HttpClient,
@@ -112,11 +120,7 @@ export class PrerequisiteComponent implements OnInit {
         this.stepFormGroup = this._formBuilder.group({
             firstCtrl: ['', Validators.required]
         });
-
-        // FOR TEST
         this.getStepData();
-        this.stepFormGroup.controls['firstCtrl'].setValue(this.checkStep());
-        this.stepFormGroup.controls['firstCtrl'].markAsUntouched();
     }
 
     getStepData() {
@@ -126,9 +130,13 @@ export class PrerequisiteComponent implements OnInit {
                 Object.keys(this.packagesList).forEach(group => {
                     this.packagesList[group].forEach((item: any, key: number) => {
                         this.packagesList[group][key].state = this.prerequisites[this.packagesList[group][key].label] ? 'ok' : 'ko';
+                        if (this.packagesList[group][key].label === 'phpVersionValid') {
+                            this.lang.install_phpVersionValid_desc = `${this.lang.currentVersion} : ${this.prerequisites['phpVersion']}`;
+                        }
                     });
                 });
-
+                this.stepFormGroup.controls['firstCtrl'].setValue(this.checkStep());
+                this.stepFormGroup.controls['firstCtrl'].markAsUntouched();
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

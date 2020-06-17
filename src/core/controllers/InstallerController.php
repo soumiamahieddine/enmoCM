@@ -48,11 +48,11 @@ class InstallerController
         $shortOpenTag = (ini_get('short_open_tag') == '1');
         $errorReporting = (ini_get('error_reporting') == 22519);
 
-        exec('whereis netcat', $output, $return);
-        $output = explode(':', $output[0]);
-        exec('whereis nmap', $output2, $return2);
-        $output2 = explode(':', $output2[0]);
-        $netcatOrNmap = !empty($output[1]) || !empty($output2[1]);
+        exec('whereis netcat', $outputNetcat, $returnNetcat);
+        $outputNetcat = explode(':', $outputNetcat[0]);
+        exec('whereis nmap', $outputNmap, $returnNmap);
+        $outputNmap = explode(':', $outputNmap[0]);
+        $netcatOrNmap = !empty($outputNetcat[1]) || !empty($outputNmap[1]);
 
         $prerequisites = [
             'phpVersion'        => $phpVersion,
