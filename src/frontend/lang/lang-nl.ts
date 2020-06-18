@@ -165,6 +165,7 @@ export const LANG_NL = {
     "city"                                  : "Gemeente",
     "classifying"                           : "STANDEN",
     "clause"                                : "Clausule",
+    "fingerprintsDoNotMatch":                      "Fingerprints do not match",
     "clauseGroup"                           : "Documentaire perimeter",
     "clickOn"                               : "Klik op",
     "close"                                 : "Afsluiten",
