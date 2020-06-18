@@ -61,7 +61,7 @@
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="appCustomization.getFormGroup()">
-                        <ng-template matStepLabel>Personnalisation</ng-template>
+                        <ng-template matStepLabel>{{lang.customization}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
                                 <app-customization #appCustomization></app-customization>

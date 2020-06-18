@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '../../notification.service';
 import { LANG } from '../../translate.component';
 
+
 declare var tinymce: any;
 
 @Component({
@@ -11,7 +12,7 @@ declare var tinymce: any;
     styleUrls: ['./customization.component.scss']
 })
 export class CustomizationComponent implements OnInit {
-
+    lang: any = LANG;
     stepFormGroup: FormGroup;
 
     docserversPath: string = '/opt/maaarch/docservers/';

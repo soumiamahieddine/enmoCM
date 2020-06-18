@@ -1774,4 +1774,10 @@ export const LANG_FR = {
     "docserverPath": "Chemin de la zone de stockage",
     "docserver": "Zone de stockage",
     "stepDocserver_desc": "N'importe quel système de stockage peut être utilisé, à partir du moment où celui-ci présente un « système de fichiers » à accès direct. Ce peut être le cas d'un attachement direct ou indirect de type NFS sur une baie SAN, NAS, ou pour les cas simples un ensemble de disques RAID.",
+    "applicationName": "Nom de l'application",
+    "loginMsg": "Message à l'écran de connexion",
+    "homeMsg": "Message à l'écran d'accueil",
+    "chooseLoginBg": "Choisissez le fond d'écran de l'écran de connexion",
+    "customization": "Personnalisation",
+    "stepCustomization_desc": "Maarch Courrier vous permet de personnaliser votre application afin de l'intégrer parfaitement à votre environnement de travail.",
 };
