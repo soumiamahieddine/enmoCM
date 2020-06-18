@@ -33,7 +33,7 @@
                         </div>
                     </mat-step>
                     <mat-step [stepControl]="appDatabase.getFormGroup()">
-                        <ng-template matStepLabel>Base de données</ng-template>
+                        <ng-template matStepLabel>{{lang.database}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
                                 <app-database #appDatabase></app-database>

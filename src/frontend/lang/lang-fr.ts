@@ -1726,7 +1726,7 @@ export const LANG_FR = {
     "warnPrivateKeyTitle": "La clé privée de chiffrement n'a pas été modifiée !",
     "warnPrivateKey": "Cela compromet la sécurité de l'application.",
     "prerequisite": "Pré-requis",
-    "stepPrerequisite_desc": "L'installation de Maarch Courrier nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous cette page pour les détails",
+    "stepPrerequisite_desc": "L'installation de Maarch Courrier nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Pour plus d'informations",
     "install_phpVersionValid": "Version minimum de PHP (>= 7.2)",
     "install_unoconv": "unoconv",
     "install_unoconv_desc": "Outils de conversion de documents bureautiques soffice/unoconv installés",
@@ -1766,4 +1766,9 @@ export const LANG_FR = {
     "general": "Générale",
     "phpExtensions": "Extensions PHP",
     "phpConfiguration": "Configuration PHP",
+    "dbName": "Nom de la base de données",
+    "stepDatabase_desc": "Maarch Courrier nécessite une connexion à une base de données afin de stocker les métas-données des documents stockés ainsi que la configuration de l'application.",
+    "checkInformations": "Vérifier les informations",
+    "badInformations": "Les informations sont incorrectes",
+    "rightInformations": "Les informations sont correctes",
 };
