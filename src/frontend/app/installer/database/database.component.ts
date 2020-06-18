@@ -33,7 +33,23 @@ export class DatabaseComponent implements OnInit {
         });
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.stepFormGroup.controls['dbHostCtrl'].valueChanges.pipe(
+            tap(() => this.stepFormGroup.controls['stateStep'].setValue(''))
+        ).subscribe();
+        this.stepFormGroup.controls['dbLoginCtrl'].valueChanges.pipe(
+            tap(() => this.stepFormGroup.controls['stateStep'].setValue(''))
+        ).subscribe();
+        this.stepFormGroup.controls['dbLoginCtrl'].valueChanges.pipe(
+            tap(() => this.stepFormGroup.controls['stateStep'].setValue(''))
+        ).subscribe();
+        this.stepFormGroup.controls['dbPasswordCtrl'].valueChanges.pipe(
+            tap(() => this.stepFormGroup.controls['stateStep'].setValue(''))
+        ).subscribe();
+        this.stepFormGroup.controls['dbNameCtrl'].valueChanges.pipe(
+            tap(() => this.stepFormGroup.controls['stateStep'].setValue(''))
+        ).subscribe();
+    }
 
     isValidConnection() {
         return false;

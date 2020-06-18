@@ -1771,4 +1771,7 @@ export const LANG_FR = {
     "checkInformations": "Vérifier les informations",
     "badInformations": "Les informations sont incorrectes",
     "rightInformations": "Les informations sont correctes",
+    "docserverPath": "Chemin de la zone de stockage",
+    "docserver": "Zone de stockage",
+    "stepDocserver_desc": "N'importe quel système de stockage peut être utilisé, à partir du moment où celui-ci présente un « système de fichiers » à accès direct. Ce peut être le cas d'un attachement direct ou indirect de type NFS sur une baie SAN, NAS, ou pour les cas simples un ensemble de disques RAID.",
 };
