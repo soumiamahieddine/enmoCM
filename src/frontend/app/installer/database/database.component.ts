@@ -15,6 +15,7 @@ import { LANG } from '../../translate.component';
 export class DatabaseComponent implements OnInit {
     lang: any = LANG;
     stepFormGroup: FormGroup;
+    hide: boolean = true;
 
     connectionState: boolean = false;
 

@@ -18,7 +18,10 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>{{lang.password}}</mat-label>
-            <input matInput formControlName="dbPasswordCtrl"  required>
+            <input [type]="hide ? 'password' : 'text'" matInput formControlName="dbPasswordCtrl" required>
+            <button mat-icon-button matSuffix color="primary" (click)="hide = !hide">
+                <mat-icon class="fa {{hide ? 'fa-eye-slash' : 'fa-eye'}}"></mat-icon>
+            </button>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>{{lang.dbName}}</mat-label>

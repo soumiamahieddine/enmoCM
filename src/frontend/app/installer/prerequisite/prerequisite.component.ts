@@ -100,11 +100,7 @@ export class PrerequisiteComponent implements OnInit {
             {
                 label: 'displayErrors',
                 required: true
-            },
-            {
-                label: 'shortOpenTag',
-                required: true
-            },
+            }
         ],
     };
 

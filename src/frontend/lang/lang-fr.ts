@@ -1780,4 +1780,8 @@ export const LANG_FR = {
     "chooseLoginBg": "Choisissez le fond d'écran de l'écran de connexion",
     "customization": "Personnalisation",
     "stepCustomization_desc": "Maarch Courrier vous permet de personnaliser votre application afin de l'intégrer parfaitement à votre environnement de travail.",
+    "userAdmin": "Utilisateur système",
+    "stepUserAdmin_desc": "Définissez un utilisateur système afin de vous connecter à l'application.",
+    "launchInstall": "Lancer l'installation",
+
 };

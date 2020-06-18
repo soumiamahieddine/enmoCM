@@ -50,7 +50,7 @@ export class InstallerComponent implements OnInit, AfterViewInit {
     }
 
     initStep(ev: any) {
-        console.log(ev.selectedStep.content);
+        // console.log(ev.selectedStep.content);
     }
 
     endInstall() {
