@@ -17,6 +17,7 @@ namespace SrcCore\controllers;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 
 class InstallerController
 {
@@ -109,7 +110,7 @@ class InstallerController
         return $response->withStatus(204);
     }
 
-    public function setDatabase(Request $request, Response $response)
+    public function createDatabase(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 
@@ -125,7 +126,7 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body name is empty or not a string']);
         }
 
-        $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname={$body['name']}";
+        $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname=postgres";
         if (!@pg_connect($connection)) {
             return $response->withStatus(400)->withJson(['errors' => 'Connexion failed']);
         }
@@ -153,6 +154,56 @@ class InstallerController
         if (!$result) {
             return $response->withStatus(400)->withJson(['errors' => 'Request failed : run structure.sql']);
         }
+
+        //TODO data fr à passer
+        return $response->withStatus(204);
+    }
+
+    public function createCustom(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['customName'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customName is empty or not a string']);
+        }
+
+        if (is_dir("custom/{$body['customName']}")) {
+            return $response->withStatus(400)->withJson(['errors' => 'Custom with this name already exists']);
+        } elseif (!@mkdir("custom/{$body['customName']}/apps/maarch_entreprise/xml", 0755, true)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Custom folder creation failed']);
+        }
+
+        if (!is_file("custom/custom.json")) {
+            $fp = fopen('custom/custom.json', 'w');
+            fwrite($fp, json_encode([], JSON_PRETTY_PRINT));
+            fclose($fp);
+        }
+
+        $customFile = CoreConfigModel::getJsonLoaded(['path' => 'custom/custom.json']);
+        $customFile[] = [
+            'id'    => $body['customName'],
+            'uri'   => null,
+            'path'  => $body['customName']
+        ];
+        $fp = fopen('custom/custom.json', 'w');
+        fwrite($fp, json_encode($customFile, JSON_PRETTY_PRINT));
+        fclose($fp);
+
+        $jsonFile = [
+            'config'    => [
+                'lang'              => $body['lang'] ?? 'fr',
+                'applicationName'   => $body['customName'],
+                'cookieTime'        => 10080,
+                'timezone'          => 'Europe/Paris'
+            ],
+            'database'  => []
+        ];
+        $fp = fopen("custom/{$body['customName']}/apps/maarch_entreprise/xml/config.json", 'w');
+        fwrite($fp, json_encode($jsonFile, JSON_PRETTY_PRINT));
+        fclose($fp);
+
+        $cmd = 'ln -s ' . realpath('.') . "/ {$body['customName']}";
+        exec($cmd);
 
         return $response->withStatus(204);
     }
