@@ -1768,6 +1768,7 @@ export const LANG_FR = {
     "phpConfiguration": "Configuration PHP",
     "dbName": "Nom de la base de données",
     "stepDatabase_desc": "Maarch Courrier nécessite une connexion à une base de données afin de stocker les métas-données des documents stockés ainsi que la configuration de l'application.",
+    "stepDatabaseActionDesc": "Création de la base de données",
     "checkInformations": "Vérifier les informations",
     "badInformations": "Les informations sont incorrectes",
     "rightInformations": "Les informations sont correctes",
@@ -1787,5 +1788,7 @@ export const LANG_FR = {
     "mailsWithStatus": " courrier(s) avec le statut ",
     "indexingModelReplaceToDelete": "Pour le supprimer vous devez le remplacer par un autre modèle.",
     "indexingModelFieldsReset": "Les champs suivants ne sont pas dans le modèle sélectionné et seront réinitialisé pour tous les courriers : ",
-    "indexingModelReassign": "Réaffection du modèle d'enregistrement"
+    "indexingModelReassign": "Réaffection du modèle d'enregistrement",
+    "updateInformations": "Actualiser les informations",
+    "dbSample": "Jeu de données"
 };

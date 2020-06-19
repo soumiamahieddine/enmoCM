@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NotificationService } from '../../notification.service';
 import { LANG } from '../../translate.component';
@@ -14,6 +14,8 @@ export class UseradminComponent implements OnInit {
     stepFormGroup: FormGroup;
 
     hide: boolean = true;
+
+    @Output() tiggerInstall = new EventEmitter<string>();
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -64,7 +66,18 @@ export class UseradminComponent implements OnInit {
         return this.stepFormGroup;
     }
 
-    launchInstall() {
+    getInfoToInstall(): any[] {
+        return [];
+        /*return {
+            body : {
+                login: this.stepFormGroup.controls['login'].value,
+                password: this.stepFormGroup.controls['password'].value,
+            },
+            route : '/installer/useradmin'
+        };*/
+    }
 
+    launchInstall() {
+        this.tiggerInstall.emit();
     }
 }

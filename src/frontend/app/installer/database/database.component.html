@@ -14,7 +14,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>{{lang.user}}</mat-label>
-            <input matInput formControlName="dbLoginCtrl"  required>
+            <input matInput formControlName="dbLoginCtrl" required>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>{{lang.password}}</mat-label>
@@ -27,8 +27,16 @@
             <mat-label>{{lang.dbName}}</mat-label>
             <input matInput formControlName="dbNameCtrl" required>
         </mat-form-field>
+        <mat-form-field appearance="outline" floatLabel="never">
+            <mat-label>{{lang.dbSample}}</mat-label>
+            <mat-select formControlName="dbSampleCtrl">
+                <mat-option *ngFor="let sample of dataSamples" [value]="sample">
+                    {{sample}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
         <div style="text-align:center;">
-            <button mat-raised-button type="button" color="primary" (click)="checkConnection()">
+            <button mat-raised-button type="button" color="primary" (click)="checkConnection()" [disabled]="isEmptyConnInfo()">
                 {{lang.checkInformations}}
             </button>
         </div>

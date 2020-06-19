@@ -45,4 +45,14 @@ export class DocserversComponent implements OnInit {
         this.notify.success(this.lang.rightInformations);
     }
 
+    getInfoToInstall(): any[] {
+        return [];
+        /*return {
+            body : {
+                appName: this.stepFormGroup.controls['docserversPath'].value,
+            },
+            route : '/installer/docservers'
+        };*/
+    }
+
 }

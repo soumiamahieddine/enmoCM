@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '../../notification.service';
 import { LANG } from '../../translate.component';
-
+import { StepAction } from '../types';
 
 declare var tinymce: any;
 
@@ -15,8 +15,7 @@ export class CustomizationComponent implements OnInit {
     lang: any = LANG;
     stepFormGroup: FormGroup;
 
-    docserversPath: string = '/opt/maaarch/docservers/';
-
+    customId: string = 'cs_maarchcourrier';
     appName: string = 'Maarch Courrier 20.10';
     loginMsg: string = '<span style="color:#24b0ed"><strong>Découvrez votre application via</strong></span>&nbsp;<a title="le guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/19.04/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>le guide de visite en ligne</strong></span></a>';
     homeMsg: string = '<p>D&eacute;couvrez <strong>Maarch Courrier 20.10</strong> avec <a title="notre guide de visite" href="https://docs.maarch.org/" target="_blank"><span style="color:#f99830;"><strong>notre guide de visite en ligne</strong></span></a>.</p>';
@@ -81,6 +80,17 @@ export class CustomizationComponent implements OnInit {
         alignleft aligncenter alignright alignjustify \
         bullist numlist outdent indent | removeformat'
         });
+    }
+
+    getInfoToInstall(): StepAction[] {
+        return [{
+            body : {
+                customName: this.customId,
+            },
+            description : 'Initialisation de l\'instance',
+            route : '../rest/installer/custom',
+            installPriority : 1
+        }];
     }
 
 }

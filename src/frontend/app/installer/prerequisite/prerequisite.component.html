@@ -10,17 +10,11 @@
                 <mat-list-item>
                     <mat-icon mat-list-icon class="fa iconCheckPackage icon_{{package.state}}"></mat-icon>
                     <div mat-line class="packageName">{{lang['install_'+package.label]}} <i class="fa fa-info-circle" [title]="lang['install_'+package.label+'_desc']"></i></div>
-                    <!--<div mat-line style="color:#666;">{{lang['install_'+package.label+'_desc']}}</div>-->
                 </mat-list-item>  
             </mat-grid-tile>
           </mat-grid-list>
-          
-        <!--<div style="display: flex;">
-            <mat-list-item *ngFor="let package of packagesList[groupPackage.key]">
-                <mat-icon mat-list-icon class="fa iconCheckPackage icon_{{package.state}}"></mat-icon>
-                <div mat-line style="font-size: 120%;">{{lang['install_'+package.label]}}</div>
-                <div mat-line style="color:#666;">{{lang['install_'+package.label+'_desc']}}</div>
-            </mat-list-item>    
-        </div>-->
     </mat-list>
+    <div style="text-align: center;">
+        <button mat-raised-button type="button" color="primary" (click)="getStepData()">{{lang.updateInformations}}</button>
+    </div>
 </div>

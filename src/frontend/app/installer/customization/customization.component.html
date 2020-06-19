@@ -5,6 +5,10 @@
     </div>
     <div class="col-md-6">
         <mat-form-field appearance="outline">
+            <mat-label>{{lang.instanceName}}</mat-label>
+            <input matInput [(ngModel)]="customId">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
             <mat-label>{{lang.applicationName}}</mat-label>
             <input matInput [(ngModel)]="appName">
         </mat-form-field>

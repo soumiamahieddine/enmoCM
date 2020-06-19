@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
@@ -7,19 +7,32 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import { AppService } from '../../service/app.service';
 import { LANG } from '../translate.component';
+import { SortPipe } from '../../plugins/sorting.pipe';
+import { StepAction } from './types';
+import { MatDialog } from '@angular/material/dialog';
+import { InstallActionComponent } from './install-action/install-action.component';
+import { filter } from 'rxjs/internal/operators/filter';
+import { tap } from 'rxjs/internal/operators/tap';
+import { finalize } from 'rxjs/internal/operators/finalize';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { of } from 'rxjs/internal/observable/of';
+import { FunctionsService } from '../../service/functions.service';
 
 @Component({
     templateUrl: './installer.component.html',
     styleUrls: ['./installer.component.scss'],
-    providers: [{
-        provide: STEPPER_GLOBAL_OPTIONS, useValue: { showError: true }
-    }]
+    providers: [
+        {
+            provide: STEPPER_GLOBAL_OPTIONS, useValue: { showError: true },
+        },
+        SortPipe
+    ]
 })
 export class InstallerComponent implements OnInit, AfterViewInit {
 
     lang: any = LANG;
 
-    @ViewChild('stepper', { static: true }) stepper: MatStepper;
+    @ViewChildren('stepContent') stepContent: any;
 
     constructor(
         private http: HttpClient,
@@ -27,6 +40,9 @@ export class InstallerComponent implements OnInit, AfterViewInit {
         private headerService: HeaderService,
         private notify: NotificationService,
         public appService: AppService,
+        private sortPipe: SortPipe,
+        public dialog: MatDialog,
+        private functionService: FunctionsService
     ) { }
 
     ngOnInit(): void {
@@ -54,7 +70,32 @@ export class InstallerComponent implements OnInit, AfterViewInit {
     }
 
     endInstall() {
-        this.stepper.next();
+        let installContent: StepAction[] = [];
+        this.stepContent.toArray().forEach((component: any) => {
+            installContent = installContent.concat(component.getInfoToInstall());
+        });
+
+        installContent = this.sortPipe.transform(installContent, 'installPriority');
+
+        console.log(installContent);
+
+        // this.stepper.next();
+
+        const dialogRef = this.dialog.open(InstallActionComponent, {
+            panelClass: 'maarch-modal',
+            disableClose: true,
+            width: '500px',
+            data: installContent
+        });
+        dialogRef.afterClosed().pipe(
+            filter((result: any) => !this.functionService.empty(result)),
+            tap((result: any) => {
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
 }

@@ -6,6 +6,7 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
 import { LANG } from '../../translate.component';
+import { StepAction } from '../types';
 
 @Component({
     selector: 'app-database',
@@ -19,6 +20,11 @@ export class DatabaseComponent implements OnInit {
 
     connectionState: boolean = false;
 
+    dataSamples: string[] = [
+        'data_fr.sql',
+        'data_en.sql'
+    ];
+
     constructor(
         public http: HttpClient,
         private _formBuilder: FormBuilder,
@@ -30,6 +36,7 @@ export class DatabaseComponent implements OnInit {
             dbPortCtrl: ['5432', Validators.required],
             dbPasswordCtrl: ['', Validators.required],
             dbNameCtrl: ['', Validators.required],
+            dbSampleCtrl: ['data_fr.sql', Validators.required],
             stateStep: ['', Validators.required]
         });
     }
@@ -97,8 +104,32 @@ export class DatabaseComponent implements OnInit {
         return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
     }
 
+    isEmptyConnInfo() {
+        return this.stepFormGroup.controls['dbHostCtrl'].invalid ||
+            this.stepFormGroup.controls['dbPortCtrl'].invalid ||
+            this.stepFormGroup.controls['dbLoginCtrl'].invalid ||
+            this.stepFormGroup.controls['dbPasswordCtrl'].invalid ||
+            this.stepFormGroup.controls['dbNameCtrl'].invalid;
+    }
+
     getFormGroup() {
         return this.stepFormGroup;
+    }
+
+    getInfoToInstall(): StepAction[] {
+        return [{
+            body: {
+                server: this.stepFormGroup.controls['dbHostCtrl'].value,
+                port: this.stepFormGroup.controls['dbPortCtrl'].value,
+                user: this.stepFormGroup.controls['dbLoginCtrl'].value,
+                password: this.stepFormGroup.controls['dbPasswordCtrl'].value,
+                name: this.stepFormGroup.controls['dbNameCtrl'].value,
+                data: this.stepFormGroup.controls['dbSampleCtrl'].value
+            },
+            route: '../rest/installer/database',
+            description: this.lang.stepDatabaseActionDesc,
+            installPriority: 2
+        }];
     }
 
 }

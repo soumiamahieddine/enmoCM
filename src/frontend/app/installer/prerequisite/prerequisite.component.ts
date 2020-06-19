@@ -160,4 +160,8 @@ export class PrerequisiteComponent implements OnInit {
     getFormGroup() {
         return this.stepFormGroup;
     }
+
+    getInfoToInstall(): any[] {
+        return [];
+    }
 }

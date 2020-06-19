@@ -11,7 +11,7 @@
                         <ng-template matStepLabel>Installation</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-welcome></app-welcome>
+                                <app-welcome #stepContent></app-welcome>
                             </div>
                             <button mat-fab matStepperNext class="nextStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-right"></mat-icon>
@@ -22,7 +22,7 @@
                         <ng-template matStepLabel>{{lang.prerequisite}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-prerequisite #appPrerequisite></app-prerequisite>
+                                <app-prerequisite #appPrerequisite #stepContent></app-prerequisite>
                             </div>
                             <button mat-fab matStepperPrevious class="previousStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-left"></mat-icon>
@@ -36,7 +36,7 @@
                         <ng-template matStepLabel>{{lang.database}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-database #appDatabase></app-database>
+                                <app-database #appDatabase #stepContent></app-database>
                             </div>
                             <button mat-fab matStepperPrevious class="previousStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-left"></mat-icon>
@@ -50,7 +50,7 @@
                         <ng-template matStepLabel>{{lang.docserver}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-docservers #appDocservers></app-docservers>
+                                <app-docservers #appDocservers #stepContent></app-docservers>
                             </div>
                             <button mat-fab matStepperPrevious class="previousStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-left"></mat-icon>
@@ -64,7 +64,7 @@
                         <ng-template matStepLabel>{{lang.customization}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-customization #appCustomization></app-customization>
+                                <app-customization #appCustomization #stepContent></app-customization>
                             </div>
                             <button mat-fab matStepperPrevious class="previousStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-left"></mat-icon>
@@ -78,7 +78,7 @@
                         <ng-template matStepLabel>{{lang.userAdmin}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-useradmin #appUseradmin></app-useradmin>
+                                <app-useradmin #appUseradmin #stepContent (tiggerInstall)="endInstall()"></app-useradmin>
                             </div>
                             <button mat-fab matStepperPrevious class="previousStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-left"></mat-icon>
