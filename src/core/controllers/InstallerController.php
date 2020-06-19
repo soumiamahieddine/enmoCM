@@ -217,7 +217,7 @@ class InstallerController
         if (!$fileContent) {
             return $response->withStatus(400)->withJson(['errors' => 'Cannot read structure.sql']);
         }
-        $result = $db->query($fileContent, null, true, true);
+        $result = $db->query($fileContent);
         if (!$result) {
             return $response->withStatus(400)->withJson(['errors' => 'Request failed : run structure.sql']);
         }
@@ -227,7 +227,7 @@ class InstallerController
             if (!$fileContent) {
                 return $response->withStatus(400)->withJson(['errors' => "Cannot read {$body['data']}.sql"]);
             }
-            $result = $db->query($fileContent, null, true, true);
+            $result = $db->query($fileContent);
             if (!$result) {
                 return $response->withStatus(400)->withJson(['errors' => "Request failed : run {$body['data']}.sql"]);
             }
