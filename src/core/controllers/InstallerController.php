@@ -213,7 +213,7 @@ class InstallerController
         $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname={$body['name']}";
         $db = new \PDO($dsn, $body['user'], $body['password'], $options);
 
-        $fileContent = file_get_contents('sql/structure.sql');
+        $fileContent = @file_get_contents('sql/structure.sql');
         if (!$fileContent) {
             return $response->withStatus(400)->withJson(['errors' => 'Cannot read structure.sql']);
         }
@@ -223,7 +223,7 @@ class InstallerController
         }
 
         if (!empty($body['data'])) {
-            $fileContent = file_get_contents("sql/{$body['data']}.sql");
+            $fileContent = @file_get_contents("sql/{$body['data']}.sql");
             if (!$fileContent) {
                 return $response->withStatus(400)->withJson(['errors' => "Cannot read {$body['data']}.sql"]);
             }
@@ -232,6 +232,22 @@ class InstallerController
                 return $response->withStatus(400)->withJson(['errors' => "Request failed : run {$body['data']}.sql"]);
             }
         }
+
+        $configFile = CoreConfigModel::getJsonLoaded(['path' => "custom/{$body['customName']}/apps/maarch_entreprise/xml/config.json"]);
+        $configFile['database'] = [
+            [
+                "server"    => $body['server'],
+                "port"      => $body['port'],
+                "type"      => 'POSTGRESQL',
+                "name"      => $body['name'],
+                "user"      => $body['user'],
+                "password"  => $body['password']
+            ]
+        ];
+
+        $fp = fopen("custom/{$body['customName']}/apps/maarch_entreprise/xml/config.json", 'w');
+        fwrite($fp, json_encode($configFile, JSON_PRETTY_PRINT));
+        fclose($fp);
 
         return $response->withStatus(204);
     }
