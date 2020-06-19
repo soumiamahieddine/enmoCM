@@ -21,8 +21,8 @@ export class DatabaseComponent implements OnInit {
     connectionState: boolean = false;
 
     dataSamples: string[] = [
-        'data_fr.sql',
-        'data_en.sql'
+        'data_fr',
+        'data_en'
     ];
 
     constructor(
@@ -36,7 +36,7 @@ export class DatabaseComponent implements OnInit {
             dbPortCtrl: ['5432', Validators.required],
             dbPasswordCtrl: ['', Validators.required],
             dbNameCtrl: ['', Validators.required],
-            dbSampleCtrl: ['data_fr.sql', Validators.required],
+            dbSampleCtrl: ['data_fr', Validators.required],
             stateStep: ['', Validators.required]
         });
     }

@@ -1790,5 +1790,6 @@ export const LANG_FR = {
     "indexingModelFieldsReset": "Les champs suivants ne sont pas dans le modèle sélectionné et seront réinitialisé pour tous les courriers : ",
     "indexingModelReassign": "Réaffection du modèle d'enregistrement",
     "updateInformations": "Actualiser les informations",
-    "dbSample": "Jeu de données"
+    "dbSample": "Jeu de données",
+    "chooseLogo": "Choisissez votre logo"
 };
