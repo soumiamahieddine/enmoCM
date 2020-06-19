@@ -92,70 +92,32 @@ class InstallerController
         } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['password'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
         }
-        if (empty($queryParams['name'])) {
-            $queryParams['name'] = 'postgres';
+
+        $connected = false;
+        $name = 'postgres';
+        if (!empty($queryParams['name'])) {
+            $name = $queryParams['name'];
+            $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname={$queryParams['name']}";
+            $connected = !@pg_connect($connection);
+        }
+        if (!$connected) {
+            $name = 'postgres';
+            $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname=postgres";
+            if (!@pg_connect($connection)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
+            }
         }
 
-        $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname={$queryParams['name']}";
-        if (!@pg_connect($connection)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Connexion failed']);
-        }
-
-        $request = "select datname from pg_database where datname = '{$queryParams['name']}'";
+        $request = "select datname from pg_database where datname = '{$name}'";
         $result = @pg_query($request);
         if (!$result) {
-            return $response->withStatus(400)->withJson(['errors' => 'Request failed']);
+            return $response->withStatus(400)->withJson(['errors' => 'Database request failed']);
         }
 
-        return $response->withStatus(204);
-    }
-
-    public function createDatabase(Request $request, Response $response)
-    {
-        $body = $request->getParsedBody();
-
-        if (!Validator::stringType()->notEmpty()->validate($body['server'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body server is empty or not a string']);
-        } elseif (!Validator::intVal()->notEmpty()->validate($body['port'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body port is empty or not an integer']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['user'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body user is empty or not a string']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['password'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['name'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body name is empty or not a string']);
+        if (!empty($queryParams['name']) && !$connected) {
+            return $response->withJson(['success' => 'First connection failed']);
         }
 
-        $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname=postgres";
-        if (!@pg_connect($connection)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Connexion failed']);
-        }
-
-        $request = "CREATE DATABASE '{$body['name']}' WITH TEMPLATE template0 ENCODING = 'UTF8'";
-        $result = pg_query($request);
-        if (!$result) {
-            return $response->withStatus(400)->withJson(['errors' => 'Request failed']);
-        }
-
-        @pg_query("ALTER DATABASE '{$body['name']}' SET DateStyle =iso, dmy");
-        pg_close();
-
-        $options = [
-            \PDO::ATTR_PERSISTENT   => true,
-            \PDO::ATTR_ERRMODE      => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_CASE         => \PDO::CASE_NATURAL
-        ];
-
-        $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname={$body['name']}";
-        $db = new \PDO($dsn, $body['user'], $body['password'], $options);
-        $fileContent = file_get_contents('sql/structure.sql');
-
-        $result = $db->query($fileContent, null, true, true);
-        if (!$result) {
-            return $response->withStatus(400)->withJson(['errors' => 'Request failed : run structure.sql']);
-        }
-
-        //TODO data fr à passer
         return $response->withStatus(204);
     }
 
@@ -204,6 +166,72 @@ class InstallerController
 
         $cmd = 'ln -s ' . realpath('.') . "/ {$body['customName']}";
         exec($cmd);
+
+        return $response->withStatus(204);
+    }
+
+    public function createDatabase(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['server'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body server is empty or not a string']);
+        } elseif (!Validator::intVal()->notEmpty()->validate($body['port'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body port is empty or not an integer']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['user'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body user is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['password'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body name is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['customName'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customName is empty or not a string']);
+        }
+
+        if (!empty($body['alreadyCreated'])) {
+            $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname=postgres";
+            if (!@pg_connect($connection)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
+            }
+
+            $request = "CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'";
+            $result = pg_query($request);
+            if (!$result) {
+                return $response->withStatus(400)->withJson(['errors' => 'Database creation failed']);
+            }
+
+            @pg_query("ALTER DATABASE '{$body['name']}' SET DateStyle =iso, dmy");
+            pg_close();
+        }
+
+        $options = [
+            \PDO::ATTR_PERSISTENT   => true,
+            \PDO::ATTR_ERRMODE      => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_CASE         => \PDO::CASE_NATURAL
+        ];
+
+        $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname={$body['name']}";
+        $db = new \PDO($dsn, $body['user'], $body['password'], $options);
+
+        $fileContent = file_get_contents('sql/structure.sql');
+        if (!$fileContent) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot read structure.sql']);
+        }
+        $result = $db->query($fileContent, null, true, true);
+        if (!$result) {
+            return $response->withStatus(400)->withJson(['errors' => 'Request failed : run structure.sql']);
+        }
+
+        if (!empty($body['data'])) {
+            $fileContent = file_get_contents("sql/{$body['data']}.sql");
+            if (!$fileContent) {
+                return $response->withStatus(400)->withJson(['errors' => "Cannot read {$body['data']}.sql"]);
+            }
+            $result = $db->query($fileContent, null, true, true);
+            if (!$result) {
+                return $response->withStatus(400)->withJson(['errors' => "Request failed : run {$body['data']}.sql"]);
+            }
+        }
 
         return $response->withStatus(204);
     }
