@@ -609,7 +609,15 @@ export class SignatureBookComponent implements OnInit {
         this.subscription.unsubscribe();
     }
 
-    pdfViewerError() {
-        this.notify.error('Fingerprints do not match');
+    pdfViewerError(viewerLink: any) {
+        this.http.get(viewerLink)
+            .pipe(
+                catchError((err: any) => {
+                    if (err.status !== 200) {
+                        this.notify.handleSoftErrors(err);
+                    }
+                    return of(false);
+                })
+            ).subscribe();
     }
 }
