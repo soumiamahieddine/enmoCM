@@ -1704,8 +1704,8 @@ export const LANG_NL = {
     "targetTable": "Target table", // _TO_TRANSLATE
     "targetIdentifier": "Target identifier", // _TO_TRANSLATE
     "companyLastname": "Company / Lastname", // _TO_TRANSLATE
-    "warnPrivateKeyTitle": "The private key has not been updated !", // _TO_TRANSLATE
-    "warnPrivateKey": "This compromises the security of the application.", // _TO_TRANSLATE
+    "warnPrivateKeyTitle": "Security alert", // _TO_TRANSLATE
+    "warnPrivateKey": "<b>The private key has not been updated !</b> <br>This compromises the security of the application.", // _TO_TRANSLATE
     "indexingModelUsedBy": "This model is already used by : ", // _TO_TRANSLATE
     "mailsWithStatus": " mail(s) with the status ", // _TO_TRANSLATE
     "indexingModelReplaceToDelete": "To delete this model you have to replace it by another.", // _TO_TRANSLATE
