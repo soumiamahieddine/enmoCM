@@ -115,6 +115,24 @@ export class IndexingModelsAdministrationComponent implements OnInit {
             ).subscribe();
         } else {
             this.dialogRef = this.dialog.open(RedirectIndexingModelComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction, indexingModel: indexingModel } });
+
+            this.dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                tap(() => {
+                    for (const i in this.indexingModels) {
+                        if (this.indexingModels[i].id === indexingModel.id) {
+                            this.indexingModels.splice(Number(i), 1);
+                        }
+                    }
+                    this.dataSource = new MatTableDataSource(this.indexingModels);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         }
     }
 

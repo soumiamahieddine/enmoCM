@@ -1783,5 +1783,9 @@ export const LANG_FR = {
     "userAdmin": "Utilisateur système",
     "stepUserAdmin_desc": "Définissez un utilisateur système afin de vous connecter à l'application.",
     "launchInstall": "Lancer l'installation",
-
+    "indexingModelUsedBy": "Ce modèle est déjà utilisé par : ",
+    "mailsWithStatus": " courrier(s) avec le statut ",
+    "indexingModelReplaceToDelete": "Pour le supprimer vous devez le remplacer par un autre modèle.",
+    "indexingModelFieldsReset": "Les champs suivants ne sont pas dans le modèle sélectionné et seront réinitialisé pour tous les courriers : ",
+    "indexingModelReassign": "Réaffection du modèle d'enregistrement"
 };

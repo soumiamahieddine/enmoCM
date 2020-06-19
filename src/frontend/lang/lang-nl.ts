@@ -1704,4 +1704,11 @@ export const LANG_NL = {
     "targetTable": "Target table", // _TO_TRANSLATE
     "targetIdentifier": "Target identifier", // _TO_TRANSLATE
     "companyLastname": "Company / Lastname", // _TO_TRANSLATE
+    "warnPrivateKeyTitle": "The private key has not been updated !", // _TO_TRANSLATE
+    "warnPrivateKey": "This compromises the security of the application.", // _TO_TRANSLATE
+    "indexingModelUsedBy": "This model is already used by : ", // _TO_TRANSLATE
+    "mailsWithStatus": " mail(s) with the status ", // _TO_TRANSLATE
+    "indexingModelReplaceToDelete": "To delete this model you have to replace it by another.", // _TO_TRANSLATE
+    "indexingModelFieldsReset": "The following fields are not in the selected model and will be reset for all mails : ", // _TO_TRANSLATE
+    "indexingModelReassign": "Reassign indexing model", // _TO_TRANSLATE
 };

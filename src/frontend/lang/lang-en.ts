@@ -1723,4 +1723,9 @@ export const LANG_EN = {
     "companyLastname": "Company / Lastname",
     "warnPrivateKeyTitle": "The private key has not been updated !",
     "warnPrivateKey": "This compromises the security of the application.",
+    "indexingModelUsedBy": "This model is already used by : ",
+    "mailsWithStatus": " mail(s) with the status ",
+    "indexingModelReplaceToDelete": "To delete this model you have to replace it by another.",
+    "indexingModelFieldsReset": "The following fields are not in the selected model and will be reset for all mails : ",
+    "indexingModelReassign": "Reassign indexing model",
 };
