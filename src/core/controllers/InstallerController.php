@@ -98,7 +98,7 @@ class InstallerController
         if (!empty($queryParams['name'])) {
             $name = $queryParams['name'];
             $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname={$queryParams['name']}";
-            $connected = !@pg_connect($connection);
+            $connected = @pg_connect($connection);
         }
         if (!$connected) {
             $name = 'postgres';
@@ -188,7 +188,7 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body customName is empty or not a string']);
         }
 
-        if (!empty($body['alreadyCreated'])) {
+        if (empty($body['alreadyCreated'])) {
             $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname=postgres";
             if (!@pg_connect($connection)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
@@ -217,8 +217,8 @@ class InstallerController
         if (!$fileContent) {
             return $response->withStatus(400)->withJson(['errors' => 'Cannot read structure.sql']);
         }
-        $result = $db->query($fileContent);
-        if (!$result) {
+        $result = $db->exec($fileContent);
+        if ($result === false) {
             return $response->withStatus(400)->withJson(['errors' => 'Request failed : run structure.sql']);
         }
 
@@ -227,8 +227,8 @@ class InstallerController
             if (!$fileContent) {
                 return $response->withStatus(400)->withJson(['errors' => "Cannot read {$body['data']}.sql"]);
             }
-            $result = $db->query($fileContent);
-            if (!$result) {
+            $result = $db->exec($fileContent);
+            if ($result ===  false) {
                 return $response->withStatus(400)->withJson(['errors' => "Request failed : run {$body['data']}.sql"]);
             }
         }
