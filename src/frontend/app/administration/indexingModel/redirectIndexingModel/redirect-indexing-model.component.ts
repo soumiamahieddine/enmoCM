@@ -1,19 +1,19 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {LANG} from '../../../translate.component';
-import {catchError, finalize, map, tap} from 'rxjs/operators';
-import {of} from 'rxjs/internal/observable/of';
-import {HttpClient} from '@angular/common/http';
-import {NotificationService} from '../../../notification.service';
-import {SortPipe} from '../../../../plugins/sorting.pipe';
-import {AppService} from '../../../../service/app.service';
+import { LANG } from '../../../translate.component';
+import { catchError, finalize, map, tap } from 'rxjs/operators';
+import { of } from 'rxjs/internal/observable/of';
+import { HttpClient } from '@angular/common/http';
+import { SortPipe } from '../../../../plugins/sorting.pipe';
+import { AppService } from '../../../../service/app.service';
+import { NotificationService } from '../../../../service/notification/notification.service';
 
 @Component({
     templateUrl: 'redirect-indexing-model.component.html',
     styleUrls: ['redirect-indexing-model.component.scss'],
-    providers: [AppService, SortPipe]
+    providers: [SortPipe]
 })
-export class RedirectIndexingModelComponent implements OnInit  {
+export class RedirectIndexingModelComponent implements OnInit {
 
     lang: any = LANG;
 
@@ -93,11 +93,11 @@ export class RedirectIndexingModelComponent implements OnInit  {
     loading: boolean = false;
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-                public dialogRef: MatDialogRef<RedirectIndexingModelComponent>,
-                public http: HttpClient,
-                private notify: NotificationService,
-                private sortPipe: SortPipe,
-                ) {
+        public dialogRef: MatDialogRef<RedirectIndexingModelComponent>,
+        public http: HttpClient,
+        private notify: NotificationService,
+        private sortPipe: SortPipe,
+    ) {
         this.mainIndexingModel = data.indexingModel;
     }
 
@@ -208,7 +208,7 @@ export class RedirectIndexingModelComponent implements OnInit  {
     }
 
     onSubmit() {
-        this.http.request('DELETE', '../rest/indexingModels/' + this.mainIndexingModel.id, {body: {targetId: this.selectedModelId}}).pipe(
+        this.http.request('DELETE', '../rest/indexingModels/' + this.mainIndexingModel.id, { body: { targetId: this.selectedModelId } }).pipe(
             tap(() => {
                 this.notify.success(this.lang.indexingModelDeleted);
                 this.dialogRef.close('ok');

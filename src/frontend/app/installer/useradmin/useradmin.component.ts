@@ -1,6 +1,6 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { NotificationService } from '../../notification.service';
+import { NotificationService } from '../../../service/notification/notification.service';
 import { LANG } from '../../translate.component';
 import { tap } from 'rxjs/internal/operators/tap';
 

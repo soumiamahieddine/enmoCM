@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ValidationErrors } from '@angular/forms';
-import { NotificationService } from '../../notification.service';
+import { NotificationService } from '../../../service/notification/notification.service';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/internal/operators/tap';
 import { catchError } from 'rxjs/internal/operators/catchError';

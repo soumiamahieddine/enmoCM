@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { NotificationService } from '../../notification.service';
+import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,8 +16,7 @@ import {RedirectIndexingModelComponent} from './redirectIndexingModel/redirect-i
 
 @Component({
     templateUrl: 'indexing-models-administration.component.html',
-    styleUrls: ['indexing-models-administration.component.scss'],
-    providers: [AppService]
+    styleUrls: ['indexing-models-administration.component.scss']
 })
 
 export class IndexingModelsAdministrationComponent implements OnInit {

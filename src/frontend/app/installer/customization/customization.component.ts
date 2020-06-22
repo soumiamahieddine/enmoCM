@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NotificationService } from '../../notification.service';
+import { NotificationService } from '../../../service/notification/notification.service';
 import { LANG } from '../../translate.component';
 import { StepAction } from '../types';
 import { DomSanitizer } from '@angular/platform-browser';

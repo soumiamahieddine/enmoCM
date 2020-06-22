@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpHandler, HttpInterceptor, HttpRequest, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { LANG } from '../app/translate.component';
 import { catchError, switchMap } from 'rxjs/operators';
-import { NotificationService } from '../app/notification.service';
+import { NotificationService } from './notification/notification.service';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';

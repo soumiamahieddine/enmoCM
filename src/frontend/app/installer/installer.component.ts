@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, ViewChildren } from '@angu
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
-import { NotificationService } from '../notification.service';
+import { NotificationService } from '../../service/notification/notification.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatStepper } from '@angular/material/stepper';
 import { AppService } from '../../service/app.service';

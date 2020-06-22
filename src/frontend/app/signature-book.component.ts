@@ -1,9 +1,8 @@
-import { Pipe, PipeTransform, Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from './translate.component';
-import { NotificationService } from './notification.service';
+import { NotificationService } from '../service/notification/notification.service';
 import { tap, catchError, filter } from 'rxjs/operators';
 import { PrivilegeService } from '../service/privileges.service';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -18,15 +17,6 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { of } from 'rxjs/internal/observable/of';
 
 declare var $: any;
-
-
-@Pipe({ name: 'safeUrl' })
-export class SafeUrlPipe implements PipeTransform {
-    constructor(private sanitizer: DomSanitizer) { }
-    transform(url: string) {
-        return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    }
-}
 
 @Component({
     templateUrl: 'signature-book.component.html',
