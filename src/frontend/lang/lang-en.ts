@@ -1692,6 +1692,8 @@ export const LANG_EN = {
     "testSucceeded": "Test succeeded",
     "test": "Test",
     "invalidClause" : "Invalid clause",
+    "invalidColumnType" : "One of selected columns does not match type",
+    "forbiddenDelimiterType" : "Delimiters are forbidden for this type",
     "canUpdateIndexingModel": "Can change indexing model",
     "options": "Options",
     "contactsDuplicates": "Contacts duplicates",

@@ -1658,6 +1658,9 @@ export const LANG_NL = {
     "accountLocked": "Too many connections attemps. Retry in", //_TO_TRANSLATE
     "modelUsedByResources": "This model is used by resources, you can't delete it.", //_TO_TRANSLATE
     "mustChangePassword": "Please, you must change your password.", //_TO_TRANSLATE
+    "invalidClause" : "Invalid clause",//_TO_TRANSLATE
+    "invalidColumnType" : "One of selected columns does not match type",//_TO_TRANSLATE
+    "forbiddenDelimiterType" : "Delimiters are forbidden for this type", //_TO_TRANSLATE
     "linkedResources": "Main document (Linked mails)", //_TO_TRANSLATE
     "linkedResourcesAttachments": "Attachments (linked mails)", //_TO_TRANSLATE
     "accessNotFound": "Access not found", //_TO_TRANSLATE

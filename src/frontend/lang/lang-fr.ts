@@ -1694,6 +1694,8 @@ export const LANG_FR = {
     "testSucceeded": "Le test a réussi",
     "test": "Tester",
     "invalidClause" : "Clause non valide",
+    "invalidColumnType" : "Une des colonnes selectionnées ne correspond pas au type choisi",
+    "forbiddenDelimiterType" : "Les délimiteurs sont interdits pour ce type",
     "canUpdateIndexingModel": "Pouvoir changer le modèle d'indexation",
     "options": "Options",
     "contactsDuplicates": "Doublons de contacts",
