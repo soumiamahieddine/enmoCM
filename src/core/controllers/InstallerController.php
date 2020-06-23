@@ -32,6 +32,13 @@ class InstallerController
         $output = explode(':', $output[0]);
         $unoconv = !empty($output[1]);
 
+        exec('whereis netcat', $outputNetcat, $returnNetcat);
+        $outputNetcat = explode(':', $outputNetcat[0]);
+
+        exec('whereis nmap', $outputNmap, $returnNmap);
+        $outputNmap = explode(':', $outputNmap[0]);
+        $netcatOrNmap = !empty($outputNetcat[1]) || !empty($outputNmap[1]);
+
         $pdoPgsql = @extension_loaded('pdo_pgsql');
         $pgsql = @extension_loaded('pgsql');
         $mbstring = @extension_loaded('mbstring');
@@ -48,18 +55,14 @@ class InstallerController
         $writable = is_writable('.') && is_readable('.');
 
         $displayErrors = (ini_get('display_errors') == '1');
-        $errorReporting = (ini_get('error_reporting') >= 22519);
-
-        exec('whereis netcat', $outputNetcat, $returnNetcat);
-        $outputNetcat = explode(':', $outputNetcat[0]);
-        exec('whereis nmap', $outputNmap, $returnNmap);
-        $outputNmap = explode(':', $outputNmap[0]);
-        $netcatOrNmap = !empty($outputNetcat[1]) || !empty($outputNmap[1]);
+        $errorReporting = CoreController::getErrorReportingFromPhpIni();
+        $errorReporting = !in_array(8, $errorReporting);
 
         $prerequisites = [
             'phpVersion'        => $phpVersion,
             'phpVersionValid'   => $phpVersionValid,
             'unoconv'           => $unoconv,
+            'netcatOrNmap'      => $netcatOrNmap,
             'pdoPgsql'          => $pdoPgsql,
             'pgsql'             => $pgsql,
             'mbstring'          => $mbstring,
@@ -74,8 +77,7 @@ class InstallerController
             'zip'               => $zip,
             'writable'          => $writable,
             'displayErrors'     => $displayErrors,
-            'errorReporting'    => $errorReporting,
-            'netcatOrNmap'      => $netcatOrNmap
+            'errorReporting'    => $errorReporting
         ];
 
         return $response->withJson(['prerequisites' => $prerequisites]);
@@ -129,6 +131,8 @@ class InstallerController
 
         if (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
+        } elseif (!preg_match('/^[a-zA-Z0-9_\-]*$/', $body['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customId has unauthorized characters']);
         }
 
         if (is_dir("custom/{$body['customId']}")) {
@@ -186,8 +190,12 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['name'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body name is empty or not a string']);
+        } elseif (!preg_match('/^[a-zA-Z0-9_\-]*$/', $body['name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body name has unauthorized characters']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
+        } elseif (!is_file("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json")) {
+            return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
         }
 
         if (empty($body['alreadyCreated'])) {
@@ -196,13 +204,24 @@ class InstallerController
                 return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
             }
 
-            $request = "CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'";
-            $result = pg_query($request);
+            $result = pg_query("CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'");
             if (!$result) {
                 return $response->withStatus(400)->withJson(['errors' => 'Database creation failed']);
             }
 
             @pg_query("ALTER DATABASE '{$body['name']}' SET DateStyle =iso, dmy");
+            pg_close();
+        } else {
+            $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname={$body['name']}";
+            if (!@pg_connect($connection)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
+            }
+
+            $result = pg_query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
+            $row = pg_fetch_row($result);
+            if (!empty($row)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Given database has tables']);
+            }
             pg_close();
         }
 
@@ -215,20 +234,20 @@ class InstallerController
         $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname={$body['name']}";
         $db = new \PDO($dsn, $body['user'], $body['password'], $options);
 
-        $fileContent = @file_get_contents('sql/structure.sql');
-        if (!$fileContent) {
-            return $response->withStatus(400)->withJson(['errors' => 'Cannot read structure.sql']);
+        if (!is_file('sql/structure.sql')) {
+            return $response->withStatus(400)->withJson(['errors' => 'File sql/structure.sql does not exist']);
         }
+        $fileContent = file_get_contents('sql/structure.sql');
         $result = $db->exec($fileContent);
         if ($result === false) {
             return $response->withStatus(400)->withJson(['errors' => 'Request failed : run structure.sql']);
         }
 
         if (!empty($body['data'])) {
-            $fileContent = @file_get_contents("sql/{$body['data']}.sql");
-            if (!$fileContent) {
-                return $response->withStatus(400)->withJson(['errors' => "Cannot read {$body['data']}.sql"]);
+            if (!is_file("sql/{$body['data']}.sql")) {
+                return $response->withStatus(400)->withJson(['errors' => "File sql/{$body['data']}.sql does not exist"]);
             }
+            $fileContent = @file_get_contents("sql/{$body['data']}.sql");
             $result = $db->exec($fileContent);
             if ($result ===  false) {
                 return $response->withStatus(400)->withJson(['errors' => "Request failed : run {$body['data']}.sql"]);
@@ -260,12 +279,14 @@ class InstallerController
 
         if (!Validator::stringType()->notEmpty()->validate($body['path'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body path is empty or not a string']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
         } elseif (!is_dir($body['path'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body path does not exist']);
         } elseif (!is_writable($body['path'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body path is not writable']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
+        } elseif (!is_file("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json")) {
+            return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
         }
 
         $body['path'] = rtrim($body['path'], '/');

@@ -142,4 +142,21 @@ class CoreController
 
         return $maximumSize;
     }
+
+    public static function getErrorReportingFromPhpIni()
+    {
+        $bits = ini_get('error_reporting');
+
+        $errorReporting = [];
+        while ($bits > 0) {
+            $end = 0;
+            for ($i = 0, $n = 0; $i <= $bits; $i = 1 * pow(2, $n), $n++) {
+                $end = $i;
+            }
+            $errorReporting[] = $end;
+            $bits = $bits - $end;
+        }
+
+        return $errorReporting;
+    }
 }
