@@ -17,7 +17,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { HeaderService } from '../../service/header.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { of } from 'rxjs/internal/observable/of';
-import { NotificationService } from '../../service/notification/notification.service.js';
+import { NotificationService } from '../../service/notification/notification.service';
 
 declare var $: any;
 declare var DocsAPI: any;

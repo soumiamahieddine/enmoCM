@@ -7,7 +7,6 @@ import { AppService } from '../service/app.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { LangService } from '../service/app-lang.service';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/internal/operators/map';
 import { AuthService } from '../service/auth.service';
 
 /** Custom options the configure the tooltip's default show/hide delays. */
@@ -37,9 +36,8 @@ export class AppComponent implements OnInit {
         sanitizer: DomSanitizer,
         public appService: AppService,
         public headerService: HeaderService,
-        private authService: AuthService
+        private authService: AuthService,
     ) {
-
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('../rest/images?image=onlyLogo'));
         iconReg.addSvgIcon('maarchLogoFull', sanitizer.bypassSecurityTrustResourceUrl('../rest/images?image=logo'));
         iconReg.addSvgIcon('maarchLogoWhite', sanitizer.bypassSecurityTrustResourceUrl('assets/logo_only_white.svg'));
@@ -49,7 +47,7 @@ export class AppComponent implements OnInit {
 
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit() {
         this.headerService.hideSideBar = true;
         this.headerService.sideNavLeft = this.snavLeft;
     }

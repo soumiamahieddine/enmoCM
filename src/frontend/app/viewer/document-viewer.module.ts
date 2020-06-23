@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { SharedModule } from '../app-common.module';
 
 import { DocumentViewerComponent } from './document-viewer.component';
+import { DocumentViewerModalComponent } from './modal/document-viewer-modal.component';
+
 import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
@@ -14,7 +16,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     ],
     declarations: [
         DocumentViewerComponent,
-        EcplOnlyofficeViewerComponent
+        EcplOnlyofficeViewerComponent,
+        DocumentViewerModalComponent
     ],
     exports: [
         PdfViewerModule,
@@ -22,6 +25,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
         DocumentViewerComponent,
     ],
     entryComponents: [
+        DocumentViewerModalComponent
     ]
 })
 export class DocumentViewerModule { }
