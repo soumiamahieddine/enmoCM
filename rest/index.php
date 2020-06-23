@@ -313,6 +313,7 @@ $app->get('/installer/prerequisites', \SrcCore\controllers\InstallerController::
 $app->get('/installer/databaseConnection', \SrcCore\controllers\InstallerController::class . ':checkDatabaseConnection');
 $app->post('/installer/custom', \SrcCore\controllers\InstallerController::class . ':createCustom');
 $app->post('/installer/database', \SrcCore\controllers\InstallerController::class . ':createDatabase');
+$app->post('/installer/docservers', \SrcCore\controllers\InstallerController::class . ':createDocservers');
 
 //ListInstances
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');

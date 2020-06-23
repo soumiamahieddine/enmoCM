@@ -18,6 +18,8 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
+use SrcCore\models\DatabasePDO;
 
 class InstallerController
 {
@@ -125,13 +127,13 @@ class InstallerController
     {
         $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($body['customName'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body customName is empty or not a string']);
+        if (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
         }
 
-        if (is_dir("custom/{$body['customName']}")) {
+        if (is_dir("custom/{$body['customId']}")) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom with this name already exists']);
-        } elseif (!@mkdir("custom/{$body['customName']}/apps/maarch_entreprise/xml", 0755, true)) {
+        } elseif (!@mkdir("custom/{$body['customId']}/apps/maarch_entreprise/xml", 0755, true)) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom folder creation failed']);
         }
 
@@ -143,9 +145,9 @@ class InstallerController
 
         $customFile = CoreConfigModel::getJsonLoaded(['path' => 'custom/custom.json']);
         $customFile[] = [
-            'id'    => $body['customName'],
+            'id'    => $body['customId'],
             'uri'   => null,
-            'path'  => $body['customName']
+            'path'  => $body['customId']
         ];
         $fp = fopen('custom/custom.json', 'w');
         fwrite($fp, json_encode($customFile, JSON_PRETTY_PRINT));
@@ -154,17 +156,17 @@ class InstallerController
         $jsonFile = [
             'config'    => [
                 'lang'              => $body['lang'] ?? 'fr',
-                'applicationName'   => $body['customName'],
+                'applicationName'   => $body['applicationName'] ?? $body['customId'],
                 'cookieTime'        => 10080,
                 'timezone'          => 'Europe/Paris'
             ],
             'database'  => []
         ];
-        $fp = fopen("custom/{$body['customName']}/apps/maarch_entreprise/xml/config.json", 'w');
+        $fp = fopen("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json", 'w');
         fwrite($fp, json_encode($jsonFile, JSON_PRETTY_PRINT));
         fclose($fp);
 
-        $cmd = 'ln -s ' . realpath('.') . "/ {$body['customName']}";
+        $cmd = 'ln -s ' . realpath('.') . "/ {$body['customId']}";
         exec($cmd);
 
         return $response->withStatus(204);
@@ -184,8 +186,8 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['name'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body name is empty or not a string']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['customName'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body customName is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
         }
 
         if (empty($body['alreadyCreated'])) {
@@ -233,7 +235,7 @@ class InstallerController
             }
         }
 
-        $configFile = CoreConfigModel::getJsonLoaded(['path' => "custom/{$body['customName']}/apps/maarch_entreprise/xml/config.json"]);
+        $configFile = CoreConfigModel::getJsonLoaded(['path' => "custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json"]);
         $configFile['database'] = [
             [
                 "server"    => $body['server'],
@@ -245,9 +247,70 @@ class InstallerController
             ]
         ];
 
-        $fp = fopen("custom/{$body['customName']}/apps/maarch_entreprise/xml/config.json", 'w');
+        $fp = fopen("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json", 'w');
         fwrite($fp, json_encode($configFile, JSON_PRETTY_PRINT));
         fclose($fp);
+
+        return $response->withStatus(204);
+    }
+
+    public function createDocservers(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['path'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body path is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
+        } elseif (!is_dir($body['path'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body path does not exist']);
+        } elseif (!is_writable($body['path'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body path is not writable']);
+        }
+
+        $body['path'] = rtrim($body['path'], '/');
+        $docservers = [
+            'AI'                        => 'ai',
+            'RESOURCES'                 => 'resources',
+            'ATTACHMENTS'               => 'attachments',
+            'CONVERT_RESOURCES'         => 'convert_resources',
+            'CONVERT_ATTACH'            => 'convert_attachments',
+            'TNL_RESOURCES'             => 'thumbnails_resources',
+            'TNL_ATTACHMENTS'           => 'thumbnails_attachments',
+            'FULLTEXT_RESOURCES'        => 'fulltext_resources',
+            'FULLTEXT_ATTACHMENTS'      => 'fulltext_attachments',
+            'TEMPLATES'                 => 'templates',
+            'ARCHIVETRANSFER'           => 'archive_transfer',
+            'ACKNOWLEDGEMENT_RECEIPTS'  => 'acknowledgement_receipts'
+        ];
+
+        foreach ($docservers as $docserver) {
+            if (!@mkdir("{$body['path']}/{$body['customId']}/{$docserver}", 0755, true)) {
+                return $response->withStatus(400)->withJson(['errors' => "Docserver folder creation failed for path : {$body['path']}/{$body['customId']}/{$docserver}"]);
+            }
+        }
+
+        $templatesPath = "{$body['path']}/{$body['customId']}/templates/0000";
+        if (!@mkdir($templatesPath, 0755, true)) {
+            return $response->withJson(['success' => "Docservers created but templates folder creation failed"]);
+        }
+
+        $templatesToCopy =  scandir('install/templates/0000');
+        foreach ($templatesToCopy as $templateToCopy) {
+            if ($templateToCopy == '.' || $templateToCopy == '..') {
+                continue;
+            }
+
+            copy("install/templates/0000/{$templateToCopy}", "{$templatesPath}/{$templateToCopy}");
+        }
+
+        DatabasePDO::reset();
+        new DatabasePDO(['customId' => $body['customId']]);
+        DatabaseModel::update([
+            'table'     => 'docservers',
+            'postSet'   => ['path_template' => "replace(path_template, '/opt/maarch/docservers', '{$body['path']}/{$body['customId']}')"],
+            'where'     => ['1 = 1']
+        ]);
 
         return $response->withStatus(204);
     }
