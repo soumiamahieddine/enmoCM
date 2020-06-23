@@ -125,6 +125,23 @@ class InstallerController
         return $response->withStatus(204);
     }
 
+    public function getSQLDataFiles(Request $request, Response $response)
+    {
+        $dataFiles = [];
+
+        $sqlFiles =  scandir('sql');
+        foreach ($sqlFiles as $sqlFile) {
+            if ($sqlFile == '.' || $sqlFile == '..') {
+                continue;
+            }
+            if (strpos($sqlFile, 'data_') === 0) {
+                $dataFiles[] = str_replace('.sql', '', $sqlFile);
+            }
+        }
+
+        return $response->withJson(['dataFiles' => $dataFiles]);
+    }
+
     public function createCustom(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
