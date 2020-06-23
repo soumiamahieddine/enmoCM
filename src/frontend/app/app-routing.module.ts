@@ -42,7 +42,7 @@ const routes: Routes = [
     { path: 'about-us', canActivate: [AppGuard], component: AboutUsComponent },
     { path: 'home', canActivate: [AppGuard], component: HomeComponent },
     { path: 'basketList/users/:userSerialId/groups/:groupSerialId/baskets/:basketId', canActivate: [AppGuard], component: BasketListComponent },
-    { path: 'login', canActivate: [AppGuard], component: LoginComponent },
+    { path: 'login', component: LoginComponent },
     {
         path: '**',
         redirectTo: 'home',
