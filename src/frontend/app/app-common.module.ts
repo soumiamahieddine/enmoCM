@@ -123,6 +123,8 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
         ReactiveFormsModule,
         RouterModule,
         AppMaterialModule,
+        AppServiceModule,
+        NotificationModule,
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
@@ -146,8 +148,6 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
         FolderMenuComponent,
         FolderActionListComponent,
         LinkedResourceListComponent,
-        AppServiceModule,
-        NotificationModule
     ],
     providers: [],
     entryComponents: [

@@ -1793,5 +1793,7 @@ export const LANG_FR = {
     "indexingModelReassign": "Réaffection du modèle d'enregistrement",
     "updateInformations": "Actualiser les informations",
     "dbSample": "Jeu de données",
-    "chooseLogo": "Choisissez votre logo"
+    "chooseLogo": "Choisissez votre logo",
+    "stepEmptyDb": "Cette base éxiste déjà ! Si celle-ci n'est pas vide, cela peut engendrer une corruption des données éxistantes !",
+    "instanceId": "identifiant de l'instance"
 };
