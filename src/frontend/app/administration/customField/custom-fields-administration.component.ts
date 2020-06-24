@@ -189,6 +189,14 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 this.notify.handleErrors(this.lang.customFieldAlreadyExists);
                 return of(false);
             }
+        } else {
+            if (['string', 'integer', 'date'].indexOf(customField.type) > -1) {
+                customField.values.label = [{
+                    column: customField.values.key,
+                    delimiterEnd: '',
+                    delimiterStart: ''
+                }];
+            }
         }
 
         this.http.put('../rest/customFields/' + customField.id, customFieldToUpdate).pipe(
@@ -258,7 +266,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     isValidField(field: any) {
         if (field.SQLMode) {
-            return !this.functionsService.empty(field.values.key) &&  !this.functionsService.empty(field.values.label) && !this.functionsService.empty(field.values.table) && !this.functionsService.empty(field.values.clause)
+            return !this.functionsService.empty(field.values.key) && !this.functionsService.empty(field.values.label) && !this.functionsService.empty(field.values.table) && !this.functionsService.empty(field.values.clause)
         } else {
             return true;
         }

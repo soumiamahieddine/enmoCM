@@ -110,7 +110,7 @@
                                                                 </mat-option>
                                                             </mat-select>
                                                         </mat-form-field>
-                                                        <div style="width:100%;padding-bottom: 20px;" *ngIf="custom.values.table">
+                                                        <div style="width:100%;padding-bottom: 20px;" *ngIf="['string', 'integer', 'date'].indexOf(custom.type) === -1 && custom.values.table">
                                                             <mat-label
                                                                 style="font-size: 75%;color: rgba(0,0,0,0.54);width: 100%;display: block;">
                                                                 {{lang.targetLabel}} *</mat-label>
