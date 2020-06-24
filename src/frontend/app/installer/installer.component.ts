@@ -66,7 +66,6 @@ export class InstallerComponent implements OnInit, AfterViewInit {
     }
 
     initStep(ev: any) {
-        console.log((ev));
         this.stepContent.toArray()[ev.selectedIndex].initStep();
     }
 

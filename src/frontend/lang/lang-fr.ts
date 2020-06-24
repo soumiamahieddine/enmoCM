@@ -1794,8 +1794,10 @@ export const LANG_FR = {
     "updateInformations": "Actualiser les informations",
     "dbSample": "Jeu de données",
     "chooseLogo": "Choisissez votre logo",
-    "stepEmptyDb": "Cette base éxiste déjà ! Si celle-ci n'est pas vide, cela peut engendrer une corruption des données éxistantes !",
+    "stepEmptyDb": "Cette base existe déjà mais semble vide.",
     "instanceId": "identifiant de l'instance",
     "addColumn": "Ajouter une colonne",
+    "stepInstanceActionDesc": "Initialisation de l'instance",
+    "stepDocserversActionDesc": "Création de la zone stockage",
     "collaboraOnlineNotEnabled": "Le serveur Collabora Online n'est pas activé dans documentEditorsConfig.xml",
 };

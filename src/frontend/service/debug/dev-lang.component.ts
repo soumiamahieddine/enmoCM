@@ -20,14 +20,14 @@ export class DevLangComponent implements OnInit {
     currentLang = 'en';
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<DevLangComponent>, public http: HttpClient) {
+    }
+
+    ngOnInit(): void {
         this.allLang = {
             fr: JSON.parse(JSON.stringify(LANG_FR)),
             en: JSON.parse(JSON.stringify(LANG_EN)),
             nl: JSON.parse(JSON.stringify(LANG_NL))
         };
-    }
-
-    ngOnInit(): void {
         this.enMissing = Object.keys(this.allLang.fr).filter((keyLang: any) => Object.keys(this.allLang.en).indexOf(keyLang) === -1).map((keyLang: any) => {
             return {
                 id: keyLang,
@@ -84,7 +84,7 @@ export class DevLangComponent implements OnInit {
                     if (this.currentLang === 'en') {
                         this.enMissing = this.enMissing.filter((missLang) => missLang.id !== keyLang);
                     } else {
-                        this.nlMissing = this.enMissing.filter((missLang) => missLang.id !== keyLang);
+                        this.nlMissing = this.nlMissing.filter((missLang) => missLang.id !== keyLang);
                     }
                 });
             }),

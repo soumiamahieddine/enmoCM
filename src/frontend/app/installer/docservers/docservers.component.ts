@@ -39,6 +39,10 @@ export class DocserversComponent implements OnInit {
         return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
     }
 
+    initStep() {
+        return false;
+    }
+
 
     getFormGroup() {
         return this.stepFormGroup;
@@ -63,17 +67,18 @@ export class DocserversComponent implements OnInit {
 
         // FOR TEST
         this.stepFormGroup.controls['stateStep'].setValue('success');
-        this.notify.success(this.lang.rightInformations);
+        this.notify.success('TODO : waiting back docservers check');
     }
 
     getInfoToInstall(): any[] {
-        return [];
-        /*return {
-            body : {
-                appName: this.stepFormGroup.controls['docserversPath'].value,
+        return [{
+            body: {
+                path: this.stepFormGroup.controls['docserversPath'].value,
             },
-            route : '/installer/docservers'
-        };*/
+            route: '../rest/installer/docservers',
+            description: this.lang.stepDocserversActionDesc,
+            installPriority: 3
+        }];
     }
 
 }

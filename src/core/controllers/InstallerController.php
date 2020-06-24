@@ -296,11 +296,11 @@ class InstallerController
 
         if (!Validator::stringType()->notEmpty()->validate($body['path'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body path is empty or not a string']);
-        } elseif (!is_dir($body['path'])) {
+        }/*  elseif (!is_dir($body['path'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body path does not exist']);
         } elseif (!is_writable($body['path'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body path is not writable']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
+        }*/ elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
         } elseif (!is_file("custom/{$body['customId']}/initializing.lck")) {
             return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
@@ -308,7 +308,7 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
         }
 
-        $body['path'] = rtrim($body['path'], '/');
+        $body['path'] = rtrim($body['path'], '/').rtrim($body['customId'], '/');
         $docservers = [
             'AI'                        => 'ai',
             'RESOURCES'                 => 'resources',
