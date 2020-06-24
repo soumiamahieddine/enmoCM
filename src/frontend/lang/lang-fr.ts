@@ -1795,5 +1795,6 @@ export const LANG_FR = {
     "dbSample": "Jeu de données",
     "chooseLogo": "Choisissez votre logo",
     "stepEmptyDb": "Cette base éxiste déjà ! Si celle-ci n'est pas vide, cela peut engendrer une corruption des données éxistantes !",
-    "instanceId": "identifiant de l'instance"
+    "instanceId": "identifiant de l'instance",
+    "addColumn": "Ajouter une colonne",
 };

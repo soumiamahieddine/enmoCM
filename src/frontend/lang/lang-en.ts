@@ -344,7 +344,7 @@ export const LANG_EN = {
     "contactDetails": "Details",
     "contactDisabled": "Contact disabled",
     "contactEnabled": "Contact enabled",
-    "contactFilledTo": "Contact filled at", // Would be better to use a variable here -> 'Contact <var> filled'
+    "contactFilledTo": "Contact filled at",
     "contactGroupCreate": "Create contacts group",
     "contactGroupCreation": "Contacts group creation",
     "contactGroupList": "Contacts group list",
@@ -1730,4 +1730,5 @@ export const LANG_EN = {
     "indexingModelReplaceToDelete": "To delete this model you have to replace it by another.",
     "indexingModelFieldsReset": "The following fields are not in the selected model and will be reset for all mails : ",
     "indexingModelReassign": "Reassign indexing model",
+    "addColumn": "Add a column"
 };
