@@ -27,7 +27,7 @@
             <mat-label>{{lang.dbName}}</mat-label>
             <input matInput formControlName="dbNameCtrl" required>
         </mat-form-field>
-        <div class="alert-message alert-message-info" *ngIf="dbExist" role="alert" style="margin-top: 30px;min-width: 100%;">
+        <div class="alert-message alert-message-info" *ngIf="dbExist" role="alert" style="margin-top: 0px;min-width: 100%;">
             {{lang.stepEmptyDb}}
         </div>
         <mat-form-field appearance="outline" floatLabel="never">

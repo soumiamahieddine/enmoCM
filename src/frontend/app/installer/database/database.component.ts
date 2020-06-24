@@ -87,19 +87,14 @@ export class DatabaseComponent implements OnInit {
             name: this.stepFormGroup.controls['dbNameCtrl'].value
         };
 
-        this.http.get(`../rest/installer/databaseConnection`, { params: info }).pipe(
+        this.http.get(`../rest/installer/databaseConnection`, { observe: 'response', params: info }).pipe(
             tap((data: any) => {
-                console.log(this.functionsService.empty(data.warning));
-                if (!this.functionsService.empty(data.warning)) {
-                    this.dbExist = true;
-                    this.stepFormGroup.controls['stateStep'].setValue('');
-                } else {
-                    this.dbExist = false;
-                    this.notify.success(this.lang.rightInformations);
-                    this.stepFormGroup.controls['stateStep'].setValue('success');
-                }
+                this.dbExist = data.status === 200;
+                this.notify.success(this.lang.rightInformations);
+                this.stepFormGroup.controls['stateStep'].setValue('success');
             }),
             catchError((err: any) => {
+                this.dbExist = false;
                 this.notify.error(this.lang.badInformations);
                 this.stepFormGroup.markAllAsTouched();
                 this.stepFormGroup.controls['stateStep'].setValue('');
