@@ -228,7 +228,11 @@ export class CustomFieldsAdministrationComponent implements OnInit {
         if (custom.SQLMode) {
             custom.values = {
                 key: 'id',
-                label: [],
+                label:  [{
+                    column: 'id',
+                    delimiterEnd: '',
+                    delimiterStart: ''
+                }],
                 table: 'users',
                 clause: '1=1'
             };
