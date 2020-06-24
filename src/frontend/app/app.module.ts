@@ -2,13 +2,14 @@ import { NgModule, Injectable } from '@angular/core';
 
 import { SharedModule } from './app-common.module';
 import { AppRoutingModule } from './app-routing.module';
-import { ProcessModule } from './process/process.module';
-import { DocumentViewerModule } from './viewer/document-viewer.module';
-import { AppListModule } from './app-list.module';
 
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
+import { ProcessModule } from './process/process.module';
+import { DocumentViewerModule } from './viewer/document-viewer.module';
+import { AppListModule } from './app-list.module';
 
 import { AuthInterceptor } from '../service/auth-interceptor.service';
 import { FiltersListService } from '../service/filtersList.service';

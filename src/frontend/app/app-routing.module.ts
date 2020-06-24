@@ -44,7 +44,7 @@ const routes: Routes = [
     { path: 'basketList/users/:userSerialId/groups/:groupSerialId/baskets/:basketId', canActivate: [AppGuard], component: BasketListComponent },
     { path: 'login', component: LoginComponent },
     {
-        path: '**',
+        path: '',
         redirectTo: 'home',
         pathMatch: 'full'
     },
