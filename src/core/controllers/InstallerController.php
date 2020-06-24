@@ -189,6 +189,8 @@ class InstallerController
         $cmd = 'ln -s ' . realpath('.') . "/ {$body['customId']}";
         exec($cmd);
 
+        file_put_contents("custom/{$body['customId']}/initializing.lck", 1);
+
         return $response->withStatus(204);
     }
 
@@ -210,6 +212,8 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body name has unauthorized characters']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
+        } elseif (!is_file("custom/{$body['customId']}/initializing.lck")) {
+            return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
         } elseif (!is_file("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json")) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
         }
@@ -298,6 +302,8 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body path is not writable']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
+        } elseif (!is_file("custom/{$body['customId']}/initializing.lck")) {
+            return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
         } elseif (!is_file("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json")) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
         }
@@ -359,6 +365,8 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
         } elseif (!preg_match('/^[a-zA-Z0-9_\-]*$/', $body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId has unauthorized characters']);
+        } elseif (!is_file("custom/{$body['customId']}/initializing.lck")) {
+            return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
         }
 
         if (!empty($body['bodyLoginPath'])) {
