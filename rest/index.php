@@ -315,7 +315,9 @@ $app->get('/installer/sqlDataFiles', \SrcCore\controllers\InstallerController::c
 $app->post('/installer/custom', \SrcCore\controllers\InstallerController::class . ':createCustom');
 $app->post('/installer/database', \SrcCore\controllers\InstallerController::class . ':createDatabase');
 $app->post('/installer/docservers', \SrcCore\controllers\InstallerController::class . ':createDocservers');
-$app->put('/dev/lang', \SrcCore\controllers\InstallerController::class . ':generateLang');
+
+//TODO REWORK
+$app->put('/dev/lang', \SrcCore\controllers\CoreController::class . ':generateLang');
 
 //ListInstances
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');

@@ -23,25 +23,6 @@ use SrcCore\models\DatabasePDO;
 
 class InstallerController
 {
-    public function generateLang(Request $request, Response $response)
-    {
-        $body = $request->getParsedBody();
-
-        if (!Validator::stringType()->notEmpty()->validate($body['langId'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body langId is empty or not a string']);
-        }
-
-        $content = 'export const LANG_'.strtoupper($body['langId']).' = '.json_encode($body['jsonContent'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).';';
-        
-        if($fp = @fopen("src/frontend/lang/lang-{$body['langId']}.ts", 'w')) {
-            fwrite($fp, $content);
-            fclose($fp);
-            return $response->withStatus(204);
-        } else {
-            return $response->withStatus(400)->withJson(['errors' => "Cannot open file : src/frontend/lang/lang-{$body['langId']}.ts"]);
-        }
-    }
-
     public function getPrerequisites(Request $request, Response $response)
     {
         $phpVersion = phpversion();
@@ -107,25 +88,24 @@ class InstallerController
         $queryParams = $request->getQueryParams();
 
         if (!Validator::stringType()->notEmpty()->validate($queryParams['server'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body server is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams server is empty or not a string']);
         } elseif (!Validator::intVal()->notEmpty()->validate($queryParams['port'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body port is empty or not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams port is empty or not an integer']);
         } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['user'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body user is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams user is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['password'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams password is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams name is empty or not a string']);
         }
 
-        $connected = false;
-        $name = 'postgres';
-        if (!empty($queryParams['name'])) {
-            $name = $queryParams['name'];
-            $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname={$queryParams['name']}";
-            $connected = @pg_connect($connection);
-        }
+        $name = $queryParams['name'];
+        $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname={$name}";
+        $connected = @pg_connect($connection);
+
         if (!$connected) {
             $name = 'postgres';
-            $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname=postgres";
+            $connection = "host={$queryParams['server']} port={$queryParams['port']} user={$queryParams['user']} password={$queryParams['password']} dbname={$name}";
             if (!@pg_connect($connection)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
             }
@@ -137,8 +117,8 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Database request failed']);
         }
 
-        if (!empty($queryParams['name']) && !$connected) {
-            return $response->withJson(['success' => 'First connection failed']);
+        if ($connected) {
+            return $response->withJson(['warning' => 'Database exists']);
         }
 
         return $response->withStatus(204);
@@ -234,30 +214,27 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
         }
 
-        if (empty($body['alreadyCreated'])) {
+        $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname={$body['name']}";
+        $connected = @pg_connect($connection);
+        if ($connected) {
+            $result = @pg_query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
+            $row = pg_fetch_row($result);
+            if (!empty($row)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Given database has tables']);
+            }
+            pg_close();
+        } else {
             $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname=postgres";
             if (!@pg_connect($connection)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
             }
 
-            $result = pg_query("CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'");
+            $result = @pg_query("CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'");
             if (!$result) {
                 return $response->withStatus(400)->withJson(['errors' => 'Database creation failed']);
             }
 
             @pg_query("ALTER DATABASE '{$body['name']}' SET DateStyle =iso, dmy");
-            pg_close();
-        } else {
-            $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname={$body['name']}";
-            if (!@pg_connect($connection)) {
-                return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
-            }
-
-            $result = pg_query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
-            $row = pg_fetch_row($result);
-            if (!empty($row)) {
-                return $response->withStatus(400)->withJson(['errors' => 'Given database has tables']);
-            }
             pg_close();
         }
 
@@ -368,6 +345,40 @@ class InstallerController
             'postSet'   => ['path_template' => "replace(path_template, '/opt/maarch/docservers', '{$body['path']}/{$body['customId']}')"],
             'where'     => ['1 = 1']
         ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function createCustomization(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['bodyLoginPath']) && empty($body['encodedBodyLogin'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body bodyLogin is empty']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
+        } elseif (!preg_match('/^[a-zA-Z0-9_\-]*$/', $body['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body customId has unauthorized characters']);
+        }
+
+        if (!empty($body['bodyLoginPath'])) {
+            if (!is_file("dist/assets/{$body['bodyLoginPath']}")) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body bodyLogin does not exist']);
+            }
+            if ($body['bodyLoginPath'] != 'bodylogin.jpg') {
+                copy("dist/assets/{$body['bodyLoginPath']}", "custom/{$body['customId']}/img/bodylogin.jpg");
+            }
+        } else {
+            //TODO check jpg
+            $tmpPath = CoreConfigModel::getTmpPath();
+            $tmpFileName = $tmpPath . 'installer_body_' . rand() . '_file.jpg';
+            file_put_contents($tmpFileName, $body['encodedBodyLogin']);
+            $imageSizes = getimagesize($tmpFileName);
+            if ($imageSizes[0] < 1920 || $imageSizes[1] < 1000) {
+                return $response->withStatus(400)->withJson(['errors' => 'BodyLogin image is not wide enough']);
+            }
+            copy($tmpFileName, "custom/{$body['customId']}/img/bodylogin.jpg");
+        }
 
         return $response->withStatus(204);
     }
