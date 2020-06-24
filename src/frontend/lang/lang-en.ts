@@ -1730,5 +1730,6 @@ export const LANG_EN = {
     "indexingModelReplaceToDelete": "To delete this model you have to replace it by another.",
     "indexingModelFieldsReset": "The following fields are not in the selected model and will be reset for all mails : ",
     "indexingModelReassign": "Reassign indexing model",
-    "addColumn": "Add a column"
+    "addColumn": "Add a column",
+    "collaboraOnlineNotEnabled": "The Collabora Online server is not enabled in documentEditorsConfig.xml",
 };

@@ -8,6 +8,7 @@ import { DocumentViewerModalComponent } from './modal/document-viewer-modal.comp
 import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import {CollaboraOnlineViewerComponent} from '../../plugins/collabora-online/collabora-online-viewer.component';
 
 @NgModule({
     imports: [
@@ -17,12 +18,14 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     declarations: [
         DocumentViewerComponent,
         EcplOnlyofficeViewerComponent,
-        DocumentViewerModalComponent
+        DocumentViewerModalComponent,
+        CollaboraOnlineViewerComponent
     ],
     exports: [
         PdfViewerModule,
         EcplOnlyofficeViewerComponent,
         DocumentViewerComponent,
+        CollaboraOnlineViewerComponent
     ],
     entryComponents: [
         DocumentViewerModalComponent
