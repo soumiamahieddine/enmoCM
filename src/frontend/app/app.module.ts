@@ -6,8 +6,6 @@ import { ProcessModule } from './process/process.module';
 import { DocumentViewerModule } from './viewer/document-viewer.module';
 import { AppListModule } from './app-list.module';
 
-
-
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -50,6 +48,9 @@ import { ResetPasswordComponent } from './login/resetPassword/reset-password.com
 import { SaveNumericPackageComponent } from './save-numeric-package.component';
 import { SignatureBookComponent } from './signature-book.component';
 import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.component';
+
+import { DevToolComponent } from '../service/debug/dev-tool.component';
+import { DevLangComponent } from '../service/debug/dev-lang.component';
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any>{
@@ -102,6 +103,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         SaveNumericPackageComponent,
         SignatureBookComponent,
         VisaWorkflowModalComponent,
+        DevLangComponent,
+        DevToolComponent
     ],
     exports : [
         SharedModule
@@ -119,6 +122,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         InfoChangePasswordModalComponent,
         RedirectIndexingModelComponent,
         VisaWorkflowModalComponent,
+        DevLangComponent
     ],
     providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, FiltersListService, FoldersService, ActionsService, PrivilegeService, {
         provide: HAMMER_GESTURE_CONFIG,
