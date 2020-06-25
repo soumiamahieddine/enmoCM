@@ -7,6 +7,20 @@
         <div class="container" [class.fullContainer]="appService.getViewMode()">
             <div class="container-content" style="overflow: hidden;">
                 <mat-horizontal-stepper [@.disabled]="true" linear #stepper style="height: 100vh;overflow: auto;" (selectionChange)="initStep($event)">
+                    <mat-step [stepControl]="appMailserver.getFormGroup()">
+                        <ng-template matStepLabel>{{lang.stepMailServer}}</ng-template>
+                        <div class="stepContainer">
+                            <div class="stepContent">
+                                <app-mailserver #appMailserver #stepContent (tiggerInstall)="endInstall()"></app-mailserver>
+                            </div>
+                            <button mat-fab matStepperPrevious class="previousStepButton" color="primary">
+                                <mat-icon class="fa fa-arrow-left"></mat-icon>
+                            </button>
+                            <button mat-fab matStepperNext class="nextStepButton" color="primary" [disabled]="!appMailserver.isValidStep()">
+                                <mat-icon class="fa fa-arrow-right"></mat-icon>
+                            </button>
+                        </div>
+                    </mat-step>
                     <mat-step label="install">
                         <ng-template matStepLabel>Installation</ng-template>
                         <div class="stepContainer">
@@ -86,13 +100,6 @@
                             <button mat-fab matStepperNext class="nextStepButton" color="primary" [disabled]="!appUseradmin.isValidStep()">
                                 <mat-icon class="fa fa-arrow-right"></mat-icon>
                             </button>
-                        </div>
-                    </mat-step>
-                    <mat-step optional>
-                        <ng-template matStepLabel>Serveur mail</ng-template>
-                        Bonjour
-                        <div>
-                            <button mat-button matStepperPrevious>Back</button>
                         </div>
                     </mat-step>
                     <ng-template matStepperIcon="edit">

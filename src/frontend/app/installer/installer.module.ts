@@ -8,6 +8,7 @@ import { DatabaseComponent } from './database/database.component';
 import { DocserversComponent } from './docservers/docservers.component';
 import { CustomizationComponent } from './customization/customization.component';
 import { UseradminComponent } from './useradmin/useradmin.component';
+import { MailserverComponent } from './mailserver/mailserver.component';
 import { InstallerRoutingModule } from './installer-routing.module';
 
 @NgModule({
@@ -24,6 +25,7 @@ import { InstallerRoutingModule } from './installer-routing.module';
         DocserversComponent,
         CustomizationComponent,
         UseradminComponent,
+        MailserverComponent
     ],
     entryComponents: [InstallActionComponent]
 })
