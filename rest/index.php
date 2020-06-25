@@ -317,6 +317,7 @@ $app->post('/installer/database', \SrcCore\controllers\InstallerController::clas
 $app->post('/installer/docservers', \SrcCore\controllers\InstallerController::class . ':createDocservers');
 
 //TODO REWORK
+$app->get('/dev/lang', \SrcCore\controllers\CoreController::class . ':getAvailableCoreLanguages');
 $app->put('/dev/lang', \SrcCore\controllers\CoreController::class . ':generateLang');
 
 //ListInstances
