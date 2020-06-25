@@ -22,13 +22,11 @@ export class UseradminComponent implements OnInit {
         private notify: NotificationService,
     ) {
         this.stepFormGroup = this._formBuilder.group({
-            login: [{ value: 'superadmin', disabled: true }, Validators.required],
+            login: [{ value: 'superadmin' }, Validators.required],
             password: ['', Validators.required],
             passwordConfirm: ['', Validators.required],
             email: ['dev@maarch.org', Validators.required],
         });
-
-
     }
 
     ngOnInit(): void {
@@ -58,6 +56,10 @@ export class UseradminComponent implements OnInit {
         ).subscribe();
     }
 
+    initStep() {
+        return false;
+    }
+
     isValidStep() {
         return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
     }
@@ -72,6 +74,7 @@ export class UseradminComponent implements OnInit {
             body : {
                 login: this.stepFormGroup.controls['login'].value,
                 password: this.stepFormGroup.controls['password'].value,
+                email: this.stepFormGroup.controls['email'].value,
             },
             route : '/installer/useradmin'
         };*/
