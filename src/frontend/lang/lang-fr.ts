@@ -1769,7 +1769,7 @@ export const LANG_FR = {
     "phpExtensions": "Extensions PHP",
     "phpConfiguration": "Configuration PHP",
     "dbName": "Nom de la base de données",
-    "stepDatabase_desc": "Maarch Courrier nécessite une connexion à une base de données afin de stocker les métas-données des documents stockés ainsi que la configuration de l'application.",
+    "stepDatabase_desc": "Maarch Courrier nécessite une connexion à une base de données afin de stocker les métadonnées des documents stockés ainsi que la configuration de l'application.",
     "stepDatabaseActionDesc": "Création de la base de données",
     "checkInformations": "Vérifier les informations",
     "badInformations": "Les informations sont incorrectes",
