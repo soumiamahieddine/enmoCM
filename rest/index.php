@@ -316,6 +316,7 @@ $app->get('/installer/docservers', \SrcCore\controllers\InstallerController::cla
 $app->post('/installer/custom', \SrcCore\controllers\InstallerController::class . ':createCustom');
 $app->post('/installer/database', \SrcCore\controllers\InstallerController::class . ':createDatabase');
 $app->post('/installer/docservers', \SrcCore\controllers\InstallerController::class . ':createDocservers');
+$app->post('/installer/customization', \SrcCore\controllers\InstallerController::class . ':createCustomization');
 
 //TODO REWORK
 $app->get('/dev/lang', \SrcCore\controllers\CoreController::class . ':getAvailableCoreLanguages');
