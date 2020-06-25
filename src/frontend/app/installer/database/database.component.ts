@@ -99,7 +99,11 @@ export class DatabaseComponent implements OnInit {
             }),
             catchError((err: any) => {
                 this.dbExist = false;
-                this.notify.error(this.lang.badInformations);
+                if (err.error.errors === 'Given database has tables') {
+                    this.notify.error(this.lang.dbNotEmpty);
+                } else {
+                    this.notify.error(this.lang.badInformations);
+                }
                 this.stepFormGroup.markAllAsTouched();
                 this.stepFormGroup.controls['stateStep'].setValue('');
                 return of(false);

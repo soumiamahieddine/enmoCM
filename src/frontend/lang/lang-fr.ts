@@ -1803,4 +1803,5 @@ export const LANG_FR = {
     "onlyExtensionsAllowed": "Seule les extensions  \"<b>{0}</b>\" sont autorisées",
     "customAlreadyExist": "Ce custom semble déjà exister.",
     "onlySpecialCharAllowed": "Seul les caractères spéciaux {0} sont autorisés.",
+    "dbNotEmpty": "Cette base de données existe déjà et n'est pas vide",
 };
