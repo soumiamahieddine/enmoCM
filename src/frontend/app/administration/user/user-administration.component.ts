@@ -29,6 +29,7 @@ export class UserAdministrationComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
     dialogRef: MatDialogRef<any>;
+    highlightMe: boolean = false;
     config: any = {};
     serialId: number;
     userId: string;
