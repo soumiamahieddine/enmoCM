@@ -24,7 +24,7 @@ export class MailserverComponent implements OnInit {
     hidePassword: boolean = true;
     stepFormGroup: FormGroup;
 
-    testRecipient: string = '';
+    recipientTest: string = '';
     emailSendLoading: boolean = false;
     emailSendResult: any = {
         msg: '',
@@ -141,7 +141,7 @@ export class MailserverComponent implements OnInit {
         };
         const email = {
             'sender': { 'email': this.stepFormGroup.controls['from'] },
-            'recipients': [this.testRecipient],
+            'recipients': [this.recipientTest],
             'object': '[' + this.lang.doNotReply + '] ' + this.lang.emailSendTest,
             'status': 'EXPRESS',
             'body': this.lang.emailSendTest,

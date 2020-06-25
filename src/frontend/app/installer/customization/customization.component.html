@@ -41,11 +41,11 @@
             <br />
             <div>{{lang.chooseLoginBg}} : </div>
             <div class="backgroundList">
-                <mat-card (click)="stepFormGroup.controls['bodyLoginBackground'].value='bodylogin.jpg'" style="opacity: 0.3;" class="backgroundItem"
+                <mat-card (click)="stepFormGroup.controls['bodyLoginBackground'].setValue('bodylogin.jpg')" style="opacity: 0.3;" class="backgroundItem"
                     [class.selected]="stepFormGroup.controls['bodyLoginBackground'].value === 'bodylogin.jpg'"
                     style="background:url(assets/bodylogin.jpg);background-size: cover;">
                 </mat-card>
-                <mat-card *ngFor="let background of backgroundList" (click)="stepFormGroup.controls['bodyLoginBackground'].value=background.filename"
+                <mat-card *ngFor="let background of backgroundList" (click)="stepFormGroup.controls['bodyLoginBackground'].setValue(background.filename)"
                     style="opacity: 0.3;" class="backgroundItem"
                     [class.selected]="background.filename === stepFormGroup.controls['bodyLoginBackground'].value"
                     [style.background]="'url('+background.url+')'">

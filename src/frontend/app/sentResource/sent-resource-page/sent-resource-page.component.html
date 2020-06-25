@@ -152,7 +152,7 @@
             </mat-menu>
         </mat-form-field>
         <mat-chip-list>
-            <mat-chip class="copy" *ngIf="emailAttach.document.isLinked" [selectable]="selectable"
+            <mat-chip class="copy" *ngIf="emailAttach.document.isLinked"
                 [removable]="canManageMail()" (removed)="removeAttachMail(0, 'document')"
                 [title]="emailAttach.document.chrono + ' - ' + emailAttach.document.label">
                 <i
