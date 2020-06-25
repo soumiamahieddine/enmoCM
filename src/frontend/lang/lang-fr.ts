@@ -1800,4 +1800,7 @@ export const LANG_FR = {
     "stepInstanceActionDesc": "Initialisation de l'instance",
     "stepDocserversActionDesc": "Création de la zone stockage",
     "collaboraOnlineNotEnabled": "Le serveur Collabora Online n'est pas activé dans documentEditorsConfig.xml",
+    "onlyExtensionsAllowed": "Seule les extensions  \"<b>{0}</b>\" sont autorisées",
+    "customAlreadyExist": "Ce custom semble déjà exister.",
+    "onlySpecialCharAllowed": "Seul les caractères spéciaux {0} sont autorisés.",
 };

@@ -77,6 +77,10 @@ export class DatabaseComponent implements OnInit {
         return false;
     }
 
+    initStep() {
+        return false;
+    }
+
     checkConnection() {
 
         const info = {
