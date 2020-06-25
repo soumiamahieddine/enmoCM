@@ -1788,5 +1788,22 @@ export const LANG_EN = {
     "install_displayErrors": "display_errors parameter (php.ini)",
     "install_displayErrors_desc": "display_errors = On",
     "install_shortOpenTag": "short_open_tags parameter (php.ini)",
-    "install_shortOpenTag_desc": "short_open_tags = On"
+    "install_shortOpenTag_desc": "short_open_tags = On",
+    "install_pdoPgsql_desc": "PHP extension for connection to PostgreSQL databases",
+    "install_mbstring_desc": "Extension PHP which provides multibyte specific string functions that help you deal with multibyte encodings in PHP.",
+    "install_fileinfo_desc": "PHP extension trying to guess the content type and encoding of a file by looking for certain magic byte sequences at specific positions within the file.",
+    "install_gd_desc": "PHP extension providing image manipulation, in a variety of formats, such as GIF, PNG, JPEG, WBMP and XPM.",
+    "install_imagick_desc": "PHP extension to create and modify images, using the ImageMagick API.",
+    "install_imap_desc": "PHP extension enable you to operate with the IMAP protocol, as well as the NNTP, POP3 and local mailbox access methods.",
+    "install_xsl_desc": "PHP extension which implements the XSL standard, performing » XSLT transformations using the » libxslt library",
+    "install_gettext_desc": "PHP extension allowing the implementation of the NLS (Native Language Support) API which can be used to internationalize your PHP applications.",
+    "install_xmlrpc_desc": "PHP extension providing functions used to write XML-RPC servers and clients.",
+    "install_curl_desc": "Tool to transfer data from or to a server, using some protocols",
+    "onlyExtensionsAllowed": "Only \"<b> {0} </b>\" extensions are allowed",
+    "customAlreadyExist": "This custom already seems to exist.",
+    "onlySpecialCharAllowed": "Only special characters {0} are allowed.",
+    "dbNotEmpty": "This database already exists and is not empty",
+    "stepMailServer": "Mail server",
+    "stepMailServer_desc": "Configure your mail server to notify users by email of the the application activities. <br/> This step can be skipped and can be configured later.",
+    "stepMailServer_warning": "If no mail server is configured, the new users will not receive their first login token!"
 };
