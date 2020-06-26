@@ -10,6 +10,7 @@ import { CustomizationComponent } from './customization/customization.component'
 import { UseradminComponent } from './useradmin/useradmin.component';
 import { MailserverComponent } from './mailserver/mailserver.component';
 import { InstallerRoutingModule } from './installer-routing.module';
+import { InstallerService } from './installer.service';
 
 @NgModule({
     imports: [
@@ -27,6 +28,7 @@ import { InstallerRoutingModule } from './installer-routing.module';
         UseradminComponent,
         MailserverComponent
     ],
-    entryComponents: [InstallActionComponent]
+    entryComponents: [InstallActionComponent],
+    providers: [InstallerService]
 })
 export class InstallerModule { }

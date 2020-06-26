@@ -2,14 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms';
 import { LANG } from '../../translate.component';
 import { StepAction } from '../types';
-import { DomSanitizer } from '@angular/platform-browser';
 import { NotificationService } from '../../../service/notification/notification.service';
-import { environment } from '../../../environments/environment';
-import { ScanPipe } from 'ngx-pipes';
-import { debounceTime, filter, tap, catchError } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { MatDrawer } from '@angular/material/sidenav';
+import { InstallerService } from '../installer.service';
 
 declare var tinymce: any;
 
@@ -70,6 +68,7 @@ export class MailserverComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
         public http: HttpClient,
+        private installerService: InstallerService
     ) {
         const valEmail: ValidatorFn[] = [Validators.pattern(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/), Validators.required];
 
@@ -173,11 +172,13 @@ export class MailserverComponent implements OnInit {
     }
 
     initStep() {
-        return false;
+        if (this.installerService.isStepAlreadyLaunched('mailserver')) {
+            this.stepFormGroup.disable();
+        }
     }
 
     isValidStep() {
-        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
+        return this.stepFormGroup === undefined ? false : this.stepFormGroup.controls['firstCtrl'].valid;
     }
 
     getFormGroup() {
@@ -189,6 +190,23 @@ export class MailserverComponent implements OnInit {
     }
 
     getInfoToInstall(): StepAction[] {
+        this.notify.error('TO DO : WAIT BACK route : ../rest/installer/mailserver');
         return [];
+        /* return [{
+            idStep : 'mailserver',
+            body: {
+                smtp: this.stepFormGroup.controls['smtp'].value,
+                auth: this.stepFormGroup.controls['auth'].value,
+                user: this.stepFormGroup.controls['user'].value,
+                password: this.stepFormGroup.controls['password'].value,
+                secure: this.stepFormGroup.controls['secure'].value,
+                port: this.stepFormGroup.controls['port'].value,
+                charset: this.stepFormGroup.controls['charset'].value,
+                from: this.stepFormGroup.controls['from'].value
+            },
+            route: '../rest/installer/mailserver',
+            description: this.lang.stepMailServerActionDesc,
+            installPriority: 3
+        }];*/
     }
 }

@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
 import { ScanPipe } from 'ngx-pipes';
 import { debounceTime, filter, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { InstallerService } from '../installer.service';
 
 declare var tinymce: any;
 
@@ -20,6 +21,7 @@ declare var tinymce: any;
 export class CustomizationComponent implements OnInit {
     lang: any = LANG;
     stepFormGroup: FormGroup;
+    readonlyState: boolean = false;
 
     backgroundList: any[] = [];
 
@@ -29,6 +31,7 @@ export class CustomizationComponent implements OnInit {
         private sanitizer: DomSanitizer,
         private scanPipe: ScanPipe,
         public http: HttpClient,
+        private installerService: InstallerService
     ) {
         const valIdentifier: ValidatorFn[] = [Validators.pattern(/^[a-zA-Z0-9_\-]*$/), Validators.required];
 
@@ -67,9 +70,19 @@ export class CustomizationComponent implements OnInit {
     }
 
     initStep() {
-        this.initMce();
-        // this.checkCustomExist();
-        return false;
+        if (this.installerService.isStepAlreadyLaunched('createCustom') && this.installerService.isStepAlreadyLaunched('customization')) {
+            this.stepFormGroup.disable();
+            this.readonlyState = true;
+            this.initMce(true);
+        } else if (this.installerService.isStepAlreadyLaunched('createCustom')) {
+            this.stepFormGroup.controls['customId'].disable();
+            this.stepFormGroup.controls['appName'].disable();
+            this.readonlyState = true;
+            this.initMce(true);
+        } else {
+            this.readonlyState = false;
+            this.initMce();
+        }
     }
 
     checkCustomExist() {
@@ -89,7 +102,7 @@ export class CustomizationComponent implements OnInit {
     }
 
     isValidStep() {
-        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
+        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid || (this.installerService.isStepAlreadyLaunched('createCustom') && this.installerService.isStepAlreadyLaunched('customization'));
     }
 
 
@@ -97,7 +110,7 @@ export class CustomizationComponent implements OnInit {
         return this.stepFormGroup;
     }
 
-    initMce() {
+    initMce(readonly = false) {
         tinymce.init({
             selector: 'textarea',
             base_url: '../node_modules/tinymce/',
@@ -107,6 +120,7 @@ export class CustomizationComponent implements OnInit {
             language_url: `../node_modules/tinymce-i18n/langs/${LANG.langISO.replace('-', '_')}.js`,
             menubar: false,
             statusbar: false,
+            readonly : readonly,
             plugins: [
                 'autolink'
             ],
@@ -115,15 +129,16 @@ export class CustomizationComponent implements OnInit {
             },
             toolbar_sticky: true,
             toolbar_drawer: 'floating',
-            toolbar: 'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | maarch_b64image | \
+            toolbar: !readonly ? 'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | maarch_b64image | \
         alignleft aligncenter alignright alignjustify \
-        bullist numlist outdent indent | removeformat'
+        bullist numlist outdent indent | removeformat' : ''
         });
     }
 
     getInfoToInstall(): StepAction[] {
         return [
             {
+                idStep : 'createCustom',
                 body: {
                     customId: this.stepFormGroup.controls['customId'].value,
                     applicationName: this.stepFormGroup.controls['appName'].value,
@@ -133,10 +148,11 @@ export class CustomizationComponent implements OnInit {
                 installPriority: 1
             },
             {
+                idStep : 'customization',
                 body: {
                     loginMessage: this.stepFormGroup.controls['loginMessage'].value,
                     homeMessage: this.stepFormGroup.controls['homeMessage'].value,
-                    bodyLoginBackground: this.stepFormGroup.controls['bodyLoginBackground'].value,
+                    bodyLogin: this.stepFormGroup.controls['bodyLoginBackground'].value,
                     logo: this.stepFormGroup.controls['uploadedLogo'].value,
                 },
                 description: this.lang.stepCustomizationActionDesc,
@@ -147,7 +163,7 @@ export class CustomizationComponent implements OnInit {
     }
 
     uploadTrigger(fileInput: any, mode: string) {
-        if (fileInput.target.files && fileInput.target.files[0]) {
+        if (fileInput.target.files && fileInput.target.files[0] && !this.readonlyState) {
             const allowedExtension = mode !== 'logo' ? ['image/jpg'] : ['image/svg+xml'];
             if (allowedExtension.indexOf(fileInput.target.files[0].type) !== -1) {
                 const reader = new FileReader();

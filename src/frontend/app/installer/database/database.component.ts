@@ -8,6 +8,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { LANG } from '../../translate.component';
 import { StepAction } from '../types';
 import { FunctionsService } from '../../../service/functions.service';
+import { InstallerService } from '../installer.service';
 
 @Component({
     selector: 'app-database',
@@ -29,6 +30,7 @@ export class DatabaseComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
         private functionsService: FunctionsService,
+        private installerService: InstallerService
     ) {
         this.stepFormGroup = this._formBuilder.group({
             dbHostCtrl: ['localhost', Validators.required],
@@ -78,7 +80,9 @@ export class DatabaseComponent implements OnInit {
     }
 
     initStep() {
-        return false;
+        if (this.installerService.isStepAlreadyLaunched('database')) {
+            this.stepFormGroup.disable();
+        }
     }
 
     checkConnection() {
@@ -116,16 +120,7 @@ export class DatabaseComponent implements OnInit {
     }
 
     isValidStep() {
-        /*Object.keys(this.stepFormGroup.controls).forEach(key => {
-
-            const controlErrors: ValidationErrors = this.stepFormGroup.get(key).errors;
-            if (controlErrors != null) {
-                Object.keys(controlErrors).forEach(keyError => {
-                    console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-                });
-            }
-        });*/
-        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
+        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid || this.installerService.isStepAlreadyLaunched('database');
     }
 
     isEmptyConnInfo() {
@@ -142,6 +137,7 @@ export class DatabaseComponent implements OnInit {
 
     getInfoToInstall(): StepAction[] {
         return [{
+            idStep : 'database',
             body: {
                 server: this.stepFormGroup.controls['dbHostCtrl'].value,
                 port: this.stepFormGroup.controls['dbPortCtrl'].value,

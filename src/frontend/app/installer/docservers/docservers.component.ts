@@ -3,9 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { tap } from 'rxjs/internal/operators/tap';
 import { LANG } from '../../translate.component';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { of } from 'rxjs/internal/observable/of';
+import { InstallerService } from '../installer.service';
 
 @Component({
     selector: 'app-docservers',
@@ -20,6 +21,7 @@ export class DocserversComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
         public http: HttpClient,
+        private installerService: InstallerService
     ) {
         this.stepFormGroup = this._formBuilder.group({
             docserversPath: ['/opt/maaarch/docservers/', Validators.required],
@@ -36,13 +38,14 @@ export class DocserversComponent implements OnInit {
 
 
     isValidStep() {
-        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
+        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid || this.installerService.isStepAlreadyLaunched('docserver');
     }
 
     initStep() {
-        return false;
+        if (this.installerService.isStepAlreadyLaunched('docserver')) {
+            this.stepFormGroup.disable();
+        }
     }
-
 
     getFormGroup() {
         return this.stepFormGroup;
@@ -53,25 +56,22 @@ export class DocserversComponent implements OnInit {
             path: this.stepFormGroup.controls['docserversPath'].value,
         };
 
-        /*this.http.get(`../rest/installer/docservers`, { params: info }).pipe(
+        this.http.get(`../rest/installer/docservers`, { params: info }).pipe(
             tap((data: any) => {
                 this.notify.success(this.lang.rightInformations);
                 this.stepFormGroup.controls['stateStep'].setValue('success');
             }),
             catchError((err: any) => {
-                this.notify.error(this.lang.badInformations);
+                this.notify.error(this.lang.pathUnreacheable);
                 this.stepFormGroup.controls['stateStep'].setValue('');
                 return of(false);
             })
-        ).subscribe();*/
-
-        // FOR TEST
-        this.stepFormGroup.controls['stateStep'].setValue('success');
-        this.notify.success('TODO : waiting back docservers check');
+        ).subscribe();
     }
 
     getInfoToInstall(): any[] {
         return [{
+            idStep : 'docserver',
             body: {
                 path: this.stepFormGroup.controls['docserversPath'].value,
             },
