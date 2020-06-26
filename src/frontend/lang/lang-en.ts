@@ -1805,5 +1805,6 @@ export const LANG_EN = {
     "dbNotEmpty": "This database already exists and is not empty",
     "stepMailServer": "Mail server",
     "stepMailServer_desc": "Configure your mail server to notify users by email of the the application activities. <br/> This step can be skipped and can be configured later.",
-    "stepMailServer_warning": "If no mail server is configured, the new users will not receive their first login token!"
+    "stepMailServer_warning": "If no mail server is configured, the new users will not receive their first login token!",
+    "checkCollaboraOnlineServer": "Connecting to the Collabora Online server",
 };

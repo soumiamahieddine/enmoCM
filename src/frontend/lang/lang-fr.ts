@@ -1807,4 +1807,5 @@ export const LANG_FR = {
     "stepMailServer": "Serveur de mail",
     "stepMailServer_desc": "Configurer votre serveur de mail afin de prévenir les utilisateurs par mail des différents échanges survenus dans l'application.<br/>Cette étape peut être passé et être configurée plus tard.",
     "stepMailServer_warning": "Si aucun serveur de mail n'est renseigné, les nouveaux utilisateurs ne recevront pas leur jeton de première connexion !",
+    "checkCollaboraOnlineServer": "Communication avec le serveur Collabora Online",
 };

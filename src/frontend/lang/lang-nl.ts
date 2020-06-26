@@ -1817,5 +1817,6 @@ export const LANG_NL = {
     "dbNotEmpty": "Cette base de données existe déjà et n'est pas vide__TO_TRANSLATE",
     "stepMailServer": "Serveur de mail__TO_TRANSLATE",
     "stepMailServer_desc": "Configurer votre serveur de mail afin de prévenir les utilisateurs par mail des différents échanges survenus dans l'application.<br/>Cette étape peut être passé et être configurée plus tard.__TO_TRANSLATE",
-    "stepMailServer_warning": "Si aucun serveur de mail n'est renseigné, les nouveaux utilisateurs ne recevront pas leur jeton de première connexion !__TO_TRANSLATE"
+    "stepMailServer_warning": "Si aucun serveur de mail n'est renseigné, les nouveaux utilisateurs ne recevront pas leur jeton de première connexion !__TO_TRANSLATE",
+    "checkCollaboraOnlineServer": "Connecting to the Collabora Online server__TO_TRANSLATE",
 };

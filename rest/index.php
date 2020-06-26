@@ -594,7 +594,7 @@ $app->get('/alfresco/autocomplete/folders', \Alfresco\controllers\AlfrescoContro
 // Collabora Online
 $app->get('/wopi/files/{id}/contents', \ContentManagement\controllers\CollaboraOnlineController::class . ':getFileContent');
 $app->get('/wopi/files/{id}', \ContentManagement\controllers\CollaboraOnlineController::class . ':getCheckFileInfo');
-$app->post('/wopi/files/{id}/contents', \ContentManagement\controllers\CollaboraOnlineController::class . ':getCheckFileInfo');
+$app->post('/wopi/files/{id}/contents', \ContentManagement\controllers\CollaboraOnlineController::class . ':saveFile');
 $app->post('/collaboraOnline/configuration', \ContentManagement\controllers\CollaboraOnlineController::class . ':getConfiguration');
 $app->get('/collaboraOnline/available', \ContentManagement\controllers\CollaboraOnlineController::class . ':isAvailable');
 
