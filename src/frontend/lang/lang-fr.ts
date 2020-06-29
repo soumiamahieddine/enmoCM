@@ -1806,7 +1806,7 @@ export const LANG_FR = {
     "dbNotEmpty": "Cette base de données existe déjà et n'est pas vide",
     "stepMailServer": "Serveur de mail",
     "stepMailServer_desc": "Configurez votre serveur de mail afin de prévenir les utilisateurs par mail des différents échanges survenus dans l'application.<br/>Cette étape peut être passée et être configurée plus tard.",
-    "stepMailServer_warning": "Si aucun serveur de mail n'est renseigné, les nouveaux utilisateurs ne recevront pas leur lien de première connexion par mail !",
+    "stepMailServer_warning": "Si aucun serveur de mail n'est renseigné, les nouveaux utilisateurs ne recevront pas leur lien de première connexion par courriel !",
     "checkCollaboraOnlineServer": "Communication avec le serveur Collabora Online",
     "stepMailServerActionDesc": "Configuration du serveur de mail",    
     "stepUserAdminActionDesc": "Création de l'utilisateur système",
