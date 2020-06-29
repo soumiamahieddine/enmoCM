@@ -56,7 +56,7 @@
                 (cdkDropListDropped)="drop($event)">
                 <mat-chip cdkDrag [cdkDragDisabled]="emailStatus == 'SENT' || emailStatus == 'ERROR'" class="copy"
                     *ngFor="let copy of copies" [removable]="canManageMail()"
-                    (removed)="remove(copy, 'copies')" (click)="remove(copycopy, 'recipients')" [title]="copy.email"
+                    (removed)="remove(copy, 'copies')" (click)="remove(copy, 'recipients')" [title]="copy.email"
                     [class.badFormat]="copy.badFormat">
                     {{copy.label}}{{copy.label !== copy.email ? ' (' + copy.email + ')' : ''}}
                     <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>

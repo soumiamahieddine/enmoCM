@@ -369,7 +369,7 @@ export class UserAdministrationComponent implements OnInit {
         this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     }
 
-    resendActivationNotification(user: any) {
+    resendActivationNotification() {
         let r = confirm(this.lang.confirmAction + ' ' + this.lang.sendActivationNotification);
 
         if (r) {
