@@ -50,7 +50,7 @@ export class DatabaseComponent implements OnInit {
         this.stepFormGroup.controls['dbLoginCtrl'].valueChanges.pipe(
             tap(() => this.stepFormGroup.controls['stateStep'].setValue(''))
         ).subscribe();
-        this.stepFormGroup.controls['dbLoginCtrl'].valueChanges.pipe(
+        this.stepFormGroup.controls['dbPortCtrl'].valueChanges.pipe(
             tap(() => this.stepFormGroup.controls['stateStep'].setValue(''))
         ).subscribe();
         this.stepFormGroup.controls['dbPasswordCtrl'].valueChanges.pipe(
