@@ -446,6 +446,7 @@ class InstallerController
             return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
         }
 
+        mkdir("custom/{$body['customId']}/img", 0755, true);
         if (strpos($body['bodyLoginBackground'], 'data:image/jpeg;base64,') === false) {
             if (!is_file("dist/{$body['bodyLoginBackground']}")) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body bodyLoginBackground does not exist']);
