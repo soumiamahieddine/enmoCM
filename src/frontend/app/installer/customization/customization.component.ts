@@ -154,8 +154,8 @@ export class CustomizationComponent implements OnInit {
             {
                 idStep : 'customization',
                 body: {
-                    loginMessage: this.stepFormGroup.controls['loginMessage'].value,
-                    homeMessage: this.stepFormGroup.controls['homeMessage'].value,
+                    loginMessage: tinymce.get('loginMessage').getContent(),
+                    homeMessage: tinymce.get('homeMessage').getContent(),
                     bodyLoginBackground: this.stepFormGroup.controls['bodyLoginBackground'].value,
                     logo: this.stepFormGroup.controls['uploadedLogo'].value,
                 },
