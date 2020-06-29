@@ -192,6 +192,15 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => "Custom already exists"]);
         }
 
+        $customFile = CoreConfigModel::getJsonLoaded(['path' => 'custom/custom.json']);
+        if (!empty($customFile)) {
+            foreach ($customFile as $value) {
+                if ($value['id'] == $queryParams['customId']) {
+                    return $response->withStatus(400)->withJson(['errors' => "Custom already exists in custom.json"]);
+                }
+            }
+        }
+
         return $response->withStatus(204);
     }
 
@@ -536,6 +545,9 @@ class InstallerController
 
         unlink("custom/{$body['customId']}/initializing.lck");
 
-        return $response->withStatus(204);
+        $url = UrlController::getCoreUrl();
+        $url .= $body['customId'] . '/dist/index.html';
+
+        return $response->withJson(['url' => $url]);
     }
 }
