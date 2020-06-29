@@ -719,6 +719,16 @@ export class DocumentViewerComponent implements OnInit {
                     };
                     this.editInProgress = true;
 
+                } else if (this.editor.mode === 'collaboraOnline') {
+                    const mode = this.mode === 'attachment' ? 'attachment' : 'resource';
+                    this.editor.async = false;
+                    this.editInProgress = true;
+                    this.editor.options = {
+                        objectType: mode,
+                        objectId: template.id,
+                        objectMode: 'creation',
+                        dataToMerge: this.resourceDatas
+                    };
                 } else {
                     this.editor.async = true;
                     this.editor.options = {
@@ -771,10 +781,10 @@ export class DocumentViewerComponent implements OnInit {
             this.editor.async = false;
             this.editInProgress = true;
             this.editor.options = {
-                objectType: 'resource',
+                objectType: 'attachment',
                 objectId: this.resId,
                 objectMode: 'edition',
-                docUrl: `rest/wopi/files/`
+                dataToMerge: this.resourceDatas
             };
         } else {
             this.editor.async = true;
@@ -811,7 +821,7 @@ export class DocumentViewerComponent implements OnInit {
                 objectType: 'resource',
                 objectId: this.resId,
                 objectMode: 'edition',
-                docUrl: `rest/wopi/files/`
+                dataToMerge: this.resourceDatas
             };
             this.editInProgress = true;
         } else {
@@ -1017,37 +1027,27 @@ export class DocumentViewerComponent implements OnInit {
 
     saveMainDocument() {
         return new Promise((resolve) => {
-            if (this.headerService.user.preferences.documentEdition === 'collaboraonline') {
-                this.getFile() .pipe(
-                    tap((data: any) => {
-                        this.closeEditor();
-                        this.loadRessource(this.resId);
-                        resolve(true);
-                    })
-                ).subscribe();
-            } else {
-                this.getFile().pipe(
-                    map((data: any) => {
-                        const formatdatas = {
-                            encodedFile: data.content,
-                            format:      data.format,
-                            resId:       this.resId
-                        };
-                        return formatdatas;
-                    }),
-                    exhaustMap((data) => this.http.put(`../rest/resources/${this.resId}?onlyDocument=true`, data)),
-                    tap(() => {
-                        this.closeEditor();
-                        this.loadRessource(this.resId);
-                        resolve(true);
-                    }),
-                    catchError((err: any) => {
-                        this.notify.handleSoftErrors(err);
-                        resolve(false);
-                        return of(false);
-                    })
-                ).subscribe();
-            }
+            this.getFile().pipe(
+                map((data: any) => {
+                    const formatdatas = {
+                        encodedFile: data.content,
+                        format:      data.format,
+                        resId:       this.resId
+                    };
+                    return formatdatas;
+                }),
+                exhaustMap((data) => this.http.put(`../rest/resources/${this.resId}?onlyDocument=true`, data)),
+                tap(() => {
+                    this.closeEditor();
+                    this.loadRessource(this.resId);
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
         });
     }
 

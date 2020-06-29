@@ -600,5 +600,6 @@ $app->get('/wopi/files/{id}', \ContentManagement\controllers\CollaboraOnlineCont
 $app->post('/wopi/files/{id}/contents', \ContentManagement\controllers\CollaboraOnlineController::class . ':saveFile');
 $app->post('/collaboraOnline/configuration', \ContentManagement\controllers\CollaboraOnlineController::class . ':getConfiguration');
 $app->get('/collaboraOnline/available', \ContentManagement\controllers\CollaboraOnlineController::class . ':isAvailable');
+$app->post('/collaboraOnline/file', \ContentManagement\controllers\CollaboraOnlineController::class . ':getTmpFile');
 
 $app->run();
