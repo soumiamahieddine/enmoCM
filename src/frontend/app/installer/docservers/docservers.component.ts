@@ -24,7 +24,7 @@ export class DocserversComponent implements OnInit {
         private installerService: InstallerService
     ) {
         this.stepFormGroup = this._formBuilder.group({
-            docserversPath: ['/opt/maaarch/docservers/', Validators.required],
+            docserversPath: ['/opt/maarch/docservers/', Validators.required],
             stateStep: ['', Validators.required],
         });
 
