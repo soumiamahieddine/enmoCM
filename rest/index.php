@@ -317,6 +317,8 @@ $app->post('/installer/custom', \SrcCore\controllers\InstallerController::class 
 $app->post('/installer/database', \SrcCore\controllers\InstallerController::class . ':createDatabase');
 $app->post('/installer/docservers', \SrcCore\controllers\InstallerController::class . ':createDocservers');
 $app->post('/installer/customization', \SrcCore\controllers\InstallerController::class . ':createCustomization');
+$app->put('/installer/administrator', \SrcCore\controllers\InstallerController::class . ':updateAdministrator');
+$app->delete('/installer/lock', \SrcCore\controllers\InstallerController::class . ':terminateInstaller');
 
 //TODO REWORK
 $app->get('/dev/lang', \SrcCore\controllers\CoreController::class . ':getAvailableCoreLanguages');
