@@ -6,9 +6,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { environment } from '../../../environments/environment';
 import { ScanPipe } from 'ngx-pipes';
-import { debounceTime, filter, tap } from 'rxjs/operators';
+import { debounceTime, filter, tap, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { InstallerService } from '../installer.service';
+import { of } from 'rxjs/internal/observable/of';
 
 declare var tinymce: any;
 
@@ -53,18 +54,15 @@ export class CustomizationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.checkCustomExist();
         this.stepFormGroup.controls['customId'].valueChanges.pipe(
             tap(() => {
-                if (this.stepFormGroup.controls['customId'].errors !== null) {
-                    const errors = Object.keys(this.stepFormGroup.controls['customId']?.errors).length > 0 ? { ...this.stepFormGroup.controls['customId'].errors} : null;
-                    this.stepFormGroup.controls['customId'].setErrors(errors);
-                }
+                this.stepFormGroup.controls['firstCtrl'].setValue('');
             }),
             debounceTime(500),
             filter((value: any) => value.length > 2),
             tap(() => {
-                this.notify.error('TO DO WAIT BACK ../rest/installer/customExist');
-                // this.checkCustomExist();
+                this.checkCustomExist();
             }),
             ).subscribe();
     }
@@ -86,17 +84,23 @@ export class CustomizationComponent implements OnInit {
     }
 
     checkCustomExist() {
-        this.http.get('../rest/installer/customExist', { params: { 'search': this.stepFormGroup.controls['customId'].value } }).pipe(
+        this.http.get('../rest/installer/custom', { observe: 'response', params: { 'customId': this.stepFormGroup.controls['customId'].value } }).pipe(
             tap((response: any) => {
-                if (!response) {
-                    // this.stepFormGroup.controls['customId'].setErrors({ ...this.stepFormGroup.controls['customId'].errors, customExist: true });
-                    // this.stepFormGroup.controls['customId'].markAsTouched();
-                } else {
+                if (this.stepFormGroup.controls['customId'].errors !== null) {
                     const error = this.stepFormGroup.controls['customId'].errors;
                     delete error.customExist;
-                    // this.stepFormGroup.controls['customId'].setErrors(error);
-                    // this.stepFormGroup.controls['customId'].markAsTouched();
+                } else {
+                    this.stepFormGroup.controls['firstCtrl'].setValue('success');
                 }
+            }),
+            catchError((err: any) => {
+                if (err.error.errors === 'Custom already exists') {
+                    this.stepFormGroup.controls['customId'].setErrors({ ...this.stepFormGroup.controls['customId'].errors, customExist: true });
+                    this.stepFormGroup.controls['customId'].markAsTouched();
+                } else {
+                    this.notify.handleSoftErrors(err);
+                }
+                return of(false);
             })
         ).subscribe();
     }
@@ -152,7 +156,7 @@ export class CustomizationComponent implements OnInit {
                 body: {
                     loginMessage: this.stepFormGroup.controls['loginMessage'].value,
                     homeMessage: this.stepFormGroup.controls['homeMessage'].value,
-                    bodyLogin: this.stepFormGroup.controls['bodyLoginBackground'].value,
+                    bodyLoginBackground: this.stepFormGroup.controls['bodyLoginBackground'].value,
                     logo: this.stepFormGroup.controls['uploadedLogo'].value,
                 },
                 description: this.lang.stepCustomizationActionDesc,

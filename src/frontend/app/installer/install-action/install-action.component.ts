@@ -6,6 +6,8 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
 import { InstallerService } from '../installer.service';
+import { Router } from '@angular/router';
+import { NotificationService } from '../../../service/notification/notification.service';
 
 @Component({
     selector: 'app-install-action',
@@ -20,12 +22,12 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
     // Workaround for angular component issue #13870
     disableAnimation = true;
 
-
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<InstallActionComponent>,
         public http: HttpClient,
-        private installerService: InstallerService
+        private installerService: InstallerService,
+        private notify: NotificationService
     ) { }
 
     async ngOnInit(): Promise<void> {
@@ -38,9 +40,13 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
     }
 
     async launchInstall() {
+        let res: any;
         for (let index = 0; index < this.data.length; index++) {
             this.steps[index].state = 'inProgress';
-            await this.doStep(index);
+            res = await this.doStep(index);
+            if (!res) {
+                break;
+            }
         }
     }
 
@@ -77,7 +83,7 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
                     }),
                     catchError((err: any) => {
                         this.steps[index].state = 'KO';
-                        resolve(true);
+                        resolve(false);
                         this.steps[index].msgErr = err.error.errors;
                         return of(false);
                     })
@@ -91,6 +97,20 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
     }
 
     isInstallError() {
+        console.log(this.steps);
         return this.steps.filter(step => step.state === 'KO').length > 0;
+    }
+
+    goToInstance() {
+        this.http.request('DELETE', '../rest/installer/lock', { body: { customId: this.customId } }).pipe(
+            tap((res: any) => {
+                window.location.href = res.url;
+                this.dialogRef.close('ok');
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }
