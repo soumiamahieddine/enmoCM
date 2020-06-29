@@ -164,7 +164,7 @@ export class CustomizationComponent implements OnInit {
 
     uploadTrigger(fileInput: any, mode: string) {
         if (fileInput.target.files && fileInput.target.files[0] && !this.readonlyState) {
-            const allowedExtension = mode !== 'logo' ? ['image/jpg'] : ['image/svg+xml'];
+            const allowedExtension = mode !== 'logo' ? ['image/jpg', 'image/jpeg'] : ['image/svg+xml'];
             if (allowedExtension.indexOf(fileInput.target.files[0].type) !== -1) {
                 const reader = new FileReader();
 
