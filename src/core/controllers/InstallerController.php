@@ -447,12 +447,10 @@ class InstallerController
         }
 
         if (strpos($body['bodyLoginBackground'], 'data:image/jpeg;base64,') === false) {
-            if (!is_file("dist/assets/{$body['bodyLoginBackground']}")) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body bodyLogin does not exist']);
+            if (!is_file("dist/{$body['bodyLoginBackground']}")) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body bodyLoginBackground does not exist']);
             }
-            if ($body['bodyLoginBackground'] != 'bodylogin.jpg') {
-                copy("dist/assets/{$body['bodyLoginBackground']}", "custom/{$body['customId']}/img/bodylogin.jpg");
-            }
+            copy("dist/{$body['bodyLoginBackground']}", "custom/{$body['customId']}/img/bodylogin.jpg");
         } else {
             $tmpPath = CoreConfigModel::getTmpPath();
             $tmpFileName = $tmpPath . 'installer_body_' . rand() . '_file.jpg';
@@ -469,7 +467,7 @@ class InstallerController
             copy($tmpFileName, "custom/{$body['customId']}/img/bodylogin.jpg");
         }
 
-        if (strpos($body['bodyLoginBackground'], 'data:image/svg+xml;base64,') !== false) {
+        if (strpos($body['logo'], 'data:image/svg+xml;base64,') !== false) {
             $tmpPath = CoreConfigModel::getTmpPath();
             $tmpFileName = $tmpPath . 'installer_logo_' . rand() . '_file.svg';
             $file = base64_decode($body['logo']);
