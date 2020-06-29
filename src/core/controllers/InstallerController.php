@@ -178,6 +178,23 @@ class InstallerController
         return $response->withStatus(204);
     }
 
+    public function checkCustomName(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Queryparams customId is empty or not a string']);
+        } elseif (!preg_match('/^[a-zA-Z0-9_\-]*$/', $queryParams['customId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Queryparams customId has unauthorized characters']);
+        }
+
+        if (is_dir("custom/{$queryParams['customId']}")) {
+            return $response->withStatus(400)->withJson(['errors' => "Custom already exists"]);
+        }
+
+        return $response->withStatus(204);
+    }
+
     public function createCustom(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
@@ -421,16 +438,16 @@ class InstallerController
         }
 
         if (strpos($body['bodyLoginBackground'], 'data:image/jpeg;base64,') === false) {
-            if (!is_file("dist/assets/{$body['bodyLoginPath']}")) {
+            if (!is_file("dist/assets/{$body['bodyLoginBackground']}")) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body bodyLogin does not exist']);
             }
-            if ($body['bodyLoginPath'] != 'bodylogin.jpg') {
-                copy("dist/assets/{$body['bodyLoginPath']}", "custom/{$body['customId']}/img/bodylogin.jpg");
+            if ($body['bodyLoginBackground'] != 'bodylogin.jpg') {
+                copy("dist/assets/{$body['bodyLoginBackground']}", "custom/{$body['customId']}/img/bodylogin.jpg");
             }
         } else {
             $tmpPath = CoreConfigModel::getTmpPath();
             $tmpFileName = $tmpPath . 'installer_body_' . rand() . '_file.jpg';
-            $file = base64_decode($body['encodedBodyLogin']);
+            $file = base64_decode($body['bodyLoginBackground']);
             file_put_contents($tmpFileName, $file);
 
             $size = strlen($file);
@@ -446,7 +463,7 @@ class InstallerController
         if (strpos($body['bodyLoginBackground'], 'data:image/svg+xml;base64,') !== false) {
             $tmpPath = CoreConfigModel::getTmpPath();
             $tmpFileName = $tmpPath . 'installer_logo_' . rand() . '_file.svg';
-            $file = base64_decode($body['encodedBodyLogin']);
+            $file = base64_decode($body['logo']);
             file_put_contents($tmpFileName, $file);
 
             $size = strlen($file);
