@@ -98,6 +98,8 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'QueryParams password is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['name'])) {
             return $response->withStatus(400)->withJson(['errors' => 'QueryParams name is empty or not a string']);
+        } elseif (!Validator::length(2, 50)->validate($queryParams['name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams name length is not valid']);
         }
 
         $options = [
@@ -271,6 +273,8 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['name'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body name is empty or not a string']);
+        } elseif (!Validator::length(2, 50)->validate($body['name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body name length is not valid']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
         } elseif (!is_file("custom/{$body['customId']}/initializing.lck")) {
@@ -287,35 +291,26 @@ class InstallerController
         $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname={$body['name']}";
         $connected = @pg_connect($connection);
         if ($connected) {
-            $result = @pg_query("SELECT table_name FROM information_schema.tables WHERE table_schema not in ('pg_catalog', 'information_schema')");
-            $row = pg_fetch_row($result);
+            pg_close();
+            $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname={$body['name']}";
+            $db = new \PDO($dsn, $body['user'], $body['password'], $options);
+
+            $query = $db->query("SELECT table_name FROM information_schema.tables WHERE table_schema not in ('pg_catalog', 'information_schema')");
+            $row = $query->fetch(\PDO::FETCH_ASSOC);
             if (!empty($row)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Given database has tables']);
             }
-            pg_close();
         } else {
-            $connection = "host={$body['server']} port={$body['port']} user={$body['user']} password={$body['password']} dbname=postgres";
-            if (!@pg_connect($connection)) {
+            $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname=postgres";
+            try {
+                $db = new \PDO($dsn, $body['user'], $body['password'], $options);
+            } catch (\PDOException $PDOException) {
                 return $response->withStatus(400)->withJson(['errors' => 'Database connection failed']);
             }
 
-            $result = @pg_query("CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'");
-            if (!$result) {
-                return $response->withStatus(400)->withJson(['errors' => 'Database creation failed']);
-            }
-
-            @pg_query("ALTER DATABASE '{$body['name']}' SET DateStyle =iso, dmy");
-            pg_close();
+            $db->query("CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'");
+            $db->query("ALTER DATABASE '{$body['name']}' SET DateStyle =iso, dmy");
         }
-
-        $options = [
-            \PDO::ATTR_PERSISTENT   => true,
-            \PDO::ATTR_ERRMODE      => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_CASE         => \PDO::CASE_NATURAL
-        ];
-
-        $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname={$body['name']}";
-        $db = new \PDO($dsn, $body['user'], $body['password'], $options);
 
         if (!is_file('sql/structure.sql')) {
             return $response->withStatus(400)->withJson(['errors' => 'File sql/structure.sql does not exist']);
