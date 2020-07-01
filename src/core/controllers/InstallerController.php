@@ -33,6 +33,10 @@ class InstallerController
         $output = explode(':', $output[0]);
         $unoconv = !empty($output[1]);
 
+        exec('whereis wkhtmltopdf', $outputWk, $returnWk);
+        $outputWk = explode(':', $outputWk[0]);
+        $wkhtmlToPdf = !empty($outputWk[1]);
+
         exec('whereis netcat', $outputNetcat, $returnNetcat);
         $outputNetcat = explode(':', $outputNetcat[0]);
 
@@ -46,12 +50,11 @@ class InstallerController
         $fileinfo = @extension_loaded('fileinfo');
         $gd = @extension_loaded('gd');
         $imagick = @extension_loaded('imagick');
-        $imap = @extension_loaded('imap');
-        $xsl = @extension_loaded('xsl');
         $gettext = @extension_loaded('gettext');
-        $xmlrpc = @extension_loaded('xmlrpc');
         $curl = @extension_loaded('curl');
         $zip = @extension_loaded('zip');
+        $json = @extension_loaded('json');
+        $xml = @extension_loaded('xml');
 
         $writable = is_writable('.') && is_readable('.');
 
@@ -63,6 +66,7 @@ class InstallerController
             'phpVersion'        => $phpVersion,
             'phpVersionValid'   => $phpVersionValid,
             'unoconv'           => $unoconv,
+            'wkhtmlToPdf'           => $wkhtmlToPdf,
             'netcatOrNmap'      => $netcatOrNmap,
             'pdoPgsql'          => $pdoPgsql,
             'pgsql'             => $pgsql,
@@ -70,10 +74,9 @@ class InstallerController
             'fileinfo'          => $fileinfo,
             'gd'                => $gd,
             'imagick'           => $imagick,
-            'imap'              => $imap,
-            'xsl'               => $xsl,
+            'json'              => $json,
             'gettext'           => $gettext,
-            'xmlrpc'            => $xmlrpc,
+            'xml'               => $xml,
             'curl'              => $curl,
             'zip'               => $zip,
             'writable'          => $writable,
@@ -309,7 +312,7 @@ class InstallerController
             }
 
             $db->query("CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'");
-            $db->query("ALTER DATABASE '{$body['name']}' SET DateStyle =iso, dmy");
+            $db->query("ALTER DATABASE \"{$body['name']}\" SET DateStyle =iso, dmy");
         }
 
         if (!is_file('sql/structure.sql')) {
@@ -520,6 +523,14 @@ class InstallerController
             ],
             'where'     => ['user_id = ?'],
             'data'      => ['superadmin']
+        ]);
+        DatabaseModel::update([
+            'table'     => 'users',
+            'set'       => [
+                'mail'      => $body['email']
+            ],
+            'where'     => ['mail = ?'],
+            'data'      => ['info@maarch.org']
         ]);
 
         return $response->withStatus(204);
