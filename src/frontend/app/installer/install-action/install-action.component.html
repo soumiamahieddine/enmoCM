@@ -26,12 +26,11 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-    <ng-container *ngIf="isInstallComplete()">
+    <ng-container *ngIf="isInstallComplete() || isInstallError()">
         <span class="divider-modal"></span>
         <div mat-dialog-actions class="actions">
             <button *ngIf="!isInstallError()" mat-raised-button mat-button color="primary"
-                (click)="goToInstance()">Accéder
-                à la nouvelle instance</button>
+                (click)="goToInstance()">{{lang.goToNewInstance}}</button>
             <button *ngIf="isInstallError()" mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
         </div>
     </ng-container>

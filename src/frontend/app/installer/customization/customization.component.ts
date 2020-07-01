@@ -42,7 +42,7 @@ export class CustomizationComponent implements OnInit {
             appName: [`Maarch Courrier ${environment.VERSION.split('.')[0] + '.' + environment.VERSION.split('.')[1]}`, Validators.required],
             loginMessage: [`<span style="color:#24b0ed"><strong>Découvrez votre application via</strong></span>&nbsp;<a title="le guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/${environment.VERSION.split('.')[0] + '.' + environment.VERSION.split('.')[1]}/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>le guide de visite en ligne</strong></span></a>`],
             homeMessage: ['<p>D&eacute;couvrez <strong>Maarch Courrier 20.10</strong> avec <a title="notre guide de visite" href="https://docs.maarch.org/" target="_blank"><span style="color:#f99830;"><strong>notre guide de visite en ligne</strong></span></a>.</p>'],
-            bodyLoginBackground: ['bodylogin.jpg'],
+            bodyLoginBackground: ['assets/bodylogin.jpg'],
             uploadedLogo: ['../rest/images?image=logo'],
         });
         this.backgroundList = Array.from({ length: 16 }).map((_, i) => {
@@ -61,6 +61,7 @@ export class CustomizationComponent implements OnInit {
             }),
             debounceTime(500),
             filter((value: any) => value.length > 2),
+            filter(() => this.stepFormGroup.controls['customId'].errors === null || this.stepFormGroup.controls['customId'].errors.pattern === undefined),
             tap(() => {
                 this.checkCustomExist();
             }),
@@ -94,7 +95,8 @@ export class CustomizationComponent implements OnInit {
                 }
             }),
             catchError((err: any) => {
-                if (err.error.errors === 'Custom already exists') {
+                const regex = /^Custom already exists/g;
+                if (err.error.errors.match(regex) !== null) {
                     this.stepFormGroup.controls['customId'].setErrors({ ...this.stepFormGroup.controls['customId'].errors, customExist: true });
                     this.stepFormGroup.controls['customId'].markAsTouched();
                 } else {
@@ -148,7 +150,10 @@ export class CustomizationComponent implements OnInit {
                     applicationName: this.stepFormGroup.controls['appName'].value,
                 },
                 description: this.lang.stepInstanceActionDesc,
-                route: '../rest/installer/custom',
+                route : {
+                    method : 'POST',
+                    url : '../rest/installer/custom'
+                },
                 installPriority: 1
             },
             {
@@ -160,7 +165,10 @@ export class CustomizationComponent implements OnInit {
                     logo: this.stepFormGroup.controls['uploadedLogo'].value,
                 },
                 description: this.lang.stepCustomizationActionDesc,
-                route: '../rest/installer/customization',
+                route : {
+                    method : 'POST',
+                    url : '../rest/installer/customization'
+                },
                 installPriority: 3
             }
         ];

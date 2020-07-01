@@ -70,12 +70,11 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
 
     doStep(index: number) {
         return new Promise((resolve, reject) => {
-            console.log(this.steps[index]);
             if (this.installerService.isStepAlreadyLaunched(this.data[index].idStep)) {
                 this.steps[index].state = 'OK';
                 resolve(true);
             } else {
-                this.http.post(this.data[index].route, this.data[index].body).pipe(
+                this.http[this.data[index].route.method.toLowerCase()](this.data[index].route.url, this.data[index].body).pipe(
                     tap((data: any) => {
                         this.steps[index].state = 'OK';
                         this.installerService.setStep(this.steps[index]);
@@ -83,8 +82,8 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
                     }),
                     catchError((err: any) => {
                         this.steps[index].state = 'KO';
-                        resolve(false);
                         this.steps[index].msgErr = err.error.errors;
+                        resolve(false);
                         return of(false);
                     })
                 ).subscribe();
@@ -97,7 +96,6 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
     }
 
     isInstallError() {
-        console.log(this.steps);
         return this.steps.filter(step => step.state === 'KO').length > 0;
     }
 
