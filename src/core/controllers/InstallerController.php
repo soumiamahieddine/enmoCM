@@ -246,7 +246,10 @@ class InstallerController
                 'lang'              => $body['lang'] ?? 'fr',
                 'applicationName'   => $body['applicationName'] ?? $body['customId'],
                 'cookieTime'        => 10080,
-                'timezone'          => 'Europe/Paris'
+                'timezone'          => 'Europe/Paris',
+                'maarchDirectory'   => realpath('.') . '/',
+                'customID'          => $body['customId'],
+                'maarchUrl'         => ''
             ],
             'database'  => []
         ];
@@ -508,9 +511,9 @@ class InstallerController
         } elseif (!is_file("custom/{$body['customId']}/initializing.lck")) {
             return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['password'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Body password is empty or not a string']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['email']) || !filter_var($body['mail'], FILTER_VALIDATE_EMAIL)) {
-            return $response->withStatus(403)->withJson(['errors' => 'Body password is empty, not a string or not a valid email']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['email']) || !filter_var($body['email'], FILTER_VALIDATE_EMAIL)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body email is empty, not a string or not a valid email']);
         }
 
         DatabasePDO::reset();
