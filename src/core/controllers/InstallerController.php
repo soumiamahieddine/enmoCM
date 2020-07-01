@@ -536,7 +536,7 @@ class InstallerController
                 'mail'      => $body['email']
             ],
             'where'     => ['mail = ?'],
-            'data'      => ['info@maarch.org']
+            'data'      => ['support@maarch.fr']
         ]);
 
         return $response->withStatus(204);
