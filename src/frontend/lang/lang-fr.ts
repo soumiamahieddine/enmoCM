@@ -1762,7 +1762,7 @@ export const LANG_FR = {
     "install_shortOpenTag": "Paramètre short_open_tags (php.ini)",
     "install_shortOpenTag_desc": "short_open_tags = On",
     "install_errorReporting": "Paramètre error_reporting (php.ini)",
-    "install_errorReporting_desc": "error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT",
+    "install_errorReporting_desc": "error_reporting = E_ALL & ~E_NOTICE",
     "install_netcatOrNmap": "netcat / nmap",
     "install_netcatOrNmap_desc": "Utilitaire permettant d'ouvrir des connexions réseau (netcat / nmap)",
     "general": "Générale",
