@@ -316,6 +316,9 @@ class InstallerController
 
             $db->query("CREATE DATABASE \"{$body['name']}\" WITH TEMPLATE template0 ENCODING = 'UTF8'");
             $db->query("ALTER DATABASE \"{$body['name']}\" SET DateStyle =iso, dmy");
+
+            $dsn = "pgsql:host={$body['server']};port={$body['port']};dbname={$body['name']}";
+            $db = new \PDO($dsn, $body['user'], $body['password'], $options);
         }
 
         if (!is_file('sql/structure.sql')) {
