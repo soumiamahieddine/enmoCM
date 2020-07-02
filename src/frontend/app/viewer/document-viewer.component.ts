@@ -65,6 +65,11 @@ export class DocumentViewerComponent implements OnInit {
     @Input() editMode: boolean = false;
 
     /**
+     * Hide tool document viewer
+     */
+    @Input() hideTools: boolean = false;
+
+    /**
      * Title of new tab when open document in external tab
      */
     @Input() title: string = '';
@@ -576,7 +581,9 @@ export class DocumentViewerComponent implements OnInit {
         }
     }
 
-    async loadRessource(resId: any, target: string = 'mainDocument') {
+    async loadRessource(resId: any, target: any = 'mainDocument') {
+        this.resId = resId;
+        this.mode = target;
         this.loading = true;
         if (target === 'attachment') {
             this.requestWithLoader(`../rest/attachments/${resId}/content?mode=base64`).subscribe(
