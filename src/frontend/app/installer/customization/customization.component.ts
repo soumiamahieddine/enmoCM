@@ -72,11 +72,19 @@ export class CustomizationComponent implements OnInit {
         if (this.installerService.isStepAlreadyLaunched('createCustom') && this.installerService.isStepAlreadyLaunched('customization')) {
             this.stepFormGroup.disable();
             this.readonlyState = true;
+            tinymce.remove();
             this.initMce(true);
         } else if (this.installerService.isStepAlreadyLaunched('createCustom')) {
             this.stepFormGroup.controls['customId'].disable();
             this.stepFormGroup.controls['appName'].disable();
+            this.stepFormGroup.controls['firstCtrl'].disable();
+        } else if (this.installerService.isStepAlreadyLaunched('customization')) {
+            this.stepFormGroup.controls['loginMessage'].disable();
+            this.stepFormGroup.controls['homeMessage'].disable();
+            this.stepFormGroup.controls['bodyLoginBackground'].disable();
+            this.stepFormGroup.controls['uploadedLogo'].disable();
             this.readonlyState = true;
+            tinymce.remove();
             this.initMce(true);
         } else {
             this.readonlyState = false;
@@ -108,12 +116,15 @@ export class CustomizationComponent implements OnInit {
     }
 
     isValidStep() {
-        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid || (this.installerService.isStepAlreadyLaunched('createCustom') && this.installerService.isStepAlreadyLaunched('customization'));
+        if (this.installerService.isStepAlreadyLaunched('createCustom') && this.installerService.isStepAlreadyLaunched('customization')) {
+            return true;
+        } else {
+            return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
+        }
     }
 
-
     getFormGroup() {
-        return this.stepFormGroup;
+        return this.installerService.isStepAlreadyLaunched('createCustom') && this.installerService.isStepAlreadyLaunched('customization') ? true : this.stepFormGroup;
     }
 
     initMce(readonly = false) {
@@ -175,7 +186,7 @@ export class CustomizationComponent implements OnInit {
     }
 
     uploadTrigger(fileInput: any, mode: string) {
-        if (fileInput.target.files && fileInput.target.files[0] && !this.readonlyState) {
+        if (fileInput.target.files && fileInput.target.files[0]) {
             const allowedExtension = mode !== 'logo' ? ['image/jpg', 'image/jpeg'] : ['image/svg+xml'];
             if (allowedExtension.indexOf(fileInput.target.files[0].type) !== -1) {
                 const reader = new FileReader();
@@ -200,5 +211,17 @@ export class CustomizationComponent implements OnInit {
 
     logoURL() {
         return this.sanitizer.bypassSecurityTrustUrl(this.stepFormGroup.controls['uploadedLogo'].value);
+    }
+
+    selectBg(content: string) {
+        if (!this.stepFormGroup.controls['bodyLoginBackground'].disabled) {
+            this.stepFormGroup.controls['bodyLoginBackground'].setValue(content);
+        }
+    }
+
+    clickLogoButton(uploadLogo: any) {
+        if (!this.stepFormGroup.controls['uploadedLogo'].disabled) {
+            uploadLogo.click();
+        }
     }
 }

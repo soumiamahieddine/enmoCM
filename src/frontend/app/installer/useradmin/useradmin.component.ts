@@ -73,7 +73,7 @@ export class UseradminComponent implements OnInit {
     }
 
     getFormGroup() {
-        return this.stepFormGroup;
+        return this.installerService.isStepAlreadyLaunched('userAdmin') ? true : this.stepFormGroup;
     }
 
     getInfoToInstall(): StepAction[] {

@@ -38,7 +38,11 @@ export class DocserversComponent implements OnInit {
 
 
     isValidStep() {
-        return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid || this.installerService.isStepAlreadyLaunched('docserver');
+        if (this.installerService.isStepAlreadyLaunched('docserver')) {
+            return true;
+        } else {
+            return this.stepFormGroup === undefined ? false : this.stepFormGroup.valid;
+        }
     }
 
     initStep() {
@@ -48,7 +52,7 @@ export class DocserversComponent implements OnInit {
     }
 
     getFormGroup() {
-        return this.stepFormGroup;
+        return this.installerService.isStepAlreadyLaunched('docserver') ? true : this.stepFormGroup;
     }
 
     checkAvailability() {
