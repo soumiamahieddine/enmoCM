@@ -1807,4 +1807,17 @@ export const LANG_EN = {
     "stepMailServer_desc": "Configure your mail server to notify users by email of the the application activities. <br/> This step can be skipped and can be configured later.",
     "stepMailServer_warning": "If no mail server is configured, the new users will not receive their first login token!",
     "checkCollaboraOnlineServer": "Connecting to the Collabora Online server",
+    "install_json": "json",
+    "install_json_desc": "PHP extension implementing the » JavaScript Object Notation (JSON) data-interchange format.",
+    "install_wkhtmlToPdf": "wkhtmlToPdf",
+    "install_wkhtmlToPdf_desc": "Command line tools to render HTML into PDF and various image formats using the Qt WebKit rendering engine. ",
+    "install_xml": "xml",
+    "install_xml_desc": "PHP extension implementing support for James Clark's expat in PHP. ",
+    "stepMailServerActionDesc": "Mail server configuration",
+    "stepUserAdminActionDesc": "Root user creation",
+    "pathUnreacheable": "Unreachable path",
+    "stepCustomizationActionDesc": "Implementation of personalized settings",
+    "goToNewInstance": "Access to the new instance",
+    "maxFileSizeExceeded": "File size must not exceed {0}",
+    "badImageResolution": "The image must be at least {0}"
 };

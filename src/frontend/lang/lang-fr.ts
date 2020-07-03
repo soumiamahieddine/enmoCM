@@ -1813,4 +1813,6 @@ export const LANG_FR = {
     "pathUnreacheable": "Chemin inaccessible",
     "stepCustomizationActionDesc": "Mise en place du paramétrage personnalisé",
     "goToNewInstance": "Accéder à la nouvelle instance",
+    "maxFileSizeExceeded": "La taille du fichier ne doit pas dépasser {0}",
+    "badImageResolution": "L'image doit être au minimum de {0}",
 };

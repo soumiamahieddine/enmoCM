@@ -1819,4 +1819,17 @@ export const LANG_NL = {
     "stepMailServer_desc": "Configurer votre serveur de mail afin de prévenir les utilisateurs par mail des différents échanges survenus dans l'application.<br/>Cette étape peut être passé et être configurée plus tard.__TO_TRANSLATE",
     "stepMailServer_warning": "Si aucun serveur de mail n'est renseigné, les nouveaux utilisateurs ne recevront pas leur jeton de première connexion !__TO_TRANSLATE",
     "checkCollaboraOnlineServer": "Connecting to the Collabora Online server__TO_TRANSLATE",
+    "install_json": "json__TO_TRANSLATE",
+    "install_json_desc": "Extension PHP permettant d'utiliser le format d'échange de données » JavaScript Object Notation (JSON).__TO_TRANSLATE",
+    "install_wkhtmlToPdf": "wkhtmlToPdf__TO_TRANSLATE",
+    "install_wkhtmlToPdf_desc": "Outil permettant de convertir du HTML en PDF et divers formats d'image en utilisant le moteur de rendu Qt WebKit.__TO_TRANSLATE",
+    "install_xml": "xml__TO_TRANSLATE",
+    "install_xml_desc": "Extension PHP fournissant utilisant la bibliothèque expat fournie avec la distribution.__TO_TRANSLATE",
+    "stepMailServerActionDesc": "Configuration du serveur de mail__TO_TRANSLATE",
+    "stepUserAdminActionDesc": "Création de l'utilisateur système__TO_TRANSLATE",
+    "pathUnreacheable": "Chemin inaccessible__TO_TRANSLATE",
+    "stepCustomizationActionDesc": "Mise en place du paramétrage personnalisé__TO_TRANSLATE",
+    "goToNewInstance": "Accéder à la nouvelle instance__TO_TRANSLATE",
+    "maxFileSizeExceeded": "La taille du fichier ne doit pas dépasser {0}__TO_TRANSLATE",
+    "badImageResolution": "L'image doit être au minimum de {0}__TO_TRANSLATE"
 };
