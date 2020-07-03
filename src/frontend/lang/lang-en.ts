@@ -1819,5 +1819,16 @@ export const LANG_EN = {
     "stepCustomizationActionDesc": "Implementation of personalized settings",
     "goToNewInstance": "Access to the new instance",
     "maxFileSizeExceeded": "File size must not exceed {0}",
-    "badImageResolution": "The image must be at least {0}"
+    "badImageResolution": "The image must be at least {0}",
+    "prerequisiteCheck": "Prerequisites controls",
+    "databaseCreation": "Database creation",
+    "dataSampleCreation": "Dataset injection",
+    "frFull": "Français",
+    "enFull": "English",
+    "chooseAppLanguage": "Choose the language of the application",
+    "welcomeApp": "Welcome to Maarch Courrier {0}",
+    "adminUserCreation": "Root user creation",
+    "externalInfoSite": "For more information, go to",
+    "installDescription": "This wizard will guide you step by step through the installation of Maarch Courrier in particular",
+    "maarchLicenceInstall": "<b>Maarch Courrier</b> is under <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\" target=\"_blank\" class=\"link\"> GNU General Public License </a>"
 };

@@ -1831,5 +1831,16 @@ export const LANG_NL = {
     "stepCustomizationActionDesc": "Mise en place du paramétrage personnalisé__TO_TRANSLATE",
     "goToNewInstance": "Accéder à la nouvelle instance__TO_TRANSLATE",
     "maxFileSizeExceeded": "La taille du fichier ne doit pas dépasser {0}__TO_TRANSLATE",
-    "badImageResolution": "L'image doit être au minimum de {0}__TO_TRANSLATE"
+    "badImageResolution": "L'image doit être au minimum de {0}__TO_TRANSLATE",
+    "prerequisiteCheck": "Contrôle des Pré-requis nécessaire au fonctionnement de l'application__TO_TRANSLATE",
+    "databaseCreation": "Création de la base de données__TO_TRANSLATE",
+    "dataSampleCreation": "Injection d'un jeu de données__TO_TRANSLATE",
+    "frFull": "Français__TO_TRANSLATE",
+    "enFull": "English__TO_TRANSLATE",
+    "chooseAppLanguage": "Choisissez la langue de l'application__TO_TRANSLATE",
+    "welcomeApp": "Bienvenue sur Maarch Courrier {0}__TO_TRANSLATE",
+    "adminUserCreation": "Création d'un utilisateur système__TO_TRANSLATE",
+    "externalInfoSite": "Pour tout renseignements, rendez vous sur__TO_TRANSLATE",
+    "installDescription": "Cet assistant va vous guider pas à pas dans l'installation de Maarch Courrier notamment__TO_TRANSLATE",
+    "maarchLicenceInstall": "<b>Maarch Courrier</b> est sous <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\" target=\"_blank\" class=\"link\">Licence publique générale GNU</a>__TO_TRANSLATE"
 };
