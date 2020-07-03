@@ -601,5 +601,6 @@ $app->post('/wopi/files/{id}/contents', \ContentManagement\controllers\Collabora
 $app->post('/collaboraOnline/configuration', \ContentManagement\controllers\CollaboraOnlineController::class . ':getConfiguration');
 $app->get('/collaboraOnline/available', \ContentManagement\controllers\CollaboraOnlineController::class . ':isAvailable');
 $app->post('/collaboraOnline/file', \ContentManagement\controllers\CollaboraOnlineController::class . ':getTmpFile');
+$app->post('/collaboraOnline/encodedFile', \ContentManagement\controllers\CollaboraOnlineController::class . ':saveTmpEncodedDocument');
 
 $app->run();

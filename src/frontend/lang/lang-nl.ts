@@ -1842,5 +1842,10 @@ export const LANG_NL = {
     "adminUserCreation": "Création d'un utilisateur système__TO_TRANSLATE",
     "externalInfoSite": "Pour tout renseignements, rendez vous sur__TO_TRANSLATE",
     "installDescription": "Cet assistant va vous guider pas à pas dans l'installation de Maarch Courrier notamment__TO_TRANSLATE",
-    "maarchLicenceInstall": "<b>Maarch Courrier</b> est sous <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\" target=\"_blank\" class=\"link\">Licence publique générale GNU</a>__TO_TRANSLATE"
+    "maarchLicenceInstall": "<b>Maarch Courrier</b> est sous <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\" target=\"_blank\" class=\"link\">Licence publique générale GNU</a>__TO_TRANSLATE",
+    "errorCollaboraOnline1": "Cannot launch Collabora Online, a local address is used__TO_TRANSLATE",
+    "errorCollaboraOnline2": "Cannot launch Collabora Online. Check if the Collabora Online server is available__TO_TRANSLATE",
+    "collaboraOnlineEditDenied": "This document cannot be edited with Collabora Online__TO_TRANSLATE",
+    "collaboraOnlineEditDenied2": "cannot be edited with Collabora Online__TO_TRANSLATE",
+    "documentEditor_collaboraonline": "Open Collabora Online inside Maarch Courrier application__TO_TRANSLATE",
 };

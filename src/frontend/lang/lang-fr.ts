@@ -1825,5 +1825,10 @@ export const LANG_FR = {
     "adminUserCreation": "Création d'un utilisateur système",
     "externalInfoSite": "Pour tout renseignements, rendez vous sur",
     "installDescription": "Cet assistant va vous guider pas à pas dans l'installation de Maarch Courrier notamment",
-    "maarchLicenceInstall": "<b>Maarch Courrier</b> est sous <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\" target=\"_blank\" class=\"link\">Licence publique générale GNU</a>"
+    "maarchLicenceInstall": "<b>Maarch Courrier</b> est sous <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\" target=\"_blank\" class=\"link\">Licence publique générale GNU</a>",
+    "errorCollaboraOnline1": "Impossible de lancer Collabora Online, vous utilisez une adresse locale",
+    "errorCollaboraOnline2": "Impossible de lancer Collabora Online. Veuillez vérifier la disponibilité du serveur",
+    "collaboraOnlineEditDenied": "Ce document ne peut pas être édité avec Collabora Online",
+    "collaboraOnlineEditDenied2": "ne peut pas être édité avec Collabora Online",
+    "documentEditor_collaboraonline": "Ouvre la suite Collabora Online directement dans l'application Maarch Courrier",
 };
