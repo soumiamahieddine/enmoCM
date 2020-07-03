@@ -185,6 +185,7 @@ export class AppGuard implements CanActivate {
                         if (err.error.errors === 'User must change his password') {
                             return this.router.navigate(['/password-modification']);
                         } else {
+                            this.authService.logout();
                             return of(false);
                         }
                     })
