@@ -372,6 +372,8 @@ class InstallerController
             return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
         } elseif (!is_file("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json")) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
+        } elseif (strpbrk($body['path'], '"\'<>|*:?') !== false) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body path is not valid']);
         }
 
         $body['path'] = rtrim($body['path'], '/');
@@ -438,10 +440,6 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body bodyLoginBackground is empty']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['logo'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body logo is empty']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['loginMessage'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body loginMessage is empty or not a string']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['homeMessage'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body homeMessage is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['customId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body customId is empty or not a string']);
         } elseif (!preg_match('/^[a-zA-Z0-9_\-]*$/', $body['customId'])) {
@@ -489,13 +487,13 @@ class InstallerController
         new DatabasePDO(['customId' => $body['customId']]);
         DatabaseModel::update([
             'table'     => 'parameters',
-            'set'       => ['param_value_string' => $body['loginMessage']],
+            'set'       => ['param_value_string' => $body['loginMessage'] ?? ''],
             'where'     => ['id = ?'],
             'data'      => ['loginpage_message']
         ]);
         DatabaseModel::update([
             'table'     => 'parameters',
-            'set'       => ['param_value_string' => $body['homeMessage']],
+            'set'       => ['param_value_string' => $body['homeMessage'] ?? ''],
             'where'     => ['id = ?'],
             'data'      => ['homepage_message']
         ]);
