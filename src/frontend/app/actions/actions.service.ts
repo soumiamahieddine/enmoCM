@@ -213,7 +213,7 @@ export class ActionsService implements OnDestroy {
     }
 
     lockResource(userId: number = this.currentUserId, groupId: number = this.currentGroupId, basketId: number = this.currentBasketId, resIds: number[] = this.currentResIds) {
-        console.log(`Verouillage des documents ${resIds}`);
+        console.debug(`Lock resources : ${resIds}`);
 
         this.http.put(`../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
             tap(() => console.debug(`Cycle lock : `, this.currentResourceLock)),
@@ -239,7 +239,7 @@ export class ActionsService implements OnDestroy {
 
     unlockResource(userId: number = this.currentUserId, groupId: number = this.currentGroupId, basketId: number = this.currentBasketId, resIds: number[] = this.currentResIds) {
         if (resIds.length > 0) {
-            console.debug(`Unlock ressource : ${resIds}`);
+            console.debug(`Unlock resources : ${resIds}`);
             this.http.put(`../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/unlock`, { resources: resIds }).pipe(
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
