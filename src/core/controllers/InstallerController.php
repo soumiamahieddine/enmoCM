@@ -372,7 +372,7 @@ class InstallerController
             return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
         } elseif (!is_file("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json")) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom does not exist']);
-        } elseif (strpbrk($body['path'], '"\'<>|*:?') !== false) {
+        } elseif (strpbrk($body['path'], '"\'<>|*:?') !== false || strpos($body['path'], '//') !== false) {
             return $response->withStatus(400)->withJson(['errors' => 'Body path is not valid']);
         }
 
