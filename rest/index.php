@@ -175,6 +175,7 @@ $app->post('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeCo
 $app->get('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getMergedFile');
 $app->get('/onlyOffice/encodedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getEncodedFileFromUrl');
 $app->get('/onlyOffice/available', \ContentManagement\controllers\OnlyOfficeController::class . ':isAvailable');
+$app->get('/onlyOffice/content', \ContentManagement\controllers\OnlyOfficeController::class . ':getTmpFile');
 $app->post('/onlyOfficeCallback', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
     return $response->withJson(['error' => 0]);
 });

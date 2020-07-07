@@ -352,7 +352,6 @@ class CollaboraOnlineController
             return $response->withStatus(400)->withJson(['errors' => 'File cannot be edited with Collabora Online', 'lang' => 'collaboraOnlineEditDenied']);
         }
 
-        $jwt = null;
         $payload = [
             'userId' => $GLOBALS['id'],
             'resId'  => $body['resId'],
