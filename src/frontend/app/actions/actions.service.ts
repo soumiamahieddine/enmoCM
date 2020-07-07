@@ -46,6 +46,7 @@ export class ActionsService implements OnDestroy {
 
     currentResourceLock: any = null;
     lockMode: boolean = true;
+    actionEnded: boolean = false;
 
     currentAction: any = null;
     currentUserId: number = null;
@@ -146,6 +147,7 @@ export class ActionsService implements OnDestroy {
 
     async launchAction(action: any, userId: number, groupId: number, basketId: number, resIds: number[], datas: any, lockRes: boolean = true) {
         if (this.setActionInformations(action, userId, groupId, basketId, resIds)) {
+            this.actionEnded = false;
             this.loading = true;
             this.lockMode = lockRes;
             this.setResourceInformations(datas);
@@ -283,6 +285,7 @@ export class ActionsService implements OnDestroy {
 
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
+        this.actionEnded = true;
         this.eventAction.next(resIds);
     }
 
