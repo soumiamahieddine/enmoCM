@@ -457,6 +457,7 @@ class InstallerController
         } else {
             $tmpPath = CoreConfigModel::getTmpPath();
             $tmpFileName = $tmpPath . 'installer_body_' . rand() . '_file.jpg';
+            $body['bodyLoginBackground'] = str_replace('data:image/jpeg;base64,', '', $body['bodyLoginBackground']);
             $file = base64_decode($body['bodyLoginBackground']);
             file_put_contents($tmpFileName, $file);
 
@@ -473,6 +474,7 @@ class InstallerController
         if (strpos($body['logo'], 'data:image/svg+xml;base64,') !== false) {
             $tmpPath = CoreConfigModel::getTmpPath();
             $tmpFileName = $tmpPath . 'installer_logo_' . rand() . '_file.svg';
+            $body['logo'] = str_replace('data:image/svg+xml;base64,', '', $body['logo']);
             $file = base64_decode($body['logo']);
             file_put_contents($tmpFileName, $file);
 
