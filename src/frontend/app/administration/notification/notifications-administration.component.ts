@@ -206,4 +206,24 @@ export class NotificationsAdministrationComponent implements OnInit {
                 this.notify.error(err.error.errors);
             });
     }
+
+    /* FEATURE TOUR */
+
+    onNext() {
+        console.log('next');
+        this.sidenavRight.open();
+        return false;
+    }
+
+    paramCron() {
+        this.newCron = {
+            'm': '0',
+            'h': '8',
+            'dom': '*',
+            'mon': '*',
+            'cmd': '/var/www/html/maarch_courrier_develop/custom/cs_recette/bin/notification/scripts/notification_cs_recette_BASKETS.sh',
+            'description': 'notification_cs_recette_BASKETS.sh',
+            'state': 'normal'
+        };
+    }
 }
