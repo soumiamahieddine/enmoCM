@@ -1831,4 +1831,5 @@ export const LANG_FR = {
     "collaboraOnlineEditDenied": "Ce document ne peut pas être édité avec Collabora Online",
     "collaboraOnlineEditDenied2": "ne peut pas être édité avec Collabora Online",
     "documentEditor_collaboraonline": "Ouvre la suite Collabora Online directement dans l'application Maarch Courrier",
+    "canUpdateResourcesInSignatureBook": "Pouvoir modifier les documents intégrés au parapheur"
 };

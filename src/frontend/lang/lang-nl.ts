@@ -1848,4 +1848,5 @@ export const LANG_NL = {
     "collaboraOnlineEditDenied": "This document cannot be edited with Collabora Online__TO_TRANSLATE",
     "collaboraOnlineEditDenied2": "cannot be edited with Collabora Online__TO_TRANSLATE",
     "documentEditor_collaboraonline": "Open Collabora Online inside Maarch Courrier application__TO_TRANSLATE",
+    "canUpdateResourcesInSignatureBook": "Pouvoir modifier les documents intégrés au parapheur__TO_TRANSLATE"
 };
