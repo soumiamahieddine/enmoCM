@@ -542,6 +542,7 @@ export const LANG_FR = {
     "documentEditor_java": "Ouvre votre éditeur de document par défaut dans une nouvelle fenêtre",
     "documentEditor_onlyoffice": "Ouvre la suite OnlyOffice directement dans l'application Maarch Courrier",
     "documentOutOfPerimeter": "Ce document est en dehors de votre périmètre",
+    "documentsOutOfPerimeter": "Certains documents sont en dehors de votre périmètre",
     "documentSignedMsg": "Le document a été signé, vous ne pouvez pas editer ce document",
     "documentTypeAdded": "Type de courrier ajouté",
     "documentTypeDeleted": "Type de courrier supprimé",

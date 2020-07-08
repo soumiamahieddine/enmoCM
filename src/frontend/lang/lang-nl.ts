@@ -1866,5 +1866,6 @@ export const LANG_NL = {
     "notifTour3Title": "Période de la tâche__TO_TRANSLATE",
     "notifTour3Description": "Vous pouvez choisir différentes périodes pour paramétrer votre tâche__TO_TRANSLATE",
     "notifTour4Title": "Liste des tâches__TO_TRANSLATE",
-    "notifTour4Description": "La liste de vos tâches actives apparaissent ici__TO_TRANSLATE"
+    "notifTour4Description": "La liste de vos tâches actives apparaissent ici__TO_TRANSLATE",
+    "documentsOutOfPerimeter": "Certains documents sont en dehors de votre périmètre__TO_TRANSLATE"
 };

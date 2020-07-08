@@ -542,6 +542,7 @@ export const LANG_EN = {
     "documentEditor_java": "Open your default document editor in a new window",
     "documentEditor_onlyoffice": "Open OnlyOffice directly inside Maarch Courrier",
     "documentOutOfPerimeter": "This document is out of your perimeter",
+    "documentsOutOfPerimeter": "Some documents are out of your perimeter",
     "documentSignedMsg": "The document has been signed, you cannot edit this document",
     "documentTypeAdded": "Document type added",
     "documentTypeDeleted": "Document type deleted",
