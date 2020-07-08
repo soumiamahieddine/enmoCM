@@ -1836,5 +1836,6 @@ export const LANG_EN = {
     "collaboraOnlineEditDenied": "This document cannot be edited with Collabora Online",
     "collaboraOnlineEditDenied2": "cannot be edited with Collabora Online",
     "documentEditor_collaboraonline": "Open Collabora Online directly inside Maarch Courrier",
-    "canUpdateResourcesInSignatureBook": "Can modify the documents included in the signature book"
+    "canUpdateResourcesInSignatureBook": "Can modify the documents included in the signature book",
+    "includeFolderPerimeter": "Access out-of-scope mails in folders"
 };

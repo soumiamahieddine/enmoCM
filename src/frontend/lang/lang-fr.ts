@@ -1833,5 +1833,6 @@ export const LANG_FR = {
     "documentEditor_collaboraonline": "Ouvre la suite Collabora Online directement dans l'application Maarch Courrier",
     "canUpdateResourcesInSignatureBook": "Pouvoir modifier les documents intégrés au parapheur",
     "admin_email_serverTour": "Vous devez paramétrer un serveur de mail afin de pouvoir créer des utilisateurs ou d'activer les notifications.",
-    "admin_notifTour": "Nous vous conseillons de paramétrer les notifications de bannettes"
+    "admin_notifTour": "Nous vous conseillons de paramétrer les notifications de bannettes",
+    "includeFolderPerimeter": "Consulter les courriers hors périmètre dans les dossiers",
 };
