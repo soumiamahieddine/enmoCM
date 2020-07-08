@@ -216,7 +216,7 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     paramCron() {
-        const notifBasket = this.authorizedNotification.filter((notif: any) => notif.path.indexOf('notification_cs_recette_BASKETS.sh') > -1)[0];
+        const notifBasket = this.authorizedNotification.filter((notif: any) => notif.path.indexOf('_BASKETS.sh') > -1)[0];
         this.newCron = {
             'm': '0',
             'h': '8',

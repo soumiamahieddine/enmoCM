@@ -1849,5 +1849,5 @@ export const LANG_FR = {
     "notifTour3Title": "Période de la tâche",
     "notifTour3Description": "Vous pouvez choisir différentes périodes pour paramétrer votre tâche",
     "notifTour4Title": "Liste des tâches",
-    "notifTour4Description": "La liste de vos tâches actives apparaissent ici"
+    "notifTour4Description": "La liste de vos tâches actives apparaît ici"
 };
