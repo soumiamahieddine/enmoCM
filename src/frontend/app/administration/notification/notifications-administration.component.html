@@ -94,8 +94,8 @@
         </div>
     </mat-sidenav-content>
     <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" position='end' [opened]="appService.getViewMode() ? false : false"  (next)="paramCron()" stepPosition="center" joyrideStep="notifTour2" [text]="'Nous allons la plannifier pour chaque jour à 8h00 du lundi au vendredi'">
-        <mat-list  (next)="saveCron()" joyrideStep="notifTour3" [text]="'Pouvez choisir différentes périodes pour paramétrer votre tâche'">
+        fixedTopGap="56" position='end' [opened]="appService.getViewMode() ? false : false"  (next)="paramCron()" stepPosition="center" joyrideStep="notifTour2">
+        <mat-list  (next)="saveCron()" joyrideStep="notifTour3">
             <h3 mat-subheader>{{lang.notificationSchedule}}</h3>
             <form class="form-horizontal" #notifForm="ngForm" style="overflow:hidden;">
                 <div class="form-group" style="padding-left:15px;padding-right:15px;">
@@ -172,7 +172,7 @@
         <div class="alert alert-info" role="alert" style="margin:15px;">
             {{lang.NotificationScheduleInfo}}
         </div>
-        <mat-list joyrideStep="notifTour4" [text]="'La liste de vos tâche actives apparait ici'">
+        <mat-list joyrideStep="notifTour4">
             <h3 mat-subheader>{{lang.activeCron}}</h3>
             <mat-chip-list #chipList class="mat-chip-list-stacked">
                 <span *ngFor="let notif of crontab;let i = index">

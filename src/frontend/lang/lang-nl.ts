@@ -1849,5 +1849,22 @@ export const LANG_NL = {
     "collaboraOnlineEditDenied2": "cannot be edited with Collabora Online__TO_TRANSLATE",
     "documentEditor_collaboraonline": "Open Collabora Online inside Maarch Courrier application__TO_TRANSLATE",
     "canUpdateResourcesInSignatureBook": "Pouvoir modifier les documents intégrés au parapheur__TO_TRANSLATE",
-    "includeFolderPerimeter": "Consulter les courriers hors périmètre dans les dossiers et courriers suivis__TO_TRANSLATE"
+    "includeFolderPerimeter": "Consulter les courriers hors périmètre dans les dossiers et courriers suivis__TO_TRANSLATE",
+    "admin_email_serverTour": "Vous devez paramétrer un serveur de mail afin de pouvoir créer des utilisateurs ou d'activer les notifications.__TO_TRANSLATE",
+    "admin_notifTour": "Nous vous conseillons de paramétrer les notifications de bannettes__TO_TRANSLATE",
+    "getIt": "J'ai compris__TO_TRANSLATE",
+    "admin_email_serverTitle": "Paramétrer un serveur de mail__TO_TRANSLATE",
+    "emailTourTitle": "Informations du serveur__TO_TRANSLATE",
+    "emailTourDescription": "Renseignez les informations nécessaires__TO_TRANSLATE",
+    "emailTour2Title": "Tester la connexion__TO_TRANSLATE",
+    "emailTour2Description": "Il est fortement recommandé de tester les informations renseignées afin de s'assurer que la connexion soit effective.__TO_TRANSLATE",
+    "admin_notifTitle": "Gérer les notifications__TO_TRANSLATE",
+    "notifTourTitle": "Planifier__TO_TRANSLATE",
+    "notifTourDescription": "Vous pouvez planifier vos notifications de manière précise__TO_TRANSLATE",
+    "notifTour2Title": "Notification de bannettes__TO_TRANSLATE",
+    "notifTour2Description": "Nous allons planifier la <b color=\"primary\">notification de bannettes</b> pour <b color=\"primary\">chaque jour à 8h00<b>.<br/><br/>Cela avertira les utilisateurs de nouveaux contenus dans leur bannettes.__TO_TRANSLATE",
+    "notifTour3Title": "Période de la tâche__TO_TRANSLATE",
+    "notifTour3Description": "Vous pouvez choisir différentes périodes pour paramétrer votre tâche__TO_TRANSLATE",
+    "notifTour4Title": "Liste des tâches__TO_TRANSLATE",
+    "notifTour4Description": "La liste de vos tâches actives apparaissent ici__TO_TRANSLATE"
 };

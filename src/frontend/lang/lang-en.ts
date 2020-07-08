@@ -1837,5 +1837,22 @@ export const LANG_EN = {
     "collaboraOnlineEditDenied2": "cannot be edited with Collabora Online",
     "documentEditor_collaboraonline": "Open Collabora Online directly inside Maarch Courrier",
     "canUpdateResourcesInSignatureBook": "Can modify the documents included in the signature book",
-    "includeFolderPerimeter": "Access out-of-scope mails in folders and followed mails"
+    "includeFolderPerimeter": "Access out-of-scope mails in folders and followed mails",
+    "admin_email_serverTour": "You must configure a mail server in order to be able to create users or activate notifications.",
+    "admin_notifTour": "We advise you to configure the notifications of baskets.",
+    "getIt": "I get it",
+    "admin_email_serverTitle": "Configure a mail server",
+    "emailTourTitle": "Server information",
+    "emailTourDescription": "Fill the necessary information.",
+    "emailTour2Title": "Test connection",
+    "emailTour2Description": "It is strongly recommended to test the information provided to ensure that the connection is effective.",
+    "admin_notifTitle": "Manage notifications",
+    "notifTourTitle": "Plan",
+    "notifTourDescription": "You can schedule your notifications precisely.",
+    "notifTour2Title": "Baskets notification",
+    "notifTour2Description": "We will schedule the <b color=\"primary\">baskets notification</b> for <b color=\"primary\">each day at 8:00 am<b>. <br/><br/>This will notify users of new contents in their baskets.",
+    "notifTour3Title": "Task period",
+    "notifTour3Description": "You can choose different periods to configure your task.",
+    "notifTour4Title": "To do-list",
+    "notifTour4Description": "The list of your active tasks appears here."
 };

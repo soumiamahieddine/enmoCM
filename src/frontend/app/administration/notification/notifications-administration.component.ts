@@ -216,13 +216,15 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     paramCron() {
+        const notifBasket = this.authorizedNotification.filter((notif: any) => notif.path.indexOf('notification_cs_recette_BASKETS.sh') > -1)[0];
         this.newCron = {
             'm': '0',
             'h': '8',
             'dom': '*',
+            'dow': '*',
             'mon': '*',
-            'cmd': '/var/www/html/maarch_courrier_develop/custom/cs_recette/bin/notification/scripts/notification_cs_recette_BASKETS.sh',
-            'description': 'notification_cs_recette_BASKETS.sh',
+            'cmd': notifBasket.path,
+            'description': notifBasket.description,
             'state': 'normal'
         };
     }
