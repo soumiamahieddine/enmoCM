@@ -1834,5 +1834,5 @@ export const LANG_FR = {
     "canUpdateResourcesInSignatureBook": "Pouvoir modifier les documents intégrés au parapheur",
     "admin_email_serverTour": "Vous devez paramétrer un serveur de mail afin de pouvoir créer des utilisateurs ou d'activer les notifications.",
     "admin_notifTour": "Nous vous conseillons de paramétrer les notifications de bannettes",
-    "includeFolderPerimeter": "Consulter les courriers hors périmètre dans les dossiers",
+    "includeFolderPerimeter": "Consulter les courriers hors périmètre dans les dossiers et courriers suivis",
 };
