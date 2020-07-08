@@ -1728,7 +1728,7 @@ export const LANG_FR = {
     "warnPrivateKeyTitle": "Alerte sécurité",
     "warnPrivateKey": "<b>La clé privée de chiffrement n'a pas été modifiée !</b> <br> Cela compromet la sécurité de l'application.",
     "prerequisite": "Pré-requis",
-    "prerequisiteCheck": "Contrôle des pré-requis au fonctionnement de l'application",
+    "prerequisiteCheck": "Contrôle des pré-requis de l'application",
     "stepPrerequisite_desc": "L'installation de Maarch Courrier nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Pour plus d'informations",
     "install_phpVersionValid": "Version minimum de PHP (>= 7.2)",
     "install_unoconv": "unoconv",
