@@ -32,7 +32,7 @@ use Template\models\TemplateModel;
 
 class OnlyOfficeController
 {
-    public static function getConfiguration(Request $request, Response $response)
+    public function getConfiguration(Request $request, Response $response)
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
 
@@ -53,7 +53,7 @@ class OnlyOfficeController
         return $response->withJson($configurations);
     }
 
-    public static function getToken(Request $request, Response $response)
+    public function getToken(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
         if (!Validator::notEmpty()->validate($body['config'])) {
@@ -80,7 +80,7 @@ class OnlyOfficeController
         return $response->withJson($jwt);
     }
 
-    public static function saveMergedFile(Request $request, Response $response)
+    public function saveMergedFile(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 
@@ -213,7 +213,7 @@ class OnlyOfficeController
         return $response->withJson(['filename' => $halfFilename]);
     }
 
-    public static function getMergedFile(Request $request, Response $response)
+    public function getMergedFile(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();
 
@@ -242,7 +242,7 @@ class OnlyOfficeController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
-    public static function getEncodedFileFromUrl(Request $request, Response $response)
+    public function getEncodedFileFromUrl(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();
 
@@ -275,7 +275,7 @@ class OnlyOfficeController
         return $response->withJson(['encodedFile' => base64_encode($fileContent)]);
     }
 
-    public static function isAvailable(Request $request, Response $response)
+    public function isAvailable(Request $request, Response $response)
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
         if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false') {
