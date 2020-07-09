@@ -1855,5 +1855,9 @@ export const LANG_EN = {
     "notifTour3Title": "Task period",
     "notifTour3Description": "You can choose different periods to configure your task.",
     "notifTour4Title": "To do-list",
-    "notifTour4Description": "The list of your active tasks appears here."
+    "notifTour4Description": "The list of your active tasks appears here.",
+    "welcomeTourTitle": "welcome",
+    "welcomeTourDescription": "We will show you some configuration points : <ul><li>Configure a <b color=\"primary\">mail server</b></li><li>Configure your first <b color=\"primary\">notification</b></li></ul><br/>To begin, click on <img style=\"width: 32px;\" src=\"assets/admin_button.png\" />",
+    "createScriptTourTitle": "Create the script",
+    "createScriptTourDescription": "Before scheduling the task, we need to create the script."
 };
