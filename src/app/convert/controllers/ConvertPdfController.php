@@ -41,18 +41,17 @@ class ConvertPdfController
             exec('export DISPLAY=:0 && '.$command.' 2>&1', $output, $return);
         } else {
             if (OnlyOfficeController::canConvert()) {
-                $output = [];
-                $return = 0;
                 $converted = OnlyOfficeController::convert(['fullFilename' => $aArgs['fullFilename']]);
-                if (!empty($converted['errors'])) {
-                    $output = [$converted['errors']];
+                if (empty($converted['errors'])) {
+                    return ['output' => [], 'return' => 0];
                 }
-            } else {
-                ConvertPdfController::addBom($aArgs['fullFilename']);
-                $command = "timeout 30 unoconv -f pdf " . escapeshellarg($aArgs['fullFilename']);
-
-                exec('export HOME=' . $tmpPath . ' && ' . $command . ' 2>&1', $output, $return);
             }
+
+            ConvertPdfController::addBom($aArgs['fullFilename']);
+            $command = "timeout 30 unoconv -f pdf " . escapeshellarg($aArgs['fullFilename']);
+
+            exec('export HOME=' . $tmpPath . ' && ' . $command . ' 2>&1', $output, $return);
+
         }
 
         return ['output' => $output, 'return' => $return];

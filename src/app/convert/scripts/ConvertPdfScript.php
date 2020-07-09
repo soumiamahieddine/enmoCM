@@ -101,13 +101,13 @@ class ConvertPdfScript
         if (strtolower($docInfo['extension']) != 'pdf') {
 
             $fullFilename = "{$tmpPath}{$fileNameOnTmp}.{$docInfo['extension']}";
+            $converted = false;
+            $output = [];
             if (OnlyOfficeController::canConvert()) {
-                $output = [];
                 $converted = OnlyOfficeController::convert(['fullFilename' => $fullFilename]);
-                if (!empty($converted['errors'])) {
-                    $output = [$converted['errors']];
-                }
-            } else {
+                $converted = empty($converted['errors']);
+            }
+            if (!$converted){
                 ConvertPdfController::addBom($fullFilename);
                 $command = "timeout 30 unoconv -f pdf " . escapeshellarg($fullFilename);
                 exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);

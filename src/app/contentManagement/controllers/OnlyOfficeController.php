@@ -318,7 +318,20 @@ class OnlyOfficeController
             return false;
         }
 
-        return $isAvailable;
+        if (!$isAvailable) {
+            return false;
+        }
+
+        $file = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+        if (empty($file['config']['maarchUrl'])) {
+            return false;
+        }
+
+        if (strpos($file['config']['maarchUrl'], 'localhost') !== false || strpos($file['config']['maarchUrl'], '127.0.0.1') !== false ) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function convert(array $args)
