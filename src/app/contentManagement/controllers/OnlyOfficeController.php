@@ -28,6 +28,7 @@ use SrcCore\controllers\CoreController;
 use SrcCore\controllers\UrlController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
+use SrcCore\models\ValidatorModel;
 use Template\models\TemplateModel;
 
 class OnlyOfficeController
@@ -298,8 +299,11 @@ class OnlyOfficeController
         return $response->withJson(['isAvailable' => $isAvailable]);
     }
 
-    public static function canConvert()
+    public static function canConvert(array $args)
     {
+        ValidatorModel::notEmpty($args, ['url']);
+        ValidatorModel::stringType($args, ['url']);
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
         if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false') {
             return false;
@@ -322,12 +326,7 @@ class OnlyOfficeController
             return false;
         }
 
-        $file = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
-        if (empty($file['config']['maarchUrl'])) {
-            return false;
-        }
-
-        if (strpos($file['config']['maarchUrl'], 'localhost') !== false || strpos($file['config']['maarchUrl'], '127.0.0.1') !== false ) {
+        if (strpos($args['url'], 'localhost') !== false || strpos($args['url'], '127.0.0.1') !== false ) {
             return false;
         }
 
@@ -336,6 +335,10 @@ class OnlyOfficeController
 
     public static function convert(array $args)
     {
+        ValidatorModel::notEmpty($args, ['url', 'fullFilename', 'userId']);
+        ValidatorModel::stringType($args, ['url', 'fullFilename']);
+        ValidatorModel::intVal($args, ['userId']);
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
         if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false') {
             return ['errors' => 'Onlyoffice is not enabled', 'lang' => 'onlyOfficeNotEnabled'];
@@ -352,18 +355,13 @@ class OnlyOfficeController
         $docInfo = pathinfo($args['fullFilename']);
 
         $payload = [
-            'userId'       => $GLOBALS['id'],
+            'userId'       => $args['userId'],
             'fullFilename' => $args['fullFilename']
         ];
 
         $jwt = JWT::encode($payload, CoreConfigModel::getEncryptKey());
 
-        $file = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
-        if (empty($file['config']['maarchUrl'])) {
-            return ['errors' => 'Cannot convert with OnlyOffice : maarchUrl not set in config.json'];
-        }
-        $coreUrl = $file['config']['maarchUrl'];
-        $docUrl = $coreUrl . 'rest/onlyOffice/content?token=' . $jwt;
+        $docUrl = $args['url'] . 'rest/onlyOffice/content?token=' . $jwt;
 
         $response = CurlModel::execSimple([
             'url'     => $uri . ':' . $port . '/ConvertService.ashx',

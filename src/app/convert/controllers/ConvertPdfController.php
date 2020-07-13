@@ -25,6 +25,7 @@ use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\UrlController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 
@@ -40,8 +41,9 @@ class ConvertPdfController
     
             exec('export DISPLAY=:0 && '.$command.' 2>&1', $output, $return);
         } else {
-            if (OnlyOfficeController::canConvert()) {
-                $converted = OnlyOfficeController::convert(['fullFilename' => $aArgs['fullFilename']]);
+            $url = str_replace('rest/', '', UrlController::getCoreUrl());
+            if (OnlyOfficeController::canConvert(['url' => $url])) {
+                $converted = OnlyOfficeController::convert(['fullFilename' => $aArgs['fullFilename'], 'url' => $url, 'userId' => $GLOBALS['id']]);
                 if (empty($converted['errors'])) {
                     return ['output' => [], 'return' => 0];
                 }
