@@ -23,8 +23,6 @@ describe('Login to app', function() {
                 browser.sleep(500);
             }
         });
-        element(by.id('alertComponentClose')).click();
-        browser.sleep(500);
         element(by.id('login')).sendKeys('bblier');
         browser.sleep(500);
         element(by.id('password')).sendKeys('maarch');
