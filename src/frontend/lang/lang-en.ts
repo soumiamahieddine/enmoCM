@@ -1859,5 +1859,7 @@ export const LANG_EN = {
     "welcomeTourTitle": "welcome",
     "welcomeTourDescription": "We will show you some configuration points : <ul><li>Configure a <b color=\"primary\">mail server</b></li><li>Configure your first <b color=\"primary\">notification</b></li></ul><br/>To begin, click on <img style=\"width: 32px;\" src=\"assets/admin_button.png\" />",
     "createScriptTourTitle": "Create the script",
-    "createScriptTourDescription": "Before scheduling the task, we need to create the script."
+    "createScriptTourDescription": "Before scheduling the task, we need to create the script.",
+    "updateKO": "Update failed !",
+    "saveInDocserversInfo": "L'historique de la mise à jour a été sauvegardé dans la zone de stockage <b>migration</b>."
 };
