@@ -251,32 +251,32 @@ class StoreController
         if (!empty($args['initiator'])) {
             $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
             $preparedData['initiator'] = $entity['entity_id'];
-        } else if (array_key_exists('initiator', $definedVars['args'])) {
+        } elseif (array_key_exists('initiator', $definedVars['args'])) {
             $preparedData['initiator'] = null;
         }
         if (isset($args['documentDate'])) {
             $preparedData['doc_date'] = $args['documentDate'];
-        } else if (array_key_exists('documentDate', $definedVars['args'])) {
+        } elseif (array_key_exists('documentDate', $definedVars['args'])) {
             $preparedData['doc_date'] = null;
         }
         if (isset($args['arrivalDate'])) {
             $preparedData['admission_date'] = $args['arrivalDate'];
-        } else if (array_key_exists('arrivalDate', $definedVars['args'])) {
+        } elseif (array_key_exists('arrivalDate', $definedVars['args'])) {
             $preparedData['admission_date'] = null;
         }
         if (isset($args['departureDate'])) {
             $preparedData['departure_date'] = $args['departureDate'];
-        } else if (array_key_exists('departureDate', $definedVars['args'])) {
+        } elseif (array_key_exists('departureDate', $definedVars['args'])) {
             $preparedData['departure_date'] = null;
         }
         if (isset($args['processLimitDate'])) {
             $preparedData['process_limit_date'] = $args['processLimitDate'];
-        } else if (array_key_exists('processLimitDate', $definedVars['args'])) {
+        } elseif (array_key_exists('processLimitDate', $definedVars['args'])) {
             $preparedData['process_limit_date'] = null;
         }
         if (isset($args['priority'])) {
             $preparedData['priority'] = $args['priority'];
-        } else if (array_key_exists('priority', $definedVars['args'])) {
+        } elseif (array_key_exists('priority', $definedVars['args'])) {
             $preparedData['priority'] = null;
         }
         if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
