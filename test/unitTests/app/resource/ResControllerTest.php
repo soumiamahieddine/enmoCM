@@ -1358,8 +1358,9 @@ class ResControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $response     = $resController->getThumbnailContent($request, new \Slim\Http\Response(), ['resId' => self::$id]);
-        $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
+        var_dump($responseBody);
+        $this->assertSame(200, $response->getStatusCode());
 
         $this->assertEmpty($responseBody);
 
