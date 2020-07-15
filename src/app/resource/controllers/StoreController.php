@@ -185,6 +185,13 @@ class StoreController
                     $date = new \DateTime($value);
                     $value = $date->format('Y-m-d');
                     $args['customFields'][$key] = $value;
+                } elseif ($customField['type'] != 'integer' && !is_array($value)) {
+                    $args['customFields'][$key] = (string)$value;
+                } elseif ($customField['type'] != 'integer' && is_array($value)) {
+                    foreach ($value as $iKey => $sValue) {
+                        $value[$iKey] = (string)$sValue;
+                    }
+                    $args['customFields'][$key] = $value;
                 }
             }
         }
@@ -297,6 +304,13 @@ class StoreController
                 if ($customField['type'] == 'date' && !empty($value)) {
                     $date = new \DateTime($value);
                     $value = $date->format('Y-m-d');
+                    $args['customFields'][$key] = $value;
+                } elseif ($customField['type'] != 'integer' && !is_array($value)) {
+                    $args['customFields'][$key] = (string)$value;
+                } elseif ($customField['type'] != 'integer' && is_array($value)) {
+                    foreach ($value as $iKey => $sValue) {
+                        $value[$iKey] = (string)$sValue;
+                    }
                     $args['customFields'][$key] = $value;
                 }
             }
