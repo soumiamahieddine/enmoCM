@@ -565,6 +565,19 @@ class InstallerController
         unlink("custom/{$body['customId']}/initializing.lck");
 
         $url = UrlController::getCoreUrl();
+
+        $explodedUrl = explode('/', rtrim($url, '/'));
+        $lastPart = $explodedUrl[count($explodedUrl) - 1];
+        $jsonFile = file_get_contents('custom/custom.json');
+        if (!empty($jsonFile)) {
+            $jsonFile = json_decode($jsonFile, true);
+            foreach ($jsonFile as $value) {
+                if (!empty($value['path']) && $value['path'] == $lastPart) {
+                    $url = str_replace("/{$lastPart}", '', $url);
+                }
+            }
+        }
+
         $url .= $body['customId'] . '/dist/index.html';
 
         return $response->withJson(['url' => $url]);
