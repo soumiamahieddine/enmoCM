@@ -373,6 +373,7 @@ class OnlyOfficeController
         ];
 
         $serverSecret = (string)$loadedXml->onlyoffice->server_secret;
+        $serverAuthorizationHeader = (string)$loadedXml->onlyoffice->server_authorization_header;
         $serverSsl = filter_var((string)$loadedXml->onlyoffice->server_ssl, FILTER_VALIDATE_BOOLEAN);
 
         $uri = explode("/", $uri);
@@ -386,7 +387,11 @@ class OnlyOfficeController
             $convertUrl = 'http://';
         }
 
-        $convertUrl .= "{$domain}:{$port}";
+        $convertUrl .= $domain;
+
+        if ($port != 80) {
+            $convertUrl .= ":{$port}";
+        }
 
         if (!empty($path)) {
             $convertUrl .= '/' . $path;
@@ -409,7 +414,11 @@ class OnlyOfficeController
             ];
 
             $tokenOnlyOffice = JWT::encode($body, $serverSecret, 'HS256', null, $header);
-            $headers[] = 'Authorization: Bearer ' . $tokenOnlyOffice;
+
+            $authorizationHeader = empty($serverAuthorizationHeader) ? 'Authorization' : $serverAuthorizationHeader;
+            $authorizationHeader .= ': Bearer ' . $tokenOnlyOffice;
+
+            $headers[] =  $authorizationHeader;
         }
 
         $response = CurlModel::execSimple([
@@ -451,7 +460,9 @@ class OnlyOfficeController
             return $response->withStatus(401)->withJson(['errors' => 'Token is invalid']);
         }
 
-        CoreController::setGlobals(['userId' => $jwt->userId]);
+        if (!file_exists($jwt->fullFilename)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found']);
+        }
 
         $fileContent = file_get_contents($jwt->fullFilename);
         if ($fileContent === false) {
