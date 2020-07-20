@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use ContentManagement\controllers\DocumentEditorController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -21,6 +22,7 @@ use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\DatabasePDO;
+use User\models\UserModel;
 
 class InstallerController
 {
@@ -521,6 +523,12 @@ class InstallerController
             return $response->withStatus(400)->withJson(['errors' => 'Body customId has unauthorized characters']);
         } elseif (!is_file("custom/{$body['customId']}/initializing.lck")) {
             return $response->withStatus(403)->withJson(['errors' => 'Custom is already installed']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['login']) && preg_match("/^[\w.@-]*$/", $body['login'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body login is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['firstname'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body firstname is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body lastname is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['password'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body password is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['email']) || !filter_var($body['email'], FILTER_VALIDATE_EMAIL)) {
@@ -529,15 +537,18 @@ class InstallerController
 
         DatabasePDO::reset();
         new DatabasePDO(['customId' => $body['customId']]);
-        DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'password'  => AuthenticationModel::getPasswordHash($body['password']),
-                'mail'      => $body['email']
-            ],
-            'where'     => ['user_id = ?'],
-            'data'      => ['superadmin']
+
+        UserModel::create([
+            'user' => [
+                'userId'        => $body['login'],
+                'firstname'     => $body['firstname'],
+                'lastname'      => $body['lastname'],
+                'mail'          => $body['email'],
+                'preferences'   => json_encode(['documentEdition' => 'java']),
+                'password'      => $body['password']
+            ]
         ]);
+
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
