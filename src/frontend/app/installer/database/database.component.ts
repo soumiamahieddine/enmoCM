@@ -32,7 +32,7 @@ export class DatabaseComponent implements OnInit {
         private functionsService: FunctionsService,
         private installerService: InstallerService
     ) {
-        const valDbName: ValidatorFn[] = [Validators.pattern(/^[^\;\"]+$/), Validators.required];
+        const valDbName: ValidatorFn[] = [Validators.pattern(/^[^\;\" ]+$/), Validators.required];
 
         this.stepFormGroup = this._formBuilder.group({
             dbHostCtrl: ['localhost', Validators.required],
