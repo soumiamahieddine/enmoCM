@@ -17,6 +17,7 @@ export class TemplateFileEditorModalComponent implements OnInit {
     editorOptions: any = null;
     file: any = null;
     editorType: any = null;
+    documentIsModified: boolean = false;
 
     @ViewChild('onlyofficeViewer', { static: false }) onlyofficeViewer: EcplOnlyofficeViewerComponent;
     @ViewChild('collaboraOnlineViewer', { static: false }) collaboraOnlineViewer: CollaboraOnlineViewerComponent;
