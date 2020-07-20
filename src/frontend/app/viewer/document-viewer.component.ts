@@ -1,10 +1,10 @@
-import {Component, OnInit, Input, ViewChild, EventEmitter, Output, ElementRef} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ElementRef } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../../service/notification/notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
-import {tap, catchError, filter, map, exhaustMap, take} from 'rxjs/operators';
+import { tap, catchError, filter, map, exhaustMap, take, finalize } from 'rxjs/operators';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { AlertComponent } from '../../plugins/modal/alert.component';
@@ -17,8 +17,7 @@ import { DocumentViewerModalComponent } from './modal/document-viewer-modal.comp
 import { PrivilegeService } from '../../service/privileges.service';
 import { VisaWorkflowModalComponent } from '../visa/modal/visa-workflow-modal.component';
 import { of } from 'rxjs/internal/observable/of';
-import {CollaboraOnlineViewerComponent} from '../../plugins/collabora-online/collabora-online-viewer.component';
-
+import { CollaboraOnlineViewerComponent } from '../../plugins/collabora-online/collabora-online-viewer.component';
 
 @Component({
     selector: 'app-document-viewer',
@@ -235,38 +234,42 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     loadTmpFile(filenameOnTmp: string) {
-        this.loading = true;
-        this.loadingInfo.mode = 'determinate';
+        return new Promise((resolve, reject) => {
+            this.loading = true;
+            this.loadingInfo.mode = 'determinate';
 
-        this.requestWithLoader(`../rest/convertedFile/${filenameOnTmp}?convert=true`).subscribe(
-            (data: any) => {
-                if (data.encodedResource) {
-                    this.file = {
-                        name: filenameOnTmp,
-                        format: data.extension,
-                        type: data.type,
-                        contentMode: 'base64',
-                        content: data.encodedResource,
-                        src: data.encodedConvertedResource !== undefined ? this.base64ToArrayBuffer(data.encodedConvertedResource) : null
-                    };
-                    this.editMode = true;
-                    this.triggerEvent.emit();
-                    if (data.encodedConvertedResource !== undefined) {
-                        this.noConvertedFound = false;
-                    } else {
-                        this.noConvertedFound = true;
-                        this.notify.error(data.convertedResourceErrors);
+            this.requestWithLoader(`../rest/convertedFile/${filenameOnTmp}?convert=true`).subscribe(
+                (data: any) => {
+                    if (data.encodedResource) {
+                        this.file = {
+                            name: filenameOnTmp,
+                            format: data.extension,
+                            type: data.type,
+                            contentMode: 'base64',
+                            content: data.encodedResource,
+                            src: data.encodedConvertedResource !== undefined ? this.base64ToArrayBuffer(data.encodedConvertedResource) : null
+                        };
+                        this.editMode = true;
+                        this.triggerEvent.emit();
+                        if (data.encodedConvertedResource !== undefined) {
+                            this.noConvertedFound = false;
+                        } else {
+                            this.noConvertedFound = true;
+                            this.notify.error(data.convertedResourceErrors);
+                        }
+                        this.loading = false;
+                        resolve(true);
                     }
+                },
+                (err: any) => {
+                    this.noConvertedFound = true;
+                    this.notify.handleErrors(err);
                     this.loading = false;
+                    resolve(true);
+                    return of(false);
                 }
-            },
-            (err: any) => {
-                this.noConvertedFound = true;
-                this.notify.handleErrors(err);
-                this.loading = false;
-                return of(false);
-            }
-        );
+            );
+        });
     }
 
     uploadTrigger(fileInput: any) {
@@ -863,11 +866,14 @@ export class DocumentViewerComponent implements OnInit {
     checkLockFile(id: string, extension: string) {
         this.intervalLockFile = setInterval(() => {
             this.http.get('../rest/jnlp/lock/' + id)
-                .subscribe((data: any) => {
+                .subscribe(async (data: any) => {
                     if (!data.lockFileFound) {
                         this.editInProgress = false;
                         clearInterval(this.intervalLockFile);
-                        this.loadTmpFile(`${data.fileTrunk}.${extension}`);
+                        await this.loadTmpFile(`${data.fileTrunk}.${extension}`);
+                        if (this.mode === 'mainDocument') {
+                            this.saveMainDocument();
+                        }
                     }
                 });
         }, 1000);
@@ -1040,13 +1046,14 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     saveMainDocument() {
+        this.loading = true;
         return new Promise((resolve) => {
             this.getFile().pipe(
                 map((data: any) => {
                     const formatdatas = {
                         encodedFile: data.content,
-                        format:      data.format,
-                        resId:       this.resId
+                        format: data.format,
+                        resId: this.resId
                     };
                     return formatdatas;
                 }),
@@ -1056,6 +1063,7 @@ export class DocumentViewerComponent implements OnInit {
                     this.loadRessource(this.resId);
                     resolve(true);
                 }),
+                finalize(() => this.loading = false),
                 catchError((err: any) => {
                     this.notify.handleSoftErrors(err);
                     resolve(false);
