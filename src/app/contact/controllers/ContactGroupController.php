@@ -21,7 +21,6 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use User\controllers\UserController;
 use User\models\UserModel;
 
 class ContactGroupController
@@ -75,15 +74,8 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
 
-        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $GLOBALS['id'], 'select' => ['entities.entity_id']]);
-        if (empty($primaryEntity)) {
-            return $response->withStatus(400)->withJson(['errors' => 'User has no entities']);
-        }
-        $entityOwner = $primaryEntity['entity_id'];
-
         $data['public']       = $data['public'] ? 'true' : 'false';
         $data['owner']        = $GLOBALS['id'];
-        $data['entity_owner'] = $entityOwner;
 
         $id = ContactGroupModel::create($data);
 

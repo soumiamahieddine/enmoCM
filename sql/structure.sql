@@ -782,7 +782,6 @@ CREATE TABLE contacts_groups
   description character varying(255) NOT NULL,
   public boolean NOT NULL,
   owner integer NOT NULL,
-  entity_owner character varying(32) NOT NULL,
   CONSTRAINT contacts_groups_pkey PRIMARY KEY (id),
   CONSTRAINT contacts_groups_key UNIQUE (label, owner)
 )
