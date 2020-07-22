@@ -276,7 +276,7 @@
                     </div>
                 </div>
                 <app-attachments-list *ngIf="showAttachmentPanel" #appAttachmentsList [resId]="resId"
-                    [target]="'process'" (reloadBadgeAttachments)="refreshAttachments()"
+                    [target]="'process'" [canModify]="canUpdateDocument" (reloadBadgeAttachments)="refreshAttachments()"
                     (afterActionAttachment)="refreshAttachments()">
                 </app-attachments-list>
             </div>
@@ -318,12 +318,12 @@
                     <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]">
-                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}"
+                    <div [ngClass]="{'visaDisabledButton': !canUpdateDocument || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}"
                         title="{{lang.updateAtt}}" class="visaPjUp"
                         (click)="showAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                         <i class="fa fa-edit fa-2x"></i>
                     </div>
-                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canDelete}"
+                    <div [ngClass]="{'visaDisabledButton': !canUpdateDocument}"
                         title="{{lang.deleteAtt}}" class="visaPjDel"
                         (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                         <i class="fa fa-trash-alt fa-2x"></i>
