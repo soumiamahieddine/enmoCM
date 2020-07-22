@@ -1873,5 +1873,9 @@ export const LANG_NL = {
     "createScriptTourTitle": "Créer le script__TO_TRANSLATE",
     "createScriptTourDescription": "Avant de planifier la tâche, nous devons créer le script.__TO_TRANSLATE",
     "updateKO": "Mise à jour échouée !__TO_TRANSLATE",
-    "saveInDocserversInfo": "L'historique de la mise à jour a été sauvegardé dans la zone de stockage <b>migration</b>.__TO_TRANSLATE"
+    "saveInDocserversInfo": "L'historique de la mise à jour a été sauvegardé dans la zone de stockage <b>migration</b>.__TO_TRANSLATE",
+    "root_visible": "Administrateur__TO_TRANSLATE",
+    "root_invisible": "Administrateur (invisible)__TO_TRANSLATE",
+    "standard": "Standard__TO_TRANSLATE",
+    "accountType": "Type de compte__TO_TRANSLATE"
 };

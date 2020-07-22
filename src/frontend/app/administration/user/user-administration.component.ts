@@ -87,6 +87,10 @@ export class UserAdministrationComponent implements OnInit {
     canViewPersonalDatas: boolean = false;
     canManagePersonalDatas: boolean = false;
 
+    adminModes: string[] = [
+        'standard', 'root_visible', 'root_invisible'
+    ];
+
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 

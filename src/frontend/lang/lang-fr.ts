@@ -1852,9 +1852,13 @@ export const LANG_FR = {
     "notifTour4Title": "Liste des tâches",
     "notifTour4Description": "La liste de vos <b color=\"primary\">tâches actives</b> apparaît ici",
     "welcomeTourTitle": "Bienvenue",
-    "welcomeTourDescription": "Nous allons vous montrer certains points de configuration : <ul><li>Paraméter un <b color=\"primary\">serveur de mail</b></li><li>Configurer votre première <b color=\"primary\">notification</b></li></ul><br/>Pour commencer, cliquez sur <img style=\"width:32px;\" src=\"assets/admin_button.png\"/>",
+    "welcomeTourDescription": "Nous allons vous montrer certains points de configuration : <ul><li>Paramétrer un <b color=\"primary\">serveur de mail</b></li><li>Configurer votre première <b color=\"primary\">notification</b></li></ul><br/>Pour commencer, cliquez sur <img style=\"width:32px;\" src=\"assets/admin_button.png\"/>",
     "createScriptTourTitle": "Créer le script",
     "createScriptTourDescription": "Avant de planifier la tâche, nous devons créer le script.",
     "updateKO": "Mise à jour échouée !",
-    "saveInDocserversInfo": "L'historique de la mise à jour a été sauvegardé dans la zone de stockage <b>migration</b>."
+    "saveInDocserversInfo": "L'historique de la mise à jour a été sauvegardé dans la zone de stockage <b>migration</b>.",
+    "root_visible": "Administrateur",
+    "root_invisible": "Administrateur (invisible)",
+    "standard": "Standard",
+    "accountType": "Type de compte"
 };

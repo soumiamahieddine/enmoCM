@@ -215,6 +215,16 @@
                                                 {{lang.otherInformations}}
                                             </mat-panel-title>
                                         </mat-expansion-panel-header>
+                                        <div>
+                                            <mat-form-field>
+                                                <mat-label>{{lang.accountType}}</mat-label>
+                                                <mat-select [(ngModel)]="user.mode" id="accountType" name="accountType" [disabled]="headerService.user.mode === 'standard'" required>
+                                                  <mat-option *ngFor="let mode of adminModes" [value]="mode">
+                                                    {{lang[mode]}}
+                                                  </mat-option>
+                                                </mat-select>
+                                              </mat-form-field>
+                                        </div>
                                         <div class="form-group">
                                             <div class="col-sm-12">
                                                 <mat-checkbox color="primary"
