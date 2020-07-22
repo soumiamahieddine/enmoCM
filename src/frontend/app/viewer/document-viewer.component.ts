@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output, ElementRef } from '@angular/core';
+import {Component, OnInit, Input, ViewChild, EventEmitter, Output, OnDestroy} from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../../service/notification/notification.service';
@@ -29,7 +29,7 @@ import { CollaboraOnlineViewerComponent } from '../../plugins/collabora-online/c
     providers: [SortPipe]
 })
 
-export class DocumentViewerComponent implements OnInit {
+export class DocumentViewerComponent implements OnInit, OnDestroy {
 
     /**
      * document name stored in server (in tmp folder)
@@ -83,6 +83,11 @@ export class DocumentViewerComponent implements OnInit {
      * Event emitter
      */
     @Output() triggerEvent = new EventEmitter<string>();
+
+    /**
+     * true if viewer in signature book
+     */
+    @Input() inSignatureBook: boolean = false;
 
     lang: any = LANG;
 
@@ -737,13 +742,11 @@ export class DocumentViewerComponent implements OnInit {
                     this.editInProgress = true;
 
                 } else if (this.editor.mode === 'collaboraOnline') {
-                    const mode = this.mode === 'attachment' ? 'attachment' : 'resource';
                     this.editor.async = false;
                     this.editInProgress = true;
                     this.editor.options = {
-                        objectType: mode,
+                        objectType: this.mode === 'attachment' ? 'attachmentCreation' : 'resourceCreation',
                         objectId: template.id,
-                        objectMode: 'creation',
                         dataToMerge: this.resourceDatas
                     };
                 } else {
@@ -798,9 +801,8 @@ export class DocumentViewerComponent implements OnInit {
             this.editor.async = false;
             this.editInProgress = true;
             this.editor.options = {
-                objectType: 'attachment',
+                objectType: 'attachmentModification',
                 objectId: this.resId,
-                objectMode: 'edition',
                 dataToMerge: this.resourceDatas
             };
         } else {
@@ -835,9 +837,8 @@ export class DocumentViewerComponent implements OnInit {
         } else if (this.editor.mode === 'collaboraOnline') {
             this.editor.async = false;
             this.editor.options = {
-                objectType: 'resource',
+                objectType: 'resourceModification',
                 objectId: this.resId,
-                objectMode: 'edition',
                 dataToMerge: this.resourceDatas
             };
             this.editInProgress = true;
