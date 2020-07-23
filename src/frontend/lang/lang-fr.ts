@@ -1860,5 +1860,6 @@ export const LANG_FR = {
     "root_visible": "Administrateur",
     "root_invisible": "Administrateur (invisible)",
     "standard": "Standard",
-    "accountType": "Type de compte"
+    "accountType": "Type de compte",
+    "beginInstall": "Commencer l'installation"  
 };
