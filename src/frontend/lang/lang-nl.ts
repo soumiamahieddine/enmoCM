@@ -1878,5 +1878,7 @@ export const LANG_NL = {
     "root_invisible": "Administrateur (invisible)__TO_TRANSLATE",
     "standard": "Standard__TO_TRANSLATE",
     "accountType": "Type de compte__TO_TRANSLATE",
-    "beginInstall": "Commencer l'installation__TO_TRANSLATE"
+    "beginInstall": "Commencer l'installation__TO_TRANSLATE",
+    "hideTool": "Cacher la barre d'outils__TO_TRANSLATE",
+    "showTool": "Afficher la barre d'outils__TO_TRANSLATE"
 };

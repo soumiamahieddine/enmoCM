@@ -1866,5 +1866,7 @@ export const LANG_EN = {
     "root_invisible": "Administrator (invisible)",
     "standard": "Default",
     "accountType": "Account type",
-    "beginInstall": "Start installation"
+    "beginInstall": "Start installation",
+    "hideTool": "Hide toolbar",
+    "showTool": "Show toolbar"
 };
