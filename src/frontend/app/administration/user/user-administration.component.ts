@@ -901,9 +901,9 @@ export class UserAdministrationComponent implements OnInit {
 
     setUserModeLogin(event: any) {
         if (event.checked) {
-            this.user.loginmode = 'restMode';
+            this.user.mode = 'rest';
         } else {
-            this.user.loginmode = 'standard';
+            this.user.mode = 'standard';
         }
     }
 

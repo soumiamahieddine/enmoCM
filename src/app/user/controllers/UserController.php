@@ -68,7 +68,7 @@ class UserController
 
         if (UserController::isRoot(['id' => $GLOBALS['id']])) {
             $users = UserModel::get([
-                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode', 'mode'],
+                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'mail', 'mode'],
                 'where'     => ['status != ?'],
                 'data'      => ['DEL']
             ]);
@@ -82,7 +82,7 @@ class UserController
                     'data'      => [$entities, 'DEL']
                 ]);
             }
-            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode']]);
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'mode']]);
             $users = array_merge($users, $usersNoEntities);
         }
 
@@ -114,7 +114,7 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'phone', 'mail', 'initials', 'loginmode', 'mode', 'external_id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'phone', 'mail', 'initials', 'mode', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
 
         if ($GLOBALS['id'] == $aArgs['id'] || PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']])) {
@@ -138,16 +138,16 @@ class UserController
         $user['canSendActivationNotification']  = false;
         $user['canCreateMaarchParapheurUser']   = false;
 
-        if ($user['loginmode'] == 'restMode') {
+        if ($user['mode'] == 'rest') {
             $user['canModifyPassword'] = true;
         }
         $loggingMethod = CoreConfigModel::getLoggingMethod();
-        if ($user['loginmode'] != 'restMode' && $loggingMethod['id'] == 'standard') {
+        if ($user['mode'] != 'rest' && $loggingMethod['id'] == 'standard') {
             $user['canSendActivationNotification'] = true;
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-        if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['loginmode'] != 'restMode' && empty($user['external_id']['maarchParapheur'])) {
+        if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['mode'] != 'rest' && empty($user['external_id']['maarchParapheur'])) {
             $user['canCreateMaarchParapheurUser'] = true;
         }
 
@@ -199,9 +199,13 @@ class UserController
             $data['phone'] = null;
         }
 
-        $logingModes = ['standard', 'restMode'];
-        if (!in_array($data['loginmode'], $logingModes)) {
-            $data['loginmode'] = 'standard';
+        $modes = ['standard', 'rest', 'root_visible', 'root_invisible'];
+        if (empty($data['mode']) || !in_array($data['mode'], $modes)) {
+            $data['mode'] = 'standard';
+        }
+
+        if (in_array($data['mode'], ['root_visible', 'root_invisible']) && !UserController::isRoot(['id' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $preferences = ['documentEdition' => 'java'];
@@ -260,7 +264,7 @@ class UserController
             'lastname'  => $data['lastname'],
             'mail'      => $data['mail'],
             'initials'  => $data['initials'],
-            'loginmode' => empty($data['loginmode']) ? 'standard' : $data['loginmode'],
+            'mode'      => empty($data['mode']) ? 'standard' : $data['mode'],
         ];
 
         if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
@@ -633,8 +637,8 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'loginmode']]);
-        if ($user['loginmode'] != 'restMode' && $user['user_id'] != $GLOBALS['login']) {
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'mode']]);
+        if ($user['mode'] != 'rest' && $user['user_id'] != $GLOBALS['login']) {
             return $response->withStatus(403)->withJson(['errors' => 'Not allowed']);
         }
 

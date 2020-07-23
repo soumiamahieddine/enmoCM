@@ -44,8 +44,8 @@ class UserControllerTest extends TestCase
             $this->assertIsString($value['status']);
             $this->assertNotNull($value['mail']);
             $this->assertIsString($value['mail']);
-            $this->assertNotNull($value['loginmode']);
-            $this->assertIsString($value['loginmode']);
+            $this->assertNotNull($value['mode']);
+            $this->assertIsString($value['mode']);
         }
 
         $GLOBALS['login'] = 'bblier';
@@ -72,8 +72,8 @@ class UserControllerTest extends TestCase
             $this->assertIsString($value['status']);
             $this->assertNotNull($value['mail']);
             $this->assertIsString($value['mail']);
-            $this->assertNotNull($value['loginmode']);
-            $this->assertIsString($value['loginmode']);
+            $this->assertNotNull($value['mode']);
+            $this->assertIsString($value['mode']);
         }
 
         // Fail

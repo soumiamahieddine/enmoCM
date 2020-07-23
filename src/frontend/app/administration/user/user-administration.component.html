@@ -230,7 +230,7 @@
                                                 <mat-checkbox color="primary"
                                                     matTooltip="{{lang.webserviceAccountDesc}}" name="loginmode"
                                                     (change)="setUserModeLogin($event)"
-                                                    [checked]="user.loginmode == 'restMode'">
+                                                    [checked]="user.mode == 'rest'">
                                                     {{lang.webserviceAccount}}
                                                 </mat-checkbox>
                                             </div>
