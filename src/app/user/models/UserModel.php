@@ -84,9 +84,11 @@ class UserModel
     {
         ValidatorModel::notEmpty($args, ['user']);
         ValidatorModel::notEmpty($args['user'], ['userId', 'firstname', 'lastname']);
-        ValidatorModel::stringType($args['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'phone', 'mode', 'preferences']);
+        ValidatorModel::stringType($args['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'phone', 'preferences', 'password']);
 
-        $password = AuthenticationModel::generatePassword();
+        if (empty($args['user']['password'])) {
+            $args['user']['password'] = AuthenticationModel::generatePassword();
+        }
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'users_id_seq']);
 
         DatabaseModel::insert([
@@ -102,7 +104,7 @@ class UserModel
                 'status'                     => 'OK',
                 'preferences'                => $args['user']['preferences'],
                 'mode'                       => empty($args['user']['mode']) ? 'standard' : $args['user']['mode'],
-                'password'                   => AuthenticationModel::getPasswordHash($password),
+                'password'                   => AuthenticationModel::getPasswordHash($args['user']['password']),
                 'password_modification_date' => 'CURRENT_TIMESTAMP'
             ]
         ]);

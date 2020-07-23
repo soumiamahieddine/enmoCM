@@ -545,7 +545,8 @@ class InstallerController
                 'lastname'      => $body['lastname'],
                 'mail'          => $body['email'],
                 'preferences'   => json_encode(['documentEdition' => 'java']),
-                'password'      => $body['password']
+                'password'      => $body['password'],
+                'mode'          => 'root_invisible'
             ]
         ]);
 
