@@ -78,8 +78,8 @@ class UserController
             if (!empty($entities)) {
                 $users = UserEntityModel::getWithUsers([
                     'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode', 'mode'],
-                    'where'     => ['users_entities.entity_id in (?)', 'status != ?', 'mode not in (?)'],
-                    'data'      => [$entities, 'DEL', ['root_visible', 'root_invisible']]
+                    'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                    'data'      => [$entities, 'DEL']
                 ]);
             }
             $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode']]);
@@ -1586,7 +1586,7 @@ class UserController
             return ['status' => 400, 'error' => 'id must be an integer'];
         }
 
-        $user = UserModel::getById(['id' => $args['id'], 'select' => ['id', 'mode']]);
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['id']]);
         if (empty($user['id'])) {
             return ['status' => 400, 'error' => 'User not found'];
         }
@@ -1597,9 +1597,6 @@ class UserController
             }
             $isRoot = UserController::isRoot(['id' => $GLOBALS['id']]);
             if (!$isRoot) {
-                if ($user['mode'] == 'root_invisible') {
-                    return ['status' => 403, 'error' => 'Service forbidden'];
-                }
                 $users = [];
                 $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['id']]);
                 if (!empty($entities)) {

@@ -27,6 +27,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
+use VersionUpdate\controllers\VersionUpdateController;
 
 class AuthenticationController
 {
@@ -276,6 +277,11 @@ class AuthenticationController
             'moduleId'  => 'authentication',
             'eventId'   => 'login'
         ]);
+
+        $control = VersionUpdateController::executeSQLAtConnection();
+        if (!empty($control['errors'])) {
+            return $response->withJson(['SQLUpdate' => $control['errors']]);
+        }
 
         return $response->withStatus(204);
     }

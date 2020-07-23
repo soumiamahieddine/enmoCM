@@ -17,10 +17,12 @@ namespace VersionUpdate\controllers;
 use Docserver\models\DocserverModel;
 use Gitlab\Client;
 use Group\controllers\PrivilegeController;
+use Parameter\models\ParameterModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
+use SrcCore\models\DatabasePDO;
 use SrcCore\models\ValidatorModel;
 
 class VersionUpdateController
@@ -95,13 +97,21 @@ class VersionUpdateController
         $output = [];
 
         exec('git status --porcelain --untracked-files=no 2>&1', $output);
-        
+
+        $multiCustom = false;
+        if (is_file('custom/custom.json')) {
+            $jsonFile = file_get_contents('custom/custom.json');
+            $jsonFile = json_decode($jsonFile, true);
+            $multiCustom = count($jsonFile) > 1;
+        }
+
         return $response->withJson([
             'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
             'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
             'currentVersion'            => $currentVersion,
             'canUpdate'                 => empty($output),
             'diffOutput'                => $output,
+            'multiCustom'               => $multiCustom
         ]);
     }
 
@@ -122,7 +132,6 @@ class VersionUpdateController
         }
 
         $applicationVersion = CoreConfigModel::getApplicationVersion();
-
         if (empty($applicationVersion)) {
             return $response->withStatus(400)->withJson(['errors' => "Can't load package.json"]);
         }
@@ -156,10 +165,10 @@ class VersionUpdateController
         $minorVersion = $availableMinorVersions[0];
 
         $output = [];
-        exec('git status --porcelain --untracked-files=no 2>&1', $output);
-        if (!empty($output)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
-        }
+//        exec('git status --porcelain --untracked-files=no 2>&1', $output);
+//        if (!empty($output)) {
+//            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
+//        }
 
         $minorVersions = explode('.', $minorVersion);
         $currentVersionTag = (int)$currentVersionTag;
@@ -178,6 +187,24 @@ class VersionUpdateController
         $control = VersionUpdateController::executeSQLUpdate(['sqlFiles' => $sqlFiles]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
+        $currentCustomId = CoreConfigModel::getCustomId();
+        if (is_file('custom/custom.json')) {
+            $jsonFile = file_get_contents('custom/custom.json');
+            $jsonFile = json_decode($jsonFile, true);
+
+            foreach ($jsonFile as $custom) {
+                if ($custom['id'] != $currentCustomId) {
+                    DatabasePDO::reset();
+                    new DatabasePDO(['customId' => $custom['id']]);
+
+                    $controlCustom = VersionUpdateController::executeSQLUpdate(['sqlFiles' => $sqlFiles]);
+                    if (!empty($controlCustom['errors'])) {
+                        return $response->withStatus(400)->withJson(['errors' => "Error with custom {$custom['id']} : " . $controlCustom['errors']]);
+                    }
+                }
+            }
         }
 
         $output = [];
@@ -233,5 +260,38 @@ class VersionUpdateController
         }
 
         return ['directoryPath' => "{$directoryPath}/migration"];
+    }
+
+    public static function executeSQLAtConnection()
+    {
+        $parameter = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'database_version']);
+
+        $parameter = explode('.', $parameter['param_value_string']);
+        $minorVersion = count($parameter) > 2 ? (int)$parameter[2] : 1;
+
+        $applicationVersion = CoreConfigModel::getApplicationVersion();
+        $versions = explode('.', $applicationVersion);
+        $currentVersion = (int)$versions[2];
+
+        $minorVersion++;
+        $sqlFiles = [];
+        while ($minorVersion <= $currentVersion) {
+            if (is_file("migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql")) {
+                if (!is_readable("migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql")) {
+                    return ['errors' => "File migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql is not readable"];
+                }
+                $sqlFiles[] = "migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql";
+            }
+            $minorVersion++;
+        }
+
+        if (!empty($sqlFiles)) {
+            $control = VersionUpdateController::executeSQLUpdate(['sqlFiles' => $sqlFiles]);
+            if (!empty($control['errors'])) {
+                return ['errors' => $control['errors']];
+            }
+        }
+
+        return true;
     }
 }
