@@ -36,7 +36,7 @@
                         <ng-template matStepLabel>{{lang.database}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-database #appDatabase #stepContent></app-database>
+                                <app-database #appDatabase #stepContent (nextStep)="nextStep()"></app-database>
                             </div>
                             <button mat-fab matStepperPrevious [title]="lang.previous" class="previousStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-left"></mat-icon>
@@ -50,7 +50,7 @@
                         <ng-template matStepLabel>{{lang.docserver}}</ng-template>
                         <div class="stepContainer">
                             <div class="stepContent">
-                                <app-docservers #appDocservers #stepContent></app-docservers>
+                                <app-docservers #appDocservers #stepContent (nextStep)="nextStep()"></app-docservers>
                             </div>
                             <button mat-fab matStepperPrevious [title]="lang.previous" class="previousStepButton" color="primary">
                                 <mat-icon class="fa fa-arrow-left"></mat-icon>
