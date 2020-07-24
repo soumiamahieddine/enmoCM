@@ -89,8 +89,8 @@ class UserController
         $quota = [];
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
         if (!empty($userQuota['param_value_int'])) {
-            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?'], 'data' => ['OK']]);
-            $inactiveUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?'], 'data' => ['SPD']]);
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'mode != ?'], 'data' => ['OK', 'root_invisible']]);
+            $inactiveUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'mode != ?'], 'data' => ['SPD', 'root_invisible']]);
             $quota = ['actives' => $activeUser[0]['count'], 'inactives' => $inactiveUser[0]['count'], 'userQuota' => $userQuota['param_value_int']];
         }
 
@@ -219,7 +219,7 @@ class UserController
 
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
         if (!empty($userQuota['param_value_int'])) {
-            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?'], 'data' => ['OK']]);
+            $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'mode != ?'], 'data' => ['OK', 'root_invisible']]);
             if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
                 NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => $GLOBALS['id'], 'info' => _QUOTA_EXCEEDED]);
             }
@@ -247,45 +247,42 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $data = $request->getParsedBody();
+        $body = $request->getParsedBody();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
-        $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
-        if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
-            $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $data['phone']));
+        if (!Validator::stringType()->notEmpty()->validate($body['firstname'])) {
+            return ['errors' => 'Body firstname is empty or not a string'];
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname'])) {
+            return ['errors' => 'Body lastname is empty or not a string'];
+        } elseif (!empty($body['mail']) && !filter_var($body['mail'], FILTER_VALIDATE_EMAIL)) {
+            return ['errors' => 'Body mail is not correct'];
+        } elseif (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']]) && !empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $body['phone'])) {
+            return ['errors' => 'Body phone is not correct'];
         }
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
+
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['status', 'mode']]);
 
         $set = [
-            'firstname' => $data['firstname'],
-            'lastname'  => $data['lastname'],
-            'mail'      => $data['mail'],
-            'initials'  => $data['initials'],
-            'mode'      => empty($data['mode']) ? 'standard' : $data['mode'],
+            'firstname' => $body['firstname'],
+            'lastname'  => $body['lastname'],
+            'mail'      => $body['mail'],
+            'initials'  => $body['initials'],
         ];
 
         if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
-            $set['phone'] = $data['phone'];
+            $set['phone'] = $body['phone'];
         }
 
-        if (!empty($data['status']) && $data['status'] == 'OK') {
+        if (!empty($body['status']) && $body['status'] == 'OK') {
             $set['status'] = 'OK';
         }
-        if (!empty($data['mode']) && in_array($data['mode'], ['root_visible', 'root_invisible'])) {
-            if (!UserController::isRoot(['id' => $GLOBALS['id']])) {
+        if (!empty($body['mode']) && $user['mode'] != $body['mode']) {
+            if ((in_array($body['mode'], ['root_visible', 'root_invisible']) || in_array($user['mode'], ['root_visible', 'root_invisible'])) && !UserController::isRoot(['id' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
-            $set['mode'] = $data['mode'];
+            $set['mode'] = $body['mode'];
         }
 
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
-        $user = [];
-        if (!empty($userQuota['param_value_int'])) {
-            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']]);
-        }
 
         UserModel::update([
             'set'   => $set,
@@ -294,8 +291,8 @@ class UserController
         ]);
 
         if (!empty($userQuota['param_value_int'])) {
-            if ($user['status'] == 'SPD' && $data['status'] == 'OK') {
-                $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?'], 'data' => ['OK']]);
+            if ($user['status'] == 'SPD' && $body['status'] == 'OK') {
+                $activeUser = UserModel::get(['select' => ['count(1)'], 'where' => ['status = ?', 'mode != ?'], 'data' => ['OK', 'root_invisible']]);
                 if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
                     NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => $GLOBALS['id'], 'info' => _QUOTA_EXCEEDED]);
                 }
@@ -307,7 +304,7 @@ class UserController
             'recordId'     => $GLOBALS['id'],
             'eventType'    => 'UP',
             'eventId'      => 'userModification',
-            'info'         => _USER_UPDATED . " {$data['firstname']} {$data['lastname']}"
+            'info'         => _USER_UPDATED . " {$body['firstname']} {$body['lastname']}"
         ]);
 
         return $response->withStatus(204);
@@ -319,8 +316,6 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
 
         $isListInstanceDeletable = true;
         $isListTemplateDeletable = true;
@@ -448,7 +443,10 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['firstname', 'lastname', 'user_id', 'mode']]);
+        if (in_array($user['mode'], ['root_visible', 'root_invisible']) && !UserController::isRoot(['id' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $listInstances = ListInstanceModel::getWhenOpenMailsByUserId(['select' => [1], 'userId' => $aArgs['id'], 'itemMode' => 'dest']);
         if (!empty($listInstances)) {
