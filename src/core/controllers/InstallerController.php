@@ -538,6 +538,11 @@ class InstallerController
         DatabasePDO::reset();
         new DatabasePDO(['customId' => $body['customId']]);
 
+        $userAlreadyExists = UserModel::getByLogin(['login' => strtolower($body['login']), 'select' => 1]);
+        if (!empty($userAlreadyExists)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User already exists', 'lang' => 'alreadyExist']);
+        }
+
         UserModel::create([
             'user' => [
                 'userId'        => $body['login'],

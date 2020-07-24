@@ -290,7 +290,7 @@ class UserControllerTest extends TestCase
         $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Bad Request', $responseBody['errors']);
+        $this->assertSame('Body phone is not correct', $responseBody['errors']);
     }
 
     public function testAddGroup()
