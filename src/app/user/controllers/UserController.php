@@ -250,13 +250,13 @@ class UserController
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['firstname'])) {
-            return ['errors' => 'Body firstname is empty or not a string'];
+            return $response->withStatus(400)->withJson(['errors' => 'Body firstname is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname'])) {
-            return ['errors' => 'Body lastname is empty or not a string'];
+            return $response->withStatus(400)->withJson(['errors' => 'Body lastname is empty or not a string']);
         } elseif (!empty($body['mail']) && !filter_var($body['mail'], FILTER_VALIDATE_EMAIL)) {
-            return ['errors' => 'Body mail is not correct'];
+            return $response->withStatus(400)->withJson(['errors' => 'Body mail is not correct']);
         } elseif (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']]) && !empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $body['phone'])) {
-            return ['errors' => 'Body phone is not correct'];
+            return $response->withStatus(400)->withJson(['errors' => 'Body phone is not correct']);
         }
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['status', 'mode']]);
