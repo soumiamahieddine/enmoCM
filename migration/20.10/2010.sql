@@ -33,6 +33,7 @@ ALTER TABLE users DROP COLUMN IF EXISTS mode;
 ALTER TABLE users ADD COLUMN mode users_modes NOT NULL DEFAULT 'standard';
 UPDATE users set mode = 'root_invisible' WHERE user_id = 'superadmin';
 UPDATE users set mode = 'rest' WHERE loginmode = 'restMode';
+ALTER TABLE users DROP COLUMN IF EXISTS loginmode;
 
 /* CONTACTS GROUPS */
 ALTER TABLE contacts_groups DROP COLUMN IF EXISTS entity_owner;

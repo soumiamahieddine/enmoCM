@@ -77,7 +77,7 @@ class UserController
             $users = [];
             if (!empty($entities)) {
                 $users = UserEntityModel::getWithUsers([
-                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode', 'mode'],
+                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'mode'],
                     'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
                     'data'      => [$entities, 'DEL']
                 ]);
