@@ -1868,5 +1868,7 @@ export const LANG_EN = {
     "accountType": "Account type",
     "beginInstall": "Start installation",
     "hideTool": "Hide toolbar",
-    "showTool": "Show toolbar"
+    "showTool": "Show toolbar",
+    "rest": "Webservice account",
+    "mustSuperadmin": "You must be an administrator yourself to define administrators."
 };

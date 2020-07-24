@@ -1880,5 +1880,7 @@ export const LANG_NL = {
     "accountType": "Type de compte__TO_TRANSLATE",
     "beginInstall": "Commencer l'installation__TO_TRANSLATE",
     "hideTool": "Cacher la barre d'outils__TO_TRANSLATE",
-    "showTool": "Afficher la barre d'outils__TO_TRANSLATE"
+    "showTool": "Afficher la barre d'outils__TO_TRANSLATE",
+    "rest": "Compte de webservice__TO_TRANSLATE",
+    "mustSuperadmin": "Vous devez être vous-même administrateur pour définir des administrateurs__TO_TRANSLATE"
 };

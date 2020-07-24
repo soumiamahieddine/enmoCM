@@ -1863,5 +1863,7 @@ export const LANG_FR = {
     "accountType": "Type de compte",
     "beginInstall": "Commencer l'installation",
     "hideTool": "Cacher la barre d'outils",
-    "showTool": "Afficher la barre d'outils"
+    "showTool": "Afficher la barre d'outils",
+    "rest": "Compte de webservice",
+    "mustSuperadmin": "Vous devez être vous-même administrateur pour définir des administrateurs"
 };

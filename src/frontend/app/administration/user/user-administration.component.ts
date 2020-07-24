@@ -34,7 +34,9 @@ export class UserAdministrationComponent implements OnInit {
     serialId: number;
     userId: string;
     mode: string = '';
-    user: any = {};
+    user: any = {
+        mode : 'standard'
+    };
     _search: string = '';
     creationMode: boolean;
 
@@ -87,8 +89,23 @@ export class UserAdministrationComponent implements OnInit {
     canViewPersonalDatas: boolean = false;
     canManagePersonalDatas: boolean = false;
 
-    adminModes: string[] = [
-        'standard', 'root_visible', 'root_invisible'
+    adminModes: any[] = [
+        {
+            id: 'standard',
+            label : this.lang.standard
+        },
+        {
+            id: 'root_visible',
+            label : this.lang.root_visible
+        },
+        {
+            id: 'root_invisible',
+            label : this.lang.root_invisible
+        },
+        {
+            id: 'rest',
+            label : this.lang.rest
+        }
     ];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -135,7 +152,6 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
         this.loading = true;
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
