@@ -27,8 +27,6 @@ use SrcCore\models\ValidatorModel;
 
 class VersionUpdateController
 {
-    const BACKUP_TABLES = ['usergroups_services', 'groupbasket'];
-
     public function get(Request $request, Response $response)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_update_control', 'userId' => $GLOBALS['id']])) {
@@ -165,10 +163,10 @@ class VersionUpdateController
         $minorVersion = $availableMinorVersions[0];
 
         $output = [];
-//        exec('git status --porcelain --untracked-files=no 2>&1', $output);
-//        if (!empty($output)) {
-//            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
-//        }
+        exec('git status --porcelain --untracked-files=no 2>&1', $output);
+        if (!empty($output)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Some files are modified. Can not update application', 'lang' => 'canNotUpdateApplication']);
+        }
 
         $minorVersions = explode('.', $minorVersion);
         $currentVersionTag = (int)$currentVersionTag;
@@ -244,11 +242,26 @@ class VersionUpdateController
 
             $actualTime = date("dmY-His");
             $tablesToSave = '';
-            foreach (self::BACKUP_TABLES as $table) {
-                $tablesToSave .= ' -t ' . $table;
+            foreach ($args['sqlFiles'] as $sqlFile) {
+                $fileContent = file_get_contents($sqlFile);
+                $explodedFile = explode("\n", $fileContent);
+                foreach ($explodedFile as $key => $line) {
+                    if (strpos($line, '--DATABASE_BACKUP') !== false) {
+                        $lineNb = $key;
+                    }
+                }
+                if (isset($lineNb)) {
+                    $explodedLine = explode('|', $explodedFile[$lineNb]);
+                    array_shift($explodedLine);
+                    foreach ($explodedLine as $table) {
+                        if (!empty($table)) {
+                            $tablesToSave .= ' -t ' . trim($table);
+                        }
+                    }
+                }
             }
 
-            $execReturn = exec("pg_dump -d \"{$config['database'][0]['name']}\" {$tablesToSave} -a > \"{$directoryPath}/migration/backupDB_maarchcourrier_{$actualTime}.sql\"", $output, $intReturn);
+            $execReturn = exec("pg_dump --dbname=\"postgresql://{$config['database'][0]['user']}:{$config['database'][0]['password']}@{$config['database'][0]['server']}:{$config['database'][0]['port']}/{$config['database'][0]['name']}\" {$tablesToSave} -a > \"{$directoryPath}/migration/backupDB_maarchcourrier_{$actualTime}.sql\"", $output, $intReturn);
             if (!empty($execReturn)) {
                 return ['errors' => 'Pg dump failed : ' . $execReturn];
             }
