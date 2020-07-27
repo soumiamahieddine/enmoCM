@@ -55,7 +55,7 @@ export class UsersAdministrationComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
-        private headerService: HeaderService,
+        public headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
         private viewContainerRef: ViewContainerRef
@@ -127,7 +127,7 @@ export class UsersAdministrationComponent implements OnInit {
     }
 
     deleteUser(user: any, mode: string) {
-        user.mode = mode;
+        user.actionMode = mode;
 
         this.http.get('../rest/users/' + user.id + '/isDeletable')
             .subscribe((response: any) => {
@@ -197,7 +197,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                 } else {
 
                                                     // delete user
-                                                    if (user.mode === 'delete') {
+                                                    if (user.actionMode === 'delete') {
                                                         this.http.delete('../rest/users/' + user.id)
                                                             .subscribe(() => {
                                                                 for (const i in this.data) {
@@ -220,7 +220,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                                 this.notify.error(err.error.errors);
                                                             });
                                                         // suspend user
-                                                    } else if (user.mode === 'suspend') {
+                                                    } else if (user.actionMode === 'suspend') {
                                                         this.http.put('../rest/users/' + user.id + '/suspend', user)
                                                             .subscribe(() => {
                                                                 user.status = 'SPD';
@@ -249,7 +249,7 @@ export class UsersAdministrationComponent implements OnInit {
                                 this.http.put('../rest/listTemplates/entityDest/itemId/' + user.id, user)
                                     .subscribe(() => {
                                         // delete user
-                                        if (user.mode === 'delete') {
+                                        if (user.actionMode === 'delete') {
                                             this.http.delete('../rest/users/' + user.id)
                                                 .subscribe(() => {
                                                     for (const i in this.data) {
@@ -272,7 +272,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                     this.notify.error(err.error.errors);
                                                 });
                                             // suspend user
-                                        } else if (user.mode === 'suspend') {
+                                        } else if (user.actionMode === 'suspend') {
                                             this.http.put('../rest/users/' + user.id + '/suspend', user)
                                                 .subscribe(() => {
                                                     user.status = 'SPD';
@@ -300,7 +300,7 @@ export class UsersAdministrationComponent implements OnInit {
                                         } else {
 
                                             // delete user
-                                            if (user.mode === 'delete') {
+                                            if (user.actionMode === 'delete') {
                                                 this.http.delete('../rest/users/' + user.id)
                                                     .subscribe(() => {
                                                         for (const i in this.data) {
@@ -323,7 +323,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                         this.notify.error(err.error.errors);
                                                     });
                                                 // suspend user
-                                            } else if (user.mode === 'suspend') {
+                                            } else if (user.actionMode === 'suspend') {
                                                 this.http.put('../rest/users/' + user.id + '/suspend', user)
                                                     .subscribe(() => {
                                                         user.status = 'SPD';
@@ -347,7 +347,7 @@ export class UsersAdministrationComponent implements OnInit {
                             } else if (!user.inDiffListDest && !user.isResDestUser) { // user is not inDiffListDest and is not isResDestUser
 
                                 // delete user
-                                if (user.mode === 'delete') {
+                                if (user.actionMode === 'delete') {
                                     this.http.delete('../rest/users/' + user.id)
                                         .subscribe(() => {
                                             for (const i in this.data) {
@@ -370,7 +370,7 @@ export class UsersAdministrationComponent implements OnInit {
                                             this.notify.error(err.error.errors);
                                         });
                                     // suspend user
-                                } else if (user.mode === 'suspend') {
+                                } else if (user.actionMode === 'suspend') {
                                     this.http.put('../rest/users/' + user.id + '/suspend', user)
                                         .subscribe(() => {
                                             user.status = 'SPD';
@@ -438,7 +438,7 @@ export class UsersAdministrationRedirectModalComponent implements OnInit {
                 this.data.isResDestUser = true;
             }
         } else {
-            if (this.data.userDestRedirect.mode === 'delete') {
+            if (this.data.userDestRedirect.actionMode === 'delete') {
                 this.modalTitle = this.lang.unableToDelete;
             } else {
                 this.modalTitle = this.lang.unableToSuspend;

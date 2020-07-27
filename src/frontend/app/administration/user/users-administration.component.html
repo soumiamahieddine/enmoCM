@@ -95,13 +95,13 @@
                             <mat-header-cell *matHeaderCellDef>
                             </mat-header-cell>
                             <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
-                                <button mat-icon-button color="primary" [disabled]="element.id===user.id"
+                                <button mat-icon-button color="primary" [disabled]="element.id===user.id || (['root_visible', 'root_invisible'].indexOf(element.mode) > -1 && headerService.user.mode === 'standard')"
                                     *ngIf="element.status != 'SPD'" matTooltip="{{lang.suspend}}"
                                     (click)="$event.stopPropagation();deleteUser(element, 'suspend')">
                                     <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>
                                 </button>
                                 <button mat-icon-button color="accent" *ngIf="element.status == 'SPD'"
-                                    matTooltip="{{lang.authorize}}"
+                                    matTooltip="{{lang.authorize}}" [disabled]="['root_visible', 'root_invisible'].indexOf(element.mode) > -1 && headerService.user.mode === 'standard'"
                                     (click)="$event.stopPropagation();activateUser(element)">
                                     <mat-icon class="fa fa-check fa-2x" aria-hidden="true"></mat-icon>
                                 </button>
