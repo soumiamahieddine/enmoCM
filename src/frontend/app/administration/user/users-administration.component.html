@@ -105,7 +105,7 @@
                                     (click)="$event.stopPropagation();activateUser(element)">
                                     <mat-icon class="fa fa-check fa-2x" aria-hidden="true"></mat-icon>
                                 </button>
-                                <button mat-icon-button color="warn" [disabled]="element.id===user.id || ['root_visible', 'root_invisible'].indexOf(row.mode) > -1"
+                                <button mat-icon-button color="warn" [disabled]="element.id===user.id || ['root_visible', 'root_invisible'].indexOf(element.mode) > -1"
                                     matTooltip="{{lang.delete}}" data-toggle="modal" data-target="#changeDiffListDest"
                                     (click)="$event.stopPropagation();deleteUser(element, 'delete')">
                                     <mat-icon class="fa fa-trash-alt fa-2x"></mat-icon>
