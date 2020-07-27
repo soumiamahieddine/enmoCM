@@ -96,20 +96,12 @@ class VersionUpdateController
 
         exec('git status --porcelain --untracked-files=no 2>&1', $output);
 
-        $multiCustom = false;
-        if (is_file('custom/custom.json')) {
-            $jsonFile = file_get_contents('custom/custom.json');
-            $jsonFile = json_decode($jsonFile, true);
-            $multiCustom = count($jsonFile) > 1;
-        }
-
         return $response->withJson([
             'lastAvailableMinorVersion' => $lastAvailableMinorVersion,
             'lastAvailableMajorVersion' => $lastAvailableMajorVersion,
             'currentVersion'            => $currentVersion,
             'canUpdate'                 => empty($output),
-            'diffOutput'                => $output,
-            'multiCustom'               => $multiCustom
+            'diffOutput'                => $output
         ]);
     }
 
@@ -193,7 +185,7 @@ class VersionUpdateController
             $jsonFile = json_decode($jsonFile, true);
 
             foreach ($jsonFile as $custom) {
-                if ($custom['id'] != $currentCustomId) {
+                if ($custom['id'] != $currentCustomId && is_dir("custom/{$custom['id']}")) {
                     DatabasePDO::reset();
                     new DatabasePDO(['customId' => $custom['id']]);
 
