@@ -1573,7 +1573,7 @@ export const LANG_FR = {
     "updateDiffusionWhileIndexing": "Pouvoir modifier toutes les parties de la liste de diffusion lors de l'enregistrement d'un courrier.",
     "updateDiffusionWhileProcess": "Pouvoir modifier toutes les parties de la liste de diffusion lors du traitement d'un courrier.",
     "updateInProgress": "Mise à jour en cours ...",
-    "updateInfo": "Cette action est irréversible et mettra à jour l'ensemble des instances présentes sur l'application! Il est préférable de ne pas faire d'actions durant le processus et qu'aucun utilisateur ne soit connecté.",
+    "updateInfo": "Cette action est irréversible et mettra à jour l'ensemble des instances présentes sur l'application ! Il est préférable de ne pas faire d'actions durant le processus et qu'aucun utilisateur ne soit connecté.",
     "updateOk": "Mise à jour effectuée avec succès !",
     "updateStatus": "Changement de statut de courrier",
     "updateStatusInformationsChrono": "En saisissant le NUMÉRO CHRONO du courrier, vous modifierez le statut du courrier. Le courrier sera disponible dans la bannette des utilisateurs auquel il était affecté suivant le statut que vous aurez défini.",
