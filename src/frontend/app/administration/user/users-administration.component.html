@@ -115,7 +115,7 @@
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumns;"
                             routerLink="/administration/users/{{row.id}}" style="cursor:pointer;"
-                            matTooltip="{{lang.view}}" [class.admin]="row.mode !== 'standard'"></mat-row>
+                            matTooltip="{{lang.view}}" [class.admin]="['root_visible', 'root_invisible'].indexOf(row.mode) > -1"></mat-row>
                     </mat-table>
                     <div class="mat-paginator"
                         style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">
