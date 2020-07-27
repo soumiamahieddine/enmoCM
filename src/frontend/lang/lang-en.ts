@@ -1573,7 +1573,7 @@ export const LANG_EN = {
     "updateDiffusionWhileIndexing": "Update all parts of diffusion list when indexing.",
     "updateDiffusionWhileProcess": "Update all parts of diffusion list when processing.",
     "updateInProgress": "Update in progress ...",
-    "updateInfo": "This action cannot be undone! Do not make any actions during process and make sure no users are connected.",
+    "updateInfo": "This action cannot be undone and will update all instances of the application! Do not make any actions during process and make sure no users are connected.",
     "updateOk": "Update successful !",
     "updateStatus": "Mail status modification",
     "updateStatusInformationsChrono": "When typing the CHRONO of a mail, you will update its status. The document will be present in the basket depending of the status you have chosen.",
