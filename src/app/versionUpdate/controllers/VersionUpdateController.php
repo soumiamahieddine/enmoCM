@@ -267,7 +267,7 @@ class VersionUpdateController
         return ['directoryPath' => "{$directoryPath}/migration"];
     }
 
-    public static function executeSQLAtConnection()
+    public function updateSQLVersion(Request $request, Response $response)
     {
         $parameter = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'database_version']);
 
@@ -283,7 +283,7 @@ class VersionUpdateController
         while ($minorVersion <= $currentVersion) {
             if (is_file("migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql")) {
                 if (!is_readable("migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql")) {
-                    return ['errors' => "File migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql is not readable"];
+                    return $response->withStatus(400)->withJson(['errors' => "File migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql is not readable"]);
                 }
                 $sqlFiles[] = "migration/{$versions[0]}.{$versions[1]}/{$versions[0]}{$versions[1]}{$minorVersion}.sql";
             }
@@ -293,10 +293,11 @@ class VersionUpdateController
         if (!empty($sqlFiles)) {
             $control = VersionUpdateController::executeSQLUpdate(['sqlFiles' => $sqlFiles]);
             if (!empty($control['errors'])) {
-                return ['errors' => $control['errors']];
+                return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
             }
+            return $response->withJson(['success' => 'Database has been updated']);
         }
 
-        return true;
+        return $response->withStatus(204);
     }
 }

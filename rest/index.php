@@ -539,6 +539,7 @@ $app->get('/followedResources/filters', \Resource\controllers\UserFollowedResour
 //VersionsUpdate
 $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');
 $app->put('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':update');
+$app->put('/versionsUpdateSQL', \VersionUpdate\controllers\VersionUpdateController::class . ':updateSQLVersion');
 
 //CurrentUser
 $app->get('/currentUser/profile', \User\controllers\UserController::class . ':getProfile');
