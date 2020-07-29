@@ -9,6 +9,7 @@ import { LangService } from '../service/app-lang.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../service/auth.service';
 import { environment } from '../environments/environment';
+import { TranslateService } from '@ngx-translate/core';
 
 /** Custom options the configure the tooltip's default show/hide delays. */
 export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
@@ -35,6 +36,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.appService.setScreenWidth(window.innerWidth);
     }
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         public langService: LangService,
         iconReg: MatIconRegistry,
@@ -43,6 +45,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         public headerService: HeaderService,
         public authService: AuthService,
     ) {
+        translate.setDefaultLang('fr');
+
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('../rest/images?image=onlyLogo'));
         iconReg.addSvgIcon('maarchLogoFull', sanitizer.bypassSecurityTrustResourceUrl('../rest/images?image=logo'));
         iconReg.addSvgIcon('maarchLogoWhite', sanitizer.bypassSecurityTrustResourceUrl('assets/logo_only_white.svg'));
