@@ -256,7 +256,7 @@ $app->get('/pinnedFolders', \Folder\controllers\FolderController::class . ':getP
 $app->post('/folders/{id}/pin', \Folder\controllers\FolderController::class . ':pinFolder');
 $app->delete('/folders/{id}/unpin', \Folder\controllers\FolderController::class . ':unpinFolder');
 
-// Git commit information
+// CommitInformation
 $app->get('/commitInformation', \SrcCore\controllers\CoreController::class . ':getGitCommitInformation');
 
 //Groups
@@ -325,6 +325,9 @@ $app->delete('/installer/lock', \SrcCore\controllers\InstallerController::class 
 //TODO REWORK
 $app->get('/dev/lang', \SrcCore\controllers\CoreController::class . ':getAvailableCoreLanguages');
 $app->put('/dev/lang', \SrcCore\controllers\CoreController::class . ':generateLang');
+
+//Languages
+$app->get('/languages/{lang}', \SrcCore\controllers\LanguageController::class . ':getByLang');
 
 //ListInstances
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
