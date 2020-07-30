@@ -29,7 +29,8 @@ export const myCustomTooltipDefaults: MatTooltipDefaultOptions = {
 })
 export class AppComponent implements OnInit, AfterViewInit {
     debugMode: boolean = false;
-    @ViewChild('snavLeft', { static: true }) snavLeft: MatSidenav;
+    loading: boolean = true;
+    @ViewChild('snavLeft', { static: false }) snavLeft: MatSidenav;
 
     @HostListener('window:resize', ['$event'])
     onResize() {
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         public headerService: HeaderService,
         public authService: AuthService,
     ) {
+
         translate.setDefaultLang('fr');
 
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('../rest/images?image=onlyLogo'));
@@ -58,9 +60,14 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+        this.appService.checkAppSecurity();
+        await this.appService.applyMinorUpdate();
+        this.loading = false;
         this.headerService.hideSideBar = true;
-        this.headerService.sideNavLeft = this.snavLeft;
+        setTimeout(() => {
+            this.headerService.sideNavLeft = this.snavLeft;
+        }, 0);
     }
 
     ngAfterViewInit(): void {
