@@ -36,7 +36,7 @@ class LanguageController
 
         if (is_file("src/frontend/lang/lang-{$args['language']}.json")) {
             $file = file_get_contents("src/frontend/lang/lang-{$args['language']}.json");
-            $language = json_decode($file, true);
+            $language['lang'] = json_decode($file, true);
         }
 
         $customId = CoreConfigModel::getCustomId();
