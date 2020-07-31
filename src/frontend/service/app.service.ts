@@ -39,7 +39,7 @@ export class AppService {
     }
 
     applyMinorUpdate() {
-        const loader = '<div id="updateLoading" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width: 200px;text-align: center;"><img src="assets/spinner.gif"><p>Mise à jour ...<p></div>';
+        const loader = '<div id="updateLoading" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width: 200px;text-align: center;"><img src="assets/spinner.gif"></div>';
         $('body').append(loader);
         return new Promise((resolve) => {
             this.http.put('../rest/versionsUpdateSQL', {}).pipe(
