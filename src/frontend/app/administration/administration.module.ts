@@ -64,6 +64,8 @@ import { VersionsUpdateAdministrationComponent } from './versionUpdate/versions-
 import { AdministrationComponent } from './home/administration.component';
 import { DocumentFormModule } from '../document-form.module';
 import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent } from './user/users-administration.component';
+import { UsersImportComponent } from './user/import/users-import.component';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -139,6 +141,7 @@ import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent
         AdministrationComponent,
         UsersAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
+        UsersImportComponent
     ],
     entryComponents: [
         AccountLinkComponent,
@@ -154,6 +157,11 @@ import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent
         TemplateFileEditorModalComponent,
         UserAdministrationRedirectModalComponent,
         UsersAdministrationRedirectModalComponent,
+        UsersImportComponent
     ],
 })
-export class AdministrationModule { }
+export class AdministrationModule {
+    constructor(translate: TranslateService) {
+        translate.setDefaultLang('fr');
+      }
+}

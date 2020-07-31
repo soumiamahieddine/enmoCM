@@ -8,6 +8,12 @@
                     {{lang.add}}
                 </p>
             </a>
+            <a mat-list-item (click)="openUsersImportModal()">
+                <mat-icon color="primary" mat-list-icon class="fa fa-file"></mat-icon>
+                <p mat-line>
+                    Importer des utilisateurs
+                </p>
+            </a>
         </mat-nav-list>
         <mat-divider></mat-divider>
         <mat-divider *ngIf="quota.userQuota"></mat-divider>

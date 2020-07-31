@@ -9,6 +9,9 @@ import { NotificationService } from '../../../service/notification/notification.
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
+import { of } from 'rxjs/internal/observable/of';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { UsersImportComponent } from './import/users-import.component';
 
 @Component({
     templateUrl: 'users-administration.component.html',
@@ -405,6 +408,22 @@ export class UsersAdministrationComponent implements OnInit {
             this.data = this.noWebserviceAccounts;
         }
         this.setDatasource();
+    }
+
+    openUsersImportModal() {
+        const dialogRef = this.dialog.open(UsersImportComponent, {
+            disableClose: true,
+            width: '99vw',
+            maxWidth: '99vw',
+            panelClass: 'maarch-full-height-modal'
+        });
+
+        /*dialogRef.afterClosed().pipe(
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();*/
     }
 
 }
