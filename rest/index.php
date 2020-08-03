@@ -529,7 +529,8 @@ $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::cl
 $app->delete('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':deleteRedirectedBasket');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
 $app->put('/users/{id}/accountActivationNotification', \User\controllers\UserController::class . ':sendAccountActivationNotification');
-$app->get('/exportUsers', \User\controllers\UserController::class . ':getExport');
+$app->put('/exportUsers', \User\controllers\UserController::class . ':getExport');
+$app->put('/importUsers', \User\controllers\UserController::class . ':setImport');
 
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
 $app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');

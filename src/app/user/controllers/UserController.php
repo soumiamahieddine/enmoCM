@@ -1600,25 +1600,37 @@ class UserController
                 'data'      => ['DEL']
             ]);
         } else {
+            $managePersonaldata = false;
+            if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                $managePersonaldata = true;
+            }
+
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['id']]);
             $users = [];
+            $select = ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'mail'];
+            if ($managePersonaldata) {
+                $select[] = 'phone';
+            }
             if (!empty($entities)) {
                 $users = UserEntityModel::getWithUsers([
-                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'mail', 'phone'],
+                    'select'    => $select,
                     'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
                     'data'      => [$entities, 'DEL']
                 ]);
             }
-            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'mail', 'phone']]);
+            $select = ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'mail'];
+            if ($managePersonaldata) {
+                $select[] = 'phone';
+            }
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => $select]);
             $users = array_merge($users, $usersNoEntities);
         }
 
         $delimiter = ',';
-        $queryParams = $request->getQueryParams();
-        if (!empty($queryParams['delimiter'])) {
-            $queryParams['delimiter'] = urldecode($queryParams['delimiter']);
-            if (in_array($queryParams['delimiter'], [',', ';', 'TAB'])) {
-                $delimiter = ($queryParams['delimiter'] == 'TAB' ? "\t" : $queryParams['delimiter']);
+        $body = $request->getParsedBody();
+        if (!empty($body['delimiter'])) {
+            if (in_array($body['delimiter'], [',', ';', 'TAB'])) {
+                $delimiter = ($body['delimiter'] == 'TAB' ? "\t" : $body['delimiter']);
             }
         }
 
@@ -1640,6 +1652,106 @@ class UserController
         fclose($file);
 
         return $response->withHeader('Content-Type', $contentType);
+    }
+
+    public function setImport(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->validate($body['users'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body users is empty or not an array']);
+        }
+
+        $isRoot = UserController::isRoot(['id' => $GLOBALS['id']]);
+        $allowedUsers = [];
+        if (!$isRoot) {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['id']]);
+            $allowedUsers = [];
+            if (!empty($entities)) {
+                $allowedUsers = UserEntityModel::getWithUsers([
+                    'select'    => ['DISTINCT users.id'],
+                    'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                    'data'      => [$entities, 'DEL']
+                ]);
+            }
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
+            $allowedUsers = array_merge($allowedUsers, $usersNoEntities);
+            $allowedUsers = array_column($allowedUsers, 'id');
+        }
+
+        foreach ($body['users'] as $key => $user) {
+            if (empty($user['id'])) {
+                if (empty($user['user_id'])) {
+                    return $response->withStatus(400)->withJson(['errors' => "Argument user_id is empty for user {$key}"]);
+                } elseif (empty($user['firstname'])) {
+                    return $response->withStatus(400)->withJson(['errors' => "Argument firstname is empty for user {$key}"]);
+                } elseif (empty($user['lastname'])) {
+                    return $response->withStatus(400)->withJson(['errors' => "Argument lastname is empty for user {$key}"]);
+                } elseif (empty($user['mail'])) {
+                    return $response->withStatus(400)->withJson(['errors' => "Argument mail is empty for user {$key}"]);
+                }
+            }
+            if (!empty($user['firstname']) && !Validator::stringType()->validate($user['firstname'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Argument firstname is not a string for user {$key}"]);
+            } elseif (!empty($user['lastname']) && !Validator::stringType()->validate($user['lastname'])) {
+                return $response->withStatus(400)->withJson(['errors' => "Argument lastname is not a string for user {$key}"]);
+            } elseif (!empty($user['mail']) && !filter_var($user['mail'], FILTER_VALIDATE_EMAIL)) {
+                return $response->withStatus(400)->withJson(['errors' => "Argument mail is not correct for user {$key}"]);
+            }
+        }
+
+        foreach ($body['users'] as $key => $user) {
+            if (empty($user['id'])) {
+                $userAlreadyExists = UserModel::getByLogin(['login' => strtolower($user['user_id']), 'select' => [1]]);
+                if (!empty($userAlreadyExists)) {
+                    return $response->withStatus(400)->withJson(['errors' => "User already exists with login {$user['user_id']}"]);
+                }
+
+                $userToCreate = [
+                    'userId'        => $user['user_id'],
+                    'firstname'     => $user['firstname'],
+                    'lastname'      => $user['lastname'],
+                    'mail'          => $user['mail'],
+                    'preferences'   => json_encode(['documentEdition' => 'java'])
+                ];
+                if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                    $userToCreate['phone'] = $user['phone'];
+                }
+                $id = UserModel::create(['user' => $userToCreate]);
+                $loggingMethod = CoreConfigModel::getLoggingMethod();
+                if ($loggingMethod['id'] == 'standard') {
+                    AuthenticationController::sendAccountActivationNotification(['userId' => $id, 'userEmail' => $user['mail']]);
+                }
+            } else {
+                if (!$isRoot && !in_array($user['id'], $allowedUsers)) {
+                    continue;
+                }
+
+                $set = [];
+                if (!empty($user['firstname'])) {
+                    $set['firstname'] = $user['firstname'];
+                } elseif (!empty($user['lastname'])) {
+                    $set['lastname'] = $user['lastname'];
+                } elseif (!empty($user['mail'])) {
+                    $set['mail'] = $user['mail'];
+                } elseif (!empty($user['phone']) && PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                    $set['phone'] = $user['phone'];
+                }
+
+                if (!empty($set)) {
+                    UserModel::update([
+                        'set'   => $set,
+                        'where' => ['id = ?'],
+                        'data'  => [$user['id']]
+                    ]);
+                }
+            }
+        }
+
+        return $response->withStatus(204);
     }
 
     public function hasUsersRights(array $args)
