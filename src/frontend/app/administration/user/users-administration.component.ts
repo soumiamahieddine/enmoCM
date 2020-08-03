@@ -12,6 +12,7 @@ import { FunctionsService } from '../../../service/functions.service';
 import { of } from 'rxjs/internal/observable/of';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { UsersImportComponent } from './import/users-import.component';
+import { UsersExportComponent } from './export/users-export.component';
 
 @Component({
     templateUrl: 'users-administration.component.html',
@@ -424,6 +425,11 @@ export class UsersAdministrationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();*/
+    }
+
+    openUsersExportModal() {
+        this.dialog.open(UsersExportComponent, { panelClass: 'maarch-modal', width: '800px', autoFocus: false });
+
     }
 
 }

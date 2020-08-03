@@ -8,8 +8,14 @@
                     {{lang.add}}
                 </p>
             </a>
+            <a mat-list-item (click)="openUsersExportModal()">
+                <mat-icon color="primary" mat-list-icon class="fas fa-file-export"></mat-icon>
+                <p mat-line>
+                    Exporter les utilisateurs
+                </p>
+            </a>
             <a mat-list-item (click)="openUsersImportModal()">
-                <mat-icon color="primary" mat-list-icon class="fa fa-file"></mat-icon>
+                <mat-icon color="primary" mat-list-icon class="fas fa-file-download"></mat-icon>
                 <p mat-line>
                     Importer des utilisateurs
                 </p>

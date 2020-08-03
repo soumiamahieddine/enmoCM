@@ -65,6 +65,7 @@ import { AdministrationComponent } from './home/administration.component';
 import { DocumentFormModule } from '../document-form.module';
 import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent } from './user/users-administration.component';
 import { UsersImportComponent } from './user/import/users-import.component';
+import { UsersExportComponent } from './user/export/users-export.component';
 import { TranslateService } from '@ngx-translate/core';
 
 
@@ -141,7 +142,8 @@ import { TranslateService } from '@ngx-translate/core';
         AdministrationComponent,
         UsersAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
-        UsersImportComponent
+        UsersImportComponent,
+        UsersExportComponent
     ],
     entryComponents: [
         AccountLinkComponent,
@@ -157,7 +159,8 @@ import { TranslateService } from '@ngx-translate/core';
         TemplateFileEditorModalComponent,
         UserAdministrationRedirectModalComponent,
         UsersAdministrationRedirectModalComponent,
-        UsersImportComponent
+        UsersImportComponent,
+        UsersExportComponent
     ],
 })
 export class AdministrationModule {
