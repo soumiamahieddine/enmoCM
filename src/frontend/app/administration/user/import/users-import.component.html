@@ -1,33 +1,57 @@
 <div class="mat-dialog-content-container">
     <h1 mat-dialog-title>Importer des utilisateurs</h1>
     <div mat-dialog-content>
-        <input type="file" name="files[]" id="uploadFile" (change)="uploadCsv($event)" accept=".csv">
-        <mat-table #table [dataSource]="dataSource" matSort matSortDirection="asc">
-            <ng-container *ngFor="let column of userColmuns;let i=index;">
-                <ng-container [matColumnDef]="column">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>
-                        <i class="fas fa-database" color="primary"></i>&nbsp;<b color="primary">{{column}}</b>
-                        &nbsp;<i class="fas fa-arrows-alt-h"></i>&nbsp;
-                        <i class="fas fa-file-csv"></i>&nbsp;<mat-form-field (click)="$event.stopPropagation()" style="width: 80px !important;">
-                            <mat-select [(ngModel)]="associatedColmuns[column]" (selectionChange)="changeColumn(column, $event.value)">
-                                <mat-option *ngFor="let col of csvColumns" [value]="col">
-                                    {{col}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        {{element[column]}}
-                    </mat-cell>
+        <mat-toolbar class="import-tool" [class.hide]="csvData.length === 0 || loading">
+            <input type="file" name="files[]" #uploadFile id="uploadFile" (change)="uploadCsv($event)" accept=".csv"
+                style="flex:1;">
+            <span><i class="fa fa-user"></i>&nbsp;Utilisateurs du fichier : <b color="primary">{{countAll}}</b>
+                ({{countAll < 10 ? countAll : '10' }} prévisualisées)</span>
+            <span class="example-spacer"></span>
+            <span style="flex:1;"><i class="fa fa-user-plus"></i>&nbsp;Ajouts : <b color="primary">{{countAdd}}</b></span>
+            <span style="flex:1;"><i class="fa fa-user-edit"></i>&nbsp;Modifications : <b color="primary">{{countUp}}</b></span>
+        </mat-toolbar>
+        <ng-container *ngIf="loading; else elseTemplate">
+            <div class="loader">
+                <mat-spinner></mat-spinner>
+            </div>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <div *ngIf="csvData.length === 0" appUploadFileDragDrop (click)="uploadFile.click()"
+                (onFileDropped)="dndUploadFile($event)"
+                class="dndFile">
+                Cliquez ici ou clissez-déposez un fichier csv
+            </div>
+            <mat-table *ngIf="csvData.length > 0" #table [dataSource]="dataSource">
+                <ng-container *ngFor="let column of userColmuns;let i=index;">
+                    <ng-container [matColumnDef]="column">
+                        <mat-header-cell *matHeaderCellDef>
+                            <i class="fas fa-database" color="primary" [title]="'colonne base de données'"></i>&nbsp;<b
+                                color="primary" [title]="'colonne base de données'">{{column}}</b>
+                            &nbsp;<i class="fas fa-arrows-alt-h"></i>&nbsp;
+                            <i class="fas fa-file-csv" [title]="'colonne fichier csv'"></i>&nbsp;<mat-form-field
+                                [title]="'colonne fichier csv'" (click)="$event.stopPropagation()"
+                                style="width: 80px !important;">
+                                <mat-select [(ngModel)]="associatedColmuns[column]"
+                                    (selectionChange)="changeColumn(column, $event.value)">
+                                    <mat-option *ngFor="let col of csvColumns" [value]="col">
+                                        {{col}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element[column]}}
+                        </mat-cell>
+                    </ng-container>
                 </ng-container>
-            </ng-container>
-            <mat-header-row *matHeaderRowDef="userColmuns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: userColmuns;"></mat-row>
-        </mat-table>
+                <mat-header-row *matHeaderRowDef="userColmuns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: userColmuns;"></mat-row>
+            </mat-table>
+        </ng-template>
     </div>
     <span class="divider-modal"></span>
     <div mat-dialog-actions class="actions">
-        <button mat-raised-button mat-button color="primary">Valider</button>
-        <button mat-raised-button mat-button [mat-dialog-close]="">{{'lang.cancel' | translate }}</button>
+        <button mat-raised-button mat-button *ngIf="csvData.length > 0" color="primary" [disabled]="loading" (click)="onSubmit()">Valider</button>
+        <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{'lang.cancel' | translate }}</button>
     </div>
 </div>
