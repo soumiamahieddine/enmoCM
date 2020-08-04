@@ -1682,6 +1682,7 @@ class UserController
             $allowedUsers = array_column($allowedUsers, 'id');
         }
 
+        $warnings = [];
         $errors = [];
         foreach ($body['users'] as $key => $user) {
             if (!empty($user['firstname']) && (!Validator::stringType()->validate($user['firstname']) || !Validator::length(1, 255)->validate($user['firstname']))) {
@@ -1712,23 +1713,36 @@ class UserController
                     continue;
                 }
 
-                $userAlreadyExists = UserModel::getByLogin(['login' => strtolower($user['user_id']), 'select' => [1]]);
-                if (!empty($userAlreadyExists)) {
+                $existingUser = UserModel::getByLogin(['login' => strtolower($user['user_id']), 'select' => ['id', 'status', 'mail']]);
+                if (!empty($existingUser) && $existingUser['status'] != 'DEL') {
                     $errors[] = ['error' => "User already exists with login {$user['user_id']}", 'index' => $key, 'lang' => ''];
                     continue;
+                } elseif (!empty($existingUser) && $existingUser['status'] == 'DEL') {
+                    UserModel::update([
+                        'set'   => [
+                            'status'    => 'OK',
+                            'mail'      => $user['mail'],
+                            'password'  => AuthenticationModel::getPasswordHash(AuthenticationModel::generatePassword()),
+                        ],
+                        'where' => ['id = ?'],
+                        'data'  => [$existingUser['id']]
+                    ]);
+                    $id = $existingUser['id'];
+                    $warnings[] = ['warning' => "User {$user['user_id']} was deleted and is now reactivated", 'index' => $key, 'lang' => ''];
+                } else {
+                    $userToCreate = [
+                        'userId'        => $user['user_id'],
+                        'firstname'     => $user['firstname'],
+                        'lastname'      => $user['lastname'],
+                        'mail'          => $user['mail'],
+                        'preferences'   => json_encode(['documentEdition' => 'java'])
+                    ];
+                    if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                        $userToCreate['phone'] = $user['phone'];
+                    }
+                    $id = UserModel::create(['user' => $userToCreate]);
                 }
 
-                $userToCreate = [
-                    'userId'        => $user['user_id'],
-                    'firstname'     => $user['firstname'],
-                    'lastname'      => $user['lastname'],
-                    'mail'          => $user['mail'],
-                    'preferences'   => json_encode(['documentEdition' => 'java'])
-                ];
-                if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
-                    $userToCreate['phone'] = $user['phone'];
-                }
-                $id = UserModel::create(['user' => $userToCreate]);
                 $loggingMethod = CoreConfigModel::getLoggingMethod();
                 if ($loggingMethod['id'] == 'standard') {
                     AuthenticationController::sendAccountActivationNotification(['userId' => $id, 'userEmail' => $user['mail']]);
@@ -1761,7 +1775,11 @@ class UserController
         }
 
         $return = [
-            'success'   => count($body['users']) - count($errors),
+            'success'   => count($body['users']) - count($warnings) - count($errors),
+            'warnings'  => [
+                'count'     => count($warnings),
+                'details'   => $warnings
+            ],
             'errors'    => [
                 'count'     => count($errors),
                 'details'   => $errors
