@@ -107,6 +107,7 @@ abstract class TemplateModelAbstract
                 'template_attachment_type'  => $args['template_attachment_type'],
                 'template_path'             => $args['template_path'],
                 'template_file_name'        => $args['template_file_name'],
+                'template_subject'          => $args['template_subject'],
             ]
         ]);
 

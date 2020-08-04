@@ -33,10 +33,10 @@
                 <mat-card *ngIf="!loading" class="card-app-content" style="display: contents;">
                     <form style="display: contents;" class="form-horizontal" (ngSubmit)="onSubmit()" #templatesFormUp="ngForm">
                         <div class="col-sm-12">
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
                                     <mat-form-field>
-                                        <input matInput *ngIf="!creationMode" type="number" title="{{lang.technicalId}}"
+                                        <input matInput type="number" title="{{lang.technicalId}}"
                                                value="{{template.id}}" placeholder="{{lang.technicalId}}" disabled>
                                     </mat-form-field>
                                 </div>
@@ -100,6 +100,16 @@
                                             <mat-option value="sva">{{lang.ARsva}}</mat-option>
                                             <mat-option value="svr">{{lang.ARsvr}}</mat-option>
                                         </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="form-group" *ngIf="template.target == 'sendmail'">
+                                <div class="col-sm-12">
+                                    <mat-form-field>
+                                        <input matInput name="subject" [(ngModel)]="template.subject"
+                                               title="{{lang.subject}}" type="text"
+                                               placeholder="{{lang.subject}}" maxlength="255" required>
                                     </mat-form-field>
                                 </div>
                             </div>

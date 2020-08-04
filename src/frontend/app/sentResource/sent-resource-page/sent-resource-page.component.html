@@ -100,7 +100,7 @@
         </mat-form-field>
         <mat-form-field floatLabel="never">
             <input matInput [placeholder]="lang.object" [readonly]="!canManageMail()" [(ngModel)]="emailsubject"
-                maxlength="70">
+                maxlength="255">
             <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue"
                 [disabled]="!canManageMail() || (emailAttachTool[keyVal.key].list.length === 0)"
                 [title]="emailAttachTool[keyVal.key].title"
@@ -213,7 +213,7 @@
         </mat-menu>
         <button mat-raised-button color="primary"
             *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')" (click)="onSubmit()"
-            [disabled]="recipients.length === 0">{{lang.send}}</button>
+            [disabled]="recipients.length === 0 || emailsubject.length > 256">{{lang.send}}</button>
         <button mat-raised-button color="warn" (click)="deleteEmail()"
             *ngIf="data.emailId && data.emailType === 'email'"
             [disabled]="headerService.user.id !== emailCreatorId">{{lang.delete}}</button>

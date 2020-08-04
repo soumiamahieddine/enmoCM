@@ -256,6 +256,10 @@ export class SentResourcePageComponent implements OnInit {
                 if (!this.htmlMode) {
                     tinymce.get('emailSignature').setContent(tinymce.get('emailSignature').getContent({ format: 'text' }));
                 }
+
+                if (!this.functions.empty(data.mergedSubject)) {
+                    this.emailsubject = data.mergedSubject;
+                }
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);

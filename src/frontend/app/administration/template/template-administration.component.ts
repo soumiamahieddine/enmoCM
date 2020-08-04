@@ -128,6 +128,7 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
                             datasource: data.template.template_datasource,
                             target: data.template.template_target,
                             type: data.template.template_type,
+                            subject: data.template.template_subject,
                             file: {}
                         };
                         this.updateTemplateType();
