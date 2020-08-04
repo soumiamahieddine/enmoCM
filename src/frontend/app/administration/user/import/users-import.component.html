@@ -4,11 +4,12 @@
         <mat-toolbar class="import-tool" [class.hide]="csvData.length === 0 || loading">
             <input type="file" name="files[]" #uploadFile id="uploadFile" (change)="uploadCsv($event)" accept=".csv"
                 style="flex:1;">
-            <span><i class="fa fa-user"></i>&nbsp;Utilisateurs du fichier : <b color="primary">{{countAll}}</b>
-                ({{countAll < 10 ? countAll : '10' }} prévisualisées)</span>
             <span class="example-spacer"></span>
-            <span style="flex:1;"><i class="fa fa-user-plus"></i>&nbsp;Ajouts : <b color="primary">{{countAdd}}</b></span>
-            <span style="flex:1;"><i class="fa fa-user-edit"></i>&nbsp;Modifications : <b color="primary">{{countUp}}</b></span>
+            <span style="flex:1;text-align: right;"><i class="fa fa-users" color="primary"></i>&nbsp;Utilisateurs du fichier : <b color="primary">{{countAll}}</b>
+                <ng-container *ngIf="countAll > 10">&nbsp;(10 prévisualisées)</ng-container>
+            </span>
+            <span style="flex:1;text-align: right;"><i class="fa fa-user-plus" color="primary"></i>&nbsp;Ajouts : <b color="primary">{{countAdd}}</b></span>
+            <span style="flex:1;text-align: right;"><i class="fa fa-user-edit" color="primary"></i>&nbsp;Modifications : <b color="primary">{{countUp}}</b></span>
         </mat-toolbar>
         <ng-container *ngIf="loading; else elseTemplate">
             <div class="loader">
@@ -33,6 +34,7 @@
                                 style="width: 80px !important;">
                                 <mat-select [(ngModel)]="associatedColmuns[column]"
                                     (selectionChange)="changeColumn(column, $event.value)">
+                                    <mat-option value=""></mat-option>
                                     <mat-option *ngFor="let col of csvColumns" [value]="col">
                                         {{col}}
                                     </mat-option>

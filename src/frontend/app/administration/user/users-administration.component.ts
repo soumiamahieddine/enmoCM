@@ -13,6 +13,8 @@ import { of } from 'rxjs/internal/observable/of';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { UsersImportComponent } from './import/users-import.component';
 import { UsersExportComponent } from './export/users-export.component';
+import { tap } from 'rxjs/internal/operators/tap';
+import { filter } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'users-administration.component.html',
@@ -72,9 +74,26 @@ export class UsersAdministrationComponent implements OnInit {
 
         this.user = this.headerService.user;
         this.loading = true;
+        this.getData();
+    }
 
-        this.http.get('../rest/users')
-            .subscribe((data: any) => {
+    setDatasource() {
+        setTimeout(() => {
+            this.dataSource = new MatTableDataSource(this.data);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
+            this.sort.active = 'user_id';
+            this.sort.direction = 'asc';
+            this.dataSource.sort = this.sort;
+        }, 0);
+    }
+
+    getData() {
+        this.webserviceAccounts = [];
+        this.noWebserviceAccounts = [];
+        this.data = [];
+        this.http.get('../rest/users').pipe(
+            tap((data: any) => {
                 this.data = data['users'];
                 this.data.forEach(element => {
                     element.statusLabel = this.lang['user' + element.status];
@@ -92,20 +111,12 @@ export class UsersAdministrationComponent implements OnInit {
 
                 this.loading = false;
                 this.setDatasource();
-            }, (err) => {
-                this.notify.handleErrors(err);
-            });
-    }
-
-    setDatasource() {
-        setTimeout(() => {
-            this.dataSource = new MatTableDataSource(this.data);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-            this.sort.active = 'user_id';
-            this.sort.direction = 'asc';
-            this.dataSource.sort = this.sort;
-        }, 0);
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     activateUser(user: any) {
@@ -419,12 +430,16 @@ export class UsersAdministrationComponent implements OnInit {
             panelClass: 'maarch-full-height-modal'
         });
 
-        /*dialogRef.afterClosed().pipe(
+        dialogRef.afterClosed().pipe(
+            filter((data: any) => data === 'success'),
+            tap(() => {
+                this.getData();
+            }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
                 return of(false);
             })
-        ).subscribe();*/
+        ).subscribe();
     }
 
     openUsersExportModal() {

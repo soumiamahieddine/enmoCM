@@ -55,7 +55,8 @@ export class UsersImportComponent implements OnInit {
         console.log(coldb);
         console.log(colCsv);
         this.userData = [];
-        for (let index = 0; index < 10; index++) {
+        const limit = this.csvData.length < 10 ? this.csvData.length : 10;
+        for (let index = 0; index < limit; index++) {
             const data = this.csvData[index];
             this.userData.push({
                 'id': coldb === 'id' ? data[this.csvColumns.filter(col => col === colCsv)[0]] : data[this.associatedColmuns['id']],
@@ -88,9 +89,9 @@ export class UsersImportComponent implements OnInit {
                     let dataCol = [];
                     let objData = {};
 
-                    this.countAll = rawCsv.length - 1;
+                    this.countAll = rawCsv.length - 2;
 
-                    for (let index = 1; index < rawCsv.length; index++) {
+                    for (let index = 1; index < rawCsv.length - 1; index++) {
                         objData = {};
                         dataCol = rawCsv[index].split(';').map(s => s.replace(/"/gi, '').trim());
                         dataCol.forEach((element: any, index2: number) => {
@@ -99,7 +100,6 @@ export class UsersImportComponent implements OnInit {
                         this.csvData.push(objData);
                     }
                     this.initData();
-
                     this.countAdd = this.csvData.filter((data: any) => this.functionsService.empty(data[this.associatedColmuns['id']])).length;
                     this.countUp = this.csvData.filter((data: any) => !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
                 } else {
@@ -114,7 +114,8 @@ export class UsersImportComponent implements OnInit {
 
     initData() {
         this.userData = [];
-        for (let index = 0; index < 10; index++) {
+        const limit = this.csvData.length < 10 ? this.csvData.length : 10;
+        for (let index = 0; index < limit; index++) {
             const data = this.csvData[index];
             this.associatedColmuns['id'] = this.csvColumns[0];
             this.associatedColmuns['user_id'] = this.csvColumns[1];
@@ -149,35 +150,43 @@ export class UsersImportComponent implements OnInit {
 
     onSubmit() {
         console.log('test');
-        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: 'Voulez-vous importer <b>' + this.countAll + '</b> utilisateurs ?<br/>(<b>' + this.countAdd + '</b> créations et <b>' + this.countUp + '</b> modifications)' } });
+        const dataToSend: any[] = [];
+        let dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: 'Voulez-vous importer <b>' + this.countAll + '</b> utilisateurs ?<br/>(<b>' + this.countAdd + '</b> créations et <b>' + this.countUp + '</b> modifications)' } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             tap(() => {
                 this.loading = true;
-                const dataToSend: any[] = [];
-                this.csvData.forEach(element => {
-                    this.associatedColmuns['id'] = this.csvColumns[0];
-                    this.associatedColmuns['user_id'] = this.csvColumns[1];
-                    this.associatedColmuns['firstname'] = this.csvColumns[2];
-                    this.associatedColmuns['lastname'] = this.csvColumns[3];
-                    this.associatedColmuns['mail'] = this.csvColumns[4];
-                    this.associatedColmuns['phone'] = this.csvColumns[5];
-
+                this.csvData.forEach((element: any) => {
                     dataToSend.push({
-                        'id': element[this.csvColumns[0]],
-                        'user_id': element[this.csvColumns[1]],
-                        'firstname': element[this.csvColumns[2]],
-                        'lastname': element[this.csvColumns[3]],
-                        'mail': element[this.csvColumns[4]],
-                        'phone': element[this.csvColumns[5]]
+                        'id': element[this.associatedColmuns['id']],
+                        'user_id': element[this.associatedColmuns['user_id']],
+                        'firstname': element[this.associatedColmuns['firstname']],
+                        'lastname': element[this.associatedColmuns['lastname']],
+                        'mail': element[this.associatedColmuns['mail']],
+                        'phone': element[this.associatedColmuns['phone']]
                     });
                 });
                 console.log(dataToSend);
             }),
-            /*exhaustMap(() => this.http.delete(`../rest/listTemplates/${this.currentEntity.listTemplate.id}`)),
+            exhaustMap(() => this.http.put(`../rest/importUsers`, { users: dataToSend })),
+            tap((data: any) => {
+                /*let text = '';
+                if (this.functionsService.empty(data.error) ) {
+                    text = `<br/>${data.error.count} en erreur  : <ul>`;
+                    data.errors.lines.forEach(element => {
+                        text  += `<li> ligne : ${element}</li>`;
+                    });
+                    text += '</ul>';
+                }
+                dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: '<b>' + data.success + '</b> / <b>' + this.countAll + '</b> utilisateurs importés.' + text } });
+                */
+                // FOR TEST
+                dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: 'success!' } });
+            }),
+            exhaustMap(() => dialogRef.afterClosed()),
             tap(() => {
-
-            }),*/
+                this.dialogRef.close('success');
+            }),
             catchError((err: any) => {
                 this.loading = false;
                 this.notify.handleSoftErrors(err);
