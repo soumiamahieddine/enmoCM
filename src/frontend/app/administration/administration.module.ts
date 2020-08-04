@@ -9,6 +9,8 @@ import { AdministrationRoutingModule } from './administration-routing.module';
 import { JoyrideModule } from 'ngx-joyride';
 import { DocumentViewerModule } from '../viewer/document-viewer.module';
 
+import { AdministrationService } from './administration.service';
+
 
 import { AccountLinkComponent } from './user/account-link/account-link.component';
 import { ActionAdministrationComponent } from './action/action-administration.component';
@@ -161,6 +163,9 @@ import { TranslateService } from '@ngx-translate/core';
         UsersAdministrationRedirectModalComponent,
         UsersImportComponent,
         UsersExportComponent
+    ],
+    providers: [
+        AdministrationService
     ],
 })
 export class AdministrationModule {

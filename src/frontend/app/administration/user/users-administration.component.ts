@@ -4,7 +4,6 @@ import { LANG } from '../../translate.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
@@ -14,7 +13,8 @@ import { catchError } from 'rxjs/internal/operators/catchError';
 import { UsersImportComponent } from './import/users-import.component';
 import { UsersExportComponent } from './export/users-export.component';
 import { tap } from 'rxjs/internal/operators/tap';
-import { filter } from 'rxjs/operators';
+import { filter, startWith, switchMap } from 'rxjs/operators';
+import { AdministrationService } from '../administration.service';
 
 @Component({
     templateUrl: 'users-administration.component.html',
@@ -42,20 +42,11 @@ export class UsersAdministrationComponent implements OnInit {
     webserviceAccounts: any[] = [];
     noWebserviceAccounts: any[] = [];
 
-    dataSource = new MatTableDataSource(this.data);
     displayedColumns = ['id', 'user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
-
+    filterColumns = ['id', 'user_id', 'lastname', 'firstname', 'mail'];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['id', 'user_id', 'lastname', 'firstname', 'mail']);
-        };
-    }
 
     constructor(
         public http: HttpClient,
@@ -64,6 +55,7 @@ export class UsersAdministrationComponent implements OnInit {
         public headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -75,17 +67,6 @@ export class UsersAdministrationComponent implements OnInit {
         this.user = this.headerService.user;
         this.loading = true;
         this.getData();
-    }
-
-    setDatasource() {
-        setTimeout(() => {
-            this.dataSource = new MatTableDataSource(this.data);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-            this.sort.active = 'user_id';
-            this.sort.direction = 'asc';
-            this.dataSource.sort = this.sort;
-        }, 0);
     }
 
     getData() {
@@ -110,7 +91,9 @@ export class UsersAdministrationComponent implements OnInit {
                 }
 
                 this.loading = false;
-                this.setDatasource();
+                setTimeout(() => {
+                    this.adminService.setDataSource('admin_users', this.data, this.sort, this.paginator, this.filterColumns);
+                }, 0);
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -220,7 +203,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                                         this.data.splice(Number(i), 1);
                                                                     }
                                                                 }
-                                                                this.setDatasource();
+                                                                this.adminService.setDataSource('admin_users', this.data, this.sort, this.paginator, this.filterColumns);
 
                                                                 if (this.quota.userQuota && user.status !== 'SPD') {
                                                                     this.quota.actives--;
@@ -272,7 +255,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                             this.data.splice(Number(i), 1);
                                                         }
                                                     }
-                                                    this.setDatasource();
+                                                    this.adminService.setDataSource('admin_users', this.data, this.sort, this.paginator, this.filterColumns);
 
                                                     if (this.quota.userQuota && user.status === 'OK') {
                                                         this.quota.actives--;
@@ -323,7 +306,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                                 this.data.splice(Number(i), 1);
                                                             }
                                                         }
-                                                        this.setDatasource();
+                                                        this.adminService.setDataSource('admin_users', this.data, this.sort, this.paginator, this.filterColumns);
 
                                                         if (this.quota.userQuota && user.status === 'OK') {
                                                             this.quota.actives--;
@@ -370,7 +353,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                     this.data.splice(Number(i), 1);
                                                 }
                                             }
-                                            this.setDatasource();
+                                            this.adminService.setDataSource('admin_users', this.data, this.sort, this.paginator, this.filterColumns);
 
                                             if (this.quota.userQuota && user.status === 'OK') {
                                                 this.quota.actives--;
@@ -419,7 +402,7 @@ export class UsersAdministrationComponent implements OnInit {
         } else {
             this.data = this.noWebserviceAccounts;
         }
-        this.setDatasource();
+        this.adminService.setDataSource('admin_users', this.data, this.sort, this.paginator, this.filterColumns);
     }
 
     openUsersImportModal() {

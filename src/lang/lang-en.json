@@ -1873,7 +1873,7 @@
     "mustSuperadmin": "You must be an administrator yourself to define administrators.",
     "additions": "Additions",
     "usersImport": "Import users",
-    "usersOfFile": "File user",
+    "usersOfFile": "File users",
     "previewed": "Previewed",
     "modifications": "Modifications",
     "dndFileCsvDesc": "Click here or drag and drop a csv file",
