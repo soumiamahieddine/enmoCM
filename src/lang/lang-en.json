@@ -1881,5 +1881,9 @@
     "csvColumn": "Csv file column",
     "withWarnings": "with warnings",
     "withErrors": "with errors",
-    "line": "line"
+    "line": "line",
+    "importedUsers": "imported users",
+    "import": "Import",
+    "confirmImportUsers": "Do you want to import <b>{{0}}</b> users",
+    "mustAtLeastMinValues": "The data must have at least <b>6</b> values"
 }

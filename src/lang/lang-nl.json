@@ -1893,5 +1893,9 @@
     "csvColumn": "Colonne fichier csv__TO_TRANSLATE",
     "withWarnings": "avec avertissements__TO_TRANSLATE",
     "withErrors": "avec erreurs__TO_TRANSLATE",
-    "line": "ligne__TO_TRANSLATE"
+    "line": "ligne__TO_TRANSLATE",
+    "importedUsers": "utilisateurs importés__TO_TRANSLATE",
+    "import": "Importer__TO_TRANSLATE",
+    "confirmImportUsers": "Voulez-vous importer <b>{{0}}</b> utilisateurs__TO_TRANSLATE",
+    "mustAtLeastMinValues": "Les données doivent avoir au mimimum <b>6</b> valeurs__TO_TRANSLATE"
 }

@@ -9,6 +9,8 @@ import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { filter, exhaustMap, tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { AlertComponent } from '../../../../plugins/modal/alert.component';
+import { LocalStorageService } from '../../../../service/local-storage.service';
+import { HeaderService } from '../../../../service/header.service';
 
 @Component({
     templateUrl: 'users-import.component.html',
@@ -30,6 +32,9 @@ export class UsersImportComponent implements OnInit {
 
     ];
 
+    delimiters = [';', ',', 'TAB'];
+    currentDelimiter = ';';
+
     associatedColmuns: any = {};
     dataSource = new MatTableDataSource(null);
     csvData: any[] = [];
@@ -43,17 +48,19 @@ export class UsersImportComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         private functionsService: FunctionsService,
+        private localStorage: LocalStorageService,
+        private headerService: HeaderService,
         public dialog: MatDialog,
         public dialogRef: MatDialogRef<UsersImportComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
     ) {
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.setConfiguration();
+    }
 
     changeColumn(coldb: string, colCsv: string) {
-        console.log(coldb);
-        console.log(colCsv);
         this.userData = [];
         const limit = this.csvData.length < 10 ? this.csvData.length : 10;
         for (let index = 0; index < limit; index++) {
@@ -81,10 +88,9 @@ export class UsersImportComponent implements OnInit {
             reader.readAsText(fileInput.target.files[0]);
 
             reader.onload = (value: any) => {
-                console.log(value.target.result.split('\n'));
                 rawCsv = value.target.result.split('\n');
 
-                if (rawCsv[0].split(';').map(s => s.replace(/"/gi, '').trim()).length >= this.userColmuns.length) {
+                if (rawCsv[0].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim()).length >= this.userColmuns.length) {
                     this.csvColumns = rawCsv[0].split(';').map(s => s.replace(/"/gi, '').trim());
                     let dataCol = [];
                     let objData = {};
@@ -102,8 +108,9 @@ export class UsersImportComponent implements OnInit {
                     this.initData();
                     this.countAdd = this.csvData.filter((data: any) => this.functionsService.empty(data[this.associatedColmuns['id']])).length;
                     this.countUp = this.csvData.filter((data: any) => !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
+                    this.localStorage.save(`importUsersFields_${this.headerService.user.id}`, this.currentDelimiter);
                 } else {
-                    this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Erreur', msg: 'Les données doivent avoir au mimimum <b>6</b> valeurs' } });
+                    this.notify.error(this.translate.instant('lang.mustAtLeastMinValues'));
                 }
                 this.loading = false;
             };
@@ -149,9 +156,13 @@ export class UsersImportComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log('test');
         const dataToSend: any[] = [];
-        let dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: 'Voulez-vous importer <b>' + this.countAll + '</b> utilisateurs ?<br/>(<b>' + this.countAdd + '</b> créations et <b>' + this.countUp + '</b> modifications)' } });
+        let confirmText = '';
+        this.translate.get('lang.confirmImportUsers', {0: this.countAll}).subscribe((res: string) => {
+            confirmText = `${res} ?<br/><br/>`;
+            confirmText += `<ul><li><b>${this.countAdd}</b> ${this.translate.instant('lang.additions')}</li><li><b>${this.countUp}</b> ${this.translate.instant('lang.modifications')}</li></ul>`;
+        });
+        let dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.import'), msg: confirmText } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             tap(() => {
@@ -169,26 +180,23 @@ export class UsersImportComponent implements OnInit {
             }),
             exhaustMap(() => this.http.put(`../rest/users/import`, { users: dataToSend })),
             tap((data: any) => {
-                let text = '';
+                let textModal = '';
                 if (data.warnings.count > 0) {
-                    text = `<br/>${data.warning.count} ${this.translate.instant('lang.widthWarnings')}  : <ul>`;
+                    textModal = `<br/>${data.warning.count} ${this.translate.instant('lang.withWarnings')}  : <ul>`;
                     data.errors.details.forEach(element => {
-                        text  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${element.index + 1})</li>`;
+                        textModal  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${element.index + 1})</li>`;
                     });
-                    text += '</ul>';
+                    textModal += '</ul>';
                 }
 
                 if (data.errors.count > 0) {
-                    text = `<br/>${data.errors.count} ${this.translate.instant('lang.widthErrors')}  : <ul>`;
+                    textModal += `<br/>${data.errors.count} ${this.translate.instant('lang.withErrors')}  : <ul>`;
                     data.errors.details.forEach(element => {
-                        text  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${element.index + 1})</li>`;
+                        textModal  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${element.index + 1})</li>`;
                     });
-                    text += '</ul>';
+                    textModal += '</ul>';
                 }
-                dialogRef = this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: '<b>' + data.success + '</b> / <b>' + this.countAll + '</b> utilisateurs importés.' + text } });
-
-                // FOR TEST
-                // dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: 'success!' } });
+                dialogRef = this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.import'), msg: '<b>' + data.success + '</b> / <b>' + this.countAll + '</b> ' + this.translate.instant('lang.importedUsers') + '.' + textModal } });
             }),
             exhaustMap(() => dialogRef.afterClosed()),
             tap(() => {
@@ -200,5 +208,11 @@ export class UsersImportComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    setConfiguration() {
+        if (this.localStorage.get(`importUsersFields_${this.headerService.user.id}`) !== null) {
+            this.currentDelimiter = this.localStorage.get(`importUsersFields_${this.headerService.user.id}`);
+        }
     }
 }

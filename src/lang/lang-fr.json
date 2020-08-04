@@ -1876,5 +1876,9 @@
     "csvColumn": "Colonne fichier csv",
     "withWarnings": "avec avertissements",
     "withErrors": "avec erreurs",
-    "line": "ligne"
+    "line": "ligne",
+    "importedUsers": "utilisateurs importés",
+    "import": "Importer",
+    "confirmImportUsers": "Voulez-vous importer <b>{{0}}</b> utilisateurs",
+    "mustAtLeastMinValues": "Les données doivent avoir au mimimum <b>6</b> valeurs"
 }
