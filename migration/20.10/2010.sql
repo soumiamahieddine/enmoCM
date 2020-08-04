@@ -40,6 +40,9 @@ DO $$ BEGIN
     END IF;
 END$$;
 
+/*INDEXING_MODELS_FIELDS*/
+ALTER TABLE indexing_models_fields DROP COLUMN IF EXISTS enabled;
+ALTER TABLE indexing_models_fields ADD COLUMN enabled BOOLEAN NOT NULL DEFAULT TRUE;
 
 /* CONTACTS GROUPS */
 ALTER TABLE contacts_groups DROP COLUMN IF EXISTS entity_owner;
