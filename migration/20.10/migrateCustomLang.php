@@ -29,7 +29,7 @@ foreach ($customs as $custom) {
                 $fileContent = trim(file_get_contents($customLangFolderPath . '/' . $customLangFile));
                 $fileContent = trim(substr($fileContent, strpos($fileContent, "{"), -2));  // get content from first "{" , and remove last "};"
                 $jsonContent = json_decode(rtrim($fileContent, ",") . "}");
-                file_put_contents($customLangFolderPath . '/' . str_ireplace(".ts", ".json", $customLangFile), json_encode($jsonContent, JSON_PRETTY_PRINT));
+                file_put_contents($customLangFolderPath . '/' . str_ireplace(".ts", ".json", $customLangFile), json_encode($jsonContent, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
                 unlink($customLangFolderPath . '/' . $customLangFile);
                 $migrated++;
             }
