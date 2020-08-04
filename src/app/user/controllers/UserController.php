@@ -1682,32 +1682,40 @@ class UserController
             $allowedUsers = array_column($allowedUsers, 'id');
         }
 
+        $errors = [];
         foreach ($body['users'] as $key => $user) {
+            if (!empty($user['firstname']) && (!Validator::stringType()->validate($user['firstname']) || !Validator::length(1, 255)->validate($user['firstname']))) {
+                $errors[] = ['error' => "Argument firstname is not a string for user {$key}", 'index' => $key, 'lang' => ''];
+                continue;
+            } elseif (!empty($user['lastname']) && (!Validator::stringType()->validate($user['lastname']) || !Validator::length(1, 255)->validate($user['lastname']))) {
+                $errors[] = ['error' => "Argument lastname is not a string for user {$key}", 'index' => $key, 'lang' => ''];
+                continue;
+            } elseif (!empty($user['mail']) && (!filter_var($user['mail'], FILTER_VALIDATE_EMAIL) || !Validator::length(1, 255)->validate($user['mail']))) {
+                $errors[] = ['error' => "Argument mail is not correct for user {$key}", 'index' => $key, 'lang' => ''];
+                continue;
+            } elseif (!empty($user['phone']) && (!preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $user['phone']) || !Validator::length(1, 32)->validate($user['phone']))) {
+                $errors[] = ['error' => "Argument phone is not correct for user {$key}", 'index' => $key, 'lang' => ''];
+                continue;
+            }
             if (empty($user['id'])) {
                 if (empty($user['user_id'])) {
-                    return $response->withStatus(400)->withJson(['errors' => "Argument user_id is empty for user {$key}"]);
+                    $errors[] = ['error' => "Argument user_id is empty for user {$key}", 'index' => $key, 'lang' => ''];
+                    continue;
                 } elseif (empty($user['firstname'])) {
-                    return $response->withStatus(400)->withJson(['errors' => "Argument firstname is empty for user {$key}"]);
+                    $errors[] = ['error' => "Argument firstname is empty for user {$key}", 'index' => $key, 'lang' => ''];
+                    continue;
                 } elseif (empty($user['lastname'])) {
-                    return $response->withStatus(400)->withJson(['errors' => "Argument lastname is empty for user {$key}"]);
+                    $errors[] = ['error' => "Argument lastname is empty for user {$key}", 'index' => $key, 'lang' => ''];
+                    continue;
                 } elseif (empty($user['mail'])) {
-                    return $response->withStatus(400)->withJson(['errors' => "Argument mail is empty for user {$key}"]);
+                    $errors[] = ['error' => "Argument mail is empty for user {$key}", 'index' => $key, 'lang' => ''];
+                    continue;
                 }
-            }
-            if (!empty($user['firstname']) && !Validator::stringType()->validate($user['firstname'])) {
-                return $response->withStatus(400)->withJson(['errors' => "Argument firstname is not a string for user {$key}"]);
-            } elseif (!empty($user['lastname']) && !Validator::stringType()->validate($user['lastname'])) {
-                return $response->withStatus(400)->withJson(['errors' => "Argument lastname is not a string for user {$key}"]);
-            } elseif (!empty($user['mail']) && !filter_var($user['mail'], FILTER_VALIDATE_EMAIL)) {
-                return $response->withStatus(400)->withJson(['errors' => "Argument mail is not correct for user {$key}"]);
-            }
-        }
 
-        foreach ($body['users'] as $key => $user) {
-            if (empty($user['id'])) {
                 $userAlreadyExists = UserModel::getByLogin(['login' => strtolower($user['user_id']), 'select' => [1]]);
                 if (!empty($userAlreadyExists)) {
-                    return $response->withStatus(400)->withJson(['errors' => "User already exists with login {$user['user_id']}"]);
+                    $errors[] = ['error' => "User already exists with login {$user['user_id']}", 'index' => $key, 'lang' => ''];
+                    continue;
                 }
 
                 $userToCreate = [
@@ -1727,6 +1735,7 @@ class UserController
                 }
             } else {
                 if (!$isRoot && !in_array($user['id'], $allowedUsers)) {
+                    $errors[] = ['error' => "User is not allowed to be modified {$user['user_id']}", 'index' => $key, 'lang' => ''];
                     continue;
                 }
 
@@ -1751,7 +1760,15 @@ class UserController
             }
         }
 
-        return $response->withStatus(204);
+        $return = [
+            'success'   => count($body['users']) - count($errors),
+            'errors'    => [
+                'count'     => count($errors),
+                'details'   => $errors
+            ]
+        ];
+
+        return $response->withJson($return);
     }
 
     public function hasUsersRights(array $args)
