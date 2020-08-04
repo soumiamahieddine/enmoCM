@@ -166,22 +166,29 @@ export class UsersImportComponent implements OnInit {
                         'phone': element[this.associatedColmuns['phone']]
                     });
                 });
-                console.log(dataToSend);
             }),
-            exhaustMap(() => this.http.put(`../rest/importUsers`, { users: dataToSend })),
+            exhaustMap(() => this.http.put(`../rest/users/import`, { users: dataToSend })),
             tap((data: any) => {
-                /*let text = '';
-                if (this.functionsService.empty(data.error) ) {
-                    text = `<br/>${data.error.count} en erreur  : <ul>`;
-                    data.errors.lines.forEach(element => {
-                        text  += `<li> ligne : ${element}</li>`;
+                let text = '';
+                if (data.warnings.count > 0) {
+                    text = `<br/>${data.warning.count} ${this.translate.instant('lang.widthWarnings')}  : <ul>`;
+                    data.errors.details.forEach(element => {
+                        text  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${element.index + 1})</li>`;
                     });
                     text += '</ul>';
                 }
-                dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: '<b>' + data.success + '</b> / <b>' + this.countAll + '</b> utilisateurs importés.' + text } });
-                */
+
+                if (data.errors.count > 0) {
+                    text = `<br/>${data.errors.count} ${this.translate.instant('lang.widthErrors')}  : <ul>`;
+                    data.errors.details.forEach(element => {
+                        text  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${element.index + 1})</li>`;
+                    });
+                    text += '</ul>';
+                }
+                dialogRef = this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: '<b>' + data.success + '</b> / <b>' + this.countAll + '</b> utilisateurs importés.' + text } });
+
                 // FOR TEST
-                dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: 'success!' } });
+                // dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: 'Importer', msg: 'success!' } });
             }),
             exhaustMap(() => dialogRef.afterClosed()),
             tap(() => {

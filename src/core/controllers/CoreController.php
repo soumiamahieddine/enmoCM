@@ -170,37 +170,30 @@ class CoreController
             return $response->withStatus(400)->withJson(['errors' => 'Body langId is empty or not a string']);
         }
 
-        $content = 'export const LANG_'.strtoupper($body['langId']).' = '.json_encode($body['jsonContent'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES).';';
+        $content = json_encode($body['jsonContent'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        if ($fp = @fopen("src/frontend/lang/lang-{$body['langId']}.ts", 'w')) {
+        if ($fp = @fopen("src/lang/lang-{$body['langId']}.json", 'w')) {
             fwrite($fp, $content);
             fclose($fp);
             return $response->withStatus(204);
         } else {
-            return $response->withStatus(400)->withJson(['errors' => "Cannot open file : src/frontend/lang/lang-{$body['langId']}.ts"]);
+            return $response->withStatus(400)->withJson(['errors' => "Cannot open file : src/lang/lang-{$body['langId']}.json"]);
         }
     }
 
     public static function getAvailableCoreLanguages(Request $request, Response $response)
     {
-        $files = array_diff(scandir('src/frontend/lang'), ['..', '.']);
+        $files = array_diff(scandir('src/lang'), ['..', '.']);
         $languages = [];
         $arrLanguages = [];
         foreach ($files as $value) {
-            $languages[] = str_replace('.ts', '', $value) ;
+            $languages[] = str_replace('.json', '', $value) ;
         }
 
         foreach ($languages as $file) {
             $langName    = explode('-', $file)[1];
-            $path        = 'src/frontend/lang/' . $file . '.ts';
+            $path        = 'src/lang/' . $file . '.json';
             $fileContent = file_get_contents($path);
-            $fileContent = str_replace('export const LANG_'.strtoupper($langName).' =', '', $fileContent);
-            $fileContent = trim($fileContent);
-            $fileContent = str_replace(PHP_EOL, '', $fileContent);
-            $fileContent = str_replace("\",   ", "\",", $fileContent);
-            $fileContent = str_replace("  ", "", $fileContent);
-            $fileContent = str_replace(",};", "}", $fileContent);
-            $fileContent = rtrim($fileContent, ";");
             $fileContent = json_decode($fileContent);
             $arrLanguages[$langName] = $fileContent;
         }

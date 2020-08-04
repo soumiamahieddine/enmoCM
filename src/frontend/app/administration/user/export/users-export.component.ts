@@ -49,7 +49,7 @@ export class UsersExportComponent implements OnInit {
     exportData() {
         this.localStorage.save(`exportUsersFields_${this.headerService.user.id}`, JSON.stringify(this.exportModel));
         this.loadingExport = true;
-        this.http.put('../rest/exportUsers', this.exportModel, { responseType: 'blob' }).pipe(
+        this.http.put('../rest/users/export', this.exportModel, { responseType: 'blob' }).pipe(
             tap((data: any) => {
                 if (data.type !== 'text/html') {
                     const downloadLink = document.createElement('a');
