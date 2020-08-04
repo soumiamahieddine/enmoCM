@@ -751,8 +751,8 @@ class EmailController
             return ['errors' => 'Data isHtml is not a boolean or empty', 'code' => 400];
         }
 
-        if (!empty($args['data']['object']) && !Validator::stringType()->length(1, 256)->validate($args['data']['object'])) {
-            return ['errors' => 'Data object is not a string or is more than 256 characters', 'code' => 400];
+        if (!empty($args['data']['object']) && !Validator::stringType()->length(1, 255)->validate($args['data']['object'])) {
+            return ['errors' => 'Data object is not a string or is more than 255 characters', 'code' => 400];
         }
 
         if (!empty($args['data']['sender']['email'])) {

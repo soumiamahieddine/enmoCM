@@ -178,8 +178,8 @@ UPDATE groupbasket SET list_event_data = jsonb_set(list_event_data, '{canUpdateD
 UPDATE groupbasket SET list_event_data = list_event_data - 'canUpdate';
 
 /* TEMPLATES */
-ALTER TABLE templates DROP COLUMN IF EXISTS template_subject;
-ALTER TABLE templates ADD COLUMN template_subject character varying(255);
+ALTER TABLE templates DROP COLUMN IF EXISTS subject;
+ALTER TABLE templates ADD COLUMN subject character varying(255);
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS

@@ -717,6 +717,7 @@ CREATE TABLE templates
   template_datasource character varying(32),
   template_target character varying(255),
   template_attachment_type character varying(255) DEFAULT NULL::character varying,
+  subject character varying(255),
   CONSTRAINT templates_pkey PRIMARY KEY (template_id)
 )
 WITH (OIDS=FALSE);
