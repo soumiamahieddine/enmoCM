@@ -1713,7 +1713,7 @@ class UserController
                     continue;
                 }
 
-                $existingUser = UserModel::getByLogin(['login' => strtolower($user['user_id']), 'select' => ['id', 'status', 'mail']]);
+                $existingUser = UserModel::getByLogin(['login' => strtolower($user['user_id']), 'select' => ['id', 'status']]);
                 if (!empty($existingUser) && $existingUser['status'] != 'DEL') {
                     $errors[] = ['error' => "User already exists with login {$user['user_id']}", 'index' => $key, 'lang' => ''];
                     continue;
