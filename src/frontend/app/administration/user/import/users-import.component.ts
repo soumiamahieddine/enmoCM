@@ -182,7 +182,7 @@ export class UsersImportComponent implements OnInit {
             tap((data: any) => {
                 let textModal = '';
                 if (data.warnings.count > 0) {
-                    textModal = `<br/>${data.warning.count} ${this.translate.instant('lang.withWarnings')}  : <ul>`;
+                    textModal = `<br/>${data.warnings.count} ${this.translate.instant('lang.withWarnings')}  : <ul>`;
                     data.errors.details.forEach(element => {
                         textModal  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${element.index + 1})</li>`;
                     });
