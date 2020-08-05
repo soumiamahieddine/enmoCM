@@ -34,6 +34,7 @@ export class AdministrationService {
     dataSource: MatTableDataSource<any>;
     filterColumns: string[];
     searchTerm: FormControl = new FormControl('');
+    currentAdminId: string = '';
 
     constructor(
         private notify: NotificationService,
@@ -46,20 +47,8 @@ export class AdministrationService {
         }
     }
 
-    setFilter(id: string, filter: any) {
-        this.filters[id] = filter;
-        this.localStorage.save(`filtersAdmin_${this.headerService.user.id}`, JSON.stringify(this.filters));
-    }
-
-    getFilterField() {
-        return this.searchTerm;
-    }
-
-    getDataSource() {
-        return this.dataSource;
-    }
-
     setDataSource(adminId: string, data: any, sort: MatSort, paginator: MatPaginator, filterColumns: string[]) {
+        this.currentAdminId = adminId;
         this.searchTerm = new FormControl('');
 
         this.searchTerm.valueChanges
@@ -67,8 +56,8 @@ export class AdministrationService {
                 // debounceTime(300),
                 // filter(value => value.length > 2),
                 tap((filterValue: any) => {
-                    this.filters[adminId]['field'] = filterValue;
-                    this.setFilter(adminId, this.filters[adminId]);
+                    this.filters[this.currentAdminId]['field'] = filterValue;
+                    this.setFilter(this.filters[this.currentAdminId]);
                     filterValue = filterValue.trim(); // Remove whitespace
                     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
                     setTimeout(() => {
@@ -85,32 +74,31 @@ export class AdministrationService {
         this.dataSource.paginator = paginator;
         this.dataSource.sortingDataAccessor = this.functionsService.listSortingDataAccessor;
 
-        if (this.functionsService.empty(this.getFilter(adminId))) {
+        if (this.functionsService.empty(this.getFilter())) {
+
             this.setFilter(
-                adminId,
-                this.defaultFilters[adminId]
+                this.defaultFilters[this.currentAdminId]
             );
         }
 
-        sort.active = this.getFilter(adminId, 'sort');
-        sort.direction = this.getFilter(adminId, 'sortDirection');
-        paginator.pageIndex = this.getFilter(adminId, 'page');
+        sort.active = this.getFilter('sort');
+        sort.direction = this.getFilter('sortDirection');
+        paginator.pageIndex = this.getFilter('page');
 
         this.dataSource.sort = sort;
 
-        this.searchTerm.setValue(this.getFilter(adminId, 'field'));
+        this.searchTerm.setValue(this.getFilter('field'));
 
         merge(sort.sortChange, paginator.page)
             .pipe(
                 startWith({}),
                 tap(() => {
                     this.setFilter(
-                        adminId,
                         {
                             sort: sort.active,
                             sortDirection: sort.direction,
                             page: paginator.pageIndex,
-                            field: this.getFilter(adminId, 'field')
+                            field: this.getFilter('field')
                         }
                     );
                 }),
@@ -121,12 +109,25 @@ export class AdministrationService {
             ).subscribe();
     }
 
-    getFilter(id: string, idFilter: string = null) {
-        if (!this.functionsService.empty(this.filters[id])) {
+    setFilter(filter: any) {
+        this.filters[this.currentAdminId] = filter;
+        this.localStorage.save(`filtersAdmin_${this.headerService.user.id}`, JSON.stringify(this.filters));
+    }
+
+    getFilterField() {
+        return this.searchTerm;
+    }
+
+    getDataSource() {
+        return this.dataSource;
+    }
+
+    getFilter(idFilter: string = null) {
+        if (!this.functionsService.empty(this.filters[this.currentAdminId])) {
             if (!this.functionsService.empty(idFilter)) {
-                return !this.functionsService.empty(this.filters[id][idFilter]) ? this.filters[id][idFilter] : '';
+                return !this.functionsService.empty(this.filters[this.currentAdminId][idFilter]) ? this.filters[this.currentAdminId][idFilter] : '';
             } else {
-                return !this.functionsService.empty(this.filters[id]) ? this.filters[id] : '';
+                return !this.functionsService.empty(this.filters[this.currentAdminId]) ? this.filters[this.currentAdminId] : '';
             }
         } else {
             return null;
