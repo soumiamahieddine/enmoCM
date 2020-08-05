@@ -11,6 +11,8 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
 import { NotificationService } from '../../service/notification/notification.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 
 @Injectable()
 export class AdministrationService {
@@ -20,11 +22,18 @@ export class AdministrationService {
             sort: 'user_id',
             sortDirection: 'asc',
             page: 0,
-            field : ''
+            field: ''
+        },
+        admin_actions: {
+            sort: 'id',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
         },
     };
     dataSource: MatTableDataSource<any>;
     filterColumns: string[];
+    searchTerm: FormControl = new FormControl('');
 
     constructor(
         private notify: NotificationService,
@@ -42,12 +51,34 @@ export class AdministrationService {
         this.localStorage.save(`filtersAdmin_${this.headerService.user.id}`, JSON.stringify(this.filters));
     }
 
+    getFilterField() {
+        return this.searchTerm;
+    }
+
     getDataSource() {
         return this.dataSource;
     }
 
     setDataSource(adminId: string, data: any, sort: MatSort, paginator: MatPaginator, filterColumns: string[]) {
+        this.searchTerm = new FormControl('');
 
+        this.searchTerm.valueChanges
+            .pipe(
+                // debounceTime(300),
+                // filter(value => value.length > 2),
+                tap((filterValue: any) => {
+                    this.filters[adminId]['field'] = filterValue;
+                    this.setFilter(adminId, this.filters[adminId]);
+                    filterValue = filterValue.trim(); // Remove whitespace
+                    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+                    setTimeout(() => {
+                        this.dataSource.filter = filterValue;
+                    }, 0);
+                    this.dataSource.filterPredicate = (template, filter: string) => {
+                        return this.functionsService.filterUnSensitive(template, filter, this.filterColumns);
+                    };
+                }),
+            ).subscribe();
         this.filterColumns = filterColumns;
         this.dataSource = new MatTableDataSource(data);
 
@@ -67,7 +98,7 @@ export class AdministrationService {
 
         this.dataSource.sort = sort;
 
-        this.applyFilter(adminId, this.getFilter(adminId, 'field'));
+        this.searchTerm.setValue(this.getFilter(adminId, 'field'));
 
         merge(sort.sortChange, paginator.page)
             .pipe(
@@ -100,16 +131,5 @@ export class AdministrationService {
         } else {
             return null;
         }
-    }
-
-    applyFilter(adminId: string, filterValue: string) {
-        this.filters[adminId]['field'] = filterValue;
-        this.setFilter(adminId, this.filters[adminId]);
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template, filter: string) => {
-            return this.functionsService.filterUnSensitive(template, filter, this.filterColumns);
-        };
     }
 }
