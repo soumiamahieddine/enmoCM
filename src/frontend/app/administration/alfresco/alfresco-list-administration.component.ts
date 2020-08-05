@@ -5,7 +5,6 @@ import { NotificationService } from '../../../service/notification/notification.
 import { HeaderService } from '../../../service/header.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
 import { tap } from 'rxjs/internal/operators/tap';

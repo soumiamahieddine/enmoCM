@@ -48,7 +48,7 @@
                             </mat-paginator>
                         </div>
                     </div>
-                    <mat-table #table [dataSource]="adminService.getDataSource()" matSort [matSortActive]="adminService.getFilter('admin_alfresco', 'sort')" [matSortDirection]="adminService.getFilter('admin_alfresco', 'sortDirection')">
+                    <mat-table #table [dataSource]="adminService.getDataSource()" [matSortActive]="adminService.getFilter('sort')" [matSortDirection]="adminService.getFilter('sortDirection')" matSort>
                         <ng-container matColumnDef="label">
                             <mat-header-cell *matHeaderCellDef mat-sort-header
                                 [class.hide-for-mobile]="appService.getViewMode()">{{lang.label}}</mat-header-cell>
