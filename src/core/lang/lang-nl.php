@@ -105,6 +105,7 @@ define('_TEMPLATE_ADDED', 'Documentmodel toegevoegd');
 define('_TEMPLATE_UPDATED', 'Documentmodel gewijzigd');
 define('_TEMPLATE_DELETED', 'Documentmodel verwijderd');
 define('_USER_ALREADY_LINK_GROUP', 'De gebruiker is reeds aan deze groep gekoppeld');
+define('_CANNOT_ADD_USER_IN_THIS_GROUP', 'You cannot add users in this group'); //TO TRANSLATE
 define('_USER_ALREADY_LINK_ENTITY', 'De gebruiker is reeds aan deze eenheid gekoppeld');
 define('_UNREACHABLE_DOCSERVER', 'Pad docserver onbereikbaar');
 define('_INCOMING', 'Brief Aankomst');

@@ -103,6 +103,7 @@ define('_USER_ENTITY_CREATION', 'Entité ajoutée pour utilisateur');
 define('_USER_ENTITY_MODIFICATION', 'Entité modifiée pour utilisateur');
 define('_USER_ENTITY_SUPPRESSION', 'Entité supprimée pour utilisateur');
 define('_USER_ALREADY_LINK_GROUP', 'L\'utilisateur est déjà lié à ce groupe');
+define('_CANNOT_ADD_USER_IN_THIS_GROUP', 'Vous n\'avez pas les droits suffisants pour ajouter des utilisateurs à ce groupe');
 define('_USER_ALREADY_LINK_ENTITY', 'L\'utilisateur est déjà lié à cette entité');
 define('_VISA_USER', 'Pour visa');
 define('_WRONG_FILE_TYPE', 'Ce type de fichier n\'est pas permis');

@@ -1102,7 +1102,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_GROUP]);
         }
         if (!PrivilegeController::canAssignGroup(['userId' => $GLOBALS['id'], 'groupId' => $group['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            return $response->withStatus(403)->withJson(['errors' => _CANNOT_ADD_USER_IN_THIS_GROUP]);
         }
         if (empty($data['role'])) {
             $data['role'] = null;
