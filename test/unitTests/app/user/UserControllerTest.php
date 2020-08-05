@@ -376,7 +376,7 @@ class UserControllerTest extends TestCase
         $response     = $userController->addGroup($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(403, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame(_CANNOT_ADD_USER_IN_THIS_GROUP, $responseBody['errors']);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
 
         $GLOBALS['login'] = 'superadmin';
         $userInfo          = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
