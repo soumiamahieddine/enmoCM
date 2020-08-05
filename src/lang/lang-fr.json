@@ -1880,5 +1880,7 @@
     "importedUsers": "utilisateurs importés",
     "import": "Importer",
     "confirmImportUsers": "Voulez-vous importer <b>{{0}}</b> utilisateurs",
-    "mustAtLeastMinValues": "Les données doivent avoir au mimimum <b>6</b> valeurs"
+    "mustAtLeastMinValues": "Les données doivent avoir au mimimum <b>6</b> valeurs",
+    "enableField": "Activer le champ",
+    "disableField": "Désactiver le champ"
 }
