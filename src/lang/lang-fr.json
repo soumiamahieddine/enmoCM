@@ -1882,5 +1882,6 @@
     "confirmImportUsers": "Voulez-vous importer <b>{{0}}</b> utilisateurs",
     "mustAtLeastMinValues": "Les données doivent avoir au mimimum <b>6</b> valeurs",
     "enableField": "Activer le champ",
-    "disableField": "Désactiver le champ"
+    "disableField": "Désactiver le champ",
+    "emailSubject": "Objet du courriel"
 }
