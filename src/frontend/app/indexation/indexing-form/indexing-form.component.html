@@ -36,7 +36,7 @@
                                     [matMenuTriggerFor]="fieldActions">
                                     <mat-icon class="fa fa-ellipsis-v" color="secondary"></mat-icon>
                                 </button>
-                                <mat-menu #fieldActions="matMenu">
+                                <mat-menu #fieldActions="matMenu" [class]="'parametersFieldsMenu'">
                                     <button mat-menu-item (click)="field.mandatory = !field.mandatory" *ngIf="!field.system">
                                         <span *ngIf="!field.mandatory">{{lang.mandatoryField}}</span>
                                         <span *ngIf="field.mandatory">{{lang.optionalField}}</span>
@@ -51,7 +51,7 @@
                                     <mat-divider *ngIf="!field.system"></mat-divider>
                                     <button mat-menu-item (click)="removeItem('indexingModels_'+category,field,i)" *ngIf="!field.system">
                                         <mat-icon class="fa fa-trash" color="warn"></mat-icon>
-                                        <span>{{lang.delete}} {{field.enabled}} {{arrFormControl[field.identifier].enabled}} {{isAlwaysDisabledField(field)}}</span>
+                                        <span>{{lang.delete}}</span>
                                     </button>
                                 </mat-menu>
                             </div>
