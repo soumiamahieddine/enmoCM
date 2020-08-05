@@ -20,6 +20,7 @@ export class AdministrationService {
             sort: 'user_id',
             sortDirection: 'asc',
             page: 0,
+            field : ''
         },
     };
     dataSource: MatTableDataSource<any>;
@@ -53,7 +54,7 @@ export class AdministrationService {
         this.dataSource.paginator = paginator;
         this.dataSource.sortingDataAccessor = this.functionsService.listSortingDataAccessor;
 
-        if (this.functionsService.empty(this.getFilter('users'))) {
+        if (this.functionsService.empty(this.getFilter(adminId))) {
             this.setFilter(
                 adminId,
                 this.defaultFilters[adminId]
@@ -66,6 +67,8 @@ export class AdministrationService {
 
         this.dataSource.sort = sort;
 
+        this.applyFilter(adminId, this.getFilter(adminId, 'field'));
+
         merge(sort.sortChange, paginator.page)
             .pipe(
                 startWith({}),
@@ -76,6 +79,7 @@ export class AdministrationService {
                             sort: sort.active,
                             sortDirection: sort.direction,
                             page: paginator.pageIndex,
+                            field: this.getFilter(adminId, 'field')
                         }
                     );
                 }),
@@ -89,16 +93,18 @@ export class AdministrationService {
     getFilter(id: string, idFilter: string = null) {
         if (!this.functionsService.empty(this.filters[id])) {
             if (!this.functionsService.empty(idFilter)) {
-                return this.filters[id][idFilter];
+                return !this.functionsService.empty(this.filters[id][idFilter]) ? this.filters[id][idFilter] : '';
             } else {
-                return this.filters[id];
+                return !this.functionsService.empty(this.filters[id]) ? this.filters[id] : '';
             }
         } else {
             return null;
         }
     }
 
-    applyFilter(filterValue: string) {
+    applyFilter(adminId: string, filterValue: string) {
+        this.filters[adminId]['field'] = filterValue;
+        this.setFilter(adminId, this.filters[adminId]);
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;

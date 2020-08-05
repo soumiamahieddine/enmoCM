@@ -52,8 +52,8 @@
                     <div class="row">
                         <div class="col-md-6 col-xs-6">
                             <mat-form-field>
-                                <input matInput (keyup)="adminService.applyFilter($event.target.value)"
-                                    placeholder="{{lang.filterBy}}">
+                                <input matInput (keyup)="adminService.applyFilter('admin_users', $event.target.value)"
+                                    placeholder="{{lang.filterBy}}" [value]="adminService.getFilter('admin_users', 'field')">
                                 <mat-button-toggle class="webserviceAccount" matSuffix
                                     (click)="$event.stopPropagation();toggleWebserviceAccount()"
                                     [checked]="this.withWebserviceAccount" title="{{lang.displayWebserviceAccount}}">

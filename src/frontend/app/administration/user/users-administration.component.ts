@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
