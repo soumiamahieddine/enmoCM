@@ -226,7 +226,8 @@ CREATE TABLE users
   reset_token text,
   failed_authentication INTEGER DEFAULT 0,
   locked_until TIMESTAMP without time zone,
-  external_id jsonb DEFAULT '{}',
+    authorized_api jsonb NOT NULL DEFAULT '[]',
+    external_id jsonb DEFAULT '{}',
   CONSTRAINT users_pkey PRIMARY KEY (user_id),
   CONSTRAINT users_id_key UNIQUE (id)
 )

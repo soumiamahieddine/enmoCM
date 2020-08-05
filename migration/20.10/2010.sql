@@ -27,11 +27,13 @@ ALTER TABLE users DROP COLUMN IF EXISTS cookie_key;
 ALTER TABLE users DROP COLUMN IF EXISTS cookie_date;
 ALTER TABLE users DROP COLUMN IF EXISTS refresh_token;
 ALTER TABLE users ADD COLUMN refresh_token jsonb NOT NULL DEFAULT '[]';
+ALTER TABLE users DROP COLUMN IF EXISTS mode;
 DROP TYPE IF EXISTS users_modes;
 CREATE TYPE users_modes AS ENUM ('standard', 'rest', 'root_visible', 'root_invisible');
-ALTER TABLE users DROP COLUMN IF EXISTS mode;
 ALTER TABLE users ADD COLUMN mode users_modes NOT NULL DEFAULT 'standard';
 UPDATE users set mode = 'root_invisible' WHERE user_id = 'superadmin';
+ALTER TABLE users DROP COLUMN IF EXISTS authorized_api;
+ALTER TABLE users ADD COLUMN authorized_api jsonb NOT NULL DEFAULT '[]';
 
 DO $$ BEGIN
     IF (SELECT count(column_name) from information_schema.columns where table_name = 'users' and column_name = 'loginmode') THEN

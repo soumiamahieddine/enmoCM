@@ -116,8 +116,10 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'phone', 'mail', 'initials', 'mode', 'external_id']]);
+        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'phone', 'mail', 'initials', 'mode', 'authorized_api', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
+        $user['authorizedApi']      = json_decode($user['authorized_api'], true);
+        unset($user['authorized_api']);
 
         if ($GLOBALS['id'] == $aArgs['id'] || PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']])) {
             $user['signatures'] = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
@@ -282,6 +284,10 @@ class UserController
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
             $set['mode'] = $body['mode'];
+        }
+
+        if ($body['mode'] == 'rest' && !empty($body['authorizedApi']) && is_array($body['authorizedApi'])) {
+            $set['authorized_api'] = json_encode($body['authorizedApi']);
         }
 
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);

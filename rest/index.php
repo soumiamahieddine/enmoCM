@@ -38,12 +38,12 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
         if (!empty($userId)) {
             \SrcCore\controllers\CoreController::setGlobals(['userId' => $userId]);
             if (!empty($currentRoute)) {
-                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute]);
+                $r = \SrcCore\controllers\AuthenticationController::isRouteAvailable(['userId' => $userId, 'currentRoute' => $currentRoute, 'currentMethod' => $currentMethod]);
                 if (!$r['isRouteAvailable']) {
                     return $response->withStatus(403)->withJson(['errors' => $r['errors']]);
                 }
             }
-        } elseif ($currentMethod.$currentRoute != 'GET/initialize') {
+        } else {
             return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
         }
     }
