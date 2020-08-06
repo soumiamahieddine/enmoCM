@@ -95,6 +95,12 @@ export class AdministrationService {
             page: 0,
             field: ''
         },
+        admin_templates: {
+            sort: 'template_label',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
     };
     dataSource: MatTableDataSource<any>;
     filterColumns: string[];
