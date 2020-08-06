@@ -4,11 +4,13 @@ import { LANG } from '../../translate.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
+import { AdministrationService } from '../administration.service';
+import { catchError, tap, finalize } from 'rxjs/operators';
+import { of } from 'rxjs/internal/observable/of';
 
 @Component({
     templateUrl: 'baskets-administration.component.html'
@@ -25,18 +27,10 @@ export class BasketsAdministrationComponent implements OnInit {
     basketsOrder: any[] = [];
 
     displayedColumns = ['basket_id', 'basket_name', 'basket_desc', 'actions'];
-    dataSource: any;
+    filterColumns = ['basket_id', 'basket_name', 'basket_desc'];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template: any, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['basket_id', 'basket_name', 'basket_desc']);
-        };
-    }
 
     constructor(
         public http: HttpClient,
@@ -44,6 +38,7 @@ export class BasketsAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -53,27 +48,30 @@ export class BasketsAdministrationComponent implements OnInit {
 
         this.loading = true;
 
+        this.getSortedBasket();
+
         this.http.get('../rest/baskets')
             .subscribe((data: any) => {
                 this.baskets = data['baskets'];
                 this.loading = false;
                 setTimeout(() => {
-                    this.http.get('../rest/sortedBaskets')
-                        .subscribe((dataSort: any) => {
-                            this.basketsOrder = dataSort['baskets'];
-                        }, (err) => {
-                            this.notify.handleErrors(err);
-                        });
-                    this.dataSource = new MatTableDataSource(this.baskets);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                    this.sort.active = 'basket_id';
-                    this.sort.direction = 'asc';
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_baskets', this.baskets, this.sort, this.paginator, this.filterColumns);
                 }, 0);
             }, (err) => {
                 this.notify.handleErrors(err);
             });
+    }
+
+    getSortedBasket() {
+        this.http.get('../rest/sortedBaskets').pipe(
+            tap((dataSort: any) => {
+                this.basketsOrder = dataSort['baskets'];
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     delete(basket: any) {
@@ -84,15 +82,8 @@ export class BasketsAdministrationComponent implements OnInit {
                 .subscribe((data: any) => {
                     this.notify.success(this.lang.basketDeleted);
                     this.baskets = data['baskets'];
-                    this.dataSource = new MatTableDataSource(this.baskets);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.http.get('../rest/sortedBaskets')
-                        .subscribe((dataSort: any) => {
-                            this.basketsOrder = dataSort['baskets'];
-                        }, (err) => {
-                            this.notify.handleErrors(err);
-                        });
+                    this.adminService.setDataSource('admin_baskets', this.baskets, this.sort, this.paginator, this.filterColumns);
+                    this.getSortedBasket();
                 }, (err: any) => {
                     this.notify.error(err.error.errors);
                 });
