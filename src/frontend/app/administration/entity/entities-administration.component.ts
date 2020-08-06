@@ -17,6 +17,7 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
 import { of } from 'rxjs/internal/observable/of';
+import {EntitiesExportComponent} from './export/entities-export.component';
 
 declare var $: any;
 @Component({
@@ -775,6 +776,11 @@ export class EntitiesAdministrationComponent implements OnInit {
             }, (err: any) => {
                 this.notify.handleErrors(err);
             });
+    }
+
+    openExportModal() {
+        this.dialog.open(EntitiesExportComponent, { panelClass: 'maarch-modal', width: '800px', autoFocus: false });
+
     }
 }
 @Component({

@@ -8,6 +8,12 @@
                     {{lang.add}}
                 </p>
             </a>
+            <a mat-list-item (click)="openExportModal()">
+                <mat-icon color="primary" mat-list-icon class="fas fa-file-export"></mat-icon>
+                <p mat-line>
+                    {{lang.toExport}}
+                </p>
+            </a>
         </mat-nav-list>
         <mat-divider></mat-divider>
         <mat-nav-list>
