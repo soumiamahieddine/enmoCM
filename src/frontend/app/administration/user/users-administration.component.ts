@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -27,7 +27,7 @@ export class UsersAdministrationComponent implements OnInit {
     dialogRef: MatDialogRef<any>;
 
     lang: any = LANG;
-    loading: boolean = false;
+    loading: boolean = true;
     updateListModel: boolean = true;
     updateListInstance: boolean = true;
 
@@ -56,7 +56,7 @@ export class UsersAdministrationComponent implements OnInit {
         public appService: AppService,
         public functions: FunctionsService,
         public adminService: AdministrationService,
-        private viewContainerRef: ViewContainerRef
+        private viewContainerRef: ViewContainerRef,
     ) { }
 
     ngOnInit(): void {
@@ -65,7 +65,7 @@ export class UsersAdministrationComponent implements OnInit {
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.user = this.headerService.user;
-        this.loading = true;
+
         this.getData();
     }
 

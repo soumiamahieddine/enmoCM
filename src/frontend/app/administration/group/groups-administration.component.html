@@ -40,7 +40,7 @@
                             </mat-paginator>
                         </div>
                     </div>
-                    <mat-table #table [dataSource]="adminService.getDataSource()" [matSortActive]="adminService.getFilter('sort')" [matSortDirection]="adminService.getFilter('sortDirection')" matSort>
+                    <mat-table #table [dataSource]="adminService.getDataSource()" matSortDisableClear matSort>
                         <ng-container matColumnDef="group_id">
                             <mat-header-cell *matHeaderCellDef mat-sort-header
                                 [class.hide-for-mobile]="appService.getViewMode()">{{lang.id}}</mat-header-cell>

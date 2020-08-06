@@ -40,7 +40,7 @@
                             </mat-paginator>
                         </div>
                     </div>
-                    <mat-table #table [dataSource]="adminService.getDataSource()" [matSortActive]="adminService.getFilter('sort')" [matSortDirection]="adminService.getFilter('sortDirection')" matSort>
+                    <mat-table #table [dataSource]="adminService.getDataSource()" matSortDisableClear matSort>
                         <ng-container matColumnDef="title">
                             <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.label}}</mat-header-cell>
                             <mat-cell *matCellDef="let element" style="flex:2;">

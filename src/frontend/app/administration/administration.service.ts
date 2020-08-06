@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { LocalStorageService } from '../../service/local-storage.service';
 import { HeaderService } from '../../service/header.service';
 import { FunctionsService } from '../../service/functions.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort, MatSortable } from '@angular/material/sort';
 import { merge } from 'rxjs/internal/observable/merge';
 import { startWith } from 'rxjs/internal/operators/startWith';
 import { tap } from 'rxjs/internal/operators/tap';
@@ -49,6 +49,12 @@ export class AdministrationService {
         },
         admin_groups: {
             sort: 'group_desc',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_indexing_models: {
+            sort: 'label',
             sortDirection: 'asc',
             page: 0,
             field: ''
@@ -104,11 +110,18 @@ export class AdministrationService {
             );
         }
 
-        sort.active = this.getFilter('sort');
-        sort.direction = this.getFilter('sortDirection');
+        // sort.active = this.getFilter('sort');
+        // sort.direction = this.getFilter('sortDirection');
         paginator.pageIndex = this.getFilter('page');
 
         this.dataSource.sort = sort;
+
+        // WORKAROUND TO SHOW ARROW DEFAULT FILTER
+        const element: HTMLElement = document.getElementsByClassName('mat-column-' + this.getFilter('sort'))[0] as HTMLElement;
+        element.click();
+        if (this.getFilter('sortDirection') === 'desc') {
+            element.click();
+        }
 
         this.searchTerm.setValue(this.getFilter('field'));
 
