@@ -83,6 +83,12 @@ export class AdministrationService {
             page: 0,
             field: ''
         },
+        admin_status: {
+            sort: 'label_status',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
     };
     dataSource: MatTableDataSource<any>;
     filterColumns: string[];
