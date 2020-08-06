@@ -4,7 +4,6 @@ import { LANG } from '../../translate.component';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 import { tap, finalize, filter, exhaustMap, catchError } from 'rxjs/operators';
@@ -12,6 +11,7 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import {FunctionsService} from '../../../service/functions.service';
 import { of } from 'rxjs/internal/observable/of';
+import { AdministrationService } from '../administration.service';
 
 declare var tinymce: any;
 
@@ -25,21 +25,13 @@ export class TagsAdministrationComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = true;
 
-    dataSource: any;
     resultsLength: number = 0;
     displayedColumns = ['label', 'description', 'actions'];
+    filterColumns = ['label', 'description'];
 
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template: any, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['label', 'description']);
-        };
-    }
 
     constructor(
         public http: HttpClient,
@@ -48,6 +40,7 @@ export class TagsAdministrationComponent implements OnInit {
         public appService: AppService,
         public dialog: MatDialog,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -63,16 +56,10 @@ export class TagsAdministrationComponent implements OnInit {
         this.loading = true;
         this.http.get('../rest/tags').pipe(
             tap((data: any) => {
+                this.resultsLength = data.tags.length;
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(data.tags);
-                    this.resultsLength = data.tags.length;
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                    this.sort.active = 'label';
-                    this.sort.direction = 'asc';
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_tag', data.tags, this.sort, this.paginator, this.filterColumns);
                 }, 0);
-
             }),
             finalize(() => this.loading = false)
         ).subscribe();
