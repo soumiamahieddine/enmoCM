@@ -607,6 +607,7 @@ export class DocumentViewerComponent implements OnInit, OnDestroy {
                         this.file.contentView = `../rest/attachments/${resId}/content?mode=base64`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
                         this.loading = false;
+                        this.noFile = false;
                     }
                 },
                 (err: any) => {
@@ -646,6 +647,7 @@ export class DocumentViewerComponent implements OnInit, OnDestroy {
                             this.file.contentView = `../rest/resources/${resId}/content?mode=base64`;
                             this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
                             this.loading = false;
+                            this.noFile = false;
                         }
                     },
                     (err: any) => {

@@ -191,7 +191,7 @@ class TemplateController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $template = TemplateModel::getById(['select' => ['template_style', 'template_file_name', 'template_type', 'template_target', 'subject'], 'id' => $aArgs['id']]);
+        $template = TemplateModel::getById(['select' => ['template_type', 'template_target'], 'id' => $aArgs['id']]);
         if (empty($template)) {
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }
