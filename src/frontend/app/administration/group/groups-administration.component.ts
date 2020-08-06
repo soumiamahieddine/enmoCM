@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -45,6 +46,7 @@ export class GroupsAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
@@ -55,7 +57,7 @@ export class GroupsAdministrationComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.groups);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.groups'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -80,7 +82,7 @@ export class GroupsAdministrationComponent implements OnInit {
 
     preDelete(group: any) {
         if (group.users.length === 0) {
-            const r = confirm(this.lang.reallyWantToDeleteThisGroup);
+            const r = confirm(this.translate.instant('lang.reallyWantToDeleteThisGroup'));
 
             if (r) {
                 this.deleteGroup(group);
@@ -122,7 +124,7 @@ export class GroupsAdministrationComponent implements OnInit {
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 }, 0);
-                this.notify.success(this.lang.groupDeleted);
+                this.notify.success(this.translate.instant('lang.groupDeleted'));
 
             }, (err) => {
                 this.notify.error(err.error.errors);

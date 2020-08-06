@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -36,6 +37,7 @@ export class StatusesAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -45,7 +47,7 @@ export class StatusesAdministrationComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.statuses);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.statuses'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -70,7 +72,7 @@ export class StatusesAdministrationComponent implements OnInit {
     }
 
     deleteStatus(status: any) {
-        const resp = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + status.id + ' »');
+        const resp = confirm(this.translate.instant('lang.confirmAction') + ' ' + this.translate.instant('lang.delete') + ' « ' + status.id + ' »');
         if (resp) {
             this.http.delete('../rest/statuses/' + status.identifier)
                 .subscribe((data: any) => {
@@ -78,7 +80,7 @@ export class StatusesAdministrationComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.statuses);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.statusDeleted);
+                    this.notify.success(this.translate.instant('lang.statusDeleted'));
 
                 }, (err) => {
                     this.notify.error(err.error.errors);

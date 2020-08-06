@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
@@ -61,6 +62,7 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -70,7 +72,7 @@ export class NotificationsAdministrationComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.notifications);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.notifications'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -94,7 +96,7 @@ export class NotificationsAdministrationComponent implements OnInit {
     }
 
     deleteNotification(notification: any) {
-        const r = confirm(this.lang.deleteMsg);
+        const r = confirm(this.translate.instant('lang.deleteMsg'));
 
         if (r) {
             this.http.delete('../rest/notifications/' + notification.notification_sid)
@@ -106,7 +108,7 @@ export class NotificationsAdministrationComponent implements OnInit {
                         this.dataSource.sort = this.sort;
                     }, 0);
                     this.sidenavRight.close();
-                    this.notify.success(this.lang.notificationDeleted);
+                    this.notify.success(this.translate.instant('lang.notificationDeleted'));
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -115,36 +117,36 @@ export class NotificationsAdministrationComponent implements OnInit {
 
     loadCron() {
         return new Promise((resolve) => {
-            this.hours = [{ label: this.lang.eachHour, value: '*' }];
-            this.minutes = [{ label: this.lang.eachMinute, value: '*' }];
+            this.hours = [{ label: this.translate.instant('lang.eachHour'), value: '*' }];
+            this.minutes = [{ label: this.translate.instant('lang.eachMinute'), value: '*' }];
 
             this.months = [
-                { label: this.lang.eachMonth, value: '*' },
-                { label: this.lang.january, value: '1' },
-                { label: this.lang.february, value: '2' },
-                { label: this.lang.march, value: '3' },
-                { label: this.lang.april, value: '4' },
-                { label: this.lang.may, value: '5' },
-                { label: this.lang.june, value: '6' },
-                { label: this.lang.july, value: '7' },
-                { label: this.lang.august, value: '8' },
-                { label: this.lang.september, value: '9' },
-                { label: this.lang.october, value: '10' },
-                { label: this.lang.november, value: '11' },
-                { label: this.lang.december, value: '12' }
+                { label: this.translate.instant('lang.eachMonth'), value: '*' },
+                { label: this.translate.instant('lang.january'), value: '1' },
+                { label: this.translate.instant('lang.february'), value: '2' },
+                { label: this.translate.instant('lang.march'), value: '3' },
+                { label: this.translate.instant('lang.april'), value: '4' },
+                { label: this.translate.instant('lang.may'), value: '5' },
+                { label: this.translate.instant('lang.june'), value: '6' },
+                { label: this.translate.instant('lang.july'), value: '7' },
+                { label: this.translate.instant('lang.august'), value: '8' },
+                { label: this.translate.instant('lang.september'), value: '9' },
+                { label: this.translate.instant('lang.october'), value: '10' },
+                { label: this.translate.instant('lang.november'), value: '11' },
+                { label: this.translate.instant('lang.december'), value: '12' }
             ];
 
-            this.dom = [{ label: this.lang.notUsed, value: '*' }];
+            this.dom = [{ label: this.translate.instant('lang.notUsed'), value: '*' }];
 
             this.dow = [
-                { label: this.lang.eachDay, value: '*' },
-                { label: this.lang.monday, value: '1' },
-                { label: this.lang.tuesday, value: '2' },
-                { label: this.lang.wednesday, value: '3' },
-                { label: this.lang.thursday, value: '4' },
-                { label: this.lang.friday, value: '5' },
-                { label: this.lang.saturday, value: '6' },
-                { label: this.lang.sunday, value: '7' }
+                { label: this.translate.instant('lang.eachDay'), value: '*' },
+                { label: this.translate.instant('lang.monday'), value: '1' },
+                { label: this.translate.instant('lang.tuesday'), value: '2' },
+                { label: this.translate.instant('lang.wednesday'), value: '3' },
+                { label: this.translate.instant('lang.thursday'), value: '4' },
+                { label: this.translate.instant('lang.friday'), value: '5' },
+                { label: this.translate.instant('lang.saturday'), value: '6' },
+                { label: this.translate.instant('lang.sunday'), value: '7' }
             ];
 
             this.newCron = {
@@ -196,7 +198,7 @@ export class NotificationsAdministrationComponent implements OnInit {
                     'description': '',
                     'state': 'normal'
                 };
-                this.notify.success(this.lang.notificationScheduleUpdated);
+                this.notify.success(this.translate.instant('lang.notificationScheduleUpdated'));
             }, (err) => {
                 this.crontab.pop();
                 this.notify.error(err.error.errors);
@@ -208,7 +210,7 @@ export class NotificationsAdministrationComponent implements OnInit {
         this.http.post('../rest/notifications/schedule', this.crontab)
             .subscribe((data: any) => {
                 this.crontab.splice(i, 1);
-                this.notify.success(this.lang.notificationScheduleUpdated);
+                this.notify.success(this.translate.instant('lang.notificationScheduleUpdated'));
             }, (err) => {
                 this.notify.error(err.error.errors);
             });

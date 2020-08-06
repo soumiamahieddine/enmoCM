@@ -67,6 +67,9 @@ import { FolderActionListComponent } from './folder/folder-action-list/folder-ac
 
 import { LinkedResourceListComponent } from './linkedResource/linked-resource-list.component';
 
+import { InternationalizationModule } from '../service/translate/internationalization.module';
+import { TranslateService } from '@ngx-translate/core';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -76,7 +79,8 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
         AppMaterialModule,
         DragDropModule,
         AppServiceModule,
-        NotificationModule
+        NotificationModule,
+        InternationalizationModule
     ],
     declarations: [
         MenuNavComponent,
@@ -163,4 +167,8 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
         ConfirmComponent
     ],
 })
-export class SharedModule { }
+export class SharedModule {
+    constructor(translate: TranslateService) {
+        translate.setDefaultLang('fr');
+    }
+}

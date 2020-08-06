@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -42,6 +43,7 @@ export class TagsAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -52,7 +54,7 @@ export class TagsAdministrationComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.tags);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.tags'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -79,13 +81,13 @@ export class TagsAdministrationComponent implements OnInit {
     }
 
     deleteTag(item: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: `${this.lang.delete} "${item.label}"`, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: `${this.translate.instant('lang.delete')} "${item.label}"`, msg: this.translate.instant('lang.confirmAction') } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete(`../rest/tags/${item.id}`)),
             tap(() => {
                 this.loadList();
-                this.notify.success(this.lang.tagDeleted);
+                this.notify.success(this.translate.instant('lang.tagDeleted'));
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

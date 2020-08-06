@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
@@ -65,6 +66,7 @@ export class ShippingAdministrationComponent implements OnInit {
 
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,
@@ -86,7 +88,7 @@ export class ShippingAdministrationComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             if (typeof params['id'] === 'undefined') {
-                this.headerService.setHeader(this.lang.shippingCreation);
+                this.headerService.setHeader(this.translate.instant('lang.shippingCreation'));
 
                 this.creationMode = true;
 
@@ -107,7 +109,7 @@ export class ShippingAdministrationComponent implements OnInit {
                 this.loading = false;
 
             } else {
-                this.headerService.setHeader(this.lang.shippingModification);
+                this.headerService.setHeader(this.translate.instant('lang.shippingModification'));
                 this.creationMode = false;
 
                 this.http.get('../rest/administration/shippings/' + params['id'])
@@ -169,7 +171,7 @@ export class ShippingAdministrationComponent implements OnInit {
             this.http.post('../rest/administration/shippings', this.shipping)
                 .subscribe((data: any) => {
                     this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
-                    this.notify.success(this.lang.shippingAdded);
+                    this.notify.success(this.translate.instant('lang.shippingAdded'));
                     this.router.navigate(['/administration/shippings']);
                 }, (err) => {
                     this.notify.handleErrors(err);
@@ -178,7 +180,7 @@ export class ShippingAdministrationComponent implements OnInit {
             this.http.put('../rest/administration/shippings/' + this.shipping.id, this.shipping)
                 .subscribe((data: any) => {
                     this.shippingClone = JSON.parse(JSON.stringify(this.shipping));
-                    this.notify.success(this.lang.shippingUpdated);
+                    this.notify.success(this.translate.instant('lang.shippingUpdated'));
                     this.router.navigate(['/administration/shippings']);
                 }, (err) => {
                     this.notify.handleErrors(err);

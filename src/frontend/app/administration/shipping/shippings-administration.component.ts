@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -29,6 +30,7 @@ export class ShippingsAdministrationComponent implements OnInit {
 
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -47,7 +49,7 @@ export class ShippingsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.shippings);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.shippings'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -67,7 +69,7 @@ export class ShippingsAdministrationComponent implements OnInit {
     }
 
     deleteShipping(id: number) {
-        const r = confirm(this.lang.deleteMsg);
+        const r = confirm(this.translate.instant('lang.deleteMsg'));
 
         if (r) {
             this.http.delete('../rest/administration/shippings/' + id)
@@ -76,7 +78,7 @@ export class ShippingsAdministrationComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.shippings);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.shippingDeleted);
+                    this.notify.success(this.translate.instant('lang.shippingDeleted'));
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });

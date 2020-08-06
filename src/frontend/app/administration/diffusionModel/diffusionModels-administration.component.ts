@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -53,6 +54,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
@@ -64,7 +66,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     ) { }
 
     async ngOnInit(): Promise<void> {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.workflowModels);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.workflowModels'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -121,13 +123,13 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     }
 
     delete(listTemplate: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction') } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete("../rest/listTemplates/" + listTemplate['id'])),
             tap(() => {
                 this.listTemplates = this.listTemplates.filter((template: any) => template.id !== listTemplate.id);
-                this.notify.success(this.lang.diffusionModelDeleted);
+                this.notify.success(this.translate.instant('lang.diffusionModelDeleted'));
                 this.loadList();
             }),
             catchError((err: any) => {

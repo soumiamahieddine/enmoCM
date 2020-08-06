@@ -171,5 +171,5 @@ import { TranslateService } from '@ngx-translate/core';
 export class AdministrationModule {
     constructor(translate: TranslateService) {
         translate.setDefaultLang('fr');
-      }
+    }
 }

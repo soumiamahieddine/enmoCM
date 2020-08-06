@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef, On
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -13,7 +14,6 @@ import { of } from 'rxjs/internal/observable/of';
 import { TemplateFileEditorModalComponent } from './templateFileEditorModal/template-file-editor-modal.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AlertComponent } from '../../../plugins/modal/alert.component';
-import {TranslateService} from '@ngx-translate/core';
 
 declare var tinymce: any;
 

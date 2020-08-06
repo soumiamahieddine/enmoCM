@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -39,6 +40,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -48,7 +50,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.prioritiesAlt);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.prioritiesAlt'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -78,7 +80,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     }
 
     deletePriority(id: string) {
-        const r = confirm(this.lang.deleteMsg);
+        const r = confirm(this.translate.instant('lang.deleteMsg'));
 
         if (r) {
             this.http.delete('../rest/priorities/' + id)
@@ -87,7 +89,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.priorities);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.priorityDeleted);
+                    this.notify.success(this.translate.instant('lang.priorityDeleted'));
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -98,7 +100,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
         this.http.put('../rest/sortedPriorities', this.prioritiesOrder)
             .subscribe((data: any) => {
                 this.prioritiesOrder = data['priorities'];
-                this.notify.success(this.lang.modificationSaved);
+                this.notify.success(this.translate.instant('lang.modificationSaved'));
             }, (err) => {
                 this.notify.error(err.error.errors);
             });

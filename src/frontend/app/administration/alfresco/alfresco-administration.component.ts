@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '../../../service/app.service';
 import { HeaderService } from '../../../service/header.service';
 import { NotificationService } from '../../../service/notification/notification.service';
@@ -43,6 +44,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
     alfrescoTreeLoaded: boolean = false;
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,
@@ -56,10 +58,10 @@ export class AlfrescoAdministrationComponent implements OnInit {
         this.loading = false;
         this.route.params.subscribe(async params => {
             if (typeof params['id'] === 'undefined') {
-                this.headerService.setHeader(this.lang.alfrescoCreation);
+                this.headerService.setHeader(this.translate.instant('lang.alfrescoCreation'));
                 this.creationMode = true;
             } else {
-                this.headerService.setHeader(this.lang.alfrescoModification);
+                this.headerService.setHeader(this.translate.instant('lang.alfrescoModification'));
 
                 this.alfresco.id = params['id'];
                 this.creationMode = false;
@@ -82,7 +84,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
     createAccount() {
         this.http.post('../rest/alfresco/accounts', this.formatData()).pipe(
             tap(() => {
-                this.notify.success(this.lang.accountAdded);
+                this.notify.success(this.translate.instant('lang.accountAdded'));
                 this.router.navigate(['/administration/alfresco']);
             }),
             catchError((err: any) => {
@@ -95,7 +97,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
     updateAccount() {
         this.http.put(`../rest/alfresco/accounts/${this.alfresco.id}`, this.formatData()).pipe(
             tap(() => {
-                this.notify.success(this.lang.accountUpdated);
+                this.notify.success(this.translate.instant('lang.accountUpdated'));
                 this.router.navigate(['/administration/alfresco']);
             }),
             catchError((err: any) => {
@@ -298,7 +300,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
 
         this.http.post(`../rest/alfresco/checkAccounts`, alfresco).pipe(
             tap(() => {
-                this.notify.success(this.lang.testSucceeded);
+                this.notify.success(this.translate.instant('lang.testSucceeded'));
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

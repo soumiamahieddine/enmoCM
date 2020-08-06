@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, Renderer2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../service/notification/notification.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl } from '@angular/forms';
@@ -87,6 +88,7 @@ export class DiffusionsListComponent implements OnInit {
     @Output('triggerEvent') triggerEvent = new EventEmitter();
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private renderer: Renderer2,
@@ -298,7 +300,7 @@ export class DiffusionsListComponent implements OnInit {
                             this.notify.error(data.errors);
                         } else {
                             this.listinstanceClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
-                            this.notify.success(this.lang.diffusionListUpdated);
+                            this.notify.success(this.translate.instant('lang.diffusionListUpdated'));
                             resolve(true);
                         }
                     }),
@@ -309,7 +311,7 @@ export class DiffusionsListComponent implements OnInit {
                 ).subscribe();
             });
         } else {
-            this.notify.error(this.lang.noDest);
+            this.notify.error(this.translate.instant('lang.noDest'));
         }
     }
 
@@ -572,7 +574,7 @@ export class DiffusionsListComponent implements OnInit {
                         this.triggerEvent.emit(allowedEntitiesIds);
                     }
                 } else {
-                    this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.userUnauthorized, msg: "<b>" + user.itemLabel + "</b> " + this.lang.notInAuthorizedEntities } });
+                    this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.userUnauthorized'), msg: "<b>" + user.itemLabel + "</b> " + this.translate.instant('lang.notInAuthorizedEntities') } });
                 }
             }),
         ).subscribe();

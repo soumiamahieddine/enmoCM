@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -49,6 +50,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -70,7 +72,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
             }),
             tap((data: any) => {
                 this.indexingModels = data;
-                this.headerService.setHeader(this.lang.administration + ' ' + this.lang.indexingModels);
+                this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.indexingModels'));
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.indexingModels);
                     this.dataSource.paginator = this.paginator;
@@ -91,7 +93,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     delete(indexingModel: any) {
 
         if (indexingModel.used.length === 0) {
-            this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+            this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction') } });
 
             this.dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'ok'),
@@ -105,7 +107,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.indexingModels);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
-                    this.notify.success(this.lang.indexingModelDeleted);
+                    this.notify.success(this.translate.instant('lang.indexingModelDeleted'));
                 }),
                 catchError((err: any) => {
                     this.notify.handleSoftErrors(err);
@@ -113,7 +115,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                 })
             ).subscribe();
         } else {
-            this.dialogRef = this.dialog.open(RedirectIndexingModelComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction, indexingModel: indexingModel } });
+            this.dialogRef = this.dialog.open(RedirectIndexingModelComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction'), indexingModel: indexingModel } });
 
             this.dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'ok'),
@@ -136,7 +138,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     }
 
     disableIndexingModel(indexingModel: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.disable, msg: this.lang.confirmAction } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.disable'), msg: this.translate.instant('lang.confirmAction') } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -147,7 +149,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                         this.indexingModels[i].enabled = false;
                     }
                 }
-                this.notify.success(this.lang.indexingModelDisabled);
+                this.notify.success(this.translate.instant('lang.indexingModelDisabled'));
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -157,7 +159,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     }
 
     enableIndexingModel(indexingModel: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.enable, msg: this.lang.confirmAction } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.enable'), msg: this.translate.instant('lang.confirmAction') } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -168,7 +170,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                         this.indexingModels[i].enabled = true;
                     }
                 }
-                this.notify.success(this.lang.indexingModelEnabled);
+                this.notify.success(this.translate.instant('lang.indexingModelEnabled'));
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

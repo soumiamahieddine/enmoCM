@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { HeaderService } from '../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -52,36 +53,37 @@ export class ContactsListAdministrationComponent implements OnInit {
         {
             icon: 'fa fa-book',
             route: '/administration/contacts/list',
-            label: this.lang.contactsList,
+            label: this.translate.instant('lang.contactsList'),
             current: true
         },
         {
             icon: 'fa fa-code',
             route: '/administration/contacts/contactsCustomFields',
-            label: this.lang.customFieldsAdmin,
+            label: this.translate.instant('lang.customFieldsAdmin'),
             current: false
         },
         {
             icon: 'fa fa-cog',
             route: '/administration/contacts/contacts-parameters',
-            label: this.lang.contactsParameters,
+            label: this.translate.instant('lang.contactsParameters'),
             current: false
         },
         {
             icon: 'fa fa-users',
             route: '/administration/contacts/contacts-groups',
-            label: this.lang.contactsGroups,
+            label: this.translate.instant('lang.contactsGroups'),
             current: false
         },
         {
             icon: 'fas fa-magic',
             route: '/administration/contacts/duplicates',
-            label: this.lang.duplicatesContactsAdmin,
+            label: this.translate.instant('lang.duplicatesContactsAdmin'),
             current: false
         },
     ];
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -119,7 +121,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
-                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.contacts.toLowerCase(), '', '');
+                    this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.contacts').toLowerCase(), '', '');
                     return data.contacts;
                 }),
                 catchError((err: any) => {
@@ -162,7 +164,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                     this.http.request('DELETE', `../rest/contacts/${contact.id}${queryparams}`)
                         .subscribe(() => {
                             this.refreshDao();
-                            this.notify.success(this.lang.contactDeleted);
+                            this.notify.success(this.translate.instant('lang.contactDeleted'));
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
@@ -170,13 +172,13 @@ export class ContactsListAdministrationComponent implements OnInit {
                 this.dialogRef = null;
             });
         } else {
-            const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+            const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction') } });
             dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'ok'),
                 exhaustMap(() => this.http.delete(`../rest/contacts/${contact.id}`)),
                 tap((data: any) => {
                     this.refreshDao();
-                    this.notify.success(this.lang.contactDeleted);
+                    this.notify.success(this.translate.instant('lang.contactDeleted'));
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
@@ -187,7 +189,7 @@ export class ContactsListAdministrationComponent implements OnInit {
     }
 
     toggleContact(contact: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.suspend, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.suspend'), msg: this.translate.instant('lang.confirmAction') } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -195,9 +197,9 @@ export class ContactsListAdministrationComponent implements OnInit {
             tap((data: any) => {
                 this.refreshDao();
                 if (!contact.enabled === true) {
-                    this.notify.success(this.lang.contactEnabled);
+                    this.notify.success(this.translate.instant('lang.contactEnabled'));
                 } else {
-                    this.notify.success(this.lang.contactDisabled);
+                    this.notify.success(this.translate.instant('lang.contactDisabled'));
                 }
             }),
             catchError((err: any) => {
@@ -277,11 +279,12 @@ export class ContactListHttpDao {
 })
 export class ContactsListAdministrationRedirectModalComponent {
     lang: any = LANG;
-    modalTitle: string = this.lang.confirmAction;
+    modalTitle: string = this.translate.instant('lang.confirmAction');
     redirectContact: number;
     processMode: string = 'delete';
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<ContactsListAdministrationRedirectModalComponent>,

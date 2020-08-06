@@ -1,6 +1,7 @@
 import { Component, ViewChild, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -39,6 +40,7 @@ export class TemplatesAdministrationComponent implements OnInit {
     }
 
     constructor(
+        private translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -48,7 +50,7 @@ export class TemplatesAdministrationComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.templates);
+        this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.templates'));
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
@@ -72,7 +74,7 @@ export class TemplatesAdministrationComponent implements OnInit {
     }
 
     deleteTemplate(template: any) {
-        const r = confirm(this.lang.confirmAction + ' ' + this.lang.delete + ' « ' + template.template_label + ' »');
+        const r = confirm(this.translate.instant('lang.confirmAction') + ' ' + this.translate.instant('lang.delete') + ' « ' + template.template_label + ' »');
 
         if (r) {
             this.http.delete('../rest/templates/' + template.template_id)
@@ -86,7 +88,7 @@ export class TemplatesAdministrationComponent implements OnInit {
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
 
-                    this.notify.success(this.lang.templateDeleted);
+                    this.notify.success(this.translate.instant('lang.templateDeleted'));
 
                 }, (err) => {
                     this.notify.error(err.error.errors);
