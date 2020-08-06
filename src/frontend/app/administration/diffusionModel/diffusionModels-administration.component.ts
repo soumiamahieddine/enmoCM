@@ -6,17 +6,16 @@ import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
 import { tap } from 'rxjs/internal/operators/tap';
 import { catchError, map, finalize, filter, exhaustMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
-import {FunctionsService} from "../../../service/functions.service";
-import {LatinisePipe} from "ngx-pipes";
+import { FunctionsService } from '../../../service/functions.service';
+import { AdministrationService } from '../administration.service';
+import { of } from 'rxjs/internal/observable/of';
 
 @Component({
-    templateUrl: "diffusionModels-administration.component.html"
+    templateUrl: 'diffusionModels-administration.component.html'
 })
 export class DiffusionModelsAdministrationComponent implements OnInit {
 
@@ -28,29 +27,11 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     listTemplates: any[] = [];
     listTemplatesForAssign: any[] = [];
 
-    displayedColumns = ['label', 'description', 'typeLabel', 'actions'];
-    dataSource = new MatTableDataSource(this.listTemplates);
-
+    displayedColumns = ['title', 'description', 'typeLabel', 'actions'];
+    filterColumns = ['title', 'description', 'typeLabel'];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim();
-        filterValue = filterValue.toLowerCase();
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template, filter: string) => {
-            let filterReturn = false;
-            filter = this.latinisePipe.transform(filter);
-            this.displayedColumns.forEach((column:any) => {
-                if (column === 'description' || column === 'typeLabel') {
-                    filterReturn = filterReturn || this.latinisePipe.transform(template[column].toLowerCase()).includes(filter);
-                } else if (column === 'label') {
-                    filterReturn = filterReturn || this.latinisePipe.transform(template['title'].toLowerCase()).includes(filter);
-                }
-            });
-            return filterReturn;
-        };
-    }
 
     constructor(
         public http: HttpClient,
@@ -59,7 +40,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
-        private latinisePipe: LatinisePipe,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -79,13 +60,13 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
 
     getListemplates() {
         return new Promise((resolve, reject) => {
-            this.http.get("../rest/listTemplates").pipe(
+            this.http.get('../rest/listTemplates').pipe(
                 map((data: any) => {
                     data.listTemplates = data.listTemplates.filter((template: any) => template.entityId === null && ['visaCircuit', 'opinionCircuit'].indexOf(template.type) > -1).map((template: any) => {
                         return {
                             ...template,
                             typeLabel: this.lang[template.type]
-                        }
+                        };
                     });
                     return data.listTemplates;
                 }),
@@ -104,19 +85,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
 
     loadList() {
         setTimeout(() => {
-            this.dataSource = new MatTableDataSource(this.listTemplates);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
-                if (sortHeaderId === 'description' || sortHeaderId === 'typeLabel') {
-                    return data[sortHeaderId].toLocaleLowerCase();
-                }
-                if (sortHeaderId === 'label') {
-                    return data['title'].toLocaleLowerCase();
-                }
-            };
-            this.sort.active = 'label';
-            this.sort.direction = 'asc';
-            this.dataSource.sort = this.sort;
+            this.adminService.setDataSource('admin_listmodels', this.listTemplates, this.sort, this.paginator, this.filterColumns);
         }, 0);
     }
 
@@ -124,7 +93,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete("../rest/listTemplates/" + listTemplate['id'])),
+            exhaustMap(() => this.http.delete('../rest/listTemplates/' + listTemplate['id'])),
             tap(() => {
                 this.listTemplates = this.listTemplates.filter((template: any) => template.id !== listTemplate.id);
                 this.notify.success(this.lang.diffusionModelDeleted);
