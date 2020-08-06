@@ -286,7 +286,12 @@ class UserController
             $set['mode'] = $body['mode'];
         }
 
-        if ($body['mode'] == 'rest' && !empty($body['authorizedApi']) && is_array($body['authorizedApi'])) {
+        if ($body['mode'] == 'rest' && isset($body['authorizedApi']) && is_array($body['authorizedApi'])) {
+            foreach ($body['authorizedApi'] as $value) {
+                if (strpos($value, 'GET') !== 0 && strpos($value, 'POST') !== 0 && strpos($value, 'PUT') !== 0 && strpos($value, 'DELETE') !== 0) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body authorizedApi is not well formatted']);
+                }
+            }
             $set['authorized_api'] = json_encode($body['authorizedApi']);
         }
 
@@ -1606,15 +1611,15 @@ class UserController
                 'data'      => ['DEL']
             ]);
         } else {
-            $managePersonaldata = false;
-            if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
-                $managePersonaldata = true;
+            $viewPersonaldata = false;
+            if (PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']])) {
+                $viewPersonaldata = true;
             }
 
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['id']]);
             $users = [];
             $select = ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'mail'];
-            if ($managePersonaldata) {
+            if ($viewPersonaldata) {
                 $select[] = 'phone';
             }
             if (!empty($entities)) {
@@ -1625,7 +1630,7 @@ class UserController
                 ]);
             }
             $select = ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'mail'];
-            if ($managePersonaldata) {
+            if ($viewPersonaldata) {
                 $select[] = 'phone';
             }
             $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => $select]);
@@ -1743,8 +1748,10 @@ class UserController
                         'mail'          => $user['mail'],
                         'preferences'   => json_encode(['documentEdition' => 'java'])
                     ];
-                    if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                    if (!empty($user['phone']) && PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
                         $userToCreate['phone'] = $user['phone'];
+                    } elseif (!empty($user['phone']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                        $warnings[] = ['warning' => "Phone is not allowed to be modified", 'index' => $key, 'lang' => ''];
                     }
                     $id = UserModel::create(['user' => $userToCreate]);
                 }
@@ -1762,12 +1769,17 @@ class UserController
                 $set = [];
                 if (!empty($user['firstname'])) {
                     $set['firstname'] = $user['firstname'];
-                } elseif (!empty($user['lastname'])) {
+                }
+                if (!empty($user['lastname'])) {
                     $set['lastname'] = $user['lastname'];
-                } elseif (!empty($user['mail'])) {
+                }
+                if (!empty($user['mail'])) {
                     $set['mail'] = $user['mail'];
-                } elseif (!empty($user['phone']) && PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                }
+                if (!empty($user['phone']) && PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
                     $set['phone'] = $user['phone'];
+                } elseif (!empty($user['phone']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+                    $warnings[] = ['warning' => "Phone is not allowed to be modified", 'index' => $key, 'lang' => ''];
                 }
 
                 if (!empty($set)) {

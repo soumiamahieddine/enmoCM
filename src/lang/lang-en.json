@@ -1888,5 +1888,6 @@
     "mustAtLeastMinValues": "The data must have at least <b>6</b> values",
     "enableField": "Enable field",
     "disableField": "Disable field",
-    "emailSubject": "E-mail's subject"
+    "emailSubject": "E-mail's subject",
+    "authorizedRoutes": "Authorized routes"
 }
