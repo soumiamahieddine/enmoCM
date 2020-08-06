@@ -5,9 +5,9 @@ import { NotificationService } from '../../../service/notification/notification.
 import { HeaderService } from '../../../service/header.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
+import { AdministrationService } from '../administration.service';
 
 @Component({
     templateUrl: 'shippings-administration.component.html'
@@ -23,7 +23,8 @@ export class ShippingsAdministrationComponent implements OnInit {
     loading: boolean = false;
 
     displayedColumns = ['label', 'description', 'accountid', 'actions'];
-    dataSource: any;
+    filterColumns = ['label', 'description', 'accountid'];
+
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -34,17 +35,9 @@ export class ShippingsAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
-
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template: any, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['label', 'description', 'accountid']);
-        };
-    }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.shippings);
@@ -58,10 +51,9 @@ export class ShippingsAdministrationComponent implements OnInit {
                 this.shippings = data.shippings;
 
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.shippings);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_shippings', this.shippings, this.sort, this.paginator, this.filterColumns);
                 }, 0);
+
                 this.loading = false;
             });
     }
@@ -73,9 +65,7 @@ export class ShippingsAdministrationComponent implements OnInit {
             this.http.delete('../rest/administration/shippings/' + id)
                 .subscribe((data: any) => {
                     this.shippings = data.shippings;
-                    this.dataSource = new MatTableDataSource(this.shippings);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_shippings', this.shippings, this.sort, this.paginator, this.filterColumns);
                     this.notify.success(this.lang.shippingDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
