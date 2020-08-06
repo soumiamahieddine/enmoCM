@@ -5,9 +5,9 @@ import { NotificationService } from '../../../service/notification/notification.
 import { HeaderService } from '../../../service/header.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
+import { AdministrationService } from '../administration.service';
 
 @Component({
     templateUrl: 'parameters-administration.component.html'
@@ -23,10 +23,10 @@ export class ParametersAdministrationComponent implements OnInit {
     loading: boolean = false;
 
     displayedColumns = ['id', 'description', 'value', 'actions'];
-    dataSource: any;
+    filterColumns = ['id', 'description', 'value'];
+
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-
 
     constructor(
         public http: HttpClient,
@@ -34,17 +34,9 @@ export class ParametersAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
-
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template: any, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['id', 'description', 'value']);
-        };
-    }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.parameters);
@@ -56,15 +48,10 @@ export class ParametersAdministrationComponent implements OnInit {
         this.http.get('../rest/parameters')
             .subscribe((data: any) => {
                 this.parameters = data.parameters;
-
-                setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.parameters);
-                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }, 0);
-
                 this.loading = false;
+                setTimeout(() => {
+                    this.adminService.setDataSource('admin_parameters', this.parameters, this.sort, this.paginator, this.filterColumns);
+                }, 0);
             });
     }
 
@@ -75,9 +62,7 @@ export class ParametersAdministrationComponent implements OnInit {
             this.http.delete('../rest/parameters/' + paramId)
                 .subscribe((data: any) => {
                     this.parameters = data.parameters;
-                    this.dataSource = new MatTableDataSource(this.parameters);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_parameters', this.parameters, this.sort, this.paginator, this.filterColumns);
                     this.notify.success(this.lang.parameterDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
