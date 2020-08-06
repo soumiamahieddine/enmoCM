@@ -13,6 +13,7 @@ import { HeaderService } from '../../service/header.service';
 import { FunctionsService } from '../../service/functions.service';
 import { TimeLimitPipe } from '../../plugins/timeLimit.pipe';
 import { AlertComponent } from '../../plugins/modal/alert.component';
+import { LocalStorageService } from '../../service/local-storage.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -35,6 +36,7 @@ export class LoginComponent implements OnInit {
         private router: Router,
         private headerService: HeaderService,
         public authService: AuthService,
+        private localStorage: LocalStorageService,
         private functionsService: FunctionsService,
         private notify: NotificationService,
         public dialog: MatDialog,
@@ -75,6 +77,7 @@ export class LoginComponent implements OnInit {
             }
         ).pipe(
             tap((data: any) => {
+                this.localStorage.resetLocal();
                 this.authService.saveTokens(data.headers.get('Token'), data.headers.get('Refresh-Token'));
                 this.authService.setUser({});
                 if (this.authService.getCachedUrl()) {
