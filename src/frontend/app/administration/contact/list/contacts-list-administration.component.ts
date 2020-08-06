@@ -14,10 +14,11 @@ import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../../service/functions.service';
 import { ContactExportComponent } from './export/contact-export.component';
+import { AdministrationService } from '../../../../app/administration/administration.service';
 
 @Component({
     selector: 'contact-list',
-    templateUrl: "contacts-list-administration.component.html",
+    templateUrl: 'contacts-list-administration.component.html',
     styleUrls: ['contacts-list-administration.component.scss']
 })
 export class ContactsListAdministrationComponent implements OnInit {
@@ -88,21 +89,27 @@ export class ContactsListAdministrationComponent implements OnInit {
         public appService: AppService,
         public dialog: MatDialog,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef) { }
 
 
     ngOnInit(): void {
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
         this.loading = true;
+        this.adminService.setAdminId('admin_contacts_list');
+        if (this.functions.empty(this.adminService.getFilter())) {
+            this.adminService.saveDefaultFilter();
+        }
         this.initContactList();
+
         this.initAutocompleteContacts();
     }
 
     initContactList() {
         this.resultListDatabase = new ContactListHttpDao(this.http);
-        this.paginator.pageIndex = 0;
-        this.sort.active = 'lastname';
-        this.sort.direction = 'asc';
+        this.paginator.pageIndex = this.adminService.getFilter('page');
+        this.sort.active = this.adminService.getFilter('sort');
+        this.sort.direction = this.adminService.getFilter('sortDirection');
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
         // When list is refresh (sort, page, filters)
@@ -111,6 +118,16 @@ export class ContactsListAdministrationComponent implements OnInit {
                 takeUntil(this.destroy$),
                 startWith({}),
                 switchMap(() => {
+                    this.adminService.saveFilter(
+                        {
+                            sort: this.sort.active,
+                            sortDirection: this.sort.direction,
+                            page: this.paginator.pageIndex,
+                            field: this.adminService.getFilter('field')
+                        }
+                    );
+                    // this.searchContact.setValue(this.adminService.getFilter('field'));
+                    this.search = this.adminService.getFilter('field');
                     this.isLoadingResults = true;
                     return this.resultListDatabase!.getRepoIssues(
                         this.sort.active, this.sort.direction, this.paginator.pageIndex, this.routeUrl, this.search);
@@ -216,9 +233,13 @@ export class ContactsListAdministrationComponent implements OnInit {
     }
 
     initAutocompleteContacts() {
+        this.searchContact = new FormControl(this.adminService.getFilter('field'));
         this.searchContact.valueChanges
             .pipe(
                 tap((value) => {
+                    this.adminService.setFilter('field', value);
+                    this.adminService.saveFilter(this.adminService.getFilter());
+
                     if (value.length === 0) {
                         this.search = '';
                         this.paginator.pageIndex = 0;

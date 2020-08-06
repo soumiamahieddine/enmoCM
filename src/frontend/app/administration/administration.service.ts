@@ -101,6 +101,12 @@ export class AdministrationService {
             page: 0,
             field: ''
         },
+        admin_contacts_list: {
+            sort: 'lastname',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
     };
     dataSource: MatTableDataSource<any>;
     filterColumns: string[];
@@ -118,6 +124,10 @@ export class AdministrationService {
         }
     }
 
+    setAdminId(adminId: string) {
+        this.currentAdminId = adminId;
+    }
+
     setDataSource(adminId: string, data: any, sort: MatSort, paginator: MatPaginator, filterColumns: string[]) {
         this.currentAdminId = adminId;
         this.searchTerm = new FormControl('');
@@ -127,8 +137,8 @@ export class AdministrationService {
                 // debounceTime(300),
                 // filter(value => value.length > 2),
                 tap((filterValue: any) => {
-                    this.filters[this.currentAdminId]['field'] = filterValue;
-                    this.setFilter(this.filters[this.currentAdminId]);
+                    this.setFilter('field', filterValue);
+                    this.saveFilter(this.filters[this.currentAdminId]);
                     filterValue = filterValue.trim(); // Remove whitespace
                     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
                     setTimeout(() => {
@@ -146,10 +156,7 @@ export class AdministrationService {
         this.dataSource.sortingDataAccessor = this.functionsService.listSortingDataAccessor;
 
         if (this.functionsService.empty(this.getFilter())) {
-
-            this.setFilter(
-                this.defaultFilters[this.currentAdminId]
-            );
+            this.saveDefaultFilter();
         }
 
         // sort.active = this.getFilter('sort');
@@ -171,7 +178,7 @@ export class AdministrationService {
             .pipe(
                 startWith({}),
                 tap(() => {
-                    this.setFilter(
+                    this.saveFilter(
                         {
                             sort: sort.active,
                             sortDirection: sort.direction,
@@ -187,7 +194,17 @@ export class AdministrationService {
             ).subscribe();
     }
 
-    setFilter(filter: any) {
+    saveDefaultFilter() {
+        this.saveFilter(
+            this.defaultFilters[this.currentAdminId]
+        );
+    }
+
+    setFilter(idFilter: string, value: string) {
+        this.filters[this.currentAdminId][idFilter] = value;
+    }
+
+    saveFilter(filter: any) {
         this.filters[this.currentAdminId] = filter;
         this.localStorage.save(`filtersAdmin_${this.headerService.user.id}`, JSON.stringify(this.filters));
     }
