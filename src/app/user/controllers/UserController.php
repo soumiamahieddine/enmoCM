@@ -286,7 +286,12 @@ class UserController
             $set['mode'] = $body['mode'];
         }
 
-        if ($body['mode'] == 'rest' && !empty($body['authorizedApi']) && is_array($body['authorizedApi'])) {
+        if ($body['mode'] == 'rest' && isset($body['authorizedApi']) && is_array($body['authorizedApi'])) {
+            foreach ($body['authorizedApi'] as $value) {
+                if (strpos($value, 'GET') !== 0 && strpos($value, 'POST') !== 0 && strpos($value, 'PUT') !== 0 && strpos($value, 'DELETE') !== 0) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body authorizedApi is not well formatted']);
+                }
+            }
             $set['authorized_api'] = json_encode($body['authorizedApi']);
         }
 

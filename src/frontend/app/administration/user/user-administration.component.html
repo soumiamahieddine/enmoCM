@@ -230,6 +230,12 @@
                                                 </mat-select>
                                             </mat-form-field>
                                         </div>
+                                        <div *ngIf="user.mode === 'rest'">
+                                            <mat-form-field>
+                                                <mat-label>{{'this.lang.authorizedRoutes' | translate}}</mat-label>
+                                                <textarea matInput [(ngModel)]="user.authorizedApi" placeholder="POST/attachments\nPUT/attachments/{id}"></textarea>
+                                            </mat-form-field>
+                                        </div>
                                     </mat-expansion-panel>
                                 </mat-accordion>
                                 <div class="form-group" style="margin-top: 10px;">

@@ -1883,5 +1883,6 @@
     "mustAtLeastMinValues": "Les données doivent avoir au mimimum <b>6</b> valeurs",
     "enableField": "Activer le champ",
     "disableField": "Désactiver le champ",
-    "emailSubject": "Objet du courriel"
+    "emailSubject": "Objet du courriel",
+    "authorizedRoutes": "Routes autorisées"
 }
