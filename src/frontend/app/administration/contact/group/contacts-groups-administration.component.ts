@@ -6,9 +6,9 @@ import { HeaderService } from '../../../../service/header.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../../service/app.service';
 import { FunctionsService } from '../../../../service/functions.service';
+import { AdministrationService } from '../../administration.service';
 
 @Component({
     templateUrl: 'contacts-groups-administration.component.html',
@@ -63,18 +63,11 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         },
     ];
 
-    displayedColumns = ['label', 'description', 'nbContacts', 'public', 'owner', 'actions',];
-    dataSource = new MatTableDataSource(this.contactsGroups);
+    displayedColumns = ['label', 'description', 'nbContacts', 'public', 'owner', 'actions'];
+    filterColumns = ['label', 'description'];
+
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['label', 'description']);
-        };
-    }
 
     constructor(
         public http: HttpClient,
@@ -82,6 +75,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -96,9 +90,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
                 this.contactsGroups = data['contactsGroups'];
                 this.loading = false;
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.contactsGroups);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_contacts_groups', this.contactsGroups, this.sort, this.paginator, this.filterColumns);
                 }, 0);
             }, (err) => {
                 this.notify.handleErrors(err);
@@ -116,12 +108,8 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
                     this.contactsGroups[row] = this.contactsGroups[lastElement];
                     this.contactsGroups[row].position = row;
                     this.contactsGroups.splice(lastElement, 1);
-
-                    this.dataSource = new MatTableDataSource(this.contactsGroups);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_contacts_groups', this.contactsGroups, this.sort, this.paginator, this.filterColumns);
                     this.notify.success(this.lang.contactsGroupDeleted);
-
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
