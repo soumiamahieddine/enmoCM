@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 import { tap, finalize, catchError, filter, exhaustMap, map } from 'rxjs/operators';
@@ -14,6 +13,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FunctionsService } from '../../../service/functions.service';
 import { of } from 'rxjs/internal/observable/of';
 import {RedirectIndexingModelComponent} from './redirectIndexingModel/redirect-indexing-model.component';
+import { AdministrationService } from '../administration.service';
 
 @Component({
     templateUrl: 'indexing-models-administration.component.html',
@@ -32,22 +32,12 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     loading: boolean = false;
 
     displayedColumns = ['id', 'category', 'label', 'private', 'default', 'enabled', 'actions'];
-
-    dataSource = new MatTableDataSource(this.indexingModels);
+    filterColumns = ['id', 'label'];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     dialogRef: MatDialogRef<any>;
-
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template, filterTarget: string) => {
-            return this.functions.filterUnSensitive(template, filterTarget, ['id', 'label']);
-        };
-    }
 
     constructor(
         private translate: TranslateService,
@@ -57,6 +47,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
         public appService: AppService,
         private dialog: MatDialog,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -74,12 +65,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                 this.indexingModels = data;
                 this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.indexingModels'));
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.indexingModels);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                    this.sort.active = 'label';
-                    this.sort.direction = 'asc';
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_indexing_models', this.indexingModels, this.sort, this.paginator, this.filterColumns);
                 }, 0);
             }),
             finalize(() => this.loading = false),
@@ -104,9 +90,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                             this.indexingModels.splice(Number(i), 1);
                         }
                     }
-                    this.dataSource = new MatTableDataSource(this.indexingModels);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_indexing_models', this.indexingModels, this.sort, this.paginator, this.filterColumns);
                     this.notify.success(this.translate.instant('lang.indexingModelDeleted'));
                 }),
                 catchError((err: any) => {
@@ -125,9 +109,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                             this.indexingModels.splice(Number(i), 1);
                         }
                     }
-                    this.dataSource = new MatTableDataSource(this.indexingModels);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_indexing_models', this.indexingModels, this.sort, this.paginator, this.filterColumns);
                 }),
                 catchError((err: any) => {
                     this.notify.handleSoftErrors(err);

@@ -223,6 +223,7 @@ $app->delete('/emails/{id}', \Email\controllers\EmailController::class . ':delet
 
 //Entities
 $app->get('/entities', \Entity\controllers\EntityController::class . ':get');
+$app->put('/entities/export', \Entity\controllers\EntityController::class . ':export');
 $app->post('/entities', \Entity\controllers\EntityController::class . ':create');
 $app->get('/entities/{id}', \Entity\controllers\EntityController::class . ':getById');
 $app->put('/entities/{id}', \Entity\controllers\EntityController::class . ':update');

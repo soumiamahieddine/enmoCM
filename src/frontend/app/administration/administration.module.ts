@@ -69,6 +69,7 @@ import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent
 import { UsersImportComponent } from './user/import/users-import.component';
 import { UsersExportComponent } from './user/export/users-export.component';
 import { TranslateService } from '@ngx-translate/core';
+import {EntitiesExportComponent} from './entity/export/entities-export.component';
 
 
 @NgModule({
@@ -145,7 +146,8 @@ import { TranslateService } from '@ngx-translate/core';
         UsersAdministrationComponent,
         UsersAdministrationRedirectModalComponent,
         UsersImportComponent,
-        UsersExportComponent
+        UsersExportComponent,
+        EntitiesExportComponent
     ],
     entryComponents: [
         AccountLinkComponent,
@@ -162,7 +164,8 @@ import { TranslateService } from '@ngx-translate/core';
         UserAdministrationRedirectModalComponent,
         UsersAdministrationRedirectModalComponent,
         UsersImportComponent,
-        UsersExportComponent
+        UsersExportComponent,
+        EntitiesExportComponent
     ],
     providers: [
         AdministrationService

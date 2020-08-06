@@ -5,10 +5,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
+import { AdministrationService } from '../administration.service';
 
 @Component({
     templateUrl: 'templates-administration.component.html'
@@ -27,17 +27,10 @@ export class TemplatesAdministrationComponent implements OnInit {
     loading: boolean = false;
 
     displayedColumns = ['template_id', 'template_label', 'template_comment', 'template_type', 'template_target', 'actions'];
-    dataSource = new MatTableDataSource(this.templates);
+    filterColumns = ['template_label', 'template_comment', 'template_type', 'template_target'];
+
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['template_label', 'template_comment', 'template_type', 'template_target']);
-        };
-    }
 
     constructor(
         private translate: TranslateService,
@@ -46,6 +39,7 @@ export class TemplatesAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -61,12 +55,7 @@ export class TemplatesAdministrationComponent implements OnInit {
                 this.templates = data['templates'];
                 this.loading = false;
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.templates);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                    this.sort.active = 'template_label';
-                    this.sort.direction = 'asc';
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_templates', this.templates, this.sort, this.paginator, this.filterColumns);
                 }, 0);
             }, (err) => {
                 this.notify.handleErrors(err);
@@ -84,9 +73,7 @@ export class TemplatesAdministrationComponent implements OnInit {
                             this.templates.splice(Number(i), 1);
                         }
                     }
-                    this.dataSource = new MatTableDataSource(this.templates);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_templates', this.templates, this.sort, this.paginator, this.filterColumns);
 
                     this.notify.success(this.translate.instant('lang.templateDeleted'));
 

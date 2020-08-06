@@ -36,7 +36,8 @@ export class UserAdministrationComponent implements OnInit {
     userId: string;
     mode: string = '';
     user: any = {
-        mode : 'standard'
+        mode : 'standard',
+        authorizedApi : ''
     };
     _search: string = '';
     creationMode: boolean;
@@ -174,6 +175,11 @@ export class UserAdministrationComponent implements OnInit {
                 this.http.get('../rest/users/' + this.serialId + '/details')
                     .subscribe((data: any) => {
                         this.user = data;
+
+                        if (this.user.mode == 'rest') {
+                            this.user.authorizedApi = this.user.authorizedApi.join('\n');
+                            console.log(this.user.authorizedApi);
+                        }
 
                         if (this.headerService.user.id === this.user.id) {
                             this.canViewPersonalDatas = true;
@@ -905,6 +911,10 @@ export class UserAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
+            if (this.user.mode == 'rest') {
+                this.user.authorizedApi = this.user.authorizedApi.split('\n');
+                console.log(this.user.authorizedApi);
+            }
             this.http.put('../rest/users/' + this.serialId, this.user)
                 .subscribe((data: any) => {
                     if (this.headerService.user.id == this.serialId) {

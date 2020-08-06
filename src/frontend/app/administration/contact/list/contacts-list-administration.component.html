@@ -56,8 +56,7 @@
                     </div>
                 </div>
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
-                    <mat-table id="contact-list" #tableContactListSort="matSort" [dataSource]="data" matSort
-                        matSortActive="lastname" matSortDirection="asc" style="width:100%;">
+                    <mat-table id="contact-list" #tableContactListSort="matSort" [dataSource]="data" matSort matSortDisableClear style="width:100%;">
                         <ng-container matColumnDef="filling">
                             <mat-header-cell *matHeaderCellDef style="flex: initial;width: 60px;"
                                 [class.hide-for-mobile]="appService.getViewMode()">

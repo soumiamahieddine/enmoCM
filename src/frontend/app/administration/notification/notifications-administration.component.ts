@@ -5,7 +5,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
@@ -14,6 +13,7 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
 import { finalize } from 'rxjs/operators';
+import { AdministrationService } from '../administration.service';
 
 @Component({
     templateUrl: 'notifications-administration.component.html'
@@ -49,17 +49,10 @@ export class NotificationsAdministrationComponent implements OnInit {
     crontab: any;
 
     displayedColumns = ['notification_id', 'description', 'is_enabled', 'notifications'];
-    dataSource = new MatTableDataSource(this.notifications);
+    filterColumns = ['notification_id', 'description'];
+
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-        this.dataSource.filterPredicate = (template, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['notification_id', 'description']);
-        };
-    }
 
     constructor(
         private translate: TranslateService,
@@ -68,6 +61,7 @@ export class NotificationsAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public functions: FunctionsService,
+        public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef
     ) { }
 
@@ -83,12 +77,7 @@ export class NotificationsAdministrationComponent implements OnInit {
                 this.notifications = data.notifications;
                 this.loading = false;
                 setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.notifications);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                    this.sort.active = 'notification_id';
-                    this.sort.direction = 'asc';
-                    this.dataSource.sort = this.sort;
+                    this.adminService.setDataSource('admin_notif', this.notifications, this.sort, this.paginator, this.filterColumns);
                 }, 0);
             }, (err: any) => {
                 this.notify.error(err.error.errors);
@@ -103,9 +92,7 @@ export class NotificationsAdministrationComponent implements OnInit {
                 .subscribe((data: any) => {
                     this.notifications = data.notifications;
                     setTimeout(() => {
-                        this.dataSource = new MatTableDataSource(this.notifications);
-                        this.dataSource.paginator = this.paginator;
-                        this.dataSource.sort = this.sort;
+                        this.adminService.setDataSource('admin_notif', this.notifications, this.sort, this.paginator, this.filterColumns);
                     }, 0);
                     this.sidenavRight.close();
                     this.notify.success(this.translate.instant('lang.notificationDeleted'));

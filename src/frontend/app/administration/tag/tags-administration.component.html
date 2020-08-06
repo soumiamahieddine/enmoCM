@@ -28,7 +28,7 @@
                 <div class="table-head">
                     <div class="table-head-result">
                         <mat-form-field style="font-size: 13px;">
-                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{'lang.filterBy' | translate}}">
+                            <input matInput [formControl]="adminService.getFilterField()" placeholder="{{'lang.filterBy' | translate}}">
                         </mat-form-field>
                     </div>
                     <div class="table-head-tool">
@@ -37,8 +37,7 @@
                     </div>
                 </div>
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
-                    <mat-table id="contact-list" #tableContactListSort="matSort" [dataSource]="dataSource" matSort
-                        matSortActive="label" matSortDirection="asc" style="width:100%;">
+                    <mat-table id="contact-list" #tableContactListSort="matSort" [dataSource]="adminService.getDataSource()" matSort matSortDisableClear style="width:100%;">
                         <ng-container matColumnDef="label">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'lang.label' | translate}}</mat-header-cell>
                             <mat-cell mat-cell *matCellDef="let element">

@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { LocalStorageService } from '../../service/local-storage.service';
 import { HeaderService } from '../../service/header.service';
 import { FunctionsService } from '../../service/functions.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort, MatSortable } from '@angular/material/sort';
 import { merge } from 'rxjs/internal/observable/merge';
 import { startWith } from 'rxjs/internal/operators/startWith';
 import { tap } from 'rxjs/internal/operators/tap';
@@ -41,6 +41,72 @@ export class AdministrationService {
             page: 0,
             field: ''
         },
+        admin_listmodels: {
+            sort: 'title',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_groups: {
+            sort: 'group_desc',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_indexing_models: {
+            sort: 'label',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_notif: {
+            sort: 'notification_id',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_parameters: {
+            sort: 'id',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_priorities: {
+            sort: 'label',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_shippings: {
+            sort: 'label',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_status: {
+            sort: 'label_status',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_tag: {
+            sort: 'label',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_templates: {
+            sort: 'template_label',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
+        admin_contacts_list: {
+            sort: 'lastname',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
     };
     dataSource: MatTableDataSource<any>;
     filterColumns: string[];
@@ -58,6 +124,10 @@ export class AdministrationService {
         }
     }
 
+    setAdminId(adminId: string) {
+        this.currentAdminId = adminId;
+    }
+
     setDataSource(adminId: string, data: any, sort: MatSort, paginator: MatPaginator, filterColumns: string[]) {
         this.currentAdminId = adminId;
         this.searchTerm = new FormControl('');
@@ -67,8 +137,8 @@ export class AdministrationService {
                 // debounceTime(300),
                 // filter(value => value.length > 2),
                 tap((filterValue: any) => {
-                    this.filters[this.currentAdminId]['field'] = filterValue;
-                    this.setFilter(this.filters[this.currentAdminId]);
+                    this.setFilter('field', filterValue);
+                    this.saveFilter(this.filters[this.currentAdminId]);
                     filterValue = filterValue.trim(); // Remove whitespace
                     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
                     setTimeout(() => {
@@ -86,17 +156,21 @@ export class AdministrationService {
         this.dataSource.sortingDataAccessor = this.functionsService.listSortingDataAccessor;
 
         if (this.functionsService.empty(this.getFilter())) {
-
-            this.setFilter(
-                this.defaultFilters[this.currentAdminId]
-            );
+            this.saveDefaultFilter();
         }
 
-        sort.active = this.getFilter('sort');
-        sort.direction = this.getFilter('sortDirection');
+        // sort.active = this.getFilter('sort');
+        // sort.direction = this.getFilter('sortDirection');
         paginator.pageIndex = this.getFilter('page');
 
         this.dataSource.sort = sort;
+
+        // WORKAROUND TO SHOW ARROW DEFAULT FILTER
+        const element: HTMLElement = document.getElementsByClassName('mat-column-' + this.getFilter('sort'))[0] as HTMLElement;
+        element.click();
+        if (this.getFilter('sortDirection') === 'desc') {
+            element.click();
+        }
 
         this.searchTerm.setValue(this.getFilter('field'));
 
@@ -104,7 +178,7 @@ export class AdministrationService {
             .pipe(
                 startWith({}),
                 tap(() => {
-                    this.setFilter(
+                    this.saveFilter(
                         {
                             sort: sort.active,
                             sortDirection: sort.direction,
@@ -120,7 +194,17 @@ export class AdministrationService {
             ).subscribe();
     }
 
-    setFilter(filter: any) {
+    saveDefaultFilter() {
+        this.saveFilter(
+            this.defaultFilters[this.currentAdminId]
+        );
+    }
+
+    setFilter(idFilter: string, value: string) {
+        this.filters[this.currentAdminId][idFilter] = value;
+    }
+
+    saveFilter(filter: any) {
         this.filters[this.currentAdminId] = filter;
         this.localStorage.save(`filtersAdmin_${this.headerService.user.id}`, JSON.stringify(this.filters));
     }
