@@ -1889,5 +1889,7 @@
     "enableField": "Enable field",
     "disableField": "Disable field",
     "emailSubject": "E-mail's subject",
-    "authorizedRoutes": "Authorized routes"
+    "authorizedRoutes": "Authorized routes",
+    "infoImportusers": "The <b>id</b> column is used to identify a user",
+    "infoImportusers2": "The <b>id</b> and <b>user_id</b> columns are ignored when updating users"
 }

@@ -11,13 +11,13 @@
             <a mat-list-item (click)="openUsersExportModal()">
                 <mat-icon color="primary" mat-list-icon class="fas fa-file-export"></mat-icon>
                 <p mat-line>
-                    Exporter les utilisateurs
+                    {{'lang.usersExport' | translate}}
                 </p>
             </a>
             <a mat-list-item (click)="openUsersImportModal()">
-                <mat-icon color="primary" mat-list-icon class="fas fa-file-download"></mat-icon>
+                <mat-icon color="primary" mat-list-icon class="fas fa-file-import"></mat-icon>
                 <p mat-line>
-                    Importer des utilisateurs
+                    {{'lang.usersImport' | translate}}
                 </p>
             </a>
         </mat-nav-list>
