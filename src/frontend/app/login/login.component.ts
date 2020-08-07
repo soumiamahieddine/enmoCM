@@ -126,7 +126,7 @@ export class LoginComponent implements OnInit {
                         } else if (data.lang === 'moreOneCustom') {
                             this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.accessNotFound'), msg: this.translate.instant('lang.moreOneCustom'), hideButton: true } });
                         } else if (data.lang === 'noConfiguration') {
-                            // TO DO : LAUNCH INSTALLER
+                            this.router.navigate(['/install']);
                         } else {
                             this.notify.handleSoftErrors(err);
                         }
