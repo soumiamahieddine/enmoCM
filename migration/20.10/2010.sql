@@ -186,6 +186,8 @@ UPDATE groupbasket SET list_event_data = list_event_data - 'canUpdate';
 ALTER TABLE templates DROP COLUMN IF EXISTS subject;
 ALTER TABLE templates ADD COLUMN subject character varying(255);
 
+UPDATE groupbasket SET list_event_data = '{"canUpdateDocuments":true}' WHERE list_event_data->'canUpdateDocument' = true;
+
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
 SELECT r.res_id,
