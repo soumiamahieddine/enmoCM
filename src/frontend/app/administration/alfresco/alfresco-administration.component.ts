@@ -12,6 +12,7 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
 import { map } from 'rxjs/internal/operators/map';
+import { MaarchFlatTreeComponent } from '../../../plugins/tree/maarch-flat-tree.component';
 
 @Component({
     selector: 'app-alfresco',
@@ -21,6 +22,7 @@ import { map } from 'rxjs/internal/operators/map';
 export class AlfrescoAdministrationComponent implements OnInit {
 
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('maarchTree', { static: true }) maarchTree: MaarchFlatTreeComponent;
 
     lang: any = LANG;
     loading: boolean = false;
@@ -112,7 +114,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
             label: this.alfresco.label,
             login: this.alfresco.account.id,
             nodeId: this.alfresco.rootFolder,
-            entities: $('#jstree').jstree('get_checked', null, true)
+            entities: this.maarchTree.getSelectedNodes().map(ent => ent.id)
         };
 
         if (!this.functionsService.empty(this.alfresco.account.password)) {
@@ -145,8 +147,8 @@ export class AlfrescoAdministrationComponent implements OnInit {
                         return {
                             text: entity.entity_label,
                             icon: entity.icon,
-                            parent: entity.parentSerialId,
-                            id: entity.serialId.toString(),
+                            parent_id: entity.parentSerialId,
+                            id: entity.serialId,
                             state: {
                                 opened: true
                             }
@@ -155,8 +157,6 @@ export class AlfrescoAdministrationComponent implements OnInit {
                     return data.entities;
                 }),
                 tap((entities: any) => {
-                    console.log(entities);
-
                     this.entities = entities;
                     resolve(true);
                 }),
@@ -177,8 +177,8 @@ export class AlfrescoAdministrationComponent implements OnInit {
                             return {
                                 text: entity.entity_label,
                                 icon: entity.icon,
-                                parent: entity.parentSerialId,
-                                id: entity.serialId.toString(),
+                                parent_id: entity.parentSerialId,
+                                id: entity.serialId,
                                 state: {
                                     opened: true
                                 }
@@ -248,33 +248,11 @@ export class AlfrescoAdministrationComponent implements OnInit {
     }
 
     initEntitiesTree(entities: any) {
-        $('#jstree')
-            .jstree({
-                'checkbox': {
-                    'three_state': false // no cascade selection
-                },
-                'core': {
-                    force_text: true,
-                    'themes': {
-                        'name': 'proton',
-                        'responsive': true
-                    },
-                    'data': entities
-                },
-                'plugins': ['checkbox', 'search', 'sort']
-            });
-        let to: any = false;
-        $('#jstree_search').keyup(function () {
-            if (to) { clearTimeout(to); }
-            to = setTimeout(function () {
-                const v: any = $('#jstree_search').val();
-                $('#jstree').jstree(true).search(v);
-            }, 250);
-        });
+        this.maarchTree.initData(entities);
     }
 
     validAccount() {
-        if (this.functionsService.empty(this.alfresco.rootFolder) || $('#jstree').jstree('get_checked', null, true).length === 0) {
+        if (this.functionsService.empty(this.alfresco.rootFolder) || this.maarchTree.getSelectedNodes().length === 0) {
             return false;
         } else {
             return true;
