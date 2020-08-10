@@ -13,6 +13,7 @@ import { AppServiceModule } from './app-service.module';
 import { NotificationModule } from '../service/notification/notification.module';
 
 import { MaarchTreeComponent } from '../plugins/tree/maarch-tree.component';
+import { MaarchFlatTreeComponent } from '../plugins/tree/maarch-flat-tree.component';
 import { AutocompleteListComponent } from '../plugins/autocomplete-list/autocomplete-list.component';
 
 /*FRONT IMPORTS*/
@@ -108,6 +109,7 @@ import { TranslateService } from '@ngx-translate/core';
         VisaWorkflowComponent,
         AvisWorkflowComponent,
         MaarchTreeComponent,
+        MaarchFlatTreeComponent,
         ContactResourceComponent,
         ContactDetailComponent,
         AutocompleteListComponent,
@@ -150,6 +152,7 @@ import { TranslateService } from '@ngx-translate/core';
         VisaWorkflowComponent,
         AvisWorkflowComponent,
         MaarchTreeComponent,
+        MaarchFlatTreeComponent,
         ContactResourceComponent,
         ContactDetailComponent,
         AutocompleteListComponent,
