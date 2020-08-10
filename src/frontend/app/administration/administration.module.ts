@@ -47,6 +47,7 @@ import { NotificationAdministrationComponent } from './notification/notification
 import { NotificationsAdministrationComponent } from './notification/notifications-administration.component';
 import { ParameterAdministrationComponent } from './parameter/parameter-administration.component';
 import { ParametersAdministrationComponent } from './parameter/parameters-administration.component';
+import { ParametersCustomizationComponent } from './parameter/customization/parameters-customization.component';
 import { PrioritiesAdministrationComponent } from './priority/priorities-administration.component';
 import { PriorityAdministrationComponent } from './priority/priority-administration.component';
 import { SecuritiesAdministrationComponent } from './security/securities-administration.component';
@@ -124,6 +125,7 @@ import {EntitiesExportComponent} from './entity/export/entities-export.component
         NotificationsAdministrationComponent,
         ParameterAdministrationComponent,
         ParametersAdministrationComponent,
+        ParametersCustomizationComponent,
         PrioritiesAdministrationComponent,
         PriorityAdministrationComponent,
         SecuritiesAdministrationComponent,

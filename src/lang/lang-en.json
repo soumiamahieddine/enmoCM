@@ -1895,5 +1895,6 @@
     "usersExport": "Export users",
     "hotkeyInfo": "Hold <b>SHIFT</b> to propagate your selections to sub-elements",
     "hotkeyMsg": "<b>SHIFT</b>&nbsp;Propagation to sub-elements",
-    "hotkeyTitle": "Hold the shift key"
+    "hotkeyTitle": "Hold the shift key",
+    "advancedParameters": "Advanced parameters"
 }

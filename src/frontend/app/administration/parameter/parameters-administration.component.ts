@@ -49,7 +49,7 @@ export class ParametersAdministrationComponent implements OnInit {
 
         this.http.get('../rest/parameters')
             .subscribe((data: any) => {
-                this.parameters = data.parameters;
+                this.parameters = data.parameters.filter((item: any) => ['homepage_message', 'loginpage_message'].indexOf(item.id) === -1);
                 this.loading = false;
                 setTimeout(() => {
                     this.adminService.setDataSource('admin_parameters', this.parameters, this.sort, this.paginator, this.filterColumns);
@@ -63,7 +63,7 @@ export class ParametersAdministrationComponent implements OnInit {
         if (r) {
             this.http.delete('../rest/parameters/' + paramId)
                 .subscribe((data: any) => {
-                    this.parameters = data.parameters;
+                    this.parameters = data.parameters.filter((item: any) => ['homeMessage', 'loginMessage'].indexOf(item) === -1);
                     this.adminService.setDataSource('admin_parameters', this.parameters, this.sort, this.paginator, this.filterColumns);
                     this.notify.success(this.translate.instant('lang.parameterDeleted'));
                 }, (err) => {
