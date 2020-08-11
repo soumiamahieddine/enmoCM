@@ -23,8 +23,8 @@ class IssuingSiteModel
         ValidatorModel::arrayType($args, ['select']);
 
         return DatabaseModel::select([
-            'select'    => empty($args['select']) ? ['*'] : $args['select'],
-            'table'     => ['issuing_sites'],
+            'select' => empty($args['select']) ? ['*'] : $args['select'],
+            'table'  => ['issuing_sites']
         ]);
     }
 
@@ -35,10 +35,10 @@ class IssuingSiteModel
         ValidatorModel::arrayType($args, ['select']);
 
         $site = DatabaseModel::select([
-            'select'    => empty($args['select']) ? ['*'] : $args['select'],
-            'table'     => ['issuing_sites'],
-            'where'     => ['id = ?'],
-            'data'      => [$args['id']]
+            'select' => empty($args['select']) ? ['*'] : $args['select'],
+            'table'  => ['issuing_sites'],
+            'where'  => ['id = ?'],
+            'data'   => [$args['id']]
         ]);
 
         if (empty($site[0])) {
@@ -62,7 +62,6 @@ class IssuingSiteModel
                 'site_label'          => $args['siteLabel'],
                 'post_office_label'   => $args['postOfficeLabel'] ?? null,
                 'account_number'      => $args['accountNumber'] ?? null,
-                'address_name'        => $args['addressName'] ?? null,
                 'address_number'      => $args['addressNumber'] ?? null,
                 'address_street'      => $args['addressStreet'] ?? null,
                 'address_additional1' => $args['addressAdditional1'] ?? null,

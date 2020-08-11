@@ -194,7 +194,6 @@ CREATE TABLE IF NOT EXISTS issuing_sites (
    site_label CHARACTER VARYING(256) NOT NULL,
    post_office_label CHARACTER VARYING(256),
    account_number CHARACTER VARYING(256),
-   address_name CHARACTER VARYING(256),
    address_number CHARACTER VARYING(256),
    address_street CHARACTER VARYING(256),
    address_additional1 CHARACTER VARYING(256),

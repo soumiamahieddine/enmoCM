@@ -15,7 +15,7 @@ class IssuingSiteControllerTest extends TestCase
 
     public function testCreate()
     {
-        $issuingSiteController = new \Recommended\controllers\IssuingSiteController();
+        $issuingSiteController = new \RegisteredMail\controllers\IssuingSiteController();
 
         //  CREATE
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -25,7 +25,6 @@ class IssuingSiteControllerTest extends TestCase
             'siteLabel'          => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
-            'addressName'        => 'Dunder Mifflin Scranton',
             'addressStreet'      => '1725',
             'ddressAdditional1'  => null,
             'addressAdditional2' => null,
@@ -55,7 +54,6 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertSame('Scranton', $responseBody['site']['siteLabel']);
         $this->assertSame('Scranton Post Office', $responseBody['site']['postOfficeLabel']);
         $this->assertSame('42', $responseBody['site']['accountNumber']);
-        $this->assertSame('Dunder Mifflin Scranton', $responseBody['site']['addressName']);
         $this->assertSame('1725', $responseBody['site']['addressStreet']);
         $this->assertEmpty($responseBody['site']['ddressAdditional1']);
         $this->assertEmpty($responseBody['site']['ddressAdditional2']);
@@ -83,7 +81,6 @@ class IssuingSiteControllerTest extends TestCase
             'siteLabel'          => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
-            'addressName'        => 'Dunder Mifflin Scranton',
             'addressStreet'      => '1725',
             'ddressAdditional1'  => null,
             'addressAdditional2' => null,
@@ -103,7 +100,6 @@ class IssuingSiteControllerTest extends TestCase
             'siteLabel'          => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
-            'addressName'        => 'Dunder Mifflin Scranton',
             'addressStreet'      => '1725',
             'ddressAdditional1'  => null,
             'addressAdditional2' => null,
@@ -140,7 +136,7 @@ class IssuingSiteControllerTest extends TestCase
 
     public function testGet()
     {
-        $issuingSiteController = new \Recommended\controllers\IssuingSiteController();
+        $issuingSiteController = new \RegisteredMail\controllers\IssuingSiteController();
 
         //  GET
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -158,7 +154,6 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertSame('Scranton', $responseBody['sites'][0]['siteLabel']);
         $this->assertSame('Scranton Post Office', $responseBody['sites'][0]['postOfficeLabel']);
         $this->assertSame('42', $responseBody['sites'][0]['accountNumber']);
-        $this->assertSame('Dunder Mifflin Scranton', $responseBody['sites'][0]['addressName']);
         $this->assertSame('1725', $responseBody['sites'][0]['addressStreet']);
         $this->assertEmpty($responseBody['sites'][0]['ddressAdditional1']);
         $this->assertEmpty($responseBody['sites'][0]['ddressAdditional2']);
@@ -182,7 +177,7 @@ class IssuingSiteControllerTest extends TestCase
 
     public function testGetById()
     {
-        $issuingSiteController = new \Recommended\controllers\IssuingSiteController();
+        $issuingSiteController = new \RegisteredMail\controllers\IssuingSiteController();
 
         //  GET
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -197,7 +192,6 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertSame('Scranton', $responseBody['site']['siteLabel']);
         $this->assertSame('Scranton Post Office', $responseBody['site']['postOfficeLabel']);
         $this->assertSame('42', $responseBody['site']['accountNumber']);
-        $this->assertSame('Dunder Mifflin Scranton', $responseBody['site']['addressName']);
         $this->assertSame('1725', $responseBody['site']['addressStreet']);
         $this->assertEmpty($responseBody['site']['ddressAdditional1']);
         $this->assertEmpty($responseBody['site']['ddressAdditional2']);
@@ -224,7 +218,7 @@ class IssuingSiteControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $issuingSiteController = new \Recommended\controllers\IssuingSiteController();
+        $issuingSiteController = new \RegisteredMail\controllers\IssuingSiteController();
 
         //  UPDATE
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -259,7 +253,6 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertSame('Scranton - UP', $responseBody['site']['siteLabel']);
         $this->assertSame('Scranton Post Office', $responseBody['site']['postOfficeLabel']);
         $this->assertSame('42', $responseBody['site']['accountNumber']);
-        $this->assertSame('Dunder Mifflin Scranton', $responseBody['site']['addressName']);
         $this->assertSame('1725', $responseBody['site']['addressStreet']);
         $this->assertEmpty($responseBody['site']['ddressAdditional1']);
         $this->assertEmpty($responseBody['site']['ddressAdditional2']);
@@ -288,7 +281,6 @@ class IssuingSiteControllerTest extends TestCase
             'siteLabel'          => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
-            'addressName'        => 'Dunder Mifflin Scranton',
             'addressStreet'      => '1725',
             'ddressAdditional1'  => null,
             'addressAdditional2' => null,
@@ -308,7 +300,6 @@ class IssuingSiteControllerTest extends TestCase
             'siteLabel'          => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
-            'addressName'        => 'Dunder Mifflin Scranton',
             'addressStreet'      => '1725',
             'ddressAdditional1'  => null,
             'addressAdditional2' => null,
@@ -350,7 +341,7 @@ class IssuingSiteControllerTest extends TestCase
 
     public function testDelete()
     {
-        $issuingSiteController = new \Recommended\controllers\IssuingSiteController();
+        $issuingSiteController = new \RegisteredMail\controllers\IssuingSiteController();
 
         //  DELETE
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);

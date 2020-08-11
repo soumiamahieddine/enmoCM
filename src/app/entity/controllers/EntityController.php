@@ -539,8 +539,7 @@ class EntityController
 
         $fields = [
             'id', 'entity_id', 'entity_label', 'short_label', 'entity_full_name', 'enabled', 'adrs_1', 'adrs_2', 'adrs_3', 'zipcode', 'city',
-            'country', 'email', 'parent_entity_id', 'entity_type', 'business_id', 'ldap_id', 'archival_agency', 'archival_agreement',
-            'folder_import', 'external_id',
+            'country', 'email', 'parent_entity_id', 'entity_type', 'business_id', 'archival_agency', 'archival_agreement', 'folder_import'
         ];
 
         $csvHead = array_merge($fields, [ 'diffusionList', 'visaCircuit', 'opinionCircuit', 'users', 'templates']);

@@ -37,7 +37,6 @@ class IssuingSiteController
                 'siteLabel'          => $site['site_label'],
                 'postOfficeLabel'    => $site['post_office_label'] ?? null,
                 'accountNumber'      => $site['account_number'] ?? null,
-                'addressName'        => $site['address_name'] ?? null,
                 'addressNumber'      => $site['address_number'] ?? null,
                 'addressStreet'      => $site['address_street'] ?? null,
                 'addressAdditional1' => $site['address_additional1'] ?? null,
@@ -68,7 +67,6 @@ class IssuingSiteController
             'siteLabel'          => $site['site_label'],
             'postOfficeLabel'    => $site['post_office_label'] ?? null,
             'accountNumber'      => $site['account_number'] ?? null,
-            'addressName'        => $site['address_name'] ?? null,
             'addressNumber'      => $site['address_number'] ?? null,
             'addressStreet'      => $site['address_street'] ?? null,
             'addressAdditional1' => $site['address_additional1'] ?? null,
@@ -115,8 +113,7 @@ class IssuingSiteController
         $id = IssuingSiteModel::create([
             'siteLabel'          => $body['siteLabel'],
             'postOfficeLabel'    => $body['postOfficeLabel'] ?? null,
-            'accountNumber'      => $body['accountNumber'] ?? null,
-            'addressName'        => $body['addressName'] ?? null,
+            'accountNumber'      => $body['accountNumber'],
             'addressNumber'      => $body['addressNumber'] ?? null,
             'addressStreet'      => $body['addressStreet'] ?? null,
             'addressAdditional1' => $body['addressAdditional1'] ?? null,
@@ -174,8 +171,7 @@ class IssuingSiteController
             'set'  => [
                 'site_label'          => $body['siteLabel'],
                 'post_office_label'   => $body['postOfficeLabel'] ?? null,
-                'account_number'      => $body['accountNumber'] ?? null,
-                'address_name'        => $body['addressName'] ?? null,
+                'account_number'      => $body['accountNumber'] ?? null, // TODO cannot be modified
                 'address_number'      => $body['addressNumber'] ?? null,
                 'address_street'      => $body['addressStreet'] ?? null,
                 'address_additional1' => $body['addressAdditional1'] ?? null,
