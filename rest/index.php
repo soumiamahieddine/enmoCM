@@ -614,4 +614,12 @@ $app->post('/collaboraOnline/file', \ContentManagement\controllers\CollaboraOnli
 $app->delete('/collaboraOnline/file', \ContentManagement\controllers\CollaboraOnlineController::class . ':deleteTmpFile');
 $app->post('/collaboraOnline/encodedFile', \ContentManagement\controllers\CollaboraOnlineController::class . ':saveTmpEncodedDocument');
 
+// Recommended
+$app->get('/recommended/sites', \Recommended\controllers\IssuingSiteController::class . ':get');
+$app->get('/recommended/sites/{id}', \Recommended\controllers\IssuingSiteController::class . ':getById');
+$app->post('/recommended/sites', \Recommended\controllers\IssuingSiteController::class . ':create');
+$app->put('/recommended/sites/{id}', \Recommended\controllers\IssuingSiteController::class . ':update');
+$app->delete('/recommended/sites/{id}', \Recommended\controllers\IssuingSiteController::class . ':delete');
+
+
 $app->run();

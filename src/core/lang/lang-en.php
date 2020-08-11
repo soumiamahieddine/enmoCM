@@ -462,3 +462,7 @@ define("_DOC_ADD_TO_SIGNATORY_BOOK", "Mail added to signatory book");
 define("_DOC_REMOVE_FROM_SIGNATORY_BOOK", "Mail removed from signatory book");
 define("_DOC_ADD_TO_MAILEVA", "Mail added to Maileva shippings");
 define("_DOC_REMOVE_FROM_MAILEVA", "Mail removed from Maileva shippings");
+
+define("_ISSUING_SITE_CREATED", "Issuing site created");
+define("_ISSUING_SITE_UPDATED", "Issuing site updated");
+define("_ISSUING_SITE_DELETED", "Issuing site deleted");

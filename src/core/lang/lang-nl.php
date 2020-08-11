@@ -464,3 +464,7 @@ define("_DOC_ADD_TO_SIGNATORY_BOOK", "Mail added to signatory book"); //TO TRANS
 define("_DOC_REMOVE_FROM_SIGNATORY_BOOK", "Mail removed from signatory book"); //TO TRANSLATE
 define("_DOC_ADD_TO_MAILEVA", "Mail added to Maileva shippings"); //TO TRANSLATE
 define("_DOC_REMOVE_FROM_MAILEVA", "Mail removed from Maileva shippings"); //TO TRANSLATE
+
+define("_ISSUING_SITE_CREATED", "Issuing site created"); //TO TRANSLATE
+define("_ISSUING_SITE_UPDATED", "Issuing site updated"); //TO TRANSLATE
+define("_ISSUING_SITE_DELETED", "Issuing site deleted"); //TO TRANSLATE

@@ -188,6 +188,31 @@ ALTER TABLE templates ADD COLUMN subject character varying(255);
 
 UPDATE groupbasket SET list_event_data = '{"canUpdateDocuments":true}' WHERE list_event_data->'canUpdateDocument' = true;
 
+/* RECOMMENDED */
+CREATE TABLE IF NOT EXISTS issuing_sites (
+   id SERIAL NOT NULL,
+   site_label CHARACTER VARYING(256) NOT NULL,
+   post_office_label CHARACTER VARYING(256),
+   account_number CHARACTER VARYING(256),
+   address_name CHARACTER VARYING(256),
+   address_number CHARACTER VARYING(256),
+   address_street CHARACTER VARYING(256),
+   address_additional1 CHARACTER VARYING(256),
+   address_additional2 CHARACTER VARYING(256),
+   address_postcode CHARACTER VARYING(256),
+   address_town CHARACTER VARYING(256),
+   address_country CHARACTER VARYING(256),
+   CONSTRAINT issuing_sites_pkey PRIMARY KEY (id)
+);
+CREATE TABLE IF NOT EXISTS issuing_sites_entities (
+   id SERIAL NOT NULL,
+   site_id INTEGER NOT NULL,
+   entity_id INTEGER NOT NULL,
+   CONSTRAINT issuing_sites_entities_pkey PRIMARY KEY (id),
+   CONSTRAINT issuing_sites_entities_unique_key UNIQUE (site_id, entity_id)
+);
+
+
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
 SELECT r.res_id,
