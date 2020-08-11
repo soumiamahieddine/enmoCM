@@ -104,7 +104,7 @@ class ParameterController
 
             $tmpPath = CoreConfigModel::getTmpPath();
             if ($args['id'] == 'logo') {
-                if (strpos($body['image'], 'data:image/jpeg;base64,') === false) {
+                if (strpos($body['image'], 'data:image/svg+xml;base64,') === false) {
                     return $response->withStatus(400)->withJson(['errors' => 'Body image is not a base64 image']);
                 }
                 $tmpFileName = $tmpPath . 'parameter_logo_' . rand() . '_file.svg';
@@ -134,8 +134,16 @@ class ParameterController
                     return $response->withStatus(400)->withJson(['errors' => 'Body size is not allowed']);
                 }
                 copy($tmpFileName, "custom/{$customId}/img/bodylogin.jpg");
+            } elseif ($args['id'] == 'applicationName') {
+                $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+                $config['config']['applicationName'] = $body['applicationName'];
+                $fp = fopen("custom/{$body['customId']}/apps/maarch_entreprise/xml/config.json", 'w');
+                fwrite($fp, json_encode($config, JSON_PRETTY_PRINT));
+                fclose($fp);
             }
-            unset($tmpFileName);
+            if (!empty($tmpFileName) && is_file($tmpFileName)) {
+                unset($tmpFileName);
+            }
             return $response->withStatus(204);
         }
 
