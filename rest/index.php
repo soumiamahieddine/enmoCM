@@ -621,5 +621,11 @@ $app->post('/registeredMail/sites', \RegisteredMail\controllers\IssuingSiteContr
 $app->put('/registeredMail/sites/{id}', \RegisteredMail\controllers\IssuingSiteController::class . ':update');
 $app->delete('/registeredMail/sites/{id}', \RegisteredMail\controllers\IssuingSiteController::class . ':delete');
 
+$app->get('/registeredMail/ranges', \RegisteredMail\controllers\RegisteredNumberRangeController::class . ':get');
+$app->get('/registeredMail/ranges/{id}', \RegisteredMail\controllers\RegisteredNumberRangeController::class . ':getById');
+$app->post('/registeredMail/ranges', \RegisteredMail\controllers\RegisteredNumberRangeController::class . ':create');
+$app->put('/registeredMail/ranges/{id}', \RegisteredMail\controllers\RegisteredNumberRangeController::class . ':update');
+$app->delete('/registeredMail/ranges/{id}', \RegisteredMail\controllers\RegisteredNumberRangeController::class . ':delete');
+
 
 $app->run();
