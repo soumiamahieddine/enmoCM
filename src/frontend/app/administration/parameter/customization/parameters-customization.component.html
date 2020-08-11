@@ -28,22 +28,22 @@
         <div>{{'lang.chooseLoginBg' | translate}} : </div>
         <div class="backgroundList">
             <mat-card (click)="selectBg('../rest/images?image=loginPage')" style="opacity: 0.3;" class="backgroundItem"
-                [class.disabled]="stepFormGroup.controls['bodyLoginBackground'].disabled"
-                [class.selected]="stepFormGroup.controls['bodyLoginBackground'].value === '../rest/images?image=loginPage'"
+                [class.disabled]="stepFormGroup.controls['bodyImage'].disabled"
+                [class.selected]="stepFormGroup.controls['bodyImage'].value === '../rest/images?image=loginPage'"
                 style="background:url(../rest/images?image=loginPage);background-size: cover;">
             </mat-card>
             <mat-card (click)="selectBg('assets/bodylogin.jpg')" style="opacity: 0.3;" class="backgroundItem"
-                [class.disabled]="stepFormGroup.controls['bodyLoginBackground'].disabled"
-                [class.selected]="stepFormGroup.controls['bodyLoginBackground'].value === 'assets/bodylogin.jpg'"
+                [class.disabled]="stepFormGroup.controls['bodyImage'].disabled"
+                [class.selected]="stepFormGroup.controls['bodyImage'].value === 'assets/bodylogin.jpg'"
                 style="background:url(assets/bodylogin.jpg);background-size: cover;">
             </mat-card>
             <mat-card *ngFor="let background of backgroundList" (click)="selectBg(background.url)"
                 style="opacity: 0.3;" class="backgroundItem"
-                [class.selected]="background.url === stepFormGroup.controls['bodyLoginBackground'].value"
-                [class.disabled]="stepFormGroup.controls['bodyLoginBackground'].disabled"
+                [class.selected]="background.url === stepFormGroup.controls['bodyImage'].value"
+                [class.disabled]="stepFormGroup.controls['bodyImage'].disabled"
                 [style.background]="'url('+background.url+')'">
             </mat-card>
-            <mat-card *ngIf="!stepFormGroup.controls['bodyLoginBackground'].disabled"
+            <mat-card *ngIf="!stepFormGroup.controls['bodyImage'].disabled"
                 style="opacity: 0.3;display: flex;align-items: center;justify-content: center;"
                 class="backgroundItem" (click)="uploadFile.click()">
                 <input type="file" name="files[]" #uploadFile (change)="uploadTrigger($event, 'bg')"

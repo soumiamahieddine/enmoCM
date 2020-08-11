@@ -36,8 +36,8 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
             appName: ['', Validators.required],
             loginpage_message: [''],
             homepage_message: [''],
-            bodyLoginBackground: ['../rest/images?image=loginPage'],
-            uploadedLogo: ['../rest/images?image=logo'],
+            bodyImage: ['../rest/images?image=loginPage'],
+            logo: ['../rest/images?image=logo'],
         });
 
         this.backgroundList = Array.from({ length: 16 }).map((_, i) => {
@@ -133,7 +133,8 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
                 reader.readAsDataURL(fileInput.target.files[0]);
                 reader.onload = (value: any) => {
                     if (mode === 'logo') {
-                        this.stepFormGroup.controls['uploadedLogo'].setValue(value.target.result);
+                        this.stepFormGroup.controls['logo'].setValue(value.target.result);
+                        this.saveParameter('logo');
                     } else {
                         const img = new Image();
                         img.onload = (imgDim: any) => {
@@ -144,8 +145,8 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
                                     filename: value.target.result,
                                     url: value.target.result,
                                 });
-                                this.stepFormGroup.controls['bodyLoginBackground'].setValue(value.target.result);
-                                this.saveParameter('bodyLoginBackground');
+                                this.stepFormGroup.controls['bodyImage'].setValue(value.target.result);
+                                this.saveParameter('bodyImage');
                             }
                         };
                         img.src = value.target.result;
@@ -177,26 +178,31 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
     }
 
     logoURL() {
-        return this.sanitizer.bypassSecurityTrustUrl(this.stepFormGroup.controls['uploadedLogo'].value);
+        return this.sanitizer.bypassSecurityTrustUrl(this.stepFormGroup.controls['logo'].value);
     }
 
     selectBg(content: string) {
-        if (!this.stepFormGroup.controls['bodyLoginBackground'].disabled) {
-            this.stepFormGroup.controls['bodyLoginBackground'].setValue(content);
-            this.saveParameter('bodyLoginBackground');
+        if (!this.stepFormGroup.controls['bodyImage'].disabled) {
+            this.stepFormGroup.controls['bodyImage'].setValue(content);
+            this.saveParameter('bodyImage');
         }
     }
 
     clickLogoButton(uploadLogo: any) {
-        if (!this.stepFormGroup.controls['uploadedLogo'].disabled) {
+        if (!this.stepFormGroup.controls['logo'].disabled) {
             uploadLogo.click();
         }
     }
 
     saveParameter(parameterId: string) {
-        const param = {
-            param_value_string: this.stepFormGroup.controls[parameterId].value
-        };
+        let param = {};
+        if (parameterId === 'logo' || parameterId === 'bodyImage') {
+            param['image'] = this.stepFormGroup.controls[parameterId].value;
+        } else {
+            param = {
+                param_value_string: this.stepFormGroup.controls[parameterId].value
+            };
+        }
         this.http.put('../rest/parameters/' + parameterId, param)
             .subscribe(() => {
                 this.notify.success(this.translate.instant('lang.parameterUpdated'));
