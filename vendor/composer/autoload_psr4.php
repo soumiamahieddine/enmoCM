@@ -32,7 +32,7 @@ return array(
     'Search\\' => array($baseDir . '/src/app/search'),
     'Respect\\Validation\\' => array($vendorDir . '/respect/validation/library'),
     'Resource\\' => array($baseDir . '/src/app/resource'),
-    'Recommended\\' => array($baseDir . '/src/app/recommended'),
+    'RegisteredMail\\' => array($baseDir . '/src/app/registeredMail'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),

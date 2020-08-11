@@ -11,7 +11,7 @@
  * @author dev@maarch.org
  */
 
-namespace Recommended\models;
+namespace RegisteredMail\models;
 
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;

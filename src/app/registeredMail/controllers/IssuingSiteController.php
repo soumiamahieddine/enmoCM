@@ -11,12 +11,12 @@
  * @author dev@maarch.org
  */
 
-namespace Recommended\controllers;
+namespace RegisteredMail\controllers;
 
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
-use Recommended\models\IssuingSiteEntitiesModel;
-use Recommended\models\IssuingSiteModel;
+use RegisteredMail\models\IssuingSiteEntitiesModel;
+use RegisteredMail\models\IssuingSiteModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -29,7 +29,26 @@ class IssuingSiteController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['sites' => IssuingSiteModel::get()]);
+        $sites = IssuingSiteModel::get();
+
+        foreach ($sites as $key => $site) {
+            $sites[$key] = [
+                'id'                 => $site['id'],
+                'siteLabel'          => $site['site_label'],
+                'postOfficeLabel'    => $site['post_office_label'] ?? null,
+                'accountNumber'      => $site['account_number'] ?? null,
+                'addressName'        => $site['address_name'] ?? null,
+                'addressNumber'      => $site['address_number'] ?? null,
+                'addressStreet'      => $site['address_street'] ?? null,
+                'addressAdditional1' => $site['address_additional1'] ?? null,
+                'addressAdditional2' => $site['address_additional2'] ?? null,
+                'addressPostcode'    => $site['address_postcode'] ?? null,
+                'addressTown'        => $site['address_town'] ?? null,
+                'addressCountry'     => $site['address_country'] ?? null
+            ];
+        }
+
+        return $response->withJson(['sites' => $sites]);
     }
 
     public function getById(Request $request, Response $response, array $args)
@@ -44,6 +63,31 @@ class IssuingSiteController
             return $response->withStatus(400)->withJson(['errors' => 'Issuing site not found']);
         }
 
+        $site = [
+            'id'                 => $site['id'],
+            'siteLabel'          => $site['site_label'],
+            'postOfficeLabel'    => $site['post_office_label'] ?? null,
+            'accountNumber'      => $site['account_number'] ?? null,
+            'addressName'        => $site['address_name'] ?? null,
+            'addressNumber'      => $site['address_number'] ?? null,
+            'addressStreet'      => $site['address_street'] ?? null,
+            'addressAdditional1' => $site['address_additional1'] ?? null,
+            'addressAdditional2' => $site['address_additional2'] ?? null,
+            'addressPostcode'    => $site['address_postcode'] ?? null,
+            'addressTown'        => $site['address_town'] ?? null,
+            'addressCountry'     => $site['address_country'] ?? null
+        ];
+
+        $entities = IssuingSiteEntitiesModel::get([
+            'select' => ['entity_id'],
+            'where'  => ['site_id = ?'],
+            'data'   => [$args['id']]
+        ]);
+
+        $entities = array_column($entities, 'entity_id');
+
+        $site['entities'] = $entities;
+
         return $response->withJson(['site' => $site]);
     }
 
@@ -56,7 +100,7 @@ class IssuingSiteController
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['siteLabel'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body siteLabel is empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body siteLabel is empty or not a string']);
         }
         if (!empty($body['entities']) && !Validator::arrayType()->validate($body['entities'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body entities is not an array']);
@@ -114,7 +158,7 @@ class IssuingSiteController
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['siteLabel'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body siteLabel is empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body siteLabel is empty or not a string']);
         }
         if (!empty($body['entities']) && !Validator::arrayType()->validate($body['entities'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body entities is not an array']);

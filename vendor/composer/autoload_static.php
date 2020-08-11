@@ -74,7 +74,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             'Respect\\Validation\\' => 19,
             'Resource\\' => 9,
-            'Recommended\\' => 12,
+            'RegisteredMail\\' => 15,
         ),
         'P' => 
         array (
@@ -277,9 +277,9 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         array (
             0 => __DIR__ . '/../..' . '/src/app/resource',
         ),
-        'Recommended\\' => 
+        'RegisteredMail\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/src/app/recommended',
+            0 => __DIR__ . '/../..' . '/src/app/registeredMail',
         ),
         'Psr\\Http\\Message\\' => 
         array (

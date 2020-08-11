@@ -11,7 +11,7 @@
  * @author dev@maarch.org
  */
 
-namespace Recommended\models;
+namespace RegisteredMail\models;
 
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
@@ -31,7 +31,7 @@ class IssuingSiteModel
     public static function getById(array $args)
     {
         ValidatorModel::notEmpty($args, ['id']);
-        ValidatorModel::stringType($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
         ValidatorModel::arrayType($args, ['select']);
 
         $site = DatabaseModel::select([
