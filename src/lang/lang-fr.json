@@ -1898,5 +1898,7 @@
     "issuingSites": "Sites émetteurs",
     "issuingSiteDeleted": "Site émetteur supprimé",
     "postOffice": "Bureau de poste",
-    "coclicoNumber": "N° COCLICO"
+    "coclicoNumber": "N° COCLICO",
+    "siteName": "Nom du site",
+    "issuingSiteCreation": "Création d'un site émetteur"
 }
