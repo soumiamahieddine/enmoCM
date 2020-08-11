@@ -25,7 +25,7 @@ class IssuingSiteController
 {
     public function get(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_recommended', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_registered_mail', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -34,7 +34,7 @@ class IssuingSiteController
 
     public function getById(Request $request, Response $response, array $args)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_recommended', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_registered_mail', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -49,7 +49,7 @@ class IssuingSiteController
 
     public function create(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_recommended', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_registered_mail', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -102,7 +102,7 @@ class IssuingSiteController
 
     public function update(Request $request, Response $response, array $args)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_recommended', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_registered_mail', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -169,7 +169,7 @@ class IssuingSiteController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_recommended', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_registered_mail', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

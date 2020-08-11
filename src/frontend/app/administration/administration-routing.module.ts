@@ -49,6 +49,7 @@ import { TagAdministrationComponent } from './tag/tag-administration.component';
 import { AlfrescoAdministrationComponent } from './alfresco/alfresco-administration.component';
 import { AlfrescoListAdministrationComponent } from './alfresco/alfresco-list-administration.component';
 import { ContactDuplicateComponent } from './contact/contact-duplicate/contact-duplicate.component';
+import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing-site-list.component';
 
 @NgModule({
     imports: [
@@ -117,6 +118,7 @@ import { ContactDuplicateComponent } from './contact/contact-duplicate/contact-d
             { path: 'alfresco', canActivate: [AppGuard], component: AlfrescoListAdministrationComponent },
             { path: 'alfresco/new', canActivate: [AppGuard], component: AlfrescoAdministrationComponent },
             { path: 'alfresco/:id', canActivate: [AppGuard], component: AlfrescoAdministrationComponent },
+            { path: 'issuingSite', canActivate: [AppGuard], component: IssuingSiteListComponent },
         ]),
     ],
     exports: [

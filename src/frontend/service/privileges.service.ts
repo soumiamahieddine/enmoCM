@@ -287,6 +287,16 @@ export class PrivilegeService {
             'style': 'alfresco',
             'angular': true,
             'hasParams': false
+        },
+        {
+            'id': 'admin_registered_mail',
+            'label': this.translate.instant('lang.registeredMail'),
+            'comment': this.translate.instant('lang.adminRegisteredMailDesc'),
+            'route': '/administration/issuingSite',
+            'unit': 'supervision',
+            'style': 'fas fa-dolly-flatbed',
+            'angular': true,
+            'hasParams': false
         }
     ];
 

@@ -71,6 +71,8 @@ import { UsersImportComponent } from './user/import/users-import.component';
 import { UsersExportComponent } from './user/export/users-export.component';
 import { TranslateService } from '@ngx-translate/core';
 import {EntitiesExportComponent} from './entity/export/entities-export.component';
+import { RegisteredMailComponent } from './registered-mail/registered-mail.component';
+import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing-site-list.component';
 
 
 @NgModule({
@@ -149,7 +151,9 @@ import {EntitiesExportComponent} from './entity/export/entities-export.component
         UsersAdministrationRedirectModalComponent,
         UsersImportComponent,
         UsersExportComponent,
-        EntitiesExportComponent
+        EntitiesExportComponent,
+        RegisteredMailComponent,
+        IssuingSiteListComponent,
     ],
     entryComponents: [
         AccountLinkComponent,

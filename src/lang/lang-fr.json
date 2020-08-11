@@ -1891,5 +1891,12 @@
     "hotkeyInfo": "Maintenez <b>SHIFT</b> pour propager vos selections aux sous-éléments",
     "hotkeyMsg": "<b>SHIFT</b>&nbsp;Propagation aux sous-élements",
     "hotkeyTitle": "Maintient de la touche shift",
-    "advancedParameters": "Paramètres avancés"
+    "advancedParameters": "Paramètres avancés",
+    "registeredMail": "Recommandés",
+    "adminRegisteredMailDesc": "Administrer vos envoi des recommandés",
+    "issuingSite": "Site émetteur",
+    "issuingSites": "Sites émetteurs",
+    "issuingSiteDeleted": "Site émetteur supprimé",
+    "postOffice": "Bureau de poste",
+    "coclicoNumber": "N° COCLICO"
 }
