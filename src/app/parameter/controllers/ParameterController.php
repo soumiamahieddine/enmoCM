@@ -116,24 +116,28 @@ class ParameterController
                 if ($size > 5000000) {
                     return $response->withStatus(400)->withJson(['errors' => 'Logo size is not allowed']);
                 }
-                copy($tmpFileName, "custom/{$body['customId']}/img/logo.svg");
+                copy($tmpFileName, "custom/{$customId}/img/logo.svg");
             } elseif ($args['id'] == 'bodyImage') {
                 if (strpos($body['image'], 'data:image/jpeg;base64,') === false) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Body image is not a base64 image']);
-                }
-                $tmpFileName = $tmpPath . 'parameter_body_' . rand() . '_file.jpg';
-                $body['image'] = str_replace('data:image/jpeg;base64,', '', $body['image']);
-                $file = base64_decode($body['image']);
-                file_put_contents($tmpFileName, $file);
+                    if (!is_file("dist/{$body['image']}")) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Body image does not exist']);
+                    }
+                    copy("dist/{$body['image']}", "custom/{$customId}/img/bodylogin.jpg");
+                } else {
+                    $tmpFileName = $tmpPath . 'parameter_body_' . rand() . '_file.jpg';
+                    $body['image'] = str_replace('data:image/jpeg;base64,', '', $body['image']);
+                    $file = base64_decode($body['image']);
+                    file_put_contents($tmpFileName, $file);
 
-                $size = strlen($file);
-                $imageSizes = getimagesize($tmpFileName);
-                if ($imageSizes[0] < 1920 || $imageSizes[1] < 1080) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Body image is not wide enough']);
-                } elseif ($size > 10000000) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Body size is not allowed']);
+                    $size = strlen($file);
+                    $imageSizes = getimagesize($tmpFileName);
+                    if ($imageSizes[0] < 1920 || $imageSizes[1] < 1080) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Body image is not wide enough']);
+                    } elseif ($size > 10000000) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Body size is not allowed']);
+                    }
+                    copy($tmpFileName, "custom/{$customId}/img/bodylogin.jpg");
                 }
-                copy($tmpFileName, "custom/{$customId}/img/bodylogin.jpg");
             } elseif ($args['id'] == 'applicationName') {
                 $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
                 $config['config']['applicationName'] = $body['applicationName'];
