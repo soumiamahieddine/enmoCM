@@ -1,10 +1,10 @@
 <mat-form-field>
     <input matInput type="text" [formControl]="searchTerm" placeholder="{{'lang.searchEntities' | translate}}">
-    <mat-hint align="end" [innerHTML]="'lang.hotkeyInfo' | translate"></mat-hint>
+    <mat-hint *ngIf="selectionPropagation" align="end" [innerHTML]="'lang.hotkeyInfo' | translate"></mat-hint>
 </mat-form-field>
 <div style="position: relative;padding-top: 20px;">
     <div class="msgHotkey" *ngIf="holdShift" [title]="'lang.hotkeyTitle' | translate">
-        <i class="fas fa-keyboard" [iinerHTML]=""></i>&nbsp;<span [innerHTML]="'lang.hotkeyMsg' | translate"></span>
+        <i class="fas fa-keyboard"></i>&nbsp;<span [innerHTML]="'lang.hotkeyMsg' | translate"></span>
     </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <mat-nested-tree-node *matTreeNodeDef="let node">

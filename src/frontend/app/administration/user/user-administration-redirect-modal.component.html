@@ -4,10 +4,10 @@
         <form #redirectConfForm="ngForm">
 
             <div class="alert-message alert-message-info" role="alert" *ngIf="data.hasConfidentialityInstances"
-                [innerHTML]="this.translate.instant('lang.redirectConfidentialInfo')">
+                [innerHTML]="'lang.redirectConfidentialInfo' | translate">
             </div>
             <div class="alert-message alert-message-info" role="alert" *ngIf="data.hasListTemplates"
-                [innerHTML]="this.translate.instant('lang.redirectModelInfo')">
+                [innerHTML]="'lang.redirectModelInfo' | translate">
             </div>
             <div class="input-group">
                 <mat-radio-group id="processMode" name="processMode"
@@ -22,14 +22,14 @@
                         {{'lang.reaffectUserRedirect' | translate}}
                     </mat-radio-button>
                 </mat-radio-group>
-                <plugin-autocomplete *ngIf="this.processMode == 'reaffect'" [labelPlaceholder]="this.translate.instant('lang.userReplacement')"
-                    [labelList]="this.translate.instant('lang.availableUsers')" [routeDatas]="['/rest/autocomplete/users']"
+                <plugin-autocomplete *ngIf="this.processMode == 'reaffect'" [labelPlaceholder]="'lang.userReplacement' | translate"
+                    [labelList]="'lang.availableUsers' | translate" [routeDatas]="['/rest/autocomplete/users']"
                     [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'"
                     (triggerEvent)="setRedirectUser($event)" singleMode required></plugin-autocomplete>
 
                 <div class="alert-message alert-message-info" role="alert" style="max-width: inherit;">
                     <span *ngIf="this.processMode == ''"><em>{{'lang.doNothingRedirectInformations' | translate}}</em></span>
-                    <span *ngIf="this.processMode == 'delete'" [innerHTML]="this.translate.instant('lang.removeUserRedirectInformations')"></span>
+                    <span *ngIf="this.processMode == 'delete'" [innerHTML]="'lang.removeUserRedirectInformations' | translate"></span>
                     <span
                         *ngIf="this.processMode == 'reaffect'"><em>{{'lang.reaffectUserRedirectInformations' | translate}}</em></span>
                 </div>

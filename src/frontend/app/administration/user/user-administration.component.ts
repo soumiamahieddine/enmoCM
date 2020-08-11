@@ -15,6 +15,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { AccountLinkComponent } from './account-link/account-link.component';
 import { AppService } from '../../../service/app.service';
 import { PrivilegeService } from '../../../service/privileges.service';
+import { MaarchFlatTreeComponent } from '../../../plugins/tree/maarch-flat-tree.component';
 
 declare var $: any;
 
@@ -26,6 +27,8 @@ export class UserAdministrationComponent implements OnInit {
 
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
+    @ViewChild('maarchTree', { static: false }) maarchTree: MaarchFlatTreeComponent;
+
 
     lang: any = LANG;
     loading: boolean = false;
@@ -36,8 +39,8 @@ export class UserAdministrationComponent implements OnInit {
     userId: string;
     mode: string = '';
     user: any = {
-        mode : 'standard',
-        authorizedApi : ''
+        mode: 'standard',
+        authorizedApi: ''
     };
     _search: string = '';
     creationMode: boolean;
@@ -94,19 +97,19 @@ export class UserAdministrationComponent implements OnInit {
     adminModes: any[] = [
         {
             id: 'standard',
-            label : this.translate.instant('lang.standard')
+            label: this.translate.instant('lang.standard')
         },
         {
             id: 'root_visible',
-            label : this.translate.instant('lang.root_visible')
+            label: this.translate.instant('lang.root_visible')
         },
         {
             id: 'root_invisible',
-            label : this.translate.instant('lang.root_invisible')
+            label: this.translate.instant('lang.root_invisible')
         },
         {
             id: 'rest',
-            label : this.translate.instant('lang.rest')
+            label: this.translate.instant('lang.rest')
         }
     ];
 
@@ -176,9 +179,8 @@ export class UserAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.user = data;
 
-                        if (this.user.mode == 'rest') {
+                        if (this.user.mode === 'rest') {
                             this.user.authorizedApi = this.user.authorizedApi.join('\n');
-                            console.log(this.user.authorizedApi);
                         }
 
                         if (this.headerService.user.id === this.user.id) {
@@ -311,7 +313,15 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     initService() {
-        if ($('.jstree-container-ul').length === 0) {
+        if (this.maarchTree.rawData.length === 0) {
+            this.maarchTree.initData(this.user.allEntities.map((ent: any) => {
+                return {
+                    ...ent,
+                    parent_id : ent.parent,
+            };
+            }));
+        }
+        /*if ($('.jstree-container-ul').length === 0) {
             $('#jstree').jstree({
                 'checkbox': {
                     'three_state': false // no cascade selection
@@ -346,7 +356,7 @@ export class UserAdministrationComponent implements OnInit {
                     $('#jstree').jstree(true).search(v);
                 }, 250);
             });
-        }
+        }*/
     }
 
     processAfterUpload(b64Content: any) {
@@ -454,23 +464,25 @@ export class UserAdministrationComponent implements OnInit {
             });
     }
 
-    addEntity(entiyId: any) {
-        const entity = {
-            'entityId': entiyId,
-            'role': ''
-        };
+    addEntity(entities: any[]) {
+        entities.forEach(ent => {
+            const entity = {
+                'entityId': ent.entity_id,
+                'role': ''
+            };
+            this.http.post('../rest/users/' + this.serialId + '/entities', entity)
+                .subscribe((data: any) => {
+                    this.user.entities = data.entities;
+                    this.user.allEntities = data.allEntities;
+                    if (this.headerService.user.id == this.serialId) {
+                        this.headerService.resfreshCurrentUser();
+                    }
+                    this.notify.success(this.translate.instant('lang.entityAdded'));
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        });
 
-        this.http.post('../rest/users/' + this.serialId + '/entities', entity)
-            .subscribe((data: any) => {
-                this.user.entities = data.entities;
-                this.user.allEntities = data.allEntities;
-                if (this.headerService.user.id == this.serialId) {
-                    this.headerService.resfreshCurrentUser();
-                }
-                this.notify.success(this.translate.instant('lang.entityAdded'));
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
     }
 
     updateEntity(entity: any) {
@@ -492,52 +504,64 @@ export class UserAdministrationComponent implements OnInit {
             });
     }
 
-    deleteEntity(entityId: any) {
+    deleteEntity(entities: any[]) {
 
-        // first check confidential state
-        this.http.get('../rest/users/' + this.serialId + '/entities/' + entityId)
-            .subscribe((data: any) => {
-                if (!data['hasConfidentialityInstances'] && !data['hasListTemplates']) {
-                    this.http.delete('../rest/users/' + this.serialId + '/entities/' + entityId)
-                        .subscribe((dataEntities: any) => {
-                            this.user.entities = dataEntities.entities;
-                            this.user.allEntities = dataEntities.allEntities;
-                            if (this.headerService.user.id == this.serialId) {
-                                this.headerService.resfreshCurrentUser();
+        entities.forEach(ent => {
+            const entityId = ent.entity_id;
+            // first check confidential state
+            this.http.get('../rest/users/' + this.serialId + '/entities/' + entityId)
+                .subscribe((data: any) => {
+                    if (!data['hasConfidentialityInstances'] && !data['hasListTemplates']) {
+                        this.http.delete('../rest/users/' + this.serialId + '/entities/' + entityId)
+                            .subscribe((dataEntities: any) => {
+                                this.user.entities = dataEntities.entities;
+                                this.user.allEntities = dataEntities.allEntities;
+                                if (this.headerService.user.id == this.serialId) {
+                                    this.headerService.resfreshCurrentUser();
+                                }
+                                this.notify.success(this.translate.instant('lang.entityDeleted'));
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
+                    } else {
+                        this.config = { panelClass: 'maarch-modal', data: { hasConfidentialityInstances: data['hasConfidentialityInstances'], hasListTemplates: data['hasListTemplates'] } };
+                        this.dialogRef = this.dialog.open(UserAdministrationRedirectModalComponent, this.config);
+                        this.dialogRef.afterClosed().subscribe((result: any) => {
+                            this.mode = 'delete';
+                            if (result) {
+                                this.mode = result.processMode;
+                                this.http.request('DELETE', '../rest/users/' + this.serialId + '/entities/' + entityId, { body: { 'mode': this.mode, 'newUser': result.newUser } })
+                                    .subscribe((dataEntities: any) => {
+                                        this.user.entities = dataEntities.entities;
+                                        this.user.allEntities = dataEntities.allEntities;
+                                        if (this.headerService.user.id == this.serialId) {
+                                            this.headerService.resfreshCurrentUser();
+                                        }
+                                        this.notify.success(this.translate.instant('lang.entityDeleted'));
+                                    }, (err) => {
+                                        this.notify.error(err.error.errors);
+                                    });
+                            } else {
+                                this.maarchTree.toggleNode(
+                                    this.maarchTree.dataSource.data,
+                                    {
+                                        selected: true,
+                                        opened: true
+                                    },
+                                    [ent.id]
+                                );
+                                // $('#jstree').jstree('select_node', entityId);
+                                this.mode = '';
                             }
-                            this.notify.success(this.translate.instant('lang.entityDeleted'));
-                        }, (err) => {
-                            this.notify.error(err.error.errors);
+                            this.dialogRef = null;
                         });
-                } else {
-                    this.config = { panelClass: 'maarch-modal', data: { hasConfidentialityInstances: data['hasConfidentialityInstances'], hasListTemplates: data['hasListTemplates'] } };
-                    this.dialogRef = this.dialog.open(UserAdministrationRedirectModalComponent, this.config);
-                    this.dialogRef.afterClosed().subscribe((result: any) => {
-                        this.mode = 'delete';
-                        if (result) {
-                            this.mode = result.processMode;
-                            this.http.request('DELETE', '../rest/users/' + this.serialId + '/entities/' + entityId, { body: { 'mode': this.mode, 'newUser': result.newUser } })
-                                .subscribe((dataEntities: any) => {
-                                    this.user.entities = dataEntities.entities;
-                                    this.user.allEntities = dataEntities.allEntities;
-                                    if (this.headerService.user.id == this.serialId) {
-                                        this.headerService.resfreshCurrentUser();
-                                    }
-                                    this.notify.success(this.translate.instant('lang.entityDeleted'));
-                                }, (err) => {
-                                    this.notify.error(err.error.errors);
-                                });
-                        } else {
-                            $('#jstree').jstree('select_node', entityId);
-                            this.mode = '';
-                        }
-                        this.dialogRef = null;
-                    });
-                }
+                    }
 
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        });
+
     }
 
     submitSignature() {
@@ -911,11 +935,13 @@ export class UserAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            if (this.user.mode == 'rest') {
-                this.user.authorizedApi = this.user.authorizedApi.split('\n');
-                console.log(this.user.authorizedApi);
+            const user = {
+                ...this.user
+            };
+            if (this.user.mode === 'rest') {
+                user.authorizedApi = this.user.authorizedApi.split('\n')[0] !== '' ? this.user.authorizedApi.split('\n') : [];
             }
-            this.http.put('../rest/users/' + this.serialId, this.user)
+            this.http.put('../rest/users/' + this.serialId, user)
                 .subscribe((data: any) => {
                     if (this.headerService.user.id == this.serialId) {
                         this.headerService.resfreshCurrentUser();

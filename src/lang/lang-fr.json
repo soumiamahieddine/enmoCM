@@ -1885,6 +1885,7 @@
     "enableField": "Activer le champ",
     "disableField": "Désactiver le champ",
     "emailSubject": "Objet du courriel",
+    "authorizedRoutes": "Routes autorisées",
     "infoImportusers": "La colonne <b>id</b> est utilisée pour identifier un utilisateur",
     "infoImportusers2": "Les colonnes <b>id</b> et <b>user_id</b> ne sont pas prises en compte lors de mise à jour d'utilisateurs",
     "hotkeyInfo": "Maintenez <b>SHIFT</b> pour propager vos selections aux sous-éléments",

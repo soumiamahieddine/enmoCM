@@ -28,10 +28,15 @@ export class MaarchFlatTreeComponent implements OnInit {
 
     @Input() rawData: any = [];
 
+    @Input() selectionPropagation: boolean = true;
+    @Input() openState: string = '';
+
     @Output() afterSelectNode = new EventEmitter<any>();
     @Output() afterDeselectNode = new EventEmitter<any>();
 
     holdShift: boolean = false;
+
+    defaultOpenedNodes: any[] = [];
 
     treeControl = new NestedTreeControl<any>(node => node.children);
     dataSource = new MatTreeNestedDataSource<any>();
@@ -41,8 +46,13 @@ export class MaarchFlatTreeComponent implements OnInit {
 
     lastSelectedNodeIds: any[] = [];
 
+    pendingChildOf: any = {};
+    temp: any = {};
+
     @HostListener('document:keydown.Shift', ['$event']) onKeydownHandler(event: KeyboardEvent) {
-        this.holdShift = true;
+        if (this.selectionPropagation) {
+            this.holdShift = true;
+        }
     }
     @HostListener('document:keyup.Shift', ['$event']) onKeyupHandler(event: KeyboardEvent) {
         this.holdShift = false;
@@ -108,21 +118,42 @@ export class MaarchFlatTreeComponent implements OnInit {
     }
 
     initData(data: any = this.rawData) {
+        this.rawData = data;
+
+        // Catch all nodes Ids to open tree nodes in root level
+        if (this.openState !== 'all') {
+            this.setDefaultOpened();
+        }
+
         this.rawData = data.map((item: any) => {
             return {
                 ...item,
-                parent_id : item.parent_id === '#' ? null : item.parent_id,
-                state: {
+                parent_id: item.parent_id === '#' || item.parent_id === '' ? null : item.parent_id,
+                state: item.state !== undefined ? {
                     selected: item.state.selected,
-                    opened: item.state.opened,
+                    opened: item.state.opened || this.defaultOpenedNodes.indexOf(item.id) > -1 || this.openState === 'all',
                     disabled: item.state.disabled,
-                }
+                } : {
+                        selected: false,
+                        opened: this.defaultOpenedNodes.indexOf(item.id) > -1 || this.openState === 'all',
+                        disabled: false,
+                    }
             };
         });
 
-        this.rawData = this.sortPipe.transform(this.rawData, 'parent_id');
+        let FlatToNested, flatToNested;
 
-        const nestedData = this.flatToNestedObject(this.rawData);
+        FlatToNested = require('flat-to-nested');
+        flatToNested = new FlatToNested({
+            id: 'id',
+            parent: 'parent_id',
+            children: 'children',
+            options : { deleteParent: false }
+        });
+
+        this.rawData = this.sortPipe.transform(this.rawData, 'text');
+        let nestedData = flatToNested.convert(this.rawData);
+        nestedData = nestedData.children;
 
         this.dataSource.data = nestedData;
         this.treeControl.dataNodes = nestedData;
@@ -139,80 +170,19 @@ export class MaarchFlatTreeComponent implements OnInit {
             ).subscribe();
     }
 
+    setDefaultOpened() {
+        this.rawData.filter((item: any) => item.state !== undefined && item.state.opened).forEach((item: any) => {
+            this.defaultOpenedNodes = this.defaultOpenedNodes.concat(this.getParents([item]));
+        });
+        this.defaultOpenedNodes = this.defaultOpenedNodes.map((node: any) => node.id);
+    }
+
     getData(id: any) {
         return this.rawData.filter((elem: any) => elem.id === id)[0];
     }
 
     getIteration(it: number) {
         return Array(it).fill(0).map((x, i) => i);
-    }
-
-    flatToNestedObject(data: any) {
-        const nested = data.reduce((initial: any, value: any, index: any, original: any) => {
-            if (value.parent_id === '') {
-                if (initial.left.length) {
-                    this.checkLeftOvers(initial.left, value);
-                }
-                delete value.parent_id;
-                value.root = true;
-                initial.nested.push(value);
-                initial.nested = this.sortPipe.transform(initial.nested, 'text');
-                initial.nested = initial.nested.map((info: any, indexPar: number) => {
-                    return {
-                        ...info,
-                        last: initial.nested.length - 1 === indexPar,
-                    };
-                });
-            } else {
-                const parentFound = this.findParent(initial.nested, value);
-                if (parentFound) {
-                    this.checkLeftOvers(initial.left, value);
-                } else {
-                    initial.left.push(value);
-                }
-            }
-            return index < original.length - 1 ? initial : initial.nested;
-        }, { nested: [], left: [] });
-        return nested;
-    }
-
-    checkLeftOvers(leftOvers: any, possibleParent: any) {
-        for (let i = 0; i < leftOvers.length; i++) {
-            if (leftOvers[i].parent_id === possibleParent.id) {
-                // delete leftOvers[i].parent_id;
-                possibleParent.children ? possibleParent.children.push(leftOvers[i]) : possibleParent.children = [leftOvers[i]];
-                possibleParent.count = possibleParent.children.length;
-                const addedObj = leftOvers.splice(i, 1);
-                this.checkLeftOvers(leftOvers, addedObj[0]);
-            }
-        }
-    }
-
-    findParent(possibleParents: any, possibleChild: any): any {
-        let found = false;
-        for (let i = 0; i < possibleParents.length; i++) {
-            if (possibleParents[i].id === possibleChild.parent_id) {
-                found = true;
-                // delete possibleChild.parent_id;
-                if (possibleParents[i].children) {
-                    possibleParents[i].children.push(possibleChild);
-                } else {
-                    possibleParents[i].children = [possibleChild];
-                }
-                possibleParents[i].count = possibleParents[i].children.length;
-                possibleParents[i].children = this.sortPipe.transform(possibleParents[i].children, 'text');
-                possibleParents[i].children = possibleParents[i].children.map((info: any, index: number) => {
-                    return {
-                        ...info,
-                        last: possibleParents[i].children.length - 1 === index,
-                    };
-                });
-                return true;
-            } else if (possibleParents[i].children) {
-                found = this.findParent(possibleParents[i].children, possibleChild);
-            }
-        }
-        return found;
     }
 
     hasChild = (_: number, node: any) => !!node.children && node.children.length > 0;
@@ -252,7 +222,6 @@ export class MaarchFlatTreeComponent implements OnInit {
         // traverse throuh each node
         if (Array.isArray(data)) { // if data is an array
             data.forEach((d) => {
-
                 if (nodeIds.indexOf(d.id) > -1 || (this.holdShift && nodeIds.indexOf(d.parent_id) > -1)) {
                     Object.keys(state).forEach(key => {
                         if (d.state.disabled && key === 'opened') {
@@ -292,6 +261,17 @@ export class MaarchFlatTreeComponent implements OnInit {
                 this.toggleNode(f, state, nodeIds);
 
             }); // and call function on each child
+        }
+    }
+
+    getParents(node: any[]) {
+        const res = this.rawData.filter((data: any) => data.id === node[node.length - 1].parent_id);
+
+        if (res.length > 0) {
+            node.push(res[0]);
+            return this.getParents(node);
+        } else {
+            return node;
         }
     }
 

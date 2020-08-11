@@ -232,8 +232,8 @@
                                         </div>
                                         <div *ngIf="user.mode === 'rest'">
                                             <mat-form-field>
-                                                <mat-label>{{'this.lang.authorizedRoutes' | translate}}</mat-label>
-                                                <textarea matInput [(ngModel)]="user.authorizedApi" placeholder="POST/attachments\nPUT/attachments/{id}"></textarea>
+                                                <mat-label>{{'lang.authorizedRoutes' | translate}}</mat-label>
+                                                <textarea matInput name="authorizedApi" [(ngModel)]="user.authorizedApi" placeholder="POST/attachments\nPUT/attachments/{id}"></textarea>
                                             </mat-form-field>
                                         </div>
                                     </mat-expansion-panel>
@@ -259,11 +259,7 @@
                             </mat-nav-list>
                         </mat-tab>
                         <mat-tab *ngIf="!creationMode" label="{{'lang.entities' | translate}}">
-                            <mat-form-field>
-                                <input matInput id="jstree_search" type="text" placeholder="{{'lang.searchEntities' | translate}}">
-                                <mat-hint>{{'lang.linkEntityToUserInfo' | translate}}</mat-hint>
-                            </mat-form-field>
-                            <div id="jstree"></div>
+                            <app-maarch-flat-tree #maarchTree (afterSelectNode)="addEntity($event)" [selectionPropagation]="false" [openState]="'all'" (afterDeselectNode)="deleteEntity($event)"></app-maarch-flat-tree>
                         </mat-tab>
                         <mat-tab *ngIf="!creationMode" label="{{'lang.baskets' | translate}}">
                             <div class="col-sm-6" style="overflow:hidden;">
