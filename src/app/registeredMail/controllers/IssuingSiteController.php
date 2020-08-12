@@ -254,7 +254,7 @@ class IssuingSiteController
         ]);
 
         if (empty($sitesIds)) {
-            return $response->withStatus(403)->withJson(['errors' => 'No range found for type : ' . $args['type']]);
+            return $response->withStatus(403)->withJson(['sites' => []]);
         }
         $sitesIds = array_column($sitesIds, 'site_id');
 

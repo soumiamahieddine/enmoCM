@@ -47,11 +47,12 @@ class RegisteredNumberRangeController
                 'rangeEnd'              => $range['range_end'],
                 'creator'               => $range['creator'],
                 'created'               => $range['created'],
-                'siteId'                => $range['site_id'],
                 'status'                => $range['status'],
                 'customerAccountNumber' => $site['account_number'],
                 'currentNumber'         => $range['current_number'],
-                'fullness'              => $fullness
+                'fullness'              => $fullness,
+                'siteId'                => $range['site_id'],
+                'siteLabel'             => $site['site_label']
             ];
         }
 
@@ -86,11 +87,12 @@ class RegisteredNumberRangeController
             'rangeEnd'              => $range['range_end'],
             'creator'               => $range['creator'],
             'created'               => $range['created'],
-            'siteId'                => $range['site_id'],
             'status'                => $range['status'],
             'customerAccountNumber' => $site['account_number'],
             'currentNumber'         => $range['current_number'],
-            'fullness'              => $fullness
+            'fullness'              => $fullness,
+            'siteId'                => $range['site_id'],
+            'siteLabel'             => $site['site_label']
         ];
 
         return $response->withJson(['range' => $range]);
@@ -125,6 +127,20 @@ class RegisteredNumberRangeController
             return $response->withStatus(400)->withJson(['errors' => 'Body siteId does not exist']);
         }
 
+        $ranges = RegisteredNumberRangeModel::get([
+            'select'  => ['range_start', 'range_end'],
+            'where'   => ['type = ?'],
+            'data'    => [$body['registeredMailType']],
+            'orderBy' => ['range_end desc']
+        ]);
+
+        foreach ($ranges as $range) {
+            if ($body['rangeStart'] <= $range['range_start'] && $range['range_start'] <= $body['rangeEnd']
+                || $body['rangeStart'] <= $range['range_end'] && $range['range_end'] <= $body['rangeEnd']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Range overlaps another range']);
+            }
+        }
+
         $id = RegisteredNumberRangeModel::create([
             'type'                  => $body['registeredMailType'],
             'trackingAccountNumber' => $body['trackerNumber'],
@@ -132,7 +148,7 @@ class RegisteredNumberRangeController
             'rangeEnd'              => $body['rangeEnd'],
             'creator'               => $GLOBALS['id'],
             'siteId'                => $body['siteId'],
-            'status'                => $body['status'],
+            'status'                => empty($body['status']) ? 'SPD' : $body['status'],
             'currentNumber'         => $body['rangeStart']
         ]);
 
@@ -182,13 +198,49 @@ class RegisteredNumberRangeController
             return $response->withStatus(400)->withJson(['errors' => 'Body siteId does not exist']);
         }
 
+        $ranges = RegisteredNumberRangeModel::get([
+            'select'  => ['range_start', 'range_end'],
+            'where'   => ['type = ?', 'id != ?'],
+            'data'    => [$body['registeredMailType'], $args['id']],
+            'orderBy' => ['range_end desc']
+        ]);
+
+        foreach ($ranges as $item) {
+            if ($body['rangeStart'] <= $item['range_start'] && $item['range_start'] <= $body['rangeEnd']
+                || $body['rangeStart'] <= $item['range_end'] && $item['range_end'] <= $body['rangeEnd']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Range overlaps another range']);
+            }
+        }
+
+        if ($body['status'] == 'OK' && $range['status'] != 'OK') {
+            RegisteredNumberRangeModel::update([
+                'set'   => [
+                    'status' => 'END'
+                ],
+                'where' => ['type = ?', 'status = ?'],
+                'data'  => [$body['registeredMailType'], 'OK']
+            ]);
+        }
+
+        if ($range['status'] != 'SPD' && $body['status'] != $range['status']) {
+            RegisteredNumberRangeModel::update([
+                'set'   => [
+                    'status' => $body['status']
+                ],
+                'where' => ['id = ?'],
+                'data'  => [$args['id']]
+            ]);
+            return $response->withStatus(204);
+        } elseif ($range['status'] != 'SPD' && $body['status'] == $range['status']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Range cannot be updated']);
+        }
+
         RegisteredNumberRangeModel::update([
             'set'   => [
                 'type'                    => $body['registeredMailType'],
                 'tracking_account_number' => $body['trackerNumber'],
                 'range_start'             => $body['rangeStart'],
                 'range_end'               => $body['rangeEnd'],
-                'creator'                 => $GLOBALS['id'],
                 'site_id'                 => $body['siteId'],
                 'status'                  => $body['status']
             ],
@@ -214,9 +266,13 @@ class RegisteredNumberRangeController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $site = RegisteredNumberRangeModel::getById(['id' => $args['id']]);
-        if (empty($site)) {
+        $range = RegisteredNumberRangeModel::getById(['id' => $args['id']]);
+        if (empty($range)) {
             return $response->withStatus(204);
+        }
+
+        if ($range['status'] == 'OK') {
+            return $response->withStatus(400)->withJson(['errors' => 'Range cannot be deleted']);
         }
 
         RegisteredNumberRangeModel::delete([
