@@ -217,7 +217,7 @@ export class IssuingSiteComponent implements OnInit {
             this.http.post('../rest/registeredMail/sites', objToSubmit)
                 .subscribe(() => {
                     this.notify.success(this.translate.instant('lang.issuingSiteAdded'));
-                    this.router.navigate(['/administration/issuingSite']);
+                    this.router.navigate(['/administration/issuingSites']);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
@@ -225,7 +225,7 @@ export class IssuingSiteComponent implements OnInit {
             this.http.put('../rest/registeredMail/sites/' + this.id, objToSubmit)
                 .subscribe(() => {
                     this.notify.success(this.translate.instant('lang.issuingSiteUpdated'));
-                    this.router.navigate(['/administration/issuingSite']);
+                    this.router.navigate(['/administration/issuingSites']);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });

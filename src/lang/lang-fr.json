@@ -1902,5 +1902,12 @@
     "siteName": "Nom du site",
     "issuingSiteCreation": "Création d'un site émetteur",
     "issuingSiteAdded": "Site émetteur ajouté",
-    "issuingSiteUpdated": "Site émetteur modifié"
+    "issuingSiteUpdated": "Site émetteur modifié",
+    "registeredMailNumberRanges": "Plages de numéros de recommandés",
+    "customerAccountNumber": "Numéro de client",
+    "trackerNumber": "Numéro de suivi",
+    "registredMailType": "Type de recommandé",
+    "rangeNumber": "Plage",
+    "currentNumber": "Numéro actuel",
+    "fullness": "Remplissage"
 }

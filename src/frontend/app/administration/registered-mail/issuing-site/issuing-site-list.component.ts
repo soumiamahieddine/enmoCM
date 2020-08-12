@@ -22,6 +22,21 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class IssuingSiteListComponent implements OnInit {
 
+    subMenus: any[] = [
+        {
+            icon: 'fas fa-dolly-flatbed',
+            route: '/administration/registeredMails',
+            label: this.translate.instant('lang.registeredMailNumberRanges'),
+            current: false
+        },
+        {
+            icon: 'fas fa-warehouse',
+            route: '/administration/issuingSites',
+            label: this.translate.instant('lang.issuingSites'),
+            current: true
+        },
+    ];
+
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     parameters: any = {};

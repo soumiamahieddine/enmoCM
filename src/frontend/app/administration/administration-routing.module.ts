@@ -51,6 +51,7 @@ import { AlfrescoListAdministrationComponent } from './alfresco/alfresco-list-ad
 import { ContactDuplicateComponent } from './contact/contact-duplicate/contact-duplicate.component';
 import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing-site-list.component';
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
+import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
 
 @NgModule({
     imports: [
@@ -119,9 +120,10 @@ import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-sit
             { path: 'alfresco', canActivate: [AppGuard], component: AlfrescoListAdministrationComponent },
             { path: 'alfresco/new', canActivate: [AppGuard], component: AlfrescoAdministrationComponent },
             { path: 'alfresco/:id', canActivate: [AppGuard], component: AlfrescoAdministrationComponent },
-            { path: 'issuingSite', canActivate: [AppGuard], component: IssuingSiteListComponent },
-            { path: 'issuingSite/new', canActivate: [AppGuard], component: IssuingSiteComponent },
-            { path: 'issuingSite/:id', canActivate: [AppGuard], component: IssuingSiteComponent },
+            { path: 'registeredMails', canActivate: [AppGuard], component: RegisteredMailListComponent },
+            { path: 'issuingSites', canActivate: [AppGuard], component: IssuingSiteListComponent },
+            { path: 'issuingSites/new', canActivate: [AppGuard], component: IssuingSiteComponent },
+            { path: 'issuingSites/:id', canActivate: [AppGuard], component: IssuingSiteComponent },
         ]),
     ],
     exports: [
