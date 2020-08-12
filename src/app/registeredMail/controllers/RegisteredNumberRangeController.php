@@ -235,4 +235,26 @@ class RegisteredNumberRangeController
 
         return $response->withStatus(204);
     }
+
+    public function getLastNumberByType(Request $request, Response $response, array $args)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_registered_mail', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $range = RegisteredNumberRangeModel::get([
+            'select'  => ['range_end'],
+            'where'   => ['type = ?'],
+            'data'    => [$args['type']],
+            'orderBy' => ['range_end desc']
+        ]);
+
+        if (empty($range)) {
+            return $response->withStatus(403)->withJson(['errors' => 'No range found for type : ' . $args['type']]);
+        }
+
+        $range = $range[0];
+
+        return $response->withJson(['lastNumber' => $range['range_end']]);
+    }
 }

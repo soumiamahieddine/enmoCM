@@ -23,8 +23,12 @@ class IssuingSiteModel
         ValidatorModel::arrayType($args, ['select']);
 
         return DatabaseModel::select([
-            'select' => empty($args['select']) ? ['*'] : $args['select'],
-            'table'  => ['issuing_sites']
+            'select'   => empty($args['select']) ? ['*'] : $args['select'],
+            'table'    => ['issuing_sites'],
+            'where'    => empty($args['where']) ? [] : $args['where'],
+            'data'     => empty($args['data']) ? [] : $args['data'],
+            'order_by' => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'limit'    => empty($args['limit']) ? 0 : $args['limit']
         ]);
     }
 

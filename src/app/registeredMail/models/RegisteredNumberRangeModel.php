@@ -23,8 +23,12 @@ class RegisteredNumberRangeModel
         ValidatorModel::arrayType($args, ['select']);
 
         return DatabaseModel::select([
-            'select' => empty($args['select']) ? ['*'] : $args['select'],
-            'table'  => ['registered_number_range']
+            'select'   => empty($args['select']) ? ['*'] : $args['select'],
+            'table'    => ['registered_number_range'],
+            'where'    => empty($args['where']) ? [] : $args['where'],
+            'data'     => empty($args['data']) ? [] : $args['data'],
+            'order_by' => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'limit'    => empty($args['limit']) ? 0 : $args['limit']
         ]);
     }
 

@@ -17,6 +17,7 @@ use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use RegisteredMail\models\IssuingSiteEntitiesModel;
 use RegisteredMail\models\IssuingSiteModel;
+use RegisteredMail\models\RegisteredNumberRangeModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -238,5 +239,46 @@ class IssuingSiteController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    public function getByType(Request $request, Response $response, array $args)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_registered_mail', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $sitesIds = RegisteredNumberRangeModel::get([
+            'select' => ['site_id'],
+            'where'  => ['type = ?'],
+            'data'   => [$args['type']]
+        ]);
+
+        if (empty($sitesIds)) {
+            return $response->withStatus(403)->withJson(['errors' => 'No range found for type : ' . $args['type']]);
+        }
+        $sitesIds = array_column($sitesIds, 'site_id');
+
+        $sites = IssuingSiteModel::get([
+            'where' => ['id in (?)'],
+            'data'  => [$sitesIds]
+        ]);
+
+        foreach ($sites as $key => $site) {
+            $sites[$key] = [
+                'id'                 => $site['id'],
+                'siteLabel'          => $site['site_label'],
+                'postOfficeLabel'    => $site['post_office_label'],
+                'accountNumber'      => $site['account_number'],
+                'addressNumber'      => $site['address_number'],
+                'addressStreet'      => $site['address_street'],
+                'addressAdditional1' => $site['address_additional1'],
+                'addressAdditional2' => $site['address_additional2'],
+                'addressPostcode'    => $site['address_postcode'],
+                'addressTown'        => $site['address_town'],
+                'addressCountry'     => $site['address_country']
+            ];
+        }
+
+        return $response->withJson(['sites' => $sites]);
     }
 }
