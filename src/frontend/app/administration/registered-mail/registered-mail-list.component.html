@@ -2,7 +2,7 @@
     <ng-template #adminMenuTemplate>
         <mat-nav-list>
             <h3 mat-subheader>{{'lang.actions' | translate}}</h3>
-            <a mat-list-item routerLink="/administration/registeredMail/new">
+            <a mat-list-item routerLink="/administration/registeredMails/new">
                 <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
                 <p mat-line>
                     {{'lang.add' | translate}}
@@ -131,7 +131,7 @@
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumns;"
-                            routerLink="/administration/registeredMail/{{row.id}}" style="cursor:pointer;"
+                            routerLink="/administration/registeredMails/{{row.id}}" style="cursor:pointer;"
                             matTooltip="{{'lang.view' | translate}}"></mat-row>
                     </mat-table>
                     <div class="mat-paginator"

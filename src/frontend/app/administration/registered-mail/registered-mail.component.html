@@ -1,1 +1,54 @@
-<p>registered-mail works!</p>
+<mat-sidenav-container autosize class="maarch-container">
+    <mat-sidenav-content>
+        <div class="bg-head">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
+                <div class="bg-head-title-label">
+                    <header-left></header-left>
+                </div>
+                <div class="bg-head-title-tool">
+                    <header-right></header-right>
+                </div>
+            </div>
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
+            </div>
+        </div>
+        <div class="container" [class.fullContainer]="appService.getViewMode()">
+            <div class="container-content">
+                <div *ngIf="loading" style="display:flex;height:100%;">
+                    <mat-spinner style="margin:auto;"></mat-spinner>
+                </div>
+                <mat-card *ngIf="!loading" class="card-app-content">
+                    <form style="display: contents;" (ngSubmit)="onSubmit()" [formGroup]="adminFormGroup">
+                        <div>
+                            <plugin-select-search *ngIf="customerAccountNumberList.length > 0"
+                                [showLabel]="true"
+                                [label]="this.translate.instant('lang.customerAccountNumber')"
+                                [placeholderLabel]="this.translate.instant('lang.customerAccountNumber')"
+                                [datas]="customerAccountNumberList" [class]="''"
+                                [formControlSelect]="adminFormGroup.controls['customerAccountNumber']">
+                            </plugin-select-search>
+                            <plugin-select-search [showLabel]="true" [label]="this.translate.instant('lang.type')"
+                                [placeholderLabel]="this.translate.instant('lang.type')" [datas]="registredMailType"
+                                [class]="''" [formControlSelect]="adminFormGroup.controls['registredMailType']">
+                            </plugin-select-search>
+                            <div style="display: grid;grid-template-columns: 1fr 1fr;grid-gap: 20px;">
+                                <mat-form-field>
+                                    <mat-label>{{'lang.start' | translate}}</mat-label>
+                                    <input matInput type="number" [min]="1" (keypress)="onlyNumbers($event)" formControlName="rangeStart">
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>{{'lang.end' | translate}}</mat-label>
+                                    <input matInput type="number" [min]="1" (keypress)="onlyNumbers($event)" formControlName="rangeEnd">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div style="text-align:center;">
+                            <button mat-raised-button color="primary" type="submit"
+                                [disabled]="!adminFormGroup.valid">{{'lang.save' | translate}}</button>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

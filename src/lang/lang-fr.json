@@ -1901,6 +1901,7 @@
     "coclicoNumber": "N° COCLICO",
     "siteName": "Nom du site",
     "issuingSiteCreation": "Création d'un site émetteur",
+    "issuingSiteModification": "Modification d'un site émetteur",
     "issuingSiteAdded": "Site émetteur ajouté",
     "issuingSiteUpdated": "Site émetteur modifié",
     "registeredMailNumberRanges": "Plages de numéros de recommandés",

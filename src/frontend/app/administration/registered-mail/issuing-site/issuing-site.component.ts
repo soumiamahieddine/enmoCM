@@ -75,6 +75,7 @@ export class IssuingSiteComponent implements OnInit {
             } else {
                 this.id = params['id'];
                 this.creationMode = false;
+                this.headerService.setHeader(this.translate.instant('lang.issuingSiteModification'));
                 this.initBanSearch();
                 this.initAutocompleteAddressBan();
 
