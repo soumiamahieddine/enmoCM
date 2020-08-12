@@ -629,5 +629,7 @@ $app->delete('/registeredMail/ranges/{id}', \RegisteredMail\controllers\Register
 $app->get('/registeredMail/ranges/type/{type}', \RegisteredMail\controllers\RegisteredNumberRangeController::class . ':getLastNumberByType');
 $app->get('/registeredMail/sites/type/{type}', \RegisteredMail\controllers\IssuingSiteController::class . ':getByType');
 
+$app->get('/registeredMail/countries', \RegisteredMail\controllers\RegisteredMailController::class . ':getCountries');
+
 
 $app->run();
