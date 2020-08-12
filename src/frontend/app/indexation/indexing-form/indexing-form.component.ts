@@ -180,6 +180,22 @@ export class IndexingFormComponent implements OnInit {
             values: [],
             enabled: true,
         },
+        {
+            identifier: 'registeredMail_type',
+            label: this.translate.instant('lang.type'),
+            type: 'select',
+            default_value: null,
+            values: [{ 'id': '2D', 'label': this.translate.instant('National sans AR') }, { 'id': '2C', 'label': this.translate.instant('National avec AR') }, { 'id': 'RW', 'label': this.translate.instant('International') }],
+            enabled: true,
+        },
+        {
+            identifier: 'registeredMail_issuingSite',
+            label: this.translate.instant('lang.issuingSite'),
+            type: 'issuingSite',
+            default_value: null,
+            values: [],
+            enabled: true,
+        },
     ];
     availableFieldsClone: any[] = [];
 
