@@ -32,9 +32,11 @@ class RegisteredNumberRangeController
         $ranges = RegisteredNumberRangeModel::get();
 
         foreach ($ranges as $key => $range) {
-            $fullness = $range['currentNumber'] - $range['range_start'];
+            $fullness = $range['current_number'] - $range['range_start'];
             $rangeSize = $range['range_end'] - $range['range_start'];
             $fullness = ($fullness / $rangeSize) * 100;
+            $fullness = $fullness < 0 ? 0 : $fullness;
+            $fullness = round($fullness, 2);
 
             $site = IssuingSiteModel::getById(['id' => $range['site_id']]);
             $ranges[$key] = [
@@ -48,7 +50,7 @@ class RegisteredNumberRangeController
                 'siteId'                => $range['site_id'],
                 'status'                => $range['status'],
                 'customerAccountNumber' => $site['account_number'],
-                'currentNumber'         => $range['currentNumber'],
+                'currentNumber'         => $range['current_number'],
                 'fullness'              => $fullness
             ];
         }
@@ -70,9 +72,11 @@ class RegisteredNumberRangeController
 
         $site = IssuingSiteModel::getById(['id' => $range['site_id']]);
 
-        $fullness = $range['currentNumber'] - $range['range_start'];
+        $fullness = $range['current_number'] - $range['range_start'];
         $rangeSize = $range['range_end'] - $range['range_start'];
         $fullness = ($fullness / $rangeSize) * 100;
+        $fullness = $fullness < 0 ? 0 : $fullness;
+        $fullness = round($fullness, 2);
 
         $range = [
             'id'                    => $range['id'],
@@ -85,7 +89,7 @@ class RegisteredNumberRangeController
             'siteId'                => $range['site_id'],
             'status'                => $range['status'],
             'customerAccountNumber' => $site['account_number'],
-            'currentNumber'         => $range['currentNumber'],
+            'currentNumber'         => $range['current_number'],
             'fullness'              => $fullness
         ];
 
@@ -128,7 +132,8 @@ class RegisteredNumberRangeController
             'rangeEnd'              => $body['rangeEnd'],
             'creator'               => $GLOBALS['id'],
             'siteId'                => $body['siteId'],
-            'status'                => $body['status']
+            'status'                => $body['status'],
+            'currentNumber'         => $body['rangeStart']
         ]);
 
         HistoryController::add([

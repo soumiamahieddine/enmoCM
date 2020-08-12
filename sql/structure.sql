@@ -1430,3 +1430,16 @@ CREATE TABLE IF NOT EXISTS issuing_sites_entities
     CONSTRAINT issuing_sites_entities_pkey PRIMARY KEY (id),
     CONSTRAINT issuing_sites_entities_unique_key UNIQUE (site_id, entity_id)
 );
+CREATE TABLE IF NOT EXISTS registered_number_range (
+   id SERIAL NOT NULL,
+   type CHARACTER VARYING(15) NOT NULL,
+   tracking_account_number CHARACTER VARYING(256),
+   range_start INTEGER,
+   range_end INTEGER,
+   creator INTEGER,
+   created timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+   site_id INTEGER,
+   status CHARACTER VARYING(10),
+   current_number INTEGER DEFAULT 0 NOT NULL,
+   CONSTRAINT registered_number_range_pkey PRIMARY KEY (id)
+);

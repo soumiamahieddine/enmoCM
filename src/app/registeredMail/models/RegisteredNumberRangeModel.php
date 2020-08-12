@@ -50,9 +50,9 @@ class RegisteredNumberRangeModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['type', 'rangeStart', 'rangeEnd', 'siteId']);
+        ValidatorModel::notEmpty($args, ['type', 'rangeStart', 'rangeEnd', 'siteId', 'currentNumber']);
         ValidatorModel::stringType($args, ['type']);
-        ValidatorModel::intVal($args, ['rangeStart', 'rangeEnd', 'siteId']);
+        ValidatorModel::intVal($args, ['rangeStart', 'rangeEnd', 'siteId', 'currentNumber']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'registered_number_range_id_seq']);
 
@@ -64,8 +64,9 @@ class RegisteredNumberRangeModel
                 'tracking_account_number' => $args['trackingAccountNumber'],
                 'range_start'             => $args['rangeStart'],
                 'range_end'               => $args['rangeEnd'],
-                'creator'                 => $args['id'],
-                'site_id'                 => $args['siteId']
+                'creator'                 => $args['creator'],
+                'site_id'                 => $args['siteId'],
+                'current_number'          => $args['currentNumber']
             ]
         ]);
 
