@@ -32,15 +32,24 @@ class RegisteredNumberRangeController
         $ranges = RegisteredNumberRangeModel::get();
 
         foreach ($ranges as $key => $range) {
+            $fullness = $range['currentNumber'] - $range['range_start'];
+            $rangeSize = $range['range_end'] - $range['range_start'];
+            $fullness = ($fullness / $rangeSize) * 100;
+
+            $site = IssuingSiteModel::getById(['id' => $range['site_id']]);
             $ranges[$key] = [
                 'id'                    => $range['id'],
-                'type'                  => $range['type'],
-                'trackingAccountNumber' => $range['tracking_account_number'] ?? null,
-                'rangeStart'            => $range['range_start'] ?? null,
-                'rangeEnd'              => $range['range_end'] ?? null,
-                'creator'               => $range['creator'] ?? null,
-                'created'               => $range['created'] ?? null,
-                'siteId'                => $range['site_id'] ?? null
+                'registeredMailType'    => $range['type'],
+                'trackerNumber'         => $range['tracking_account_number'],
+                'rangeStart'            => $range['range_start'],
+                'rangeEnd'              => $range['range_end'],
+                'creator'               => $range['creator'],
+                'created'               => $range['created'],
+                'siteId'                => $range['site_id'],
+                'status'                => $range['status'],
+                'customerAccountNumber' => $site['account_number'],
+                'currentNumber'         => $range['currentNumber'],
+                'fullness'              => $fullness
             ];
         }
 
@@ -59,15 +68,25 @@ class RegisteredNumberRangeController
             return $response->withStatus(400)->withJson(['errors' => 'Range not found']);
         }
 
+        $site = IssuingSiteModel::getById(['id' => $range['site_id']]);
+
+        $fullness = $range['currentNumber'] - $range['range_start'];
+        $rangeSize = $range['range_end'] - $range['range_start'];
+        $fullness = ($fullness / $rangeSize) * 100;
+
         $range = [
             'id'                    => $range['id'],
-            'type'                  => $range['type'],
-            'trackingAccountNumber' => $range['tracking_account_number'] ?? null,
-            'rangeStart'            => $range['range_start'] ?? null,
-            'rangeEnd'              => $range['range_end'] ?? null,
-            'creator'               => $range['creator'] ?? null,
-            'created'               => $range['created'] ?? null,
-            'siteId'                => $range['site_id'] ?? null
+            'registeredMailType'    => $range['type'],
+            'trackerNumber'         => $range['tracking_account_number'],
+            'rangeStart'            => $range['range_start'],
+            'rangeEnd'              => $range['range_end'],
+            'creator'               => $range['creator'],
+            'created'               => $range['created'],
+            'siteId'                => $range['site_id'],
+            'status'                => $range['status'],
+            'customerAccountNumber' => $site['account_number'],
+            'currentNumber'         => $range['currentNumber'],
+            'fullness'              => $fullness
         ];
 
         return $response->withJson(['range' => $range]);
@@ -81,8 +100,11 @@ class RegisteredNumberRangeController
 
         $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($body['type']) || !in_array($body['type'], ['nationalWithAr', 'nationalNoAr', 'international'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body type is empty or not a value between nationalWithAr, nationalNoAr or international']);
+        if (!Validator::stringType()->notEmpty()->validate($body['registeredMailType'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body registeredMailType is empty or not a string']);
+        }
+        if (!Validator::stringType()->notEmpty()->validate($body['trackerNumber'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body trackerNumber is empty or not a string']);
         }
         if (!Validator::intVal()->notEmpty()->validate($body['rangeStart'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body rangeStart is empty or not an integer']);
@@ -100,12 +122,13 @@ class RegisteredNumberRangeController
         }
 
         $id = RegisteredNumberRangeModel::create([
-            'type'                  => $body['type'],
-            'trackingAccountNumber' => $body['trackingAccountNumber'] ?? null,
+            'type'                  => $body['registeredMailType'],
+            'trackingAccountNumber' => $body['trackerNumber'],
             'rangeStart'            => $body['rangeStart'],
             'rangeEnd'              => $body['rangeEnd'],
             'creator'               => $GLOBALS['id'],
-            'siteId'                => $body['siteId']
+            'siteId'                => $body['siteId'],
+            'status'                => $body['status']
         ]);
 
         HistoryController::add([
@@ -133,8 +156,11 @@ class RegisteredNumberRangeController
 
         $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($body['type']) || !in_array($body['type'], ['nationalWithAr', 'nationalNoAr', 'international'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body type is empty or not a value between nationalWithAr, nationalNoAr or international']);
+        if (!Validator::stringType()->notEmpty()->validate($body['registeredMailType'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body registeredMailType is empty or not a string']);
+        }
+        if (!Validator::stringType()->notEmpty()->validate($body['trackerNumber'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body trackerNumber is empty or not a string']);
         }
         if (!Validator::intVal()->notEmpty()->validate($body['rangeStart'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body rangeStart is empty or not an integer']);
@@ -153,12 +179,13 @@ class RegisteredNumberRangeController
 
         RegisteredNumberRangeModel::update([
             'set'   => [
-                'type'                    => $body['type'],
-                'tracking_account_number' => $body['trackingAccountNumber'],
+                'type'                    => $body['registeredMailType'],
+                'tracking_account_number' => $body['trackerNumber'],
                 'range_start'             => $body['rangeStart'],
                 'range_end'               => $body['rangeEnd'],
                 'creator'                 => $GLOBALS['id'],
-                'site_id'                 => $body['siteId']
+                'site_id'                 => $body['siteId'],
+                'status'                  => $body['status']
             ],
             'where' => ['id = ?'],
             'data'  => [$args['id']]

@@ -188,7 +188,7 @@ ALTER TABLE templates ADD COLUMN subject character varying(255);
 
 UPDATE groupbasket SET list_event_data = '{"canUpdateDocuments":true}' WHERE list_event_data->'canUpdateDocument' = true;
 
-/* RECOMMENDED */
+/* REGISTERED MAIL */
 CREATE TABLE IF NOT EXISTS issuing_sites (
    id SERIAL NOT NULL,
    site_label CHARACTER VARYING(256) NOT NULL,
@@ -220,6 +220,8 @@ CREATE TABLE IF NOT EXISTS registered_number_range (
     creator INTEGER,
     created timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     site_id INTEGER,
+    status CHARACTER VARYING(10),
+    current_number INTEGER DEFAULT 0 NOT NULL,
     CONSTRAINT registered_number_range_pkey PRIMARY KEY (id)
 );
 

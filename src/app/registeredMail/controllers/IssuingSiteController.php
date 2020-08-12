@@ -171,7 +171,7 @@ class IssuingSiteController
             'set'  => [
                 'site_label'          => $body['siteLabel'],
                 'post_office_label'   => $body['postOfficeLabel'] ?? null,
-                'account_number'      => $body['accountNumber'] ?? null, // TODO cannot be modified
+                'account_number'      => $body['accountNumber'] ?? null,
                 'address_number'      => $body['addressNumber'] ?? null,
                 'address_street'      => $body['addressStreet'] ?? null,
                 'address_additional1' => $body['addressAdditional1'] ?? null,
