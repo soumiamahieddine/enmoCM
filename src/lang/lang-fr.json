@@ -1910,5 +1910,6 @@
     "registredMailType": "Type de recommandé",
     "rangeNumber": "Plage",
     "currentNumber": "Numéro actuel",
-    "fullness": "Remplissage"
+    "fullness": "Remplissage",
+    "registeredMailNumber": "Numéro de recommandé"
 }

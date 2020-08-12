@@ -201,6 +201,10 @@
                                     <app-address-ban-input [control]="arrFormControl[field.identifier]" [admin]="adminMode" style="width:100%;">
                                     </app-address-ban-input>
                                 </ng-container>
+                                <ng-container *ngIf="field.identifier === 'registeredMail_issuingSite'">
+                                    <app-issuing-site-input #appIssuingSiteInput [registedMailType]="arrFormControl['registeredMail_type'].value" [control]="arrFormControl[field.identifier]" (afterSelected)="launchEvent($event, field)" style="width:100%;">
+                                    </app-issuing-site-input>
+                                </ng-container>
                             </div>
                             <div class="fieldState">
                                 <i class="fas fa-asterisk fieldRequired"

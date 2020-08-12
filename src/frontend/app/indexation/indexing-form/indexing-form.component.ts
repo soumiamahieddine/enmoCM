@@ -14,6 +14,7 @@ import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, Abst
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
 import { FunctionsService } from '../../../service/functions.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { IssuingSiteInputComponent } from '../../administration/registered-mail/issuing-site/indexing/issuing-site-input.component';
 
 @Component({
     selector: 'app-indexing-form',
@@ -41,6 +42,7 @@ export class IndexingFormComponent implements OnInit {
     @Output() loadingFormEndEvent = new EventEmitter<string>();
 
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('appIssuingSiteInput', { static: false }) appIssuingSiteInput: IssuingSiteInputComponent;
 
     fieldCategories: any[] = ['mail', 'contact', 'process', 'classifying'];
 
@@ -192,6 +194,14 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'registeredMail_issuingSite',
             label: this.translate.instant('lang.issuingSite'),
             type: 'issuingSite',
+            default_value: null,
+            values: [],
+            enabled: true,
+        },
+        {
+            identifier: 'registeredMail_number',
+            label: this.translate.instant('lang.registeredMailNumber'),
+            type: 'string',
             default_value: null,
             values: [],
             enabled: true,
@@ -685,6 +695,9 @@ export class IndexingFormComponent implements OnInit {
 
                 } else if (elem.identifier === 'doctype') {
                     await this.setDoctypeField(elem);
+                } else if (elem.identifier === 'registeredMail_type') {
+                    elem.event = 'getIssuingSites';
+                    // await this.setDoctypeField(elem);
                 }
             }));
         }));
@@ -1115,6 +1128,12 @@ export class IndexingFormComponent implements OnInit {
     loadDiffusionList(field: any, value: any) {
         if (!this.functions.empty(this.appDiffusionsList)) {
             this.appDiffusionsList.loadListModel(value);
+        }
+    }
+
+    getIssuingSites(field: any, value: any) {
+        if (!this.functions.empty(this.appIssuingSiteInput)) {
+            this.appIssuingSiteInput.getIssuingSites(value);
         }
     }
 
