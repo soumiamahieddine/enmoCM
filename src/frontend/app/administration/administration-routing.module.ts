@@ -121,6 +121,7 @@ import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-sit
             { path: 'alfresco/:id', canActivate: [AppGuard], component: AlfrescoAdministrationComponent },
             { path: 'issuingSite', canActivate: [AppGuard], component: IssuingSiteListComponent },
             { path: 'issuingSite/new', canActivate: [AppGuard], component: IssuingSiteComponent },
+            { path: 'issuingSite/:id', canActivate: [AppGuard], component: IssuingSiteComponent },
         ]),
     ],
     exports: [

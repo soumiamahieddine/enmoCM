@@ -1888,7 +1888,7 @@
     "authorizedRoutes": "Routes autorisées",
     "infoImportusers": "La colonne <b>id</b> est utilisée pour identifier un utilisateur",
     "infoImportusers2": "Les colonnes <b>id</b> et <b>user_id</b> ne sont pas prises en compte lors de mise à jour d'utilisateurs",
-    "hotkeyInfo": "Maintenez <b>SHIFT</b> pour propager vos selections aux sous-éléments",
+    "hotkeyInfo": "Maintenez <b>SHIFT</b> pour propager vos sélections aux sous-éléments",
     "hotkeyMsg": "<b>SHIFT</b>&nbsp;Propagation aux sous-élements",
     "hotkeyTitle": "Maintient de la touche shift",
     "advancedParameters": "Paramètres avancés",
@@ -1900,5 +1900,7 @@
     "postOffice": "Bureau de poste",
     "coclicoNumber": "N° COCLICO",
     "siteName": "Nom du site",
-    "issuingSiteCreation": "Création d'un site émetteur"
+    "issuingSiteCreation": "Création d'un site émetteur",
+    "issuingSiteAdded": "Site émetteur ajouté",
+    "issuingSiteUpdated": "Site émetteur modifié"
 }

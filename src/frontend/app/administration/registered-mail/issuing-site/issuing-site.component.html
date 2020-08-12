@@ -70,10 +70,6 @@
                                     </mat-autocomplete>
                                 </mat-form-field>
                                 <mat-form-field>
-                                    <mat-label>{{'lang.addressName' | translate}}</mat-label>
-                                    <input matInput formControlName="addressName">
-                                </mat-form-field>
-                                <mat-form-field>
                                     <mat-label>{{'lang.contactsParameters_addressNumber' | translate}}</mat-label>
                                     <input matInput formControlName="addressNumber">
                                 </mat-form-field>
@@ -116,7 +112,7 @@
     <mat-list>
         <h3 mat-subheader>{{'lang.chooseEntityAssociationModel' | translate}}</h3>
         <div style="padding:10px;">
-            <app-maarch-flat-tree #maarchTree *ngIf="entities.length > 0" [rawData]="entities"></app-maarch-flat-tree>
+            <app-maarch-flat-tree #maarchTree></app-maarch-flat-tree>
         </div>
     </mat-list>
 </mat-sidenav>

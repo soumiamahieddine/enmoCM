@@ -42,25 +42,25 @@
                         </div>
                     </div>
                     <mat-table #table [dataSource]="adminService.getDataSource()" matSort matSortDisableClear>
-                        <ng-container matColumnDef="account_number">
+                        <ng-container matColumnDef="accountNumber">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'lang.coclicoNumber' | translate}}
                             </mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                {{element.account_number}} </mat-cell>
+                                {{element.accountNumber}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="site_label">
+                        <ng-container matColumnDef="siteLabel">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>
                                 {{'lang.label' | translate}}
                             </mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                {{element.site_label}} </mat-cell>
+                                {{element.siteLabel}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="post_office_label">
+                        <ng-container matColumnDef="postOfficeLabel">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>
                                 {{'lang.postOffice' | translate}}
                             </mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                {{element.post_office_label}} </mat-cell>
+                                {{element.postOfficeLabel}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="actions">
                             <mat-header-cell *matHeaderCellDef></mat-header-cell>
