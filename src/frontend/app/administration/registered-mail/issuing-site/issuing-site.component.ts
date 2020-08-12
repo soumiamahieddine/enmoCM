@@ -213,8 +213,6 @@ export class IssuingSiteComponent implements OnInit {
 
         objToSubmit['entities'] = this.maarchTree.getSelectedNodes().map((ent: any) => ent.id);
 
-        console.log(objToSubmit);
-
         if (this.creationMode) {
             this.http.post('../rest/registeredMail/sites', objToSubmit)
                 .subscribe(() => {
