@@ -7,9 +7,10 @@ import { NotificationService } from '../../../../service/notification/notificati
 import { HeaderService } from '../../../../service/header.service';
 import { AppService } from '../../../../service/app.service';
 import { MaarchFlatTreeComponent } from '../../../../plugins/tree/maarch-flat-tree.component';
-import { map, tap, catchError, debounceTime, filter, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { map, tap, catchError, debounceTime, filter, distinctUntilChanged, switchMap, startWith } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
+import { LatinisePipe } from 'ngx-pipes';
 
 @Component({
     selector: 'app-issuing-site',
@@ -23,6 +24,10 @@ export class IssuingSiteComponent implements OnInit {
 
     adminFormGroup: FormGroup;
     entities: any = [];
+
+    countries: any = [];
+    countriesFilteredResult: Observable<string[]>;
+
     id: number = null;
 
     addressBANInfo: string = '';
@@ -45,6 +50,7 @@ export class IssuingSiteComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         private _formBuilder: FormBuilder,
+        private latinisePipe: LatinisePipe,
     ) { }
 
     ngOnInit(): void {
@@ -68,6 +74,8 @@ export class IssuingSiteComponent implements OnInit {
                     addressTown: [''],
                     addressCountry: ['']
                 });
+                this.getCountries();
+                this.initAutocompleteCountries();
                 this.loading = false;
 
                 await this.getEntities();
@@ -81,6 +89,9 @@ export class IssuingSiteComponent implements OnInit {
 
                 await this.getEntities();
                 await this.getData();
+
+                this.getCountries();
+                this.initAutocompleteCountries();
                 this.maarchTree.initData(this.entities);
             }
         });
@@ -139,6 +150,20 @@ export class IssuingSiteComponent implements OnInit {
             })
         ).subscribe();
     }
+    initAutocompleteCountries() {
+        this.countriesFilteredResult = this.adminFormGroup.controls['addressCountry'].valueChanges
+        .pipe(
+            startWith(''),
+            map(value => this._filter(value))
+        );
+    }
+
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        console.log(this.countries);
+        
+        return this.countries.filter(option => option.toLowerCase().includes(filterValue));
+      }
 
     initAutocompleteAddressBan() {
         this.addressBANInfo = this.translate.instant('lang.autocompleteInfo');
@@ -204,6 +229,19 @@ export class IssuingSiteComponent implements OnInit {
                 })
             ).subscribe();
         });
+    }
+
+    getCountries() {
+        this.http.get(`../rest/registeredMail/countries`).pipe(
+            tap((data: any) => {
+                this.countries = data.countries.map(
+                    (item: any) => this.latinisePipe.transform(item.toUpperCase()));
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     onSubmit() {
