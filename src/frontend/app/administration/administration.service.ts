@@ -101,6 +101,12 @@ export class AdministrationService {
             page: 0,
             field: ''
         },
+        admin_alfresco: {
+            sort: 'label',
+            sortDirection: 'asc',
+            page: 0,
+            field: ''
+        },
         admin_contacts_list: {
             sort: 'lastname',
             sortDirection: 'asc',
@@ -114,7 +120,7 @@ export class AdministrationService {
             field: ''
         },
         admin_regitered_mail: {
-            sort: 'customerAccountNumber',
+            sort: 'rangeNumber',
             sortDirection: 'asc',
             page: 0,
             field: ''
