@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 class RegisteredNumberRangeControllerTest extends TestCase
 {
     private static $id = null;
+    private static $id2 = null;
     private static $siteId = null;
 
     public function testCreate()
@@ -60,6 +61,22 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         self::$id = $responseBody['id'];
 
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1001,
+            'rangeEnd'           => 2000,
+            'siteId'             => self::$siteId
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertIsInt($responseBody['id']);
+
+        self::$id2 = $responseBody['id'];
+
         //  READ
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
@@ -75,7 +92,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(1000, $responseBody['range']['rangeEnd']);
         $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['range']['creator']);
-        $this->assertSame(1, $responseBody['range']['currentNumber']);
+        $this->assertNull($responseBody['range']['currentNumber']);
         $this->assertSame(0, $responseBody['range']['fullness']);
 
         // fail
@@ -205,7 +222,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(1000, $responseBody['ranges'][0]['rangeEnd']);
         $this->assertSame(self::$siteId, $responseBody['ranges'][0]['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['ranges'][0]['creator']);
-        $this->assertSame(1, $responseBody['ranges'][0]['currentNumber']);
+        $this->assertNull($responseBody['ranges'][0]['currentNumber']);
         $this->assertSame(0, $responseBody['ranges'][0]['fullness']);
 
         $GLOBALS['login'] = 'bbain';
@@ -241,7 +258,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(1000, $responseBody['range']['rangeEnd']);
         $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['range']['creator']);
-        $this->assertSame(1, $responseBody['range']['currentNumber']);
+        $this->assertNull($responseBody['range']['currentNumber']);
         $this->assertSame(0, $responseBody['range']['fullness']);
 
         $GLOBALS['login'] = 'bbain';
@@ -270,8 +287,9 @@ class RegisteredNumberRangeControllerTest extends TestCase
             'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
-            'rangeEnd'           => 2000,
-            'siteId'             => self::$siteId
+            'rangeEnd'           => 900,
+            'siteId'             => self::$siteId,
+            'status'             => 'OK'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -289,11 +307,73 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('2D', $responseBody['range']['registeredMailType']);
         $this->assertSame('AZPOKF30KDZP', $responseBody['range']['trackerNumber']);
         $this->assertSame(1, $responseBody['range']['rangeStart']);
-        $this->assertSame(2000, $responseBody['range']['rangeEnd']);
+        $this->assertSame(900, $responseBody['range']['rangeEnd']);
         $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['range']['creator']);
         $this->assertSame(1, $responseBody['range']['currentNumber']);
         $this->assertSame(0, $responseBody['range']['fullness']);
+        $this->assertSame('OK', $responseBody['range']['status']);
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1001,
+            'rangeEnd'           => 2000,
+            'siteId'             => self::$siteId,
+            'status'             => 'OK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        //  READ
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+        $response = $registeredNumberRangeController->getById($request, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertNotEmpty($responseBody['range']);
+        $this->assertSame(self::$id2, $responseBody['range']['id']);
+        $this->assertSame('2D', $responseBody['range']['registeredMailType']);
+        $this->assertSame('AZPOKF30KDZP', $responseBody['range']['trackerNumber']);
+        $this->assertSame(1001, $responseBody['range']['rangeStart']);
+        $this->assertSame(2000, $responseBody['range']['rangeEnd']);
+        $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
+        $this->assertSame($GLOBALS['id'], $responseBody['range']['creator']);
+        $this->assertSame(1001, $responseBody['range']['currentNumber']);
+        $this->assertSame(0, $responseBody['range']['fullness']);
+        $this->assertSame('OK', $responseBody['range']['status']);
+
+        $response = $registeredNumberRangeController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('END', $responseBody['range']['status']);
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1001,
+            'rangeEnd'           => 2000,
+            'siteId'             => self::$siteId,
+            'status'             => 'SPD'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1001,
+            'rangeEnd'           => 2000,
+            'siteId'             => self::$siteId,
+            'status'             => 'OK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $this->assertSame(204, $response->getStatusCode());
 
         // fail
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -373,6 +453,35 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Range not found', $responseBody['errors']);
 
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 500,
+            'rangeEnd'           => 1500,
+            'siteId'             => self::$siteId
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Range overlaps another range', $responseBody['errors']);
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1001,
+            'rangeEnd'           => 2000,
+            'siteId'             => self::$siteId,
+            'status'             => 'OK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Range cannot be updated', $responseBody['errors']);
+
         $GLOBALS['login'] = 'bbain';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
@@ -385,6 +494,38 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(403, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+    }
+
+    public function testGetLastNumberByType()
+    {
+        $registeredNumberRangeController = new \RegisteredMail\controllers\RegisteredNumberRangeController();
+
+        //  GET
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $registeredNumberRangeController->getLastNumberByType($request, new \Slim\Http\Response(), ['type' => '2D']);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(2000, $responseBody['lastNumber']);
+
+        $response = $registeredNumberRangeController->getLastNumberByType($request, new \Slim\Http\Response(), ['type' => '2C']);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame(1, $responseBody['lastNumber']);
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $response = $registeredNumberRangeController->getLastNumberByType($request, new \Slim\Http\Response(), ['type' => '2D']);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Service forbidden', $responseBody['errors']);
 
         $GLOBALS['login'] = 'superadmin';
@@ -416,6 +557,25 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Range not found', $responseBody['errors']);
 
         // Fail
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $registeredNumberRangeController->delete($request, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Range cannot be deleted', $responseBody['errors']);
+
+        \RegisteredMail\models\RegisteredNumberRangeModel::update([
+            'set'   => [
+                'status' => 'SPD'
+            ],
+            'where' => ['id = ?'],
+            'data'  => [self::$id2]
+        ]);
+
+        $response = $registeredNumberRangeController->delete($request, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $this->assertSame(204, $response->getStatusCode());
+
         $GLOBALS['login'] = 'bbain';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];

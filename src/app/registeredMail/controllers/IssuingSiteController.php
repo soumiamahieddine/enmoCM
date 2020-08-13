@@ -256,7 +256,7 @@ class IssuingSiteController
         ]);
 
         if (empty($sitesIds)) {
-            return $response->withStatus(403)->withJson(['sites' => []]);
+            return $response->withStatus(200)->withJson(['sites' => []]);
         }
         $sitesIds = array_column($sitesIds, 'site_id');
 

@@ -1440,6 +1440,6 @@ CREATE TABLE IF NOT EXISTS registered_number_range (
    created timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
    site_id INTEGER,
    status CHARACTER VARYING(10),
-   current_number INTEGER DEFAULT 0 NOT NULL,
+   current_number INTEGER,
    CONSTRAINT registered_number_range_pkey PRIMARY KEY (id)
 );

@@ -339,6 +339,83 @@ class IssuingSiteControllerTest extends TestCase
         $GLOBALS['id'] = $userInfo['id'];
     }
 
+    public function testGetLastNumberByType()
+    {
+        $issuingSiteController = new \RegisteredMail\controllers\IssuingSiteController();
+        $registeredNumberRangeController = new \RegisteredMail\controllers\RegisteredNumberRangeController();
+
+        //  GET
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $issuingSiteController->getByType($request, new \Slim\Http\Response(), ['type' => '2D']);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['sites']);
+        $this->assertEmpty($responseBody['sites']);
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1,
+            'rangeEnd'           => 1000,
+            'siteId'             => self::$id,
+            'status'             => 'OK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertIsInt($responseBody['id']);
+
+        $rangeId = $responseBody['id'];
+
+        $response = $issuingSiteController->getByType($request, new \Slim\Http\Response(), ['type' => '2D']);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertIsArray($responseBody['sites']);
+        $this->assertNotEmpty($responseBody['sites']);
+        $this->assertSame(1, count($responseBody['sites']));
+
+        $this->assertSame(self::$id, $responseBody['sites'][0]['id']);
+        $this->assertSame('Scranton - UP', $responseBody['sites'][0]['label']);
+        $this->assertSame('Scranton Post Office', $responseBody['sites'][0]['postOfficeLabel']);
+        $this->assertSame('42', $responseBody['sites'][0]['accountNumber']);
+        $this->assertSame('1725', $responseBody['sites'][0]['addressStreet']);
+        $this->assertEmpty($responseBody['sites'][0]['addressAdditional1']);
+        $this->assertEmpty($responseBody['sites'][0]['addressAdditional2']);
+        $this->assertSame('18505', $responseBody['sites'][0]['addressPostcode']);
+        $this->assertSame('Scranton', $responseBody['sites'][0]['addressTown']);
+        $this->assertSame('USA', $responseBody['sites'][0]['addressCountry']);
+
+        \RegisteredMail\models\RegisteredNumberRangeModel::update([
+            'set'   => [
+                'status' => 'SPD'
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$rangeId]
+        ]);
+
+        $response = $registeredNumberRangeController->delete($request, new \Slim\Http\Response(), ['id' => $rangeId]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        $GLOBALS['login'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
+        $response = $issuingSiteController->getByType($request, new \Slim\Http\Response(), ['type' => '2D']);
+        $this->assertSame(403, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
+
+        $GLOBALS['login'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+    }
+
     public function testDelete()
     {
         $issuingSiteController = new \RegisteredMail\controllers\IssuingSiteController();

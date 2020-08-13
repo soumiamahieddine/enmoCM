@@ -235,6 +235,11 @@ class RegisteredNumberRangeController
             return $response->withStatus(400)->withJson(['errors' => 'Range cannot be updated']);
         }
 
+        $currentNumber = $range['current_number'];
+        if ($body['status'] == 'OK' && $range['status'] != 'OK' && $currentNumber == null) {
+            $currentNumber = $body['rangeStart'];
+        }
+
         RegisteredNumberRangeModel::update([
             'set'   => [
                 'type'                    => $body['registeredMailType'],
@@ -242,7 +247,8 @@ class RegisteredNumberRangeController
                 'range_start'             => $body['rangeStart'],
                 'range_end'               => $body['rangeEnd'],
                 'site_id'                 => $body['siteId'],
-                'status'                  => $body['status']
+                'status'                  => $body['status'],
+                'current_number'          => $currentNumber
             ],
             'where' => ['id = ?'],
             'data'  => [$args['id']]
