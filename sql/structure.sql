@@ -1441,5 +1441,6 @@ CREATE TABLE IF NOT EXISTS registered_number_range (
    site_id INTEGER,
    status CHARACTER VARYING(10),
    current_number INTEGER,
-   CONSTRAINT registered_number_range_pkey PRIMARY KEY (id)
+   CONSTRAINT registered_number_range_pkey PRIMARY KEY (id),
+   CONSTRAINT registered_number_range_unique_key UNIQUE (tracking_account_number)
 );

@@ -128,9 +128,18 @@ class RegisteredNumberRangeController
         }
 
         $ranges = RegisteredNumberRangeModel::get([
+            'select' => [1],
+            'where'  => ['tracking_account_number = ?'],
+            'data'   => [$body['trackerNumber']]
+        ]);
+        if (!empty($ranges)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body trackerNumber is already used by another range']);
+        }
+
+        $ranges = RegisteredNumberRangeModel::get([
             'select'  => ['range_start', 'range_end'],
-            'where'   => ['type = ?', 'site_id = ?'],
-            'data'    => [$body['registeredMailType'], $body['siteId']],
+            'where'   => ['type = ?', 'site_id = ?', 'status = ?'],
+            'data'    => [$body['registeredMailType'], $body['siteId'], 'OK'],
             'orderBy' => ['range_end desc']
         ]);
 
@@ -196,6 +205,15 @@ class RegisteredNumberRangeController
         $site = IssuingSiteModel::getById(['id' => $body['siteId']]);
         if (empty($site)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body siteId does not exist']);
+        }
+
+        $ranges = RegisteredNumberRangeModel::get([
+            'select' => [1],
+            'where'  => ['tracking_account_number = ?', 'id != ?'],
+            'data'   => [$body['trackerNumber'], $args['id']]
+        ]);
+        if (!empty($ranges)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body trackerNumber is already used by another range']);
         }
 
         $ranges = RegisteredNumberRangeModel::get([

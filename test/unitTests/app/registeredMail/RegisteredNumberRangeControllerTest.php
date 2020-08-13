@@ -63,10 +63,11 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $body = [
             'registeredMailType' => '2D',
-            'trackerNumber'      => 'AZPOKF30KDZP',
+            'trackerNumber'      => 'AZPOKF30KDZP2',
             'rangeStart'         => 1001,
             'rangeEnd'           => 2000,
-            'siteId'             => self::$siteId
+            'siteId'             => self::$siteId,
+            'status'             => 'OK'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -170,7 +171,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $body = [
             'registeredMailType' => '2D',
-            'trackerNumber'      => 'AZPOKF30KDZP',
+            'trackerNumber'      => 'AZPOKF30KDZP3',
             'rangeStart'         => 500,
             'rangeEnd'           => 1500,
             'siteId'             => self::$siteId
@@ -314,9 +315,17 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(0, $responseBody['range']['fullness']);
         $this->assertSame('OK', $responseBody['range']['status']);
 
+        \RegisteredMail\models\RegisteredNumberRangeModel::update([
+            'set'   => [
+                'status' => 'SPD'
+            ],
+            'where' => ['id = ?'],
+            'data'  => [self::$id2]
+        ]);
+
         $body = [
             'registeredMailType' => '2D',
-            'trackerNumber'      => 'AZPOKF30KDZP',
+            'trackerNumber'      => 'AZPOKF30KDZP2',
             'rangeStart'         => 1001,
             'rangeEnd'           => 2000,
             'siteId'             => self::$siteId,
@@ -336,7 +345,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertNotEmpty($responseBody['range']);
         $this->assertSame(self::$id2, $responseBody['range']['id']);
         $this->assertSame('2D', $responseBody['range']['registeredMailType']);
-        $this->assertSame('AZPOKF30KDZP', $responseBody['range']['trackerNumber']);
+        $this->assertSame('AZPOKF30KDZP2', $responseBody['range']['trackerNumber']);
         $this->assertSame(1001, $responseBody['range']['rangeStart']);
         $this->assertSame(2000, $responseBody['range']['rangeEnd']);
         $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
@@ -351,7 +360,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $body = [
             'registeredMailType' => '2D',
-            'trackerNumber'      => 'AZPOKF30KDZP',
+            'trackerNumber'      => 'AZPOKF30KDZP2',
             'rangeStart'         => 1001,
             'rangeEnd'           => 2000,
             'siteId'             => self::$siteId,
@@ -364,7 +373,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $body = [
             'registeredMailType' => '2D',
-            'trackerNumber'      => 'AZPOKF30KDZP',
+            'trackerNumber'      => 'AZPOKF30KDZP2',
             'rangeStart'         => 1001,
             'rangeEnd'           => 2000,
             'siteId'             => self::$siteId,
@@ -469,7 +478,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $body = [
             'registeredMailType' => '2D',
-            'trackerNumber'      => 'AZPOKF30KDZP',
+            'trackerNumber'      => 'AZPOKF30KDZP2',
             'rangeStart'         => 1001,
             'rangeEnd'           => 2000,
             'siteId'             => self::$siteId,
