@@ -106,7 +106,7 @@ export class RegisteredMailComponent implements OnInit {
                 this.customerAccountNumberList = data['sites'].map((item: any) => {
                     return {
                         id: item.id,
-                        label: `${item.siteLabel} (${item.accountNumber})`
+                        label: `${item.label} (${item.accountNumber})`
                     };
                 });
             }),

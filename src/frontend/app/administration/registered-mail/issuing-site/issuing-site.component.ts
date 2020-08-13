@@ -63,7 +63,7 @@ export class IssuingSiteComponent implements OnInit {
                 this.initAutocompleteAddressBan();
                 this.adminFormGroup = this._formBuilder.group({
                     id: [null],
-                    siteLabel: ['', Validators.required],
+                    label: ['', Validators.required],
                     postOfficeLabel: ['', Validators.required],
                     accountNumber: ['', Validators.required],
                     addressNumber: [''],
@@ -103,7 +103,7 @@ export class IssuingSiteComponent implements OnInit {
                 tap((data: any) => {
                     this.adminFormGroup = this._formBuilder.group({
                         id: [this.id],
-                        siteLabel: [data.site.siteLabel, Validators.required],
+                        label: [data.site.label, Validators.required],
                         postOfficeLabel: [data.site.postOfficeLabel, Validators.required],
                         accountNumber: [data.site.accountNumber, Validators.required],
                         addressNumber: [data.site.addressNumber],

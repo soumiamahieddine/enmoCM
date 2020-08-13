@@ -52,7 +52,7 @@ class RegisteredNumberRangeController
                 'currentNumber'         => $range['current_number'],
                 'fullness'              => $fullness,
                 'siteId'                => $range['site_id'],
-                'siteLabel'             => $site['site_label']
+                'label'                 => $site['label']
             ];
         }
 
@@ -92,7 +92,7 @@ class RegisteredNumberRangeController
             'currentNumber'         => $range['current_number'],
             'fullness'              => $fullness,
             'siteId'                => $range['site_id'],
-            'siteLabel'             => $site['site_label']
+            'label'                 => $site['label']
         ];
 
         return $response->withJson(['range' => $range]);
@@ -129,8 +129,8 @@ class RegisteredNumberRangeController
 
         $ranges = RegisteredNumberRangeModel::get([
             'select'  => ['range_start', 'range_end'],
-            'where'   => ['type = ?'],
-            'data'    => [$body['registeredMailType']],
+            'where'   => ['type = ?', 'site_id = ?'],
+            'data'    => [$body['registeredMailType'], $body['siteId']],
             'orderBy' => ['range_end desc']
         ]);
 
@@ -149,7 +149,7 @@ class RegisteredNumberRangeController
             'creator'               => $GLOBALS['id'],
             'siteId'                => $body['siteId'],
             'status'                => empty($body['status']) ? 'SPD' : $body['status'],
-            'currentNumber'         => $body['rangeStart']
+            'currentNumber'         => null
         ]);
 
         HistoryController::add([
@@ -200,8 +200,8 @@ class RegisteredNumberRangeController
 
         $ranges = RegisteredNumberRangeModel::get([
             'select'  => ['range_start', 'range_end'],
-            'where'   => ['type = ?', 'id != ?'],
-            'data'    => [$body['registeredMailType'], $args['id']],
+            'where'   => ['type = ?', 'id != ?', 'site_id = ?'],
+            'data'    => [$body['registeredMailType'], $args['id'], $range['site_id']],
             'orderBy' => ['range_end desc']
         ]);
 
@@ -217,8 +217,8 @@ class RegisteredNumberRangeController
                 'set'   => [
                     'status' => 'END'
                 ],
-                'where' => ['type = ?', 'status = ?'],
-                'data'  => [$body['registeredMailType'], 'OK']
+                'where' => ['type = ?', 'status = ?', 'site_id = ?'],
+                'data'  => [$body['registeredMailType'], 'OK', $range['site_id']]
             ]);
         }
 
@@ -300,13 +300,13 @@ class RegisteredNumberRangeController
 
         $range = RegisteredNumberRangeModel::get([
             'select'  => ['range_end'],
-            'where'   => ['type = ?'],
-            'data'    => [$args['type']],
+            'where'   => ['type = ?', 'status = ?'],
+            'data'    => [$args['type'], 'OK'],
             'orderBy' => ['range_end desc']
         ]);
 
         if (empty($range)) {
-            return $response->withStatus(403)->withJson(['errors' => 'No range found for type : ' . $args['type']]);
+            return $response->withJson(['lastNumber' => 1]);
         }
 
         $range = $range[0];

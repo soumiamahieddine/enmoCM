@@ -22,7 +22,7 @@ class IssuingSiteControllerTest extends TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
 
         $body = [
-            'siteLabel'          => 'Scranton',
+            'label'              => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
             'addressStreet'      => '1725',
@@ -51,7 +51,7 @@ class IssuingSiteControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody['site']);
         $this->assertSame(self::$id, $responseBody['site']['id']);
-        $this->assertSame('Scranton', $responseBody['site']['siteLabel']);
+        $this->assertSame('Scranton', $responseBody['site']['label']);
         $this->assertSame('Scranton Post Office', $responseBody['site']['postOfficeLabel']);
         $this->assertSame('42', $responseBody['site']['accountNumber']);
         $this->assertSame('1725', $responseBody['site']['addressStreet']);
@@ -75,10 +75,10 @@ class IssuingSiteControllerTest extends TestCase
         $response = $issuingSiteController->create($fullRequest, new \Slim\Http\Response());
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Body siteLabel is empty or not a string', $responseBody['errors']);
+        $this->assertSame('Body label is empty or not a string', $responseBody['errors']);
 
         $body = [
-            'siteLabel'          => 'Scranton',
+            'label'              => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
             'addressStreet'      => '1725',
@@ -97,7 +97,7 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertSame('Body entities is not an array', $responseBody['errors']);
 
         $body = [
-            'siteLabel'          => 'Scranton',
+            'label'              => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
             'addressStreet'      => '1725',
@@ -151,7 +151,7 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertNotEmpty($responseBody['sites'][0]);
 
         $this->assertSame(self::$id, $responseBody['sites'][0]['id']);
-        $this->assertSame('Scranton', $responseBody['sites'][0]['siteLabel']);
+        $this->assertSame('Scranton', $responseBody['sites'][0]['label']);
         $this->assertSame('Scranton Post Office', $responseBody['sites'][0]['postOfficeLabel']);
         $this->assertSame('42', $responseBody['sites'][0]['accountNumber']);
         $this->assertSame('1725', $responseBody['sites'][0]['addressStreet']);
@@ -189,7 +189,7 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertNotEmpty($responseBody['site']);
 
         $this->assertSame(self::$id, $responseBody['site']['id']);
-        $this->assertSame('Scranton', $responseBody['site']['siteLabel']);
+        $this->assertSame('Scranton', $responseBody['site']['label']);
         $this->assertSame('Scranton Post Office', $responseBody['site']['postOfficeLabel']);
         $this->assertSame('42', $responseBody['site']['accountNumber']);
         $this->assertSame('1725', $responseBody['site']['addressStreet']);
@@ -225,7 +225,7 @@ class IssuingSiteControllerTest extends TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
 
         $body = [
-            'siteLabel'          => 'Scranton - UP',
+            'label'              => 'Scranton - UP',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
             'addressName'        => 'Dunder Mifflin Scranton',
@@ -250,7 +250,7 @@ class IssuingSiteControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody['site']);
         $this->assertSame(self::$id, $responseBody['site']['id']);
-        $this->assertSame('Scranton - UP', $responseBody['site']['siteLabel']);
+        $this->assertSame('Scranton - UP', $responseBody['site']['label']);
         $this->assertSame('Scranton Post Office', $responseBody['site']['postOfficeLabel']);
         $this->assertSame('42', $responseBody['site']['accountNumber']);
         $this->assertSame('1725', $responseBody['site']['addressStreet']);
@@ -275,10 +275,10 @@ class IssuingSiteControllerTest extends TestCase
         $response = $issuingSiteController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Body siteLabel is empty or not a string', $responseBody['errors']);
+        $this->assertSame('Body label is empty or not a string', $responseBody['errors']);
 
         $body = [
-            'siteLabel'          => 'Scranton',
+            'label'              => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
             'addressStreet'      => '1725',
@@ -297,7 +297,7 @@ class IssuingSiteControllerTest extends TestCase
         $this->assertSame('Body entities is not an array', $responseBody['errors']);
 
         $body = [
-            'siteLabel'          => 'Scranton',
+            'label'              => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
             'addressStreet'      => '1725',

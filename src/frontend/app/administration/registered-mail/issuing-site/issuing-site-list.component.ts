@@ -45,8 +45,8 @@ export class IssuingSiteListComponent implements OnInit {
 
     data: any[] = [];
 
-    displayedColumns = ['accountNumber', 'siteLabel', 'postOfficeLabel', 'actions'];
-    filterColumns = ['accountNumber', 'siteLabel', 'postOfficeLabel'];
+    displayedColumns = ['accountNumber', 'label', 'postOfficeLabel', 'actions'];
+    filterColumns = ['accountNumber', 'label', 'postOfficeLabel'];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;

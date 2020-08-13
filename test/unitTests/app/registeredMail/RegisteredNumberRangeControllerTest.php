@@ -24,7 +24,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
 
         $body = [
-            'siteLabel'          => 'Scranton',
+            'label'              => 'Scranton',
             'postOfficeLabel'    => 'Scranton Post Office',
             'accountNumber'      => 42,
             'addressStreet'      => '1725',
@@ -45,7 +45,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         self::$siteId = $responseBody['id'];
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
             'rangeEnd'           => 1000,
@@ -69,7 +69,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody['range']);
         $this->assertSame(self::$id, $responseBody['range']['id']);
-        $this->assertSame('B01', $responseBody['range']['registeredMailType']);
+        $this->assertSame('2D', $responseBody['range']['registeredMailType']);
         $this->assertSame('AZPOKF30KDZP', $responseBody['range']['trackerNumber']);
         $this->assertSame(1, $responseBody['range']['rangeStart']);
         $this->assertSame(1000, $responseBody['range']['rangeEnd']);
@@ -92,7 +92,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body registeredMailType is empty or not a string', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01'
+            'registeredMailType' => '2D'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -102,7 +102,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body trackerNumber is empty or not a string', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
@@ -113,7 +113,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body rangeStart is empty or not an integer', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
         ];
@@ -125,7 +125,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body rangeEnd is empty or not an integer', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
             'rangeEnd'           => 1000,
@@ -138,7 +138,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body siteId is empty or not an integer', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
             'rangeEnd'           => 1000,
@@ -150,6 +150,20 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Body siteId does not exist', $responseBody['errors']);
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 500,
+            'rangeEnd'           => 1500,
+            'siteId'             => self::$siteId
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Range overlaps another range', $responseBody['errors']);
 
         $GLOBALS['login'] = 'bbain';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
@@ -185,7 +199,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody['ranges'][0]);
         $this->assertSame(self::$id, $responseBody['ranges'][0]['id']);
-        $this->assertSame('B01', $responseBody['ranges'][0]['registeredMailType']);
+        $this->assertSame('2D', $responseBody['ranges'][0]['registeredMailType']);
         $this->assertSame('AZPOKF30KDZP', $responseBody['ranges'][0]['trackerNumber']);
         $this->assertSame(1, $responseBody['ranges'][0]['rangeStart']);
         $this->assertSame(1000, $responseBody['ranges'][0]['rangeEnd']);
@@ -221,7 +235,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody['range']);
         $this->assertSame(self::$id, $responseBody['range']['id']);
-        $this->assertSame('B01', $responseBody['range']['registeredMailType']);
+        $this->assertSame('2D', $responseBody['range']['registeredMailType']);
         $this->assertSame('AZPOKF30KDZP', $responseBody['range']['trackerNumber']);
         $this->assertSame(1, $responseBody['range']['rangeStart']);
         $this->assertSame(1000, $responseBody['range']['rangeEnd']);
@@ -253,7 +267,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $request = \Slim\Http\Request::createFromEnvironment($environment);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
             'rangeEnd'           => 2000,
@@ -272,7 +286,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
 
         $this->assertNotEmpty($responseBody['range']);
         $this->assertSame(self::$id, $responseBody['range']['id']);
-        $this->assertSame('B01', $responseBody['range']['registeredMailType']);
+        $this->assertSame('2D', $responseBody['range']['registeredMailType']);
         $this->assertSame('AZPOKF30KDZP', $responseBody['range']['trackerNumber']);
         $this->assertSame(1, $responseBody['range']['rangeStart']);
         $this->assertSame(2000, $responseBody['range']['rangeEnd']);
@@ -295,7 +309,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body registeredMailType is empty or not a string', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01'
+            'registeredMailType' => '2D'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -305,7 +319,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body trackerNumber is empty or not a string', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
@@ -316,7 +330,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body rangeStart is empty or not an integer', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
         ];
@@ -328,7 +342,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body rangeEnd is empty or not an integer', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
             'rangeEnd'           => 1000,
@@ -341,7 +355,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('Body siteId is empty or not an integer', $responseBody['errors']);
 
         $body = [
-            'registeredMailType' => 'B01',
+            'registeredMailType' => '2D',
             'trackerNumber'      => 'AZPOKF30KDZP',
             'rangeStart'         => 1,
             'rangeEnd'           => 1000,

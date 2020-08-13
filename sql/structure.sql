@@ -1410,7 +1410,7 @@ WITH (OIDS=FALSE);
 CREATE TABLE IF NOT EXISTS issuing_sites
 (
     id                  SERIAL                 NOT NULL,
-    site_label          CHARACTER VARYING(256) NOT NULL,
+    label               CHARACTER VARYING(256) NOT NULL,
     post_office_label   CHARACTER VARYING(256),
     account_number      CHARACTER VARYING(256),
     address_number      CHARACTER VARYING(256),

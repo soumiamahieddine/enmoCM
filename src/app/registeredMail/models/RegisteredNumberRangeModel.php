@@ -54,7 +54,7 @@ class RegisteredNumberRangeModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['type', 'rangeStart', 'rangeEnd', 'siteId', 'currentNumber', 'status']);
+        ValidatorModel::notEmpty($args, ['type', 'rangeStart', 'rangeEnd', 'siteId', 'status']);
         ValidatorModel::stringType($args, ['type', 'status']);
         ValidatorModel::intVal($args, ['rangeStart', 'rangeEnd', 'siteId', 'currentNumber']);
 

@@ -54,8 +54,8 @@ class IssuingSiteModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['siteLabel']);
-        ValidatorModel::stringType($args, ['siteLabel']);
+        ValidatorModel::notEmpty($args, ['label']);
+        ValidatorModel::stringType($args, ['label']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'issuing_sites_id_seq']);
 
@@ -63,7 +63,7 @@ class IssuingSiteModel
             'table'         => 'issuing_sites',
             'columnsValues' => [
                 'id'                  => $nextSequenceId,
-                'site_label'          => $args['siteLabel'],
+                'label'               => $args['label'],
                 'post_office_label'   => $args['postOfficeLabel'] ?? null,
                 'account_number'      => $args['accountNumber'] ?? null,
                 'address_number'      => $args['addressNumber'] ?? null,

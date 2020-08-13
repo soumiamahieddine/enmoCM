@@ -33,18 +33,20 @@ class IssuingSiteController
         $sites = IssuingSiteModel::get();
 
         foreach ($sites as $key => $site) {
+            $ranges = RegisteredNumberRangeModel::get(['where' => ['site_id = ?'], 'data' => [$site['id']]]);
             $sites[$key] = [
                 'id'                 => $site['id'],
-                'siteLabel'          => $site['site_label'],
-                'postOfficeLabel'    => $site['post_office_label'] ?? null,
-                'accountNumber'      => $site['account_number'] ?? null,
-                'addressNumber'      => $site['address_number'] ?? null,
-                'addressStreet'      => $site['address_street'] ?? null,
-                'addressAdditional1' => $site['address_additional1'] ?? null,
-                'addressAdditional2' => $site['address_additional2'] ?? null,
-                'addressPostcode'    => $site['address_postcode'] ?? null,
-                'addressTown'        => $site['address_town'] ?? null,
-                'addressCountry'     => $site['address_country'] ?? null
+                'label'              => $site['label'],
+                'postOfficeLabel'    => $site['post_office_label'],
+                'accountNumber'      => $site['account_number'],
+                'addressNumber'      => $site['address_number'],
+                'addressStreet'      => $site['address_street'],
+                'addressAdditional1' => $site['address_additional1'],
+                'addressAdditional2' => $site['address_additional2'],
+                'addressPostcode'    => $site['address_postcode'],
+                'addressTown'        => $site['address_town'],
+                'addressCountry'     => $site['address_country'],
+                'countRanges'        => count($ranges)
             ];
         }
 
@@ -65,7 +67,7 @@ class IssuingSiteController
 
         $site = [
             'id'                 => $site['id'],
-            'siteLabel'          => $site['site_label'],
+            'label'              => $site['label'],
             'postOfficeLabel'    => $site['post_office_label'] ?? null,
             'accountNumber'      => $site['account_number'] ?? null,
             'addressNumber'      => $site['address_number'] ?? null,
@@ -98,8 +100,8 @@ class IssuingSiteController
 
         $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($body['siteLabel'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body siteLabel is empty or not a string']);
+        if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         if (!empty($body['entities']) && !Validator::arrayType()->validate($body['entities'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body entities is not an array']);
@@ -112,7 +114,7 @@ class IssuingSiteController
         }
 
         $id = IssuingSiteModel::create([
-            'siteLabel'          => $body['siteLabel'],
+            'label'              => $body['label'],
             'postOfficeLabel'    => $body['postOfficeLabel'] ?? null,
             'accountNumber'      => $body['accountNumber'],
             'addressNumber'      => $body['addressNumber'] ?? null,
@@ -155,8 +157,8 @@ class IssuingSiteController
 
         $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($body['siteLabel'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body siteLabel is empty or not a string']);
+        if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
         if (!empty($body['entities']) && !Validator::arrayType()->validate($body['entities'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body entities is not an array']);
@@ -169,8 +171,8 @@ class IssuingSiteController
         }
 
         IssuingSiteModel::update([
-            'set'  => [
-                'site_label'          => $body['siteLabel'],
+            'set'   => [
+                'label'               => $body['label'],
                 'post_office_label'   => $body['postOfficeLabel'] ?? null,
                 'account_number'      => $body['accountNumber'] ?? null,
                 'address_number'      => $body['addressNumber'] ?? null,
@@ -249,8 +251,8 @@ class IssuingSiteController
 
         $sitesIds = RegisteredNumberRangeModel::get([
             'select' => ['site_id'],
-            'where'  => ['type = ?'],
-            'data'   => [$args['type']]
+            'where'  => ['type = ?', 'status = ?'],
+            'data'   => [$args['type'], 'OK']
         ]);
 
         if (empty($sitesIds)) {
@@ -266,7 +268,7 @@ class IssuingSiteController
         foreach ($sites as $key => $site) {
             $sites[$key] = [
                 'id'                 => $site['id'],
-                'siteLabel'          => $site['site_label'],
+                'label'              => $site['label'],
                 'postOfficeLabel'    => $site['post_office_label'],
                 'accountNumber'      => $site['account_number'],
                 'addressNumber'      => $site['address_number'],
