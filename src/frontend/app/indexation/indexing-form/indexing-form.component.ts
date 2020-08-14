@@ -325,7 +325,7 @@ export class IndexingFormComponent implements OnInit {
             const regex = /registeredMail_[.]*/g;
 
             if (event.item.data.identifier.match(regex) !== null && event.previousContainer.id === 'fieldsList') {
-                this.transfetRegisteredMailInput(event);
+                this.transferRegisteredMailInput(event);
             } else {
                 this.transferInput(event);
             }
@@ -1158,21 +1158,34 @@ export class IndexingFormComponent implements OnInit {
         }
     }
 
+    getCheckboxListLabel(selectedItemId: any, items: any) {
+        return items.filter((item: any) => item.id === selectedItemId)[0].label;
+    }
+
+    /**
+     * [Registered mail module]
+     */
     getIssuingSites(field: any, value: any) {
+        this.fieldCategories.forEach(element => {
+            this['indexingModels_' + element].forEach((fieldItem: any) => {
+                if (fieldItem.identifier === 'registeredMail_warranty') {
+                    console.log(fieldItem);
+                    fieldItem.values[2].disabled = value === 'RW';
+                }
+            });
+            if (value === 'RW' && this.arrFormControl['registeredMail_warranty'].value === 'R3') {
+                this.arrFormControl['registeredMail_warranty'].setValue('R1');
+            }
+        });
         if (!this.functions.empty(this.appIssuingSiteInput)) {
             this.appIssuingSiteInput.getIssuingSites(value);
         }
     }
 
-    getCheckboxListLabel(selectedItemId: any, items: any) {
-        return items.filter((item: any) => item.id === selectedItemId)[0].label;
-    }
-
-
     /**
      * [Registered mail module]
      */
-    transfetRegisteredMailInput(event: CdkDragDrop<string[]>) {
+    transferRegisteredMailInput(event: CdkDragDrop<string[]>) {
         const regex = /registeredMail_[.]*/g;
 
         this.transferInput(event);

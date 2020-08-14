@@ -149,7 +149,7 @@
                                         <input matInput style="display: none;">
                                         <mat-radio-group class="radio-form" color="primary"
                                             [formControl]="arrFormControl[field.identifier]">
-                                            <mat-radio-button *ngFor="let value of field.values" [value]="value.id">
+                                            <mat-radio-button *ngFor="let value of field.values" [value]="value.id" [disabled]="value.disabled">
                                                 {{value.label}}
                                             </mat-radio-button>
                                         </mat-radio-group>
