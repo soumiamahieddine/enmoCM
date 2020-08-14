@@ -1911,5 +1911,16 @@
     "rangeNumber": "Plage",
     "currentNumber": "Numéro actuel",
     "fullness": "Remplissage",
-    "registeredMailNumber": "Numéro de recommandé"
+    "registeredMailNumber": "Numéro de recommandé",
+    "registeredMail_2C": "National avec AR",
+    "registeredMail_2D": "National sans AR",
+    "registeredMail_RW": "International",
+    "registeredMailStart": "Début de la plage de numéro",
+    "registeredMailEnd": "Fin de la plage de numéro",
+    "registeredMail_OK": "Active",
+    "registeredMail_END": "Cloturée",
+    "registeredMail_SPD": "Inactive",
+    "warrantyLevel": "Niveau de garantie",
+    "letter": "Lettre",
+    "requiredForRegisteredMail": "Champs nécesssaire à la génération de recommandés."
 }
