@@ -324,8 +324,8 @@ class RegisteredNumberRangeController
 
         $range = RegisteredNumberRangeModel::get([
             'select'  => ['range_end'],
-            'where'   => ['type = ?', 'status = ?'],
-            'data'    => [$args['type'], 'OK'],
+            'where'   => ['type = ?', 'status in (?)'],
+            'data'    => [$args['type'], ['OK', 'SPD']],
             'orderBy' => ['range_end desc']
         ]);
 
