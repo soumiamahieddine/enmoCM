@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { tap, catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { NotificationService } from '../../../../../service/notification/notification.service';
+import { HeaderService } from '../../../../../service/header.service';
 
 @Component({
     selector: 'app-issuing-site-input',
@@ -36,6 +37,7 @@ export class IssuingSiteInputComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
+        private headerService: HeaderService
     ) {
 
     }
@@ -52,11 +54,11 @@ export class IssuingSiteInputComponent implements OnInit {
         this.http.get(`../rest/registeredMail/ranges`).pipe(
             tap((data: any) => {
                 this.issuingSiteAddress = null;
-                this.issuingSiteList = data['ranges'].filter((item: any) => item.registeredMailType === registeredMailType && item.status === 'OK').map((item: any) => {
+                this.issuingSiteList = data['ranges'].filter((item: any) => item.registeredMailType === registeredMailType && item.status === 'OK' && item.entities.indexOf(this.headerService.user.entities[0].id) > -1).map((item: any) => {
                     return {
                         ...item,
                         id : `${item.trackerNumber}#${item.siteId}`,
-                        label: `${item.siteLabel} (${item.customerAccountNumber})`,
+                        label: `${item.label} (${item.customerAccountNumber})`,
                         disabled: item.fullness === 100,
                     };
                 });
