@@ -104,19 +104,15 @@ export class RegisteredMailListComponent implements OnInit {
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.put(`../rest/registeredMail/ranges/${row.id}`, dataTosend)),
             tap(() => {
-                this.data = this.data.map((item: any) => {
-                    return {
-                        ...item,
-                        status : item.status === 'OK' && item.registeredMailType === row.registeredMailType && item.siteId === row.siteId ? 'END' : item.status
-                    };
-                });
                 this.data.forEach(item => {
                     if (item.status === 'OK' && item.registeredMailType === row.registeredMailType && item.siteId === row.siteId) {
                         item.status = 'END';
+                        item.currentNumber  = null;
                         item.statusLabel = this.translate.instant('lang.registeredMail_' + item.status);
 
                     } else if (item.id === row.id) {
                         item.status = 'OK';
+                        item.currentNumber  = item.rangeStart;
                         item.statusLabel = this.translate.instant('lang.registeredMail_' + item.status);
                     }
                 });

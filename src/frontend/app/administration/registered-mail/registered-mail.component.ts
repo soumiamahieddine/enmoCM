@@ -56,7 +56,7 @@ export class RegisteredMailComponent implements OnInit {
             this.getIssuingSites();
             if (typeof params['id'] === 'undefined') {
                 this.creationMode = true;
-                this.headerService.setHeader(this.translate.instant('lang.registeredMailNumberRangesCreation'));
+                this.headerService.setHeader(this.translate.instant('lang.registeredMailNumberRangeCreation'));
 
                 this.adminFormGroup = this._formBuilder.group({
                     id: [null],
@@ -70,7 +70,7 @@ export class RegisteredMailComponent implements OnInit {
                 this.loading = false;
 
             } else {
-                this.headerService.setHeader(this.translate.instant('lang.registeredMailNumberRangesModification'));
+                this.headerService.setHeader(this.translate.instant('lang.registeredMailNumberRangeModification'));
                 this.id = params['id'];
                 this.creationMode = false;
                 await this.getData();

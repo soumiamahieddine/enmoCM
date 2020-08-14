@@ -20,7 +20,7 @@
                 <mat-card *ngIf="!loading" class="card-app-content">
                     <div class="alert-message alert-message-danger" style="min-width: 100%;"
                         *ngIf="adminFormGroup.controls['status'].value === 'OK' || adminFormGroup.controls['status'].value === 'END' "
-                        [innerHTML]="'La plage est en <b>cours d\'utilisation</b> ou <b>clôturée</b>, vous ne pouvez pas la modifier.'"></div>
+                        [innerHTML]="'lang.registeredMailNumberRangeModificationMsg' | translate"></div>
                     <form style="display: contents;" (ngSubmit)="onSubmit()" [formGroup]="adminFormGroup">
                         <div>
                             <mat-form-field>
@@ -33,8 +33,8 @@
                                 [datas]="customerAccountNumberList" [class]="''"
                                 [formControlSelect]="adminFormGroup.controls['siteId']">
                             </plugin-select-search>
-                            <plugin-select-search [showLabel]="true" [label]="this.translate.instant('lang.type')"
-                                [placeholderLabel]="this.translate.instant('lang.type')" [datas]="registeredMailType"
+                            <plugin-select-search [showLabel]="true" [label]="this.translate.instant('lang.registredMailType')"
+                                [placeholderLabel]="this.translate.instant('lang.registredMailType')" [datas]="registeredMailType"
                                 [class]="''" [formControlSelect]="adminFormGroup.controls['registeredMailType']">
                             </plugin-select-search>
                             <div style="display: grid;grid-template-columns: 1fr 1fr;grid-gap: 20px;">
