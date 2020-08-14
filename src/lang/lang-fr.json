@@ -1924,6 +1924,6 @@
     "letter": "Lettre",
     "requiredForRegisteredMail": "Champs nécesssaires à la génération de recommandés.",
     "registeredMailNumberRangeCreation": "Création d'une plage de numéros de recommandés",
-    "registeredMailNumberRangeModification": "Création d'une plage de numéros de recommandés",
+    "registeredMailNumberRangeModification": "Modification d'une plage de numéros de recommandés",
     "registeredMailNumberRangeModificationMsg": "La plage est en <b>cours d'utilisation</b> ou <b>clôturée</b>, vous ne pouvez pas la modifier."
 }

@@ -184,7 +184,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'registeredMail_type',
-            label: this.translate.instant('lang.type'),
+            label: this.translate.instant('lang.registredMailType'),
             type: 'select',
             default_value: null,
             values: [{ 'id': '2D', 'label': this.translate.instant('lang.registeredMail_2D') }, { 'id': '2C', 'label': this.translate.instant('lang.registeredMail_2C') }, { 'id': 'RW', 'label': this.translate.instant('lang.registeredMail_RW') }],
@@ -220,6 +220,14 @@ export class IndexingFormComponent implements OnInit {
             type: 'radio',
             default_value: null,
             values: [{ 'id': true, 'label': this.translate.instant('lang.yes') }, { 'id': false, 'label': this.translate.instant('lang.no') }],
+            enabled: true,
+        },
+        {
+            identifier: 'Destinataire de recommandés',
+            label: this.translate.instant('Destinataire de recommandés'),
+            type: 'registeredMailDest',
+            default_value: null,
+            values: [],
             enabled: true,
         },
     ];
