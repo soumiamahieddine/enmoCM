@@ -19,8 +19,8 @@
                 </div>
                 <mat-card *ngIf="!loading" class="card-app-content">
                     <div class="alert-message alert-message-danger" style="min-width: 100%;"
-                        *ngIf="adminFormGroup.controls['status'].value === 'OK'"
-                        [innerHTML]="'La plage est en <b>cours d\'utilisation</b>, vous ne pouvez pas la modifier.'"></div>
+                        *ngIf="adminFormGroup.controls['status'].value === 'OK' || adminFormGroup.controls['status'].value === 'END' "
+                        [innerHTML]="'La plage est en <b>cours d\'utilisation</b> ou <b>clôturée</b>, vous ne pouvez pas la modifier.'"></div>
                     <form style="display: contents;" (ngSubmit)="onSubmit()" [formGroup]="adminFormGroup">
                         <div>
                             <mat-form-field>
@@ -28,8 +28,8 @@
                                 <input matInput formControlName="trackerNumber">
                             </mat-form-field>
                             <plugin-select-search *ngIf="customerAccountNumberList.length > 0" [showLabel]="true"
-                                [label]="this.translate.instant('lang.customerAccountNumber')"
-                                [placeholderLabel]="this.translate.instant('lang.customerAccountNumber')"
+                                [label]="this.translate.instant('lang.issuingSite')"
+                                [placeholderLabel]="this.translate.instant('lang.issuingSite')"
                                 [datas]="customerAccountNumberList" [class]="''"
                                 [formControlSelect]="adminFormGroup.controls['siteId']">
                             </plugin-select-search>
@@ -39,13 +39,13 @@
                             </plugin-select-search>
                             <div style="display: grid;grid-template-columns: 1fr 1fr;grid-gap: 20px;">
                                 <mat-form-field>
-                                    <mat-label>{{'lang.start' | translate}}</mat-label>
-                                    <input matInput type="number" [min]="1" (keypress)="onlyNumbers($event)"
+                                    <mat-label>{{'lang.registeredMailStart' | translate}}</mat-label>
+                                    <input matInput type="number" [min]="minRange" (keypress)="onlyNumbers($event)"
                                         formControlName="rangeStart">
                                 </mat-form-field>
                                 <mat-form-field>
-                                    <mat-label>{{'lang.end' | translate}}</mat-label>
-                                    <input matInput type="number" [min]="1" (keypress)="onlyNumbers($event)"
+                                    <mat-label>{{'lang.registeredMailEnd' | translate}}</mat-label>
+                                    <input matInput type="number" [min]="this.adminFormGroup.controls['rangeStart'].value" (keypress)="onlyNumbers($event)"
                                         formControlName="rangeEnd">
                                 </mat-form-field>
                             </div>

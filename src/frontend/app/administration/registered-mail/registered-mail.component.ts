@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,21 +21,22 @@ export class RegisteredMailComponent implements OnInit {
 
     adminFormGroup: FormGroup;
     id: number = null;
+    minRange: number = 1;
 
     customerAccountNumberList: any[] = [];
 
     registeredMailType: any[] = [
         {
             id: '2D',
-            label: 'National sans AR'
+            label: this.translate.instant('lang.registeredMail_2D')
         },
         {
             id: '2C',
-            label: 'National avec AR'
+            label: this.translate.instant('lang.registeredMail_2C')
         },
         {
             id: 'RW',
-            label: 'International'
+            label: this.translate.instant('lang.registeredMail_RW')
         }
     ];
 
@@ -59,14 +60,13 @@ export class RegisteredMailComponent implements OnInit {
 
                 this.adminFormGroup = this._formBuilder.group({
                     id: [null],
-                    siteId: [null],
-                    trackerNumber: [null],
-                    registeredMailType: [null],
-                    rangeStart: [1],
-                    rangeEnd: [2],
+                    siteId: [null, Validators.required],
+                    trackerNumber: [null, Validators.required],
+                    registeredMailType: [null, Validators.required],
+                    rangeStart: [1, Validators.required],
+                    rangeEnd: [2, Validators.required],
                     status: ['SPD']
                 });
-
                 this.loading = false;
 
             } else {
@@ -74,7 +74,14 @@ export class RegisteredMailComponent implements OnInit {
                 this.id = params['id'];
                 this.creationMode = false;
                 await this.getData();
+                this.getMinRange();
             }
+
+            this.adminFormGroup.controls['registeredMailType'].valueChanges.pipe(
+                tap((value: string) => {
+                    this.getMinRange();
+                })
+            ).subscribe();
 
             this.adminFormGroup.controls['rangeStart'].valueChanges.pipe(
                 tap((value: string) => {
@@ -152,6 +159,26 @@ export class RegisteredMailComponent implements OnInit {
         } else {
             return (k >= 48 && k <= 57);
         }
+    }
+
+    getMinRange() {
+        this.http.get(`../rest/registeredMail/ranges/last/type/${this.adminFormGroup.controls['registeredMailType'].value}`).pipe(
+            tap((data: any) => {
+                if (data.lastNumber === 1) {
+                    this.minRange = data.lastNumber;
+                } else {
+                    this.minRange = data.lastNumber + 1;
+                }
+                this.adminFormGroup.controls['rangeStart'].setValue(this.minRange);
+                if (this.adminFormGroup.controls['rangeEnd'].value < this.adminFormGroup.controls['rangeStart'].value) {
+                    this.adminFormGroup.controls['rangeEnd'].setValue(this.adminFormGroup.controls['rangeStart'].value + 1);
+                }
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     onSubmit() {

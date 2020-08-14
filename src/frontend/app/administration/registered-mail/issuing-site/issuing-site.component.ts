@@ -150,20 +150,19 @@ export class IssuingSiteComponent implements OnInit {
             })
         ).subscribe();
     }
+
     initAutocompleteCountries() {
         this.countriesFilteredResult = this.adminFormGroup.controls['addressCountry'].valueChanges
-        .pipe(
-            startWith(''),
-            map(value => this._filter(value))
-        );
+            .pipe(
+                startWith(''),
+                map(value => this._filter(value))
+            );
     }
 
     private _filter(value: string): string[] {
         const filterValue = value.toLowerCase();
-        console.log(this.countries);
-        
         return this.countries.filter(option => option.toLowerCase().includes(filterValue));
-      }
+    }
 
     initAutocompleteAddressBan() {
         this.addressBANInfo = this.translate.instant('lang.autocompleteInfo');

@@ -51,12 +51,12 @@
                         </div>
                     </div>
                     <mat-table #table [dataSource]="adminService.getDataSource()" matSort matSortDisableClear>
-                        <ng-container matColumnDef="customerAccountNumber">
+                        <ng-container matColumnDef="label">
                             <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2">
-                                {{'lang.customerAccountNumber' | translate}}
+                                {{'lang.issuingSite' | translate}}
                             </mat-header-cell>
                             <mat-cell *matCellDef="let element" style="flex:2">
-                                {{element.customerAccountNumber}} </mat-cell>
+                                {{element.label}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="trackerNumber">
                             <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2">
@@ -65,12 +65,12 @@
                             <mat-cell *matCellDef="let element" style="flex:2">
                                 {{element.trackerNumber}} </mat-cell>
                         </ng-container>
-                        <ng-container matColumnDef="registredMailType">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>
+                        <ng-container matColumnDef="typeLabel">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2">
                                 {{'lang.type' | translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                {{element.registeredMailType}} </mat-cell>
+                            <mat-cell *matCellDef="let element" style="flex:2">
+                                {{element.typeLabel}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="rangeNumber">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -92,7 +92,7 @@
                             </mat-header-cell>
                             <mat-cell *matCellDef="let element">
                                 <span
-                                    [ngClass]="{'statusLabelWarn': ['SPD','END'].indexOf(element.status) > -1, 'statusLabelPrimary': ['SPD','END'].indexOf(element.status) == -1}"
+                                    [ngClass]="{'statusLabelPrimary': ['OK'].indexOf(element.status) > -1, 'statusLabelWarn': ['SPD'].indexOf(element.status) > -1, 'statusLabelDanger': ['END'].indexOf(element.status) > -1}"
                                     class="label">{{element.statusLabel}}</span>
                             </mat-cell>
                         </ng-container>
@@ -115,7 +115,7 @@
                             <mat-header-cell *matHeaderCellDef></mat-header-cell>
                             <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
                                 <button mat-icon-button color="accent" matTooltip="{{'Activer la plage' | translate}}"
-                                    (click)="$event.stopPropagation();activate(element)" *ngIf="element.status !== 'OK'" [disabled]="element.fullness === 100">
+                                    (click)="$event.stopPropagation();activate(element)" *ngIf="element.status === 'SPD'" [disabled]="element.fullness === 100">
                                     <mat-icon class="fa fas fa-play fa-2x" aria-hidden="true"></mat-icon>
                                 </button>
                                 <button mat-icon-button color="warn" matTooltip="{{'Clôturer la plage' | translate}}"

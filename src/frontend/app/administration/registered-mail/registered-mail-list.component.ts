@@ -43,8 +43,8 @@ export class RegisteredMailListComponent implements OnInit {
 
     data: any[] = [];
 
-    displayedColumns = ['trackerNumber', 'customerAccountNumber', 'registredMailType', 'rangeNumber', 'currentNumber', 'status', 'fullness', 'actions'];
-    filterColumns = ['customerAccountNumber', 'trackerNumber', 'registredMailType', 'rangeNumber', 'currentNumber', 'fullness', 'statusLabel'];
+    displayedColumns = ['trackerNumber', 'label', 'typeLabel', 'rangeNumber', 'currentNumber', 'status', 'fullness', 'actions'];
+    filterColumns = ['label', 'trackerNumber', 'typeLabel', 'rangeNumber', 'currentNumber', 'fullness', 'statusLabel'];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -77,7 +77,8 @@ export class RegisteredMailListComponent implements OnInit {
                 this.data = data['ranges'].map((item: any) => {
                     return {
                         ...item,
-                        statusLabel : item.status !== 'OK' ? this.translate.instant('lang.inactive') : this.translate.instant('lang.active'),
+                        statusLabel : this.translate.instant('lang.registeredMail_' + item.status),
+                        typeLabel : this.translate.instant('lang.registeredMail_' + item.registeredMailType),
                         rangeNumber : `${item.rangeStart} - ${item.rangeEnd}`,
                     };
                 });
@@ -103,8 +104,22 @@ export class RegisteredMailListComponent implements OnInit {
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.put(`../rest/registeredMail/ranges/${row.id}`, dataTosend)),
             tap(() => {
-                row.status = 'OK';
-                row.statusLabel = this.translate.instant('lang.active');
+                this.data = this.data.map((item: any) => {
+                    return {
+                        ...item,
+                        status : item.status === 'OK' && item.registeredMailType === row.registeredMailType && item.siteId === row.siteId ? 'END' : item.status
+                    };
+                });
+                this.data.forEach(item => {
+                    if (item.status === 'OK' && item.registeredMailType === row.registeredMailType && item.siteId === row.siteId) {
+                        item.status = 'END';
+                        item.statusLabel = this.translate.instant('lang.registeredMail_' + item.status);
+
+                    } else if (item.id === row.id) {
+                        item.status = 'OK';
+                        item.statusLabel = this.translate.instant('lang.registeredMail_' + item.status);
+                    }
+                });
                 setTimeout(() => {
                     this.adminService.setDataSource('admin_regitered_mail', this.data, this.sort, this.paginator, this.filterColumns);
                 }, 0);
@@ -128,7 +143,7 @@ export class RegisteredMailListComponent implements OnInit {
             exhaustMap(() => this.http.put(`../rest/registeredMail/ranges/${row.id}`, dataTosend)),
             tap(() => {
                 row.status = 'END';
-                row.statusLabel = this.translate.instant('lang.inactive');
+                row.statusLabel = this.translate.instant('lang.registeredMail_' + row.status);
                 setTimeout(() => {
                     this.adminService.setDataSource('admin_regitered_mail', this.data, this.sort, this.paginator, this.filterColumns);
                 }, 0);
