@@ -1444,3 +1444,17 @@ CREATE TABLE IF NOT EXISTS registered_number_range (
    CONSTRAINT registered_number_range_pkey PRIMARY KEY (id),
    CONSTRAINT registered_number_range_unique_key UNIQUE (tracking_account_number)
 );
+
+CREATE TABLE IF NOT EXISTS registered_mail_resources (
+     id SERIAL NOT NULL,
+     res_id INTEGER NOT NULL,
+     type CHARACTER VARYING(2) NOT NULL,
+     issuing_site INTEGER NOT NULL,
+     warranty INTEGER NOT NULL,
+     letter BOOL NOT NULL DEFAULT FALSE,
+     recipient jsonb NOT NULL,
+     number INTEGER NOT NULL,
+     reference TEXT,
+     generated BOOL NOT NULL DEFAULT FALSE,
+     CONSTRAINT registered_mail_resources_pkey PRIMARY KEY (id)
+);
