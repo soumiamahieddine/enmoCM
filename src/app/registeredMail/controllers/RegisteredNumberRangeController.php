@@ -233,7 +233,8 @@ class RegisteredNumberRangeController
         if ($body['status'] == 'OK' && $range['status'] != 'OK') {
             RegisteredNumberRangeModel::update([
                 'set'   => [
-                    'status' => 'END'
+                    'status' => 'END',
+                    'current_number' => null
                 ],
                 'where' => ['type = ?', 'status = ?', 'site_id = ?'],
                 'data'  => [$body['registeredMailType'], 'OK', $range['site_id']]
@@ -256,6 +257,8 @@ class RegisteredNumberRangeController
         $currentNumber = $range['current_number'];
         if ($body['status'] == 'OK' && $range['status'] != 'OK' && $currentNumber == null) {
             $currentNumber = $body['rangeStart'];
+        } elseif ($body['status'] == 'END') {
+            $currentNumber = null;
         }
 
         RegisteredNumberRangeModel::update([

@@ -183,6 +183,20 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Range overlaps another range', $responseBody['errors']);
 
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 500,
+            'rangeEnd'           => 1500,
+            'siteId'             => self::$siteId
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body trackerNumber is already used by another range', $responseBody['errors']);
+
         $GLOBALS['login'] = 'bbain';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
@@ -355,8 +369,37 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('OK', $responseBody['range']['status']);
 
         $response = $registeredNumberRangeController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('END', $responseBody['range']['status']);
+        $this->assertNull($responseBody['range']['currentNumber']);
+
+        \RegisteredMail\models\RegisteredNumberRangeModel::update([
+            'set'   => [
+                'status' => 'SPD'
+            ],
+            'where' => ['id = ?'],
+            'data'  => [self::$id]
+        ]);
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1,
+            'rangeEnd'           => 900,
+            'siteId'             => self::$siteId,
+            'status'             => 'END'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        $response = $registeredNumberRangeController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('END', $responseBody['range']['status']);
+        $this->assertNull($responseBody['range']['currentNumber']);
 
         $body = [
             'registeredMailType' => '2D',
@@ -490,6 +533,21 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Range cannot be updated', $responseBody['errors']);
+
+        $body = [
+            'registeredMailType' => '2D',
+            'trackerNumber'      => 'AZPOKF30KDZP',
+            'rangeStart'         => 1001,
+            'rangeEnd'           => 2000,
+            'siteId'             => self::$siteId,
+            'status'             => 'OK'
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
+
+        $response = $registeredNumberRangeController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id2]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body trackerNumber is already used by another range', $responseBody['errors']);
 
         $GLOBALS['login'] = 'bbain';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
