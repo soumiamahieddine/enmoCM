@@ -235,7 +235,7 @@ CREATE TABLE IF NOT EXISTS registered_mail_resources (
    res_id INTEGER NOT NULL,
    type CHARACTER VARYING(2) NOT NULL,
    issuing_site INTEGER NOT NULL,
-   warranty INTEGER NOT NULL,
+   warranty CHARACTER VARYING(2) NOT NULL,
    letter BOOL NOT NULL DEFAULT FALSE,
    recipient jsonb NOT NULL,
    number INTEGER NOT NULL,

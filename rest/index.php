@@ -630,6 +630,7 @@ $app->get('/registeredMail/ranges/type/{type}/last', \RegisteredMail\controllers
 $app->get('/registeredMail/sites/type/{type}', \RegisteredMail\controllers\IssuingSiteController::class . ':getByType');
 
 $app->get('/registeredMail/countries', \RegisteredMail\controllers\RegisteredMailController::class . ':getCountries');
+$app->get('/registeredMail/print', \RegisteredMail\controllers\RegisteredMailController::class . ':print');
 
 
 $app->run();
