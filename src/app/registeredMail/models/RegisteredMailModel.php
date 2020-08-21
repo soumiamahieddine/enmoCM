@@ -52,6 +52,26 @@ class RegisteredMailModel
         return $item[0];
     }
 
+    public static function getByResId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['select']);
+
+        $item = DatabaseModel::select([
+            'select' => empty($args['select']) ? ['*'] : $args['select'],
+            'table'  => ['registered_mail_resources'],
+            'where'  => ['res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
+
+        if (empty($item[0])) {
+            return [];
+        }
+
+        return $item[0];
+    }
+
     public static function create(array $args)
     {
         ValidatorModel::notEmpty($args, ['res_id', 'type', 'issuing_site', 'warranty', 'recipient', 'number']);

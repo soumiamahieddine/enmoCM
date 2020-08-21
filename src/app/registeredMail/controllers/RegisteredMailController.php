@@ -14,9 +14,12 @@
 namespace RegisteredMail\controllers;
 
 use Com\Tecnick\Barcode\Barcode;
+use RegisteredMail\models\RegisteredMailModel;
+use Resource\models\ResModel;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\ValidatorModel;
 
 class RegisteredMailController
 {
@@ -52,67 +55,99 @@ class RegisteredMailController
         return $registeredMailNumber;
     }
 
-    public function print(Request $request, Response $response)
+    public static function isRegisteredMailClosed(array $args)
     {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
 
+        $registeredMail = RegisteredMailModel::getByResId(['select' => ['generated'], 'resId' => $args['resId']]);
+        if (empty($registeredMail['generated'])) {
+            return false;
+        }
+
+        $resource = ResModel::getById(['select' => ['departure_date'], 'resId' => $args['resId']]);
+        if (empty($resource['departure_date'])) {
+            return ['errors' => ['Departure date is empty']];
+        }
+        $departureDate = new \DateTime($resource['departure_date']);
+        $today = new \DateTime();
+        $today->setTime(16, 00);
+
+        if ($departureDate > $today) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function printTest(Request $request, Response $response)
+    {
         $args = [
-            'type' => '2C',
+            'type' => 'RW',
             'number'    => '551',
-            'warranty'  => 'R1',
+            'warranty'  => 'R2',
             'letter'    => true,
             'reference'    => '15/08/2020 - ma ref',
             'recipient' => [
                 'AFNOR',
-                '',
+                'PSG',
                 'Eric Choupo',
-                '',
+                'Porte 160',
                 '5 Rue de Paris',
-                '',
+                'Batiment C',
                 '75001 Paris',
                 'FRANCE'
             ],
             'sender' => [
                 'AFNOR',
-                '',
+                'PSG',
                 'Edinson Cavani',
-                '',
+                'Porte 140',
                 '10 Rue de France',
-                '',
+                'Batiment B',
                 '75016 Paris',
                 'FRANCE'
             ],
         ];
 
+        RegisteredMailController::getRegisteredMailPDF($args);
+
+        return true;
+    }
+
+    public static function getRegisteredMailPDF(array $args)
+    {
         $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $args['number']]);
+
         $pdf = new Fpdi();
         $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
         $pdf->SetAutoPagebreak(false);
         $pdf->addPage();
+        $pdf->SetFont('times', '', 11);
 
         $barcode = new Barcode();
-//        $pdf->AddFont('LucidaConsole','','lucon.php');
-        $pdf->SetFont('times', '', 11);
 
         if ($args['type'] != 'RW') {
             // TODO INFO FEUILLE 1 : GAUCHE
-            $pdf->SetXY(50, 22);
+            $pdf->SetXY(50, 8);
             $pdf->cell(0, 0, $registeredMailNumber);
 
             if ($args['warranty'] == 'R1') {
-                $pdf->SetXY(86, 28);
+                $pdf->SetXY(88, 17);
                 $pdf->cell(0, 0, 'X');
             } else if ($args['warranty'] == 'R2') {
-                $pdf->SetXY(99, 28);
+                $pdf->SetXY(101, 17);
                 $pdf->cell(0, 0, 'X');
             } else {
-                $pdf->SetXY(112, 28);
+                $pdf->SetXY(114, 17);
                 $pdf->cell(0, 0, 'X');
             }
             if ($args['letter'] === true) {
-                $pdf->SetXY(86, 36);
+                $pdf->SetXY(88, 23);
                 $pdf->cell(0, 0, 'X');
             }
-            $y = 45;
+            $y = 31;
             $pdf->SetXY(36, $y);
             $pdf->cell(0, 0, $args['recipient'][1]);
 
@@ -138,60 +173,59 @@ class RegisteredMailController
 
 
             // TODO INFO FEUILLE 1 : DROITE
-            $pdf->SetXY(130, 77);
-            $pdf->cell(0, 0, $registeredMailNumber);
-            $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber);
-            $pdf->Image('@'.$barcodeObj->getPngData(), 130, 82, 60, 15, '', '', '', false, 300);
-
-
-            $y = 45;
-            $pdf->SetXY(120, $y);
+            $y = 31;
+            $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][1]);
 
             $y += 4;
-            $pdf->SetXY(120, $y);
+            $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][2]);
 
             $y += 4;
-            $pdf->SetXY(120, $y);
+            $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][3]);
 
             $y += 4;
-            $pdf->SetXY(120, $y);
+            $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][4]);
 
             $y += 4;
-            $pdf->SetXY(120, $y);
+            $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][5]);
 
             $y += 4;
-            $pdf->SetXY(120, $y);
+            $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][6]);
+
+            $pdf->SetXY(140, 65);
+            $pdf->cell(0, 0, $registeredMailNumber);
+            $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
+            $pdf->Image('@'.$barcodeObj->getPngData(), 140, 70, 60, 12, '', '', '', false, 300);
 
 
             //TODO INFO 2eme feuille
-            $pdf->SetXY(63, 107);
+            $pdf->SetXY(63, 100);
             $pdf->cell(0, 0, $registeredMailNumber);
-            $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber);
-            $pdf->Image('@'.$barcodeObj->getPngData(), 63, 112, 60, 15, '', '', '', false, 300);
+            $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
+            $pdf->Image('@'.$barcodeObj->getPngData(), 63, 105, 60, 12, '', '', '', false, 300);
 
 
             if ($args['warranty'] == 'R1') {
-                $pdf->SetXY(99, 131);
+                $pdf->SetXY(101, 125);
                 $pdf->cell(0, 0, 'X');
             } else if ($args['warranty'] == 'R2') {
-                $pdf->SetXY(112, 131);
+                $pdf->SetXY(114, 125);
                 $pdf->cell(0, 0, 'X');
             } else {
-                $pdf->SetXY(125, 131);
+                $pdf->SetXY(127, 125);
                 $pdf->cell(0, 0, 'X');
             }
             if ($args['letter'] === true) {
-                $pdf->SetXY(99, 137);
+                $pdf->SetXY(101, 130);
                 $pdf->cell(0, 0, 'X');
             }
 
-            $y = 145;
+            $y = 140;
             $pdf->SetXY(57, $y);
             $pdf->cell(0, 0, $args['recipient'][1]);
 
@@ -215,7 +249,7 @@ class RegisteredMailController
             $pdf->SetXY(57, $y);
             $pdf->cell(0, 0, $args['recipient'][6]);
 
-            $y =175;
+            $y = 170;
             $pdf->SetXY(57, $y);
             $pdf->cell(0, 0, $args['sender'][1]);
 
@@ -244,8 +278,8 @@ class RegisteredMailController
             if ($args['type'] == '2C') {
                 $pdf->SetXY(37, 207);
                 $pdf->cell(0, 0, $registeredMailNumber);
-                $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber);
-                $pdf->Image('@'.$barcodeObj->getPngData(), 37, 212, 60, 15, '', '', '', false, 300);
+                $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
+                $pdf->Image('@'.$barcodeObj->getPngData(), 37, 212, 60, 12, '', '', '', false, 300);
 
                 $y = 235;
                 $pdf->SetXY(57, $y);
@@ -272,7 +306,7 @@ class RegisteredMailController
                 $pdf->cell(0, 0, $args['recipient'][6]);
             }
 
-            $y = 265;
+            $y = 267;
             $pdf->SetXY(57, $y);
             $pdf->cell(0, 0, $args['sender'][1]);
 
@@ -296,12 +330,12 @@ class RegisteredMailController
             $pdf->SetXY(57, $y);
             $pdf->cell(0, 0, $args['sender'][6]);
 
-            $pdf->SetXY(7, 280);
+            $pdf->SetXY(5, 280);
             $pdf->Multicell(40, 5, $args['reference']);
         } else {
             //TODO INFO RW
             $pdf->setFont('times', '', '8');
-            
+
             $y = 27;
             $pdf->SetXY(127, $y);
             $pdf->cell(0, 0, $args['recipient'][1]);
@@ -325,7 +359,7 @@ class RegisteredMailController
             $y += 4;
             $pdf->SetXY(127, $y);
             $pdf->cell(0, 0, $args['recipient'][6]);
-            
+
             $y += 4;
             $pdf->SetXY(127, $y);
             $pdf->cell(0, 0, $args['recipient'][7]);
@@ -367,9 +401,8 @@ class RegisteredMailController
 
             $pdf->SetXY(56, 37);
             $pdf->cell(0, 0, $registeredMailNumber);
-            $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber);
-            $pdf->Image('@'.$barcodeObj->getPngData(), 56, 42, 60, 15, '', '', '', false, 300);
-
+            $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
+            $pdf->Image('@'.$barcodeObj->getPngData(), 56, 42, 60, 12, '', '', '', false, 300);
 
             $pdf->SetXY(56, 53);
             $pdf->cell(0, 0, $registeredMailNumber);
@@ -405,7 +438,6 @@ class RegisteredMailController
             $pdf->cell(0, 0, $args['sender'][7]);
 
             $pdf->SetFont('times', '', 11);
-
 
             if ($args['letter'] === true) {
                 $pdf->SetXY(21, 239);
@@ -446,14 +478,14 @@ class RegisteredMailController
             $y += 4;
             $pdf->SetXY(20, $y);
             $pdf->cell(0, 0, $args['recipient'][6]);
-            
+
             $y += 4;
             $pdf->SetXY(20, $y);
             $pdf->cell(0, 0, $args['recipient'][7]);
         }
 
-        $pdf->Output('/home/damien/reco.pdf', 'F');
+        $fileContent = $pdf->Output('', 'S');
 
-        return true;
+        return ['encodedFileContent' => base64_encode($fileContent)];
     }
 }
