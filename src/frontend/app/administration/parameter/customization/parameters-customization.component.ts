@@ -33,7 +33,7 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
         const valIdentifier: ValidatorFn[] = [Validators.pattern(/^[a-zA-Z0-9_\-]*$/), Validators.required];
 
         this.stepFormGroup = this._formBuilder.group({
-            appName: ['', Validators.required],
+            applicationName: ['', Validators.required],
             loginpage_message: [''],
             homepage_message: [''],
             bodyImage: ['../rest/images?image=loginPage'],
@@ -61,12 +61,12 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
                 }),
                 exhaustMap(() => this.http.get('../rest/authenticationInformations')),
                 tap((data: any) => {
-                    this.stepFormGroup.controls['appName'].setValue(data.applicationName);
+                    this.stepFormGroup.controls['applicationName'].setValue(data.applicationName);
                     setTimeout(() => {
 
-                        this.stepFormGroup.controls['appName'].valueChanges.pipe(
+                        this.stepFormGroup.controls['applicationName'].valueChanges.pipe(
                             debounceTime(500),
-                            tap(() => this.saveParameter('appName'))
+                            tap(() => this.saveParameter('applicationName'))
                         ).subscribe();
 
 
@@ -198,6 +198,8 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
         let param = {};
         if (parameterId === 'logo' || parameterId === 'bodyImage') {
             param['image'] = this.stepFormGroup.controls[parameterId].value;
+        } else if (parameterId === 'applicationName') {
+            param['applicationName'] = this.stepFormGroup.controls[parameterId].value;
         } else {
             param = {
                 param_value_string: this.stepFormGroup.controls[parameterId].value
