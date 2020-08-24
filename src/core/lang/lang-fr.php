@@ -470,3 +470,7 @@ define("_ISSUING_SITE_DELETED", "Site émetteur supprimé");
 define("_REGISTERED_NUMBER_RANGE_CREATED", "Plage de recommandé créé");
 define("_REGISTERED_NUMBER_RANGE_UPDATED", "Plage de recommandé modifié");
 define("_REGISTERED_NUMBER_RANGE_DELETED", "Plage de recommandé supprimé");
+
+define('_SAVE_REGISTERED_MAIL', 'Enregistrer le recommandé');
+define('_SAVE_PRINT_REGISTERED_MAIL', 'Enregistrer et imprimer le recommandé');
+define('_PRINT_REGISTERED_MAIL', 'Imprimer le recommandé');

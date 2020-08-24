@@ -54,11 +54,11 @@ trait RegisteredMailTrait
             return ['errors' => ['No range found']];
         }
 
-        $status = $range['current_number'] + 1 > $range['range_end'] ? 'DEL' : 'OK';
+        $status = $range[0]['current_number'] + 1 > $range[0]['range_end'] ? 'DEL' : 'OK';
         RegisteredNumberRangeModel::update([
-            'set'   => ['current_number' => $range['current_number'] + 1, 'status' => $status],
+            'set'   => ['current_number' => $range[0]['current_number'] + 1, 'status' => $status],
             'where' => ['id = ?'],
-            'data'  => [$range['id']]
+            'data'  => [$range[0]['id']]
         ]);
 
         $date = new \DateTime($resource['departure_date']);
@@ -71,7 +71,7 @@ trait RegisteredMailTrait
             'warranty'      => $args['data']['warranty'],
             'letter'        => empty($args['letter']) ? 'false' : 'true',
             'recipient'     => json_encode($args['data']['recipient']),
-            'number'        => $range['current_number'],
+            'number'        => $range[0]['current_number'],
             'reference'     => "{$date} - {$args['data']['reference']}",
             'generated'     => 'false',
         ]);
@@ -112,11 +112,11 @@ trait RegisteredMailTrait
             return ['errors' => ['No range found']];
         }
 
-        $status = $range['current_number'] + 1 > $range['range_end'] ? 'DEL' : 'OK';
+        $status = $range[0]['current_number'] + 1 > $range[0]['range_end'] ? 'DEL' : 'OK';
         RegisteredNumberRangeModel::update([
-            'set'   => ['current_number' => $range['current_number'] + 1, 'status' => $status],
+            'set'   => ['current_number' => $range[0]['current_number'] + 1, 'status' => $status],
             'where' => ['id = ?'],
-            'data'  => [$range['id']]
+            'data'  => [$range[0]['id']]
         ]);
 
         $date = new \DateTime($resource['departure_date']);
@@ -129,7 +129,7 @@ trait RegisteredMailTrait
             'warranty'      => $args['data']['warranty'],
             'letter'        => empty($args['letter']) ? 'false' : 'true',
             'recipient'     => json_encode($args['data']['recipient']),
-            'number'        => $range['current_number'],
+            'number'        => $range[0]['current_number'],
             'reference'     => "{$date} - {$args['data']['reference']}",
             'generated'     => 'true',
         ]);
@@ -139,9 +139,8 @@ trait RegisteredMailTrait
 
     public static function printRegisteredMail(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId', 'data']);
+        ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
-        ValidatorModel::arrayType($args, ['data']);
 
         $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'number', 'warranty', 'letter', 'recipient'], 'resId' => $args['resId']]);
         if (empty($registeredMail)) {
@@ -175,6 +174,6 @@ trait RegisteredMailTrait
             'sender'    => $sender
         ]);
 
-        return ['encodedFileContent' => $encodedFileContent];
+        return ['data' => $encodedFileContent];
     }
 }

@@ -470,3 +470,7 @@ define("_ISSUING_SITE_DELETED", "Issuing site deleted");
 define("_REGISTERED_NUMBER_RANGE_CREATED", "Registered number range created");
 define("_REGISTERED_NUMBER_RANGE_UPDATED", "Registered number range updated");
 define("_REGISTERED_NUMBER_RANGE_DELETED", "Registered number range deleted");
+
+define('_SAVE_REGISTERED_MAIL', 'Save registered mail');
+define('_SAVE_PRINT_REGISTERED_MAIL', 'Save and print registered mail');
+define('_PRINT_REGISTERED_MAIL', 'Print registered mail');

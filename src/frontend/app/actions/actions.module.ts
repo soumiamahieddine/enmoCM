@@ -39,6 +39,9 @@ import { GiveAvisParallelActionComponent } from './avis-give-parallel-action/giv
 import { ValidateAvisParallelComponent } from './avis-parallel-validate-action/validate-avis-parallel-action.component';
 import { ReconcileActionComponent } from './reconciliation-action/reconcile-action.component';
 import { SendAlfrescoActionComponent } from './send-alfresco-action/send-alfresco-action.component';
+import { SaveRegisteredMailActionComponent } from './save-registered-mail-action/save-registered-mail-action.component';
+import { SaveAndPrintRegisteredMailActionComponent } from './save-and-print-registered-mail-action/save-and-print-registered-mail-action.component';
+import { PrintRegisteredMailActionComponent } from './print-registered-mail-action/print-registered-mail-action.component';
 
 import { InternationalizationModule } from '../../service/translate/internationalization.module';
 import { TranslateService } from '@ngx-translate/core';
@@ -84,6 +87,9 @@ import { TranslateService } from '@ngx-translate/core';
         GiveAvisParallelActionComponent,
         ValidateAvisParallelComponent,
         SendAlfrescoActionComponent,
+        SaveRegisteredMailActionComponent,
+        SaveAndPrintRegisteredMailActionComponent,
+        PrintRegisteredMailActionComponent,
         ReconcileActionComponent,
     ],
     exports: [
@@ -121,6 +127,9 @@ import { TranslateService } from '@ngx-translate/core';
         GiveAvisParallelActionComponent,
         ValidateAvisParallelComponent,
         SendAlfrescoActionComponent,
+        SaveRegisteredMailActionComponent,
+        SaveAndPrintRegisteredMailActionComponent,
+        PrintRegisteredMailActionComponent,
         ReconcileActionComponent,
         DocumentViewerModule
     ],
@@ -151,6 +160,9 @@ import { TranslateService } from '@ngx-translate/core';
         closeMailWithAttachmentsOrNotesActionComponent,
         SendSignatureBookActionComponent,
         SendAlfrescoActionComponent,
+        SaveRegisteredMailActionComponent,
+        SaveAndPrintRegisteredMailActionComponent,
+        PrintRegisteredMailActionComponent,
         ViewDocActionComponent,
         ReconcileActionComponent,
     ]

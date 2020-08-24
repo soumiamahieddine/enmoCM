@@ -1,0 +1,54 @@
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { LANG } from '../../translate.component';
+import { TranslateService } from '@ngx-translate/core';
+import { NotificationService } from '../../../service/notification/notification.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+import { NoteEditorComponent } from '../../notes/note-editor.component';
+import { tap, exhaustMap, catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+@Component({
+    templateUrl: "print-registered-mail-action.component.html",
+    styleUrls: ['print-registered-mail-action.component.scss'],
+})
+export class PrintRegisteredMailActionComponent implements OnInit {
+
+    lang: any = LANG;
+    loading: boolean = false;
+
+    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
+
+    constructor(
+        private translate: TranslateService,
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialogRef: MatDialogRef<PrintRegisteredMailActionComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any
+    ) { }
+
+    ngOnInit(): void { }
+
+    onSubmit() {
+        this.loading = true;
+        this.executeAction();
+    }
+
+    executeAction() {
+        const downloadLink = document.createElement('a');
+        this.http.put(this.data.processActionRoute, { resources: this.data.resIds, note: this.noteEditor.getNote() }).pipe(
+            tap((data: any) => {
+                downloadLink.href = `data:application/pdf;base64,${data.data.encodedFileContent}`;
+                downloadLink.setAttribute('download', 'recommande.pdf');
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                this.dialogRef.close(this.data.resIds);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+}
