@@ -1412,13 +1412,13 @@ CREATE TABLE IF NOT EXISTS registered_mail_issuing_sites
     id                  SERIAL                 NOT NULL,
     label               CHARACTER VARYING(256) NOT NULL,
     post_office_label   CHARACTER VARYING(256),
-    account_number      CHARACTER VARYING(256),
-    address_number      CHARACTER VARYING(256),
-    address_street      CHARACTER VARYING(256),
+    account_number      INTEGER,
+    address_number      CHARACTER VARYING(256) NOT NULL,
+    address_street      CHARACTER VARYING(256) NOT NULL,
     address_additional1 CHARACTER VARYING(256),
     address_additional2 CHARACTER VARYING(256),
-    address_postcode    CHARACTER VARYING(256),
-    address_town        CHARACTER VARYING(256),
+    address_postcode    CHARACTER VARYING(256) NOT NULL,
+    address_town        CHARACTER VARYING(256) NOT NULL,
     address_country     CHARACTER VARYING(256),
     CONSTRAINT registered_mail_issuing_sites_pkey PRIMARY KEY (id)
 );

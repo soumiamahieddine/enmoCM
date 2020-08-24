@@ -184,7 +184,7 @@ export class IndexingFormComponent implements OnInit {
         },
         {
             identifier: 'registeredMail_type',
-            label: this.translate.instant('lang.registredMailType'),
+            label: this.translate.instant('lang.registeredMailType'),
             type: 'select',
             default_value: null,
             values: [{ 'id': '2D', 'label': this.translate.instant('lang.registeredMail_2D') }, { 'id': '2C', 'label': this.translate.instant('lang.registeredMail_2C') }, { 'id': 'RW', 'label': this.translate.instant('lang.registeredMail_RW') }],

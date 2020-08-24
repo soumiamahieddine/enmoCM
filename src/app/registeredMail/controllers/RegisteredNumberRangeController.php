@@ -121,6 +121,9 @@ class RegisteredNumberRangeController
         if (!Validator::intVal()->notEmpty()->validate($body['siteId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body siteId is empty or not an integer']);
         }
+        if ($body['rangeStart'] >= $body['rangeEnd']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body rangeStart cannot be larger or equal than rangeEnd']);
+        }
 
         $site = IssuingSiteModel::getById(['id' => $body['siteId']]);
         if (empty($site)) {
@@ -202,7 +205,7 @@ class RegisteredNumberRangeController
             return $response->withStatus(400)->withJson(['errors' => 'Body siteId is empty or not an integer']);
         }
         if ($body['rangeStart'] >= $body['rangeEnd']) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body rangeStart cannot be larger than rangeEnd']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body rangeStart cannot be larger or equal  than rangeEnd']);
         }
 
         $site = IssuingSiteModel::getById(['id' => $body['siteId']]);
