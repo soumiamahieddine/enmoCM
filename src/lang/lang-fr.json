@@ -1925,5 +1925,17 @@
     "requiredForRegisteredMail": "Champs nécesssaires à la génération de recommandés.",
     "registeredMailNumberRangeCreation": "Création d'une plage de numéros de recommandés",
     "registeredMailNumberRangeModification": "Modification d'une plage de numéros de recommandés",
-    "registeredMailNumberRangeModificationMsg": "La plage est en <b>cours d'utilisation</b> ou <b>clôturée</b>, vous ne pouvez pas la modifier."
+    "registeredMailNumberRangeModificationMsg": "La plage est en <b>cours d'utilisation</b> ou <b>clôturée</b>, vous ne pouvez pas la modifier.",
+    "userLoginAlreadyExists": "Un utilisateur avec ce login existe déjà.",
+    "userDeletedNowActivated": "Un utilisateur était supprimé et est maintenant réactivé.",
+    "phoneModificationNotAllowed": "Le numéro de téléphone n'est pas modifiable.",
+    "userModificationNotAllowed": "Un utilisateur n'est pas modifiable.",
+    "argumentUserIdEmpty": "La donnée user_id est vide pour un utilisateur.",
+    "argumentFirstnameEmpty": "La donnée firstname est vide pour un utilisateur.",
+    "argumentLastnameEmpty": "La donnée lastname est vide pour un utilisateur.",
+    "argumentMailEmpty": "La donnée mail est vide pour un utilisateur.",
+    "argumentFirstnameNotString": "La donnée firstname n'est pas une chaine de caractère pour un utilisateur.",
+    "argumentLastnameNotString": "La donnée lastname n'est pas une chaine de caractère pour un utilisateur.",
+    "argumentMailNotCorrect": "La donnée mail n'est pas correcte pour un utilisateur.",
+    "argumentPhoneNotCorrect": "La donnée phone n'est pas correcte pour un utilisateur."
 }

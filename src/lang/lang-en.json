@@ -1896,5 +1896,17 @@
     "hotkeyInfo": "Hold <b>SHIFT</b> to propagate your selections to sub-elements",
     "hotkeyMsg": "<b>SHIFT</b>&nbsp;Propagation to sub-elements",
     "hotkeyTitle": "Hold the shift key",
-    "advancedParameters": "Advanced parameters"
+    "advancedParameters": "Advanced parameters",
+    "userLoginAlreadyExists": "User with this login already exists.",
+    "userDeletedNowActivated": "User was deleted and is now reactivated.",
+    "phoneModificationNotAllowed": "Phone is not allowed to be modified.",
+    "userModificationNotAllowed": "User is not allowed to be modified.",
+    "argumentUserIdEmpty": "Argument user_id is empty for a user.",
+    "argumentFirstnameEmpty": "Argument firstname is empty for a user.",
+    "argumentLastnameEmpty": "Argument lastname is empty for a user.",
+    "argumentMailEmpty": "Argument mail is empty for a user.",
+    "argumentFirstnameNotString": "Argument firstname is not a string for a user.",
+    "argumentLastnameNotString": "Argument lastname is not a string for a user.",
+    "argumentMailNotCorrect": "Argument mail is not correct for a user.",
+    "argumentPhoneNotCorrect": "Argument phone is not correct for a user."
 }
