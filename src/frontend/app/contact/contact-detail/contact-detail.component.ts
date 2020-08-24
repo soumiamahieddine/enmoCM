@@ -35,7 +35,7 @@ export class ContactDetailComponent implements OnInit {
     customFields: any[] = [];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private contactService: ContactService,

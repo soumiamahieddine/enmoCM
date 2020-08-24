@@ -35,7 +35,7 @@ export class MaarchParapheurListComponent implements OnInit, AfterViewInit {
 
     @Output() triggerEvent = new EventEmitter<string>();
 
-    constructor(private translate: TranslateService, public http: HttpClient, public dialog: MatDialog, private notify: NotificationService, private headerService: HeaderService) {
+    constructor(public translate: TranslateService, public http: HttpClient, public dialog: MatDialog, private notify: NotificationService, private headerService: HeaderService) {
         this.dataSource = new MatTableDataSource(this.userList);
     }
 

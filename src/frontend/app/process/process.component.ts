@@ -160,7 +160,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     resourceFollowed: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
         public http: HttpClient,

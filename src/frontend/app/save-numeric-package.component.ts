@@ -31,7 +31,7 @@ export class SaveNumericPackageComponent implements OnInit {
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private zone: NgZone,
         private notify: NotificationService,

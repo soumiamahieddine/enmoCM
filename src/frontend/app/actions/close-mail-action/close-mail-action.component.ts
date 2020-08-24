@@ -25,7 +25,7 @@ export class CloseMailActionComponent implements OnInit {
     requiredFields: any;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient, 
         private notify: NotificationService, 
         public dialogRef: MatDialogRef<CloseMailActionComponent>,

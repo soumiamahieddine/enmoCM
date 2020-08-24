@@ -24,7 +24,7 @@ export class ContactModalComponent implements OnInit{
     @ViewChild('drawer', { static: true }) drawer: MatSidenav;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private privilegeService: PrivilegeService,
         @Inject(MAT_DIALOG_DATA) public data: any,

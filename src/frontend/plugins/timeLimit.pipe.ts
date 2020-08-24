@@ -10,7 +10,7 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 	private timer: number;
 	lang: any = LANG;
 	constructor(
-		private translate: TranslateService,
+		public translate: TranslateService,
 		private changeDetectorRef: ChangeDetectorRef, 
 		private ngZone: NgZone) {}
 	transform(value:string, args: string = null) {

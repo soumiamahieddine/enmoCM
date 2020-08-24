@@ -59,7 +59,7 @@ export class VisaWorkflowComponent implements OnInit {
     loadedInConstructor: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public functions: FunctionsService,

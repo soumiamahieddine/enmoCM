@@ -47,7 +47,7 @@ export class ToolsListComponent implements OnInit {
     @Input('selectedRes') selectedRes: any;
     @Input('totalRes') totalRes: number;
 
-    constructor(private translate: TranslateService, public http: HttpClient, public dialog: MatDialog) { }
+    constructor(public translate: TranslateService, public http: HttpClient, public dialog: MatDialog) { }
 
     ngOnInit(): void {
 

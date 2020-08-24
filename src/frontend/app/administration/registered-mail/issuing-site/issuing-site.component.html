@@ -100,7 +100,7 @@
                                     <input matInput #autoCompleteInput [matAutocomplete]="matAutocompleteCountries"
                                         formControlName="addressCountry">
                                     <mat-autocomplete #matAutocompleteCountries="matAutocomplete"
-                                        (optionSelected)="adminFormGroup.controls['addressCountry'].setValue($event.option.value)" [isOpen]="true">
+                                        (optionSelected)="adminFormGroup.controls['addressCountry'].setValue($event.option.value)" isOpen="true">
                                         <mat-option *ngFor="let country of countriesFilteredResult | async"
                                             [value]="country">
                                             {{country}}

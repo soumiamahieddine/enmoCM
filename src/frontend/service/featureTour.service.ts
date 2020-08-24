@@ -94,7 +94,7 @@ export class FeatureTourService {
     featureTourEnd: any[] = [];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private readonly joyrideService: JoyrideService,
         private localStorage: LocalStorageService,
         private headerService: HeaderService,

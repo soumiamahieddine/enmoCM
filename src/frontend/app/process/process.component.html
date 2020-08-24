@@ -225,7 +225,7 @@
                             <div
                                 style="position: absolute;right: 0px;top: 0px;height: 100%;display: flex;flex-direction: column;justify-content: center;">
                                 <button mat-icon-button *ngFor="let inteKey of integrationsInfo | keyvalue"
-                                    [matTooltip]="lang[inteKey.key]" (click)="toggleIntegration(inteKey.key)">
+                                    matTooltip="{{'lang.' + inteKey.key | translate}}" (click)="toggleIntegration(inteKey.key)">
                                     <mat-icon [class]="inteKey.value.icon"
                                         [class.checked]="currentResourceInformations.integrations[inteKey.key]"
                                         [class.unchecked]="!currentResourceInformations.integrations[inteKey.key]">

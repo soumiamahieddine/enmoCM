@@ -29,7 +29,7 @@ export class DatabaseComponent implements OnInit {
     @Output() nextStep = new EventEmitter<string>();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private _formBuilder: FormBuilder,
         private notify: NotificationService,

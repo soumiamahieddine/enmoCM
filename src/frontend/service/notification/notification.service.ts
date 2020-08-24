@@ -22,7 +22,7 @@ export class CustomSnackbarComponent {
 export class NotificationService {
     lang: any = LANG;
 
-    constructor(private translate: TranslateService, private router: Router, public snackBar: MatSnackBar) {
+    constructor(public translate: TranslateService, private router: Router, public snackBar: MatSnackBar) {
     }
     success(message: string) {
         const duration = this.getMessageDuration(message, 2000);

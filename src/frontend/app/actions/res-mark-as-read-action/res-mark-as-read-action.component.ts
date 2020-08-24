@@ -19,7 +19,7 @@ export class ResMarkAsReadActionComponent implements OnInit {
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
 
-    constructor(private translate: TranslateService, public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<ResMarkAsReadActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<ResMarkAsReadActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void { }
 

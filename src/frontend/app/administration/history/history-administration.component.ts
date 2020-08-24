@@ -40,7 +40,7 @@ export class HistoryAdministrationComponent implements OnInit {
     ];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public appService: AppService,
         public functions: FunctionsService,

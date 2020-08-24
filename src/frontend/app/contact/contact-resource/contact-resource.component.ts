@@ -37,7 +37,7 @@ export class ContactResourceComponent implements OnInit {
 
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private contactService: ContactService,

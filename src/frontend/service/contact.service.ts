@@ -12,7 +12,7 @@ export class ContactService {
     lang: any = LANG;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public functions: FunctionsService 
     ) { }

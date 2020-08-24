@@ -28,7 +28,7 @@ export class CustomizationComponent implements OnInit {
     backgroundList: any[] = [];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
         private sanitizer: DomSanitizer,

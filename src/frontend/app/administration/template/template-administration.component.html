@@ -69,7 +69,7 @@
                                             [(ngModel)]="template.target"
                                             (selectionChange)="updateTemplateType()">
                                             <mat-option *ngFor="let target of targetTypes" [value]="target">
-                                                {{lang[target]}}</mat-option>
+                                                {{'lang.' + target | translate}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>

@@ -22,7 +22,7 @@ export class AppGuard implements CanActivate {
     lang: any = LANG;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private router: Router,
         private authService: AuthService,

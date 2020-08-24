@@ -67,7 +67,7 @@ export class FiltersToolComponent implements OnInit {
     @Output() refreshEventAfterAction = new EventEmitter<string>();
     @Output() toggleAllRes = new EventEmitter<string>();
 
-    constructor(private translate: TranslateService, public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe, public dialog: MatDialog) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private filtersListService: FiltersListService, private fb: FormBuilder, private latinisePipe: LatinisePipe, public dialog: MatDialog) { }
 
     ngOnInit(): void {
 

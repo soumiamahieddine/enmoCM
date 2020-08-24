@@ -106,7 +106,7 @@ export class FollowedDocumentListComponent implements OnInit, OnDestroy {
     @ViewChild('menuShortcut', { static: true }) menuShortcut: MenuShortcutComponent;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private router: Router,
         private route: ActivatedRoute,
         public http: HttpClient,

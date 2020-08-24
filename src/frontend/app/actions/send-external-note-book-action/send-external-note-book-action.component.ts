@@ -29,7 +29,7 @@ export class SendExternalNoteBookActionComponent implements OnInit {
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
 
-    constructor(private translate: TranslateService, public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalNoteBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalNoteBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void {
         this.loading = true;

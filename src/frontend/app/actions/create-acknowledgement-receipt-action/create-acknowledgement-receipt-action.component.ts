@@ -48,7 +48,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
     loadingExport: boolean;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient, 
         private notify: NotificationService, 
         public dialogRef: MatDialogRef<CreateAcknowledgementReceiptActionComponent>, 

@@ -38,7 +38,7 @@ export class SendAlfrescoActionComponent implements OnInit {
     @ViewChild('maarchTree', { static: false }) maarchTree: MaarchTreeComponent;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialogRef: MatDialogRef<SendAlfrescoActionComponent>,

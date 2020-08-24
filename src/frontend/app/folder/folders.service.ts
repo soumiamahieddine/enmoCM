@@ -25,7 +25,7 @@ export class FoldersService {
     private eventAction = new Subject<any>();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public dialog: MatDialog,
         private notify: NotificationService,

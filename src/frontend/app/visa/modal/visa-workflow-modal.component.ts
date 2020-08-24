@@ -15,7 +15,7 @@ export class VisaWorkflowModalComponent {
 
     @ViewChild('appVisaWorkflow', { static: true }) appVisaWorkflow: VisaWorkflowComponent;
 
-    constructor(private translate: TranslateService, public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<VisaWorkflowModalComponent>) { }
+    constructor(public translate: TranslateService, public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<VisaWorkflowModalComponent>) { }
 
     ngOnInit(): void {
         this.appVisaWorkflow.loadWorkflowMaarchParapheur(this.data.id, this.data.type);

@@ -43,7 +43,7 @@ export class ActivateUserComponent implements OnInit {
     }
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private authService: AuthService,
         private headerService: HeaderService,

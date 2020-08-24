@@ -23,7 +23,7 @@ export class ThesaurusModalComponent implements OnInit {
     tag: any = null;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialogRef: MatDialogRef<ThesaurusModalComponent>,

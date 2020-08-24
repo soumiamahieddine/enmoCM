@@ -46,7 +46,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
     ];
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private router: Router,
         public notificationService: NotificationService,

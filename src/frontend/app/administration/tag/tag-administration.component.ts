@@ -50,7 +50,7 @@ export class TagAdministrationComponent implements OnInit {
     @ViewChild('linkedTagInput') linkedTagInput: ElementRef<HTMLInputElement>;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,

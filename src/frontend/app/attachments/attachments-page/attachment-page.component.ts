@@ -49,7 +49,7 @@ export class AttachmentPageComponent implements OnInit {
     @ViewChild('appAttachmentViewer', { static: false }) appAttachmentViewer: DocumentViewerComponent;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialog: MatDialog,

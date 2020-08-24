@@ -21,7 +21,7 @@ export class UseradminComponent implements OnInit {
     @Output() tiggerInstall = new EventEmitter<string>();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
         private installerService: InstallerService

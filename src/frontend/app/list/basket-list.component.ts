@@ -103,7 +103,7 @@ export class BasketListComponent implements OnInit, OnDestroy {
     @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private router: Router,
         private _activatedRoute: ActivatedRoute,
         private route: ActivatedRoute,

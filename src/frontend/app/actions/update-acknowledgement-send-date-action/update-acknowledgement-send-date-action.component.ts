@@ -22,7 +22,7 @@ export class UpdateAcknowledgementSendDateActionComponent implements OnInit {
     acknowledgementSendDate    : Date      = new Date();
     acknowledgementSendDateEnd : Date      = new Date();
 
-    constructor(private translate: TranslateService, public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<UpdateAcknowledgementSendDateActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<UpdateAcknowledgementSendDateActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void { }
 

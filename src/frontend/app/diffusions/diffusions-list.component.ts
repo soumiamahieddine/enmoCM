@@ -88,7 +88,7 @@ export class DiffusionsListComponent implements OnInit {
     @Output('triggerEvent') triggerEvent = new EventEmitter();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private renderer: Renderer2,

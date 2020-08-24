@@ -66,7 +66,7 @@ export class MailserverComponent implements OnInit {
     @ViewChild('checkMailserverContent', { static: true }) checkMailserverContent: MatDrawer;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
         public http: HttpClient,

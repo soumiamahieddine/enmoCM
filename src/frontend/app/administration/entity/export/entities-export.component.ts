@@ -32,7 +32,7 @@ export class EntitiesExportComponent implements OnInit {
     @ViewChild('listFilter', { static: true }) private listFilter: any;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         @Inject(MAT_DIALOG_DATA) public data: any,

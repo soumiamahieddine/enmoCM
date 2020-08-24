@@ -90,7 +90,7 @@
                                                 <span *ngIf="!lang[data.displayValue]" style="opacity: 0.5"
                                                     title="id: {{data.displayValue}}">{{'lang.undefined' | translate}}</span>
                                                 <span *ngIf="lang[data.displayValue]"
-                                                    title="{{lang[data.displayValue]}}">{{lang[data.displayValue]}}</span>
+                                                    title="{{'lang.' + data.displayValue | translate}}">{{'lang.' + data.displayValue | translate}}</span>
                                             </ng-container>
                                             <ng-container
                                                 *ngIf="data.value != 'getCategory' && data.value != 'getCreationAndProcessLimitDates'">

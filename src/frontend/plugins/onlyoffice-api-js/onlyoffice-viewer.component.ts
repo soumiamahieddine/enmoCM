@@ -90,7 +90,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnD
         }
     }
 
-    constructor(private translate: TranslateService, public http: HttpClient, public dialog: MatDialog, private notify: NotificationService, public headerService: HeaderService) { }
+    constructor(public translate: TranslateService, public http: HttpClient, public dialog: MatDialog, private notify: NotificationService, public headerService: HeaderService) { }
 
     quit() {
         this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.close'), msg: this.translate.instant('lang.confirmCloseEditor') } });

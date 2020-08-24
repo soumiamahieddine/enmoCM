@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.appService.setScreenWidth(window.innerWidth);
     }
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public langService: LangService,
         iconReg: MatIconRegistry,

@@ -163,7 +163,7 @@ export class ProfileComponent implements OnInit {
 
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private zone: NgZone,
         private notify: NotificationService,

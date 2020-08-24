@@ -33,7 +33,7 @@
         <ng-container matColumnDef="category">
             <mat-header-cell *matHeaderCellDef mat-sort-header> {{'lang.category_id' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let row">
-                {{lang[row.category]}}
+                {{'lang.' + row.category | translate}}
             </mat-cell>
         </ng-container>
 

@@ -22,7 +22,7 @@ export class ForgotPasswordComponent implements OnInit {
     labelButton: string = this.translate.instant('lang.send');
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private router: Router,
         public notificationService: NotificationService,

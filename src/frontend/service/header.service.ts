@@ -39,7 +39,7 @@ export class HeaderService {
     private portalHost: DomPortalHost;
     
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public foldersService: FoldersService,
         private componentFactoryResolver: ComponentFactoryResolver,

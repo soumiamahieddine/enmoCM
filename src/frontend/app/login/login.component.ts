@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     loginMessage: string = '';
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private langService: LangService,
         private http: HttpClient,
         private router: Router,

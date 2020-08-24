@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public dialog: MatDialog,
         private sanitizer: DomSanitizer,

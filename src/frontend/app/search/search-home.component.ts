@@ -10,7 +10,7 @@ export class SearchHomeComponent implements OnInit {
 
     lang: any = LANG;
 
-    constructor(private translate: TranslateService) {
+    constructor(public translate: TranslateService) {
     }
 
     ngOnInit(): void { }

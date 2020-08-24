@@ -38,7 +38,7 @@ export class IxbusParaphComponent implements OnInit {
     @Input() additionalsInfos: any;
     @Input() externalSignatoryBookDatas: any;
 
-    constructor(private translate: TranslateService, public http: HttpClient, private notify: NotificationService) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService) { }
 
     ngOnInit(): void {
         this.natures = this.additionalsInfos.ixbus.natures.map((element: any) => {

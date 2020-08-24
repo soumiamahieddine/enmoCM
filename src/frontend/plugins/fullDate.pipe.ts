@@ -10,7 +10,7 @@ import { FunctionsService } from "../service/functions.service";
 export class FullDatePipe implements PipeTransform {
 	lang: any = LANG;
 	constructor(
-		private translate: TranslateService,
+		public translate: TranslateService,
 		public functions: FunctionsService
 	) { }
 	transform(value: string) {

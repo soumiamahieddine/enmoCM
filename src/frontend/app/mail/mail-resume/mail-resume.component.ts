@@ -28,7 +28,7 @@ export class MailResumeComponent implements OnInit {
     @Output('goTo') goTo = new EventEmitter<string>();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public functions: FunctionsService

@@ -95,7 +95,7 @@ export class SignatureBookComponent implements OnInit, OnDestroy {
     @ViewChild('appDocumentViewer', { static: false }) appDocumentViewer: DocumentViewerComponent;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private appService: AppService,
         private route: ActivatedRoute,

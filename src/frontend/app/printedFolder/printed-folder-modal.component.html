@@ -43,7 +43,7 @@
                                         (change)="$event ? toggleAllElements($event.checked, keyVal.key) : null"
                                         [checked]="selectedPrintedFolderElement[keyVal.key].value.length > 0 && selectedPrintedFolderElement[keyVal.key].value.length === printedFolderElement[keyVal.key].length"
                                         [indeterminate]="selectedPrintedFolderElement[keyVal.key].value.length > 0 && selectedPrintedFolderElement[keyVal.key].value.length !== printedFolderElement[keyVal.key].length"
-                                        (click)="$event.stopPropagation()" disableRipple>{{lang[keyVal.key]}}
+                                        (click)="$event.stopPropagation()" disableRipple>{{'lang.' + keyVal.key | translate}}
                                     </mat-checkbox>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>
@@ -82,7 +82,7 @@
 
                                         <div *ngIf="!functions.empty(element.status)">
                                             <div *ngIf="element.status === 'SIGN'" style="color: green">
-                                                {{lang['attachment_' + element.status]}}
+                                                {{'lang.attachment_' + element.status | translate}}
                                             </div>
                                         </div>
 

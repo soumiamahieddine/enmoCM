@@ -38,7 +38,7 @@ export class InstallerComponent implements OnInit, AfterViewInit {
     @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private http: HttpClient,
         private router: Router,
         private headerService: HeaderService,

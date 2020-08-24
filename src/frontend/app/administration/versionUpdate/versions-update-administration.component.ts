@@ -28,7 +28,7 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
     versions: any = {};
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private headerService: HeaderService,
         private notify: NotificationService,

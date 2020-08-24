@@ -75,7 +75,7 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
@@ -794,7 +794,7 @@ export class EntitiesAdministrationComponent implements OnInit {
 export class EntitiesAdministrationRedirectModalComponent {
     lang: any = LANG;
 
-    constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<EntitiesAdministrationRedirectModalComponent>) {
+    constructor(public translate: TranslateService, public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<EntitiesAdministrationRedirectModalComponent>) {
         console.log(this.data.entity.redirectEntity);
     }
 

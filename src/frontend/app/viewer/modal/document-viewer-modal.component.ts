@@ -12,7 +12,7 @@ export class DocumentViewerModalComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
-    constructor(private translate: TranslateService, public dialogRef: MatDialogRef<DocumentViewerModalComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(public translate: TranslateService, public dialogRef: MatDialogRef<DocumentViewerModalComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
     ngOnInit(): void { }
 }

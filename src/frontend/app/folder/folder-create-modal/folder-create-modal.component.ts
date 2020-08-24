@@ -18,7 +18,7 @@ export class FolderCreateModalComponent implements OnInit {
     folderName: string = '';
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient, 
         private notify: NotificationService,
         @Inject(MAT_DIALOG_DATA) public data: any, 

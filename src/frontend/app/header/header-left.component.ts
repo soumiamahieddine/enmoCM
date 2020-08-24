@@ -19,7 +19,7 @@ export class HeaderLeftComponent implements OnInit {
     @Input() snavLeft: MatSidenav;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public headerService: HeaderService
     ) { }
 

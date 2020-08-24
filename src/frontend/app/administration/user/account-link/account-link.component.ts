@@ -21,7 +21,7 @@ export class AccountLinkComponent implements OnInit {
     };
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<AccountLinkComponent>,

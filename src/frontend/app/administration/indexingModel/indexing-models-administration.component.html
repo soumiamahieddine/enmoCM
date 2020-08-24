@@ -47,7 +47,7 @@
                         </ng-container>
                         <ng-container matColumnDef="category">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{'lang.category_id' | translate}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> {{lang[element.category]}} </mat-cell>
+                            <mat-cell *matCellDef="let element"> {{'lang.' + element.category | translate}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="label">
                             <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2">{{'lang.label' | translate}}</mat-header-cell>

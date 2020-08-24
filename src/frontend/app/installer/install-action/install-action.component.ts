@@ -24,7 +24,7 @@ export class InstallActionComponent implements OnInit, AfterViewInit {
     disableAnimation = true;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<InstallActionComponent>,
         public http: HttpClient,

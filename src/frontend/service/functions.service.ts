@@ -14,7 +14,7 @@ export class FunctionsService {
     lang: any = LANG;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private authService: AuthService,
         private headerService: HeaderService,
         private latinisePipe: LatinisePipe,

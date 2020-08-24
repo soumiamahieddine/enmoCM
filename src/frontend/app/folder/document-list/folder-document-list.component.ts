@@ -104,7 +104,7 @@ export class FolderDocumentListComponent implements OnInit, OnDestroy {
     @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private router: Router,
         private route: ActivatedRoute,
         public http: HttpClient,

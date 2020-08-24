@@ -56,7 +56,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     contactId: number = null;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,

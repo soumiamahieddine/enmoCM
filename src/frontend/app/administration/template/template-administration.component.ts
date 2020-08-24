@@ -100,7 +100,7 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
         public appService: AppService,
         private viewContainerRef: ViewContainerRef,
         public functionsService: FunctionsService,
-        private translate: TranslateService
+        public translate: TranslateService
     ) { }
 
     ngOnInit(): void {

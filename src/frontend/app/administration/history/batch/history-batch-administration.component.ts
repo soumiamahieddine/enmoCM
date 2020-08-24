@@ -63,7 +63,7 @@ export class HistoryBatchAdministrationComponent implements OnInit {
     subMenus: any[] = [];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,

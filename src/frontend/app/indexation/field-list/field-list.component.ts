@@ -28,7 +28,7 @@ export class FieldListComponent implements OnInit {
     @Input() dataFields: any[];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public dialog: MatDialog,
         public appService: AppService,

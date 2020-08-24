@@ -93,7 +93,7 @@ export class RedirectIndexingModelComponent implements OnInit {
     loading: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<RedirectIndexingModelComponent>,
         public http: HttpClient,

@@ -23,7 +23,7 @@ export class AboutUsComponent implements OnInit {
     commitHash: string = this.translate.instant('lang.undefined');
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,

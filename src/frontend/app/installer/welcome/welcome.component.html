@@ -8,7 +8,7 @@
             <mat-label>{{'lang.chooseAppLanguage' | translate}} : </mat-label>
             <mat-select formControlName="lang" required>
                 <mat-option *ngFor="let language of langs" [value]="language">
-                    {{lang[language + 'Full']}}
+                    {{'lang.' + language + 'Full' | translate}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

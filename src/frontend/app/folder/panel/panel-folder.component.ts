@@ -24,7 +24,7 @@ export class PanelFolderComponent implements OnInit, OnDestroy {
     subscription: Subscription;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public foldersService: FoldersService,
         public actionService: ActionsService
     ) {

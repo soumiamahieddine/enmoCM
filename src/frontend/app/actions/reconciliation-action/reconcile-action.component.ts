@@ -28,7 +28,7 @@ export class ReconcileActionComponent implements OnInit {
     noResourceToProcess: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialogRef: MatDialogRef<ReconcileActionComponent>,

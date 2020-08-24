@@ -40,7 +40,7 @@ export class ActionAdministrationComponent implements OnInit {
     selectStatusId = new FormControl();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,

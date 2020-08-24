@@ -63,7 +63,7 @@ export class IndexationComponent implements OnInit {
     isMailing: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
         public http: HttpClient,

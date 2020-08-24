@@ -50,7 +50,7 @@ export class UsersAdministrationComponent implements OnInit {
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
@@ -444,7 +444,7 @@ export class UsersAdministrationRedirectModalComponent implements OnInit {
     modalTitle: string = this.translate.instant('lang.confirmAction');
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<UsersAdministrationRedirectModalComponent>,

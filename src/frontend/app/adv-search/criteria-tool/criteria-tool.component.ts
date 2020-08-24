@@ -50,7 +50,7 @@ export class CriteriaToolComponent implements OnInit {
     @ViewChild('searchCriteriaInput', { static: false }) searchCriteriaInput: ElementRef;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public appService: AppService,
         public functions: FunctionsService,

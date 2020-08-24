@@ -296,7 +296,7 @@ export class ContactsFormComponent implements OnInit {
     annuaryEnabled: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,

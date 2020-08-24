@@ -20,7 +20,7 @@ export class FolderPinnedComponent implements OnInit {
     @Input('noInit') noInit: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         public foldersService: FoldersService
     ) {

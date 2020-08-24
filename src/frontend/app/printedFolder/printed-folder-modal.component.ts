@@ -43,7 +43,7 @@ export class PrintedFolderModalComponent implements OnInit {
     selectedPrintedFolderElement: any = {};
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         @Inject(MAT_DIALOG_DATA) public data: any,

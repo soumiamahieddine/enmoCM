@@ -92,7 +92,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     onTouched: Function = (_: any) => { };
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private latinisePipe: LatinisePipe,
         private changeDetectorRef: ChangeDetectorRef,
         private renderer: Renderer2,

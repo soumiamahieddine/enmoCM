@@ -48,7 +48,7 @@ export class ResetPasswordComponent implements OnInit {
 
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private router: Router,
         private route: ActivatedRoute,
         public http: HttpClient,

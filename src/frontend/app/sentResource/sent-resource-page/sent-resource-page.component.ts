@@ -100,7 +100,7 @@ export class SentResourcePageComponent implements OnInit {
         private contactService: ContactService,
         public privilegeService: PrivilegeService,
         public headerService: HeaderService,
-        private translate: TranslateService
+        public translate: TranslateService
     ) { }
 
     async ngOnInit(): Promise<void> {

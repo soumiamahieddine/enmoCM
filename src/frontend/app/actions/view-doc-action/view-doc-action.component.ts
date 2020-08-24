@@ -12,7 +12,7 @@ export class ViewDocActionComponent implements OnInit {
     lang: any = LANG;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 

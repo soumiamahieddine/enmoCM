@@ -375,7 +375,7 @@
                         <ng-container matColumnDef="template_target">
                             <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{'lang.templateTarget' | translate}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}}
+                            <mat-cell *matCellDef="let element" style="flex:1;"> {{'lang.' + element.template_target | translate}}
                             </mat-cell>
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>

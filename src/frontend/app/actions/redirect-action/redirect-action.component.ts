@@ -49,7 +49,7 @@ export class RedirectActionComponent implements OnInit {
     @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialogRef: MatDialogRef<RedirectActionComponent>,

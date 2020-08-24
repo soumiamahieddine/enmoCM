@@ -222,7 +222,7 @@ export class ListAdministrationComponent implements OnInit {
     @Input('currentBasketGroup') private basketGroup: any;
     @Output('refreshBasketGroup') refreshBasketGroup = new EventEmitter<any>();
 
-    constructor(private translate: TranslateService, public http: HttpClient, private notify: NotificationService) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService) { }
 
     ngOnInit(): void {
         this.filteredDataOptions = this.dataControl.valueChanges

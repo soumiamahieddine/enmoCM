@@ -39,7 +39,7 @@ export class PanelListComponent implements OnInit {
     @ViewChild('appNotesList', { static: false }) appNotesList: NotesListComponent;
     @ViewChild('appAttachmentsList', { static: false }) appAttachmentsList: AttachmentsListComponent;
 
-    constructor(private translate: TranslateService) { }
+    constructor(public translate: TranslateService) { }
 
     ngOnInit(): void { }
 

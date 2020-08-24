@@ -39,7 +39,7 @@ export class AdministrationComponent implements OnInit, AfterViewInit {
     @ViewChild('searchServiceInput', { static: true }) searchServiceInput: ElementRef;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private router: Router,
         private headerService: HeaderService,

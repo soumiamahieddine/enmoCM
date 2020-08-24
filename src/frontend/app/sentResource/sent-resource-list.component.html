@@ -46,7 +46,7 @@
                 <div style="display: grid;grid-template-columns: 100px 1fr 170px;width: 100%;grid-gap: 10px;align-items: center;padding:10px;">
                     <div class="dateType">
                         <span class="type">
-                            <span class="badge" [style.background]="row.typeColor" [title]="lang[row.type]">{{lang[row.type]}}</span>
+                            <span class="badge" [style.background]="row.typeColor" [title]="lang[row.type]">{{'lang.' + row.type | translate}}</span>
                             <div class="attach">
                                 <i *ngIf="row.hasMainDoc" class="fas fa-file" title="Document attaché"></i>
                                 <i *ngIf="row.hasAttach" class="fas fa-paperclip" title="Pièce(s) jointe(s) attachée(s)"></i>

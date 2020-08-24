@@ -41,7 +41,7 @@ export class NoteEditorComponent implements OnInit {
     entitiesList: any[] = [];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public headerService: HeaderService,

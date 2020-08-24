@@ -53,7 +53,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     @ViewChild('ixbus', { static: false }) ixbus: IxbusParaphComponent;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>,

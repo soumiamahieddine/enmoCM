@@ -46,7 +46,7 @@ export class AlfrescoAdministrationComponent implements OnInit {
     alfrescoTreeLoaded: boolean = false;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,

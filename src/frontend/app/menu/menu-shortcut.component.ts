@@ -24,7 +24,7 @@ export class MenuShortcutComponent implements OnInit {
     shortcuts: any;
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private _router: Router,
         public dialog: MatDialog,

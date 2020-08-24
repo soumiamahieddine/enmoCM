@@ -35,7 +35,7 @@ export class SelectIndexingModelComponent implements OnInit {
     currentIndexingModel: any = {};
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private http: HttpClient,
         private headerService: HeaderService,
         private notify: NotificationService,

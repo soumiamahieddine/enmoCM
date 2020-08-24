@@ -21,7 +21,7 @@ export class DocserversComponent implements OnInit {
     @Output() nextStep = new EventEmitter<string>();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
         public http: HttpClient,

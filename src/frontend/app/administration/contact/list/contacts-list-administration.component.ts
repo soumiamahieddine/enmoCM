@@ -84,7 +84,7 @@ export class ContactsListAdministrationComponent implements OnInit {
     ];
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
@@ -305,7 +305,7 @@ export class ContactsListAdministrationRedirectModalComponent {
     processMode: string = 'delete';
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<ContactsListAdministrationRedirectModalComponent>,

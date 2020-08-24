@@ -49,7 +49,7 @@ export class FolderActionListComponent implements OnInit {
     @Output() refreshPanelFolders = new EventEmitter<string>();
 
     constructor(
-        private translate: TranslateService,
+        public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,

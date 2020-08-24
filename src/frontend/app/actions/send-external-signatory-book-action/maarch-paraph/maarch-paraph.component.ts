@@ -27,7 +27,7 @@ export class MaarchParaphComponent implements OnInit {
     @Input() additionalsInfos: any;
     @Input() externalSignatoryBookDatas: any;
 
-    constructor(private translate: TranslateService, public http: HttpClient) { }
+    constructor(public translate: TranslateService, public http: HttpClient) { }
 
     ngOnInit(): void {
         if (typeof this.additionalsInfos.destinationId !== 'undefined' && this.additionalsInfos.destinationId !== '') {
