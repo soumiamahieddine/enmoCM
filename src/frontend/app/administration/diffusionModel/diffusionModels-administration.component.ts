@@ -67,7 +67,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
                     data.listTemplates = data.listTemplates.filter((template: any) => template.entityId === null && ['visaCircuit', 'opinionCircuit'].indexOf(template.type) > -1).map((template: any) => {
                         return {
                             ...template,
-                            typeLabel: this.lang[template.type]
+                            typeLabel: this.translate.instant('lang.' + template.type)
                         };
                     });
                     return data.listTemplates;

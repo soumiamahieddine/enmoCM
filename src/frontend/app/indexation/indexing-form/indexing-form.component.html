@@ -15,8 +15,8 @@
         <div *ngIf="this['indexingModels_'+category].length > 0 || adminMode" class="banner"
             [style.borderColor]="currentPriorityColor">
             <div class="title" [style.color]="currentPriorityColor">
-                {{lang[category] | uppercase}} <small *ngIf="category === 'mail'"
-                    [title]="this.translate.instant('lang.category_id')">{{lang['indexing_' + currentCategory] | titlecase}}</small>
+                {{'lang.' + category| translate | uppercase }} <small *ngIf="category === 'mail'"
+                    [title]="this.translate.instant('lang.category_id')">{{'lang.indexing_' + currentCategory | translate | titlecase}}</small>
                 <div class="title-divider"></div>
             </div>
             <div class="content">

@@ -80,7 +80,7 @@ export class ContactExportComponent implements OnInit {
                     data.contactsParameters = data.contactsParameters.filter((field: any) => field.identifier.match(regex) === null).map((field: any) => {
                         return {
                             value: field.identifier,
-                            label: this.lang['contactsParameters_' + field.identifier]
+                            label: this.translate.instant('lang.contactsParameters_' + field.identifier)
                         };
                     });
                     return data.contactsParameters;

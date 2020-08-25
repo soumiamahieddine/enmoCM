@@ -79,7 +79,7 @@ export class UsersAdministrationComponent implements OnInit {
             tap((data: any) => {
                 this.data = data['users'];
                 this.data.forEach(element => {
-                    element.statusLabel = this.lang['user' + element.status];
+                    element.statusLabel = this.translate.instant('lang.user' + element.status);
                     if (element.mode === 'rest') {
                         this.webserviceAccounts.push(element);
                     } else {

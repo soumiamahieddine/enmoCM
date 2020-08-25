@@ -1127,7 +1127,7 @@ export class DocumentViewerComponent implements OnInit, OnDestroy {
 
     openResourceVersion(version: number, type: string) {
 
-        const title = type !== 'PDF' ? this.lang[type + '_version'] : `${this.translate.instant('lang.version')} ${version}`;
+        const title = type !== 'PDF' ? this.translate.instant('lang.' + type + '_version') : `${this.translate.instant('lang.version')} ${version}`;
 
         // TO SHOW ORIGINAL DOC (because autoload signed doc)
         type = type === 'SIGN' ? 'PDF' : type;

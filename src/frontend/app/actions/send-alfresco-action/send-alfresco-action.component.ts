@@ -79,7 +79,7 @@ export class SendAlfrescoActionComponent implements OnInit {
             this.http.post('../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkSendAlfresco', { resources: this.data.resIds })
                 .subscribe((data: any) => {
                     if (!this.functions.empty(data.fatalError)) {
-                        this.notify.error(this.lang[data.reason]);
+                        this.notify.error(this.translate.instant('lang.' + data.reason));
                         this.dialogRef.close();
                     } else if (!this.functions.empty(data.resourcesInformations.error)) {
                         this.resourcesErrors = data.resourcesInformations.error;

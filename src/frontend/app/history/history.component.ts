@@ -191,7 +191,7 @@ export class HistoryComponent implements OnInit {
                     data.systemActions = data.systemActions.map((syst: any) => {
                         return {
                             id: syst.id,
-                            label: !this.functions.empty(this.lang[syst.id]) ? this.lang[syst.id] : syst.id
+                            label: !this.functions.empty(this.translate.instant('lang.' + syst.id)) ? this.translate.instant('lang.' + syst.id) : syst.id
                         }
                     });
                     return data;

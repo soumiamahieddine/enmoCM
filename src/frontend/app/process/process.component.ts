@@ -334,7 +334,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 }
 
                 this.loadAvaibleIntegrations(data.integrations);
-                this.headerService.setHeader(this.detailMode ? this.translate.instant('lang.detailDoc') : this.translate.instant('lang.eventProcessDoc'), this.lang[this.currentResourceInformations.categoryId]);
+                this.headerService.setHeader(this.detailMode ? this.translate.instant('lang.detailDoc') : this.translate.instant('lang.eventProcessDoc'), this.translate.instant('lang.' + this.currentResourceInformations.categoryId));
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {

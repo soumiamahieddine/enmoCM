@@ -143,7 +143,7 @@ export class GroupAdministrationComponent implements OnInit {
 
                             this.unitPrivileges.push({
                                 id: element,
-                                label: this.lang[element],
+                                label: this.translate.instant('lang.' + element),
                                 services: services
                             });
                         });

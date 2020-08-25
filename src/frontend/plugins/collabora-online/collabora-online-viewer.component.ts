@@ -193,7 +193,7 @@ export class CollaboraOnlineViewerComponent implements OnInit, AfterViewInit, On
                         }
                     }),
                     catchError((err) => {
-                        this.notify.error(`${this.lang[err.error.lang]}`);
+                        this.notify.error(this.translate.instant('lang.' + err.error.lang));
                         this.triggerCloseEditor.emit();
                         return of(false);
                     }),

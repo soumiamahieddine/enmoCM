@@ -56,7 +56,7 @@ export class NotificationService {
             if (err.error !== undefined) {
                 if (err.error.errors !== undefined) {
                     if (err.error.lang !== undefined) {
-                        this.error(this.lang[err.error.lang]);
+                        this.error(this.translate.instant('lang.' + err.error.lang));
                     } else if (err.error.errors === 'Document out of perimeter' || err.error.errors === 'Resource out of perimeter') {
                         this.error(this.translate.instant('lang.documentOutOfPerimeter'));
                     } else if (err.error.errors === 'Resources out of perimeter') {
@@ -85,7 +85,7 @@ export class NotificationService {
         if (err.error !== undefined) {
             if (err.error.errors !== undefined) {
                 if (err.error.lang !== undefined) {
-                    this.error(this.lang[err.error.lang]);
+                    this.error(this.translate.instant('lang.' + err.error.lang));
                 } else if (err.error.errors === 'Document out of perimeter' || err.error.errors === 'Resource out of perimeter') {
                     this.error(this.translate.instant('lang.documentOutOfPerimeter'));
                 } else if (err.error.errors === 'Resources out of perimeter') {

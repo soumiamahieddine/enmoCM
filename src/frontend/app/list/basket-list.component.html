@@ -87,9 +87,9 @@
                                                 &nbsp;
                                             </ng-container>
                                             <ng-container *ngIf="data.value == 'getCategory'">
-                                                <span *ngIf="!lang[data.displayValue]" style="opacity: 0.5"
+                                                <span *ngIf="!this.translate.instant('lang.' + data.displayValue)" style="opacity: 0.5"
                                                     title="id: {{data.displayValue}}">{{'lang.undefined' | translate}}</span>
-                                                <span *ngIf="lang[data.displayValue]"
+                                                <span *ngIf="this.translate.instant('lang.' + data.displayValue)"
                                                     title="{{'lang.' + data.displayValue | translate}}">{{'lang.' + data.displayValue | translate}}</span>
                                             </ng-container>
                                             <ng-container

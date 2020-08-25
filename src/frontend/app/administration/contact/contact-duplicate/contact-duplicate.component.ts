@@ -107,7 +107,7 @@ export class ContactDuplicateComponent implements OnInit {
                     data.contactsParameters = data.contactsParameters.filter((field: any) => field.identifier.match(regex) === null).map((field: any) => {
                         return {
                             ...field,
-                            label: this.lang['contactsParameters_' + field.identifier]
+                            label: this.translate.instant('lang.contactsParameters_' + field.identifier)
                         };
                     });
                     return data.contactsParameters;
@@ -239,10 +239,10 @@ export class ContactDuplicateComponent implements OnInit {
     }
 
     getLabel(item: any) {
-        if (this.lang['contactsParameters_' + item] !== undefined) {
-            return this.lang['contactsParameters_' + item];
-        } else if (this.lang[item] !== undefined) {
-            return this.lang[item];
+        if (this.translate.instant('lang.contactsParameters_' + item) !== undefined) {
+            return this.translate.instant('lang.contactsParameters_' + item);
+        } else if (this.translate.instant('lang.' + item) !== undefined) {
+            return this.translate.instant('lang.' + item);
         } else {
             return this.contactFields.filter((field: any) => field.id === 'contactCustomField_' + item)[0].label;
         }

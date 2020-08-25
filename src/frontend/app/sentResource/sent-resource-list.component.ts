@@ -239,7 +239,7 @@ export class SentResourceListComponent implements OnInit {
             if (this.filterTypes.filter(type => type.id === element.type).length === 0) {
                 this.filterTypes.push({
                     id: element.type,
-                    label: this.lang[element.type]
+                    label: this.translate.instant('lang.' + element.type)
                 });
             }
         });
@@ -264,7 +264,7 @@ export class SentResourceListComponent implements OnInit {
         let title = this.translate.instant('lang.sendElement');
 
         if (row.id !== null) {
-            title = this.lang[row.type];
+            title = this.translate.instant('lang.' + row.type);
         }
 
         if (row.canManage || row.id === null) {
@@ -291,7 +291,7 @@ export class SentResourceListComponent implements OnInit {
         let title = this.translate.instant('lang.sendElement');
 
         if (row.id !== null) {
-            title = this.lang[row.type];
+            title = this.translate.instant('lang.' + row.type);
         }
 
         if (row.canManage || row.id === null) {

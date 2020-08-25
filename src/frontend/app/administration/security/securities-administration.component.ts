@@ -49,7 +49,7 @@ export class SecuritiesAdministrationComponent implements OnInit {
                 data.rules.forEach((rule: any) => {
                     this.passwordRules[rule.label].enabled = rule.enabled;
                     this.passwordRules[rule.label].value = rule.value;
-                    this.passwordRules[rule.label].label = this.lang['password' + rule.label + 'Required'];
+                    this.passwordRules[rule.label].label = this.translate.instant('lang.password' + rule.label + 'Required');
                     this.passwordRules[rule.label].id = rule.label;
 
                     this.loading = false;

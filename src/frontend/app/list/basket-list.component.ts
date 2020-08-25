@@ -341,9 +341,9 @@ export class BasketListComponent implements OnInit, OnDestroy {
                             user = '<u>' + user + '</u>';
                         }
                         if (visa.date === '') {
-                            content = '<i class="fa fa-hourglass-half"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span>';
+                            content = '<i class="fa fa-hourglass-half"></i> <span title="' + this.translate.instant('lang.' + visa.mode + 'User') + '">' + user + '</span>';
                         } else {
-                            content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.lang[visa.mode + 'User'] + '">' + user + '</span></span>';
+                            content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.translate.instant('lang.' + visa.mode + 'User') + '">' + user + '</span></span>';
                         }
 
                         if (visa.current && keyVis >= 0) {
@@ -396,7 +396,7 @@ export class BasketListComponent implements OnInit, OnDestroy {
                         key.displayValue = key.displayValue + ' ' + this.translate.instant('lang.opinionsSent');
                     }
                 }
-                key.label = this.lang[key.value];
+                key.label = this.translate.instant('lang.' + key.value);
             });
 
             if (this.selectedRes.indexOf(element['resId']) === -1) {
