@@ -242,15 +242,6 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertIsArray($responseBody['ranges'][0]['entities']);
         $this->assertSame(0, $responseBody['ranges'][0]['fullness']);
 
-        $GLOBALS['login'] = 'bbain';
-        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-        $GLOBALS['id'] = $userInfo['id'];
-
-        $response = $registeredNumberRangeController->get($request, new \Slim\Http\Response());
-        $this->assertSame(403, $response->getStatusCode());
-        $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Service forbidden', $responseBody['errors']);
-
         $GLOBALS['login'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
