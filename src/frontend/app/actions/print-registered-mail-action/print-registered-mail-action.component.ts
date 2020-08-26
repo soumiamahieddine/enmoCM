@@ -7,9 +7,10 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { tap, exhaustMap, catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { FunctionsService } from '../../../service/functions.service';
 
 @Component({
-    templateUrl: "print-registered-mail-action.component.html",
+    templateUrl: 'print-registered-mail-action.component.html',
     styleUrls: ['print-registered-mail-action.component.scss'],
 })
 export class PrintRegisteredMailActionComponent implements OnInit {
@@ -23,6 +24,7 @@ export class PrintRegisteredMailActionComponent implements OnInit {
         public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
+        private functions: FunctionsService,
         public dialogRef: MatDialogRef<PrintRegisteredMailActionComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
@@ -38,11 +40,15 @@ export class PrintRegisteredMailActionComponent implements OnInit {
         const downloadLink = document.createElement('a');
         this.http.put(this.data.processActionRoute, { resources: this.data.resIds, note: this.noteEditor.getNote() }).pipe(
             tap((data: any) => {
-                downloadLink.href = `data:application/pdf;base64,${data.data.encodedFileContent}`;
-                downloadLink.setAttribute('download', 'recommande.pdf');
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                this.dialogRef.close(this.data.resIds);
+                Object.values(data.data).forEach((encodedFile: string) => {
+                    if (!this.functions.empty(encodedFile)) {
+                        downloadLink.href = `data:application/pdf;base64,${encodedFile}`;
+                        downloadLink.setAttribute('download', 'recommande.pdf');
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        this.dialogRef.close(this.data.resIds);
+                    }
+                });
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
