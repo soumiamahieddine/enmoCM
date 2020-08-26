@@ -1909,5 +1909,6 @@
     "argumentLastnameNotString": "Argument lastname is not a string for a user.",
     "argumentMailNotCorrect": "Argument mail is not correct for a user.",
     "argumentPhoneNotCorrect": "Argument phone is not correct for a user.",
-    "authorizedRoutesInformations": "One route per row. Routes documentation"
+    "authorizedRoutesInformations": "One route per row. Routes documentation",
+    "canNotDisabledField": "This field can not be disabled because it is empty and mandatory"
 }

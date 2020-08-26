@@ -941,6 +941,10 @@ export class IndexingFormComponent implements OnInit {
             }
             field.enabled = true;
         } else {
+            if (this.functions.empty(this.arrFormControl[field.identifier].value) && field.mandatory) {
+                alert(this.translate.instant('lang.canNotDisabledField'));
+                return false;
+            }
             this.arrFormControl[field.identifier].disable();
             field.enabled = false;
         }

@@ -1939,5 +1939,6 @@
     "argumentLastnameNotString": "La donnée lastname n'est pas une chaine de caractère pour un utilisateur.",
     "argumentMailNotCorrect": "La donnée mail n'est pas correcte pour un utilisateur.",
     "argumentPhoneNotCorrect": "La donnée phone n'est pas correcte pour un utilisateur.",
-    "authorizedRoutesInformations": "Une route par ligne. Documentation des routes"
+    "authorizedRoutesInformations": "Une route par ligne. Documentation des routes",
+    "canNotDisabledField": "Le champ ne peut pas être désactivé car il est vide et obligatoire"
 }
