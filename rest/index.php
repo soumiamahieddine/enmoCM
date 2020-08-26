@@ -632,6 +632,7 @@ $app->get('/registeredMail/sites/type/{type}', \RegisteredMail\controllers\Issui
 $app->get('/registeredMail/countries', \RegisteredMail\controllers\RegisteredMailController::class . ':getCountries');
 //TODO remove
 $app->get('/registeredMail/print', \RegisteredMail\controllers\RegisteredMailController::class . ':printTest');
+$app->get('/registeredMail/printDeposit', \RegisteredMail\controllers\RegisteredMailController::class . ':printDepositSlipTest');
 
 
 $app->run();

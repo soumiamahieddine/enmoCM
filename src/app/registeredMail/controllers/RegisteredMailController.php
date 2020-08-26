@@ -115,6 +115,47 @@ class RegisteredMailController
         return $response->withJson(['test' => 2]);
     }
 
+    public function printDepositSlipTest(Request $request, Response $response)
+    {
+        $args = [
+            'site' => [
+                'label'           => 'Dunder Mifflin Scranton',
+                'accountNumber'   => 42,
+                'addressNumber'   => '1725',
+                'addressStreet'   => 'Slough Avenue',
+                'addressPostcode' => '18505',
+                'addressTown'     => 'Scranton',
+                'postOfficeLabel' => 'Scranton Post Office'
+            ],
+            'type' => '2D',
+            'trackingNumber' => '1234567890',
+            'departureDate' => '26/08/2010',
+            'registeredMails' => [
+                [
+                    'type'      => '2D',
+                    'number'    => '551',
+                    'warranty'  => 'R2',
+                    'letter'    => true,
+                    'reference' => '15/08/2020 - ma ref',
+                    'recipient' => [
+                        'AFNOR',
+                        'PSG',
+                        'Eric Choupo',
+                        'Porte 160',
+                        '5 Rue de Paris',
+                        'Batiment C',
+                        '75001 Paris',
+                        'FRANCE'
+                    ]
+                ]
+            ]
+        ];
+
+        $result = RegisteredMailController::getDepositSlipPdf($args);
+
+        return $response->withJson($result);
+    }
+
     public static function getRegisteredMailPDF(array $args)
     {
         $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $args['number']]);
@@ -487,5 +528,177 @@ class RegisteredMailController
         $fileContent = $pdf->Output('', 'S');
 
         return ['fileContent' => $fileContent];
+    }
+
+    public static function getDepositSlipPdf(array $args)
+    {
+        $pdf = new Fpdi();
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        $pdf->SetAutoPagebreak(false);
+        $pdf->addPage();
+        $pdf->SetFont('times', '', 11);
+
+        $nb = 0;
+        $page = 1;
+
+        $pdf->setFont('times', 'B', 11);
+        $pdf->SetXY(10, 10);
+        if ($args['type'] == '2D') {
+            $pdf->MultiCell(0, 15, "DESCRIPTIF DE PLI - LETTRE RECOMMANDEE SANS AR", 'LRTB', 'C', 0);
+        } else if ($args['type'] == '2C') {
+            $pdf->MultiCell(0, 15, "DESCRIPTIF DE PLI - LETTRE RECOMMANDEE AVEC AR", 'LRTB', 'C', 0);
+
+        } else {
+            $pdf->MultiCell(0, 15, "DESCRIPTIF DE PLI - LETTRE RECOMMANDEE INTERNATIONALE AVEC AR", 'LRTB', 'C', 0);
+        }
+
+        $pdf->SetXY(10, 30);
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(30, 10, "Raison sociale", 1);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(85, 10, $args['site']['label'], 1);
+        $pdf->Ln();
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(30, 10, "Adresse", 1);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(85, 10, $args['site']['addressNumber'] . ' ' . $args['site']['addressStreet'], 1);
+        $pdf->Ln();
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(30, 10, "Code postale", 1);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(15, 10, $args['site']['addressPostcode'], 1);
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(15, 10, "Ville", 1);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(55, 10, $args['site']['addressTown'], 1);
+        $pdf->Ln();
+
+        $pdf->SetXY(145, 30);
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(55, 10, "N° Client (Coclico)", 1);
+        $pdf->Ln();
+        $pdf->SetXY(145, 40);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(55, 10, $args['site']['accountNumber'], 1);
+        $pdf->Ln();
+
+        $pdf->SetXY(145, 50);
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(55, 10, "N° Compte de suivi", 1);
+        $pdf->Ln();
+
+        $pdf->SetXY(145, 60);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(55, 10, $args['trackingNumber'], 1);
+        $pdf->Ln();
+
+        $pdf->SetXY(10, 80);
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(30, 10, "Lieu", 1);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(100, 10, $args['site']['postOfficeLabel'], 1);
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(20, 10, "Date", 1);
+        $pdf->setFont('times', '', 11);
+        $pdf->Cell(40, 10, date("d/m/y"), 1);
+        $pdf->SetXY(10, 100);
+        $pdf->Cell(10, 10, "", 1);
+        $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(30, 10, "ID du pli", 1);
+        $pdf->Cell(10, 10, "NG*", 1);
+        $pdf->Cell(15, 10, "CRBT", 1);
+        $pdf->Cell(30, 10, "Référence", 1);
+        $pdf->Cell(95, 10, "Destinataire", 1);
+        $pdf->Ln();
+
+        // List
+        foreach ($args['registeredMails'] as $position => $registeredMail) {
+            if ($position % 9 == 0) {
+                $nb++;
+            }
+
+            $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $registeredMail['number']]);
+
+            $pdf->setFont('times', '', 9);
+            $pdf->Cell(10, 10, $position + 1, 1);
+            $pdf->setFont('times', '', 9);
+            $pdf->Cell(30, 10, $registeredMailNumber, 1);
+            $pdf->Cell(10, 10, $registeredMail['warranty'], 1);
+            $pdf->Cell(15, 10, "", 1);
+            if (strlen($registeredMail['reference']) > 19) {
+                $pdf->Cell(30, 10, "", 1);
+
+            } else {
+//                    $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 10, ""), 1); // TODO strim width ???
+                $pdf->Cell(30, 10, $registeredMail['reference'], 1);
+            }
+
+            $pdf->setFont('times', '', 6);
+            if (strlen($registeredMail['recipient'][1] . " " . $registeredMail['recipient'][4] . " " . $registeredMail['recipient'][6]) > 60) {
+                $pdf->Cell(95, 10, $registeredMail['recipient'][1], 1);
+                $pdf->SetXY($pdf->GetX() - 95, $pdf->GetY() + 3);
+                $pdf->Cell(95, 10, $registeredMail['recipient'][4] . " " . $registeredMail['recipient'][6], 0);
+                $pdf->SetXY($pdf->GetX() + 95, $pdf->GetY() - 3);
+            } else {
+                $pdf->Cell(95, 10, $registeredMail['recipient'][1] . " " . $registeredMail['recipient'][4] . " " . $registeredMail['recipient'][6], 1);
+            }
+
+
+            $pdf->Ln();
+            //contrôle du nb de reco présent sur la page. Si 16 lignes, changement de page et affichage du footer
+            if ($position % 16 >= 15) {
+                $pdf->SetXY(10, 276);
+                $pdf->setFont('times', 'I', 8);
+                $pdf->Cell(0, 0, "*Niveau de garantie (R1 pour tous ou R2, R3");
+                $pdf->SetXY(-30, 276);
+                $pdf->setFont('times', 'I', 8);
+                $pdf->Cell(0, 0, $page . '/' . $nb);
+                $pdf->addPage();
+                $page++;
+            }
+        }
+
+        $position = 0;
+        //contrôle du nb de reco présent sur la page. Si trop, saut de page pour la partie réservé à la poste
+        if ($position % 10 >= 9) {
+            $pdf->SetXY(10, 276);
+            $pdf->setFont('times', 'I', 8);
+            $pdf->Cell(0, 0, "*Niveau de garantie (R1 pour tous ou R2, R3");
+            $pdf->SetXY(-30, 276);
+            $pdf->setFont('times', 'I', 8);
+            $pdf->Cell(0, 0, $page . '/' . $nb);
+            $pdf->addPage();
+            $page++;
+        }
+        $pdf->setFont('times', 'B', 9);
+        $pdf->SetXY(10, 228);
+        $pdf->Cell(0, 0, 'Partie réservée au contrôle postal:');
+        $pdf->SetXY(110, 238);
+        $pdf->setFont('times', '', 11);
+        $pdf->SetXY(10, 233);
+        $pdf->Cell(90, 40, '', 1);
+        $pdf->Cell(50, 40, '', 1);
+        $pdf->Cell(11, 10, "Total", 1);
+        $pdf->setFont('times', '', 9);
+        $position = $position + 1;
+        $pdf->Cell(0, 10, $position . " recommandé(s)", 1);
+        $pdf->SetXY(10, 234);
+        $pdf->Cell(0, 0, 'Commentaire:');
+        $pdf->SetXY(110, 234);
+        $pdf->Cell(0, 0, 'Timbre à date:');
+        $pdf->setFont('times', 'I', 8);
+        $pdf->SetXY(100, 268);
+        $pdf->Cell(0, 0, 'Visa après contrôle des quantités.');
+
+        $pdf->SetXY(10, 276);
+        $pdf->setFont('times', 'I', 8);
+        $pdf->Cell(0, 0, "*Niveau de garantie (R1 pour tous ou R2, R3");
+        $pdf->SetXY(-30, 276);
+        $pdf->setFont('times', 'I', 8);
+        $pdf->Cell(0, 0, $page . '/' . $nb);
+
+        $fileContent = $pdf->Output('', 'S');
+        return ['encodedFileContent' => base64_encode($fileContent)];
     }
 }

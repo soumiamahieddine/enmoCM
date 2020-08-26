@@ -244,4 +244,83 @@ trait RegisteredMailTrait
 
         return ['data' => $data];
     }
+
+    public static function printDepositSlip(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        static $processedResources;
+        static $data;
+
+        if ($data === null) {
+            $data = [
+                '2D' => null,
+                '2C' => null,
+                'RW' => null
+            ];
+        }
+        if ($processedResources === null) {
+            $processedResources = [];
+        }
+
+        if (in_array($args['resId'], $processedResources)) {
+            return [];
+        }
+
+        $registeredMail = RegisteredMailModel::getWithResources([
+            'select' => ['issuing_site', 'type', 'number', 'warranty', 'recipient', 'generated', 'departure_date'],
+            'where'  => ['res_letterbox.res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
+        if (empty($registeredMail)) {
+            return ['errors' => ['No registered mail for this resource']];
+        }
+
+        if (!$registeredMail['generated']) {
+            return ['errors' => ['Registered mail not generated for this resource']];
+        }
+
+        $site = IssuingSiteModel::getById(['id' => $registeredMail['issuing_site']]);
+
+        $range = RegisteredNumberRangeModel::get([
+            'where' => ['site_id = ?', 'type = ?'],
+            'data'  => [$registeredMail['issuing_site'], $registeredMail['type']]
+        ]);
+
+        $registeredMails = RegisteredMailModel::getWithResources([
+            'select' => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id'],
+            'where'  => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'generated = ?'],
+            'data'   => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], true]
+        ]);
+
+        $args = [
+            'site'            => [
+                'label'              => $site['label'],
+                'postOfficeLabel'    => $site['post_office_label'],
+                'accountNumber'      => $site['account_number'],
+                'addressNumber'      => $site['address_number'],
+                'addressStreet'      => $site['address_street'],
+                'addressAdditional1' => $site['address_additional1'],
+                'addressAdditional2' => $site['address_additional2'],
+                'addressPostcode'    => $site['address_postcode'],
+                'addressTown'        => $site['address_town'],
+                'addressCountry'     => $site['address_country'],
+            ],
+            'type'            => $registeredMail['type'],
+            'trackingNumber'  => $range['tracking_account_number'],
+            'departureDate'   => $registeredMail['departure_date'],
+            'registeredMails' => $registeredMails
+        ];
+
+        $resultPDF = RegisteredMailController::getDepositSlipPdf($args);
+
+        $resIds = array_column($registeredMails, 'res_id');
+
+        $processedResources = array_merge($processedResources, $resIds);
+
+        $data[$registeredMail['type']] = $resultPDF['encodedFileContent'];
+
+        return ['data' => $data];
+    }
 }
