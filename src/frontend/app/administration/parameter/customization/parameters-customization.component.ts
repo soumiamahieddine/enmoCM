@@ -65,18 +65,18 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
                     setTimeout(() => {
 
                         this.stepFormGroup.controls['applicationName'].valueChanges.pipe(
-                            debounceTime(500),
+                            debounceTime(1000),
                             tap(() => this.saveParameter('applicationName'))
                         ).subscribe();
 
 
                         this.stepFormGroup.controls['homepage_message'].valueChanges.pipe(
-                            debounceTime(500),
+                            debounceTime(1000),
                             tap(() => this.saveParameter('homepage_message'))
                         ).subscribe();
 
                         this.stepFormGroup.controls['loginpage_message'].valueChanges.pipe(
-                            debounceTime(500),
+                            debounceTime(1000),
                             tap(() => this.saveParameter('loginpage_message'))
                         ).subscribe();
                         this.initMce();
