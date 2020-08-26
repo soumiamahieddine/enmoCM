@@ -473,4 +473,5 @@ define("_REGISTERED_NUMBER_RANGE_DELETED", "Plage de recommandé supprimé");
 
 define('_SAVE_REGISTERED_MAIL', 'Enregistrer le recommandé');
 define('_SAVE_PRINT_REGISTERED_MAIL', 'Enregistrer et imprimer le recommandé');
+define('_SAVE_INDEX_REGISTERED_MAIL', 'Enregistrer le recommandé et lancer l\'indexation');
 define('_PRINT_REGISTERED_MAIL', 'Imprimer le recommandé');

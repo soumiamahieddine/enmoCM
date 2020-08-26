@@ -86,7 +86,7 @@ export class IndexationComponent implements OnInit {
 
         // Event after process action
         this.subscription = this.actionService.catchAction().subscribe(resIds => {
-            if (this.selectedAction.component === 'closeAndIndexAction') {
+            if (['closeAndIndexAction', 'saveAndIndexRegisteredMailAction'].indexOf(this.selectedAction.component) > -1) {
                 this.appDocumentViewer.templateListForm.reset();
                 this.appDocumentViewer.file = {
                     name: '',

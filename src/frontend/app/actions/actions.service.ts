@@ -39,6 +39,7 @@ import { ReconcileActionComponent } from './reconciliation-action/reconcile-acti
 import { SendAlfrescoActionComponent } from './send-alfresco-action/send-alfresco-action.component';
 import { SaveRegisteredMailActionComponent } from './save-registered-mail-action/save-registered-mail-action.component';
 import { SaveAndPrintRegisteredMailActionComponent } from './save-and-print-registered-mail-action/save-and-print-registered-mail-action.component';
+import { SaveAndIndexRegisteredMailActionComponent } from './save-and-index-registered-mail-action/save-and-index-registered-mail-action.component';
 import { PrintRegisteredMailActionComponent } from './print-registered-mail-action/print-registered-mail-action.component';
 
 @Injectable()
@@ -1006,6 +1007,29 @@ export class ActionsService implements OnDestroy {
             data: this.setDatasActionToSend()
         });
 
+        dialogRef.afterClosed().pipe(
+            tap((resIds: any) => {
+                this.unlockResourceAfterActionModal(resIds);
+            }),
+            filter((resIds: any) => !this.functions.empty(resIds)),
+            tap((resIds: any) => {
+                this.endAction(resIds);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    saveAndIndexRegisteredMailAction(options: any = null) {
+        const dialogRef = this.dialog.open(SaveAndIndexRegisteredMailActionComponent, {
+            panelClass: 'maarch-modal',
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
         dialogRef.afterClosed().pipe(
             tap((resIds: any) => {
                 this.unlockResourceAfterActionModal(resIds);

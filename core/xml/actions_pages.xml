@@ -437,6 +437,16 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
     <ACTIONPAGE>
+        <ID>saveAndIndexRegisteredMail</ID>
+        <LABEL>_SAVE_INDEX_REGISTERED_MAIL</LABEL>
+        <NAME>saveAndIndexRegisteredMail</NAME>
+        <DESC>_SAVE_INDEX_REGISTERED_MAIL</DESC>
+        <component>saveAndIndexRegisteredMailAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
         <ID>printRegisteredMail</ID>
         <LABEL>_PRINT_REGISTERED_MAIL</LABEL>
         <NAME>printRegisteredMail</NAME>

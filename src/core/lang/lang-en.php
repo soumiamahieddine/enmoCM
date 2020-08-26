@@ -473,4 +473,5 @@ define("_REGISTERED_NUMBER_RANGE_DELETED", "Registered number range deleted");
 
 define('_SAVE_REGISTERED_MAIL', 'Save registered mail');
 define('_SAVE_PRINT_REGISTERED_MAIL', 'Save and print registered mail');
+define('_SAVE_INDEX_REGISTERED_MAIL', 'Save registered mail and start indexing');
 define('_PRINT_REGISTERED_MAIL', 'Print registered mail');

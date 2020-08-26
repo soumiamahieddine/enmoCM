@@ -83,6 +83,7 @@ class ActionMethodController
         'sendAlfrescoAction'                        => 'sendResourceAlfresco',
         'saveRegisteredMailAction'                  => 'saveRegisteredMail',
         'saveAndPrintRegisteredMailAction'          => 'saveAndPrintRegisteredMail',
+        'saveAndIndexRegisteredMailAction'          => 'saveRegisteredMail',
         'printRegisteredMailAction'                 => 'printRegisteredMail',
         'noConfirmAction'                           => null
     ];
