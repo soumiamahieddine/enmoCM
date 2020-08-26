@@ -16,6 +16,7 @@ import { AccountLinkComponent } from './account-link/account-link.component';
 import { AppService } from '../../../service/app.service';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { MaarchFlatTreeComponent } from '../../../plugins/tree/maarch-flat-tree.component';
+import { environment } from '../../../environments/environment';
 
 declare var $: any;
 
@@ -112,6 +113,8 @@ export class UserAdministrationComponent implements OnInit {
             label: this.translate.instant('lang.rest')
         }
     ];
+
+    appVersion: string = environment.VERSION.split('.')[0] + '.' + environment.VERSION.split('.')[1];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
