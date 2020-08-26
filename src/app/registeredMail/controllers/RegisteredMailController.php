@@ -112,7 +112,7 @@ class RegisteredMailController
 
         RegisteredMailController::getRegisteredMailPDF($args);
 
-        return true;
+        return $response->withJson(['test' => 2]);
     }
 
     public static function getRegisteredMailPDF(array $args)
@@ -486,6 +486,6 @@ class RegisteredMailController
 
         $fileContent = $pdf->Output('', 'S');
 
-        return ['encodedFileContent' => base64_encode($fileContent)];
+        return ['fileContent' => $fileContent];
     }
 }

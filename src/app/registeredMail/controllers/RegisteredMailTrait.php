@@ -17,6 +17,8 @@ use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
 use RegisteredMail\models\RegisteredNumberRangeModel;
 use Resource\models\ResModel;
+use setasign\Fpdi\Tcpdf\Fpdi;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 
 trait RegisteredMailTrait
@@ -98,7 +100,10 @@ trait RegisteredMailTrait
             return ['errors' => ['R3 warranty is not allowed for type RW']];
         }
 
-        $issuingSite = IssuingSiteModel::getById(['id' => $args['data']['issuingSiteId'], 'select' => [1]]);
+        $issuingSite = IssuingSiteModel::getById([
+            'id'        => $args['data']['issuingSiteId'],
+            'select'    => ['post_office_label', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country']
+        ]);
         if (empty($issuingSite)) {
             return ['errors' => ['Issuing site does not exist']];
         }
@@ -134,13 +139,35 @@ trait RegisteredMailTrait
             'generated'     => 'true',
         ]);
 
-        return true;
+        $sender = ContactController::getContactAfnor([
+            'company'               => $issuingSite['post_office_label'],
+            'address_number'        => $issuingSite['address_number'],
+            'address_street'        => $issuingSite['address_street'],
+            'address_additional1'   => $issuingSite['address_additional1'],
+            'address_additional2'   => $issuingSite['address_additional2'],
+            'address_postcode'      => $issuingSite['address_postcode'],
+            'address_town'          => $issuingSite['address_town'],
+            'address_country'       => $issuingSite['address_country']
+        ]);
+        $registeredMailPDF = RegisteredMailController::getRegisteredMailPDF([
+            'type'      => $args['data']['type'],
+            'number'    => $range[0]['current_number'],
+            'warranty'  => $args['data']['warranty'],
+            'letter'    => !empty($args['data']['letter']),
+            'reference' => "{$date} - {$args['data']['reference']}",
+            'recipient' => $args['data']['recipient'],
+            'sender'    => $sender
+        ]);
+
+        return ['data' => base64_encode($registeredMailPDF['fileContent'])];
     }
 
     public static function printRegisteredMail(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
+
+        static $data;
 
         $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'number', 'warranty', 'letter', 'recipient'], 'resId' => $args['resId']]);
         if (empty($registeredMail)) {
@@ -164,7 +191,7 @@ trait RegisteredMailTrait
         ]);
 
         $registeredMail['recipient'] = json_decode($registeredMail['recipient'], true);
-        $encodedFileContent = RegisteredMailController::getRegisteredMailPDF([
+        $registeredMailPDF = RegisteredMailController::getRegisteredMailPDF([
             'type'      => $registeredMail['type'],
             'number'    => $registeredMail['number'],
             'warranty'  => $registeredMail['warranty'],
@@ -174,6 +201,47 @@ trait RegisteredMailTrait
             'sender'    => $sender
         ]);
 
-        return ['data' => $encodedFileContent];
+        if ($data === null) {
+            $data = [
+                '2D' => null,
+                '2C' => null,
+                'RW' => null
+            ];
+        }
+
+        if (empty($data[$registeredMail['type']])) {
+            $data[$registeredMail['type']] = base64_encode($registeredMailPDF['fileContent']);
+        } else {
+            $concatPdf = new Fpdi('P', 'pt');
+            $concatPdf->setPrintHeader(false);
+            $concatPdf->setPrintFooter(false);
+            $tmpPath = CoreConfigModel::getTmpPath();
+
+            $firstFile = $tmpPath . 'registeredMail_first_file' . rand() . '.pdf';
+            file_put_contents($firstFile, base64_decode($data[$registeredMail['type']]));
+            $pageCount = $concatPdf->setSourceFile($firstFile);
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $pageId = $concatPdf->ImportPage($pageNo);
+                $s = $concatPdf->getTemplatesize($pageId);
+                $concatPdf->AddPage($s['orientation'], $s);
+                $concatPdf->useImportedPage($pageId);
+            }
+
+            $secondFile = $tmpPath . 'registeredMail_second_file' . rand() . '.pdf';
+            file_put_contents($secondFile, $registeredMailPDF['fileContent']);
+            $concatPdf->setSourceFile($secondFile);
+            $pageId = $concatPdf->ImportPage(1);
+            $s = $concatPdf->getTemplatesize($pageId);
+            $concatPdf->AddPage($s['orientation'], $s);
+            $concatPdf->useImportedPage($pageId);
+
+            $fileContent = $concatPdf->Output('', 'S');
+
+            $data[$registeredMail['type']] = base64_encode($fileContent);
+            unlink($firstFile);
+            unlink($secondFile);
+        }
+
+        return ['data' => $data];
     }
 }
