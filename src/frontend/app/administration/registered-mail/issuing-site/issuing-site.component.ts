@@ -69,7 +69,7 @@ export class IssuingSiteComponent implements OnInit {
                     addressNumber: ['', Validators.required],
                     addressStreet: ['', Validators.required],
                     addressAdditional1: [''],
-                    addressadditional2: [''],
+                    addressAdditional2: [''],
                     addressPostcode: ['', Validators.required],
                     addressTown: ['', Validators.required],
                     addressCountry: ['']
@@ -109,7 +109,7 @@ export class IssuingSiteComponent implements OnInit {
                         addressNumber: [data.site.addressNumber, Validators.required],
                         addressStreet: [data.site.addressStreet, Validators.required],
                         addressAdditional1: [data.site.addressAdditional1],
-                        addressadditional2: [data.site.addressadditional2],
+                        addressAdditional2: [data.site.addressAdditional2],
                         addressPostcode: [data.site.addressPostcode, Validators.required],
                         addressTown: [data.site.addressTown, Validators.required],
                         addressCountry: [data.site.addressCountry],

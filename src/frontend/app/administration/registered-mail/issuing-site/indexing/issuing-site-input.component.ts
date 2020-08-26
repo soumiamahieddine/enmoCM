@@ -72,7 +72,7 @@ export class IssuingSiteInputComponent implements OnInit {
     }
 
     setAddress(id: any) {
-        const siteId = id.split('#')[1];
+        const siteId = id.split('#').slice(-1)[0];
 
         this.http.get(`../rest/registeredMail/sites/${siteId}`).pipe(
             tap((data: any) => {

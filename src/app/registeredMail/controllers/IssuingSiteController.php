@@ -103,8 +103,8 @@ class IssuingSiteController
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
-        if (!Validator::intVal()->notEmpty()->validate($body['accountNumber'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body accountNumber is empty or not an integer']);
+        if (!Validator::intVal()->notEmpty()->length(1, 10)->validate($body['accountNumber'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body accountNumber is empty or not an integer with less than 11 digits']);
         }
         if (!Validator::intVal()->notEmpty()->validate($body['addressNumber'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body addressNumber is empty or not an integer']);
@@ -186,8 +186,8 @@ class IssuingSiteController
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
-        if (!Validator::intVal()->notEmpty()->validate($body['accountNumber'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body accountNumber is empty or not an integer']);
+        if (!Validator::intVal()->notEmpty()->length(1, 10)->validate($body['accountNumber'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body accountNumber is empty or not an integer with less than 11 digits']);
         }
         if (!Validator::intVal()->notEmpty()->validate($body['addressNumber'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body addressNumber is empty or not an integer']);

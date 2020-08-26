@@ -47,7 +47,7 @@ export class SaveAndIndexRegisteredMailActionComponent implements OnInit {
                     data: {
                         type: this.data.resource.registeredMail_type,
                         warranty: this.data.resource.registeredMail_warranty,
-                        issuingSiteId: this.data.resource.registeredMail_issuingSite,
+                        issuingSiteId: this.data.resource.registeredMail_issuingSite.split('#').slice(-1)[0],
                         letter: this.data.resource.registeredMail_letter,
                         recipient: this.data.resource.registeredMail_recipient,
                         reference: this.data.resource.registeredMail_reference

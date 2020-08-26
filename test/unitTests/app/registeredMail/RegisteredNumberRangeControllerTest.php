@@ -239,6 +239,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(self::$siteId, $responseBody['ranges'][0]['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['ranges'][0]['creator']);
         $this->assertNull($responseBody['ranges'][0]['currentNumber']);
+        $this->assertIsArray($responseBody['ranges'][0]['entities']);
         $this->assertSame(0, $responseBody['ranges'][0]['fullness']);
 
         $GLOBALS['login'] = 'bbain';
@@ -275,6 +276,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['range']['creator']);
         $this->assertNull($responseBody['range']['currentNumber']);
+        $this->assertIsArray($responseBody['range']['entities']);
         $this->assertSame(0, $responseBody['range']['fullness']);
 
         $GLOBALS['login'] = 'bbain';
