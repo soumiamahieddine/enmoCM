@@ -14,8 +14,12 @@
 namespace RegisteredMail\controllers;
 
 use Com\Tecnick\Barcode\Barcode;
+use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
+use RegisteredMail\models\RegisteredNumberRangeModel;
+use Resource\controllers\ResController;
 use Resource\models\ResModel;
+use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -23,6 +27,91 @@ use SrcCore\models\ValidatorModel;
 
 class RegisteredMailController
 {
+    public function getById(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $registeredMail = RegisteredMailController::getFormattedRegisteredMail(['resId' => $args['resId']]);
+        if (empty($registeredMail)) {
+            return $response->withStatus(400)->withJson(['errors' => 'No registered mail for this resource']);
+        }
+
+        return $response->withJson($registeredMail);
+    }
+
+    public function update(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'deposit_id'], 'resId' => $args['resId']]);
+        if (empty($registeredMail)) {
+            return $response->withStatus(400)->withJson(['errors' => 'No registered mail for this resource']);
+        } elseif (!empty($registeredMail['deposit_id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Registered mail can not be modified (deposit list already generated)']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['type'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body type is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['warranty'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body warranty is empty or not a string']);
+        } elseif (!Validator::date()->notEmpty()->validate($body['departureDate'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body departureDate is empty or not a date']);
+        } elseif (!in_array($body['type'], ['2D', '2C', 'RW'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body type is not correct']);
+        } elseif (!in_array($body['type'], ['2D', '2C', 'RW'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body type is not correct']);
+        } elseif (!in_array($body['warranty'], ['R1', 'R2', 'R3'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body warranty is not correct']);
+        } elseif ($body['type'] == 'RW' && $body['warranty'] == 'R3') {
+            return $response->withStatus(400)->withJson(['errors' => 'Body warranty R3 is not allowed for type RW']);
+        }
+
+        ResModel::update(['set' => ['departure_date' => $body['departureDate']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+
+        $date = new \DateTime($body['departureDate']);
+        $date = $date->format('d/m/Y');
+
+        $set = [
+            'type'          => $body['type'],
+            'warranty'      => $body['warranty'],
+            'reference'     => "{$date} - {$body['reference']}"
+        ];
+
+        if ($registeredMail['type'] != $body['type']) {
+            $range = RegisteredNumberRangeModel::get([
+                'select'    => ['id', 'range_end', 'current_number'],
+                'where'     => ['type = ?', 'site_id = ?', 'status = ?'],
+                'data'      => [$body['type'], $registeredMail['issuing_site'], 'OK']
+            ]);
+            if (empty($range)) {
+                return $response->withStatus(400)->withJson(['errors' => 'No range found']);
+            }
+
+            $status = $range[0]['current_number'] + 1 > $range[0]['range_end'] ? 'DEL' : 'OK';
+            RegisteredNumberRangeModel::update([
+                'set'   => ['current_number' => $range[0]['current_number'] + 1, 'status' => $status],
+                'where' => ['id = ?'],
+                'data'  => [$range[0]['id']]
+            ]);
+
+            $set['number'] = $range[0]['current_number'];
+        }
+
+        RegisteredMailModel::update([
+            'set'   => $set,
+            'where' => ['res_id = ?'],
+            'data'  => [$args['resId']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
     public function getCountries(Request $request, Response $response)
     {
         $countries = [];
@@ -53,31 +142,6 @@ class RegisteredMailController
         $registeredMailNumber = "{$args['type']} {$number[0]}{$number[1]}{$number[2]} {$number[3]}{$number[4]}{$number[5]} {$number[6]}{$number[7]}{$number[8]}{$number[9]} {$key}";
 
         return $registeredMailNumber;
-    }
-
-    public static function isRegisteredMailClosed(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
-
-        $registeredMail = RegisteredMailModel::getByResId(['select' => ['generated'], 'resId' => $args['resId']]);
-        if (empty($registeredMail['generated'])) {
-            return false;
-        }
-
-        $resource = ResModel::getById(['select' => ['departure_date'], 'resId' => $args['resId']]);
-        if (empty($resource['departure_date'])) {
-            return ['errors' => ['Departure date is empty']];
-        }
-        $departureDate = new \DateTime($resource['departure_date']);
-        $today = new \DateTime();
-        $today->setTime(16, 00);
-
-        if ($departureDate > $today) {
-            return false;
-        }
-
-        return true;
     }
 
     public function printTest(Request $request, Response $response)
@@ -700,5 +764,39 @@ class RegisteredMailController
 
         $fileContent = $pdf->Output('', 'S');
         return ['encodedFileContent' => base64_encode($fileContent)];
+    }
+
+    public static function getFormattedRegisteredMail(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'deposit_id', 'warranty', 'letter', 'recipient', 'reference', 'generated', 'number'], 'resId' => $args['resId']]);
+
+        if (!empty($registeredMail)) {
+            $registeredMail['recipient'] = json_decode($registeredMail['recipient'], true);
+            $registeredMail['number'] = RegisteredMailController::getRegisteredMailNumber(['type' => $registeredMail['type'], 'rawNumber' => $registeredMail['number']]);
+
+            $issuingSite = IssuingSiteModel::getById([
+                'id'        => $registeredMail['issuing_site'],
+                'select'    => ['label', 'post_office_label', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country']
+            ]);
+
+            $registeredMail['issuingSite'] = [
+                'id'                    => $registeredMail['issuing_site'],
+                'label'                 => $issuingSite['label'],
+                'postOfficeLabel'       => $issuingSite['post_office_label'],
+                'addressNumber'         => $issuingSite['address_number'],
+                'addressStreet'         => $issuingSite['address_street'],
+                'addressAdditional1'    => $issuingSite['address_additional1'],
+                'addressAdditional2'    => $issuingSite['address_additional2'],
+                'addressPostcode'       => $issuingSite['address_postcode'],
+                'addressTown'           => $issuingSite['address_town'],
+                'addressCountry'        => $issuingSite['address_country']
+            ];
+            unset($registeredMail['issuing_site']);
+        }
+
+        return $registeredMail;
     }
 }

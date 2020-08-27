@@ -37,7 +37,7 @@ trait RegisteredMailTrait
         if (!in_array($args['data']['type'], ['2D', '2C', 'RW'])) {
             return ['errors' => ['Type is not correct']];
         } elseif (!in_array($args['data']['warranty'], ['R1', 'R2', 'R3'])) {
-            return ['errors' => ['Type is not correct']];
+            return ['errors' => ['Warranty is not correct']];
         } elseif ($args['data']['type'] == 'RW' && $args['data']['warranty'] == 'R3') {
             return ['errors' => ['R3 warranty is not allowed for type RW']];
         }

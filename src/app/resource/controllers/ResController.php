@@ -38,6 +38,9 @@ use IndexingModel\models\IndexingModelFieldModel;
 use MessageExchange\models\MessageExchangeModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
+use RegisteredMail\controllers\RegisteredMailController;
+use RegisteredMail\models\IssuingSiteModel;
+use RegisteredMail\models\RegisteredMailModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Resource\models\UserFollowedResourceModel;
@@ -230,6 +233,10 @@ class ResController extends ResourceControlController
 
             $tags = ResourceTagModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             $formattedData['tags'] = array_column($tags, 'tag_id');
+
+            if ($formattedData['categoryId'] == 'registeredMail') {
+                $formattedData['registeredMail'] = RegisteredMailController::getFormattedRegisteredMail(['resId' => $args['resId']]);
+            }
         } else {
             $followed = UserFollowedResourceModel::get([
                 'select'    => [1],

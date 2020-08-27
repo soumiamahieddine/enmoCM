@@ -1456,6 +1456,7 @@ CREATE TABLE IF NOT EXISTS registered_mail_resources (
     number INTEGER NOT NULL,
     reference TEXT,
     generated BOOL NOT NULL DEFAULT FALSE,
+    deposit_id INTEGER,
     CONSTRAINT registered_mail_resources_pkey PRIMARY KEY (id),
     CONSTRAINT registered_mail_resources_unique_key UNIQUE (res_id)
 );
