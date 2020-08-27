@@ -26,8 +26,6 @@ import { ThesaurusModalComponent } from './thesaurus/thesaurus-modal.component';
 
 export class TagInputComponent implements OnInit {
 
-    
-
     loading: boolean = false;
 
     key: string = 'idToDisplay';
@@ -192,7 +190,6 @@ export class TagInputComponent implements OnInit {
     }
 
     openThesaurus(tagId: number = null) {
-        
         const dialogRef = this.dialog.open(ThesaurusModalComponent, {
             panelClass: 'maarch-modal',
             width: '600px',

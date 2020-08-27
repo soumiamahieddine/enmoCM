@@ -55,6 +55,10 @@ export class IssuingSiteInputComponent implements OnInit {
             tap((data: any) => {
                 this.issuingSiteAddress = null;
                 this.issuingSiteList = data['ranges'].filter((item: any) => item.registeredMailType === registeredMailType && item.status === 'OK' && item.entities.indexOf(this.headerService.user.entities[0].id) > -1).map((item: any) => {
+                    if (this.control.value === item.siteId) {
+                        this.control.setValue(`${item.trackerNumber}#${item.siteId}`);
+                        this.setAddress(this.control.value);
+                    }
                     return {
                         ...item,
                         id : `${item.trackerNumber}#${item.siteId}`,

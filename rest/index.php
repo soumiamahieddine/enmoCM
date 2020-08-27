@@ -631,7 +631,6 @@ $app->get('/registeredMail/sites/type/{type}', \RegisteredMail\controllers\Issui
 
 $app->get('/registeredMail/countries', \RegisteredMail\controllers\RegisteredMailController::class . ':getCountries');
 
-$app->get('/registeredMails/{resId}', \RegisteredMail\controllers\RegisteredMailController::class . ':getById');
 $app->put('/registeredMails/{resId}', \RegisteredMail\controllers\RegisteredMailController::class . ':update');
 //TODO remove
 $app->get('/registeredMail/print', \RegisteredMail\controllers\RegisteredMailController::class . ':printTest');

@@ -114,6 +114,7 @@ define('_OUTGOING', 'Courrier Départ');
 define('_INTERNAL', 'Courrier Interne');
 define('_ATTACHMENT', 'Pièce jointe');
 define('_GED_DOC', 'Document GED');
+define('_REGISTERED_MAIL', 'Recommandé');
 define('_UNCHANGED', 'Inchangé');
 define('_NO_PAGE', 'Aucune page');
 define('_NO_KEYWORD', 'Aucun mot clé');

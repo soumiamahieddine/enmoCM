@@ -235,7 +235,10 @@ class ResController extends ResourceControlController
             $formattedData['tags'] = array_column($tags, 'tag_id');
 
             if ($formattedData['categoryId'] == 'registeredMail') {
-                $formattedData['registeredMail'] = RegisteredMailController::getFormattedRegisteredMail(['resId' => $args['resId']]);
+                $registeredMailInfo = RegisteredMailController::getFormattedRegisteredMail(['resId' => $args['resId']]);
+                foreach ($registeredMailInfo as $key => $value) {
+                    $formattedData['registeredMail_' . $key] = $value;
+                }
             }
         } else {
             $followed = UserFollowedResourceModel::get([
@@ -244,6 +247,9 @@ class ResController extends ResourceControlController
                 'data'      => [$GLOBALS['id'], $args['resId']]
             ]);
             $formattedData['followed'] = !empty($followed);
+
+            $registeredMail = RegisteredMailModel::getByResId(['select' => ['deposit_id'], 'resId' => $args['resId']]);
+            $formattedData['registeredMail_deposit_id'] = $registeredMail['deposit_id'];
         }
 
         return $response->withJson($formattedData);

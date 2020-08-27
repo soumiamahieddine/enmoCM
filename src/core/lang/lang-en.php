@@ -114,6 +114,7 @@ define('_OUTGOING', 'Outgoing mail');
 define('_INTERNAL', 'Internal Mail');
 define('_ATTACHMENT', 'Attachment');
 define('_GED_DOC', 'EDM Document');
+define('_REGISTERED_MAIL', 'Registered mail');
 define('_UNCHANGED', 'Unchanged');
 define('_NO_PAGE', 'No page');
 define('_NO_KEYWORD', 'No keyword');

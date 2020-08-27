@@ -27,8 +27,6 @@ export class IndexingModelAdministrationComponent implements OnInit {
 
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
 
-    
-
     loading: boolean = true;
 
     indexingModel: any = {

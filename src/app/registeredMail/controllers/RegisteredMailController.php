@@ -14,11 +14,9 @@
 namespace RegisteredMail\controllers;
 
 use Com\Tecnick\Barcode\Barcode;
-use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
 use RegisteredMail\models\RegisteredNumberRangeModel;
 use Resource\controllers\ResController;
-use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
@@ -27,20 +25,6 @@ use SrcCore\models\ValidatorModel;
 
 class RegisteredMailController
 {
-    public function getById(Request $request, Response $response, array $args)
-    {
-        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
-        }
-
-        $registeredMail = RegisteredMailController::getFormattedRegisteredMail(['resId' => $args['resId']]);
-        if (empty($registeredMail)) {
-            return $response->withStatus(400)->withJson(['errors' => 'No registered mail for this resource']);
-        }
-
-        return $response->withJson($registeredMail);
-    }
-
     public function update(Request $request, Response $response, array $args)
     {
         if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
@@ -72,15 +56,13 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body warranty R3 is not allowed for type RW']);
         }
 
-        ResModel::update(['set' => ['departure_date' => $body['departureDate']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-
         $date = new \DateTime($body['departureDate']);
         $date = $date->format('d/m/Y');
 
         $set = [
-            'type'          => $body['type'],
-            'warranty'      => $body['warranty'],
-            'reference'     => "{$date} - {$body['reference']}"
+            'type'      => $body['type'],
+            'warranty'  => $body['warranty'],
+            'reference' => "{$date} - {$body['reference']}"
         ];
 
         if ($registeredMail['type'] != $body['type']) {
@@ -115,9 +97,9 @@ class RegisteredMailController
     public function getCountries(Request $request, Response $response)
     {
         $countries = [];
-        if (($handle = fopen("referential/liste-197-etats.csv", "r")) !== FALSE) {
+        if (($handle = fopen("referential/liste-197-etats.csv", "r")) !== false) {
             fgetcsv($handle, 0, ';');
-            while (($data = fgetcsv($handle, 0, ';')) !== FALSE) {
+            while (($data = fgetcsv($handle, 0, ';')) !== false) {
                 $countries[] = utf8_encode($data[0]);
             }
             fclose($handle);
@@ -241,7 +223,7 @@ class RegisteredMailController
             if ($args['warranty'] == 'R1') {
                 $pdf->SetXY(88, 17);
                 $pdf->cell(0, 0, 'X');
-            } else if ($args['warranty'] == 'R2') {
+            } elseif ($args['warranty'] == 'R2') {
                 $pdf->SetXY(101, 17);
                 $pdf->cell(0, 0, 'X');
             } else {
@@ -318,7 +300,7 @@ class RegisteredMailController
             if ($args['warranty'] == 'R1') {
                 $pdf->SetXY(101, 125);
                 $pdf->cell(0, 0, 'X');
-            } else if ($args['warranty'] == 'R2') {
+            } elseif ($args['warranty'] == 'R2') {
                 $pdf->SetXY(114, 125);
                 $pdf->cell(0, 0, 'X');
             } else {
@@ -499,7 +481,7 @@ class RegisteredMailController
             if ($args['warranty'] == 'R1') {
                 $pdf->SetXY(71, 27);
                 $pdf->cell(0, 0, 'X');
-            } else if ($args['warranty'] == 'R2') {
+            } elseif ($args['warranty'] == 'R2') {
                 $pdf->SetXY(78, 27);
                 $pdf->cell(0, 0, 'X');
             }
@@ -610,9 +592,8 @@ class RegisteredMailController
         $pdf->SetXY(10, 10);
         if ($args['type'] == '2D') {
             $pdf->MultiCell(0, 15, "DESCRIPTIF DE PLI - LETTRE RECOMMANDEE SANS AR", 'LRTB', 'C', 0);
-        } else if ($args['type'] == '2C') {
+        } elseif ($args['type'] == '2C') {
             $pdf->MultiCell(0, 15, "DESCRIPTIF DE PLI - LETTRE RECOMMANDEE AVEC AR", 'LRTB', 'C', 0);
-
         } else {
             $pdf->MultiCell(0, 15, "DESCRIPTIF DE PLI - LETTRE RECOMMANDEE INTERNATIONALE AVEC AR", 'LRTB', 'C', 0);
         }
@@ -692,7 +673,6 @@ class RegisteredMailController
             $pdf->Cell(15, 10, "", 1);
             if (strlen($registeredMail['reference']) > 19) {
                 $pdf->Cell(30, 10, "", 1);
-
             } else {
 //                    $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 10, ""), 1); // TODO strim width ???
                 $pdf->Cell(30, 10, $registeredMail['reference'], 1);
@@ -774,26 +754,9 @@ class RegisteredMailController
         $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'deposit_id', 'warranty', 'letter', 'recipient', 'reference', 'generated', 'number'], 'resId' => $args['resId']]);
 
         if (!empty($registeredMail)) {
-            $registeredMail['recipient'] = json_decode($registeredMail['recipient'], true);
-            $registeredMail['number'] = RegisteredMailController::getRegisteredMailNumber(['type' => $registeredMail['type'], 'rawNumber' => $registeredMail['number']]);
-
-            $issuingSite = IssuingSiteModel::getById([
-                'id'        => $registeredMail['issuing_site'],
-                'select'    => ['label', 'post_office_label', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country']
-            ]);
-
-            $registeredMail['issuingSite'] = [
-                'id'                    => $registeredMail['issuing_site'],
-                'label'                 => $issuingSite['label'],
-                'postOfficeLabel'       => $issuingSite['post_office_label'],
-                'addressNumber'         => $issuingSite['address_number'],
-                'addressStreet'         => $issuingSite['address_street'],
-                'addressAdditional1'    => $issuingSite['address_additional1'],
-                'addressAdditional2'    => $issuingSite['address_additional2'],
-                'addressPostcode'       => $issuingSite['address_postcode'],
-                'addressTown'           => $issuingSite['address_town'],
-                'addressCountry'        => $issuingSite['address_country']
-            ];
+            $registeredMail['recipient']   = json_decode($registeredMail['recipient'], true);
+            $registeredMail['number']      = RegisteredMailController::getRegisteredMailNumber(['type' => $registeredMail['type'], 'rawNumber' => $registeredMail['number']]);
+            $registeredMail['issuingSite'] = $registeredMail['issuing_site'];
             unset($registeredMail['issuing_site']);
         }
 

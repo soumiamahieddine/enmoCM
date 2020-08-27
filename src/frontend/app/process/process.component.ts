@@ -39,8 +39,6 @@ import { of } from 'rxjs/internal/observable/of';
 })
 export class ProcessComponent implements OnInit, OnDestroy {
 
-    
-
     loading: boolean = true;
 
     detailMode: boolean = false;

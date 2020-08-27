@@ -783,6 +783,7 @@
     "indexing_incoming": "incoming",
     "indexing_internal": "internal",
     "indexing_outgoing": "outgoing",
+    "indexing_registeredMail": "registered mail",
     "infoMailevaAccount": "Indicate here your username and the INITIAL password communicated by Maileva when opening your account",
     "information": "Information",
     "informations": "Information",
