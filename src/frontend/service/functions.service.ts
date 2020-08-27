@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { LANG } from '../app/translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { LatinisePipe } from 'ngx-pipes';
 import { AuthService } from './auth.service';
@@ -10,8 +9,6 @@ import { TimeLimitPipe } from '../plugins/timeLimit.pipe';
     providedIn: 'root'
 })
 export class FunctionsService {
-
-    lang: any = LANG;
 
     constructor(
         public translate: TranslateService,

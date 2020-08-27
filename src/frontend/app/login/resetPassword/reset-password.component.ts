@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NotificationService } from '../../../service/notification/notification.service';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../service/auth.service';
@@ -13,7 +12,7 @@ import { AuthService } from '../../../service/auth.service';
 })
 export class ResetPasswordComponent implements OnInit {
 
-    lang: any = LANG;
+    
     loadingForm: boolean = false;
     loading: boolean = false;
 

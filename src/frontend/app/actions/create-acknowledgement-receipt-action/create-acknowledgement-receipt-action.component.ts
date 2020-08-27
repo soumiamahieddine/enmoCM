@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject, ViewChild, OnDestroy } from '@angular/core';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -18,7 +17,7 @@ declare var tinymce: any;
 })
 export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDestroy {
 
-    lang: any = LANG;
+    
     loading: boolean = false;
     loadingInit: boolean = false;
 

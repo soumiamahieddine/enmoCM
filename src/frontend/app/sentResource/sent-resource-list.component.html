@@ -19,10 +19,10 @@
             <mat-cell *matCellDef="let row" class="dataLine" [class.canManage]="row.canManage" style="flex: 1;padding: 0px;flex-direction: column;" (click)="open(row)">
                 <div class="subinfo">
                     <span *ngIf="(row.sendDate === null && row.status === 'SENT' && row.type == 'm2m_ARCHIVETRANSFER') || row.type != 'm2m_ARCHIVETRANSFER'" style="flex:1" [title]="row.creationDate | fullDate">
-                        {{row.type == 'm2m_ARCHIVETRANSFER' ? lang.sent : lang.createdAlt}} : <b>{{row.creationDate | timeAgo : 'full'}}</b>
+                        {{row.type == 'm2m_ARCHIVETRANSFER' ? this.translate.instant('lang.sent') : this.translate.instant('lang.createdAlt')}} : <b>{{row.creationDate | timeAgo : 'full'}}</b>
                     </span>
                     <span *ngIf="row.sendDate !== null" style="flex:1;color:green" [title]="row.sendDate | fullDate">
-                        {{row.type == 'm2m_ARCHIVETRANSFER' ? 'Reçu' : lang.sent}} : <b>{{row.sendDate | timeAgo : 'full'}}</b>
+                        {{row.type == 'm2m_ARCHIVETRANSFER' ? 'Reçu' : this.translate.instant('lang.sent')}} : <b>{{row.sendDate | timeAgo : 'full'}}</b>
                     </span>
                     <span *ngIf="row.status === 'DRAFT'" style="flex:1;color:orange">
                         {{'lang.draft' | translate}}

@@ -7,7 +7,6 @@ import { tap, catchError, finalize } from 'rxjs/operators';
 import { AuthService } from '../../service/auth.service';
 import { NotificationService } from '../../service/notification/notification.service';
 import { environment } from '../../environments/environment';
-import { LangService } from '../../service/app-lang.service';
 import { of } from 'rxjs/internal/observable/of';
 import { HeaderService } from '../../service/header.service';
 import { FunctionsService } from '../../service/functions.service';
@@ -22,7 +21,6 @@ import { LocalStorageService } from '../../service/local-storage.service';
     providers: [TimeLimitPipe]
 })
 export class LoginComponent implements OnInit {
-    lang: any = this.langService.getLang();
     loginForm: FormGroup;
 
     loading: boolean = false;
@@ -33,7 +31,6 @@ export class LoginComponent implements OnInit {
 
     constructor(
         public translate: TranslateService,
-        private langService: LangService,
         private http: HttpClient,
         private router: Router,
         private headerService: HeaderService,

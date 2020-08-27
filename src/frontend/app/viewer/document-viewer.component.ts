@@ -1,6 +1,5 @@
 import {Component, OnInit, Input, ViewChild, EventEmitter, Output, OnDestroy} from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
-import { LANG } from '../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../service/notification/notification.service';
 import { HeaderService } from '../../service/header.service';
@@ -85,7 +84,7 @@ export class DocumentViewerComponent implements OnInit, OnDestroy {
      */
     @Output() triggerEvent = new EventEmitter<string>();
 
-    lang: any = LANG;
+    
 
     loading: boolean = true;
     noConvertedFound: boolean = false;

@@ -16,7 +16,7 @@
                 </div>
                 <div class="alert-message alert-message-info" *ngIf="data.resIds.length == 1  && !noResourceToProcess"
                     role="alert" style="margin-top: 30px;"
-                    [innerHTML]="lang.validateAvisParallelSingle + ' <b>' + ownerOpinion + '</b>'">
+                    [innerHTML]="this.translate.instant('lang.validateAvisParallelSingle') + ' <b>' + ownerOpinion + '</b>'">
                 </div>
 
                 <div class="alert-message alert-message-info" *ngIf="data.resIds.length > 1 && !noResourceToProcess"

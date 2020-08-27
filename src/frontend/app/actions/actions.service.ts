@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../app/translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { tap, catchError, filter, finalize, exhaustMap } from 'rxjs/operators';
 import { of, Subject, Observable } from 'rxjs';
@@ -44,8 +43,6 @@ import { PrintRegisteredMailActionComponent } from './print-registered-mail-acti
 
 @Injectable()
 export class ActionsService implements OnDestroy {
-
-    lang: any = LANG;
 
     mode: string = 'indexing';
 

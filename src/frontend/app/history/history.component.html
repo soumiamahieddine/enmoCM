@@ -28,7 +28,7 @@
             </mat-autocomplete>
         </mat-form-field>
     </div>
-    <button *ngIf="privilegeService.hasCurrentUserPrivilege('view_full_history') && privilegeService.hasCurrentUserPrivilege('view_doc_history')" color="primary" mat-icon-button [title]="!fullHistoryMode ? lang.viewAllHistory : lang.viewActionsHistory" (click)="switchHistoryMode()">
+    <button *ngIf="privilegeService.hasCurrentUserPrivilege('view_full_history') && privilegeService.hasCurrentUserPrivilege('view_doc_history')" color="primary" mat-icon-button [title]="!fullHistoryMode ? this.translate.instant('lang.viewAllHistory') : this.translate.instant('lang.viewActionsHistory')" (click)="switchHistoryMode()">
         <mat-icon class="fas" [class.fa-exchange-alt]="fullHistoryMode" [class.fa-history]="!fullHistoryMode"></mat-icon>
     </button>
     <div class="table-head-tool">
@@ -68,7 +68,7 @@
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="userLabel">
-            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.user | ucfirst}}</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>{{'lang.user' | translate | ucfirst}}</mat-header-cell>
             <mat-cell *matCellDef="let element">
                 {{element.userLabel}} </mat-cell>
         </ng-container>

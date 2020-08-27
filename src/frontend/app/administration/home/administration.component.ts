@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService } from '../../../service/header.service';
@@ -21,7 +20,7 @@ import { FeatureTourService } from '../../../service/featureTour.service';
 })
 export class AdministrationComponent implements OnInit, AfterViewInit {
 
-    lang: any = LANG;
+    
     loading: boolean = false;
 
     shortcutsAdmin: any[] = [];

@@ -56,7 +56,7 @@
                         {{row.chrono}}
                     </span>
                     <span class="main-info-data" style="font-weight:bold;flex:1;"
-                        [class.undefined]="row.subject == lang.undefined"
+                        [class.undefined]="row.subject == this.translate.instant('lang.undefined')"
                         title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                     <span class="main-info-data">
                         <button *ngIf="privilegeService.hasCurrentUserPrivilege('add_links')" mat-icon-button color="warn" [title]="this.translate.instant('lang.unlink')"

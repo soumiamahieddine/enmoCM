@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -9,7 +8,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ViewDocActionComponent implements OnInit {
 
-    lang: any = LANG;
+    
 
     constructor(
         public translate: TranslateService,

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -19,7 +18,7 @@ import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap,
 
 export class AddressBanAutocompleteComponent implements OnInit {
 
-    lang: any = LANG;
+    
 
     loading: boolean = false;
 

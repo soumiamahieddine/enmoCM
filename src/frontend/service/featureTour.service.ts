@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { LANG } from '../app/translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { JoyrideService } from 'ngx-joyride';
 import { LocalStorageService } from './local-storage.service';
@@ -11,8 +10,6 @@ import { Router } from '@angular/router';
     providedIn: 'root'
 })
 export class FeatureTourService {
-
-    lang: any = LANG;
 
     currentStepType: string = '';
 

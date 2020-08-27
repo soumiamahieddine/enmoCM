@@ -1,7 +1,6 @@
 import { Component, OnInit, NgZone, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -31,7 +30,7 @@ export class UserAdministrationComponent implements OnInit {
     @ViewChild('maarchTree', { static: false }) maarchTree: MaarchFlatTreeComponent;
 
 
-    lang: any = LANG;
+    
     loading: boolean = false;
     dialogRef: MatDialogRef<any>;
     highlightMe: boolean = false;
@@ -1002,7 +1001,7 @@ export class UserAdministrationComponent implements OnInit {
     styles: ['.mat-dialog-content{max-height: 65vh;width:600px;}']
 })
 export class UserAdministrationRedirectModalComponent {
-    lang: any = LANG;
+    
 
     redirectUser: String = '';
     processMode: String = '';

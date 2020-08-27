@@ -1,5 +1,4 @@
 import {Pipe, PipeTransform, NgZone, ChangeDetectorRef, OnDestroy} from "@angular/core";
-import { LANG } from '../app/translate.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
@@ -8,7 +7,6 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TimeLimitPipe implements PipeTransform, OnDestroy {
 	private timer: number;
-	lang: any = LANG;
 	constructor(
 		public translate: TranslateService,
 		private changeDetectorRef: ChangeDetectorRef, 

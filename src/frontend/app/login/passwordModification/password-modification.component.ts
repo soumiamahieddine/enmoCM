@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { FormBuilder, FormGroup, Validators, ValidationErrors, AbstractControl, ValidatorFn } from '@angular/forms';
@@ -18,7 +17,7 @@ export class PasswordModificationComponent implements OnInit {
     dialogRef: MatDialogRef<any>;
     config: any = {};
 
-    lang: any = LANG;
+    
     loading: boolean = false;
 
     user: any = {};
@@ -207,7 +206,7 @@ export class PasswordModificationComponent implements OnInit {
 })
 export class InfoChangePasswordModalComponent {
 
-    lang: any = LANG;
+    
 
     constructor(
         public http: HttpClient,

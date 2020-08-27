@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,7 +22,7 @@ export interface StateGroup {
 })
 export class ToolsListComponent implements OnInit {
 
-    lang: any = LANG;
+    
 
 
     @ViewChild(MatAutocompleteTrigger, { static: true }) autocomplete: MatAutocompleteTrigger;

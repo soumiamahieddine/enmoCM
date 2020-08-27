@@ -2,7 +2,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Injectable, Component, Inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { LANG } from '../../app/translate.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -20,7 +19,6 @@ export class CustomSnackbarComponent {
 
 @Injectable()
 export class NotificationService {
-    lang: any = LANG;
 
     constructor(public translate: TranslateService, private router: Router, public snackBar: MatSnackBar) {
     }

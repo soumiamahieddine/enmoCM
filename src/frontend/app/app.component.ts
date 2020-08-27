@@ -5,7 +5,6 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS, MatTooltipDefaultOptions } from '@angular/
 import { HeaderService } from '../service/header.service';
 import { AppService } from '../service/app.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { LangService } from '../service/app-lang.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../service/auth.service';
 import { environment } from '../environments/environment';
@@ -39,7 +38,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
-        public langService: LangService,
         iconReg: MatIconRegistry,
         sanitizer: DomSanitizer,
         public appService: AppService,

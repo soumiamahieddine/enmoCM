@@ -117,7 +117,7 @@
                                 {{element.event_date  | timeAgo : 'full' | ucfirst}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="total_processed">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.totalProcessed | ucfirst}}
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{'lang.totalProcessed' | translate | ucfirst}}
                             </mat-header-cell>
                             <mat-cell *matCellDef="let element" [class.empty]="element.total_processed === 0">
                                 {{element.total_processed}} </mat-cell>

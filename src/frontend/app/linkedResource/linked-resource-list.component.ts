@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../service/notification/notification.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,7 +24,7 @@ declare var $: any;
 })
 export class LinkedResourceListComponent implements OnInit {
 
-    lang: any = LANG;
+    
     loading: boolean = true;
 
     linkedResources: any[] = [];

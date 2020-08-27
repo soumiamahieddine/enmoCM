@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { LANG } from '../../../app/translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/internal/operators/tap';
@@ -16,7 +15,6 @@ import { NotificationService } from '../../../service/notification/notification.
     styleUrls: ['./install-action.component.scss']
 })
 export class InstallActionComponent implements OnInit, AfterViewInit {
-    lang: any = LANG;
     steps: any[] = [];
     customId: string = '';
 

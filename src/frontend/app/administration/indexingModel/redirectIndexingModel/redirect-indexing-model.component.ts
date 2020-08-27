@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { LANG } from '../../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, finalize, map, tap } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
@@ -15,7 +14,7 @@ import { NotificationService } from '../../../../service/notification/notificati
 })
 export class RedirectIndexingModelComponent implements OnInit {
 
-    lang: any = LANG;
+    
 
     indexingModels: any[] = [];
     modelIds: any[] = [];

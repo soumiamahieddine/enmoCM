@@ -4,7 +4,6 @@ import { HeaderService } from '../../../../../service/header.service';
 import { HttpClient } from '@angular/common/http';
 import { FunctionsService } from '../../../../../service/functions.service';
 import { ContactDetailComponent } from '../../../../contact/contact-detail/contact-detail.component';
-import { LANG } from '../../../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { tap, catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
@@ -18,7 +17,7 @@ import { NotificationService } from '../../../../../service/notification/notific
 export class ManageDuplicateComponent implements OnInit {
 
     loading: boolean = false;
-    lang: any = LANG;
+    
 
     contactSelected: number = null;
     contactsExcluded: number[] = [];

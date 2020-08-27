@@ -1,6 +1,5 @@
 import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../service/notification/notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -22,7 +21,7 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class VisaWorkflowComponent implements OnInit {
 
-    lang: any = LANG;
+    
     visaWorkflow: any = {
         roles: ['sign', 'visa'],
         items: []
@@ -102,7 +101,7 @@ export class VisaWorkflowComponent implements OnInit {
             if (this.canManageUser(this.visaWorkflow.items[event.currentIndex], event.currentIndex)) {
                 moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             } else {
-                this.notify.error(`${this.scanPipe.transform(this.translate.instant('lang.moveVisaUserErr'), [this.visaWorkflow.items[event.previousIndex].labelToDisplay])}`);
+                this.notify.error(this.translate.instant('lang.moveVisaUserErr', {value1: this.visaWorkflow.items[event.previousIndex].labelToDisplay}));
             }
         }
     }

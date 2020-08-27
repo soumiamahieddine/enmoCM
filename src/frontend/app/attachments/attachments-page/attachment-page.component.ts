@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { catchError, tap, finalize, exhaustMap, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -27,7 +26,7 @@ import { FunctionsService } from '../../../service/functions.service';
 
 export class AttachmentPageComponent implements OnInit {
 
-    lang: any = LANG;
+    
 
     loading: boolean = true;
     sendMassMode: boolean = false;

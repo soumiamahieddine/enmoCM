@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { catchError, tap, finalize } from 'rxjs/operators';
@@ -15,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class EntitiesExportComponent implements OnInit {
 
-    lang: any = LANG;
+    
     loading: boolean = false;
     loadingExport: boolean = false;
 

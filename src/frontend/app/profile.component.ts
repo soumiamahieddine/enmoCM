@@ -1,6 +1,5 @@
 import { Component, OnInit, NgZone, ViewChild, QueryList, ViewChildren, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from './translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../service/notification/notification.service';
 import { HeaderService } from '../service/header.service';
@@ -29,7 +28,7 @@ declare var tinymce: any;
 export class ProfileComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
-    lang: any = LANG;
+    
 
     highlightMe: boolean = false;
     user: any = {

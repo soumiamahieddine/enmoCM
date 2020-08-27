@@ -1,6 +1,5 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotificationService } from '../../../service/notification/notification.service';
@@ -12,7 +11,7 @@ import { of } from 'rxjs';
     styleUrls: ['add-private-indexing-model-modal.component.scss'],
 })
 export class AddPrivateIndexingModelModalComponent {
-    lang: any               = LANG;
+    
     
     constructor(
         public translate: TranslateService,

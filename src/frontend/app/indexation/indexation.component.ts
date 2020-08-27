@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ViewContainerRef, TemplateRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../service/notification/notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -32,7 +31,7 @@ import { SelectIndexingModelComponent } from './select-indexing-model/select-ind
 })
 export class IndexationComponent implements OnInit {
 
-    lang: any = LANG;
+    
 
     loading: boolean = false;
 

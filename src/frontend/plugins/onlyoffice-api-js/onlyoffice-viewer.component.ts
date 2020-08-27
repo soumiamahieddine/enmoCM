@@ -11,7 +11,6 @@ import {
 import './onlyoffice-api.js';
 import { HttpClient } from '@angular/common/http';
 import { catchError, tap, filter, finalize } from 'rxjs/operators';
-import { LANG } from '../../app/translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmComponent } from '../modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -29,8 +28,6 @@ declare var DocsAPI: any;
     styleUrls: ['onlyoffice-viewer.component.scss'],
 })
 export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit, OnDestroy {
-
-    lang: any = LANG;
 
     loading: boolean = true;
 

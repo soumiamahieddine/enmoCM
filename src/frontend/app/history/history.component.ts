@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../service/notification/notification.service';
 import { HeaderService } from '../../service/header.service';
@@ -21,7 +20,7 @@ import { PrivilegeService } from '../../service/privileges.service';
 })
 export class HistoryComponent implements OnInit {
 
-    lang: any = LANG;
+    
     loading: boolean = false;
 
     fullHistoryMode : boolean = true;

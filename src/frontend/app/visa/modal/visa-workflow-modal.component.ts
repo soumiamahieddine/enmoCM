@@ -1,6 +1,5 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { VisaWorkflowComponent } from '../visa-workflow.component';
@@ -11,7 +10,7 @@ import { VisaWorkflowComponent } from '../visa-workflow.component';
     styleUrls: ['visa-workflow-modal.component.scss'],
 })
 export class VisaWorkflowModalComponent {
-    lang: any = LANG;
+    
 
     @ViewChild('appVisaWorkflow', { static: true }) appVisaWorkflow: VisaWorkflowComponent;
 

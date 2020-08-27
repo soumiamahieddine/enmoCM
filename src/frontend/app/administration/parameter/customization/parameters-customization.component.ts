@@ -139,7 +139,7 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
                         const img = new Image();
                         img.onload = (imgDim: any) => {
                             if (imgDim.target.width < 1920 || imgDim.target.height < 1080) {
-                                this.notify.error(this.scanPipe.transform(this.translate.instant('lang.badImageResolution'), ['1920x1080']));
+                                this.notify.error(this.translate.instant('lang.badImageResolution', {value1: '1920x1080'}));
                             } else {
                                 this.backgroundList.push({
                                     filename: value.target.result,
@@ -163,15 +163,15 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
 
         if (mode === 'logo') {
             if (file.size > 5000000) {
-                return this.scanPipe.transform(this.translate.instant('lang.maxFileSizeExceeded'), ['5mo']);
+                return this.translate.instant('lang.maxFileSizeExceeded', {value1: '5mo'});
             } else if (allowedExtension.indexOf(file.type) === -1) {
-                return this.scanPipe.transform(this.translate.instant('lang.onlyExtensionsAllowed'), [allowedExtension.join(', ')]);
+                return this.translate.instant('lang.onlyExtensionsAllowed', {value1: allowedExtension.join(', ')});
             }
         } else {
             if (file.size > 10000000) {
-                return this.scanPipe.transform(this.translate.instant('lang.maxFileSizeExceeded'), ['10mo']);
+                return this.translate.instant('lang.maxFileSizeExceeded', {value1: '10mo'});
             } else if (allowedExtension.indexOf(file.type) === -1) {
-                return this.scanPipe.transform(this.translate.instant('lang.onlyExtensionsAllowed'), [allowedExtension.join(', ')]);
+                return this.translate.instant('lang.onlyExtensionsAllowed', {value1: allowedExtension.join(', ')});
             }
         }
         return true;

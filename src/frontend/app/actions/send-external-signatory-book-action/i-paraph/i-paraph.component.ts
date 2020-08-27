@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { LANG } from '../../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class IParaphComponent implements OnInit {
 
-    lang: any = LANG;
+    
     loading: boolean = false;
 
     currentAccount: any = null;

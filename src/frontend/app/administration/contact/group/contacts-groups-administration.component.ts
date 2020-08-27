@@ -1,6 +1,5 @@
 import { Component, ViewChild, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { HeaderService } from '../../../../service/header.service';
@@ -23,7 +22,7 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
-    lang: any = LANG;
+    
     search: string = null;
 
     contactsGroups: any[] = [];

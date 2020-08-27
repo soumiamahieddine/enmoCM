@@ -16,12 +16,12 @@
                 </div>
                 <div class="alert-message alert-message-info" *ngIf="data.resIds.length == 1  && !noResourceToProcess"
                     role="alert" style="margin-top: 30px;"
-                    [innerHTML]="'<b>' + ownerOpinion + '</b> '+ lang.askOpinionUser + ' :<br/><br/>' + opinionContent">
+                    [innerHTML]="'<b>' + ownerOpinion + '</b> '+ this.translate.instant('lang.askOpinionUser') + ' :<br/><br/>' + opinionContent">
                 </div>
                 <div class="alert-message alert-message-info"
                     *ngIf="data.resIds.length == 1 && appAvisWorkflow !== undefined && appAvisWorkflow.getNextAvisUser() !== ''"
                     role="alert" style="margin-top: 30px;"
-                    [innerHTML]="lang.sendToDocTo + ' <b>' + appAvisWorkflow.getNextAvisUser().labelToDisplay + '</b>'">
+                    [innerHTML]="this.translate.instant('lang.sendToDocTo') + ' <b>' + appAvisWorkflow.getNextAvisUser().labelToDisplay + '</b>'">
                 </div>
 
                 <div class="alert-message alert-message-info"

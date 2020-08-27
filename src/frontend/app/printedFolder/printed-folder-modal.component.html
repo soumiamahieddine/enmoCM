@@ -66,7 +66,7 @@
                                         <div color="primary"
                                             style="flex:1;display: flex;font-size: 80%;white-space: pre;padding-right: 10px;"
                                             *ngIf="!functions.empty(element.recipients)">
-                                            {{lang.for | ucfirst}} : {{element.recipients}}
+                                            {{'lang.for' | translate | ucfirst}} : {{element.recipients}}
                                         </div>
                                         <div *ngIf="!functions.empty(element.creator)" color="primary"
                                             style="flex:1;font-size: 80%;padding-right: 10px;">

@@ -27,7 +27,7 @@
                             </mat-card-subtitle>
                             <i class="contact-filling fa fa-circle"
                                 *ngIf="option.type === 'contact' && !empty(option.fillingRate.rate)"
-                                [title]="lang.contactsFillingRate + ' : ' + option.fillingRate.rate + '%'" [style.color]="option.fillingRate.color"></i>
+                                [title]="this.translate.instant('lang.contactsFillingRate') + ' : ' + option.fillingRate.rate + '%'" [style.color]="option.fillingRate.color"></i>
                         </mat-card-header>
                         <mat-card-content>
                             <mat-list>

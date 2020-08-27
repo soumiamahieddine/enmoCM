@@ -223,7 +223,7 @@
                                                     <ng-container *ngFor="let mode of adminModes | sortBy : 'label'">
                                                         <mat-option [value]="mode.id"
                                                             [disabled]="headerService.user.mode === 'standard' && ['root_visible','root_invisible'].indexOf(mode.id) > -1"
-                                                            [title]="headerService.user.mode === 'standard' && ['root_visible','root_invisible'].indexOf(mode.id) > -1 ? lang.mustSuperadmin : ''">
+                                                            [title]="headerService.user.mode === 'standard' && ['root_visible','root_invisible'].indexOf(mode.id) > -1 ? this.translate.instant('lang.mustSuperadmin') : ''">
                                                             {{mode.label}}
                                                         </mat-option>
                                                     </ng-container>

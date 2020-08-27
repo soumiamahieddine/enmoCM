@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -33,7 +32,7 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
 
-    lang: any = LANG;
+    
     loading: boolean = false;
 
     entities: any[] = [];
@@ -792,7 +791,7 @@ export class EntitiesAdministrationComponent implements OnInit {
     ]
 })
 export class EntitiesAdministrationRedirectModalComponent {
-    lang: any = LANG;
+    
 
     constructor(public translate: TranslateService, public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<EntitiesAdministrationRedirectModalComponent>) {
         console.log(this.data.entity.redirectEntity);

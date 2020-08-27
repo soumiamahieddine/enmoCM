@@ -1,6 +1,5 @@
 import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { LANG } from '../../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { SearchAdvListComponent } from '../../adv-search/list/search-adv-list.component';
@@ -13,7 +12,7 @@ import { catchError, tap } from 'rxjs/operators';
     styleUrls: ['link-resource-modal.component.scss'],
 })
 export class LinkResourceModalComponent {
-    lang: any = LANG;
+    
 
     searchUrl: string = '';
 

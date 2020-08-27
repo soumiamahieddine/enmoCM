@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild, EventEmitter, Input, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../translate.component';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../service/notification/notification.service';
 import { of } from 'rxjs';
@@ -20,7 +19,7 @@ import { SentNumericPackagePageComponent } from './sent-numeric-package-page/sen
 })
 export class SentResourceListComponent implements OnInit {
 
-    lang: any = LANG;
+    
     loading: boolean = true;
 
     dataSource: any;
