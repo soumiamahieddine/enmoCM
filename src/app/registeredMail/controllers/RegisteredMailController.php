@@ -167,47 +167,6 @@ class RegisteredMailController
         return $response->withJson(['test' => 2]);
     }
 
-    public function printDepositSlipTest(Request $request, Response $response)
-    {
-        $args = [
-            'site' => [
-                'label'           => 'Dunder Mifflin Scranton',
-                'accountNumber'   => 42,
-                'addressNumber'   => '1725',
-                'addressStreet'   => 'Slough Avenue',
-                'addressPostcode' => '18505',
-                'addressTown'     => 'Scranton',
-                'postOfficeLabel' => 'Scranton Post Office'
-            ],
-            'type' => '2D',
-            'trackingNumber' => '1234567890',
-            'departureDate' => '26/08/2010',
-            'registeredMails' => [
-                [
-                    'type'      => '2D',
-                    'number'    => '551',
-                    'warranty'  => 'R2',
-                    'letter'    => true,
-                    'reference' => '15/08/2020 - ma ref',
-                    'recipient' => [
-                        'AFNOR',
-                        'PSG',
-                        'Eric Choupo',
-                        'Porte 160',
-                        '5 Rue de Paris',
-                        'Batiment C',
-                        '75001 Paris',
-                        'FRANCE'
-                    ]
-                ]
-            ]
-        ];
-
-        $result = RegisteredMailController::getDepositSlipPdf($args);
-
-        return $response->withJson($result);
-    }
-
     public static function getRegisteredMailPDF(array $args)
     {
         $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $args['number']]);
@@ -582,7 +541,7 @@ class RegisteredMailController
         return ['fileContent' => $fileContent];
     }
 
-    public static function getDepositSlipPdf(array $args)
+    public static function getDepositListPdf(array $args)
     {
         $pdf = new Fpdi();
         $pdf->setPrintHeader(false);
@@ -677,12 +636,7 @@ class RegisteredMailController
             $pdf->Cell(30, 10, $registeredMailNumber, 1);
             $pdf->Cell(10, 10, $registeredMail['warranty'], 1);
             $pdf->Cell(15, 10, "", 1);
-            if (strlen($registeredMail['reference']) > 19) {
-                $pdf->Cell(30, 10, "", 1);
-            } else {
-//                    $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 10, ""), 1); // TODO strim width ???
-                $pdf->Cell(30, 10, $registeredMail['reference'], 1);
-            }
+            $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 25, ""), 1);
 
             $pdf->setFont('times', '', 6);
             if (strlen($registeredMail['recipient'][1] . " " . $registeredMail['recipient'][4] . " " . $registeredMail['recipient'][6]) > 60) {
@@ -697,7 +651,7 @@ class RegisteredMailController
 
             $pdf->Ln();
             //contrôle du nb de reco présent sur la page. Si 16 lignes, changement de page et affichage du footer
-            if ($position % 16 >= 15) {
+            if ($position % 12 >= 11) {
                 $pdf->SetXY(10, 276);
                 $pdf->setFont('times', 'I', 8);
                 $pdf->Cell(0, 0, "*Niveau de garantie (R1 pour tous ou R2, R3");
@@ -709,7 +663,6 @@ class RegisteredMailController
             }
         }
 
-        $position = 0;
         //contrôle du nb de reco présent sur la page. Si trop, saut de page pour la partie réservé à la poste
         if ($position % 10 >= 9) {
             $pdf->SetXY(10, 276);
@@ -749,7 +702,7 @@ class RegisteredMailController
         $pdf->Cell(0, 0, $page . '/' . $nb);
 
         $fileContent = $pdf->Output('', 'S');
-        return ['encodedFileContent' => base64_encode($fileContent)];
+        return ['fileContent' => $fileContent];
     }
 
     public static function getFormattedRegisteredMail(array $args)

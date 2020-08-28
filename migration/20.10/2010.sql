@@ -246,6 +246,8 @@ CREATE TABLE IF NOT EXISTS registered_mail_resources (
     CONSTRAINT registered_mail_resources_unique_key UNIQUE (res_id)
 );
 
+INSERT INTO parameters (id, param_value_int) VALUES ('last_deposit_id', 0);
+
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
 SELECT r.res_id,

@@ -456,4 +456,14 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>printDepositList</ID>
+        <LABEL>_PRINT_DEPOSIT_LIST</LABEL>
+        <NAME>printDepositList</NAME>
+        <DESC>_PRINT_DEPOSIT_LIST</DESC>
+        <component>printDepositListAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>

@@ -13,6 +13,7 @@
 namespace RegisteredMail\controllers;
 
 use Contact\controllers\ContactController;
+use Parameter\models\ParameterModel;
 use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
 use RegisteredMail\models\RegisteredNumberRangeModel;
@@ -251,23 +252,36 @@ trait RegisteredMailTrait
         return ['data' => $data];
     }
 
-    public static function printDepositSlip(array $args)
+    public static function printDepositList(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
         static $processedResources;
-        static $data;
+        static $filesByType;
+        static $currentDepositId;
+        static $registeredMailsIdsByType;
+        static $processedTypes;
 
-        if ($data === null) {
-            $data = [
+        if ($filesByType === null) {
+            $filesByType = [
                 '2D' => null,
                 '2C' => null,
                 'RW' => null
             ];
         }
+        if ($registeredMailsIdsByType === null) {
+            $registeredMailsIdsByType = [
+                '2D' => [],
+                '2C' => [],
+                'RW' => []
+            ];
+        }
         if ($processedResources === null) {
             $processedResources = [];
+        }
+        if ($processedTypes === null) {
+            $processedTypes = [];
         }
 
         if (in_array($args['resId'], $processedResources)) {
@@ -275,13 +289,14 @@ trait RegisteredMailTrait
         }
 
         $registeredMail = RegisteredMailModel::getWithResources([
-            'select' => ['issuing_site', 'type', 'number', 'warranty', 'recipient', 'generated', 'departure_date'],
+            'select' => ['issuing_site', 'type', 'number', 'warranty', 'recipient', 'generated', 'departure_date', 'deposit_id'],
             'where'  => ['res_letterbox.res_id = ?'],
             'data'   => [$args['resId']]
         ]);
-        if (empty($registeredMail)) {
+        if (empty($registeredMail[0])) {
             return ['errors' => ['No registered mail for this resource']];
         }
+        $registeredMail = $registeredMail[0];
 
         if (!$registeredMail['generated']) {
             return ['errors' => ['Registered mail not generated for this resource']];
@@ -290,17 +305,37 @@ trait RegisteredMailTrait
         $site = IssuingSiteModel::getById(['id' => $registeredMail['issuing_site']]);
 
         $range = RegisteredNumberRangeModel::get([
-            'where' => ['site_id = ?', 'type = ?'],
-            'data'  => [$registeredMail['issuing_site'], $registeredMail['type']]
+            'where' => ['site_id = ?', 'type = ?', 'range_start <= ?', 'range_end >= ?'],
+            'data'  => [$registeredMail['issuing_site'], $registeredMail['type'], $registeredMail['number'], $registeredMail['number']]
         ]);
+        if (empty($range[0])) {
+            return ['errors' => ['No range found']];
+        }
+        $range = $range[0];
 
-        $registeredMails = RegisteredMailModel::getWithResources([
-            'select' => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id'],
-            'where'  => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'generated = ?'],
-            'data'   => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], true]
-        ]);
+        if (empty($registeredMail['deposit_id'])) {
+            $registeredMails = RegisteredMailModel::getWithResources([
+                'select'  => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id'],
+                'where'   => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'generated = ?'],
+                'data'    => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], true],
+                'orderBy' => ['number']
+            ]);
 
-        $args = [
+            if (empty($currentDepositId) || !in_array($registeredMail['type'], $processedTypes)) {
+                $lastDepositId = ParameterModel::getById(['id' => 'last_deposit_id', 'select' => ['param_value_int']]);
+                $currentDepositId = $lastDepositId['param_value_int'] + 1;
+                ParameterModel::update(['id' => 'last_deposit_id', 'param_value_int' => $currentDepositId]);
+            }
+        } else {
+            $registeredMails = RegisteredMailModel::getWithResources([
+                'select'  => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id'],
+                'where'   => ['deposit_id = ?'],
+                'data'    => [$registeredMail['deposit_id']],
+                'orderBy' => ['number']
+            ]);
+        }
+
+        $resultPDF = RegisteredMailController::getDepositListPdf([
             'site'            => [
                 'label'              => $site['label'],
                 'postOfficeLabel'    => $site['post_office_label'],
@@ -317,16 +352,67 @@ trait RegisteredMailTrait
             'trackingNumber'  => $range['tracking_account_number'],
             'departureDate'   => $registeredMail['departure_date'],
             'registeredMails' => $registeredMails
-        ];
-
-        $resultPDF = RegisteredMailController::getDepositSlipPdf($args);
+        ]);
 
         $resIds = array_column($registeredMails, 'res_id');
-
         $processedResources = array_merge($processedResources, $resIds);
+        $registeredMailsIdsByType[$registeredMail['type']] = $resIds;
 
-        $data[$registeredMail['type']] = $resultPDF['encodedFileContent'];
+        $filesByType[$registeredMail['type']] = base64_encode($resultPDF['fileContent']);
 
-        return ['data' => $data];
+        if (!empty($currentDepositId)) {
+            foreach ($registeredMailsIdsByType as $type => $ids) {
+                if (!empty($ids) && !in_array($type, $processedTypes)) {
+                    RegisteredMailModel::update([
+                        'set'   => ['deposit_id' => $currentDepositId],
+                        'where' => ['res_id in (?)'],
+                        'data'  => [$ids]
+                    ]);
+                }
+            }
+        }
+        $processedTypes[] = $registeredMail['type'];
+
+        $finalFile = null;
+        foreach ($filesByType as $type => $file) {
+            if (empty($file)) {
+                continue;
+            }
+            if (empty($finalFile)) {
+                $finalFile = $file;
+                continue;
+            }
+
+            $concatPdf = new Fpdi('P', 'pt');
+            $concatPdf->setPrintHeader(false);
+            $concatPdf->setPrintFooter(false);
+            $tmpPath = CoreConfigModel::getTmpPath();
+
+            $firstFile = $tmpPath . 'depositList_first_file' . rand() . '.pdf';
+            file_put_contents($firstFile, base64_decode($finalFile));
+            $pageCount = $concatPdf->setSourceFile($firstFile);
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $pageId = $concatPdf->ImportPage($pageNo);
+                $s = $concatPdf->getTemplatesize($pageId);
+                $concatPdf->AddPage($s['orientation'], $s);
+                $concatPdf->useImportedPage($pageId);
+            }
+
+            $secondFile = $tmpPath . 'depositList_second_file' . rand() . '.pdf';
+            file_put_contents($secondFile, base64_decode($file));
+            $concatPdf->setSourceFile($secondFile);
+            $pageId = $concatPdf->ImportPage(1);
+            $s = $concatPdf->getTemplatesize($pageId);
+            $concatPdf->AddPage($s['orientation'], $s);
+            $concatPdf->useImportedPage($pageId);
+
+            $fileContent = $concatPdf->Output('', 'S');
+
+            $finalFile = base64_encode($fileContent);
+            unlink($firstFile);
+            unlink($secondFile);
+        }
+
+        return ['data' => ['encodedFile' => $finalFile]];
     }
 }

@@ -1010,6 +1010,7 @@ INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnails
 INSERT INTO parameters (id, description, param_value_int) VALUES ('keepDestForRedirection', 'Si activé (1), met le destinataire en copie de la liste de diffusion lors d''une action de redirection', 0);
 INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'Si activé (1), ajoute "Maarch_" dans le contenu des QrCode générés. (Utilisable avec MaarchCapture >= 1.4)', 0);
 INSERT INTO parameters (id, description, param_value_int) VALUES ('workingDays', 'Si activé (1), les délais de traitement sont calculés en jours ouvrés (Lundi à Vendredi). Sinon, en jours calendaire', 1);
+INSERT INTO parameters (id, param_value_int) VALUES ('last_deposit_id', 0);
 
 ------------
 --DIFFLIST_TYPES

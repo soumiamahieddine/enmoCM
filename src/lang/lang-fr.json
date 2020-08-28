@@ -1943,5 +1943,7 @@
     "argumentMailNotCorrect": "La donnée mail n'est pas correcte pour un utilisateur.",
     "argumentPhoneNotCorrect": "La donnée phone n'est pas correcte pour un utilisateur.",
     "authorizedRoutesInformations": "Une route par ligne. Documentation des routes",
-    "canNotDisabledField": "Le champ ne peut pas être désactivé car il est vide et obligatoire"
+    "canNotDisabledField": "Le champ ne peut pas être désactivé car il est vide et obligatoire",
+    "registeredMailsIncluded": "Nombre de recommandés inclus :",
+    "cannotGenerateDepositListForMails": "Génération impossible pour les recommandés suivants :"
 }
