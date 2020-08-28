@@ -17,6 +17,7 @@ use Com\Tecnick\Barcode\Barcode;
 use RegisteredMail\models\RegisteredMailModel;
 use RegisteredMail\models\RegisteredNumberRangeModel;
 use Resource\controllers\ResController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
@@ -44,8 +45,6 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body type is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['warranty'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body warranty is empty or not a string']);
-        } elseif (!Validator::date()->notEmpty()->validate($body['departureDate'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body departureDate is empty or not a date']);
         } elseif (!in_array($body['type'], ['2D', '2C', 'RW'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body type is not correct']);
         } elseif (!in_array($body['type'], ['2D', '2C', 'RW'])) {
@@ -56,13 +55,20 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body warranty R3 is not allowed for type RW']);
         }
 
-        $date = new \DateTime($body['departureDate']);
+        $resource = ResModel::getById(['select' => ['departure_date'], 'resId' => $args['resId']]);
+        $date = new \DateTime($resource['departure_date']);
         $date = $date->format('d/m/Y');
 
+        $refPos = strpos($body['reference'], '-');
+        if ($refPos !== false) {
+            $body['reference'] = substr_replace($body['reference'], "{$date} -", 0, $refPos);
+        } else {
+            $body['reference'] = "{$date} - {$body['reference']}";
+        }
         $set = [
             'type'      => $body['type'],
             'warranty'  => $body['warranty'],
-            'reference' => "{$date} - {$body['reference']}"
+            'reference' => $body['reference']
         ];
 
         if ($registeredMail['type'] != $body['type']) {

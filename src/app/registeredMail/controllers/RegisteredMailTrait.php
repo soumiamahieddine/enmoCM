@@ -174,6 +174,12 @@ trait RegisteredMailTrait
             return ['errors' => ['No registered mail for this resource']];
         }
 
+        RegisteredMailModel::update([
+            'set'   => ['generated' => true],
+            'where' => ['res_id = ?'],
+            'data'  => [$args['resId']]
+        ]);
+
         $issuingSite = IssuingSiteModel::getById([
             'id'        => $registeredMail['issuing_site'],
             'select'    => ['post_office_label', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country']
