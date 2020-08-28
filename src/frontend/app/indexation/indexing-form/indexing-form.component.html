@@ -50,7 +50,8 @@
                                     </button>
                                     <mat-divider *ngIf="!field.system"></mat-divider>
                                     <button mat-menu-item (click)="removeItem('indexingModels_'+category,field,i)" 
-                                        *ngIf="!field.system && field.identifier.indexOf('registeredMail_') === -1">
+                                        *ngIf="!field.system && field.identifier.indexOf('registeredMail_') === -1 && ((currentCategory == 'registeredMail' && field.identifier != 'departureDate') || 
+                                            currentCategory != 'registeredMail')">
                                         <mat-icon class="fa fa-trash" color="warn"></mat-icon>
                                         <span>{{'lang.delete' | translate}}</span>
                                     </button>

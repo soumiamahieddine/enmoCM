@@ -443,16 +443,20 @@ export class IndexingFormComponent implements OnInit {
 
                 this.http.put(`../rest/resources/${this.resId}`, formatdatas).pipe(
                     tap(() => {
-                        if (this.currentCategory == 'registeredMail') {
+                        if (this.currentCategory === 'registeredMail') {
                             this.http.put(`../rest/registeredMails/${this.resId}`, {
-                                    departureDate: formatdatas.departureDate,
                                     type: formatdatas.registeredMail_type,
                                     warranty: formatdatas.registeredMail_warranty,
                                     issuingSiteId: formatdatas.registeredMail_issuingSite.split('#').slice(-1)[0],
                                     letter: formatdatas.registeredMail_letter,
                                     recipient: formatdatas.registeredMail_recipient,
                                     reference: formatdatas.registeredMail_reference
-                            }).subscribe();
+                            }).pipe(
+                                catchError((err: any) => {
+                                    this.notify.handleErrors(err);
+                                    return of(false);
+                                })
+                            ).subscribe();
                         }
                     }),
                     tap(() => {
