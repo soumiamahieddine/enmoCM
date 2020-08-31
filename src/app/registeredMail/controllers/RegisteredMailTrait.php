@@ -170,13 +170,13 @@ trait RegisteredMailTrait
 
         static $data;
 
-        $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'number', 'warranty', 'letter', 'recipient'], 'resId' => $args['resId']]);
+        $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'number', 'warranty', 'letter', 'recipient', 'reference'], 'resId' => $args['resId']]);
         if (empty($registeredMail)) {
             return ['errors' => ['No registered mail for this resource']];
         }
 
         RegisteredMailModel::update([
-            'set'   => ['generated' => true],
+            'set'   => ['generated' => 'true'],
             'where' => ['res_id = ?'],
             'data'  => [$args['resId']]
         ]);

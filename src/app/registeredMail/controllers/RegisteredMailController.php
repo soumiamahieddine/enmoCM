@@ -230,6 +230,17 @@ class RegisteredMailController
         $barcode = new Barcode();
 
         if ($args['type'] != 'RW') {
+            // DATA TEST
+            // if ($args['type'] == '2C') {
+            //     $pdf->setSourceFile('/var/www/html/ar.pdf');
+            // } else {
+            //     $pdf->setSourceFile('/var/www/html/sansar.pdf');
+            // }
+            // $pageId = $pdf->ImportPage(1);
+            // $pageInfo = $pdf->getTemplatesize($pageId);
+            // $pdf->AddPage($pageInfo['orientation'], $pageInfo);
+            // $pdf->useImportedPage($pageId);
+
             // TODO INFO FEUILLE 1 : GAUCHE
             $pdf->SetXY(50, 8);
             $pdf->cell(0, 0, $registeredMailNumber);
@@ -434,7 +445,13 @@ class RegisteredMailController
             $pdf->SetXY(5, 280);
             $pdf->Multicell(40, 5, $args['reference']);
         } else {
-            //TODO INFO RW
+            // DATA TEST
+            // $pdf->setSourceFile('/var/www/html/international.pdf');
+            // $pageId = $pdf->ImportPage(1);
+            // $pageInfo = $pdf->getTemplatesize($pageId);
+            // $pdf->AddPage($pageInfo['orientation'], $pageInfo);
+            // $pdf->useImportedPage($pageId);
+
             $pdf->setFont('times', '', '8');
 
             $y = 27;
@@ -465,47 +482,56 @@ class RegisteredMailController
             $pdf->SetXY(127, $y);
             $pdf->cell(0, 0, $args['recipient'][7]);
 
-
-            $y = 7;
-            $pdf->SetXY(10, $y);
+            $y = 2;
+            $pdf->SetXY(26, $y);
             $pdf->cell(0, 0, $args['sender'][1]);
 
             $y += 3;
-            $pdf->SetXY(10, $y);
+            $pdf->SetXY(26, $y);
             $pdf->cell(0, 0, $args['sender'][2]);
 
             $y += 3;
-            $pdf->SetXY(10, $y);
+            $pdf->SetXY(26, $y);
             $pdf->cell(0, 0, $args['sender'][3]);
 
             $y += 3;
-            $pdf->SetXY(10, $y);
+            $pdf->SetXY(26, $y);
             $pdf->cell(0, 0, $args['sender'][4]);
 
             $y += 3;
-            $pdf->SetXY(10, $y);
+            $pdf->SetXY(26, $y);
             $pdf->cell(0, 0, $args['sender'][5]);
 
             $y += 3;
-            $pdf->SetXY(10, $y);
+            $pdf->SetXY(26, $y);
             $pdf->cell(0, 0, "{$args['sender'][6]}, {$args['sender'][7]}");
+
+            $pdf->SetXY(37.5, 22);
+            $pdf->cell(0, 0, $args['sender'][7]);
 
             $pdf->SetFont('times', '', 11);
 
             if ($args['warranty'] == 'R1') {
-                $pdf->SetXY(71, 27);
+                $pdf->SetXY(70.2, 24.4);
                 $pdf->cell(0, 0, 'X');
             } elseif ($args['warranty'] == 'R2') {
-                $pdf->SetXY(78, 27);
+                $pdf->SetXY(77.2, 24.4);
                 $pdf->cell(0, 0, 'X');
             }
 
-            $pdf->SetXY(56, 37);
+            $pdf->SetXY(52, 27.5);
+            $pdf->cell(0, 0, $registeredMailNumber);
+
+            $pdf->SetXY(52, 36.5);
             $pdf->cell(0, 0, $registeredMailNumber);
             $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
-            $pdf->Image('@'.$barcodeObj->getPngData(), 56, 42, 60, 12, '', '', '', false, 300);
+            $pdf->Image('@'.$barcodeObj->getPngData(), 38, 41, 60, 10, '', '', '', false, 300);
 
-            $pdf->SetXY(56, 53);
+            $pdf->SetXY(52, 57);
+            $pdf->cell(0, 0, $registeredMailNumber);
+            $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
+            $pdf->Image('@'.$barcodeObj->getPngData(), 38, 62, 60, 10, '', '', '', false, 300);
+            $pdf->SetXY(52, 72);
             $pdf->cell(0, 0, $registeredMailNumber);
 
             $pdf->setFont('times', '', '8');
@@ -538,23 +564,13 @@ class RegisteredMailController
             $pdf->SetXY(103, $y);
             $pdf->cell(0, 0, $args['sender'][7]);
 
-            $pdf->SetFont('times', '', 11);
-
-            if ($args['letter'] === true) {
-                $pdf->SetXY(21, 239);
-                $pdf->cell(0, 0, 'X');
-            } else {
-                $pdf->SetXY(29, 239);
-                $pdf->cell(0, 0, 'X');
-            }
-
-            $pdf->setFont('times', '', '8');
-
-            $pdf->SetXY(120, 210);
+            $pdf->SetXY(120, 209);
             $pdf->cell(0, 0, $registeredMailNumber);
 
+            $pdf->setFont('times', '', '10');
             $pdf->SetXY(95, 219);
             $pdf->Multicell(70, 5, $args['reference']);
+            $pdf->setFont('times', '', '8');
 
             $y = 208;
             $pdf->SetXY(20, $y);
