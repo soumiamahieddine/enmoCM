@@ -1913,5 +1913,10 @@
     "authorizedRoutesInformations": "One route per row. Routes documentation",
     "canNotDisabledField": "This field can not be disabled because it is empty and mandatory",
     "registeredMailsIncluded": "Number of registered mails included",
-    "cannotGenerateDepositListForMails": "Imposible to generate for the following registered mails :"
+    "cannotGenerateDepositListForMails": "Imposible to generate for the following registered mails :",
+    "accountNumberAlreadyUsed": "Account number is already used by another issuing site",
+    "rangeStartLargerThanRangeEnd": "Range start cannot be larger than range end",
+    "trackingNumberAlreadyUsed": "Tracking number is already used",
+    "rangeOverlaps": "Range overlaps another range",
+    "siteIsUsedByActiveRange": "Cannot delete issuing site : site is used by an active range"
 }

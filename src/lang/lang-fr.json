@@ -1945,5 +1945,10 @@
     "authorizedRoutesInformations": "Une route par ligne. Documentation des routes",
     "canNotDisabledField": "Le champ ne peut pas être désactivé car il est vide et obligatoire",
     "registeredMailsIncluded": "Nombre de recommandés inclus :",
-    "cannotGenerateDepositListForMails": "Génération impossible pour les recommandés suivants :"
+    "cannotGenerateDepositListForMails": "Génération impossible pour les recommandés suivants :",
+    "accountNumberAlreadyUsed": "Le N° COCLICO est déjà utilisé par un autre site émetteur",
+    "rangeStartLargerThanRangeEnd": "Le début de la plage ne peut pas être plus grand que la fin de la plage",
+    "trackingNumberAlreadyUsed": "Le numéro de suivi est déjà utilisé",
+    "rangeOverlaps": "La plage chevauche une autre plage",
+    "siteIsUsedByActiveRange": "Impossible de supprimer le site émetteur : le site est utilisé par une plage active"
 }
