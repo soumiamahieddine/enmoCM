@@ -632,6 +632,7 @@ $app->get('/registeredMail/sites/type/{type}', \RegisteredMail\controllers\Issui
 
 $app->get('/registeredMail/countries', \RegisteredMail\controllers\RegisteredMailController::class . ':getCountries');
 
+$app->put('/registeredMails/acknowledgement', \RegisteredMail\controllers\RegisteredMailController::class . ':receiveAcknowledgement');
 $app->put('/registeredMails/{resId}', \RegisteredMail\controllers\RegisteredMailController::class . ':update');
 //TODO remove
 $app->get('/registeredMail/print', \RegisteredMail\controllers\RegisteredMailController::class . ':printTest');

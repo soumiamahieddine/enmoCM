@@ -47,8 +47,6 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body warranty is empty or not a string']);
         } elseif (!in_array($body['type'], ['2D', '2C', 'RW'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body type is not correct']);
-        } elseif (!in_array($body['type'], ['2D', '2C', 'RW'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body type is not correct']);
         } elseif (!in_array($body['warranty'], ['R1', 'R2', 'R3'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body warranty is not correct']);
         } elseif ($body['type'] == 'RW' && $body['warranty'] == 'R3') {
@@ -112,6 +110,56 @@ class RegisteredMailController
             fclose($handle);
         }
         return $response->withJson(['countries' => $countries]);
+    }
+
+    public function receiveAcknowledgement(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['type']) && !in_array($body['type'], ['distributed', 'notDistributed'])) {
+            return $response->withStatus(400)->withJson(['errors' => "Body type is empty or is not 'distributed' or 'notDistributed'"]);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['number'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body number is empty or not a string']);
+        }
+
+        $number = substr($body['number'], 3, 12);
+        $number = str_replace(' ', '', $number);
+
+        $registeredMail = RegisteredMailModel::get([
+            'select' => ['id', 'res_id'],
+            'where'  => ['number = ?'],
+            'data'   => [$number]
+        ]);
+        if (empty($registeredMail)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Registered mail number not found']);
+        }
+
+        if ($body['type'] == 'distributed') {
+            $set = ['received_date' => 'CURRENT_TIMESTAMP'];
+            $status = 'DSTRIBUTED';
+        } else {
+            if (!Validator::stringType()->notEmpty()->validate($body['returnReason'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body returnReason is empty or not a string']);
+            } elseif (!Validator::date()->notEmpty()->validate($body['receivedDate'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body receivedDate is empty or not a date']);
+            }
+
+            $set = ['received_date' => $body['receivedDate'], 'return_reason' => $body['returnReason'], 'return_reason_other' => $body['returnReasonOther'] ?? null];
+            $status = 'PND';
+        }
+
+        RegisteredMailModel::update([
+            'set'   => $set,
+            'where' => ['id = ?'],
+            'data'  => [$registeredMail['id']]
+        ]);
+        ResModel::update([
+            'set'   => ['status' => $status],
+            'where' => ['res_id = ?'],
+            'data'  => [$registeredMail['res_id']]
+        ]);
+
+        return $response->withStatus(204);
     }
 
     public static function getRegisteredMailNumber(array $args)
