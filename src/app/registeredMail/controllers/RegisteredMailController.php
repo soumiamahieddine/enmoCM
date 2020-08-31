@@ -61,14 +61,15 @@ class RegisteredMailController
 
         $refPos = strpos($body['reference'], '-');
         if ($refPos !== false) {
-            $body['reference'] = substr_replace($body['reference'], "{$date} -", 0, $refPos);
+            $body['reference'] = substr_replace($body['reference'], "{$date} ", 0, $refPos);
         } else {
             $body['reference'] = "{$date} - {$body['reference']}";
         }
         $set = [
             'type'      => $body['type'],
             'warranty'  => $body['warranty'],
-            'reference' => $body['reference']
+            'reference' => $body['reference'],
+            'letter'    => empty($body['letter']) ? 'false' : 'true',
         ];
 
         if ($registeredMail['type'] != $body['type']) {
