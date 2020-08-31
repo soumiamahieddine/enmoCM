@@ -13,7 +13,6 @@ import { of } from 'rxjs';
 })
 export class SaveAndPrintRegisteredMailActionComponent implements OnInit {
 
-    
     loading: boolean = false;
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
@@ -54,6 +53,10 @@ export class SaveAndPrintRegisteredMailActionComponent implements OnInit {
                 })
             ),
             tap((data: any) => {
+                if (data && data.errors != null) {
+                    this.notify.error(data.errors);
+                    return of(false);
+                }
                 const downloadLink = document.createElement('a');
                 downloadLink.href = `data:application/pdf;base64,${data}`;
                 downloadLink.setAttribute('download', 'recommande.pdf');

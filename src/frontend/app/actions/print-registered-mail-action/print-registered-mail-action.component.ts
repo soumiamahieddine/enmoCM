@@ -39,6 +39,10 @@ export class PrintRegisteredMailActionComponent implements OnInit {
         const downloadLink = document.createElement('a');
         this.http.put(this.data.processActionRoute, { resources: this.data.resIds, note: this.noteEditor.getNote() }).pipe(
             tap((data: any) => {
+                if (data && data.errors != null) {
+                    this.notify.error(data.errors);
+                    return of(false);
+                }
                 Object.values(data.data).forEach((encodedFile: string) => {
                     if (!this.functions.empty(encodedFile)) {
                         downloadLink.href = `data:application/pdf;base64,${encodedFile}`;

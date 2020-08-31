@@ -96,9 +96,11 @@ trait RegisteredMailTrait
         if (!in_array($args['data']['type'], ['2D', '2C', 'RW'])) {
             return ['errors' => ['Type is not correct']];
         } elseif (!in_array($args['data']['warranty'], ['R1', 'R2', 'R3'])) {
-            return ['errors' => ['Type is not correct']];
+            return ['errors' => ['warranty is not correct']];
         } elseif ($args['data']['type'] == 'RW' && $args['data']['warranty'] == 'R3') {
             return ['errors' => ['R3 warranty is not allowed for type RW']];
+        } elseif (empty($args['data']['recipient']) || empty($args['data']['issuingSiteId'])) {
+            return ['errors' => ['recipient or issuingSiteId is missing to print registered mail']];
         }
 
         $issuingSite = IssuingSiteModel::getById([
@@ -173,6 +175,8 @@ trait RegisteredMailTrait
         $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'number', 'warranty', 'letter', 'recipient', 'reference'], 'resId' => $args['resId']]);
         if (empty($registeredMail)) {
             return ['errors' => ['No registered mail for this resource']];
+        } elseif (empty(json_decode($registeredMail['recipient'])) || empty($registeredMail['issuing_site']) || empty($registeredMail['type']) || empty($registeredMail['number']) || empty($registeredMail['warranty'])) {
+            return ['errors' => ['recipient, issuing_site, type, number or warranty is missing to print registered mail']];
         }
 
         RegisteredMailModel::update([

@@ -51,6 +51,8 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body warranty is not correct']);
         } elseif ($body['type'] == 'RW' && $body['warranty'] == 'R3') {
             return $response->withStatus(400)->withJson(['errors' => 'Body warranty R3 is not allowed for type RW']);
+        } elseif (!Validator::notEmpty()->validate($body['recipient'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body recipient is empty']);
         }
 
         $resource = ResModel::getById(['select' => ['departure_date'], 'resId' => $args['resId']]);
@@ -68,6 +70,7 @@ class RegisteredMailController
             'warranty'  => $body['warranty'],
             'reference' => $body['reference'],
             'letter'    => empty($body['letter']) ? 'false' : 'true',
+            'recipient' => json_encode($body['recipient']),
         ];
 
         if ($registeredMail['type'] != $body['type']) {
