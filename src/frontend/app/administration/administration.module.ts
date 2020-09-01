@@ -75,6 +75,7 @@ import { RegisteredMailComponent } from './registered-mail/registered-mail.compo
 import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing-site-list.component';
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
 import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
+import { AcknowledgementReceptionComponent } from './registered-mail/acknowledgement-reception/acknowledgement-reception.component';
 
 
 @NgModule({
@@ -158,6 +159,7 @@ import { RegisteredMailListComponent } from './registered-mail/registered-mail-l
         IssuingSiteListComponent,
         IssuingSiteComponent,
         RegisteredMailListComponent,
+        AcknowledgementReceptionComponent
     ],
     entryComponents: [
         AccountLinkComponent,

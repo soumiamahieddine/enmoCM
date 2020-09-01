@@ -1919,5 +1919,17 @@
     "rangeStartLargerThanRangeEnd": "Range start cannot be larger than range end",
     "trackingNumberAlreadyUsed": "Tracking number is already used",
     "rangeOverlaps": "Range overlaps another range",
-    "siteIsUsedByActiveRange": "Cannot delete issuing site : site is used by an active range"
+    "siteIsUsedByActiveRange": "Cannot delete issuing site : site is used by an active range",
+    "fieldsNotValid": "Fields are invalid",
+    "arReception": "AR reception",
+    "returnType": "Return type",
+    "registeredMailDistributed": "Registered mail distributed",
+    "registeredMailNotDistributed": "Registered mail not distributed",
+    "registeredMailReceivedDate": "Date of receipt",
+    "precise": "Precise :",
+    "returnReason": "Reason of return",
+    "returnReasonCannotAccess": "Access or address error",
+    "returnReasonNotClaimed": "Mail not claimed",
+    "returnReasonRejected": "Mail rejected by recipient",
+    "returnReasonUnknown": "Recipient unknown at this address"
 }
