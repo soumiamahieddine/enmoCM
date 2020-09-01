@@ -41,17 +41,17 @@ export class PrintRegisteredMailActionComponent implements OnInit {
             tap((data: any) => {
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
-                    return of(false);
+                } else {
+                    Object.values(data.data).forEach((encodedFile: string) => {
+                        if (!this.functions.empty(encodedFile)) {
+                            downloadLink.href = `data:application/pdf;base64,${encodedFile}`;
+                            downloadLink.setAttribute('download', 'recommande.pdf');
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            this.dialogRef.close(this.data.resIds);
+                        }
+                    });
                 }
-                Object.values(data.data).forEach((encodedFile: string) => {
-                    if (!this.functions.empty(encodedFile)) {
-                        downloadLink.href = `data:application/pdf;base64,${encodedFile}`;
-                        downloadLink.setAttribute('download', 'recommande.pdf');
-                        document.body.appendChild(downloadLink);
-                        downloadLink.click();
-                        this.dialogRef.close(this.data.resIds);
-                    }
-                });
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {

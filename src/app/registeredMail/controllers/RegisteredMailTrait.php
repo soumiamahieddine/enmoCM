@@ -13,6 +13,7 @@
 namespace RegisteredMail\controllers;
 
 use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Parameter\models\ParameterModel;
 use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
@@ -101,6 +102,8 @@ trait RegisteredMailTrait
             return ['errors' => ['R3 warranty is not allowed for type RW']];
         } elseif (empty($args['data']['recipient']) || empty($args['data']['issuingSiteId'])) {
             return ['errors' => ['recipient or issuingSiteId is missing to print registered mail']];
+        } elseif ((empty($args['data']['recipient']['company']) && empty($args['data']['recipient']['lastname'])) || empty($args['data']['recipient']['addressStreet']) || empty($args['data']['recipient']['addressPostcode']) || empty($args['data']['recipient']['addressTown']) || empty($args['data']['recipient']['addressCountry'])) {
+            return ['errors' => ['company and lastname, or addressStreet, addressPostcode, addressTown or addressCountry is empty in Recipient']];
         }
 
         $issuingSite = IssuingSiteModel::getById([
@@ -152,13 +155,27 @@ trait RegisteredMailTrait
             'address_town'          => $issuingSite['address_town'],
             'address_country'       => $issuingSite['address_country']
         ]);
+
+        $recipient = ContactController::getContactAfnor([
+            'company'               => $args['data']['recipient']['company'],
+            'civility'              => ContactModel::getCivilityId(['civilityLabel' => $args['data']['recipient']['civility']]),
+            'firstname'             => $args['data']['recipient']['firstname'],
+            'lastname'              => $args['data']['recipient']['lastname'],
+            'address_number'        => $args['data']['recipient']['addressNumber'],
+            'address_street'        => $args['data']['recipient']['addressStreet'],
+            'address_additional1'   => $args['data']['recipient']['addressAdditional1'],
+            'address_additional2'   => $args['data']['recipient']['addressAdditional2'],
+            'address_postcode'      => $args['data']['recipient']['addressPostcode'],
+            'address_town'          => $args['data']['recipient']['addressTown'],
+            'address_country'       => $args['data']['recipient']['addressCountry']
+        ]);
         $registeredMailPDF = RegisteredMailController::getRegisteredMailPDF([
             'type'      => $args['data']['type'],
             'number'    => $range[0]['current_number'],
             'warranty'  => $args['data']['warranty'],
             'letter'    => !empty($args['data']['letter']),
             'reference' => "{$date} - {$args['data']['reference']}",
-            'recipient' => $args['data']['recipient'],
+            'recipient' => $recipient,
             'sender'    => $sender
         ]);
 
@@ -173,10 +190,13 @@ trait RegisteredMailTrait
         static $data;
 
         $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'number', 'warranty', 'letter', 'recipient', 'reference'], 'resId' => $args['resId']]);
+        $recipient = json_decode($registeredMail['recipient'], true);
         if (empty($registeredMail)) {
             return ['errors' => ['No registered mail for this resource']];
-        } elseif (empty(json_decode($registeredMail['recipient'])) || empty($registeredMail['issuing_site']) || empty($registeredMail['type']) || empty($registeredMail['number']) || empty($registeredMail['warranty'])) {
+        } elseif (empty($recipient) || empty($registeredMail['issuing_site']) || empty($registeredMail['type']) || empty($registeredMail['number']) || empty($registeredMail['warranty'])) {
             return ['errors' => ['recipient, issuing_site, type, number or warranty is missing to print registered mail']];
+        } elseif ((empty($recipient['company']) && empty($recipient['lastname'])) || empty($recipient['addressStreet']) || empty($recipient['addressPostcode']) || empty($recipient['addressTown']) || empty($recipient['addressCountry'])) {
+            return ['errors' => ['company and name, or addressStreet, addressPostcode, addressTown or addressCountry is empty in Recipient']];
         }
 
         RegisteredMailModel::update([
@@ -201,14 +221,27 @@ trait RegisteredMailTrait
             'address_country'       => $issuingSite['address_country']
         ]);
 
-        $registeredMail['recipient'] = json_decode($registeredMail['recipient'], true);
+        $recipient = ContactController::getContactAfnor([
+            'company'               => $recipient['company'],
+            'civility'              => ContactModel::getCivilityId(['civilityLabel' => $recipient['civility']]),
+            'firstname'             => $recipient['firstname'],
+            'lastname'              => $recipient['lastname'],
+            'address_number'        => $recipient['addressNumber'],
+            'address_street'        => $recipient['addressStreet'],
+            'address_additional1'   => $recipient['addressAdditional1'],
+            'address_additional2'   => $recipient['addressAdditional2'],
+            'address_postcode'      => $recipient['addressPostcode'],
+            'address_town'          => $recipient['addressTown'],
+            'address_country'       => $recipient['addressCountry']
+        ]);
+
         $registeredMailPDF = RegisteredMailController::getRegisteredMailPDF([
             'type'      => $registeredMail['type'],
             'number'    => $registeredMail['number'],
             'warranty'  => $registeredMail['warranty'],
             'letter'    => $registeredMail['letter'],
             'reference' => $registeredMail['reference'],
-            'recipient' => $registeredMail['recipient'],
+            'recipient' => $recipient,
             'sender'    => $sender
         ]);
 
