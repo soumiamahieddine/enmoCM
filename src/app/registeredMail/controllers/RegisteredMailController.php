@@ -123,6 +123,10 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => "Body type is empty or is not 'distributed' or 'notDistributed'"]);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['number'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body number is empty or not a string']);
+        } elseif (!preg_match("/(2C|2D|RW) ([0-9]{3} [0-9]{3} [0-9]{4}) ([0-9])/", $body['number'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body number is not valid']);
+        } elseif (!empty($body['status']) && !Validator::stringType()->length(1, 10)->validate($body['status'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body status is not a string']);
         }
 
         $number = substr($body['number'], 3, 12);
@@ -139,16 +143,20 @@ class RegisteredMailController
 
         if ($body['type'] == 'distributed') {
             $set = ['received_date' => 'CURRENT_TIMESTAMP'];
-            $status = 'DSTRIBUTED';
         } else {
             if (!Validator::stringType()->notEmpty()->validate($body['returnReason'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body returnReason is empty or not a string']);
             } elseif (!Validator::date()->notEmpty()->validate($body['receivedDate'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body receivedDate is empty or not a date']);
             }
+            $receivedDate = new \DateTime($body['receivedDate']);
+            $today = new \DateTime();
+            $today->setTime(00, 00, 00);
+            if ($receivedDate < $today) {
+                return ['errors' => "Body receivedDate is not a valid date"];
+            }
 
             $set = ['received_date' => $body['receivedDate'], 'return_reason' => $body['returnReason'], 'return_reason_other' => $body['returnReasonOther'] ?? null];
-            $status = 'PND';
         }
 
         RegisteredMailModel::update([
@@ -156,11 +164,13 @@ class RegisteredMailController
             'where' => ['id = ?'],
             'data'  => [$registeredMail['id']]
         ]);
-        ResModel::update([
-            'set'   => ['status' => $status],
-            'where' => ['res_id = ?'],
-            'data'  => [$registeredMail['res_id']]
-        ]);
+        if (!empty($body['status'])) {
+            ResModel::update([
+                'set'   => ['status' => $body['status']],
+                'where' => ['res_id = ?'],
+                'data'  => [$registeredMail['res_id']]
+            ]);
+        }
 
         return $response->withStatus(204);
     }
