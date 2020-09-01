@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { tap, catchError, debounceTime, filter, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
+import { LatinisePipe } from 'ngx-pipes';
 
 @Component({
     selector: 'app-registered-mail-recipient-input',
@@ -16,7 +17,7 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
 
     adminFormGroup: FormGroup;
     manualAddress: boolean = false;
-
+    civilities: any[] = [];
     addressBANInfo: string = '';
     addressBANMode: boolean = true;
     addressBANControl = new FormControl();
@@ -31,9 +32,11 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
         public http: HttpClient,
         private _formBuilder: FormBuilder,
         private notify: NotificationService,
+        private latinisePipe: LatinisePipe,
     ) { }
 
     ngOnInit(): void {
+        this.getCivilities();
         this.initBanSearch();
         this.initAutocompleteAddressBan();
         this.adminFormGroup = this._formBuilder.group({
@@ -51,6 +54,23 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
         });
     }
 
+    getCivilities() {
+        this.http.get('../rest/civilities').pipe(
+            tap((data: any) => {
+                Object.keys(data.civilities).forEach(element => {
+                    this.civilities.push({
+                        id: element,
+                        label: data.civilities[element].label.toUpperCase()
+                    });
+                });
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     initBanSearch() {
         this.http.get('../rest/ban/availableDepartments').pipe(
             tap((data: any) => {
@@ -60,7 +80,7 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
                 this.departmentList = data.departments;
             }),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();
@@ -109,5 +129,22 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
             formatedAddress[key] = this.adminFormGroup.controls[key].value;
         });
         return formatedAddress;
+    }
+
+    emptyAddress() {
+        let state: boolean = true;
+        Object.keys(this.adminFormGroup.controls).forEach(key => {
+            if (this.adminFormGroup.controls[key].value !== '') {
+                state = false;
+            }
+        });
+        return state;
+    }
+
+    toUpperCase(target: string, ev: any) {
+        setTimeout(() => {
+            const test = this.latinisePipe.transform(this.adminFormGroup.controls[target].value.toUpperCase());
+            this.adminFormGroup.controls[target].setValue(test);
+        }, 100);
     }
 }
