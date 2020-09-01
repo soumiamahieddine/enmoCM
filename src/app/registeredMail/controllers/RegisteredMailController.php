@@ -14,6 +14,8 @@
 namespace RegisteredMail\controllers;
 
 use Com\Tecnick\Barcode\Barcode;
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use RegisteredMail\models\RegisteredMailModel;
 use RegisteredMail\models\RegisteredNumberRangeModel;
 use Resource\controllers\ResController;
@@ -708,6 +710,21 @@ class RegisteredMailController
 
             $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $registeredMail['number']]);
 
+            $referenceInfo = json_decode($registeredMail['recipient'], true);
+            $recipient = ContactController::getContactAfnor([
+                'company'               => $referenceInfo['company'],
+                'civility'              => ContactModel::getCivilityId(['civilityLabel' => $referenceInfo['civility']]),
+                'firstname'             => $referenceInfo['firstname'],
+                'lastname'              => $referenceInfo['lastname'],
+                'address_number'        => $referenceInfo['addressNumber'],
+                'address_street'        => $referenceInfo['addressStreet'],
+                'address_additional1'   => $referenceInfo['addressAdditional1'],
+                'address_additional2'   => $referenceInfo['addressAdditional2'],
+                'address_postcode'      => $referenceInfo['addressPostcode'],
+                'address_town'          => $referenceInfo['addressTown'],
+                'address_country'       => $referenceInfo['addressCountry']
+            ]);
+
             $pdf->setFont('times', '', 9);
             $pdf->Cell(10, 10, $position + 1, 1);
             $pdf->setFont('times', '', 9);
@@ -717,13 +734,13 @@ class RegisteredMailController
             $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 25, ""), 1);
 
             $pdf->setFont('times', '', 6);
-            if (strlen($registeredMail['recipient'][1] . " " . $registeredMail['recipient'][4] . " " . $registeredMail['recipient'][6]) > 60) {
-                $pdf->Cell(95, 10, $registeredMail['recipient'][1], 1);
+            if (strlen($recipient[1] . " " . $recipient[4] . " " . $recipient[6]) > 60) {
+                $pdf->Cell(95, 10, $recipient[1], 1);
                 $pdf->SetXY($pdf->GetX() - 95, $pdf->GetY() + 3);
-                $pdf->Cell(95, 10, $registeredMail['recipient'][4] . " " . $registeredMail['recipient'][6], 0);
+                $pdf->Cell(95, 10, $recipient[4] . " " . $recipient[6], 0);
                 $pdf->SetXY($pdf->GetX() + 95, $pdf->GetY() - 3);
             } else {
-                $pdf->Cell(95, 10, $registeredMail['recipient'][1] . " " . $registeredMail['recipient'][4] . " " . $registeredMail['recipient'][6], 1);
+                $pdf->Cell(95, 10, $recipient[1] . " " . $recipient[4] . " " . $recipient[6], 1);
             }
 
 
