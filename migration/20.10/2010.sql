@@ -186,7 +186,7 @@ UPDATE groupbasket SET list_event_data = list_event_data - 'canUpdate';
 ALTER TABLE templates DROP COLUMN IF EXISTS subject;
 ALTER TABLE templates ADD COLUMN subject character varying(255);
 
-UPDATE groupbasket SET list_event_data = '{"canUpdateDocuments":true}' WHERE list_event_data->'canUpdateDocument' = true;
+UPDATE groupbasket SET list_event_data = '{"canUpdateDocuments":true}' WHERE list_event_data->'canUpdateDocument' = 'true';
 
 /* REGISTERED MAIL */
 DROP TABLE IF EXISTS registered_mail_issuing_sites;
@@ -249,6 +249,7 @@ CREATE TABLE IF NOT EXISTS registered_mail_resources (
     CONSTRAINT registered_mail_resources_unique_key UNIQUE (res_id)
 );
 
+DELETE FROM parameters WHERE id = 'last_deposit_id';
 INSERT INTO parameters (id, param_value_int) VALUES ('last_deposit_id', 0);
 
 /* RE CREATE VIEWS */
