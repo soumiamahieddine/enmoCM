@@ -1,4 +1,4 @@
-<mat-form-field appearance='outline' class="smallInput">
+<mat-form-field *ngIf="this.control.status !== 'DISABLED'" appearance='outline' class="smallInput">
     <button mat-button matSuffix [matMenuTriggerFor]="menuDep" (click)="$event.stopPropagation();"
         [title]="this.translate.instant('lang.targetDepartment')">
         {{addressBANCurrentDepartment}}&nbsp;<i class="fa fa-chevron-down"></i>
@@ -31,14 +31,14 @@
     <button mat-icon-button class="address-icon" (click)="manualAddress=!manualAddress" [title]="'lang.showAddress' | translate">
         <mat-icon class="fa fa-eye"></mat-icon>
     </button>
-    <form style="display: contents;" (ngSubmit)="onSubmit()" [formGroup]="adminFormGroup">
+    <form style="display: contents;" (ngSubmit)="onSubmit()">
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_company' | translate}}</mat-label>
-            <input matInput formControlName="company" (ngModelChange)="toUpperCase('company', $event)">
+            <input matInput name="company" [(ngModel)]="this.control.value.company" (ngModelChange)="toUpperCase('company', $event)">
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_civility' | translate}}</mat-label>
-            <mat-select formControlName="civility">
+            <mat-select name="civility" [(ngModel)]="this.control.value.civility">
                 <mat-option *ngFor="let civ of civilities | sortBy: 'label'" [value]="civ.label">
                     {{civ.label}}
                 </mat-option>
@@ -46,65 +46,68 @@
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_firstname' | translate}}</mat-label>
-            <input matInput formControlName="firstname" (ngModelChange)="toUpperCase('firstname', $event)">
+            <input matInput name="firstname" [(ngModel)]="this.control.value.firstname" (ngModelChange)="toUpperCase('firstname', $event)">
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_lastname' | translate}}</mat-label>
-            <input matInput formControlName="lastname" (ngModelChange)="toUpperCase('lastname', $event)">
-        </mat-form-field>
-        <mat-form-field floatLabel="always">
-            <mat-label>{{'lang.contactsParameters_addressNumber' | translate}}</mat-label>
-            <input matInput formControlName="addressNumber" (ngModelChange)="toUpperCase('addressNumber', $event)">
-        </mat-form-field>
-        <mat-form-field floatLabel="always">
-            <mat-label>{{'lang.contactsParameters_addressStreet' | translate}}</mat-label>
-            <input matInput formControlName="addressStreet" (ngModelChange)="toUpperCase('addressStreet', $event)">
+            <input matInput name="lastname" [(ngModel)]="this.control.value.lastname" (ngModelChange)="toUpperCase('lastname', $event)">
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_addressAdditional1' | translate}}</mat-label>
-            <input matInput formControlName="addressAdditional1" (ngModelChange)="toUpperCase('addressAdditional1', $event)">
+            <input matInput  name="addressAdditional1" [(ngModel)]="this.control.value.addressAdditional1" (ngModelChange)="toUpperCase('addressAdditional1', $event)">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+            <mat-label>{{'lang.contactsParameters_addressNumber' | translate}}</mat-label>
+            <input matInput name="addressNumber" [(ngModel)]="this.control.value.addressNumber" (ngModelChange)="toUpperCase('addressNumber', $event)">
+        </mat-form-field>
+        <mat-form-field floatLabel="always">
+            <mat-label>{{'lang.contactsParameters_addressStreet' | translate}}</mat-label>
+            <input matInput name="addressStreet" [(ngModel)]="this.control.value.addressStreet" (ngModelChange)="toUpperCase('addressStreet', $event)">
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_addressAdditional2' | translate}}</mat-label>
-            <input matInput formControlName="addressAdditional2" (ngModelChange)="toUpperCase('addressAdditional2', $event)">
+            <input matInput name="addressAdditional2" [(ngModel)]="this.control.value.addressAdditional2" (ngModelChange)="toUpperCase('addressAdditional2', $event)">
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_addressPostcode' | translate}}</mat-label>
-            <input matInput formControlName="addressPostcode" (ngModelChange)="toUpperCase('addressPostcode', $event)">
+            <input matInput name="addressPostcode" [(ngModel)]="this.control.value.addressPostcode" (ngModelChange)="toUpperCase('addressPostcode', $event)">
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_addressTown' | translate}}</mat-label>
-            <input matInput formControlName="addressTown" (ngModelChange)="toUpperCase('addressTown', $event)">
+            <input matInput name="addressTown" [(ngModel)]="this.control.value.addressTown" (ngModelChange)="toUpperCase('addressTown', $event)">
         </mat-form-field>
         <mat-form-field floatLabel="always">
             <mat-label>{{'lang.contactsParameters_addressCountry' | translate}}</mat-label>
-            <input matInput formControlName="addressCountry" (ngModelChange)="toUpperCase('addressCountry', $event)">
+            <input matInput name="addressCountry" [(ngModel)]="this.control.value.addressCountry" (ngModelChange)="toUpperCase('addressCountry', $event)">
         </mat-form-field>
     </form>
 </mat-card>
 <mat-card color="primary" *ngIf="!manualAddress && !emptyAddress()">
-    <button mat-icon-button class="address-icon" (click)="manualAddress=!manualAddress" [title]="'lang.update' | translate">
+    <button *ngIf="this.control.status !== 'DISABLED'" mat-icon-button class="address-icon" (click)="manualAddress=!manualAddress" [title]="'lang.update' | translate">
         <mat-icon class="fa fa-edit"></mat-icon>
     </button>
     <div>
-        {{adminFormGroup.controls['company'].value}}
+        {{control.value.company}}
     </div>
     <div>
-        {{adminFormGroup.controls['civility'].value}} {{adminFormGroup.controls['firstname'].value}} {{adminFormGroup.controls['lastname'].value}}
+        {{control.value.civility}} {{control.value.firstname}} {{control.value.lastname}}
     </div>
     <div>
-        {{adminFormGroup.controls['addressAdditional1'].value}}
+        {{control.value.addressAdditional1}}
     </div>
     <div>
-        {{adminFormGroup.controls['addressNumber'].value}} {{adminFormGroup.controls['addressStreet'].value}}
+        {{control.value.addressNumber}} {{control.value.addressStreet}}
     </div>
     <div>
-        {{adminFormGroup.controls['addressAdditional2'].value}}
+        {{control.value.addressAdditional2}}
     </div>
     <div>
-        {{adminFormGroup.controls['addressPostcode'].value}} {{adminFormGroup.controls['addressTown'].value}}
+        {{control.value.addressPostcode}} {{control.value.addressTown}}
     </div>
     <div>
-        {{adminFormGroup.controls['addressCountry'].value}}
+        {{control.value.addressCountry}}
     </div>
+    <button mat-icon-button class="map-icon" (click)="goTo()" [title]="'lang.openMap' | translate">
+        <mat-icon class="fa fas fa-map-marked-alt"></mat-icon>
+    </button>
 </mat-card>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient } from '@angular/common/http';
@@ -15,7 +15,11 @@ import { LatinisePipe } from 'ngx-pipes';
 })
 export class RegisteredMailRecipientInputComponent implements OnInit {
 
-    adminFormGroup: FormGroup;
+    /**
+     * FormControl used when autocomplete is used in form and must be catched in a form control.
+     */
+    @Input() control: FormControl;
+
     manualAddress: boolean = false;
     civilities: any[] = [];
     addressBANInfo: string = '';
@@ -30,28 +34,18 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
-        private _formBuilder: FormBuilder,
         private notify: NotificationService,
         private latinisePipe: LatinisePipe,
     ) { }
 
     ngOnInit(): void {
+
         this.getCivilities();
         this.initBanSearch();
         this.initAutocompleteAddressBan();
-        this.adminFormGroup = this._formBuilder.group({
-            company: ['', Validators.required],
-            civility: ['', Validators.required],
-            firstname: ['', Validators.required],
-            lastname: ['', Validators.required],
-            addressNumber: ['', Validators.required],
-            addressStreet: ['', Validators.required],
-            addressAdditional1: [''],
-            addressAdditional2: [''],
-            addressPostcode: ['', Validators.required],
-            addressTown: ['', Validators.required],
-            addressCountry: ['']
-        });
+        if (this.control.value === null) {
+            this.control.setValue({});
+        }
     }
 
     getCivilities() {
@@ -115,26 +109,27 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
     }
 
     selectAddressBan(ev: any) {
-        this.adminFormGroup.controls['addressNumber'].setValue(ev.option.value.number);
-        this.adminFormGroup.controls['addressStreet'].setValue(ev.option.value.afnorName);
-        this.adminFormGroup.controls['addressPostcode'].setValue(ev.option.value.postalCode);
-        this.adminFormGroup.controls['addressTown'].setValue(ev.option.value.city);
-        this.adminFormGroup.controls['addressCountry'].setValue('FRANCE');
+        this.control.value.addressNumber = ev.option.value.number;
+        this.control.value.addressStreet = ev.option.value.afnorName;
+        this.control.value.addressPostcode = ev.option.value.postalCode;
+        this.control.value.addressTown = ev.option.value.city;
+        this.control.value.addressCountry = 'FRANCE';
+
         this.addressBANControl.setValue('');
     }
 
     getFormatedAdress() {
         const formatedAddress = {};
-        Object.keys(this.adminFormGroup.controls).forEach(key => {
-            formatedAddress[key] = this.adminFormGroup.controls[key].value;
+        Object.keys(this.control.value).forEach(key => {
+            formatedAddress[key] = this.control.value[key];
         });
         return formatedAddress;
     }
 
     emptyAddress() {
         let state: boolean = true;
-        Object.keys(this.adminFormGroup.controls).forEach(key => {
-            if (this.adminFormGroup.controls[key].value !== '') {
+        Object.keys(this.control.value).forEach(key => {
+            if (this.control.value[key] !== '') {
                 state = false;
             }
         });
@@ -143,8 +138,12 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
 
     toUpperCase(target: string, ev: any) {
         setTimeout(() => {
-            const test = this.latinisePipe.transform(this.adminFormGroup.controls[target].value.toUpperCase());
-            this.adminFormGroup.controls[target].setValue(test);
+            const test = this.latinisePipe.transform(this.control.value[target].toUpperCase());
+            this.control.value[target] = test;
         }, 100);
+    }
+
+    goTo() {
+        window.open(`https://www.google.com/maps/search/${this.control.value.addressNumber}+${this.control.value.addressStreet},+${this.control.value.addressPostcode}+${this.control.value.addressTown},+${this.control.value.addressCountry}`, '_blank');
     }
 }
