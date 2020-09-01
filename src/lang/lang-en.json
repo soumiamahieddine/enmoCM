@@ -1757,6 +1757,8 @@
     "stepInstanceActionDesc": "Instance initialization",
     "loginMsg": "Message on the login screen",
     "homeMsg": "Message on the home screen",
+    "trafficRecordSummarySheetParameters": "Traffic record module for summary sheet",
+    "trafficRecordSummarySheet": "Traffic records module",
     "chooseLoginBg": "Choose the login screen wallpaper",
     "stepCustomization_desc": "Maarch Courrier allows you to customize your application to integrate it perfectly into your work environment.",
     "userAdmin": "Root user",

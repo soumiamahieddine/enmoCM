@@ -1785,6 +1785,8 @@
     "applicationName": "Nom de l'application",
     "loginMsg": "Message à l'écran de connexion",
     "homeMsg": "Message à l'écran d'accueil",
+    "trafficRecordSummarySheetParameters": "Module circulation pour la fiche de liaison",
+    "trafficRecordSummarySheet": "Module de circulation",
     "chooseLoginBg": "Choisissez le fond d'écran de l'écran de connexion",
     "customization": "Personnalisation",
     "stepCustomization_desc": "Maarch Courrier vous permet de personnaliser votre application afin de l'intégrer parfaitement à votre environnement de travail.",

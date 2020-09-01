@@ -252,6 +252,9 @@ CREATE TABLE IF NOT EXISTS registered_mail_resources (
 DELETE FROM parameters WHERE id = 'last_deposit_id';
 INSERT INTO parameters (id, param_value_int) VALUES ('last_deposit_id', 0);
 
+DELETE FROM parameters WHERE id = 'traffic_record_summary_sheet';
+INSERT INTO parameters (id, description, param_value_string) VALUES ('traffic_record_summary_sheet', 'Module circulation pour la fiche de liaison', '');
+
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
 SELECT r.res_id,
