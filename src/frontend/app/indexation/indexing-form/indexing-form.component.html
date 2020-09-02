@@ -208,7 +208,7 @@
                                     </app-issuing-site-input>
                                 </ng-container>
                                 <ng-container *ngIf="field.identifier === 'registeredMail_recipient'">
-                                    <app-registered-mail-recipient-input #appRegisteredMailRecipientInput [control]="arrFormControl[field.identifier]" style="width:100%;">
+                                    <app-registered-mail-recipient-input #appRegisteredMailRecipientInput [control]="arrFormControl[field.identifier]" [registeredMailType]="arrFormControl['registeredMail_type'].value" style="width:100%;">
                                     </app-registered-mail-recipient-input>
                                 </ng-container>
                             </div>

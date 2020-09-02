@@ -7,6 +7,7 @@ import { NotificationService } from '../../../../service/notification/notificati
 import { tap, catchError, debounceTime, filter, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { LatinisePipe } from 'ngx-pipes';
+import { FunctionsService } from '../../../../service/functions.service';
 
 @Component({
     selector: 'app-registered-mail-recipient-input',
@@ -19,6 +20,8 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
      * FormControl used when autocomplete is used in form and must be catched in a form control.
      */
     @Input() control: FormControl;
+
+    @Input() registeredMailType: string;
 
     manualAddress: boolean = false;
     civilities: any[] = [];
@@ -36,15 +39,16 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         private latinisePipe: LatinisePipe,
+        public functions: FunctionsService,
     ) { }
 
     ngOnInit(): void {
-
         this.getCivilities();
         this.initBanSearch();
         this.initAutocompleteAddressBan();
         if (this.control.value === null) {
             this.control.setValue({});
+            this.control.setErrors({ 'required': true });
         }
     }
 
@@ -114,8 +118,9 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
         this.control.value.addressPostcode = ev.option.value.postalCode;
         this.control.value.addressTown = ev.option.value.city;
         this.control.value.addressCountry = 'FRANCE';
-
         this.addressBANControl.setValue('');
+        this.control.setErrors({ 'required': true });
+        this.control.markAsTouched();
     }
 
     getFormatedAdress() {
@@ -140,7 +145,26 @@ export class RegisteredMailRecipientInputComponent implements OnInit {
         setTimeout(() => {
             const test = this.latinisePipe.transform(this.control.value[target].toUpperCase());
             this.control.value[target] = test;
+            this.checkRequiredFields();
         }, 100);
+    }
+
+    checkRequiredFields() {
+        // CASE PRO ADDRESS
+        if (!this.functions.empty(this.control.value.company)) {
+            if (this.functions.empty(this.control.value.addressNumber) || this.functions.empty(this.control.value.addressStreet) || this.functions.empty(this.control.value.addressPostcode) || this.functions.empty(this.control.value.addressTown) || (this.registeredMailType === 'RW' && this.functions.empty(this.control.value.addressCountry))) {
+                this.control.setErrors({ 'required': true });
+            } else {
+                this.control.setErrors(null);
+            }
+        // CASE PERSON ADDRESS
+        } else if (this.functions.empty(this.control.value.company)) {
+            if (this.functions.empty(this.control.value.firstname) || this.functions.empty(this.control.value.lastname) || this.functions.empty(this.control.value.addressNumber) || this.functions.empty(this.control.value.addressStreet) || this.functions.empty(this.control.value.addressPostcode) || this.functions.empty(this.control.value.addressTown) || (this.registeredMailType === 'RW' && this.functions.empty(this.control.value.addressCountry))) {
+                this.control.setErrors({ 'required': true });
+            } else {
+                this.control.setErrors(null);
+            }
+        }
     }
 
     goTo() {
