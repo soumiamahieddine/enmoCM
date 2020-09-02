@@ -32,12 +32,7 @@ export class RegisteredMailListComponent implements OnInit {
             route: '/administration/issuingSites',
             label: this.translate.instant('lang.issuingSites'),
             current: false
-        }, {
-            icon: 'fas fa-warehouse',
-            route: '/administration/registeredMails/acknowledgement',
-            label: 'Réception AR',
-            current: false
-        },
+        }
     ];
 
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
