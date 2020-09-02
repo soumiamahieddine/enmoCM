@@ -53,7 +53,6 @@ import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
 import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
 import { RegisteredMailComponent } from './registered-mail/registered-mail.component';
-import {AcknowledgementReceptionComponent} from './registered-mail/acknowledgement-reception/acknowledgement-reception.component';
 
 @NgModule({
     imports: [
@@ -123,7 +122,6 @@ import {AcknowledgementReceptionComponent} from './registered-mail/acknowledgeme
             { path: 'alfresco/new', canActivate: [AppGuard], component: AlfrescoAdministrationComponent },
             { path: 'alfresco/:id', canActivate: [AppGuard], component: AlfrescoAdministrationComponent },
             { path: 'registeredMails', canActivate: [AppGuard], component: RegisteredMailListComponent },
-            { path: 'registeredMails/acknowledgement', canActivate: [AppGuard], component: AcknowledgementReceptionComponent },
             { path: 'registeredMails/new', canActivate: [AppGuard], component: RegisteredMailComponent },
             { path: 'registeredMails/:id', canActivate: [AppGuard], component: RegisteredMailComponent },
             { path: 'issuingSites', canActivate: [AppGuard], component: IssuingSiteListComponent },

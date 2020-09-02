@@ -520,6 +520,16 @@ export class PrivilegeService {
             'unit': 'sendmail',
             'angular': true,
             'shortcut': false
+        },
+        {
+            'id': 'registered_mail_receive_ar',
+            'label': this.translate.instant('lang.arReception'),
+            'comment': this.translate.instant('lang.arReception'),
+            'route': '/registeredMail/acknowledgement',
+            'style': 'fa fa-file-archive',
+            'unit': 'registeredMails',
+            'angular': true,
+            'shortcut': false
         }
     ];
 
