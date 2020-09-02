@@ -124,6 +124,7 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
                 'maarch_b64image': '../../src/frontend/plugins/tinymce/maarch_b64image/plugin.min.js'
             },
             table_toolbar: '',
+            table_sizing_mode: 'relative',
             toolbar_sticky: true,
             toolbar_drawer: 'floating',
             toolbar: !readonly ? 'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | table maarch_b64image | \

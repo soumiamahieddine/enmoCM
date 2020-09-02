@@ -102,8 +102,8 @@ trait RegisteredMailTrait
             return ['errors' => ['R3 warranty is not allowed for type RW']];
         } elseif (empty($args['data']['recipient']) || empty($args['data']['issuingSiteId'])) {
             return ['errors' => ['recipient or issuingSiteId is missing to print registered mail']];
-        } elseif ((empty($args['data']['recipient']['company']) && empty($args['data']['recipient']['lastname'])) || empty($args['data']['recipient']['addressStreet']) || empty($args['data']['recipient']['addressPostcode']) || empty($args['data']['recipient']['addressTown']) || empty($args['data']['recipient']['addressCountry'])) {
-            return ['errors' => ['company and lastname, or addressStreet, addressPostcode, addressTown or addressCountry is empty in Recipient']];
+        } elseif ((empty($args['data']['recipient']['company']) && (empty($args['data']['recipient']['lastname']) || empty($args['data']['recipient']['firstname']))) || empty($args['data']['recipient']['addressStreet']) || empty($args['data']['recipient']['addressPostcode']) || empty($args['data']['recipient']['addressTown']) || empty($args['data']['recipient']['addressCountry'])) {
+            return ['errors' => ['company and firstname/lastname, or addressStreet, addressPostcode, addressTown or addressCountry is empty in Recipient']];
         }
 
         $issuingSite = IssuingSiteModel::getById([
@@ -195,8 +195,8 @@ trait RegisteredMailTrait
             return ['errors' => ['No registered mail for this resource']];
         } elseif (empty($recipient) || empty($registeredMail['issuing_site']) || empty($registeredMail['type']) || empty($registeredMail['number']) || empty($registeredMail['warranty'])) {
             return ['errors' => ['recipient, issuing_site, type, number or warranty is missing to print registered mail']];
-        } elseif ((empty($recipient['company']) && empty($recipient['lastname'])) || empty($recipient['addressStreet']) || empty($recipient['addressPostcode']) || empty($recipient['addressTown']) || empty($recipient['addressCountry'])) {
-            return ['errors' => ['company and name, or addressStreet, addressPostcode, addressTown or addressCountry is empty in Recipient']];
+        } elseif ((empty($recipient['company']) && (empty($recipient['lastname']) || empty($recipient['firstname']))) || empty($recipient['addressStreet']) || empty($recipient['addressPostcode']) || empty($recipient['addressTown']) || empty($recipient['addressCountry'])) {
+            return ['errors' => ['company and firstname/lastname, or addressStreet, addressPostcode, addressTown or addressCountry is empty in Recipient']];
         }
 
         RegisteredMailModel::update([
