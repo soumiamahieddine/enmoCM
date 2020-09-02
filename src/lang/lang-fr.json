@@ -1965,5 +1965,11 @@
     "returnReasonCannotAccess": "Défaut d'accès ou d'adressage",
     "returnReasonNotClaimed": "Pli avisé et non réclamé",
     "returnReasonRejected": "Pli refusé par le destinataire",
-    "returnReasonUnknown": "Destinataire inconnu à l'adresse"
+    "returnReasonUnknown": "Destinataire inconnu à l'adresse",
+    "showAddress": "Afficher l'adresse",
+    "openMap": "Afficher sur la carte",
+    "maileva": "Maileva",
+    "acknowlegdmentReceipt": "Accusé de réception",
+    "externalSignatoryBook": "Parapheur externe",
+    "dispositListGeneratedMsg": "Le recommandé a été imprimé dans un <b>descriptif de pli</b>, vous ne pouvez pas modifier les données."
 }
