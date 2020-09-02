@@ -14,6 +14,7 @@
 namespace RegisteredMail\controllers;
 
 use Com\Tecnick\Barcode\Barcode;
+use Group\controllers\PrivilegeController;
 use Parameter\models\ParameterModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
@@ -120,6 +121,10 @@ class RegisteredMailController
 
     public function receiveAcknowledgement(Request $request, Response $response)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'registered_mail_receive_ar', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['type']) && !in_array($body['type'], ['distributed', 'notDistributed'])) {
@@ -134,7 +139,7 @@ class RegisteredMailController
         $number = str_replace(' ', '', $number);
 
         $registeredMail = RegisteredMailModel::get([
-            'select' => ['id', 'res_id'],
+            'select' => ['id', 'res_id', 'received_date'],
             'where'  => ['number = ?'],
             'data'   => [$number]
         ]);
@@ -142,6 +147,9 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Registered mail number not found']);
         }
         $registeredMail = $registeredMail[0];
+        if (!empty($registeredMail['received_date'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Registered mail was already received', 'lang' => 'arAlreadyReceived']);
+        }
 
         if ($body['type'] == 'distributed') {
             $set = ['received_date' => 'CURRENT_TIMESTAMP'];

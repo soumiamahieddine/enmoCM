@@ -1971,5 +1971,7 @@
     "maileva": "Maileva",
     "acknowlegdmentReceipt": "Accusé de réception",
     "externalSignatoryBook": "Parapheur externe",
-    "dispositListGeneratedMsg": "Le recommandé a été imprimé dans un <b>descriptif de pli</b>, vous ne pouvez pas modifier les données."
+    "dispositListGeneratedMsg": "Le recommandé a été imprimé dans un <b>descriptif de pli</b>, vous ne pouvez pas modifier les données.",
+    "arReceived": "AR réceptionné",
+    "arAlreadyReceived": "Cet AR a déjà été reçu"
 }

@@ -1933,5 +1933,7 @@
     "returnReasonCannotAccess": "Access or address error",
     "returnReasonNotClaimed": "Mail not claimed",
     "returnReasonRejected": "Mail rejected by recipient",
-    "returnReasonUnknown": "Recipient unknown at this address"
+    "returnReasonUnknown": "Recipient unknown at this address",
+    "arReceived": "AR received",
+    "arAlreadyReceived": "This AR has already been received"
 }
