@@ -724,7 +724,7 @@ class SummarySheetController
                 $pdf->SetFont('', '', 9);
 
                 $parameter = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'traffic_record_summary_sheet']);
-                $pdf->writeHTMLCell(640, 0, 25, $pdf->GetY(), $parameter['param_value_string']);
+                $pdf->writeHTMLCell(575, 0, 25, $pdf->GetY(), $parameter['param_value_string']);
                 // $pdf->writeHTML($parameter['param_value_string']);
             }
         }
