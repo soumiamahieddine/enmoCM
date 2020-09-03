@@ -49,7 +49,9 @@ export class IssuingSiteInputComponent implements OnInit {
             this.getIssuingSites(this.registedMailType);
         }
         if (!this.functions.empty(this.control.value)) {
-            this.setAddress(this.control.value);
+            setTimeout(() => {
+                this.setAddress(this.control.value);
+            }, 0);
         }
     }
 
@@ -62,7 +64,7 @@ export class IssuingSiteInputComponent implements OnInit {
                 this.issuingSiteList = data['ranges'].filter((item: any) => item.registeredMailType === registeredMailType && item.status === 'OK' && item.entities.indexOf(this.headerService.user.entities[0].id) > -1).map((item: any) => {
                     return {
                         ...item,
-                        id : item.siteId,
+                        id: item.siteId,
                         label: `${item.label} (${item.customerAccountNumber})`,
                         disabled: item.fullness === 100,
                     };

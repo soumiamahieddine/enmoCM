@@ -449,7 +449,7 @@ export class IndexingFormComponent implements OnInit {
                             this.http.put(`../rest/registeredMails/${this.resId}`, {
                                     type: formatdatas.registeredMail_type,
                                     warranty: formatdatas.registeredMail_warranty,
-                                    issuingSiteId: formatdatas.registeredMail_issuingSite.split('#').slice(-1)[0],
+                                    issuingSiteId: formatdatas.registeredMail_issuingSite,
                                     letter: formatdatas.registeredMail_letter,
                                     recipient: formatdatas.registeredMail_recipient,
                                     reference: formatdatas.registeredMail_reference
