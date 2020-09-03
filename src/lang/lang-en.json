@@ -1978,5 +1978,7 @@
     "registeredMail_SPD": "Inactive",
     "requiredForRegisteredMail": "Fields required to generate registered mails.",
     "registeredMailNumberRangeCreation": "Registered mail number range creation",
-    "registeredMailNumberRangeModification": "Registered mail number range modification"
+    "registeredMailNumberRangeModification": "Registered mail number range modification",
+    "argumentCivilityNotCorrect": "Argument Civility is not a valid civility for a contact",
+    "argumentLastnameAndCompanyEmpty": "Arguments lastname and company are empty for a contact"
 }
