@@ -1973,5 +1973,8 @@
     "externalSignatoryBook": "Parapheur externe",
     "dispositListGeneratedMsg": "Le recommandé a été imprimé dans un <b>descriptif de pli</b>, vous ne pouvez pas modifier les données.",
     "arReceived": "AR réceptionné",
-    "arAlreadyReceived": "Cet AR a déjà été reçu"
+    "arAlreadyReceived": "Cet AR a déjà été reçu",
+    "contactsOfFile": "Contact du fichier",
+    "infoImportcontacts": "La colonne <b>id</b> est utilisée pour identifier un contact",
+    "importContacts": "Importer des contacts"
 }
