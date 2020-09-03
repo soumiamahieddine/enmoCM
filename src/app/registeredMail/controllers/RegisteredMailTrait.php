@@ -267,7 +267,7 @@ trait RegisteredMailTrait
 
         if (empty($registeredMail['deposit_id'])) {
             $registeredMails = RegisteredMailModel::getWithResources([
-                'select'  => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id'],
+                'select'  => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id', 'alt_identifier'],
                 'where'   => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'generated = ?'],
                 'data'    => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], true],
                 'orderBy' => ['number']
@@ -280,7 +280,7 @@ trait RegisteredMailTrait
             }
         } else {
             $registeredMails = RegisteredMailModel::getWithResources([
-                'select'  => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id'],
+                'select'  => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id', 'alt_identifier'],
                 'where'   => ['deposit_id = ?'],
                 'data'    => [$registeredMail['deposit_id']],
                 'orderBy' => ['number']

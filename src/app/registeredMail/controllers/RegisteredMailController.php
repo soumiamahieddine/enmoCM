@@ -719,9 +719,13 @@ class RegisteredMailController
             $pdf->MultiCell(0, 15, "DESCRIPTIF DE PLI - LETTRE RECOMMANDEE INTERNATIONALE AVEC AR", 'LRTB', 'C', 0);
         }
 
+        $pdf->SetXY(10, 20);
+        $pdf->setFont('times', '', 10);
+        $pdf->MultiCell(0, 15, "(Descriptif de pli faisant office de preuve de dépôt après validation de La Poste)", '', 'C', 0);
+
         $pdf->SetXY(10, 30);
         $pdf->setFont('times', 'B', 11);
-        $pdf->Cell(30, 10, "Raison sociale", 1);
+        $pdf->Cell(30, 10, "Raison Sociale", 1);
         $pdf->setFont('times', '', 11);
         $pdf->Cell(85, 10, $args['site']['label'], 1);
         $pdf->Ln();
@@ -731,7 +735,7 @@ class RegisteredMailController
         $pdf->Cell(85, 10, $args['site']['addressNumber'] . ' ' . $args['site']['addressStreet'], 1);
         $pdf->Ln();
         $pdf->setFont('times', 'B', 11);
-        $pdf->Cell(30, 10, "Code postale", 1);
+        $pdf->Cell(30, 10, "Code postal", 1);
         $pdf->setFont('times', '', 11);
         $pdf->Cell(15, 10, $args['site']['addressPostcode'], 1);
         $pdf->setFont('times', 'B', 11);
@@ -742,25 +746,27 @@ class RegisteredMailController
 
         $pdf->SetXY(145, 30);
         $pdf->setFont('times', 'B', 11);
-        $pdf->Cell(55, 10, "N° Client (Coclico)", 1);
+        $pdf->Cell(55, 10, "N° de Client (Coclico)", 1, 0, 'C');
         $pdf->Ln();
         $pdf->SetXY(145, 40);
         $pdf->setFont('times', '', 11);
-        $pdf->Cell(55, 10, $args['site']['accountNumber'], 1);
+        $pdf->Cell(55, 10, $args['site']['accountNumber'], 1, 0, 'C');
         $pdf->Ln();
 
         $pdf->SetXY(145, 50);
         $pdf->setFont('times', 'B', 11);
-        $pdf->Cell(55, 10, "N° Compte de suivi", 1);
+        $pdf->Cell(55, 10, "N° de Compte de suivi", 1, 0, 'C');
         $pdf->Ln();
 
         $pdf->SetXY(145, 60);
         $pdf->setFont('times', '', 11);
-        $pdf->Cell(55, 10, $args['trackingNumber'], 1);
+        $pdf->Cell(55, 10, $args['trackingNumber'], 1, 0, 'C');
         $pdf->Ln();
 
-        $pdf->SetXY(10, 80);
+        $pdf->SetXY(10, 71);
         $pdf->setFont('times', 'B', 11);
+        $pdf->Cell(30, 10, "Site de dépôt", 0);
+        $pdf->SetXY(10, 80);
         $pdf->Cell(30, 10, "Lieu", 1);
         $pdf->setFont('times', '', 11);
         $pdf->Cell(100, 10, $args['site']['postOfficeLabel'], 1);
@@ -774,11 +780,11 @@ class RegisteredMailController
         $pdf->SetXY(10, 100);
         $pdf->Cell(10, 10, "", 1);
         $pdf->setFont('times', 'B', 11);
-        $pdf->Cell(30, 10, "ID du pli", 1);
-        $pdf->Cell(10, 10, "NG*", 1);
-        $pdf->Cell(15, 10, "CRBT", 1);
-        $pdf->Cell(30, 10, "Référence", 1);
-        $pdf->Cell(95, 10, "Destinataire", 1);
+        $pdf->Cell(30, 10, "ID du pli", 1, 0, 'C');
+        $pdf->Cell(10, 10, "NG*", 1, 0, 'C');
+        $pdf->Cell(15, 10, "CRBT", 1, 0, 'C');
+        $pdf->Cell(30, 10, "Référence", 1, 0, 'C');
+        $pdf->Cell(95, 10, "Destinataire", 1, 0, 'C');
         $pdf->Ln();
 
         // List
@@ -786,8 +792,6 @@ class RegisteredMailController
             if ($position % 9 == 0) {
                 $nb++;
             }
-
-            $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $registeredMail['number']]);
 
             $referenceInfo = json_decode($registeredMail['recipient'], true);
             $recipient = ContactController::getContactAfnor([
@@ -805,12 +809,12 @@ class RegisteredMailController
             ]);
 
             $pdf->setFont('times', '', 9);
-            $pdf->Cell(10, 10, $position + 1, 1);
+            $pdf->Cell(10, 10, $position + 1, 1, 0, 'C');
             $pdf->setFont('times', '', 9);
-            $pdf->Cell(30, 10, $registeredMailNumber, 1);
-            $pdf->Cell(10, 10, $registeredMail['warranty'], 1);
+            $pdf->Cell(30, 10, $registeredMail['alt_identifier'], 1, 0, 'C');
+            $pdf->Cell(10, 10, $registeredMail['warranty'], 1, 0, 'C');
             $pdf->Cell(15, 10, "", 1);
-            $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 22, "..."), 1);
+            $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 22, "..."), 1, 0, 'C');
 
             $pdf->setFont('times', '', 6);
             if (strlen($recipient[1] . " " . $recipient[4] . " " . $recipient[6]) > 60) {
@@ -850,7 +854,7 @@ class RegisteredMailController
         }
         $pdf->setFont('times', 'B', 9);
         $pdf->SetXY(10, 228);
-        $pdf->Cell(0, 0, 'Partie réservée au contrôle postal:');
+        $pdf->Cell(0, 0, 'Partie réservée au contrôle postal');
         $pdf->SetXY(110, 238);
         $pdf->setFont('times', '', 11);
         $pdf->SetXY(10, 233);
@@ -861,9 +865,9 @@ class RegisteredMailController
         $position = $position + 1;
         $pdf->Cell(0, 10, $position . " recommandé(s)", 1);
         $pdf->SetXY(10, 234);
-        $pdf->Cell(0, 0, 'Commentaire:');
+        $pdf->Cell(0, 0, 'Commentaire :');
         $pdf->SetXY(110, 234);
-        $pdf->Cell(0, 0, 'Timbre à date:');
+        $pdf->Cell(0, 0, 'Timbre à date :');
         $pdf->setFont('times', 'I', 8);
         $pdf->SetXY(100, 268);
         $pdf->Cell(0, 0, 'Visa après contrôle des quantités.');
@@ -884,15 +888,19 @@ class RegisteredMailController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $registeredMail = RegisteredMailModel::getByResId(['select' => ['issuing_site', 'type', 'deposit_id', 'warranty', 'letter', 'recipient', 'reference', 'generated', 'number'], 'resId' => $args['resId']]);
+        $registeredMail = RegisteredMailModel::getWithResources([
+            'select' => ['issuing_site', 'type', 'deposit_id', 'warranty', 'letter', 'recipient', 'reference', 'generated', 'number', 'alt_identifier'],
+            'where'  => ['res_letterbox.res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
 
         if (!empty($registeredMail)) {
-            $registeredMail['recipient']   = json_decode($registeredMail['recipient'], true);
-            $registeredMail['number']      = RegisteredMailController::getRegisteredMailNumber(['type' => $registeredMail['type'], 'rawNumber' => $registeredMail['number']]);
-            $registeredMail['issuingSite'] = 'issuingSite#'.$registeredMail['issuing_site'];
-            unset($registeredMail['issuing_site']);
+            $registeredMail[0]['recipient']   = json_decode($registeredMail[0]['recipient'], true);
+            $registeredMail[0]['number']      = $registeredMail[0]['alt_identifier'];
+            $registeredMail[0]['issuingSite'] = 'issuingSite#'.$registeredMail[0]['issuing_site'];
+            unset($registeredMail[0]['issuing_site']);
         }
 
-        return $registeredMail;
+        return $registeredMail[0];
     }
 }
