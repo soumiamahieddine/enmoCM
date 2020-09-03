@@ -1,14 +1,14 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {FormBuilder, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {catchError, tap} from 'rxjs/operators';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { FunctionsService } from '../../../service/functions.service';
-import {AppService} from '../../../service/app.service';
-import {TranslateService} from '@ngx-translate/core';
-import {MatTableDataSource} from '@angular/material/table';
+import { AppService } from '../../../service/app.service';
+import { TranslateService } from '@ngx-translate/core';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'app-acknowledgement-reception',
@@ -58,10 +58,10 @@ export class AcknowledgementReceptionComponent implements OnInit {
         this.headerService.setHeader(this.translate.instant('lang.arReception'));
         const validatorNumber: ValidatorFn[] = [Validators.pattern(/(2C|2D|RW) ([0-9]{3} [0-9]{3} [0-9]{4}) ([0-9])/), Validators.required];
         this.adminFormGroup = this._formBuilder.group({
-            type:              ['', Validators.required],
-            number:            ['', validatorNumber],
-            receivedDate:      ['', Validators.required],
-            returnReason:      ['', Validators.required],
+            type: ['', Validators.required],
+            number: ['', validatorNumber],
+            receivedDate: ['', Validators.required],
+            returnReason: ['', Validators.required],
             returnReasonOther: ['']
         });
         this.loading = false;
