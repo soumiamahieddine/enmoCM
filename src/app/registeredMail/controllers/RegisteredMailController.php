@@ -98,9 +98,15 @@ class RegisteredMailController
                 return $response->withStatus(400)->withJson(['errors' => 'No range found']);
             }
 
-            $status = $range[0]['current_number'] + 1 > $range[0]['range_end'] ? 'DEL' : 'OK';
+            if ($range[0]['current_number'] + 1 > $range[0]['range_end']) {
+                $status = 'DEL';
+                $nextNumber = $range[0]['current_number'];
+            } else {
+                $status = 'OK';
+                $nextNumber = $range[0]['current_number'] + 1;
+            }
             RegisteredNumberRangeModel::update([
-                'set'   => ['current_number' => $range[0]['current_number'] + 1, 'status' => $status],
+                'set'   => ['current_number' => $nextNumber, 'status' => $status],
                 'where' => ['id = ?'],
                 'data'  => [$range[0]['id']]
             ]);
@@ -761,7 +767,10 @@ class RegisteredMailController
         $pdf->setFont('times', 'B', 11);
         $pdf->Cell(20, 10, "Date", 1);
         $pdf->setFont('times', '', 11);
-        $pdf->Cell(40, 10, date("d/m/y"), 1);
+
+        $date = new \DateTime($args['departureDate']);
+
+        $pdf->Cell(40, 10, $date->format('d/m/Y'), 1);
         $pdf->SetXY(10, 100);
         $pdf->Cell(10, 10, "", 1);
         $pdf->setFont('times', 'B', 11);
@@ -801,7 +810,7 @@ class RegisteredMailController
             $pdf->Cell(30, 10, $registeredMailNumber, 1);
             $pdf->Cell(10, 10, $registeredMail['warranty'], 1);
             $pdf->Cell(15, 10, "", 1);
-            $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 25, ""), 1);
+            $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 22, "..."), 1);
 
             $pdf->setFont('times', '', 6);
             if (strlen($recipient[1] . " " . $recipient[4] . " " . $recipient[6]) > 60) {
@@ -861,7 +870,7 @@ class RegisteredMailController
 
         $pdf->SetXY(10, 276);
         $pdf->setFont('times', 'I', 8);
-        $pdf->Cell(0, 0, "*Niveau de garantie (R1 pour tous ou R2, R3");
+        $pdf->Cell(0, 0, "*Niveau de garantie (R1 pour tous ou R2, R3)");
         $pdf->SetXY(-30, 276);
         $pdf->setFont('times', 'I', 8);
         $pdf->Cell(0, 0, $page . '/' . $nb);
