@@ -179,7 +179,8 @@ trait RegisteredMailTrait
             'sender'    => $sender
         ]);
 
-        return ['data' => base64_encode($registeredMailPDF['fileContent'])];
+        return ['data' => ['fileContent' => base64_encode($registeredMailPDF['fileContent']),
+                            'registeredMailNumber' => $registeredMailPDF['registeredMailNumber']]];
     }
 
     public static function printRegisteredMail(array $args)

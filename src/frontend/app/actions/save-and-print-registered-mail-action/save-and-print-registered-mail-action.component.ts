@@ -57,8 +57,8 @@ export class SaveAndPrintRegisteredMailActionComponent implements OnInit {
                     this.notify.error(data.errors);
                 } else {
                     const downloadLink = document.createElement('a');
-                    downloadLink.href = `data:application/pdf;base64,${data}`;
-                    downloadLink.setAttribute('download', 'recommande.pdf');
+                    downloadLink.href = `data:application/pdf;base64,${data.fileContent}`;
+                    downloadLink.setAttribute('download', 'recommande_' + data.registeredMailNumber.split(' ').join('_') + '.pdf');
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
                     this.dialogRef.close(this.data.resIds);
@@ -69,7 +69,7 @@ export class SaveAndPrintRegisteredMailActionComponent implements OnInit {
                 this.notify.handleSoftErrors(err);
                 return of(false);
             })
-        ).subscribe()
+        ).subscribe();
     }
 
     executeAction() {

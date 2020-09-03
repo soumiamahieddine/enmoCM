@@ -44,7 +44,24 @@ export class PrintRegisteredMailActionComponent implements OnInit {
                     Object.values(data.data).forEach((encodedFile: string) => {
                         if (!this.functions.empty(encodedFile)) {
                             downloadLink.href = `data:application/pdf;base64,${encodedFile}`;
-                            downloadLink.setAttribute('download', 'recommande.pdf');
+                            let today: any;
+                            let dd: any;
+                            let mm: any;
+                            let yyyy: any;
+
+                            today = new Date();
+                            dd = today.getDate();
+                            mm = today.getMonth() + 1;
+                            yyyy = today.getFullYear();
+
+                            if (dd < 10) {
+                                dd = '0' + dd;
+                            }
+                            if (mm < 10) {
+                                mm = '0' + mm;
+                            }
+                            today = dd + '-' + mm + '-' + yyyy;
+                            downloadLink.setAttribute('download', 'recommande_' + today + '.pdf');
                             document.body.appendChild(downloadLink);
                             downloadLink.click();
                             this.dialogRef.close(this.data.resIds);

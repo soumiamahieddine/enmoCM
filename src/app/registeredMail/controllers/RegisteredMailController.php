@@ -208,41 +208,6 @@ class RegisteredMailController
         return $registeredMailNumber;
     }
 
-    public function printTest(Request $request, Response $response)
-    {
-        $args = [
-            'type' => 'RW',
-            'number'    => '551',
-            'warranty'  => 'R2',
-            'letter'    => true,
-            'reference'    => '15/08/2020 - ma ref',
-            'recipient' => [
-                'AFNOR',
-                'PSG',
-                'Eric Choupo',
-                'Porte 160',
-                '5 Rue de Paris',
-                'Batiment C',
-                '75001 Paris',
-                'FRANCE'
-            ],
-            'sender' => [
-                'AFNOR',
-                'PSG',
-                'Edinson Cavani',
-                'Porte 140',
-                '10 Rue de France',
-                'Batiment B',
-                '75016 Paris',
-                'FRANCE'
-            ],
-        ];
-
-        RegisteredMailController::getRegisteredMailPDF($args);
-
-        return $response->withJson(['test' => 2]);
-    }
-
     public static function getRegisteredMailPDF(array $args)
     {
         $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $args['number']]);
@@ -630,7 +595,7 @@ class RegisteredMailController
 
         $fileContent = $pdf->Output('', 'S');
 
-        return ['fileContent' => $fileContent];
+        return ['fileContent' => $fileContent, 'registeredMailNumber' => $registeredMailNumber];
     }
 
     public static function getDepositListPdf(array $args)
