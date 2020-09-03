@@ -58,9 +58,15 @@ trait RegisteredMailTrait
             return ['errors' => ['No range found']];
         }
 
-        $status = $range[0]['current_number'] + 1 > $range[0]['range_end'] ? 'DEL' : 'OK';
+        if ($range[0]['current_number'] + 1 > $range[0]['range_end']) {
+            $status = 'DEL';
+            $nextNumber = $range[0]['current_number'];
+        } else {
+            $status = 'OK';
+            $nextNumber = $range[0]['current_number'] + 1;
+        }
         RegisteredNumberRangeModel::update([
-            'set'   => ['current_number' => $range[0]['current_number'] + 1, 'status' => $status],
+            'set'   => ['current_number' => $nextNumber, 'status' => $status],
             'where' => ['id = ?'],
             'data'  => [$range[0]['id']]
         ]);
@@ -123,9 +129,15 @@ trait RegisteredMailTrait
             return ['errors' => ['No range found']];
         }
 
-        $status = $range[0]['current_number'] + 1 > $range[0]['range_end'] ? 'DEL' : 'OK';
+        if ($range[0]['current_number'] + 1 > $range[0]['range_end']) {
+            $status = 'DEL';
+            $nextNumber = $range[0]['current_number'];
+        } else {
+            $status = 'OK';
+            $nextNumber = $range[0]['current_number'] + 1;
+        }
         RegisteredNumberRangeModel::update([
-            'set'   => ['current_number' => $range[0]['current_number'] + 1, 'status' => $status],
+            'set'   => ['current_number' => $nextNumber, 'status' => $status],
             'where' => ['id = ?'],
             'data'  => [$range[0]['id']]
         ]);
