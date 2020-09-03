@@ -889,7 +889,7 @@ class RegisteredMailController
         if (!empty($registeredMail)) {
             $registeredMail['recipient']   = json_decode($registeredMail['recipient'], true);
             $registeredMail['number']      = RegisteredMailController::getRegisteredMailNumber(['type' => $registeredMail['type'], 'rawNumber' => $registeredMail['number']]);
-            $registeredMail['issuingSite'] = 'issuingSite#'.$registeredMail['issuing_site'];
+            $registeredMail['issuingSite'] = $registeredMail['issuing_site'];
             unset($registeredMail['issuing_site']);
         }
 
