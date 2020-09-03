@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { AlertComponent } from '../../../../plugins/modal/alert.component';
 import { LocalStorageService } from '../../../../service/local-storage.service';
 import { HeaderService } from '../../../../service/header.service';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     templateUrl: 'users-import.component.html',
@@ -44,6 +45,8 @@ export class UsersImportComponent implements OnInit {
     countAdd: number = 0;
     countUp: number = 0;
 
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
@@ -63,8 +66,7 @@ export class UsersImportComponent implements OnInit {
 
     changeColumn(coldb: string, colCsv: string) {
         this.userData = [];
-        const limit = this.csvData.length < 10 ? this.csvData.length : 10;
-        for (let index = this.hasHeader ? 1 : 0; index < limit; index++) {
+        for (let index = this.hasHeader ? 1 : 0; index < this.csvData.length; index++) {
             const data = this.csvData[index];
             this.userData.push({
                 'id': coldb === 'id' ? data[this.csvColumns.filter(col => col === colCsv)[0]] : data[this.associatedColmuns['id']],
@@ -79,7 +81,10 @@ export class UsersImportComponent implements OnInit {
         this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
         this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
 
-        this.dataSource = new MatTableDataSource(this.userData);
+        setTimeout(() => {
+            this.dataSource = new MatTableDataSource(this.userData);
+            this.dataSource.paginator = this.paginator;
+        }, 0);
     }
 
     uploadCsv(fileInput: any) {
@@ -89,7 +94,7 @@ export class UsersImportComponent implements OnInit {
             let rawCsv = [];
             const reader = new FileReader();
 
-            reader.readAsText(fileInput.target.files[0]);
+            reader.readAsText(fileInput.target.files[0], 'ISO-8859-1');
 
             reader.onload = (value: any) => {
                 rawCsv = value.target.result.split('\n');
@@ -148,8 +153,7 @@ export class UsersImportComponent implements OnInit {
 
     initData() {
         this.userData = [];
-        const limit = this.csvData.length < 10 ? this.csvData.length : 10;
-        for (let index = this.hasHeader ? 1 : 0; index < limit; index++) {
+        for (let index = this.hasHeader ? 1 : 0; index < this.csvData.length; index++) {
             const data = this.csvData[index];
             this.associatedColmuns['id'] = this.csvColumns[0];
             this.associatedColmuns['user_id'] = this.csvColumns[1];
@@ -168,7 +172,10 @@ export class UsersImportComponent implements OnInit {
                 'phone': data[this.csvColumns[5]]
             });
         }
-        this.dataSource = new MatTableDataSource(this.userData);
+        setTimeout(() => {
+            this.dataSource = new MatTableDataSource(this.userData);
+            this.dataSource.paginator = this.paginator;
+        }, 0);
     }
 
     dndUploadFile(event: any) {
@@ -185,7 +192,7 @@ export class UsersImportComponent implements OnInit {
     onSubmit() {
         const dataToSend: any[] = [];
         let confirmText = '';
-        this.translate.get('lang.confirmImportUsers', {0: this.countAll}).subscribe((res: string) => {
+        this.translate.get('lang.confirmImportUsers', { 0: this.countAll }).subscribe((res: string) => {
             confirmText = `${res} ?<br/><br/>`;
             confirmText += `<ul><li><b>${this.countAdd}</b> ${this.translate.instant('lang.additions')}</li><li><b>${this.countUp}</b> ${this.translate.instant('lang.modifications')}</li></ul>`;
         });
@@ -213,7 +220,7 @@ export class UsersImportComponent implements OnInit {
                 if (data.warnings.count > 0) {
                     textModal = `<br/>${data.warnings.count} ${this.translate.instant('lang.withWarnings')}  : <ul>`;
                     data.errors.details.forEach(element => {
-                        textModal  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 :  element.index + 1})</li>`;
+                        textModal += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 : element.index + 1})</li>`;
                     });
                     textModal += '</ul>';
                 }
@@ -221,7 +228,7 @@ export class UsersImportComponent implements OnInit {
                 if (data.errors.count > 0) {
                     textModal += `<br/>${data.errors.count} ${this.translate.instant('lang.withErrors')}  : <ul>`;
                     data.errors.details.forEach(element => {
-                        textModal  += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 :  element.index + 1})</li>`;
+                        textModal += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 : element.index + 1})</li>`;
                     });
                     textModal += '</ul>';
                 }
