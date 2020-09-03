@@ -1243,10 +1243,10 @@ class ContactController
                         // Check custom field format
                         $type = $customTypes[(string)$customId];
                         if (in_array($type, ['checkbox', 'select', 'radio']) && !Validator::arrayType()->validate($contact[$frontField])) {
-                            $errors[] = ['error' => "Argument {$frontField} is not an array for contact {$key}", 'index' => $key, 'lang' => 'argumentNotAnArray']; // TODO lang
+                            $errors[] = ['error' => "Argument {$frontField} is not an array for contact {$key}", 'index' => $key, 'lang' => 'argumentNotArray'];
                             continue 2;
                         } elseif ($customTypes[$customId] == 'integer' && !Validator::intVal()->validate($contact[$frontField])) {
-                            $errors[] = ['error' => "Argument {$frontField} is not an integer for contact {$key}", 'index' => $key, 'lang' => 'argumentNotAnInteger'];
+                            $errors[] = ['error' => "Argument {$frontField} is not an integer for contact {$key}", 'index' => $key, 'lang' => 'argumentNotInteger'];
                             continue 2;
                         } elseif ($customTypes[$customId] == 'date' && !Validator::date()->validate($contact[$frontField])) {
                             $errors[] = ['error' => "Argument {$frontField} is not a date for contact {$key}", 'index' => $key, 'lang' => 'argumentNotDate'];
@@ -1284,7 +1284,7 @@ class ContactController
                 $mandatoryParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['mandatory = ?', 'identifier not in (?)'], 'data' => [true, ['lastname', 'company']]]);
                 foreach ($mandatoryParameters as $mandatoryParameter) {
                         if (empty($contact[$mandatoryParameter['identifier']])) {
-                            $errors[] = ['error' => "Argument {$mandatoryParameter['identifier']} is empty for contact {$key}", 'index' => $key, 'lang' => 'argumentMailEmpty']; // TODO lang
+                            $errors[] = ['error' => "Argument {$mandatoryParameter['identifier']} is empty for contact {$key}", 'index' => $key, 'lang' => 'argumentMandatoryEmpty'];
                             continue 2;
                         }
                 }

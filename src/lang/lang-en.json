@@ -1980,5 +1980,10 @@
     "registeredMailNumberRangeCreation": "Registered mail number range creation",
     "registeredMailNumberRangeModification": "Registered mail number range modification",
     "argumentCivilityNotCorrect": "Argument Civility is not a valid civility for a contact",
-    "argumentLastnameAndCompanyEmpty": "Arguments lastname and company are empty for a contact"
+    "argumentLastnameAndCompanyEmpty": "Arguments lastname and company are empty for a contact",
+    "argumentNotArray": "An argument is not an array for a contact",
+    "argumentNotInteger": "An argument is not an integer for a contact",
+    "argumentNotDate": "An argument is not a date for a contact",
+    "argumentNotString": "An argument is not a string for a contact",
+    "argumentMandatoryEmpty": "Mandatory argument is empty for a contact"
 }

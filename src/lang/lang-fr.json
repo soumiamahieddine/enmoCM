@@ -1978,5 +1978,10 @@
     "infoImportcontacts": "La colonne <b>id</b> est utilisée pour identifier un contact",
     "importContacts": "Importer des contacts",
     "argumentCivilityNotCorrect": "La donnée civility n'est pas une civilité valide pour un contact",
-    "argumentLastnameAndCompanyEmpty": "Les données lastname et company sont vides pour un contact"
+    "argumentLastnameAndCompanyEmpty": "Les données lastname et company sont vides pour un contact",
+    "argumentNotArray": "Une donnée n'est pas un tableau pour un contact",
+    "argumentNotInteger": "Une donnée n'est pas un entier pour un contact",
+    "argumentNotDate": "Une donnée n'est pas une date pour un contact",
+    "argumentNotString": "Une donnée n'est pas une chaîne de caractères pour un contact",
+    "argumentMandatoryEmpty": "Une donnée obligatoire est vide pour un contact"
 }
