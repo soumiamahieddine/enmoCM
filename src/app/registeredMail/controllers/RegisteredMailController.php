@@ -897,7 +897,7 @@ class RegisteredMailController
         if (!empty($registeredMail)) {
             $registeredMail[0]['recipient']   = json_decode($registeredMail[0]['recipient'], true);
             $registeredMail[0]['number']      = $registeredMail[0]['alt_identifier'];
-            $registeredMail[0]['issuingSite'] = 'issuingSite#'.$registeredMail[0]['issuing_site'];
+            $registeredMail[0]['issuingSite'] = $registeredMail[0]['issuing_site'];
             unset($registeredMail[0]['issuing_site']);
         }
 
