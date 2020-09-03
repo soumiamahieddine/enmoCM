@@ -14,10 +14,13 @@
 namespace RegisteredMail\controllers;
 
 use Com\Tecnick\Barcode\Barcode;
-use Group\controllers\PrivilegeController;
-use Parameter\models\ParameterModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use Convert\models\AdrModel;
+use Docserver\controllers\DocserverController;
+use Group\controllers\PrivilegeController;
+use Parameter\models\ParameterModel;
+use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
 use RegisteredMail\models\RegisteredNumberRangeModel;
 use Resource\controllers\ResController;
@@ -59,9 +62,17 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body recipient is empty']);
         }
 
-        $resource = ResModel::getById(['select' => ['departure_date'], 'resId' => $args['resId']]);
-        $date = new \DateTime($resource['departure_date']);
-        $date = $date->format('d/m/Y');
+        $issuingSite = IssuingSiteModel::getById([
+            'id'        => $registeredMail['issuing_site'],
+            'select'    => ['label', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country']
+        ]);
+        if (empty($issuingSite)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Issuing site does not exist']);
+        }
+
+        $resource = ResModel::getById(['select' => ['departure_date', 'alt_identifier'], 'resId' => $args['resId']]);
+        $date     = new \DateTime($resource['departure_date']);
+        $date     = $date->format('d/m/Y');
 
         $refPos = strpos($body['reference'], '-');
         if ($refPos !== false) {
@@ -79,9 +90,9 @@ class RegisteredMailController
 
         if ($registeredMail['type'] != $body['type']) {
             $range = RegisteredNumberRangeModel::get([
-                'select'    => ['id', 'range_end', 'current_number'],
-                'where'     => ['type = ?', 'site_id = ?', 'status = ?'],
-                'data'      => [$body['type'], $registeredMail['issuing_site'], 'OK']
+                'select' => ['id', 'range_end', 'current_number'],
+                'where'  => ['type = ?', 'site_id = ?', 'status = ?'],
+                'data'   => [$body['type'], $registeredMail['issuing_site'], 'OK']
             ]);
             if (empty($range)) {
                 return $response->withStatus(400)->withJson(['errors' => 'No range found']);
@@ -95,12 +106,31 @@ class RegisteredMailController
             ]);
 
             $set['number'] = $range[0]['current_number'];
+
+            $resource['alt_identifier'] = RegisteredMailController::getRegisteredMailNumber(['type' => $body['type'], 'rawNumber' => $range[0]['current_number']]);
+            ResModel::update([
+                'set'   => ['alt_identifier' => $resource['alt_identifier']],
+                'where' => ['res_id = ?'],
+                'data'  => [$args['resId']]
+            ]);
         }
 
         RegisteredMailModel::update([
             'set'   => $set,
             'where' => ['res_id = ?'],
             'data'  => [$args['resId']]
+        ]);
+
+        RegisteredMailController::generateRegisteredMailPDf([
+            'registeredMailNumber' => $resource['alt_identifier'],
+            'type'                 => $body['type'],
+            'warranty'             => $body['warranty'],
+            'letter'               => empty($body['letter']) ? 'false' : 'true',
+            'reference'            => $body['reference'],
+            'recipient'            => $body['recipient'],
+            'issuingSite'          => $issuingSite,
+            'resId'                => $args['resId'],
+            'savePdf'              => true
         ]);
 
         return $response->withStatus(204);
@@ -208,9 +238,50 @@ class RegisteredMailController
         return $registeredMailNumber;
     }
 
+    public static function generateRegisteredMailPDf(array $args)
+    {
+        $sender = ContactController::getContactAfnor([
+            'company'               => $args['issuingSite']['label'],
+            'address_number'        => $args['issuingSite']['address_number'],
+            'address_street'        => $args['issuingSite']['address_street'],
+            'address_additional1'   => $args['issuingSite']['address_additional1'],
+            'address_additional2'   => $args['issuingSite']['address_additional2'],
+            'address_postcode'      => $args['issuingSite']['address_postcode'],
+            'address_town'          => $args['issuingSite']['address_town'],
+            'address_country'       => $args['issuingSite']['address_country']
+        ]);
+
+        $recipient = ContactController::getContactAfnor([
+            'company'               => $args['recipient']['company'],
+            'civility'              => ContactModel::getCivilityId(['civilityLabel' => $args['recipient']['civility']]),
+            'firstname'             => $args['recipient']['firstname'],
+            'lastname'              => $args['recipient']['lastname'],
+            'address_number'        => $args['recipient']['addressNumber'],
+            'address_street'        => $args['recipient']['addressStreet'],
+            'address_additional1'   => $args['recipient']['addressAdditional1'],
+            'address_additional2'   => $args['recipient']['addressAdditional2'],
+            'address_postcode'      => $args['recipient']['addressPostcode'],
+            'address_town'          => $args['recipient']['addressTown'],
+            'address_country'       => $args['recipient']['addressCountry']
+        ]);
+
+        $registeredMailPDF = RegisteredMailController::getRegisteredMailPDF([
+            'registeredMailNumber' => $args['registeredMailNumber'],
+            'type'                 => $args['type'],
+            'warranty'             => $args['warranty'],
+            'letter'               => $args['letter'],
+            'reference'            => $args['reference'],
+            'recipient'            => $recipient,
+            'sender'               => $sender,
+            'resId'                => $args['resId'],
+            'savePdf'              => $args['savePdf']
+        ]);
+        return $registeredMailPDF;
+    }
+
     public static function getRegisteredMailPDF(array $args)
     {
-        $registeredMailNumber = RegisteredMailController::getRegisteredMailNumber(['type' => $args['type'], 'rawNumber' => $args['number']]);
+        $registeredMailNumber = $args['registeredMailNumber'];
 
         $pdf = new Fpdi();
         $pdf->setPrintHeader(false);
@@ -595,7 +666,29 @@ class RegisteredMailController
 
         $fileContent = $pdf->Output('', 'S');
 
-        return ['fileContent' => $fileContent, 'registeredMailNumber' => $registeredMailNumber];
+        if ($args['savePdf']) {
+            AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            $storeResult = DocserverController::storeResourceOnDocServer([
+                'collId'            => 'letterbox_coll',
+                'docserverTypeId'   => 'DOC',
+                'encodedResource'   => base64_encode($fileContent),
+                'format'            => 'pdf'
+            ]);
+            if (!empty($storeResult['errors'])) {
+                return ['errors' => '[storeResource] ' . $storeResult['errors']];
+            }
+    
+            $data['docserver_id']   = $storeResult['docserver_id'];
+            $data['filename']       = $storeResult['file_destination_name'];
+            $data['filesize']       = $storeResult['fileSize'];
+            $data['path']           = $storeResult['directory'];
+            $data['fingerprint']    = $storeResult['fingerPrint'];
+            $data['format']         = 'pdf';
+    
+            ResModel::update(['set' => $data, 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        }
+
+        return ['fileContent' => $fileContent];
     }
 
     public static function getDepositListPdf(array $args)

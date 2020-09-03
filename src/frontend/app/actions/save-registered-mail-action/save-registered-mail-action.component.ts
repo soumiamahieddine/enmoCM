@@ -49,7 +49,8 @@ export class SaveRegisteredMailActionComponent implements OnInit {
                         issuingSiteId: this.data.resource.registeredMail_issuingSite.split('#').slice(-1)[0],
                         letter: this.data.resource.registeredMail_letter,
                         recipient: this.data.resource.registeredMail_recipient,
-                        reference: this.data.resource.registeredMail_reference
+                        reference: this.data.resource.registeredMail_reference,
+                        generated: false
                     }
                 })
             ),
