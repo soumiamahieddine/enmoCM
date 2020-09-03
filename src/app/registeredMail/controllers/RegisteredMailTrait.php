@@ -299,13 +299,13 @@ trait RegisteredMailTrait
         static $filesByType;
         static $currentDepositId;
         static $registeredMailsIdsByType;
-        static $processedTypes;
+        static $processedTypesSites;
 
         if ($filesByType === null) {
             $filesByType = [
-                '2D' => null,
-                '2C' => null,
-                'RW' => null
+                '2D' => [],
+                '2C' => [],
+                'RW' => []
             ];
         }
         if ($registeredMailsIdsByType === null) {
@@ -318,8 +318,8 @@ trait RegisteredMailTrait
         if ($processedResources === null) {
             $processedResources = [];
         }
-        if ($processedTypes === null) {
-            $processedTypes = [];
+        if ($processedTypesSites === null) {
+            $processedTypesSites = [];
         }
 
         if (in_array($args['resId'], $processedResources)) {
@@ -359,7 +359,7 @@ trait RegisteredMailTrait
                 'orderBy' => ['number']
             ]);
 
-            if (empty($currentDepositId) || !in_array($registeredMail['type'], $processedTypes)) {
+            if (empty($currentDepositId) || !in_array($registeredMail['type'].'_'.$registeredMail['issuing_site'], $processedTypesSites)) {
                 $lastDepositId = ParameterModel::getById(['id' => 'last_deposit_id', 'select' => ['param_value_int']]);
                 $currentDepositId = $lastDepositId['param_value_int'] + 1;
                 ParameterModel::update(['id' => 'last_deposit_id', 'param_value_int' => $currentDepositId]);
@@ -396,11 +396,11 @@ trait RegisteredMailTrait
         $processedResources = array_merge($processedResources, $resIds);
         $registeredMailsIdsByType[$registeredMail['type']] = $resIds;
 
-        $filesByType[$registeredMail['type']] = base64_encode($resultPDF['fileContent']);
+        $filesByType[$registeredMail['type']][] = base64_encode($resultPDF['fileContent']);
 
         if (!empty($currentDepositId)) {
             foreach ($registeredMailsIdsByType as $type => $ids) {
-                if (!empty($ids) && !in_array($type, $processedTypes)) {
+                if (!empty($ids) && !in_array($type.'_'.$registeredMail['issuing_site'], $processedTypesSites)) {
                     RegisteredMailModel::update([
                         'set'   => ['deposit_id' => $currentDepositId],
                         'where' => ['res_id in (?)'],
@@ -409,46 +409,48 @@ trait RegisteredMailTrait
                 }
             }
         }
-        $processedTypes[] = $registeredMail['type'];
+        $processedTypesSites[] = $registeredMail['type'].'_'.$registeredMail['issuing_site'];
 
         $finalFile = null;
-        foreach ($filesByType as $type => $file) {
-            if (empty($file)) {
+        foreach ($filesByType as $type => $files) {
+            if (empty($files)) {
                 continue;
             }
-            if (empty($finalFile)) {
-                $finalFile = $file;
-                continue;
-            }
+            foreach ($files as $file) {
+                if (empty($finalFile)) {
+                    $finalFile = $file;
+                    continue;
+                }
 
-            $concatPdf = new Fpdi('P', 'pt');
-            $concatPdf->setPrintHeader(false);
-            $concatPdf->setPrintFooter(false);
-            $tmpPath = CoreConfigModel::getTmpPath();
+                $concatPdf = new Fpdi('P', 'pt');
+                $concatPdf->setPrintHeader(false);
+                $concatPdf->setPrintFooter(false);
+                $tmpPath = CoreConfigModel::getTmpPath();
 
-            $firstFile = $tmpPath . 'depositList_first_file' . rand() . '.pdf';
-            file_put_contents($firstFile, base64_decode($finalFile));
-            $pageCount = $concatPdf->setSourceFile($firstFile);
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                $pageId = $concatPdf->ImportPage($pageNo);
+                $firstFile = $tmpPath . 'depositList_first_file' . rand() . '.pdf';
+                file_put_contents($firstFile, base64_decode($finalFile));
+                $pageCount = $concatPdf->setSourceFile($firstFile);
+                for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    $pageId = $concatPdf->ImportPage($pageNo);
+                    $s = $concatPdf->getTemplatesize($pageId);
+                    $concatPdf->AddPage($s['orientation'], $s);
+                    $concatPdf->useImportedPage($pageId);
+                }
+
+                $secondFile = $tmpPath . 'depositList_second_file' . rand() . '.pdf';
+                file_put_contents($secondFile, base64_decode($file));
+                $concatPdf->setSourceFile($secondFile);
+                $pageId = $concatPdf->ImportPage(1);
                 $s = $concatPdf->getTemplatesize($pageId);
                 $concatPdf->AddPage($s['orientation'], $s);
                 $concatPdf->useImportedPage($pageId);
+
+                $fileContent = $concatPdf->Output('', 'S');
+
+                $finalFile = base64_encode($fileContent);
+                unlink($firstFile);
+                unlink($secondFile);
             }
-
-            $secondFile = $tmpPath . 'depositList_second_file' . rand() . '.pdf';
-            file_put_contents($secondFile, base64_decode($file));
-            $concatPdf->setSourceFile($secondFile);
-            $pageId = $concatPdf->ImportPage(1);
-            $s = $concatPdf->getTemplatesize($pageId);
-            $concatPdf->AddPage($s['orientation'], $s);
-            $concatPdf->useImportedPage($pageId);
-
-            $fileContent = $concatPdf->Output('', 'S');
-
-            $finalFile = base64_encode($fileContent);
-            unlink($firstFile);
-            unlink($secondFile);
         }
 
         return ['data' => ['encodedFile' => $finalFile]];

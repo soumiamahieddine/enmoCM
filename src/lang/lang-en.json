@@ -1915,7 +1915,7 @@
     "authorizedRoutesInformations": "One route per row. Routes documentation",
     "canNotDisabledField": "This field can not be disabled because it is empty and mandatory",
     "registeredMailsIncludedExplication": "All registered mails with the same desired shipping date, same type and same issuing site will be included in the deposit list.",
-    "registeredMailsIncluded": "Number of registered mails included",
+    "registeredMailsIncluded": "Registered mails numbers included :",
     "cannotGenerateDepositListForMails": "Imposible to generate for the following registered mails :",
     "accountNumberAlreadyUsed": "Account number is already used by another issuing site",
     "rangeStartLargerThanRangeEnd": "Range start cannot be larger than range end",

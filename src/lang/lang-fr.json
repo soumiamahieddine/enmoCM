@@ -1947,7 +1947,7 @@
     "authorizedRoutesInformations": "Une route par ligne. Documentation des routes",
     "canNotDisabledField": "Le champ ne peut pas être désactivé car il est vide et obligatoire",
     "registeredMailsIncludedExplication": "Tous les recommandés avec la même date d'expédition souhaitée, le même type et le même site émetteur seront inclus dans le bordereau.",
-    "registeredMailsIncluded": "Nombre de recommandés inclus :",
+    "registeredMailsIncluded": "Numéros de recommandés inclus :",
     "cannotGenerateDepositListForMails": "Génération impossible pour les recommandés suivants :",
     "accountNumberAlreadyUsed": "Le N° COCLICO est déjà utilisé par un autre site émetteur",
     "rangeStartLargerThanRangeEnd": "Le début de la plage ne peut pas être plus grand que la fin de la plage",

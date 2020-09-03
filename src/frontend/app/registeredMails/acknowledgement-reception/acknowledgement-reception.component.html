@@ -42,7 +42,6 @@
                             </mat-form-field>
 
                             <mat-form-field *ngIf="type === 'notDistributed'" >
-                                <!-- sort -->
                                 <mat-select [(ngModel)]="reason" formControlName="returnReason" placeholder="{{'lang.returnReason' | translate}}" required>
                                     <mat-option *ngFor="let reason of returnReasons" [value]="reason">{{reason}}</mat-option>
                                     <mat-option value="{{'lang.others' | translate}}">{{'lang.others' | translate}}</mat-option>
