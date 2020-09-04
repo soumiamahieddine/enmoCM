@@ -1207,6 +1207,8 @@ class ContactController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        ini_set('memory_limit', -1);
+
         $body = $request->getParsedBody();
         if (!Validator::arrayType()->validate($body['contacts'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body contacts is empty or not an array']);
