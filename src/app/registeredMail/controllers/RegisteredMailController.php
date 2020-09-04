@@ -131,7 +131,7 @@ class RegisteredMailController
             'registeredMailNumber' => $resource['alt_identifier'],
             'type'                 => $body['type'],
             'warranty'             => $body['warranty'],
-            'letter'               => empty($body['letter']) ? 'false' : 'true',
+            'letter'               => $body['letter'],
             'reference'            => $body['reference'],
             'recipient'            => $body['recipient'],
             'issuingSite'          => $issuingSite,
@@ -293,42 +293,47 @@ class RegisteredMailController
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->SetAutoPagebreak(false);
-        $pdf->addPage();
+        if (!$args['savePdf']) {
+            $pdf->addPage();
+        }
         $pdf->SetFont('times', '', 11);
 
         $barcode = new Barcode();
 
+        if ($args['savePdf']) {
+            if ($args['type'] == '2C') {
+                $pdf->setSourceFile(__DIR__ . '/../sample/registeredMail_ar.pdf');
+            } elseif ($args['type'] == '2D') {
+                $pdf->setSourceFile(__DIR__ . '/../sample/registeredMail.pdf');
+            } else {
+                $pdf->setSourceFile(__DIR__ . '/../sample/registeredMail_international.pdf');
+            }
+            $pageId = $pdf->ImportPage(1);
+            $pageInfo = $pdf->getTemplatesize($pageId);
+            $pdf->AddPage($pageInfo['orientation'], $pageInfo);
+            $pdf->useImportedPage($pageId);
+        }
         if ($args['type'] != 'RW') {
-            // DATA TEST
-            // if ($args['type'] == '2C') {
-            //     $pdf->setSourceFile('/var/www/html/ar.pdf');
-            // } else {
-            //     $pdf->setSourceFile('/var/www/html/sansar.pdf');
-            // }
-            // $pageId = $pdf->ImportPage(1);
-            // $pageInfo = $pdf->getTemplatesize($pageId);
-            // $pdf->AddPage($pageInfo['orientation'], $pageInfo);
-            // $pdf->useImportedPage($pageId);
 
             // TODO INFO FEUILLE 1 : GAUCHE
-            $pdf->SetXY(50, 8);
+            $pdf->SetXY(50, 15);
             $pdf->cell(0, 0, $registeredMailNumber);
 
             if ($args['warranty'] == 'R1') {
-                $pdf->SetXY(88, 17);
+                $pdf->SetXY(85, 27);
                 $pdf->cell(0, 0, 'X');
             } elseif ($args['warranty'] == 'R2') {
-                $pdf->SetXY(101, 17);
+                $pdf->SetXY(98, 27);
                 $pdf->cell(0, 0, 'X');
             } else {
-                $pdf->SetXY(114, 17);
+                $pdf->SetXY(111, 27);
                 $pdf->cell(0, 0, 'X');
             }
             if ($args['letter'] === true) {
-                $pdf->SetXY(88, 23);
+                $pdf->SetXY(85, 32);
                 $pdf->cell(0, 0, 'X');
             }
-            $y = 31;
+            $y = 40;
             $pdf->SetXY(36, $y);
             $pdf->cell(0, 0, $args['recipient'][1]);
 
@@ -354,7 +359,7 @@ class RegisteredMailController
 
 
             // TODO INFO FEUILLE 1 : DROITE
-            $y = 31;
+            $y = 40;
             $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][1]);
 
@@ -378,10 +383,10 @@ class RegisteredMailController
             $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][6]);
 
-            $pdf->SetXY(140, 65);
+            $pdf->SetXY(140, 70);
             $pdf->cell(0, 0, $registeredMailNumber);
             $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
-            $pdf->Image('@'.$barcodeObj->getPngData(), 140, 70, 60, 12, '', '', '', false, 300);
+            $pdf->Image('@'.$barcodeObj->getPngData(), 140, 75, 60, 12, '', '', '', false, 300);
 
 
             //TODO INFO 2eme feuille
@@ -392,17 +397,17 @@ class RegisteredMailController
 
 
             if ($args['warranty'] == 'R1') {
-                $pdf->SetXY(101, 125);
+                $pdf->SetXY(98, 127);
                 $pdf->cell(0, 0, 'X');
             } elseif ($args['warranty'] == 'R2') {
-                $pdf->SetXY(114, 125);
+                $pdf->SetXY(111, 127);
                 $pdf->cell(0, 0, 'X');
             } else {
-                $pdf->SetXY(127, 125);
+                $pdf->SetXY(124, 127);
                 $pdf->cell(0, 0, 'X');
             }
             if ($args['letter'] === true) {
-                $pdf->SetXY(101, 130);
+                $pdf->SetXY(98, 133);
                 $pdf->cell(0, 0, 'X');
             }
 
@@ -457,12 +462,12 @@ class RegisteredMailController
 
             //TODO INFO 3eme feuille
             if ($args['type'] == '2C') {
-                $pdf->SetXY(37, 207);
+                $pdf->SetXY(37, 205);
                 $pdf->cell(0, 0, $registeredMailNumber);
                 $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
                 $pdf->Image('@'.$barcodeObj->getPngData(), 37, 212, 60, 12, '', '', '', false, 300);
 
-                $y = 235;
+                $y = 230;
                 $pdf->SetXY(57, $y);
                 $pdf->cell(0, 0, $args['recipient'][1]);
 
@@ -487,7 +492,7 @@ class RegisteredMailController
                 $pdf->cell(0, 0, $args['recipient'][6]);
             }
 
-            $y = 267;
+            $y = 260;
             $pdf->SetXY(57, $y);
             $pdf->cell(0, 0, $args['sender'][1]);
 
@@ -511,16 +516,9 @@ class RegisteredMailController
             $pdf->SetXY(57, $y);
             $pdf->cell(0, 0, $args['sender'][6]);
 
-            $pdf->SetXY(5, 280);
+            $pdf->SetXY(5, 275);
             $pdf->Multicell(40, 5, $args['reference']);
         } else {
-            // DATA TEST
-            // $pdf->setSourceFile('/var/www/html/international.pdf');
-            // $pageId = $pdf->ImportPage(1);
-            // $pageInfo = $pdf->getTemplatesize($pageId);
-            // $pdf->AddPage($pageInfo['orientation'], $pageInfo);
-            // $pdf->useImportedPage($pageId);
-
             $pdf->setFont('times', '', '8');
 
             $y = 27;
