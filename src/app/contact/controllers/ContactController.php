@@ -1223,7 +1223,7 @@ class ContactController
 
 
         $contactFields = ContactController::MAPPING_FIELDS;
-        $contactFields = array_merge($contactFields, $contactCustoms, ['communicationMeans' => 'communication_means']);
+        $contactFields = array_merge($contactFields, $contactCustoms);
 
         $errors = [];
         foreach ($body['contacts'] as $key => $contact) {

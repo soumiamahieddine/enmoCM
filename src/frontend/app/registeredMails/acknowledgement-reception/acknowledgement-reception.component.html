@@ -54,7 +54,7 @@
 
                             <mat-form-field>
                                 <mat-label>{{'lang.registeredMailNumber' | translate}}</mat-label>
-                                <input #numberInput type="text" matInput required (change)="receiveAcknowledgement()" [(ngModel)]="number" formControlName="number">
+                                <input #numberInput type="text" matInput required [(ngModel)]="number" formControlName="number">
                             </mat-form-field>
 
                             <div style="text-align:center;">

@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { catchError, tap } from 'rxjs/operators';
+import {catchError, debounceTime, tap} from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { HeaderService } from '../../../service/header.service';
@@ -21,7 +21,7 @@ export class AcknowledgementReceptionComponent implements OnInit {
 
     today: Date = new Date();
 
-    type: any;
+    type: any = 'distributed';
     number: any;
     receivedDate: any = this.today;
     reason: any;
@@ -67,6 +67,11 @@ export class AcknowledgementReceptionComponent implements OnInit {
         this.loading = false;
         this.dataSource = new MatTableDataSource([]);
         this.returnReasons.sort();
+
+        this.adminFormGroup.controls['number'].valueChanges.pipe(
+            debounceTime(500),
+            tap(() => this.receiveAcknowledgement())
+        ).subscribe();
     }
 
     receiveAcknowledgement() {
@@ -78,6 +83,9 @@ export class AcknowledgementReceptionComponent implements OnInit {
             returnReasonOther: this.reasonOther
         };
 
+        if (this.functions.empty(this.number)) {
+            return;
+        }
         if (this.type === 'distributed') {
             if (!this.adminFormGroup.get('number').valid) {
                 this.notify.error(this.translate.instant('lang.fieldsNotValid'));
