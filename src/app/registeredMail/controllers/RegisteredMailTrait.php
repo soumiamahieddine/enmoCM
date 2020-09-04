@@ -99,7 +99,7 @@ trait RegisteredMailTrait
             'data'  => [$args['resId']]
         ]);
 
-        $registeredMailPDF = RegisteredMailController::generateRegisteredMailPDf([
+        RegisteredMailController::generateRegisteredMailPDf([
             'registeredMailNumber' => $registeredMailNumber,
             'type'                 => $args['data']['type'],
             'warranty'             => $args['data']['warranty'],
@@ -114,6 +114,17 @@ trait RegisteredMailTrait
         if (empty($args['data']['generated'])) {
             return true;
         } else {
+            $registeredMailPDF = RegisteredMailController::generateRegisteredMailPDf([
+                'registeredMailNumber' => $registeredMailNumber,
+                'type'                 => $args['data']['type'],
+                'warranty'             => $args['data']['warranty'],
+                'letter'               => $args['data']['letter'],
+                'reference'            => $reference,
+                'recipient'            => $args['data']['recipient'],
+                'issuingSite'          => $issuingSite,
+                'resId'                => $args['resId'],
+                'savePdf'              => false
+            ]);
             return ['data' => ['fileContent' => base64_encode($registeredMailPDF['fileContent']), 'registeredMailNumber' => $registeredMailNumber]];
         }
     }
