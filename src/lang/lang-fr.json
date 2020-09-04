@@ -1946,7 +1946,7 @@
     "argumentPhoneNotCorrect": "La donnée phone ne correspond pas à un format de numéro de téléphone valide pour un utilisateur.",
     "authorizedRoutesInformations": "Une route par ligne. Documentation des routes",
     "canNotDisabledField": "Le champ ne peut pas être désactivé car il est vide et obligatoire",
-    "registeredMailsIncludedExplication": "Tous les recommandés avec la même date d'expédition souhaitée, le même type et le même site émetteur seront inclus dans le bordereau.",
+    "registeredMailsIncludedExplication": "Tous les recommandés avec la même date d'expédition souhaitée, le même type et le même site émetteur seront inclus dans le bordereau (Si un bordereau a déjà été généré, le même bordereau sera regénéré).",
     "registeredMailsIncluded": "Numéros de recommandés inclus :",
     "cannotGenerateDepositListForMails": "Génération impossible pour les recommandés suivants :",
     "accountNumberAlreadyUsed": "Le N° COCLICO est déjà utilisé par un autre site émetteur",
@@ -1983,5 +1983,6 @@
     "argumentNotInteger": "Une donnée n'est pas un entier pour un contact",
     "argumentNotDate": "Une donnée n'est pas une date pour un contact",
     "argumentNotString": "Une donnée n'est pas une chaîne de caractères pour un contact",
-    "argumentMandatoryEmpty": "Une donnée obligatoire est vide pour un contact"
+    "argumentMandatoryEmpty": "Une donnée obligatoire est vide pour un contact",
+    "noneItalic": "<em>Aucun</em>"
 }

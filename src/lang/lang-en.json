@@ -1914,7 +1914,7 @@
     "argumentPhoneNotCorrect": "Argument phone is not correct for a user.",
     "authorizedRoutesInformations": "One route per row. Routes documentation",
     "canNotDisabledField": "This field can not be disabled because it is empty and mandatory",
-    "registeredMailsIncludedExplication": "All registered mails with the same desired shipping date, same type and same issuing site will be included in the deposit list.",
+    "registeredMailsIncludedExplication": "All registered mails with the same desired shipping date, same type and same issuing site will be included in the deposit list (If a deposit list has already been generated, the same list will be generated again).",
     "registeredMailsIncluded": "Registered mails numbers included :",
     "cannotGenerateDepositListForMails": "Imposible to generate for the following registered mails :",
     "accountNumberAlreadyUsed": "Account number is already used by another issuing site",
@@ -1985,5 +1985,6 @@
     "argumentNotInteger": "An argument is not an integer for a contact",
     "argumentNotDate": "An argument is not a date for a contact",
     "argumentNotString": "An argument is not a string for a contact",
-    "argumentMandatoryEmpty": "Mandatory argument is empty for a contact"
+    "argumentMandatoryEmpty": "Mandatory argument is empty for a contact",
+    "noneItalic": "<em>None</em>"
 }

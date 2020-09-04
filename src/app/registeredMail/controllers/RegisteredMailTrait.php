@@ -13,7 +13,6 @@
 namespace RegisteredMail\controllers;
 
 use Parameter\models\ParameterModel;
-use RegisteredMail\controllers\RegisteredMailController;
 use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
 use RegisteredMail\models\RegisteredNumberRangeModel;
@@ -223,11 +222,7 @@ trait RegisteredMailTrait
             ];
         }
         if ($registeredMailsIdsByType === null) {
-            $registeredMailsIdsByType = [
-                '2D' => [],
-                '2C' => [],
-                'RW' => []
-            ];
+            $registeredMailsIdsByType = [];
         }
         if ($processedResources === null) {
             $processedResources = [];
@@ -254,6 +249,8 @@ trait RegisteredMailTrait
             return ['errors' => ['Registered mail not generated for this resource']];
         }
 
+        $uniqueType = $registeredMail['type'] . '_' . $registeredMail['issuing_site'] . '_' . $registeredMail['warranty'] . '_' . $registeredMail['departure_date'];
+
         $site = IssuingSiteModel::getById(['id' => $registeredMail['issuing_site']]);
 
         $range = RegisteredNumberRangeModel::get([
@@ -268,12 +265,12 @@ trait RegisteredMailTrait
         if (empty($registeredMail['deposit_id'])) {
             $registeredMails = RegisteredMailModel::getWithResources([
                 'select'  => ['number', 'warranty', 'reference', 'recipient', 'res_letterbox.res_id', 'alt_identifier'],
-                'where'   => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'generated = ?'],
-                'data'    => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], true],
+                'where'   => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'warranty = ?', 'generated = ?'],
+                'data'    => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], $registeredMail['warranty'], true],
                 'orderBy' => ['number']
             ]);
 
-            if (empty($currentDepositId) || !in_array($registeredMail['type'].'_'.$registeredMail['issuing_site'], $processedTypesSites)) {
+            if (empty($currentDepositId) || !in_array($uniqueType, $processedTypesSites)) {
                 $lastDepositId = ParameterModel::getById(['id' => 'last_deposit_id', 'select' => ['param_value_int']]);
                 $currentDepositId = $lastDepositId['param_value_int'] + 1;
                 ParameterModel::update(['id' => 'last_deposit_id', 'param_value_int' => $currentDepositId]);
@@ -308,13 +305,13 @@ trait RegisteredMailTrait
 
         $resIds = array_column($registeredMails, 'res_id');
         $processedResources = array_merge($processedResources, $resIds);
-        $registeredMailsIdsByType[$registeredMail['type']] = $resIds;
+        $registeredMailsIdsByType[$uniqueType] = $resIds;
 
         $filesByType[$registeredMail['type']][] = base64_encode($resultPDF['fileContent']);
 
         if (!empty($currentDepositId)) {
             foreach ($registeredMailsIdsByType as $type => $ids) {
-                if (!empty($ids) && !in_array($type.'_'.$registeredMail['issuing_site'], $processedTypesSites)) {
+                if (!empty($ids) && !in_array($type, $processedTypesSites)) {
                     RegisteredMailModel::update([
                         'set'   => ['deposit_id' => $currentDepositId],
                         'where' => ['res_id in (?)'],
@@ -323,7 +320,7 @@ trait RegisteredMailTrait
                 }
             }
         }
-        $processedTypesSites[] = $registeredMail['type'].'_'.$registeredMail['issuing_site'];
+        $processedTypesSites[] = $uniqueType;
 
         $finalFile = null;
         foreach ($filesByType as $type => $files) {

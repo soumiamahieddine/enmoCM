@@ -42,6 +42,12 @@ export class PrintDepositListActionComponent implements OnInit {
         this.http.post('../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkPrintDepositList', { resources: this.data.resIds })
             .subscribe((data: any) => {
                 this.types = data.types;
+
+                this.types['2C'] = this.functions.empty(this.types['2C']) ? this.translate.instant('lang.noneItalic') : this.types['2C'];
+                this.types['2D'] = this.functions.empty(this.types['2D']) ? this.translate.instant('lang.noneItalic') : this.types['2D'];
+                this.types['RW'] = this.functions.empty(this.types['RW']) ? this.translate.instant('lang.noneItalic') : this.types['RW'];
+
+
                 this.canGenerate = data.canGenerate;
                 this.cannotGenerate = data.cannotGenerate;
                 this.loadingInit = false;

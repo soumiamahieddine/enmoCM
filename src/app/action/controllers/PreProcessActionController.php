@@ -1630,8 +1630,8 @@ class PreProcessActionController
             if (empty($registeredMail['deposit_id'])) {
                 $registeredMails = RegisteredMailModel::getWithResources([
                     'select' => ['alt_identifier', 'res_letterbox.res_id'],
-                    'where'  => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'generated = ?', 'deposit_id is null'],
-                    'data'   => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], true]
+                    'where'  => ['type = ?', 'issuing_site = ?', 'departure_date = ?', 'warranty = ?', 'generated = ?', 'deposit_id is null'],
+                    'data'   => [$registeredMail['type'], $registeredMail['issuing_site'], $registeredMail['departure_date'], $registeredMail['warranty'], true]
                 ]);
             } else {
                 $registeredMails = RegisteredMailModel::getWithResources([
