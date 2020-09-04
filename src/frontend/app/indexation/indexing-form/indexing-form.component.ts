@@ -793,7 +793,7 @@ export class IndexingFormComponent implements OnInit {
                                 }
 
                                 if (elem.identifier === 'registeredMail_type') {
-                                    this.getIssuingSites(null, fieldValue);
+                                    this.getIssuingSites(null, fieldValue, false);
                                 }
 
                                 if (elem.identifier === 'priority') {
@@ -1210,14 +1210,14 @@ export class IndexingFormComponent implements OnInit {
     /**
      * [Registered mail module]
      */
-    getIssuingSites(field: any, value: any) {
+    getIssuingSites(field: any, value: any, resetIssuingSite: boolean = true) {
         this.fieldCategories.forEach(element => {
             this['indexingModels_' + element].forEach((fieldItem: any) => {
                 if (fieldItem.identifier === 'registeredMail_warranty') {
                     fieldItem.values[2].disabled = value === 'RW';
                 }
 
-                if (fieldItem.identifier === 'registeredMail_issuingSite') {
+                if (fieldItem.identifier === 'registeredMail_issuingSite' && resetIssuingSite) {
                     this.arrFormControl['registeredMail_issuingSite'].setValue('');
                 }
             });
