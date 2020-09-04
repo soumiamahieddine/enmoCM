@@ -1984,5 +1984,8 @@
     "argumentNotDate": "Une donnée n'est pas une date pour un contact",
     "argumentNotString": "Une donnée n'est pas une chaîne de caractères pour un contact",
     "argumentMandatoryEmpty": "Une donnée obligatoire est vide pour un contact",
-    "noneItalic": "<em>Aucun</em>"
+    "noneItalic": "<em>Aucun</em>",
+    "csvHeader": "En-tête csv",
+    "confirmImportContacts": "Voulez-vous importer <b>{{0}}</b> contacts",
+    "importedContacts": "contacts importés"
 }

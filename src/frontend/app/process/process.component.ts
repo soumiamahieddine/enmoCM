@@ -715,8 +715,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
 
     refreshData() {
-        console.log('fuuuu');
-        
         this.appDocumentViewer.loadRessource(this.currentResourceInformations.resId);
     }
 

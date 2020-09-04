@@ -3,7 +3,7 @@
     <div mat-dialog-content>
         <mat-toolbar class="import-tool" [class.hide]="csvData.length === 0 || loading">
             <span style="flex:1;">
-                <mat-slide-toggle color="primary" [checked]="hasHeader" (change)="toggleHeader()">En-tête csv</mat-slide-toggle>
+                <mat-slide-toggle color="primary" [checked]="hasHeader" (change)="toggleHeader()">{{'lang.csvHeader' | translate}}</mat-slide-toggle>
             </span>
             <span style="flex:1;text-align: center;"><i class="fa fa-users"
                     color="primary"></i>&nbsp;{{'lang.usersOfFile' | translate}} : <b color="primary">{{countAll}}</b>

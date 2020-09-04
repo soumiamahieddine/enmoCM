@@ -220,7 +220,7 @@ export class UsersImportComponent implements OnInit {
                 if (data.warnings.count > 0) {
                     textModal = `<br/>${data.warnings.count} ${this.translate.instant('lang.withWarnings')}  : <ul>`;
                     data.errors.details.forEach(element => {
-                        textModal += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 : element.index + 1})</li>`;
+                        textModal += `<li> ${this.translate.instant('lang.' + element.lang)} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 : element.index + 1})</li>`;
                     });
                     textModal += '</ul>';
                 }
@@ -228,7 +228,7 @@ export class UsersImportComponent implements OnInit {
                 if (data.errors.count > 0) {
                     textModal += `<br/>${data.errors.count} ${this.translate.instant('lang.withErrors')}  : <ul>`;
                     data.errors.details.forEach(element => {
-                        textModal += `<li> ${this.translate.instant('element.lang')} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 : element.index + 1})</li>`;
+                        textModal += `<li> ${this.translate.instant('lang.' + element.lang)} (${this.translate.instant('lang.line')} : ${this.hasHeader ? element.index + 2 : element.index + 1})</li>`;
                     });
                     textModal += '</ul>';
                 }
