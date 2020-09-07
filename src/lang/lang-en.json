@@ -1986,5 +1986,11 @@
     "argumentNotDate": "An argument is not a date for a contact",
     "argumentNotString": "An argument is not a string for a contact",
     "argumentMandatoryEmpty": "Mandatory argument is empty for a contact",
-    "noneItalic": "<em>None</em>"
+    "noneItalic": "<em>None</em>",
+    "contactsOfFile": "Contacts of file",
+    "infoImportcontacts": "The <b>id</b> column is used to identify a contact",
+    "importContacts": "Import contacts",
+    "csvHeader": "Csv header",
+    "confirmImportContacts": "Do you want to import <b>{{0}}</b> contacts",
+    "importedContacts": "imported contacts"
 }

@@ -1990,5 +1990,19 @@
     "externalSignatoryBook": "Parapheur externe__TO_TRANSLATE",
     "dispositListGeneratedMsg": "Le recommandé a été imprimé dans un <b>descriptif de pli</b>, vous ne pouvez pas modifier les données.__TO_TRANSLATE",
     "arReceived": "AR réceptionné__TO_TRANSLATE",
-    "arAlreadyReceived": "Cet AR a déjà été reçu__TO_TRANSLATE"
+    "arAlreadyReceived": "Cet AR a déjà été reçu__TO_TRANSLATE",
+    "contactsOfFile": "Contact du fichier__TO_TRANSLATE",
+    "infoImportcontacts": "La colonne <b>id</b> est utilisée pour identifier un contact__TO_TRANSLATE",
+    "importContacts": "Importer des contacts__TO_TRANSLATE",
+    "argumentCivilityNotCorrect": "La donnée civility n'est pas une civilité valide pour un contact__TO_TRANSLATE",
+    "argumentLastnameAndCompanyEmpty": "Les données lastname et company sont vides pour un contact__TO_TRANSLATE",
+    "argumentNotArray": "Une donnée n'est pas un tableau pour un contact__TO_TRANSLATE",
+    "argumentNotInteger": "Une donnée n'est pas un entier pour un contact__TO_TRANSLATE",
+    "argumentNotDate": "Une donnée n'est pas une date pour un contact__TO_TRANSLATE",
+    "argumentNotString": "Une donnée n'est pas une chaîne de caractères pour un contact__TO_TRANSLATE",
+    "argumentMandatoryEmpty": "Une donnée obligatoire est vide pour un contact__TO_TRANSLATE",
+    "noneItalic": "<em>Aucun</em>__TO_TRANSLATE",
+    "csvHeader": "En-tête csv__TO_TRANSLATE",
+    "confirmImportContacts": "Voulez-vous importer <b>{{0}}</b> contacts__TO_TRANSLATE",
+    "importedContacts": "contacts importés__TO_TRANSLATE"
 }
