@@ -1987,5 +1987,6 @@
     "noneItalic": "<em>Aucun</em>",
     "csvHeader": "En-tête csv",
     "confirmImportContacts": "Voulez-vous importer <b>{{0}}</b> contacts",
-    "importedContacts": "contacts importés"
+    "importedContacts": "contacts importés",
+    "registeredMailNotFound": "Ce recommandé n'existe pas"
 }

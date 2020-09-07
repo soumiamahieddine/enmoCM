@@ -99,7 +99,7 @@ class RegisteredMailController
             }
 
             if ($range[0]['current_number'] + 1 > $range[0]['range_end']) {
-                $status = 'DEL';
+                $status = 'END';
                 $nextNumber = $range[0]['current_number'];
             } else {
                 $status = 'OK';
@@ -171,8 +171,9 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body number is not valid']);
         }
 
-        $type = substr($body['number'], 0, 2);
-        $number = substr($body['number'], 3, 12);
+        $number = trim($body['number'], ' ');
+        $type = substr($number, 0, 2);
+        $number = substr($number, 3, 12);
         $number = str_replace(' ', '', $number);
 
         $registeredMail = RegisteredMailModel::get([
@@ -181,7 +182,7 @@ class RegisteredMailController
             'data'   => [$number, $type]
         ]);
         if (empty($registeredMail)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Registered mail number not found']);
+            return $response->withStatus(400)->withJson(['errors' => 'Registered mail number not found', 'lang' => 'registeredMailNotFound']);
         }
         $registeredMail = $registeredMail[0];
         if (!empty($registeredMail['received_date'])) {

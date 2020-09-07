@@ -1244,7 +1244,7 @@ class ContactController
                         $customId = explode('_', $frontField)[1];
                         // Check custom field format
                         $type = $customTypes[(string)$customId];
-                        if (in_array($type, ['checkbox', 'select', 'radio']) && !Validator::arrayType()->validate($contact[$frontField])) {
+                        if (in_array($type, ['checkbox', 'radio']) && !Validator::arrayType()->validate($contact[$frontField])) {
                             $errors[] = ['error' => "Argument {$frontField} is not an array for contact {$key}", 'index' => $key, 'lang' => 'argumentNotArray'];
                             continue 2;
                         } elseif ($customTypes[$customId] == 'integer' && !Validator::intVal()->validate($contact[$frontField])) {
@@ -1253,7 +1253,7 @@ class ContactController
                         } elseif ($customTypes[$customId] == 'date' && !Validator::date()->validate($contact[$frontField])) {
                             $errors[] = ['error' => "Argument {$frontField} is not a date for contact {$key}", 'index' => $key, 'lang' => 'argumentNotDate'];
                             continue 2;
-                        } elseif ($customTypes[$customId] == 'string' && !Validator::stringType()->validate($contact[$frontField]) || !Validator::length(1, 255)->validate($contact[$frontField])) {
+                        } elseif (in_array($customTypes[$customId], ['string', 'select']) && !Validator::stringType()->validate($contact[$frontField]) || !Validator::length(1, 255)->validate($contact[$frontField])) {
                             $errors[] = ['error' => "Argument {$frontField} is not a string for contact {$key}", 'index' => $key, 'lang' => 'argumentNotString'];
                             continue 2;
                         }

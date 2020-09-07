@@ -1992,5 +1992,6 @@
     "importContacts": "Import contacts",
     "csvHeader": "Csv header",
     "confirmImportContacts": "Do you want to import <b>{{0}}</b> contacts",
-    "importedContacts": "imported contacts"
+    "importedContacts": "imported contacts",
+    "registeredMailNotFound": "This registered mail does not exist"
 }
