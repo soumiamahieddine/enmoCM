@@ -52,7 +52,7 @@
                                 <input matInput name="returnReasonOther" formControlName="returnReasonOther" [(ngModel)]="reasonOther">
                             </mat-form-field>
 
-                            <mat-form-field>
+                            <mat-form-field *ngIf="type === 'notDistributed' || type === 'distributed'">
                                 <mat-label>{{'lang.registeredMailNumber' | translate}}</mat-label>
                                 <input #numberInput type="text" matInput required [(ngModel)]="number" formControlName="number">
                             </mat-form-field>

@@ -171,13 +171,14 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Body number is not valid']);
         }
 
+        $type = substr($body['number'], 0, 2);
         $number = substr($body['number'], 3, 12);
         $number = str_replace(' ', '', $number);
 
         $registeredMail = RegisteredMailModel::get([
             'select' => ['id', 'res_id', 'received_date'],
-            'where'  => ['number = ?'],
-            'data'   => [$number]
+            'where'  => ['number = ?', 'type = ?'],
+            'data'   => [$number, $type]
         ]);
         if (empty($registeredMail)) {
             return $response->withStatus(400)->withJson(['errors' => 'Registered mail number not found']);

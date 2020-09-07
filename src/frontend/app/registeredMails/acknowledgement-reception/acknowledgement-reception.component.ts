@@ -21,7 +21,7 @@ export class AcknowledgementReceptionComponent implements OnInit {
 
     today: Date = new Date();
 
-    type: any = 'distributed';
+    type: any;
     number: any;
     receivedDate: any = this.today;
     reason: any;
@@ -60,8 +60,8 @@ export class AcknowledgementReceptionComponent implements OnInit {
         this.adminFormGroup = this._formBuilder.group({
             type: ['', Validators.required],
             number: ['', validatorNumber],
-            receivedDate: ['', Validators.required],
-            returnReason: ['', Validators.required],
+            receivedDate: [''],
+            returnReason: [''],
             returnReasonOther: ['']
         });
         this.loading = false;
