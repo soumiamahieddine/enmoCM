@@ -1946,7 +1946,7 @@
     "argumentPhoneNotCorrect": "La donnée phone ne correspond pas à un format de numéro de téléphone valide pour un utilisateur.",
     "authorizedRoutesInformations": "Une route par ligne. Documentation des routes",
     "canNotDisabledField": "Le champ ne peut pas être désactivé car il est vide et obligatoire",
-    "registeredMailsIncludedExplication": "Tous les recommandés avec la même date d'expédition souhaitée, le même type et le même site émetteur seront inclus dans le bordereau (Si un bordereau a déjà été généré, le même bordereau sera regénéré).",
+    "registeredMailsIncludedExplication": "Tous les recommandés avec la même date d'expédition souhaitée, le même type et le même site émetteur seront inclus dans le descriptif de pli (Si un descriptif a déjà été généré, le même descriptif sera regénéré).",
     "registeredMailsIncluded": "Numéros de recommandés inclus :",
     "cannotGenerateDepositListForMails": "Génération impossible pour les recommandés suivants :",
     "accountNumberAlreadyUsed": "Le N° COCLICO est déjà utilisé par un autre site émetteur",
