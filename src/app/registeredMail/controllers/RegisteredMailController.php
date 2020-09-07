@@ -205,7 +205,7 @@ class RegisteredMailController
                 return ['errors' => "Body receivedDate is not a valid date"];
             }
 
-            $set = ['received_date' => $body['receivedDate'], 'return_reason' => $body['returnReason'], 'return_reason_other' => $body['returnReasonOther'] ?? null];
+            $set = ['received_date' => $body['receivedDate'], 'return_reason' => $body['returnReason']];
             $status = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'registeredMailNotDistributedStatus']);
             $status = $status['param_value_string'];
         }
