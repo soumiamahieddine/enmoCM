@@ -205,6 +205,16 @@
                                         *ngIf="this.senderLightInfo.filling" class="fas fa-circle"
                                         style="font-size: 8px" [style.color]="this.senderLightInfo.filling"></i></div>
                             </div>
+                            <div class="content-item" *ngIf="!functions.empty(currentResourceInformations.registeredMail_returnDate)">
+                                <div>{{'lang.returnDate' | translate}} :</div>
+                                <div class="content-item-value" [title]="this.currentResourceInformations.registeredMail_returnDate">
+                                    {{this.currentResourceInformations.registeredMail_returnDate}}</div>
+                            </div>
+                            <div class="content-item" *ngIf="!functions.empty(currentResourceInformations.registeredMail_reason)">
+                                <div>{{'lang.returnReason' | translate}} :</div>
+                                <div class="content-item-value" [title]="this.currentResourceInformations.registeredMail_reason">
+                                    {{this.currentResourceInformations.registeredMail_reason}}</div>
+                            </div>
                             <div class="content-item"
                                 *ngIf="this.currentResourceInformations.processLimitDate !== undefined">
                                 <ng-container
