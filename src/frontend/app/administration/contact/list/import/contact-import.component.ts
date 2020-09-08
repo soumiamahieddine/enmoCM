@@ -150,7 +150,7 @@ export class ContactImportComponent implements OnInit {
             map((data: any) => {
                 data = data.customFields.map(custom => {
                     return {
-                        id : `contactCustomField_${custom.id}`,
+                        id: `contactCustomField_${custom.id}`,
                         label: custom.label
                     };
                 });
@@ -190,7 +190,7 @@ export class ContactImportComponent implements OnInit {
     }
 
     uploadCsv(fileInput: any) {
-        if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].type === 'text/csv') {
+        if (fileInput.target.files && fileInput.target.files[0] && (fileInput.target.files[0].type === 'text/csv' || fileInput.target.files[0].type === 'application/vnd.ms-excel')) {
             this.loading = true;
 
             let rawCsv = [];
@@ -202,29 +202,26 @@ export class ContactImportComponent implements OnInit {
                 rawCsv = value.target.result.split('\n');
                 rawCsv = rawCsv.filter(data => data !== '');
 
-                if (rawCsv[0].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim()).length >= this.contactColumns.length - 1) {
-                    let dataCol = [];
-                    let objData = {};
-                    this.setCsvColumns(rawCsv[0].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim()));
+                let dataCol = [];
+                let objData = {};
+                this.setCsvColumns(rawCsv[0].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim()));
 
-                    this.countAll = this.hasHeader ? rawCsv.length - 1 : rawCsv.length;
+                this.countAll = this.hasHeader ? rawCsv.length - 1 : rawCsv.length;
 
-                    for (let index = 0; index < rawCsv.length; index++) {
-                        objData = {};
-                        dataCol = rawCsv[index].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim());
+                for (let index = 0; index < rawCsv.length; index++) {
+                    objData = {};
+                    dataCol = rawCsv[index].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim());
 
-                        dataCol.forEach((element: any, index2: number) => {
-                            objData[this.csvColumns[index2]] = element;
-                        });
-                        this.csvData.push(objData);
-                    }
-                    this.initData();
-                    this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-                    this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-                    this.localStorage.save(`importContactFields_${this.headerService.user.id}`, this.currentDelimiter);
-                } else {
-                    this.notify.error(this.translate.instant('lang.mustAtLeastMinValues'));
+                    dataCol.forEach((element: any, index2: number) => {
+                        objData[this.csvColumns[index2]] = element;
+                    });
+                    this.csvData.push(objData);
                 }
+                this.initData();
+                this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
+                this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
+                this.localStorage.save(`importContactFields_${this.headerService.user.id}`, this.currentDelimiter);
+
                 this.loading = false;
             };
         } else {
