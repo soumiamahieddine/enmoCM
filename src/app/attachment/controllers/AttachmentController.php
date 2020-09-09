@@ -308,12 +308,16 @@ class AttachmentController
 
             if ($attachment['status'] == 'SIGN') {
                 $signedResponse = AttachmentModel::get([
-                    'select'    => ['creation_date', 'typist'],
+                    'select'    => ['creation_date', 'typist', 'signatory_user_serial_id'],
                     'where'     => ['origin = ?', 'status not in (?)'],
                     'data'      => ["{$attachment['resId']},res_attachments", ['DEL']]
                 ]);
                 if (!empty($signedResponse[0])) {
-                    $attachments[$key]['signatory'] = UserModel::getLabelledUserById(['id' => $signedResponse[0]['typist']]);
+                    if (!empty($signedResponse[0]['signatory_user_serial_id'])) {
+                        $attachments[$key]['signatory'] = UserModel::getLabelledUserById(['id' => $signedResponse[0]['signatory_user_serial_id']]);
+                    } else {
+                        $attachments[$key]['signatory'] = UserModel::getLabelledUserById(['id' => $signedResponse[0]['typist']]);
+                    }
                     $attachments[$key]['signDate'] = $signedResponse[0]['creation_date'];
                 }
             }
