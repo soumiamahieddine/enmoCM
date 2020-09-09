@@ -41,67 +41,83 @@ export class ContactImportComponent implements OnInit {
     contactColumns: any[] = [
         {
             id: 'id',
-            label: this.translate.instant('lang.id')
+            label: this.translate.instant('lang.id'),
+            emptyValueMode: false
         },
         {
             id: 'company',
-            label: this.translate.instant('lang.contactsParameters_company')
+            label: this.translate.instant('lang.contactsParameters_company'),
+            emptyValueMode: false,
         },
         {
             id: 'civility',
-            label: this.translate.instant('lang.contactsParameters_civility')
+            label: this.translate.instant('lang.contactsParameters_civility'),
+            emptyValueMode: false
         },
         {
             id: 'firstname',
-            label: this.translate.instant('lang.contactsParameters_firstname')
+            label: this.translate.instant('lang.contactsParameters_firstname'),
+            emptyValueMode: false
         },
         {
             id: 'lastname',
-            label: this.translate.instant('lang.contactsParameters_lastname')
+            label: this.translate.instant('lang.contactsParameters_lastname'),
+            emptyValueMode: false
         },
         {
             id: 'function',
-            label: this.translate.instant('lang.contactsParameters_function')
+            label: this.translate.instant('lang.contactsParameters_function'),
+            emptyValueMode: false
         },
         {
             id: 'department',
-            label: this.translate.instant('lang.contactsParameters_department')
+            label: this.translate.instant('lang.contactsParameters_department'),
+            emptyValueMode: false
         },
         {
             id: 'email',
-            label: this.translate.instant('lang.contactsParameters_email')
+            label: this.translate.instant('lang.contactsParameters_email'),
+            emptyValueMode: false
         },
         {
             id: 'phone',
-            label: this.translate.instant('lang.contactsParameters_phone')
+            label: this.translate.instant('lang.contactsParameters_phone'),
+            emptyValueMode: false
         },
         {
             id: 'addressAdditional1',
-            label: this.translate.instant('lang.contactsParameters_addressAdditional1')
+            label: this.translate.instant('lang.contactsParameters_addressAdditional1'),
+            emptyValueMode: false
         },
         {
             id: 'addressNumber',
-            label: this.translate.instant('lang.contactsParameters_addressNumber')
+            label: this.translate.instant('lang.contactsParameters_addressNumber'),
+            emptyValueMode: false
         },
         {
             id: 'addressStreet',
-            label: this.translate.instant('lang.contactsParameters_addressStreet')
+            label: this.translate.instant('lang.contactsParameters_addressStreet'),
+            emptyValueMode: false
         },
         {
             id: 'addressAdditional2',
-            label: this.translate.instant('lang.contactsParameters_addressAdditional2')
+            label: this.translate.instant('lang.contactsParameters_addressAdditional2'),
+            emptyValueMode: false
         },
         {
             id: 'addressPostcode',
-            label: this.translate.instant('lang.contactsParameters_addressPostcode')
+            label: this.translate.instant('lang.contactsParameters_addressPostcode'),
+            emptyValueMode: false
         },
         {
             id: 'addressTown',
-            label: this.translate.instant('lang.contactsParameters_addressTown')
+            label: this.translate.instant('lang.contactsParameters_addressTown'),
+            emptyValueMode: false
         },
         {
             id: 'addressCountry',
-            label: this.translate.instant('lang.contactsParameters_addressCountry')
+            label: this.translate.instant('lang.contactsParameters_addressCountry'),
+            emptyValueMode: false
         },
     ];
 
@@ -166,8 +182,14 @@ export class ContactImportComponent implements OnInit {
         ).subscribe();
     }
 
-    changeColumn(coldb: string, colCsv: string) {
+
+    toggleEmptyMode(id: string, state: boolean) {
+        this.contactColumns.filter(col => col.id === id)[0].emptyValueMode = state;
+    }
+
+    changeColumn(coldb: any, colCsv: string) {
         this.contactData = [];
+
         for (let index = this.hasHeader ? 1 : 0; index < this.csvData.length; index++) {
             const data = this.csvData[index];
 
@@ -211,7 +233,6 @@ export class ContactImportComponent implements OnInit {
                 for (let index = 0; index < rawCsv.length; index++) {
                     objData = {};
                     dataCol = rawCsv[index].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim());
-
                     dataCol.forEach((element: any, index2: number) => {
                         objData[this.csvColumns[index2]] = element;
                     });
@@ -297,7 +318,11 @@ export class ContactImportComponent implements OnInit {
                     if ((this.hasHeader && index > 0) || !this.hasHeader) {
                         const objContact = {};
                         this.contactColumns.forEach((key) => {
-                            objContact[key.id] = element[this.associatedColmuns[key.id]];
+                            if (key.emptyValueMode && this.functionsService.empty(element[this.associatedColmuns[key.id]])) {
+                                objContact[key.id] = false;
+                            } else {
+                                objContact[key.id] = element[this.associatedColmuns[key.id]].includes('##') ? element[this.associatedColmuns[key.id]].split('##') : element[this.associatedColmuns[key.id]];
+                            }
                         });
                         dataToSend.push(objContact);
                     }
