@@ -1988,5 +1988,6 @@
     "csvHeader": "En-tête csv",
     "confirmImportContacts": "Voulez-vous importer <b>{{0}}</b> contacts",
     "importedContacts": "contacts importés",
-    "registeredMailNotFound": "Ce recommandé n'existe pas"
+    "registeredMailNotFound": "Ce recommandé n'existe pas",
+    "registeredMailNotInDepositList": "Ce recommandé n'est pas dans un descriptif de pli"
 }

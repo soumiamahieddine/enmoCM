@@ -177,7 +177,7 @@ class RegisteredMailController
         $number = str_replace(' ', '', $number);
 
         $registeredMail = RegisteredMailModel::get([
-            'select' => ['id', 'res_id', 'received_date'],
+            'select' => ['id', 'res_id', 'received_date', 'deposit_id'],
             'where'  => ['number = ?', 'type = ?'],
             'data'   => [$number, $type]
         ]);
@@ -185,6 +185,9 @@ class RegisteredMailController
             return $response->withStatus(400)->withJson(['errors' => 'Registered mail number not found', 'lang' => 'registeredMailNotFound']);
         }
         $registeredMail = $registeredMail[0];
+        if (empty($registeredMail['deposit_id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Registered mail is not in a deposit list', 'lang' => 'registeredMailNotInDepositList']);
+        }
         if (!empty($registeredMail['received_date'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Registered mail was already received', 'lang' => 'arAlreadyReceived']);
         }
