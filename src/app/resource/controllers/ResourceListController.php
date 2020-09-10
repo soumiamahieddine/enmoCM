@@ -101,7 +101,7 @@ class ResourceListController
             ]);
 
             $groupBasket = GroupBasketModel::get(['select' => ['list_display', 'list_event', 'list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
-            $listDisplay = json_decode($groupBasket[0]['list_display']);
+            $listDisplay = json_decode($groupBasket[0]['list_display'], true);
             $templateColumns = $listDisplay['templateColumns'];
             $listDisplay = $listDisplay['subInfos'];
 
