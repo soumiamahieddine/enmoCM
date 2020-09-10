@@ -123,11 +123,9 @@ export class AcknowledgementReceptionComponent implements OnInit {
         ).subscribe();
     }
 
-    changeType(type: any) {
+    focusRegisteredMailNumber() {
         setTimeout(() => {
-            if (type === 'distributed') {
                 this.numberInput.nativeElement.focus();
-            }
         }, 0);
     }
 }
