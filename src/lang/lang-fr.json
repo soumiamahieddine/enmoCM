@@ -1992,5 +1992,6 @@
     "registeredMailNotFound": "Ce recommandé n'existe pas",
     "registeredMailNotInDepositList": "Ce recommandé n'est pas dans un descriptif de pli",
     "toggleEmptyValues": "Prendre en compte les valeurs vides",
-    "emptyValue": "Valeur vide"
+    "emptyValue": "Valeur vide",
+    "templateUsed": "Structure utilisée"
 }
