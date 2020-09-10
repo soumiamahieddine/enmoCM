@@ -12,6 +12,7 @@ import { AlertComponent } from '../../../../../plugins/modal/alert.component';
 import { LocalStorageService } from '../../../../../service/local-storage.service';
 import { HeaderService } from '../../../../../service/header.service';
 import { MatPaginator } from '@angular/material/paginator';
+import { Papa } from 'ngx-papaparse';
 
 @Component({
     templateUrl: 'contact-import.component.html',
@@ -20,23 +21,6 @@ import { MatPaginator } from '@angular/material/paginator';
 export class ContactImportComponent implements OnInit {
 
     loading: boolean = false;
-    /*contactColumns: string[] = [
-        'id',
-        'company',
-        'civility',
-        'firstname',
-        'lastname',
-        'function',
-        'department',
-        'email',
-        'addressAdditional1',
-        'addressNumber',
-        'addressStreet',
-        'addressAdditional2',
-        'addressPostcode',
-        'addressTown',
-        'addressCountry',
-    ];*/
 
     contactColumns: any[] = [
         {
@@ -148,6 +132,7 @@ export class ContactImportComponent implements OnInit {
         private headerService: HeaderService,
         public dialog: MatDialog,
         public dialogRef: MatDialogRef<ContactImportComponent>,
+        private papa: Papa,
         @Inject(MAT_DIALOG_DATA) public data: any,
     ) {
     }
@@ -221,29 +206,35 @@ export class ContactImportComponent implements OnInit {
             reader.readAsText(fileInput.target.files[0]);
 
             reader.onload = (value: any) => {
-                rawCsv = value.target.result.split('\n');
-                rawCsv = rawCsv.filter(data => data !== '');
+                this.papa.parse(value.target.result, {
+                    complete: (result) => {
+                        // console.log('Parsed: ', result);
 
-                let dataCol = [];
-                let objData = {};
-                this.setCsvColumns(rawCsv[0].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim()));
+                        rawCsv = result.data;
+                        rawCsv = rawCsv.filter(data => data.length === rawCsv[0].length);
 
-                this.countAll = this.hasHeader ? rawCsv.length - 1 : rawCsv.length;
+                        let dataCol = [];
+                        let objData = {};
 
-                for (let index = 0; index < rawCsv.length; index++) {
-                    objData = {};
-                    dataCol = rawCsv[index].split(this.currentDelimiter).map(s => s.replace(/"/gi, '').trim());
-                    dataCol.forEach((element: any, index2: number) => {
-                        objData[this.csvColumns[index2]] = element;
-                    });
-                    this.csvData.push(objData);
-                }
-                this.initData();
-                this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-                this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-                this.localStorage.save(`importContactFields_${this.headerService.user.id}`, this.currentDelimiter);
+                        this.setCsvColumns(rawCsv[0]);
+                        this.countAll = this.hasHeader ? rawCsv.length - 1 : rawCsv.length;
 
-                this.loading = false;
+                        for (let index = 0; index < rawCsv.length; index++) {
+                            objData = {};
+                            dataCol = rawCsv[index];
+                            dataCol.forEach((element: any, index2: number) => {
+                                objData[this.csvColumns[index2]] = element;
+                            });
+                            this.csvData.push(objData);
+                        }
+                        this.initData();
+                        this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
+                        this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
+                        this.localStorage.save(`importContactFields_${this.headerService.user.id}`, this.currentDelimiter);
+
+                        this.loading = false;
+                    }
+                });
             };
         } else {
             this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.notAllowedExtension') + ' !', msg: this.translate.instant('lang.file') + ' : <b>' + fileInput.target.files[0].name + '</b>, ' + this.translate.instant('lang.type') + ' : <b>' + fileInput.target.files[0].type + '</b><br/><br/><u>' + this.translate.instant('lang.allowedExtensions') + '</u> : <br/>' + 'text/csv' } });
@@ -321,7 +312,7 @@ export class ContactImportComponent implements OnInit {
                             if (key.emptyValueMode && this.functionsService.empty(element[this.associatedColmuns[key.id]])) {
                                 objContact[key.id] = false;
                             } else {
-                                objContact[key.id] = element[this.associatedColmuns[key.id]].includes('##') ? element[this.associatedColmuns[key.id]].split('##') : element[this.associatedColmuns[key.id]];
+                                objContact[key.id] = element[this.associatedColmuns[key.id]].includes('\n') ? element[this.associatedColmuns[key.id]].split('\n') : element[this.associatedColmuns[key.id]];
                             }
                         });
                         dataToSend.push(objContact);
