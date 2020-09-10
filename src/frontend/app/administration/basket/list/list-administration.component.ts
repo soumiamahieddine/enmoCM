@@ -4,8 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { FormControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, tap, catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
+import { of } from 'rxjs/internal/observable/of';
 
 declare var $: any;
 
@@ -228,7 +229,8 @@ export class ListAdministrationComponent implements OnInit {
 
     constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService) { }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
+        await this.initCustomFields();
         this.filteredDataOptions = this.dataControl.valueChanges
             .pipe(
                 startWith(''),
@@ -259,6 +261,36 @@ export class ListAdministrationComponent implements OnInit {
 
         this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
         this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
+    }
+
+    initCustomFields() {
+        return new Promise((resolve, reject) => {
+
+            this.http.get('../rest/customFields').pipe(
+                map((data: any) => {
+                    data.customFields = data.customFields.map((info: any) => {
+                        return {
+                            'value': 'indexingCustomField_' + info.id,
+                            'label': info.label,
+                            'sample': this.translate.instant('lang.customField') + info.id,
+                            'cssClasses': ['align_leftData'],
+                            'icon': 'fa-hashtag'
+                        };
+                    });
+                    return data.customFields;
+                }),
+                tap((customs) => {
+                    console.log(customs);
+                    this.availableData = this.availableData.concat(customs);
+                    resolve(true);
+
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     toggleData() {
@@ -332,7 +364,7 @@ export class ListAdministrationComponent implements OnInit {
         });
 
         objToSend = {
-            templateColumns : this.selectedTemplateDisplayedSecondaryData,
+            templateColumns: this.selectedTemplateDisplayedSecondaryData,
             subInfos: template
         };
 
