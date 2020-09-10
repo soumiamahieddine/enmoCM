@@ -309,10 +309,14 @@ export class ContactImportComponent implements OnInit {
                     if ((this.hasHeader && index > 0) || !this.hasHeader) {
                         const objContact = {};
                         this.contactColumns.forEach((key) => {
-                            if (key.emptyValueMode && this.functionsService.empty(element[this.associatedColmuns[key.id]])) {
+                            if (key.emptyValueMode && (element[this.associatedColmuns[key.id]] === undefined || this.functionsService.empty(element[this.associatedColmuns[key.id]]))) {
                                 objContact[key.id] = false;
                             } else {
-                                objContact[key.id] = element[this.associatedColmuns[key.id]].includes('\n') ? element[this.associatedColmuns[key.id]].split('\n') : element[this.associatedColmuns[key.id]];
+                                if (element[this.associatedColmuns[key.id]] === undefined) {
+                                    objContact[key.id] = '';
+                                } else {
+                                    objContact[key.id] = element[this.associatedColmuns[key.id]].includes('\n') ? element[this.associatedColmuns[key.id]].split('\n') : element[this.associatedColmuns[key.id]];
+                                }
                             }
                         });
                         dataToSend.push(objContact);
