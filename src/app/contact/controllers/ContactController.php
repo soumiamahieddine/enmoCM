@@ -1214,8 +1214,9 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Body contacts is empty or not an array']);
         }
 
-        $contactCustoms = ContactCustomFieldListModel::get(['select' => ['id', 'type']]);
+        $contactCustoms = ContactCustomFieldListModel::get(['select' => ['id', 'type', 'label']]);
         $customTypes = array_column($contactCustoms, 'type', 'id');
+        $customLabels = array_column($contactCustoms, 'label', 'id');
 
         $contactCustoms = array_column($contactCustoms, 'id');
 
@@ -1245,21 +1246,21 @@ class ContactController
                         // Check custom field format
                         $type = $customTypes[(string)$customId];
                         if ($type == 'checkbox' && !Validator::arrayType()->validate($contact[$frontField])) {
-                            $errors[] = ['error' => "Argument {$frontField} is not an array for contact {$key}", 'index' => $key, 'lang' => 'argumentNotArray'];
+                            $errors[] = ['error' => "Argument {$frontField} is not an array for contact {$key}", 'index' => $key, 'lang' => 'argumentNotArray', 'langParam' => $customLabels[$customId]];
                             continue 2;
                         } elseif ($type == 'integer' && !Validator::floatVal()->validate($contact[$frontField])) {
-                            $errors[] = ['error' => "Argument {$frontField} is not an integer for contact {$key}", 'index' => $key, 'lang' => 'argumentNotInteger'];
+                            $errors[] = ['error' => "Argument {$frontField} is not an integer for contact {$key}", 'index' => $key, 'lang' => 'argumentNotInteger', 'langParam' => $customLabels[$customId]];
                             continue 2;
                         } elseif ($type == 'date' && !Validator::date()->validate($contact[$frontField])) {
-                            $errors[] = ['error' => "Argument {$frontField} is not a date for contact {$key}", 'index' => $key, 'lang' => 'argumentNotDate'];
+                            $errors[] = ['error' => "Argument {$frontField} is not a date for contact {$key}", 'index' => $key, 'lang' => 'argumentNotDate', 'langParam' => $customLabels[$customId]];
                             continue 2;
                         } elseif (in_array($type, ['string', 'select', 'radio']) && !Validator::stringType()->validate($contact[$frontField]) || !Validator::length(1, 255)->validate($contact[$frontField])) {
-                            $errors[] = ['error' => "Argument {$frontField} is not a string for contact {$key}", 'index' => $key, 'lang' => 'argumentNotString'];
+                            $errors[] = ['error' => "Argument {$frontField} is not a string for contact {$key}", 'index' => $key, 'lang' => 'argumentNotString', 'langParam' => $customLabels[$customId]];
                             continue 2;
                         }
                     } else {
                         if (!Validator::stringType()->validate($contact[$frontField]) || !Validator::length(1, 255)->validate($contact[$frontField])) {
-                            $errors[] = ['error' => "Argument {$frontField} is not a string for contact {$key}", 'index' => $key, 'lang' => 'argumentNotString'];
+                            $errors[] = ['error' => "Argument {$frontField} is not a string for contact {$key}", 'index' => $key, 'lang' => 'argumentNotString', 'langParam' => $frontField];
                             continue 2;
                         }
                     }
@@ -1286,7 +1287,7 @@ class ContactController
                 $mandatoryParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['mandatory = ?', 'identifier not in (?)'], 'data' => [true, ['lastname', 'company']]]);
                 foreach ($mandatoryParameters as $mandatoryParameter) {
                         if (empty($contact[$mandatoryParameter['identifier']])) {
-                            $errors[] = ['error' => "Argument {$mandatoryParameter['identifier']} is empty for contact {$key}", 'index' => $key, 'lang' => 'argumentMandatoryEmpty'];
+                            $errors[] = ['error' => "Argument {$mandatoryParameter['identifier']} is empty for contact {$key}", 'index' => $key, 'lang' => 'argumentMandatoryEmpty', 'langParam' => $mandatoryParameter['identifier']];
                             continue 2;
                         }
                 }
