@@ -129,7 +129,7 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
             toolbar_sticky: true,
             toolbar_drawer: 'floating',
             table_style_by_css: true,
-            content_style: 'table td { vertical-align: top; }',
+            content_style: 'table td { padding: 1px; vertical-align: top; }',
             forced_root_block : false,
             toolbar: !readonly ? 'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | table maarch_b64image | \
         alignleft aligncenter alignright alignjustify \
