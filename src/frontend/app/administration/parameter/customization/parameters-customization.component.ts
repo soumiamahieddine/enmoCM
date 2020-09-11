@@ -102,8 +102,8 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
     }
 
     initMce(readonly = false) {
-        tinymce.init({
-            selector: 'textarea',
+        let param = {
+            selector: '#loginpage_message',
             setup: (editor: any) => {
                 editor.on('Blur', (e) => {
                     this.stepFormGroup.controls[e.target.id].setValue(tinymce.get(e.target.id).getContent());
@@ -134,7 +134,13 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
             toolbar: !readonly ? 'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | table maarch_b64image | \
         alignleft aligncenter alignright alignjustify \
         bullist numlist outdent indent | removeformat code' : ''
-        });
+        };
+        tinymce.init(param);
+        param.selector = '#homepage_message';
+        tinymce.init(param);
+        param.selector = '#traffic_record_summary_sheet';
+        param.height = '500';
+        tinymce.init(param);
     }
 
     uploadTrigger(fileInput: any, mode: string) {
