@@ -227,6 +227,11 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
         this.http.put('../rest/parameters/' + parameterId, param)
             .subscribe(() => {
                 this.notify.success(this.translate.instant('lang.parameterUpdated'));
+                if (parameterId === 'logo') {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                }
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
