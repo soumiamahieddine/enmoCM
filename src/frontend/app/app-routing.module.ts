@@ -17,7 +17,7 @@ import { SignatureBookComponent } from './signature-book.component';
 import { FollowedDocumentListComponent } from './home/followed-list/followed-document-list.component';
 import { FolderDocumentListComponent } from './folder/document-list/folder-document-list.component';
 import { BasketListComponent } from './list/basket-list.component';
-import { AcknowledgementReceptionComponent } from './registeredMails/acknowledgement-reception/acknowledgement-reception.component';
+import { AcknowledgementReceptionComponent } from './registeredMail/acknowledgement-reception/acknowledgement-reception.component';
 import { AdvSearchComponent } from './adv-search/adv-search.component';
 
 
