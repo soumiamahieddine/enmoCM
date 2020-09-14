@@ -817,7 +817,7 @@ class RegisteredMailController
             $pdf->Cell(30, 10, $registeredMail['alt_identifier'], 1, 0, 'C');
             $pdf->Cell(10, 10, $registeredMail['warranty'], 1, 0, 'C');
             $pdf->Cell(15, 10, "", 1);
-            $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 22, "..."), 1, 0, 'C');
+            $pdf->Cell(30, 10, mb_strimwidth($registeredMail['reference'], 0, 22, "...", "UTF-8"), 1, 0, 'C');
 
             $pdf->setFont('times', '', 6);
             if (strlen($recipient[1] . " " . $recipient[4] . " " . $recipient[6]) > 60) {
