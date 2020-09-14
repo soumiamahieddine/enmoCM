@@ -7,3 +7,57 @@
 .criteriaField {
     font-size: 13px;
 }
+
+.basket-search {
+    color: #666;
+    width: 500px;
+    padding-right: 10px;
+    height: 55px;
+
+    button {
+        font-size: 30px;
+
+    }
+
+    ::ng-deep.mat-form-field-infix {
+        padding-bottom: 15px;
+    }
+
+    ::ng-deep.mat-form-field-flex {
+        background: white;
+        border-radius: 30px;
+    }
+
+    ::ng-deep.mat-form-field-label-wrapper {
+        font-style: italic;
+    }
+
+    ::ng-deep .mat-form-field-underline {
+        display: none;
+    }
+
+    .processLimitButton {
+        color: #666;
+        position: absolute;
+        top: -32px;
+        left: -47px;
+        border-radius: 30px;
+
+    }
+
+    .mat-button-toggle-checked {
+        background-color: #F99830 !important;
+        color: white;
+    }
+}
+
+.toto {
+    ::ng-deep .mat-optgroup-label {
+        z-index: 1;
+        position: sticky;
+        top: 0px;
+        background: white;
+        display: flex;
+        align-items: center;
+    }
+}

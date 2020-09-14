@@ -1,3 +1,20 @@
+
+<mat-form-field floatLabel="never" class="basket-search">
+    <input class="metaSearch" type="text" matInput
+        [matAutocomplete]="autoCriteria" [formControl]="searchTermControl">
+    <button mat-icon-button matPrefix>
+        <mat-icon class="fa fa-search"></mat-icon>
+    </button>
+    <mat-autocomplete #autoCriteria="matAutocomplete" (optionSelected)="addCriteria($event.option.value)">
+        <mat-optgroup [label]="'Ajouter un critère de recherche'" class="toto">
+            <input matInput type="text" [formControl]="getFilterControl()" style="margin-left:5px;width:150px !important;height: 20px;border: 1px solid #6666663d;padding: 10px;border-radius: 5px;" placeholder="{{'lang.filterBy' | translate}}">   
+            <mat-option *ngIf="(getFilteredCriterias() | async)?.length===0" disabled>Aucun résultat</mat-option>
+            <mat-option *ngFor="let item of getFilteredCriterias()  | async | sortBy : 'label'" [value]="item" [disabled]="isCurrentCriteria(item.identifier)">
+                {{item.label}}
+            </mat-option>
+        </mat-optgroup>
+    </mat-autocomplete>
+</mat-form-field>
 <mat-accordion>
     <mat-expansion-panel expanded #criteriaTool>
         <mat-expansion-panel-header>
@@ -11,28 +28,102 @@
                 <input type="text" #searchCriteriaInput matInput placeholder="Ajouter un critère"
                     [formControl]="searchCriteria" [matAutocomplete]="autoGroup">
                 <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addCriteria($event.option.value)">
-                    <ng-container *ngFor="let keyVal of criteria | keyvalue">
-                        <mat-optgroup [label]="this.translate.instant('lang.' + keyVal.key)" *ngIf="(filteredCriteria[keyVal.key] | async)?.length > 0">
-                            <mat-option *ngFor="let crit of filteredCriteria[keyVal.key] | async | sortBy : 'label'"
-                                [value]="crit" [disabled]="isCurrentCriteria(crit.id)">
-                                {{crit.label}}
-                            </mat-option>
-                        </mat-optgroup>
-                    </ng-container>
+                    <mat-option *ngFor="let crit of filteredCriteria | async | sortBy : 'label'"
+                        [value]="crit" [disabled]="isCurrentCriteria(crit.id)">
+                        {{crit.label}}
+                    </mat-option>
                 </mat-autocomplete>
             </mat-form-field>
         </div>-->
         <form (ngSubmit)="getSearchUrl()" #criteriaFormUp="ngForm">
-            <div class="col-md-6" *ngFor="let criteria of currentCriteria;let i=index">
+            <div class="col-md-6" *ngFor="let field of currentCriteria;let i=index">
+                <!--<ng-container *ngIf="field.type === 'string'">
+                    <button mat-button color="primary"  *ngIf="field.SQLMode && adminMode" matPrefix mat-icon-button
+                        disabled  style="position: absolute;left: -40px;" [title]="this.translate.instant('lang.bddModeCustomFieldMsg')">
+                        <mat-icon color="primary"
+                            class="fas fa-database">
+                        </mat-icon>
+                    </button>
+                    <mat-form-field class="input-form"
+                        [floatLabel]="appService.getViewMode() ? '' : 'never'">
+                        <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
+                        <textarea [id]="field.identifier" matInput matTextareaAutosize
+                             [formControl]="field.control"
+                            [placeholder]="!adminMode ? this.translate.instant('lang.typeValue') : this.translate.instant('lang.defaultValue')"
+                             class="subject"></textarea>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'integer'">
+                    <button mat-button color="primary"  *ngIf="field.SQLMode && adminMode" matPrefix mat-icon-button
+                        disabled  style="position: absolute;left: -40px;" [title]="this.translate.instant('lang.bddModeCustomFieldMsg')">
+                        <mat-icon color="primary"
+                            class="fas fa-database">
+                        </mat-icon>
+                    </button>
+                    <mat-form-field class="input-form"
+                        [floatLabel]="appService.getViewMode() ? '' : 'never'">
+                        <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
+                        <input [id]="field.identifier" type="number" matInput [formControl]="field.control"
+                            [placeholder]="!adminMode ? this.translate.instant('lang.typeValue') : this.translate.instant('lang.defaultValue')" min="0"
+                            step="0.1">
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'select'">
+                    <button mat-button color="primary" *ngIf="field.SQLMode && adminMode" matPrefix mat-icon-button
+                        disabled  style="position: absolute;left: -40px;" [title]="this.translate.instant('lang.bddModeCustomFieldMsg')">
+                        <mat-icon color="primary"
+                            class="fas fa-database">
+                        </mat-icon>
+                    </button>
+                    <plugin-select-search [id]="field.identifier" [showResetOption]="adminMode || !field.mandatory" [label]="field.label"
+                        [placeholderLabel]="!adminMode ? this.translate.instant('lang.chooseValue') : this.translate.instant('lang.defaultValue')"
+                        [formControlSelect]="field.control" [datas]="field.values"
+                        (afterSelected)="launchEvent($event, field)" style="width:100%;">
+                    </plugin-select-search>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'date'">
+                    <mat-form-field class="input-form input-date"
+                        [floatLabel]="appService.getViewMode() ? '' : 'never'" (click)="picker.open()"
+                        style="cursor:pointer;">
+                        <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
+                        <input [id]="field.identifier" [formControl]="field.control" matInput
+                            [matDatepicker]="picker"
+                            [placeholder]="!adminMode ? this.translate.instant('lang.chooseDate') : this.translate.instant('lang.defaultValue')"
+                            [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)"
+                            readonly style="cursor:pointer;" (dateChange)="launchEvent($event, field)">
+                        <mat-datepicker-toggle matSuffix [for]="picker"
+                            *ngIf="!field.control.value">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
+                        <button mat-button color="warn" matSuffix mat-icon-button
+                            (click)="$event.stopPropagation();field.control.reset();"
+                            [title]="this.translate.instant('lang.eraseValue')">
+                            <mat-icon color="warn" class="fa fa-calendar-times">
+                            </mat-icon>
+                        </button>
+                    </mat-form-field>
+                </ng-container>
+                <ng-container *ngIf="field.type === 'radio'">
+                    <mat-form-field class="input-form input-radio"
+                        [floatLabel]="appService.getViewMode() ? '' : 'never'">
+                        <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
+                        <input matInput style="display: none;">
+                        <mat-radio-group class="radio-form" color="primary" [formControl]="field.control">
+                            <mat-radio-button *ngFor="let value of field.values" [value]="value.id" [disabled]="value.disabled">
+                                {{value.label}}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </mat-form-field>
+                </ng-container>
                 <mat-form-field appearance="outline" class="criteriaField">
                     <mat-label>{{criteria.label}}</mat-label>
                     <input matInput [formControl]="criteria.control">
-                    <!--<button mat-icon-button type="button" matSuffix color="primary"
+                   <button mat-icon-button type="button" matSuffix color="primary"
                         (click)="$event.stopPropagation();removeCriteria(i)">
                         <mat-icon color="warn" class="fa fa-trash"></mat-icon>
-                    </button>-->
-                    <mat-hint>{{criteria.desc}}</mat-hint>
-                </mat-form-field>
+                    </button>
+                    <mat-hint>{{criteria.type}}</mat-hint>
+                </mat-form-field>-->
             </div>
             <div class="col-md-12">
                 <button mat-raised-button matSuffix color="primary" type="submit">

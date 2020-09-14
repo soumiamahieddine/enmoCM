@@ -23,6 +23,8 @@ import { Subscription } from 'rxjs/internal/Subscription';
 import { merge } from 'rxjs/internal/observable/merge';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
+import { CriteriaToolComponent } from './criteria-tool/criteria-tool.component';
+import { FormControl } from '@angular/forms';
 
 declare var $: any;
 
@@ -94,6 +96,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
     @ViewChild('actionsListContext', { static: true }) actionsList: FolderActionListComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
+    @ViewChild('appCriteriaTool', { static: true }) appCriteriaTool: CriteriaToolComponent;
 
     currentSelectedChrono: string = '';
 
@@ -125,7 +128,9 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
         this.isLoadingResults = false;
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
-        this.headerService.setHeader(this.translate.instant('lang.searchMails'), '', 'fa fa-search');
+        this.headerService.setHeader(this.translate.instant('lang.searchMails'), '', '');
+
+        this.appCriteriaTool.getCriterias();
 
         /*this.route.params.subscribe(params => {
             this.folderInfoOpened = false;
@@ -174,7 +179,6 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.destroy$.next(true);
-        this.subscription.unsubscribe();
     }
 
     launchSearch(value: any) {

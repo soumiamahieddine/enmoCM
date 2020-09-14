@@ -10,7 +10,8 @@ import { InternationalizationModule } from '../service/translate/internationaliz
 
 import { JoyrideModule } from 'ngx-joyride';
 
-import { ProcessModule } from './process/process.module';
+import { PanelListComponent } from './list/panel/panel-list.component';
+import { ActionsModule } from './actions/actions.module';
 import { DocumentViewerModule } from './viewer/document-viewer.module';
 import { AppListModule } from './app-list.module';
 
@@ -22,6 +23,23 @@ import { ActionsService } from './actions/actions.service';
 
 import { AppComponent } from './app.component';
 
+// PROCESS
+import { ProcessComponent } from './process/process.component';
+import { IndexationComponent } from './indexation/indexation.component';
+import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/link-resource-modal.component';
+import { HistoryWorkflowResumeComponent } from './history/history-workflow-resume/history-workflow-resume.component';
+import { NoteResumeComponent } from './notes/note-resume/note-resume.component';
+import { AttachmentsResumeComponent } from './attachments/attachments-resume/attachments-resume.component';
+import { MailResumeComponent } from './mail/mail-resume/mail-resume.component';
+import { SentResourceListComponent } from './sentResource/sent-resource-list.component';
+import { SentResourcePageComponent } from './sentResource/sent-resource-page/sent-resource-page.component';
+import { SentNumericPackagePageComponent } from './sentResource/sent-numeric-package-page/sent-numeric-package-page.component';
+import { ThesaurusModalComponent } from './tag/indexing/thesaurus/thesaurus-modal.component';
+import { SelectIndexingModelComponent } from './indexation/select-indexing-model/select-indexing-model.component';
+import { DocumentFormModule } from './document-form.module';
+import { FilterToolComponent } from './adv-search/filter-tool/filter-tool.component';
+
+import { AdvSearchComponent } from './adv-search/adv-search.component';
 import { AboutUsComponent } from './about-us.component';
 import { ActivateUserComponent } from './activate-user.component';
 import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-modal.component';
@@ -71,15 +89,31 @@ export class MyHammerConfig extends HammerGestureConfig {
         BrowserAnimationsModule,
         HttpClientModule,
         InternationalizationModule,
+        ActionsModule,
+        DocumentFormModule,
         JoyrideModule.forRoot(),
         SharedModule,
         AppRoutingModule,
         DocumentViewerModule,
-        ProcessModule,
         AppListModule,
     ],
     declarations: [
         AppComponent,
+        ProcessComponent,
+        IndexationComponent,
+        LinkResourceModalComponent,
+        HistoryWorkflowResumeComponent,
+        NoteResumeComponent,
+        AttachmentsResumeComponent,
+        MailResumeComponent,
+        SentResourceListComponent,
+        SentResourcePageComponent,
+        SentNumericPackagePageComponent,
+        ThesaurusModalComponent,
+        SelectIndexingModelComponent,
+        FilterToolComponent,
+        PanelListComponent,
+        AdvSearchComponent,
         AboutUsComponent,
         ActivateUserComponent,
         AddAvisModelModalComponent,
@@ -119,6 +153,10 @@ export class MyHammerConfig extends HammerGestureConfig {
         SharedModule
     ],
     entryComponents: [
+        LinkResourceModalComponent,
+        SentResourcePageComponent,
+        SentNumericPackagePageComponent,
+        ThesaurusModalComponent,
         AddAvisModelModalComponent,
         AddPrivateIndexingModelModalComponent,
         AddVisaModelModalComponent,

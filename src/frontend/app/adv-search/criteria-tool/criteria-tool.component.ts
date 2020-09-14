@@ -8,39 +8,25 @@ import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { IndexingFieldsService } from '../../../service/indexing-fields.service';
 
 @Component({
     selector: 'app-criteria-tool',
-    templateUrl: "criteria-tool.component.html",
+    templateUrl: 'criteria-tool.component.html',
     styleUrls: ['criteria-tool.component.scss']
 })
 export class CriteriaToolComponent implements OnInit {
 
-    
-
-    criteria: any = {
-        mailInformations: [
-            {
-                id : 'resourceField',
-                label: this.translate.instant('lang.criteriaResourceField'),
-                desc: this.translate.instant('lang.criteriaResourceFieldDesc'),
-                control : new FormControl()
-            },
-            {
-                id : 'contactField',
-                label: this.translate.instant('lang.criteriaContactField'),
-                desc: this.translate.instant('lang.criteriaContactFieldDesc'),
-                control : new FormControl()
-            },
-        ]
-    }
+    criteria: any = [];
 
     currentCriteria: any = [];
 
-    filteredCriteria: any = {};
+    filteredCriteria: Observable<string[]>;
 
+    searchTermControl = new FormControl();
     searchCriteria = new FormControl();
 
+    @Input() searchTerm: string = 'Foo';
     @Input() defaultCriteria: any = [];
 
     @Output() searchUrlGenerated = new EventEmitter<string>();
@@ -53,43 +39,58 @@ export class CriteriaToolComponent implements OnInit {
         public http: HttpClient,
         public appService: AppService,
         public functions: FunctionsService,
+        public indexingFields: IndexingFieldsService,
         private latinisePipe: LatinisePipe) { }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
+        // console.log('getAllFields()', await this.indexingFields.getAllFields());
 
-        Object.keys(this.criteria).forEach(keyVal => {
-            this.criteria[keyVal].forEach((element: any) => {
-                if (this.defaultCriteria.indexOf(element.id) > -1) {
-                    this.currentCriteria.push(element);
-                }
-            });
-            this.filteredCriteria[keyVal] = {};
-            this.filteredCriteria[keyVal] = new Observable<string[]>();
-            this.filteredCriteria[keyVal] = this.searchCriteria.valueChanges
-            .pipe(
-                startWith(''),
-                map(value => this._filter(value, keyVal))
-            );
+        this.searchTermControl.setValue(this.searchTerm);
+
+        this.criteria = await this.indexingFields.getAllFields();
+
+        this.criteria.forEach((element: any) => {
+            if (this.defaultCriteria.indexOf(element.identifier) > -1) {
+                element.control = new FormControl('');
+                this.currentCriteria.push(element);
+            }
         });
+
+        this.filteredCriteria = this.searchCriteria.valueChanges
+        .pipe(
+            startWith(''),
+            map(value => this._filter(value))
+        );
+
+        this.searchTermControl.valueChanges
+        .pipe(
+            startWith(''),
+            map(value => {
+                if (typeof value === 'string') {
+                    this.searchTerm = value;
+                }
+            })
+        ).subscribe();
     }
 
-    private _filter(value: string, type: string): string[] {
+    private _filter(value: string): string[] {
         if (typeof value === 'string') {
             const filterValue = this.latinisePipe.transform(value.toLowerCase());
-            return this.criteria[type].filter((option: any) => this.latinisePipe.transform(option['label'].toLowerCase()).includes(filterValue));
+            return this.criteria.filter((option: any) => this.latinisePipe.transform(option['label'].toLowerCase()).includes(filterValue));
         } else {
-            return this.criteria[type];
+            return this.criteria;
         }
     }
 
     isCurrentCriteria(criteriaId: string) {
-        return this.currentCriteria.filter((currCrit: any) => currCrit.id === criteriaId).length > 0;
+        return this.currentCriteria.filter((currCrit: any) => currCrit.identifier === criteriaId).length > 0;
     }
 
     addCriteria(criteria: any) {
+        criteria.control = new FormControl('');
         this.currentCriteria.push(criteria);
-        this.searchCriteria.reset();
-        this.searchCriteriaInput.nativeElement.blur();
+        this.searchTermControl.setValue(this.searchTerm);
+        // this.searchCriteriaInput.nativeElement.blur();
     }
 
     removeCriteria(index: number) {
@@ -105,5 +106,17 @@ export class CriteriaToolComponent implements OnInit {
         });
         this.criteriaTool.close();
         this.searchUrlGenerated.emit('&' + arrUrl.join('&'));
+    }
+
+    getFilterControl() {
+        return this.searchCriteria;
+    }
+
+    getCriterias() {
+        return this.criteria;
+    }
+
+    getFilteredCriterias() {
+        return this.filteredCriteria;
     }
 }

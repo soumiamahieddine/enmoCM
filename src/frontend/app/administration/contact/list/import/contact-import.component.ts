@@ -127,7 +127,7 @@ export class ContactImportComponent implements OnInit {
         public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
-        private functionsService: FunctionsService,
+        public functionsService: FunctionsService,
         private localStorage: LocalStorageService,
         private headerService: HeaderService,
         public dialog: MatDialog,
