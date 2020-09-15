@@ -238,7 +238,7 @@ class DatasourceControllerTest extends TestCase
         $this->assertNotEmpty($result);
 
         $this->assertIsArray($result['sender']);
-        $this->assertEmpty($result['sender']);
+        $this->assertNotEmpty($result['sender']);
 
         $this->assertIsArray($result['recipient']);
         $this->assertNotEmpty($result['recipient']);
