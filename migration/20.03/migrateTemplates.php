@@ -179,6 +179,9 @@ $DATA_TO_REPLACE = [
 ];
 
 const DATA_CONTACT_NOTIFICATION = [
+    'sender.firstname'                  => '[contact.firstname]',
+    'sender.lastname'                   => '[contact.lastname]',
+    'sender.company'                    => '[contact.company]',
     'contact.contact_type_label'        => '',
     'contact.society_short'             => '',
     'contact.contact_purpose_label'     => '',
