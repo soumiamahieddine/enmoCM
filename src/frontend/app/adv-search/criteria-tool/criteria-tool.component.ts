@@ -33,7 +33,7 @@ export class CriteriaToolComponent implements OnInit {
     @Input() searchTerm: string = 'Foo';
     @Input() defaultCriteria: any = [];
 
-    @Output() searchUrlGenerated = new EventEmitter<string>();
+    @Output() searchUrlGenerated = new EventEmitter<any>();
 
     @ViewChild('criteriaTool', { static: false }) criteriaTool: MatExpansionPanel;
     @ViewChild('searchCriteriaInput', { static: false }) searchCriteriaInput: ElementRef;
@@ -159,14 +159,18 @@ export class CriteriaToolComponent implements OnInit {
 
     getCurrentCriteriaValues() {
         const objCriteria = {};
+        if (!this.functions.empty(this.searchTermControl.value)) {
+            objCriteria['quickSearch'] = {
+                values: this.searchTermControl.value
+            };
+        }
         this.currentCriteria.forEach((field: any) => {
             objCriteria[field.identifier] = {
                 values: field.control.value
             };
         });
-        console.log(objCriteria);
+        this.searchUrlGenerated.emit(objCriteria);
 
-        return objCriteria;
     }
 
     set_doctype_field(elem: any) {

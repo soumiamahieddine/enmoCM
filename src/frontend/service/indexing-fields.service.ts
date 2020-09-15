@@ -62,7 +62,7 @@ export class IndexingFieldsService {
         {
             identifier: 'confidentiality',
             label: this.translate.instant('lang.confidential'),
-            icon: 'fa-hashtag',
+            icon: 'fa-user-secret',
             type: 'radio',
             default_value: null,
             values: [{ 'id': true, 'label': this.translate.instant('lang.yes') }, { 'id': false, 'label': this.translate.instant('lang.no') }],
@@ -71,7 +71,7 @@ export class IndexingFieldsService {
         {
             identifier: 'initiator',
             label: this.translate.instant('lang.initiatorEntityAlt'),
-            icon: 'fa-hashtag',
+            icon: 'fa-user',
             type: 'select',
             default_value: null,
             values: [],
@@ -80,7 +80,7 @@ export class IndexingFieldsService {
         {
             identifier: 'departureDate',
             label: this.translate.instant('lang.departureDate'),
-            icon: 'fa-hashtag',
+            icon: 'fa-calendar-check',
             type: 'date',
             default_value: null,
             values: [],
@@ -89,7 +89,7 @@ export class IndexingFieldsService {
         {
             identifier: 'processLimitDate',
             label: this.translate.instant('lang.processLimitDate'),
-            icon: 'fa-hashtag',
+            icon: 'fa-stopwatch',
             type: 'date',
             default_value: null,
             values: [],
@@ -98,7 +98,7 @@ export class IndexingFieldsService {
         {
             identifier: 'tags',
             label: this.translate.instant('lang.tags'),
-            icon: 'fa-hashtag',
+            icon: 'fa-tags',
             type: 'autocomplete',
             default_value: [],
             values: ['/rest/autocomplete/tags', '/rest/tags'],
@@ -107,7 +107,7 @@ export class IndexingFieldsService {
         {
             identifier: 'senders',
             label: this.translate.instant('lang.getSenders'),
-            icon: 'fa-hashtag',
+            icon: 'fa-address-book',
             type: 'autocomplete',
             default_value: [],
             values: ['/rest/autocomplete/correspondents'],
@@ -116,7 +116,7 @@ export class IndexingFieldsService {
         {
             identifier: 'destination',
             label: this.translate.instant('lang.destination'),
-            icon: 'fa-hashtag',
+            icon: 'fa-sitemap',
             type: 'select',
             default_value: null,
             values: [],
@@ -125,7 +125,7 @@ export class IndexingFieldsService {
         {
             identifier: 'folders',
             label: this.translate.instant('lang.folders'),
-            icon: 'fa-hashtag',
+            icon: 'fa-folder',
             type: 'autocomplete',
             default_value: [],
             values: ['/rest/autocomplete/folders', '/rest/folders'],
@@ -134,6 +134,7 @@ export class IndexingFieldsService {
         {
             identifier: 'documentDate',
             label: this.translate.instant('lang.docDate'),
+            icon: 'fa-calendar-day',
             unit: 'mail',
             type: 'date',
             default_value: null,
@@ -143,7 +144,7 @@ export class IndexingFieldsService {
         {
             identifier: 'arrivalDate',
             label: this.translate.instant('lang.arrivalDate'),
-            icon: 'fa-hashtag',
+            icon: 'fa-calendar',
             unit: 'mail',
             type: 'date',
             default_value: null,
@@ -153,7 +154,7 @@ export class IndexingFieldsService {
         {
             identifier: 'registeredMail_type',
             label: this.translate.instant('lang.registeredMailType'),
-            icon: 'fa-hashtag',
+            icon: 'fa-file',
             type: 'select',
             default_value: null,
             values: [{ 'id': '2D', 'label': this.translate.instant('lang.registeredMail_2D') }, { 'id': '2C', 'label': this.translate.instant('lang.registeredMail_2C') }, { 'id': 'RW', 'label': this.translate.instant('lang.registeredMail_RW') }],
@@ -162,7 +163,7 @@ export class IndexingFieldsService {
         {
             identifier: 'registeredMail_issuingSite',
             label: this.translate.instant('lang.issuingSite'),
-            icon: 'fa-hashtag',
+            icon: 'fa-warehouse',
             type: 'issuingSite',
             default_value: null,
             values: [],
@@ -171,7 +172,7 @@ export class IndexingFieldsService {
         {
             identifier: 'registeredMail_number',
             label: this.translate.instant('lang.registeredMailNumber'),
-            icon: 'fa-hashtag',
+            icon: 'fa-barcode',
             type: 'string',
             default_value: null,
             values: [],
@@ -180,7 +181,7 @@ export class IndexingFieldsService {
         {
             identifier: 'registeredMail_warranty',
             label: this.translate.instant('lang.warrantyLevel'),
-            icon: 'fa-hashtag',
+            icon: 'fa-shield-alt',
             type: 'radio',
             default_value: null,
             values: [{ 'id': 'R1', 'label': 'R1' }, { 'id': 'R2', 'label': 'R2' }, { 'id': 'R3', 'label': 'R3' }],
@@ -189,7 +190,7 @@ export class IndexingFieldsService {
         {
             identifier: 'registeredMail_letter',
             label: this.translate.instant('lang.letter'),
-            icon: 'fa-hashtag',
+            icon: 'fa-envelope',
             type: 'radio',
             default_value: null,
             values: [{ 'id': true, 'label': this.translate.instant('lang.yes') }, { 'id': false, 'label': this.translate.instant('lang.no') }],
@@ -198,7 +199,7 @@ export class IndexingFieldsService {
         {
             identifier: 'registeredMail_recipient',
             label: this.translate.instant('lang.registeredMailRecipient'),
-            icon: 'fa-hashtag',
+            icon: 'fa-address-book',
             type: 'registeredMailRecipient',
             default_value: null,
             values: [],
@@ -207,7 +208,7 @@ export class IndexingFieldsService {
         {
             identifier: 'registeredMail_reference',
             label: this.translate.instant('lang.registeredMailReference'),
-            icon: 'fa-hashtag',
+            icon: 'fa-dolly-flatbed',
             type: 'string',
             default_value: null,
             values: [],

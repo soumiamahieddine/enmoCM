@@ -37,7 +37,8 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
     loading: boolean = false;
     docUrl: string = '';
     public innerHtml: SafeHtml;
-    basketUrl: string;
+    searchUrl: string = '../rest/search';
+    searchTerm: string = '';
     homeData: any;
 
     injectDatasParam = {
@@ -105,6 +106,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
     @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
 
     constructor(
+        private _activatedRoute: ActivatedRoute,
         public translate: TranslateService,
         private router: Router,
         private route: ActivatedRoute,
@@ -118,7 +120,13 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
         public foldersService: FoldersService,
-        public functions: FunctionsService) { }
+        public functions: FunctionsService) {
+            _activatedRoute.queryParams.subscribe(
+                params => {
+                    this.searchTerm = params.value;
+                }
+            );
+        }
 
     ngOnInit(): void {
         this.headerService.sideBarAdmin = true;
@@ -131,6 +139,8 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
         this.headerService.setHeader(this.translate.instant('lang.searchMails'), '', '');
 
         this.appCriteriaTool.getCriterias();
+
+        this.initResultList();
 
         /*this.route.params.subscribe(params => {
             this.folderInfoOpened = false;
@@ -159,7 +169,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
                     this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
 
                 });
-            this.basketUrl = '../rest/folders/' + params['folderId'] + '/resources';
+            this.searchUrl = '../rest/folders/' + params['folderId'] + '/resources';
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
             this.sidenavRight.close();
@@ -201,7 +211,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
                 switchMap(() => {
                     this.isLoadingResults = true;
                     return this.resultListDatabase!.getRepoIssues(
-                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.basketUrl, this.filtersListService.getUrlFilters(), this.paginator.pageSize);
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.searchUrl, null, this.paginator.pageSize);
                 }),
                 map((data: any) => {
                     // Flip flag to show that loading has finished.
@@ -441,8 +451,8 @@ export class ResultListHttpDao {
     constructor(private http: HttpClient, private filtersListService: FiltersListService) { }
 
     getRepoIssues(sort: string, order: string, page: number, href: string, filters: string, pageSize: number): Observable<BasketList> {
-        this.filtersListService.updateListsPropertiesPage(page);
-        this.filtersListService.updateListsPropertiesPageSize(pageSize);
+        // this.filtersListService.updateListsPropertiesPage(page);
+        // this.filtersListService.updateListsPropertiesPageSize(pageSize);
         const offset = page * pageSize;
         const requestUrl = `${href}?limit=${pageSize}&offset=${offset}${filters}`;
 

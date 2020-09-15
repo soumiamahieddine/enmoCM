@@ -2004,5 +2004,7 @@
     "getBarcode": "Code à barre",
     "getBarcodeSample": "123456789",
     "displayCriteria": "Afficher les critères de recherche",
-    "displaySelectedValues": "Afficher les valeurs sélectionnées"
+    "displaySelectedValues": "Afficher les valeurs sélectionnées",
+    "quickSearch": "Recherche rapide"
+
 }

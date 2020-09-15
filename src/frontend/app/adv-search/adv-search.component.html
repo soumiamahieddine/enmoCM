@@ -109,46 +109,41 @@
                                         [class.undefined]="row.subject == this.translate.instant('lang.undefined')"
                                         title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                                     <span class="main-info-action">
-                                        <div *ngIf="!row.allowed" color="warn">
-                                            {{'lang.documentOutOfPerimeter' | translate}}
-                                        </div>
-                                        <ng-container *ngIf="row.allowed">
-                                            <button mat-icon-button title="{{'lang.notes' | translate}}"
-                                                (click)="$event.stopPropagation();togglePanel('note',row)"
-                                                [class.noData]="row.countNotes == 0">
-                                                <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
-                                                    matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"
-                                                    [color]="snav2.opened && row.checked && currentMode == 'note' ? 'primary' : ''">
-                                                </mat-icon>
-                                            </button>
-                                            <button mat-icon-button title="{{'lang.attachments' | translate}}"
-                                                (click)="$event.stopPropagation();togglePanel('attachment',row)"
-                                                [class.noData]="row.countAttachments == 0">
-                                                <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
-                                                    matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"
-                                                    [color]="snav2.opened && row.checked && currentMode == 'attachment' ? 'primary' : ''">
-                                                </mat-icon>
-                                            </button>
-                                            <button mat-icon-button title="{{'lang.diffusionList' | translate}}"
-                                                (click)="$event.stopPropagation();togglePanel('diffusion',row)">
-                                                <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"
-                                                    [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
-                                                </mat-icon>
-                                            </button>
-                                            <button mat-icon-button
-                                                title="{{row.hasDocument ? this.translate.instant('lang.viewResource') : this.translate.instant('lang.noDocument')}}"
-                                                (click)="$event.stopPropagation();viewDocument(row)"
-                                                (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
-                                                [disabled]="!row.hasDocument">
-                                                <mat-icon class="fa"
-                                                    [ngClass]="[row.hasDocument ? 'fa-eye' : 'fa-eye-slash']">
-                                                </mat-icon>
-                                            </button>
-                                            <button mat-icon-button title="{{'lang.linkDetails' | translate}}"
-                                                (click)="$event.stopPropagation();goToDetail(row);">
-                                                <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
-                                            </button>
-                                        </ng-container>
+                                        <button mat-icon-button title="{{'lang.notes' | translate}}"
+                                            (click)="$event.stopPropagation();togglePanel('note',row)"
+                                            [class.noData]="row.countNotes == 0">
+                                            <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
+                                                matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"
+                                                [color]="snav2.opened && row.checked && currentMode == 'note' ? 'primary' : ''">
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button title="{{'lang.attachments' | translate}}"
+                                            (click)="$event.stopPropagation();togglePanel('attachment',row)"
+                                            [class.noData]="row.countAttachments == 0">
+                                            <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
+                                                matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"
+                                                [color]="snav2.opened && row.checked && currentMode == 'attachment' ? 'primary' : ''">
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button title="{{'lang.diffusionList' | translate}}"
+                                            (click)="$event.stopPropagation();togglePanel('diffusion',row)">
+                                            <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"
+                                                [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button
+                                            title="{{row.hasDocument ? this.translate.instant('lang.viewResource') : this.translate.instant('lang.noDocument')}}"
+                                            (click)="$event.stopPropagation();viewDocument(row)"
+                                            (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
+                                            [disabled]="!row.hasDocument">
+                                            <mat-icon class="fa"
+                                                [ngClass]="[row.hasDocument ? 'fa-eye' : 'fa-eye-slash']">
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button title="{{'lang.linkDetails' | translate}}"
+                                            (click)="$event.stopPropagation();goToDetail(row);">
+                                            <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
+                                        </button>
                                     </span>
                                 </div>
                                 <div *ngIf="row.folders !== undefined && row.folders.length > 0" class="folder-info">
