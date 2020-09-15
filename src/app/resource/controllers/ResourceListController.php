@@ -934,6 +934,9 @@ class ResourceListController
                     } elseif ($value['value'] == 'getResId') {
                         $value['displayValue'] = $resource['res_id'];
                         $display[] = $value;
+                    } elseif ($value['value'] == 'getBarcode') {
+                        $value['displayValue'] = $resource['barcode'];
+                        $display[] = $value;
                     } elseif (strpos($value['value'], 'indexingCustomField_') !== false) {
                         $customId = explode('_', $value['value'])[1];
                         $customValue = json_decode($resource['custom_fields'], true);
