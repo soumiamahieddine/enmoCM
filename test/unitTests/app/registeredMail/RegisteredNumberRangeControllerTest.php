@@ -227,20 +227,27 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertIsArray($responseBody['ranges']);
         $this->assertNotEmpty($responseBody['ranges']);
 
-        $this->assertIsArray($responseBody['ranges'][1]);
-        $this->assertNotEmpty($responseBody['ranges'][1]);
+        $found = false;
+        foreach ($responseBody['ranges'] as $range) {
+            $this->assertIsArray($range);
+            $this->assertNotEmpty($range);
+            if ($range['id'] == self::$id) {
+                $this->assertNotEmpty($range);
+                $this->assertSame(self::$id, $range['id']);
+                $this->assertSame('2D', $range['registeredMailType']);
+                $this->assertSame('AZPOKF30KDZP', $range['trackerNumber']);
+                $this->assertSame(11, $range['rangeStart']);
+                $this->assertSame(1000, $range['rangeEnd']);
+                $this->assertSame(self::$siteId, $range['siteId']);
+                $this->assertSame($GLOBALS['id'], $range['creator']);
+                $this->assertNull($range['currentNumber']);
+                $this->assertIsArray($range['entities']);
+                $this->assertSame(0, $range['fullness']);
+                $found = true;
+            }
+        }
 
-        $this->assertNotEmpty($responseBody['ranges'][1]);
-        $this->assertSame(self::$id, $responseBody['ranges'][1]['id']);
-        $this->assertSame('2D', $responseBody['ranges'][1]['registeredMailType']);
-        $this->assertSame('AZPOKF30KDZP', $responseBody['ranges'][1]['trackerNumber']);
-        $this->assertSame(11, $responseBody['ranges'][1]['rangeStart']);
-        $this->assertSame(1000, $responseBody['ranges'][1]['rangeEnd']);
-        $this->assertSame(self::$siteId, $responseBody['ranges'][1]['siteId']);
-        $this->assertSame($GLOBALS['id'], $responseBody['ranges'][1]['creator']);
-        $this->assertNull($responseBody['ranges'][1]['currentNumber']);
-        $this->assertIsArray($responseBody['ranges'][1]['entities']);
-        $this->assertSame(0, $responseBody['ranges'][1]['fullness']);
+        $this->assertSame(true, $found);
 
         $GLOBALS['login'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
