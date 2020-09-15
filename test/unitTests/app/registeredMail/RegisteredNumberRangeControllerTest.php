@@ -325,7 +325,7 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame(900, $responseBody['range']['rangeEnd']);
         $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['range']['creator']);
-        $this->assertSame(1, $responseBody['range']['currentNumber']);
+        $this->assertSame(11, $responseBody['range']['currentNumber']);
         $this->assertSame(0, $responseBody['range']['fullness']);
         $this->assertSame('OK', $responseBody['range']['status']);
 
