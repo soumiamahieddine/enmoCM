@@ -70,7 +70,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
     ];
 
     resultListDatabase: ResultListHttpDao | null;
-    data: any;
+    data: any = [];
     resultsLength = 0;
     isLoadingResults = true;
     listProperties: any = {};

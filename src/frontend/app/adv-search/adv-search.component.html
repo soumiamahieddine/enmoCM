@@ -1,6 +1,6 @@
 <mat-sidenav-container class="maarch-container">
     <ng-template #adminMenuTemplate>
-        <app-filter-tool-adv-search></app-filter-tool-adv-search>
+        <app-filter-tool-adv-search *ngIf="data.length > 0"></app-filter-tool-adv-search>
     </ng-template>
     <mat-sidenav-content>
         <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;">
