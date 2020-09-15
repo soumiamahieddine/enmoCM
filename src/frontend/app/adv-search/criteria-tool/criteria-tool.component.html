@@ -93,6 +93,13 @@
                                 </button>
                             </mat-form-field>
                         </ng-container>
+                        <ng-container *ngIf="['senders','recipients'].indexOf(field.identifier) > -1">
+                            <span class="criteria-label">
+                                <i class="fa {{field.icon}}"></i> {{field.label}}&nbsp;:&nbsp;
+                            </span>
+                            <app-contact-autocomplete [id]="field.identifier" [control]="field.control" style="width:100%;">
+                            </app-contact-autocomplete>
+                        </ng-container>
                         <ng-container *ngIf="field.identifier === 'folders'">
                             <span class="criteria-label">
                                 <i class="fa {{field.icon}}"></i> {{field.label}}&nbsp;:&nbsp;

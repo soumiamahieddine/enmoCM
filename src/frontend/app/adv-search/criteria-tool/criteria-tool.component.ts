@@ -170,7 +170,6 @@ export class CriteriaToolComponent implements OnInit {
             };
         });
         this.searchUrlGenerated.emit(objCriteria);
-
     }
 
     set_doctype_field(elem: any) {
