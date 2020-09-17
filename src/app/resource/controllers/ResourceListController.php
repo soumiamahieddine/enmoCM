@@ -953,6 +953,8 @@ class ResourceListController
                             $value['displayValue'] .= $customValue[$customId][0]['addressStreet'] ?? '';
                             $value['displayValue'] .= ' ';
                             $value['displayValue'] .= $customValue[$customId][0]['addressTown'] ?? '';
+                        } elseif ($customFields[$customId] == 'date' && !empty($customValue[$customId])) {
+                            $value['displayValue'] = TextFormatModel::formatDate($customValue[$customId], 'd-m-Y');
                         } elseif ($customFields[$customId] == 'checkbox' && !empty($customValue[$customId])) {
                             $value['displayValue'] = implode(', ', $customValue[$customId]);
                         } else {
