@@ -1604,6 +1604,7 @@ class PreProcessActionController
 
         foreach ($body['resources'] as $resource) {
             if (in_array($resource, $processedResources)) {
+                $canGenerate[] = $resource;
                 continue;
             }
 
