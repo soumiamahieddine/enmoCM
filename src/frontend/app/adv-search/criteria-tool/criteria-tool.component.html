@@ -6,7 +6,7 @@
             <mat-icon class="fas fa-clipboard-list"></mat-icon>
         </button>
         <mat-autocomplete [class]="hideCriteriaList ? 'hide' : ''" #autoCriteria="matAutocomplete"
-            (closed)="hideCriteriaList = true;" (optionSelected)="addCriteria($event.option.value)" [showPanel]="false">
+            (closed)="hideCriteriaList = true;" (optionSelected)="addCriteria($event.option.value)">
             <mat-optgroup [label]="'Ajouter un critère de recherche'" class="criteria-list">
                 <input matInput type="text" #searchCriteriaInput [formControl]="getFilterControl()"
                     style="margin-left:5px;width:150px !important;height: 20px;border: 1px solid #6666663d;padding: 10px;border-radius: 5px;"
@@ -59,7 +59,7 @@
                             </span>
                             <mat-form-field class="input-form">
                                 <input [id]="field.identifier" type="number" matInput [formControl]="field.control"
-                                    [placeholder]="!adminMode ? this.translate.instant('lang.typeValue') : this.translate.instant('lang.defaultValue')"
+                                    [placeholder]="'lang.typeValue' | translate"
                                     min="0" step="0.1">
                             </mat-form-field>
                         </ng-container>

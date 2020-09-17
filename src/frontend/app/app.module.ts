@@ -22,13 +22,6 @@ import { ActionsService } from './actions/actions.service';
 
 import { AppComponent } from './app.component';
 
-// DOCUMENT FORM
-import { IndexingFormComponent } from './indexation/indexing-form/indexing-form.component';
-import { TagInputComponent } from './tag/indexing/tag-input.component';
-import { FolderInputComponent } from '../app/folder/indexing/folder-input.component';
-import { IssuingSiteInputComponent } from '../app/administration/registered-mail/issuing-site/indexing/issuing-site-input.component';
-import { RegisteredMailRecipientInputComponent } from '../app/administration/registered-mail/indexing/recipient-input.component';
-
 import { CriteriaToolComponent } from './adv-search/criteria-tool/criteria-tool.component';
 
 // ACTIONS
@@ -147,11 +140,6 @@ export class MyHammerConfig extends HammerGestureConfig {
     ],
     declarations: [
         AppComponent,
-        IndexingFormComponent,
-        TagInputComponent,
-        FolderInputComponent,
-        IssuingSiteInputComponent,
-        RegisteredMailRecipientInputComponent,
         ProcessComponent,
         IndexationComponent,
         LinkResourceModalComponent,
