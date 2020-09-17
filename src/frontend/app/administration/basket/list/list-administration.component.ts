@@ -134,7 +134,7 @@ export class ListAdministrationComponent implements OnInit {
             'label': this.translate.instant('lang.getResId'),
             'sample': this.translate.instant('lang.getResIdSample'),
             'cssClasses': ['align_leftData'],
-            'icon': 'fa-sort-numeric-down'
+            'icon': 'fa-envelope'
         }, {
             'value': 'getBarcode',
             'label': this.translate.instant('lang.getBarcode'),
