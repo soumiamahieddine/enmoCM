@@ -173,14 +173,11 @@ class RegisteredMailController
         }
 
         $number = trim($body['number'], ' ');
-        $type = substr($number, 0, 2);
-        $number = substr($number, 3, 12);
-        $number = str_replace(' ', '', $number);
 
-        $registeredMail = RegisteredMailModel::get([
-            'select' => ['id', 'res_id', 'received_date', 'deposit_id'],
-            'where'  => ['number = ?', 'type = ?'],
-            'data'   => [$number, $type]
+        $registeredMail = RegisteredMailModel::getWithResources([
+            'select' => ['id', 'registered_mail_resources.res_id', 'received_date', 'deposit_id'],
+            'where'  => ['alt_identifier = ?'],
+            'data'   => [$number]
         ]);
         if (empty($registeredMail)) {
             return $response->withStatus(400)->withJson(['errors' => 'Registered mail number not found', 'lang' => 'registeredMailNotFound']);
