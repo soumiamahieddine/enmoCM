@@ -310,32 +310,47 @@ class SearchController
         $body = $args['body'];
 
         if (!empty($body['subject']) && !empty($body['subject']['values']) && is_string($body['subject']['values'])) {
-            $fields = ['subject'];
-            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-            $requestData = AutoCompleteController::getDataForRequest([
-                'search'        => $body['subject']['values'],
-                'fields'        => $fields,
-                'where'         => [],
-                'data'          => [],
-                'fieldsNumber'  => 1
-            ]);
-            $subjectGlue = implode(' AND ',$requestData['where']);
-            $subjectGlue = "(($subjectGlue) OR res_id in (select res_id_master from res_attachments where title ilike ?))";
-            $args['searchWhere'][] = $subjectGlue;
-            $args['searchData'] = array_merge($args['searchData'], $requestData['data']);
-            $args['searchData'][] = "%{$body['subject']['values']}%";
+            if ($body['subject']['values'][0] == '"' && $body['subject']['values'][strlen($body['subject']['values']) - 1] == '"') {
+                $args['searchWhere'][] = "(subject = ? OR res_id in (select res_id_master from res_attachments where title = ?))";
+                $subject = trim($body['subject']['values'], '"');
+                $args['searchData'][] = $subject;
+                $args['searchData'][] = $subject;
+            } else {
+                $fields = ['subject'];
+                $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+                $requestData = AutoCompleteController::getDataForRequest([
+                    'search'        => $body['subject']['values'],
+                    'fields'        => $fields,
+                    'where'         => [],
+                    'data'          => [],
+                    'fieldsNumber'  => 1
+                ]);
+                $subjectGlue = implode(' AND ',$requestData['where']);
+                $subjectGlue = "(($subjectGlue) OR res_id in (select res_id_master from res_attachments where title ilike ?))";
+                $args['searchWhere'][] = $subjectGlue;
+                $args['searchData'] = array_merge($args['searchData'], $requestData['data']);
+                $args['searchData'][] = "%{$body['subject']['values']}%";
+            }
         }
         if (!empty($body['chrono']) && !empty($body['chrono']['values']) && is_string($body['chrono']['values'])) {
             $args['searchWhere'][] = '(alt_identifier ilike ? OR res_id in (select res_id_master from res_attachments where identifier ilike ?))';
             $args['searchData'][] = "%{$body['chrono']['values']}%";
             $args['searchData'][] = "%{$body['chrono']['values']}%";
         }
+        if (!empty($body['resId']) && !empty($body['resId']['values']) && is_array($body['resId']['values'])) {
+            $args['searchWhere'][] = 'res_id in (?)';
+            $args['searchData'][] = $body['resId']['values'];
+        }
         if (!empty($body['doctype']) && !empty($body['doctype']['values']) && is_array($body['doctype']['values'])) {
             $args['searchWhere'][] = 'type_id in (?)';
             $args['searchData'][] = $body['doctype']['values'];
         }
         if (!empty($body['priority']) && !empty($body['priority']['values']) && is_array($body['priority']['values'])) {
-            $args['searchWhere'][] = 'priority in (?)';
+            if (in_array(null, $body['priority']['values'])) {
+                $args['searchWhere'][] = '(priority in (?) OR priority is NULL)';
+            } else {
+                $args['searchWhere'][] = 'priority in (?)';
+            }
             $args['searchData'][] = $body['priority']['values'];
         }
         if (!empty($body['confidentiality']) && is_bool($body['confidentiality']['values'])) {
@@ -343,11 +358,19 @@ class SearchController
             $args['searchData'][] = empty($body['confidentiality']['values']) ? 'N' : 'Y';
         }
         if (!empty($body['initiator']) && !empty($body['initiator']['values']) && is_array($body['initiator']['values'])) {
-            $args['searchWhere'][] = 'initiator in (?)';
+            if (in_array(null, $body['initiator']['values'])) {
+                $args['searchWhere'][] = '(initiator in (?) OR priority is NULL)';
+            } else {
+                $args['searchWhere'][] = 'initiator in (?)';
+            }
             $args['searchData'][] = $body['initiator']['values'];
         }
         if (!empty($body['destination']) && !empty($body['destination']['values']) && is_array($body['destination']['values'])) {
-            $args['searchWhere'][] = 'destination in (?)';
+            if (in_array(null, $body['destination']['values'])) {
+                $args['searchWhere'][] = '(destination in (?) OR priority is NULL)';
+            } else {
+                $args['searchWhere'][] = 'destination in (?)';
+            }
             $args['searchData'][] = $body['destination']['values'];
         }
         if (!empty($body['documentDate']) && !empty($body['documentDate']['values']) && is_array($body['documentDate']['values'])) {
@@ -440,30 +463,42 @@ class SearchController
             $args['searchData'][] = $recipientsMatch;
         }
         if (!empty($body['tags']) && is_array($body['tags']['values']) && !empty($body['tags']['values'])) {
-            $tagsMatch = ResourceTagModel::get([
-                'select'    => ['res_id'],
-                'where'     => ['tag_id in (?)'],
-                'data'      => [$body['tags']['values']]
-            ]);
-            if (empty($tagsMatch)) {
+            if (!(in_array(null, $body['tags']['values']) && count($body['tags']['values']) === 1)) {
+                $tagsMatch = ResourceTagModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['tag_id in (?)'],
+                    'data'      => [$body['tags']['values']]
+                ]);
+            }
+            if (empty($tagsMatch) && !in_array(null, $body['tags']['values'])) {
                 return null;
             }
-            $tagsMatch = array_column($tagsMatch, 'res_id');
-            $args['searchWhere'][] = 'res_id in (?)';
-            $args['searchData'][] = $tagsMatch;
+            if (empty($tagsMatch)) {
+                $args['searchWhere'][] = 'res_id not in (select distinct res_id from resources_tags)';
+            } else {
+                $args['searchWhere'][] = '(res_id in (?) OR res_id not in (select distinct res_id from resources_tags))';
+                $tagsMatch = array_column($tagsMatch, 'res_id');
+                $args['searchData'][] = $tagsMatch;
+            }
         }
         if (!empty($body['folders']) && is_array($body['folders']['values']) && !empty($body['folders']['values'])) {
-            $foldersMatch = ResourceFolderModel::get([
-                'select'    => ['res_id'],
-                'where'     => ['folder_id in (?)'],
-                'data'      => [$body['folders']['values']]
-            ]);
-            if (empty($foldersMatch)) {
+            if (!(in_array(null, $body['folders']['values']) && count($body['folders']['values']) === 1)) {
+                $foldersMatch = ResourceFolderModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['folder_id in (?)'],
+                    'data'      => [$body['folders']['values']]
+                ]);
+            }
+            if (empty($foldersMatch) && !in_array(null, $body['folders']['values'])) {
                 return null;
             }
-            $foldersMatch = array_column($foldersMatch, 'res_id');
-            $args['searchWhere'][] = 'res_id in (?)';
-            $args['searchData'][] = $foldersMatch;
+            if (empty($foldersMatch)) {
+                $args['searchWhere'][] = 'res_id not in (select distinct res_id from resources_folders)';
+            } else {
+                $args['searchWhere'][] = '(res_id in (?) OR res_id not in (select distinct res_id from resources_folders))';
+                $foldersMatch = array_column($foldersMatch, 'res_id');
+                $args['searchData'][] = $foldersMatch;
+            }
         }
 
         return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
