@@ -66,7 +66,6 @@ import { UpdateStatusAdministrationComponent } from './updateStatus/update-statu
 import { UserAdministrationComponent, UserAdministrationRedirectModalComponent } from './user/user-administration.component';
 import { VersionsUpdateAdministrationComponent } from './versionUpdate/versions-update-administration.component';
 import { AdministrationComponent } from './home/administration.component';
-import { DocumentFormModule } from '../document-form.module';
 import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent } from './user/users-administration.component';
 import { UsersImportComponent } from './user/import/users-import.component';
 import { UsersExportComponent } from './user/export/users-export.component';
@@ -77,14 +76,12 @@ import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
 import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
 
-
 @NgModule({
     imports: [
         SharedModule,
         // NgxChartsModule,
         InternationalizationModule,
         JoyrideModule.forChild(),
-        DocumentFormModule,
         AdministrationRoutingModule,
         DocumentViewerModule
     ],

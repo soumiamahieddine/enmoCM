@@ -24,6 +24,7 @@ use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Contact\controllers\ContactController;
 use Convert\models\AdrModel;
+use CustomField\models\CustomFieldModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Entity\models\EntityModel;
@@ -130,6 +131,8 @@ class ResourceListController
                     $select[] = 'res_letterbox.modification_date';
                 } elseif ($value['value'] == 'getOpinionLimitDate') {
                     $select[] = 'res_letterbox.opinion_limit_date';
+                } elseif (strpos($value['value'], 'indexingCustomField_') !== false && !in_array('res_letterbox.custom_fields', $select)) {
+                    $select[] = 'res_letterbox.custom_fields';
                 }
             }
 
@@ -852,6 +855,10 @@ class ResourceListController
 
         $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
+        $customFields = CustomFieldModel::get(['select' => ['id', 'type', 'label']]);
+        $customFieldsLabels = array_column($customFields, 'label', 'id');
+        $customFields = array_column($customFields, 'type', 'id');
+
         foreach ($resources as $key => $resource) {
             $formattedResources[$key]['resId']              = $resource['res_id'];
             $formattedResources[$key]['chrono']             = $resource['alt_identifier'];
@@ -928,6 +935,29 @@ class ResourceListController
                         $display[] = $value;
                     } elseif ($value['value'] == 'getOpinionLimitDate') {
                         $value['displayValue'] = $resource['opinion_limit_date'];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getResId') {
+                        $value['displayValue'] = $resource['res_id'];
+                        $display[] = $value;
+                    } elseif ($value['value'] == 'getBarcode') {
+                        $value['displayValue'] = $resource['barcode'];
+                        $display[] = $value;
+                    } elseif (strpos($value['value'], 'indexingCustomField_') !== false) {
+                        $customId = explode('_', $value['value'])[1];
+                        $customValue = json_decode($resource['custom_fields'], true);
+
+                        $value['displayLabel'] = $customFieldsLabels[$customId] ?? '';
+                        if ($customFields[$customId] == 'banAutocomplete' && !empty($customValue[$customId])) {
+                            $value['displayValue'] = $customValue[$customId][0]['addressNumber'] ?? '';
+                            $value['displayValue'] .= ' ';
+                            $value['displayValue'] .= $customValue[$customId][0]['addressStreet'] ?? '';
+                            $value['displayValue'] .= ' ';
+                            $value['displayValue'] .= $customValue[$customId][0]['addressTown'] ?? '';
+                        } elseif ($customFields[$customId] == 'checkbox' && !empty($customValue[$customId])) {
+                            $value['displayValue'] = implode(', ', $customValue[$customId]);
+                        } else {
+                            $value['displayValue'] = $customValue[$customId] ?? '';
+                        }
                         $display[] = $value;
                     }
                 }
