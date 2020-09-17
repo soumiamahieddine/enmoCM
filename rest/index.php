@@ -454,7 +454,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkPrintDepositList', \Action\controllers\PreProcessActionController::class . ':checkPrintDepositList');
 
 //Search
-$app->get('/search', \Search\controllers\SearchController::class . ':get');
+$app->get('/search', \Search\controllers\SearchController::class . ':post');
 
 //shipping
 $app->get('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':get');

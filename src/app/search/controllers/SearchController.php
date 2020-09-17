@@ -37,7 +37,7 @@ class SearchController
 {
     public static function get(Request $request, Response $response)
     {
-        $queryParams = $request->getQueryParams();
+        $body = $request->getParsedBody();
 
         if (UserController::isRoot(['id' => $GLOBALS['id']])) {
             $whereClause = '1=1';
@@ -112,23 +112,47 @@ class SearchController
             $searchWhere = array_merge($searchWhere, $requestData['where']);
             $searchData = array_merge($searchData, $requestData['data']);
         }
-        if (!empty($queryParams['contactField'])) {
-            $fields = ['company', 'firstname', 'lastname'];
-            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-            $requestData = AutoCompleteController::getDataForRequest([
-                'search'        => $queryParams['contactField'],
-                'fields'        => $fields,
-                'where'         => ['type = ?'],
-                'data'          => ['contact'],
-                'fieldsNumber'  => 3
-            ]);
-
-            $contactsMatch = DatabaseModel::select([
+//        if (!empty($queryParams['contactField'])) {
+//            $fields = ['company', 'firstname', 'lastname'];
+//            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+//            $requestData = AutoCompleteController::getDataForRequest([
+//                'search'        => $queryParams['contactField'],
+//                'fields'        => $fields,
+//                'where'         => ['type = ?'],
+//                'data'          => ['contact'],
+//                'fieldsNumber'  => 3
+//            ]);
+//
+//            $contactsMatch = DatabaseModel::select([
+//                'select'    => ['res_id'],
+//                'table'     => ['resource_contacts', 'contacts'],
+//                'left_join' => ['resource_contacts.item_id = contacts.id'],
+//                'where'     => $requestData['where'],
+//                'data'      => $requestData['data']
+//            ]);
+//            if (empty($contactsMatch)) {
+//                return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
+//            }
+//            $contactsMatch = array_column($contactsMatch, 'res_id');
+//            $searchWhere[] = 'res_id in (?)';
+//            $searchData[] = $contactsMatch;
+//        }
+        if (!empty($body['senders']) && is_array($body['senders']['values']) && !empty($body['senders']['values'])) {
+            $where = '';
+            $data = [];
+            foreach ($body['senders']['values'] as $value) {
+                if (!empty($where)) {
+                    $where .= ' OR ';
+                }
+                $where .= '(item_id = ? AND type = ?)';
+                $data[] = $value['id'];
+                $data[] = $value['type'];
+            }
+            $data[] = 'sender';
+            $contactsMatch = ResourceContactModel::get([
                 'select'    => ['res_id'],
-                'table'     => ['resource_contacts', 'contacts'],
-                'left_join' => ['resource_contacts.item_id = contacts.id'],
-                'where'     => $requestData['where'],
-                'data'      => $requestData['data']
+                'where'     => ["({$where})", 'mode = ?'],
+                'data'      => $data
             ]);
             if (empty($contactsMatch)) {
                 return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
@@ -136,6 +160,68 @@ class SearchController
             $contactsMatch = array_column($contactsMatch, 'res_id');
             $searchWhere[] = 'res_id in (?)';
             $searchData[] = $contactsMatch;
+        }
+        if (!empty($body['recipients']) && is_array($body['recipients']['values']) && !empty($body['recipients']['values'])) {
+            $where = '';
+            $data = [];
+            foreach ($body['recipients']['values'] as $value) {
+                if (!empty($where)) {
+                    $where .= ' OR ';
+                }
+                $where .= '(item_id = ? AND type = ?)';
+                $data[] = $value['id'];
+                $data[] = $value['type'];
+            }
+            $data[] = 'recipient';
+            $contactsMatch = ResourceContactModel::get([
+                'select'    => ['res_id'],
+                'where'     => ["({$where})", 'mode = ?'],
+                'data'      => $data
+            ]);
+            if (empty($contactsMatch)) {
+                return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
+            }
+            $contactsMatch = array_column($contactsMatch, 'res_id');
+            $searchWhere[] = 'res_id in (?)';
+            $searchData[] = $contactsMatch;
+        }
+        //TODO tags, folders
+        if (!empty($body['doctype']) && is_array($body['doctype']['values']) && !empty($body['doctype']['values'])) {
+            $searchWhere[] = 'type_id in (?)';
+            $searchData[] = $body['doctype']['values'];
+        }
+        if (!empty($body['priority']) && is_array($body['priority']['values']) && !empty($body['priority']['values'])) {
+            $searchWhere[] = 'priority in (?)';
+            $searchData[] = $body['priority']['values'];
+        }
+        if (!empty($body['confidentiality']) && is_bool($body['confidentiality']['values'])) {
+            $searchWhere[] = 'confidentiality = ?';
+            $searchData[] = empty($body['confidentiality']['values']) ? 'N' : 'Y';
+        }
+        if (!empty($body['initiator']) && is_array($body['initiator']['values']) && !empty($body['initiator']['values'])) {
+            $searchWhere[] = 'initiator in (?)';
+            $searchData[] = $body['initiator']['values'];
+        }
+        if (!empty($body['destination']) && is_array($body['destination']['values']) && !empty($body['destination']['values'])) {
+            $searchWhere[] = 'destination in (?)';
+            $searchData[] = $body['destination']['values'];
+        }
+        //TODO dates
+        if (!empty($body['departureDate']) && is_array($body['initiator']['values']) && !empty($body['initiator']['values'])) {
+            $searchWhere[] = 'initiator in (?)';
+            $searchData[] = $body['initiator']['values'];
+        }
+        if (!empty($body['processLimitDate']) && is_array($body['initiator']['values']) && !empty($body['initiator']['values'])) {
+            $searchWhere[] = 'initiator in (?)';
+            $searchData[] = $body['initiator']['values'];
+        }
+        if (!empty($body['documentDate']) && is_array($body['initiator']['values']) && !empty($body['initiator']['values'])) {
+            $searchWhere[] = 'initiator in (?)';
+            $searchData[] = $body['initiator']['values'];
+        }
+        if (!empty($body['arrivalDate']) && is_array($body['initiator']['values']) && !empty($body['initiator']['values'])) {
+            $searchWhere[] = 'initiator in (?)';
+            $searchData[] = $body['initiator']['values'];
         }
 
         $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
