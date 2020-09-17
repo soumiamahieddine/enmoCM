@@ -75,6 +75,8 @@ import { RegisteredMailComponent } from './registered-mail/registered-mail.compo
 import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing-site-list.component';
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
 import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
+import { SearchAdministrationComponent } from './searchAdv/search-adv.component';
+
 
 @NgModule({
     imports: [
@@ -156,7 +158,8 @@ import { RegisteredMailListComponent } from './registered-mail/registered-mail-l
         RegisteredMailComponent,
         IssuingSiteListComponent,
         IssuingSiteComponent,
-        RegisteredMailListComponent
+        RegisteredMailListComponent,
+        SearchAdministrationComponent
     ],
     entryComponents: [
         AccountLinkComponent,
