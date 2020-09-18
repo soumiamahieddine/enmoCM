@@ -1537,7 +1537,7 @@ class PreProcessActionController
         }
         $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
-        $configuration = ConfigurationModel::getByService(['service' => 'admin_alfresco']);
+        $configuration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_alfresco']);
         if (empty($configuration)) {
             return $response->withStatus(400)->withJson(['errors' => 'Alfresco configuration is not enabled']);
         }

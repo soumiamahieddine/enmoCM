@@ -1267,7 +1267,7 @@ WITH (OIDS=FALSE);
 CREATE TABLE configurations
 (
 id serial NOT NULL,
-service character varying(64) NOT NULL,
+privilege character varying(64) NOT NULL,
 value json DEFAULT '{}' NOT NULL,
 CONSTRAINT configuration_pkey PRIMARY KEY (id),
 CONSTRAINT configuration_unique_key UNIQUE (service)

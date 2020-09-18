@@ -124,8 +124,8 @@ $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getS
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
 //Configurations
-$app->get('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':getByService');
-$app->put('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':update');
+$app->get('/configurations/{privilege}', \Configuration\controllers\ConfigurationController::class . ':getByPrivilege');
+$app->put('/configurations/{privilege}', \Configuration\controllers\ConfigurationController::class . ':update');
 
 //Contacts
 $app->get('/contacts', \Contact\controllers\ContactController::class . ':get');
@@ -455,6 +455,8 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 
 //Search
 $app->post('/search', \Search\controllers\SearchController::class . ':get');
+$app->get('/search/configuration', \Search\controllers\SearchAdministrationController::class . ':get');
+$app->put('/search/configuration', \Search\controllers\SearchAdministrationController::class . ':update');
 
 //shipping
 $app->get('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':get');
