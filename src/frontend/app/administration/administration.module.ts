@@ -75,7 +75,7 @@ import { RegisteredMailComponent } from './registered-mail/registered-mail.compo
 import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing-site-list.component';
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
 import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
-import { SearchAdministrationComponent } from './SearchAdministration/SearchAdministration.component';
+import { SearchAdministrationComponent } from './search/search-administration.component';
 
 
 @NgModule({
