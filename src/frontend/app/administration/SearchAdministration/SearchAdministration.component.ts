@@ -12,8 +12,8 @@ declare var $: any;
 
 
 @Component({
-    templateUrl: 'search-adv.component.html',
-    styleUrls: ['search-adv.component.scss'],
+    templateUrl: 'SearchAdministration.component.html',
+    styleUrls: ['SearchAdministration.component.scss'],
 })
 
 export class SearchAdministrationComponent implements OnInit {
