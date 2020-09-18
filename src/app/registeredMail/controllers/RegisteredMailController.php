@@ -92,8 +92,8 @@ class RegisteredMailController
         if ($registeredMail['type'] != $body['type']) {
             $range = RegisteredNumberRangeModel::get([
                 'select' => ['id', 'range_end', 'current_number'],
-                'where'  => ['type = ?', 'site_id = ?', 'status = ?'],
-                'data'   => [$body['type'], $registeredMail['issuing_site'], 'OK']
+                'where'  => ['type = ?', 'status = ?'],
+                'data'   => [$body['type'], 'OK']
             ]);
             if (empty($range)) {
                 return $response->withStatus(400)->withJson(['errors' => 'No range found']);
@@ -329,7 +329,7 @@ class RegisteredMailController
         }
         if ($args['type'] != 'RW') {
 
-            // TODO INFO FEUILLE 1 : GAUCHE
+            // FEUILLE 1 : GAUCHE
             $pdf->SetXY(50, 15);
             $pdf->cell(0, 0, $registeredMailNumber);
 
@@ -372,7 +372,7 @@ class RegisteredMailController
             $pdf->cell(0, 0, $args['recipient'][6]);
 
 
-            // TODO INFO FEUILLE 1 : DROITE
+            // FEUILLE 1 : DROITE
             $y = 40;
             $pdf->SetXY(130, $y);
             $pdf->cell(0, 0, $args['recipient'][1]);
@@ -403,7 +403,7 @@ class RegisteredMailController
             $pdf->Image('@'.$barcodeObj->getPngData(), 140, 75, 60, 12, '', '', '', false, 300);
 
 
-            //TODO INFO 2eme feuille
+            // 2eme feuille
             $pdf->SetXY(63, 100);
             $pdf->cell(0, 0, $registeredMailNumber);
             $barcodeObj = $barcode->getBarcodeObj('C128', $registeredMailNumber, -4, -100);
@@ -474,7 +474,7 @@ class RegisteredMailController
             $pdf->cell(0, 0, $args['sender'][6]);
 
 
-            //TODO INFO 3eme feuille
+            // 3eme feuille
             if ($args['type'] == '2C') {
                 $pdf->SetXY(37, 205);
                 $pdf->cell(0, 0, $registeredMailNumber);

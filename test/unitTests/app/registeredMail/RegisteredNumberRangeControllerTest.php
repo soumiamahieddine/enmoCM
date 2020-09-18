@@ -238,10 +238,8 @@ class RegisteredNumberRangeControllerTest extends TestCase
                 $this->assertSame('AZPOKF30KDZP', $range['trackerNumber']);
                 $this->assertSame(11, $range['rangeStart']);
                 $this->assertSame(1000, $range['rangeEnd']);
-                $this->assertSame(self::$siteId, $range['siteId']);
                 $this->assertSame($GLOBALS['id'], $range['creator']);
                 $this->assertNull($range['currentNumber']);
-                $this->assertIsArray($range['entities']);
                 $this->assertSame(0, $range['fullness']);
                 $found = true;
             }
@@ -271,7 +269,6 @@ class RegisteredNumberRangeControllerTest extends TestCase
         $this->assertSame('AZPOKF30KDZP', $responseBody['range']['trackerNumber']);
         $this->assertSame(11, $responseBody['range']['rangeStart']);
         $this->assertSame(1000, $responseBody['range']['rangeEnd']);
-        $this->assertSame(self::$siteId, $responseBody['range']['siteId']);
         $this->assertSame($GLOBALS['id'], $responseBody['range']['creator']);
         $this->assertNull($responseBody['range']['currentNumber']);
         $this->assertSame(0, $responseBody['range']['fullness']);

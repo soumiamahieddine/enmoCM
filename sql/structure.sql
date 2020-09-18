@@ -1438,7 +1438,6 @@ CREATE TABLE IF NOT EXISTS registered_mail_number_range (
     range_end INTEGER NOT NULL,
     creator INTEGER NOT NULL,
     creation_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    site_id INTEGER NOT NULL,
     status CHARACTER VARYING(10) NOT NULL,
     current_number INTEGER,
     CONSTRAINT registered_mail_number_range_pkey PRIMARY KEY (id),
