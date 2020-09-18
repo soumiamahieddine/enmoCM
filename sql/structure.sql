@@ -798,23 +798,13 @@ CREATE TABLE contacts_groups_lists
 )
 WITH (OIDS=FALSE);
 
-CREATE SEQUENCE query_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 10
-  CACHE 1;
-
-CREATE TABLE saved_queries (
-  query_id bigint NOT NULL DEFAULT nextval('query_id_seq'::regclass),
-  user_id character varying(128)  default NULL,
-  query_name character varying(255) NOT NULL,
+CREATE TABLE search_templates (
+  id serial,
+  user_id integer NOT NULL,
+  label character varying(255) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
-  created_by character varying(128)  NOT NULL,
-  query_type character varying(50) NOT NULL,
-  query_txt text  NOT NULL,
-  last_modification_date timestamp without time zone,
-  CONSTRAINT saved_queries_pkey PRIMARY KEY  (query_id)
+  query json NOT NULL,
+  CONSTRAINT search_templates_pkey PRIMARY KEY (id)
 ) WITH (OIDS=FALSE);
 
 CREATE SEQUENCE doctypes_first_level_id_seq

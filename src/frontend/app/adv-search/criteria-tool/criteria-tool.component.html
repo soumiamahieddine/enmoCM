@@ -27,6 +27,39 @@
                     {{'lang.criteriaSearch' | translate}}
                     <span style="background: white;height: 1px;flex: 1;margin-top: 10px;margin-left: 10px;"></span>
                 </mat-panel-title>
+                <mat-panel-description class="myCriterias" (click)="$event.stopPropagation()">
+                    <button type="button" mat-button class="button-form-primary" style="width: auto; height: 24px; line-height: 0px;" [matMenuTriggerFor]="IndexingModelsMenu">
+                        Mes modèles
+                    </button>
+                    <mat-menu #IndexingModelsMenu="matMenu">
+                        <div class="menuTitle">
+                            <span>
+                                Mes modèles
+                            </span>
+                            <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
+                                (click)="$event.stopPropagation();" style="width: 220px !important;">
+                                <input matInput id="searchTerm" placeholder="{{'lang.filterBy' | translate}}" #listFilter autocomplete="off"
+                                    (click)="$event.stopPropagation();" (keydown)="$event.stopPropagation()">
+                            </mat-form-field>
+                        </div>
+                        <ng-container
+                            *ngFor="let searchTemplate of searchTemplates | filterList:listFilter.value:'label'; let i=index">
+                            <button mat-menu-item (click)="selectSearchTemplate(searchTemplate)" [title]="searchTemplate.label" style="display: flex;align-items: center;">
+                                <div style="flex:1;">
+                                    {{searchTemplate.label | shorten: 45: '...'}}
+                                </div>
+                                <button mat-icon-button class="listModels-menu-delete"
+                                    [title]="this.translate.instant('lang.delete')"
+                                    (click)="$event.stopPropagation();deleteSearchTemplate(searchTemplate.id, i)">
+                                    <mat-icon class="fa fa-trash" color="warn">
+                                    </mat-icon>
+                                </button>
+                            </button>
+                        </ng-container>
+                    </mat-menu>
+                    <mat-icon class="far fa-copy" style="color: white; width: 30px; text-align: center; padding-top: 2px;" (click)="$event.stopPropagation();saveSearchTemplate()">
+                    </mat-icon>
+                </mat-panel-description>
             </mat-expansion-panel-header>
             <ng-container *ngIf="!loading; else loadingTemplate">
                 <!--<div class="col-md-12">

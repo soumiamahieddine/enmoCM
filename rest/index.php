@@ -458,6 +458,10 @@ $app->post('/search', \Search\controllers\SearchController::class . ':get');
 $app->get('/search/configuration', \Search\controllers\SearchAdministrationController::class . ':get');
 $app->put('/search/configuration', \Search\controllers\SearchAdministrationController::class . ':update');
 
+$app->get('/searchTemplates', \Search\controllers\SearchTemplateController::class . ':get');
+$app->post('/searchTemplates', \Search\controllers\SearchTemplateController::class . ':create');
+$app->delete('/searchTemplates/{id}', \Search\controllers\SearchTemplateController::class . ':delete');
+
 //shipping
 $app->get('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':get');
 $app->get('/administration/shippings/new', \Shipping\controllers\ShippingTemplateController::class . ':initShipping');

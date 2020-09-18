@@ -3,13 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { startWith, map, tap } from 'rxjs/operators';
+import { startWith, map, tap, filter, exhaustMap, catchError } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { IndexingFieldsService } from '../../../service/indexing-fields.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { NotificationService } from '../../../service/notification/notification.service';
+import { AddSearchTemplateModalComponent } from './search-template/search-template-modal.component';
 
 @Component({
     selector: 'app-criteria-tool',
@@ -20,6 +24,7 @@ export class CriteriaToolComponent implements OnInit {
 
     loading: boolean = true;
     criteria: any = [];
+    searchTemplates: any;
 
     currentCriteria: any = [];
 
@@ -45,6 +50,8 @@ export class CriteriaToolComponent implements OnInit {
         public appService: AppService,
         public functions: FunctionsService,
         public indexingFields: IndexingFieldsService,
+        private dialog: MatDialog,
+        private notify: NotificationService,
         private latinisePipe: LatinisePipe) {
             _activatedRoute.queryParams.subscribe(
                 params => {
@@ -85,6 +92,7 @@ export class CriteriaToolComponent implements OnInit {
             ).subscribe();
             this.criteriaTool.open();
         }, 500);
+        this.getSearchTemplates();
     }
 
     private _filter(value: string): string[] {
@@ -276,5 +284,69 @@ export class CriteriaToolComponent implements OnInit {
             ).subscribe();
         });
 
+    }
+
+    getSearchTemplates() {
+        this.http.get(`../rest/searchTemplates`).pipe(
+            tap((data: any) => {
+                this.searchTemplates = data.searchTemplates;
+            })
+        ).subscribe();
+    }
+
+    saveSearchTemplate() {
+        // console.log(this.currentCriteria);
+        // const fields = JSON.parse(JSON.stringify(this.currentCriteria));
+
+        const dialogRef = this.dialog.open(
+            AddSearchTemplateModalComponent,
+            {
+                panelClass: 'maarch-modal',
+                autoFocus: true,
+                disableClose: true,
+                data: {
+                    searchTemplate: {query: this.currentCriteria}
+                }
+            }
+        );
+
+        dialogRef.afterClosed().pipe(
+            filter((data: any) => data !== undefined),
+            tap((data) => {
+                this.searchTemplates.push(data.searchTemplate);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    deleteSearchTemplate(id: number, index: number) {
+        const dialogRef = this.dialog.open(
+            ConfirmComponent,
+            {
+                panelClass: 'maarch-modal',
+                autoFocus: false,
+                disableClose: true,
+                data: {
+                    title: this.translate.instant('lang.delete'),
+                    msg: this.translate.instant('lang.confirmAction')
+                }
+            }
+        );
+
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete(`../rest/searchTemplates/${id}`)),
+            tap(() => {
+                this.searchTemplates.splice(index, 1);
+                this.notify.success(this.translate.instant('lang.indexingModelDeleted'));
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }
