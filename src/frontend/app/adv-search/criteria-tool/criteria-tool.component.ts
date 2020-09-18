@@ -127,17 +127,6 @@ export class CriteriaToolComponent implements OnInit {
         }
     }
 
-    getSearchUrl() {
-        let arrUrl: any[] = [];
-        this.currentCriteria.forEach((crit: any) => {
-            if (!this.functions.empty(crit.control.value)) {
-                arrUrl.push(`${crit.id}=${crit.control.value}`);
-            }
-        });
-        this.criteriaTool.close();
-        this.searchUrlGenerated.emit('&' + arrUrl.join('&'));
-    }
-
     getFilterControl() {
         return this.searchCriteria;
     }
@@ -165,11 +154,46 @@ export class CriteriaToolComponent implements OnInit {
             };
         }
         this.currentCriteria.forEach((field: any) => {
-            objCriteria[field.identifier] = {
-                values: field.control.value
-            };
+            if (!this.functions.empty(field.control.value)) {
+                objCriteria[field.identifier] = {
+                    values: field.control.value
+                };
+            }
         });
         this.searchUrlGenerated.emit(objCriteria);
+        this.criteriaTool.close();
+    }
+
+
+    getLabelValue(identifier: string, value: string) {
+        if (this.functions.empty(value)) {
+            return this.translate.instant('lang.undefined');
+        } else  if (['doctype', 'destination'].indexOf(identifier) > -1) {
+            return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].title;
+        } else {
+            return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].label;
+
+        }
+    }
+
+    getLabelValues(identifier: string, values: string[]) {
+        if (values.length === 0) {
+            return this.translate.instant('lang.undefined');
+        } else  if (['doctype', 'destination'].indexOf(identifier) > -1) {
+            return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => values.indexOf(val.id) > -1).map((val: any) => val.title);
+        } else {
+            return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => values.indexOf(val.id) > -1).map((val: any) => val.label);
+        }
+    }
+
+    refreshCriteria(criteria: any) {
+        this.currentCriteria.forEach((field: any, index: number) => {
+            if (criteria[field.identifier] !== undefined) {
+                field.control.setValue(criteria[field.identifier].values);
+            }
+        });
+
+        this.getCurrentCriteriaValues();
     }
 
     set_doctype_field(elem: any) {
@@ -214,5 +238,43 @@ export class CriteriaToolComponent implements OnInit {
                 })
             ).subscribe();
         });
+    }
+
+    set_priority_field(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/priorities`).pipe(
+                tap((data: any) => {
+                    elem.values = data.priorities;
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    set_destination_field(elem: any) {
+        let route = `../rest/indexingModels/entities`;
+
+        return new Promise((resolve, reject) => {
+            this.http.get(route).pipe(
+                tap((data: any) => {
+                        let title = '';
+                        elem.values = elem.values.concat(data.entities.map((entity: any) => {
+                            title = entity.entity_label;
+
+                            for (let index = 0; index < entity.level; index++) {
+                                entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                            }
+                            return {
+                                id: entity.id,
+                                title: title,
+                                label: entity.entity_label,
+                                disabled: false
+                            };
+                        }));
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+
     }
 }

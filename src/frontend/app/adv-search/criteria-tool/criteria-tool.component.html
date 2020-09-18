@@ -2,7 +2,7 @@
     <mat-form-field floatLabel="never" class="basket-search">
         <input class="metaSearch" type="text" matInput [matAutocomplete]="autoCriteria"
             [placeholder]="'lang.quickSearch' | translate" [formControl]="searchTermControl">
-        <button mat-icon-button matPrefix (click)="focusFilter()" [title]="'lang.displayCriteria' | translate">
+        <button mat-icon-button matPrefix type="button" (click)="focusFilter()" [title]="'lang.displayCriteria' | translate">
             <mat-icon class="fas fa-clipboard-list"></mat-icon>
         </button>
         <mat-autocomplete [class]="hideCriteriaList ? 'hide' : ''" #autoCriteria="matAutocomplete"
@@ -57,10 +57,10 @@
                             <span class="criteria-label">
                                 <i class="fa {{field.icon}}"></i> {{field.label}}&nbsp;:&nbsp;
                             </span>
-                            <mat-form-field class="input-form">
+                            <mat-form-field class="input-form" floatLabel="never">
                                 <input [id]="field.identifier" type="number" matInput [formControl]="field.control"
                                     [placeholder]="'lang.typeValue' | translate"
-                                    min="0" step="0.1">
+                                    min="0" step="1">
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="['select', 'radio', 'checkbox'].indexOf(field.type) > -1">

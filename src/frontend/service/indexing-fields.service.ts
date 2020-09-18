@@ -42,6 +42,15 @@ export class IndexingFieldsService {
 
     fields: any[] = [
         {
+            identifier: 'resId',
+            label: this.translate.instant('lang.getResId'),
+            icon: 'fa-envelope',
+            type: 'integer',
+            default_value: [],
+            values: [],
+            enabled: true,
+        },
+        {
             identifier: 'recipients',
             label: this.translate.instant('lang.getRecipients'),
             icon: 'fa-user',
@@ -267,6 +276,13 @@ export class IndexingFieldsService {
                 ).subscribe();
             }
         });
+    }
+
+    getField(identifier: string) {
+        let mergedFields = this.getCoreFields().concat(this.getFields());
+        mergedFields = mergedFields.concat(this.customFields);
+
+        return mergedFields.filter(field => field.identifier === identifier)[0];
     }
 
     async getAllFields() {
