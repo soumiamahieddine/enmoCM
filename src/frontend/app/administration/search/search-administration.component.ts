@@ -7,6 +7,8 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { startWith, map, tap, catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { AppService } from '../../../service/app.service';
+import { HeaderService } from '../../../service/header.service';
 
 declare var $: any;
 
@@ -20,6 +22,8 @@ export class SearchAdministrationComponent implements OnInit {
 
 
     loading: boolean = false;
+    customFieldsFormControl = new FormControl({ value: '', disabled: false });
+
 
     displayedMainData: any = [
         {
@@ -240,9 +244,10 @@ export class SearchAdministrationComponent implements OnInit {
 
     searchAdv: any = { list_event: {}, list_display: {} };
 
-    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public appService: AppService, public headerService: HeaderService) { }
 
     async ngOnInit(): Promise<void> {
+        this.headerService.setHeader(this.translate.instant('lang.searchAdministration'));
         await this.initCustomFields();
         this.filteredDataOptions = this.dataControl.valueChanges
             .pipe(

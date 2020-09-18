@@ -2005,5 +2005,6 @@
     "getBarcodeSample": "123456789",
     "displayCriteria": "Afficher les critères de recherche",
     "displaySelectedValues": "Afficher les valeurs sélectionnées",
-    "quickSearch": "Recherche rapide"
+    "quickSearch": "Recherche rapide",
+    "searchAdministration" : "Administration recherche"
 }
