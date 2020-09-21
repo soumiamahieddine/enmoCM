@@ -47,9 +47,7 @@ class SummarySheetController
 
         if (!Validator::arrayType()->notEmpty()->validate($bodyData['resources'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Resources is not set or empty']);
-        }
-
-        if (!ResController::hasRightByResId(['resId' => $bodyData['resources'], 'userId' => $GLOBALS['id']])) {
+        } elseif (!ResController::hasRightByResId(['resId' => $bodyData['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 

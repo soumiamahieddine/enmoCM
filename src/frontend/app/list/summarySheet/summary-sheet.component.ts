@@ -153,7 +153,6 @@ export class SummarySheetComponent implements OnInit {
     genSummarySheets() {
         this.loading = true;
 
-
         this.http.post('../rest/resourcesList/summarySheets', { units: this.formatSummarySheet(), resources: this.data.selectedRes }, { responseType: 'blob' })
             .subscribe((data) => {
                 if (data.type !== 'text/html') {
