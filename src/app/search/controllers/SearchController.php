@@ -49,20 +49,6 @@ class SearchController
         $searchData = $userdataClause['searchData'];
 
 
-        //TODO meta champs
-        if (!empty($queryParams['resourceField'])) {
-            $fields = ['subject', 'alt_identifier'];
-            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-            $requestData = AutoCompleteController::getDataForRequest([
-                'search'        => $queryParams['resourceField'],
-                'fields'        => $fields,
-                'where'         => [],
-                'data'          => [],
-                'fieldsNumber'  => 2
-            ]);
-            $searchWhere = array_merge($searchWhere, $requestData['where']);
-            $searchData = array_merge($searchData, $requestData['data']);
-        }
         //TODO à garder ?
 //        if (!empty($queryParams['contactField'])) {
 //            $fields = ['company', 'firstname', 'lastname'];
@@ -89,6 +75,13 @@ class SearchController
 //            $searchWhere[] = 'res_id in (?)';
 //            $searchData[] = $contactsMatch;
 //        }
+        $searchClause = SearchController::getQuickFieldClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        if (empty($searchClause)) {
+            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
+        }
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData = $searchClause['searchData'];
+
         $searchClause = SearchController::getMainFieldsClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
@@ -116,6 +109,8 @@ class SearchController
             $searchWhere[] = 'status not in (?)';
             $searchData[] = $nonSearchableStatuses;
         }
+
+        $queryParams = $request->getQueryParams();
 
         $limit = 25;
         if (!empty($queryParams['limit']) && is_numeric($queryParams['limit'])) {
@@ -310,9 +305,49 @@ class SearchController
         return ['searchWhere' => ["({$whereClause})"], 'searchData' => $dataClause];
     }
 
+    private static function getQuickFieldClause(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['searchWhere', 'searchData']);
+        ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
+
+        $body = $args['body'];
+
+        //TODO finish
+        if (!empty($body['meta']) && !empty($body['meta']['values']) && is_string($body['meta']['values'])) {
+            if ($body['meta']['values'][0] == '"' && $body['meta']['values'][strlen($body['meta']['values']) - 1] == '"') {
+                $quick = trim($body['meta']['values'], '"');
+                $quickWhere = "(subject = ? OR res_id in (select res_id_master from res_attachments where title = ?)";
+                $quickWhere .= ' OR alt_identifier  ? OR res_id in (select res_id_master from res_attachments where identifier ilike ?)';
+                $quickWhere .= ' OR barcode = ?';
+                if (is_numeric($quick)) {
+                    $quickWhere .= ' OR res_id = ?';
+                    $args['searchData'][] = $quick;
+                }
+                $quickWhere .= ')';
+
+                $args['searchWhere'][] = $quickWhere;
+                $args['searchData'] = array_merge($args['searchData'], [$quick, $quick, $quick, $quick, $quick]);
+            } else {
+                $fields = ['subject', 'alt_identifier', 'barcode'];
+                $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+                $requestData = AutoCompleteController::getDataForRequest([
+                    'search'        => $body['meta']['values'],
+                    'fields'        => $fields,
+                    'where'         => [],
+                    'data'          => [],
+                    'fieldsNumber'  => 3
+                ]);
+                $args['searchWhere'] = array_merge($args['searchWhere'], $requestData['where']);
+                $args['searchData'] = array_merge($args['searchData'], $requestData['data']);
+            }
+        }
+
+        return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
+    }
+
     private static function getMainFieldsClause(array $args)
     {
-        ValidatorModel::notEmpty($args, ['body', 'searchWhere', 'searchData']);
+        ValidatorModel::notEmpty($args, ['searchWhere', 'searchData']);
         ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
 
         $body = $args['body'];
@@ -514,7 +549,7 @@ class SearchController
 
     private static function getCustomFieldsClause(array $args)
     {
-        ValidatorModel::notEmpty($args, ['body', 'searchWhere', 'searchData']);
+        ValidatorModel::notEmpty($args, ['searchWhere', 'searchData']);
         ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
 
         $body = $args['body'];
@@ -591,7 +626,7 @@ class SearchController
 
     private static function getRegisteredMailsClause(array $args)
     {
-        ValidatorModel::notEmpty($args, ['body', 'searchWhere', 'searchData']);
+        ValidatorModel::notEmpty($args, ['searchWhere', 'searchData']);
         ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
 
         $body = $args['body'];
