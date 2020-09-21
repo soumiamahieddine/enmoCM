@@ -109,8 +109,8 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     async addCriteria(criteria: any) {
-        criteria.control = new FormControl('');
-        await this.initField(criteria);
+        criteria.control = criteria.type === 'date' ? new FormControl({}) : new FormControl('');
+        this.initField(criteria);
         this.currentCriteria.push(criteria);
         this.searchTermControl.setValue(this.searchTerm);
         this.searchCriteria.reset();
@@ -122,7 +122,13 @@ export class CriteriaToolComponent implements OnInit {
 
     initField(field: any) {
         try {
-            this['set_' + field.identifier + '_field'](field);
+            const regex = /role_[.]*/g;
+            if (field.identifier.match(regex) !== null) {
+                this['set_role_field'](field);
+            } else {
+                this['set_' + field.identifier + '_field'](field);
+
+            }
         } catch (error) {
             // console.log(error);
         }
@@ -260,10 +266,8 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     set_destination_field(elem: any) {
-        let route = `../rest/indexingModels/entities`;
-
         return new Promise((resolve, reject) => {
-            this.http.get(route).pipe(
+            this.http.get(`../rest/indexingModels/entities`).pipe(
                 tap((data: any) => {
                         let title = '';
                         elem.values = elem.values.concat(data.entities.map((entity: any) => {
@@ -283,7 +287,25 @@ export class CriteriaToolComponent implements OnInit {
                 })
             ).subscribe();
         });
+    }
 
+    set_role_field(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/users`).pipe(
+                tap((data: any) => {
+                    const arrValues: any[] = [];
+                    data.users.forEach((user: any) => {
+                        arrValues.push({
+                            id: user.id,
+                            label: `${user.firstname} ${user.lastname}`,
+                            title: `${user.firstname} ${user.lastname}`,
+                        });
+                    });
+                    elem.values = arrValues;
+                    resolve(true);
+                })
+            ).subscribe();
+        });
     }
 
     getSearchTemplates() {

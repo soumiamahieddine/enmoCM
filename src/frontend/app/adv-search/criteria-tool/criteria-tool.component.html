@@ -111,19 +111,12 @@
                             </span>
                             <mat-form-field class="input-form input-date" floatLabel="never" (click)="picker.open()"
                                 style="cursor:pointer;">
-                                <input [id]="field.identifier" [formControl]="field.control" matInput
-                                    [matDatepicker]="picker" [placeholder]="'lang.chooseDate' | translate" readonly
-                                    style="cursor:pointer;">
-                                <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="!field.control.value">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
-                                <button mat-button color="warn" matSuffix mat-icon-button
-                                    *ngIf="!functions.empty(field.control.value)"
-                                    (click)="$event.stopPropagation();field.control.reset();"
-                                    [title]="this.translate.instant('lang.eraseValue')">
-                                    <mat-icon color="warn" class="fa fa-calendar-times">
-                                    </mat-icon>
-                                </button>
+                                <mat-date-range-input [rangePicker]="picker">
+                                    <input matStartDate placeholder="Début" (dateChange)="field.control.value.start=$event.value">
+                                    <input matEndDate placeholder="Fin" (dateChange)="field.control.value.end=$event.value">
+                                  </mat-date-range-input>
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-date-range-picker #picker></mat-date-range-picker>
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="['senders','recipients'].indexOf(field.identifier) > -1">
