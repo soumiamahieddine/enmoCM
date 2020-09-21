@@ -29,12 +29,12 @@
                 </mat-panel-title>
                 <mat-panel-description class="myCriterias" (click)="$event.stopPropagation()">
                     <button type="button" mat-button class="button-form-primary" style="width: auto; height: 24px; line-height: 0px;" [matMenuTriggerFor]="IndexingModelsMenu">
-                        Mes modèles
+                        {{'lang.mySearchTemplates' | translate}}
                     </button>
                     <mat-menu #IndexingModelsMenu="matMenu">
                         <div class="menuTitle">
                             <span>
-                                Mes modèles
+                                {{'lang.mySearchTemplates' | translate}}
                             </span>
                             <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
                                 (click)="$event.stopPropagation();" style="width: 220px !important;">

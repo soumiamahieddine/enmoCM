@@ -27,7 +27,7 @@ export class AddSearchTemplateModalComponent {
         this.http.post('../rest/searchTemplates', this.data.searchTemplate).pipe(
             tap((data: any) => {
                 this.data.searchTemplate.id = data.id;
-                this.notify.success(this.translate.instant('lang.indexingModelAdded'));
+                this.notify.success(this.translate.instant('lang.searchTemplateAdded'));
                 this.dialogRef.close(this.data);
             }),
             catchError((err: any) => {

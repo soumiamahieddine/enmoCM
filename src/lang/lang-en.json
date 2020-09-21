@@ -2002,5 +2002,11 @@
     "getResId": "Res ID",
     "getResIdSample": "420",
     "getBarcode": "Barcode",
-    "getBarcodeSample": "123456789"
+    "getBarcodeSample": "123456789",
+    "searchAdministration" : "Search administration",
+    "searchTemplateAdded": "Search template added",
+    "searchTemplateCreation": "Search template creation",
+    "addSearchTemplateMsg": "This template will be private. All criterias and values selected will be saved",
+    "mySearchTemplates": "My templates",
+    "searchTemplateDeleted": "Search template deleted"
 }

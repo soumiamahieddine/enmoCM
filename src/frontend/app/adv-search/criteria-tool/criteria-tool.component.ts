@@ -367,7 +367,7 @@ export class CriteriaToolComponent implements OnInit {
             exhaustMap(() => this.http.delete(`../rest/searchTemplates/${id}`)),
             tap(() => {
                 this.searchTemplates.splice(index, 1);
-                this.notify.success(this.translate.instant('lang.indexingModelDeleted'));
+                this.notify.success(this.translate.instant('lang.searchTemplateDeleted'));
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
