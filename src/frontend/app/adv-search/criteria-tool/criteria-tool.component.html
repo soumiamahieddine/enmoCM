@@ -29,15 +29,16 @@
                 </mat-panel-title>
                 <mat-panel-description class="myCriterias" (click)="$event.stopPropagation()">
                     <button type="button" mat-button class="button-form-primary" style="width: auto; height: 24px; line-height: 0px;" [matMenuTriggerFor]="IndexingModelsMenu">
-                        {{'lang.mySearchTemplates' | translate}}
+                        {{'lang.mySearchTemplates' | translate}}&nbsp;
+                        <i class="fa fa-chevron-down" style="margin: 0 0 0 10px;"></i>
                     </button>
-                    <mat-menu #IndexingModelsMenu="matMenu">
+                    <mat-menu #IndexingModelsMenu="matMenu" class="searchTemplateMenu">
                         <div class="menuTitle">
                             <span>
                                 {{'lang.mySearchTemplates' | translate}}
                             </span>
                             <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
-                                (click)="$event.stopPropagation();" style="width: 220px !important;">
+                                (click)="$event.stopPropagation();" style="width: 220px !important; padding-top: 10px;">
                                 <input matInput id="searchTerm" placeholder="{{'lang.filterBy' | translate}}" #listFilter autocomplete="off"
                                     (click)="$event.stopPropagation();" (keydown)="$event.stopPropagation()">
                             </mat-form-field>
