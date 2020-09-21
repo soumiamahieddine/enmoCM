@@ -109,7 +109,9 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     async addCriteria(criteria: any) {
-        criteria.control = criteria.type === 'date' ? new FormControl({}) : new FormControl('');
+        if (this.functions.empty(criteria.control.value)) {
+            criteria.control = criteria.type === 'date' ? new FormControl({}) : new FormControl('');
+        }
         this.initField(criteria);
         this.currentCriteria.push(criteria);
         this.searchTermControl.setValue(this.searchTerm);
@@ -317,8 +319,10 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     saveSearchTemplate() {
-        // console.log(this.currentCriteria);
-        // const fields = JSON.parse(JSON.stringify(this.currentCriteria));
+        let query: any = [];
+        this.currentCriteria.forEach((field: any, index: number) => {
+            query.push({'identifier': field.identifier, 'values': field.control.value});
+        });
 
         const dialogRef = this.dialog.open(
             AddSearchTemplateModalComponent,
@@ -327,7 +331,7 @@ export class CriteriaToolComponent implements OnInit {
                 autoFocus: true,
                 disableClose: true,
                 data: {
-                    searchTemplate: {query: this.currentCriteria}
+                    searchTemplate: {query: query}
                 }
             }
         );
@@ -370,5 +374,17 @@ export class CriteriaToolComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    selectSearchTemplate(searchTemplate: any) {
+        this.currentCriteria = [];
+        this.criteria.forEach((element: any) => {
+            let index = searchTemplate.query.map((field: any) => field.identifier).indexOf(element.identifier);
+            if (index > -1) {
+                element.control = new FormControl({ value: searchTemplate.query[index].values, disabled: false });
+                element.control.value = searchTemplate.query[index].values;
+                this.addCriteria(element);
+            }
+        });
     }
 }

@@ -38,8 +38,8 @@ class SearchTemplateModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['user_id', 'label', 'creation_date', 'query']);
-        ValidatorModel::stringType($args, ['label', 'creation_date', 'query']);
+        ValidatorModel::notEmpty($args, ['user_id', 'label', 'query']);
+        ValidatorModel::stringType($args, ['label', 'query']);
         ValidatorModel::intVal($args, ['user_id']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'search_templates_id_seq']);
