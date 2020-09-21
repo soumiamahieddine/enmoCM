@@ -14,11 +14,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { AddSearchTemplateModalComponent } from './search-template/search-template-modal.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-criteria-tool',
     templateUrl: 'criteria-tool.component.html',
-    styleUrls: ['criteria-tool.component.scss', '../../indexation/indexing-form/indexing-form.component.scss']
+    styleUrls: ['criteria-tool.component.scss', '../../indexation/indexing-form/indexing-form.component.scss'],
+    providers: [DatePipe]
 })
 export class CriteriaToolComponent implements OnInit {
 
@@ -52,6 +54,7 @@ export class CriteriaToolComponent implements OnInit {
         public indexingFields: IndexingFieldsService,
         private dialog: MatDialog,
         private notify: NotificationService,
+        private datePipe: DatePipe,
         private latinisePipe: LatinisePipe) {
             _activatedRoute.queryParams.subscribe(
                 params => {
@@ -165,7 +168,7 @@ export class CriteriaToolComponent implements OnInit {
     getCurrentCriteriaValues() {
         const objCriteria = {};
         if (!this.functions.empty(this.searchTermControl.value)) {
-            objCriteria['quickSearch'] = {
+            objCriteria['meta'] = {
                 values: this.searchTermControl.value
             };
         }
@@ -192,6 +195,15 @@ export class CriteriaToolComponent implements OnInit {
         }
     }
 
+    getFormatLabel(value: any) {
+        if (typeof value === 'object') {
+            return `${this.datePipe.transform(value.start, 'dd/MM/y') } - ${this.datePipe.transform(value.end, 'dd/MM/y')}`;
+        } else {
+            return value;
+
+        }
+    }
+
     getLabelValues(identifier: string, values: string[]) {
         if (values.length === 0) {
             return this.translate.instant('lang.undefined');
@@ -209,7 +221,15 @@ export class CriteriaToolComponent implements OnInit {
             }
         });
 
+        if (Object.keys(criteria)[0] === 'meta') {
+            this.searchTermControl.setValue(criteria['meta'].values);
+        }
+
         this.getCurrentCriteriaValues();
+    }
+
+    set_meta_field(value: any) {
+        this.searchTermControl.setValue(value);
     }
 
     set_doctype_field(elem: any) {
