@@ -19,6 +19,7 @@ use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use CustomField\models\CustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Folder\models\ResourceFolderModel;
@@ -89,6 +90,13 @@ class SearchController
 //            $searchData[] = $contactsMatch;
 //        }
         $searchClause = SearchController::getMainFieldsClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        if (empty($searchClause)) {
+            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
+        }
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData = $searchClause['searchData'];
+
+        $searchClause = SearchController::getCustomFieldsClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
@@ -375,41 +383,41 @@ class SearchController
         }
         if (!empty($body['documentDate']) && !empty($body['documentDate']['values']) && is_array($body['documentDate']['values'])) {
             if (Validator::date()->notEmpty()->validate($body['documentDate']['values']['start'])) {
-                $args['searchWhere'][] = 'doc_date > ?';
+                $args['searchWhere'][] = 'doc_date >= ?';
                 $args['searchData'][] = $body['documentDate']['values']['start'];
             }
             if (Validator::date()->notEmpty()->validate($body['documentDate']['values']['end'])) {
-                $args['searchWhere'][] = 'doc_date < ?';
+                $args['searchWhere'][] = 'doc_date <= ?';
                 $args['searchData'][] = $body['documentDate']['values']['end'];
             }
         }
         if (!empty($body['arrivalDate']) && !empty($body['arrivalDate']['values']) && is_array($body['arrivalDate']['values'])) {
             if (Validator::date()->notEmpty()->validate($body['arrivalDate']['values']['start'])) {
-                $args['searchWhere'][] = 'admission_date > ?';
+                $args['searchWhere'][] = 'admission_date >= ?';
                 $args['searchData'][] = $body['arrivalDate']['values']['start'];
             }
             if (Validator::date()->notEmpty()->validate($body['arrivalDate']['values']['end'])) {
-                $args['searchWhere'][] = 'admission_date < ?';
+                $args['searchWhere'][] = 'admission_date <= ?';
                 $args['searchData'][] = $body['arrivalDate']['values']['end'];
             }
         }
         if (!empty($body['departureDate']) && !empty($body['departureDate']['values']) && is_array($body['departureDate']['values'])) {
             if (Validator::date()->notEmpty()->validate($body['departureDate']['values']['start'])) {
-                $args['searchWhere'][] = 'departure_date > ?';
+                $args['searchWhere'][] = 'departure_date >= ?';
                 $args['searchData'][] = $body['departureDate']['values']['start'];
             }
             if (Validator::date()->notEmpty()->validate($body['departureDate']['values']['end'])) {
-                $args['searchWhere'][] = 'departure_date < ?';
+                $args['searchWhere'][] = 'departure_date <= ?';
                 $args['searchData'][] = $body['departureDate']['values']['end'];
             }
         }
         if (!empty($body['processLimitDate']) && !empty($body['processLimitDate']['values']) && is_array($body['processLimitDate']['values'])) {
             if (Validator::date()->notEmpty()->validate($body['processLimitDate']['values']['start'])) {
-                $args['searchWhere'][] = 'process_limit_date > ?';
+                $args['searchWhere'][] = 'process_limit_date >= ?';
                 $args['searchData'][] = $body['processLimitDate']['values']['start'];
             }
             if (Validator::date()->notEmpty()->validate($body['processLimitDate']['values']['end'])) {
-                $args['searchWhere'][] = 'process_limit_date < ?';
+                $args['searchWhere'][] = 'process_limit_date <= ?';
                 $args['searchData'][] = $body['processLimitDate']['values']['end'];
             }
         }
@@ -498,6 +506,83 @@ class SearchController
                 $args['searchWhere'][] = '(res_id in (?) OR res_id not in (select distinct res_id from resources_folders))';
                 $foldersMatch = array_column($foldersMatch, 'res_id');
                 $args['searchData'][] = $foldersMatch;
+            }
+        }
+
+        return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
+    }
+
+    private static function getCustomFieldsClause(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['body', 'searchWhere', 'searchData']);
+        ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
+
+        $body = $args['body'];
+
+        foreach ($body as $key => $value) {
+            if (strpos($key, 'indexingCustomField_') !== false) {
+                $customFieldId = substr($key, 20);
+                $customField = CustomFieldModel::getById(['select' => ['type'], 'id' => $customFieldId]);
+                if (empty($customField)) {
+                    continue;
+                }
+                if ($customField['type'] == 'string') {
+                    if (!empty($value) && !empty($value['values']) && is_string($value['values'])) {
+                        if ($value['values'][0] == '"' && $value['values'][strlen($value['values']) - 1] == '"') {
+                            $args['searchWhere'][] = "custom_fields->>'{$customFieldId}' = ?";
+                            $subject = trim($value['values'], '"');
+                            $args['searchData'][] = $subject;
+                        } else {
+                            $fields = ["custom_fields->>'{$customFieldId}'"];
+                            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+                            $requestData = AutoCompleteController::getDataForRequest([
+                                'search'        => $value['values'],
+                                'fields'        => $fields,
+                                'where'         => [],
+                                'data'          => [],
+                                'fieldsNumber'  => 1
+                            ]);
+                            $args['searchWhere'] = array_merge($args['searchWhere'], $requestData['where']);
+                            $args['searchData'] = array_merge($args['searchData'], $requestData['data']);
+                        }
+                    }
+                } elseif ($customField['type'] == 'integer') {
+                    if (!empty($value) && !empty($value['values']) && is_numeric($value['values'])) {
+                        $args['searchWhere'][] = "custom_fields->>'{$customFieldId}' = ?";
+                        $args['searchData'][] = $value['values'];
+                    }
+                } elseif ($customField['type'] == 'radio' || $customField['type'] == 'select') {
+                    if (!empty($value) && !empty($value['values']) && is_array($value['values'])) {
+                        if (in_array(null, $value['values'])) {
+                            $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}' in (?) OR custom_fields->>'{$customFieldId}' is NULL)";
+                        } else {
+                            $args['searchWhere'][] = "custom_fields->>'{$customFieldId}' in (?)";
+                        }
+                        $args['searchData'][] = $value['values'];
+                    }
+                } elseif ($customField['type'] == 'checkbox') {
+                    if (!empty($value) && !empty($value['values']) && is_array($value['values'])) {
+                        $where = '';
+                        foreach ($value['values'] as $item) {
+                            if (!empty($where)) {
+                                $where .= ' OR ';
+                            }
+                            $where .= "custom_fields->'{$customFieldId}' @> ?";
+                            $args['searchData'][] = "\"{$item}\"";
+                        }
+
+                        $args['searchWhere'][] = $where;
+                    }
+                } elseif ($customField['type'] == 'date') {
+                    if (Validator::date()->notEmpty()->validate($value['values']['start'])) {
+                        $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}')::timestamp >= ?";
+                        $args['searchData'][] = $value['values']['start'];
+                    }
+                    if (Validator::date()->notEmpty()->validate($value['values']['end'])) {
+                        $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}')::timestamp <= ?";
+                        $args['searchData'][] = $value['values']['end'];
+                    }
+                }
             }
         }
 
