@@ -879,7 +879,7 @@ class ResourceListController
                     break;
                 }
             }
-            $formattedResources[$key]['countNotes'] = NoteModel::countByResId(['resId' => $resource['res_id'], 'login' => $currentUser['user_id'], 'userId' => $args['userId']]);
+            $formattedResources[$key]['countNotes'] = NoteModel::countByResId(['resId' => [$resource['res_id']], 'userId' => $args['userId']])[$resource['res_id']];
 
             if (!empty($args['checkLocked'])) {
                 $isLocked = true;

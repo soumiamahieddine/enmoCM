@@ -21,7 +21,7 @@
         <div *ngIf="value && _options?.length === 0 && datas.length > 5" class="mat-select-search-no-entries-found">
             {{'lang.noResult' | translate}}
         </div>
-        <mat-option *ngIf="showResetOption" [value]="null"></mat-option>
+        <mat-option *ngIf="showResetOption" [value]="null">({{'lang.emptyValue' | translate}})</mat-option>
         <mat-option *ngFor="let value of filteredDatas | async" [value]="returnValue === 'id' ? value.id : value"
             [title]="value.title !== undefined ? value.title : value.label" [disabled]="value.disabled"
             [class.opt-group]="value.isTitle" [style.color]="value.color">

@@ -23,6 +23,7 @@ use CustomField\models\CustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Folder\models\ResourceFolderModel;
+use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use RegisteredMail\models\RegisteredMailModel;
 use Resource\models\ResModel;
@@ -172,6 +173,8 @@ class SearchController
         $doctypesIds = array_column($resources, 'type');
         $doctypes = DoctypeModel::get(['select' => ['type_id', 'description'], 'where' => ['type_id in (?)'], 'data' => [$doctypesIds]]);
 
+        $notes = NoteModel::countByResId(['resId' => $resourcesIds, 'userId' => $GLOBALS['id']]);
+
         $correspondents = ResourceContactModel::get([
             'select'    => ['item_id', 'type', 'mode', 'res_id'],
             'where'     => ['res_id in (?)'],
@@ -228,13 +231,15 @@ class SearchController
                 }
             }
 
-            $resources[$key]['attachments'] = 0;
+            $resources[$key]['countAttachments'] = 0;
             foreach ($attachments as $attachment) {
                 if ($attachment['res_id_master'] == $resource['resId']) {
-                    $resources[$key]['attachments'] = $attachment['count'];
+                    $resources[$key]['countAttachments'] = $attachment['count'];
                     break;
                 }
             }
+
+            $resources[$key]['countNotes'] = $notes[$resource['resId']];
         }
 
         return $response->withJson(['resources' => $resources, 'count' => count($allResources), 'allResources' => $allResources]);
@@ -368,7 +373,7 @@ class SearchController
                     'data'          => [],
                     'fieldsNumber'  => 1
                 ]);
-                $subjectGlue = implode(' AND ',$requestData['where']);
+                $subjectGlue = implode(' AND ', $requestData['where']);
                 $subjectGlue = "(($subjectGlue) OR res_id in (select res_id_master from res_attachments where title ilike ?))";
                 $args['searchWhere'][] = $subjectGlue;
                 $args['searchData'] = array_merge($args['searchData'], $requestData['data']);
