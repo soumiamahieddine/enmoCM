@@ -317,7 +317,7 @@ class SearchController
             if ($body['meta']['values'][0] == '"' && $body['meta']['values'][strlen($body['meta']['values']) - 1] == '"') {
                 $quick = trim($body['meta']['values'], '"');
                 $quickWhere = "(subject = ? OR res_id in (select res_id_master from res_attachments where title = ?)";
-                $quickWhere .= ' OR alt_identifier  ? OR res_id in (select res_id_master from res_attachments where identifier ilike ?)';
+                $quickWhere .= ' OR alt_identifier = ? OR res_id in (select res_id_master from res_attachments where identifier ilike ?)';
                 $quickWhere .= ' OR barcode = ?';
                 if (is_numeric($quick)) {
                     $quickWhere .= ' OR res_id = ?';
