@@ -224,7 +224,7 @@
         <mat-divider></mat-divider>
     </mat-sidenav>
 </mat-sidenav-container>
-<app-folder-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo"
+<app-followed-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo"
     [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
-    (refreshPanelFolders)="foldersService.getFolders()">
-</app-folder-action-list>
+    [menuShortcut]="menuShortcut" (refreshPanelFolders)="foldersService.getFolders()">
+</app-followed-action-list>

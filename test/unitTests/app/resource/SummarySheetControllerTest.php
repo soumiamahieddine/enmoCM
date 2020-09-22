@@ -126,24 +126,6 @@ class SummarySheetControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Resources is not set or empty', $responseBody['errors']);
 
-        $body = [
-            "resources" => $GLOBALS['resources'],
-            "units" => [
-                ['label' => 'Informations', 'unit' => 'primaryInformations']
-            ],
-        ];
-
-        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
-
-        $GLOBALS['login'] = 'ddur';
-        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
-        $GLOBALS['id'] = $userInfo['id'];
-
-        $response = $summarySheetController->createList($fullRequest, new \Slim\Http\Response());
-        $this->assertSame(403, $response->getStatusCode());
-        $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Resources out of perimeter', $responseBody['errors']);
-
         $GLOBALS['login'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];

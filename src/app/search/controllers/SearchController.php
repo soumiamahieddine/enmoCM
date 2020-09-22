@@ -317,33 +317,57 @@ class SearchController
 
         $body = $args['body'];
 
-        //TODO finish
         if (!empty($body['meta']) && !empty($body['meta']['values']) && is_string($body['meta']['values'])) {
             if ($body['meta']['values'][0] == '"' && $body['meta']['values'][strlen($body['meta']['values']) - 1] == '"') {
                 $quick = trim($body['meta']['values'], '"');
-                $quickWhere = "(subject = ? OR res_id in (select res_id_master from res_attachments where title = ?)";
-                $quickWhere .= ' OR alt_identifier = ? OR res_id in (select res_id_master from res_attachments where identifier ilike ?)';
+                $quickWhere = "subject = ? OR res_id in (select res_id_master from res_attachments where title = ?)";
+                $quickWhere .= ' OR alt_identifier = ? OR res_id in (select res_id_master from res_attachments where identifier = ?)';
                 $quickWhere .= ' OR barcode = ?';
-                if (is_numeric($quick)) {
+                if (ctype_digit($quick)) {
                     $quickWhere .= ' OR res_id = ?';
                     $args['searchData'][] = $quick;
                 }
-                $quickWhere .= ')';
 
-                $args['searchWhere'][] = $quickWhere;
+                $args['searchWhere'][] = '(' . $quickWhere . ')';
                 $args['searchData'] = array_merge($args['searchData'], [$quick, $quick, $quick, $quick, $quick]);
             } else {
                 $fields = ['subject', 'alt_identifier', 'barcode'];
                 $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-                $requestData = AutoCompleteController::getDataForRequest([
+                $requestDataDocument = AutoCompleteController::getDataForRequest([
                     'search'        => $body['meta']['values'],
                     'fields'        => $fields,
                     'where'         => [],
                     'data'          => [],
                     'fieldsNumber'  => 3
                 ]);
-                $args['searchWhere'] = array_merge($args['searchWhere'], $requestData['where']);
-                $args['searchData'] = array_merge($args['searchData'], $requestData['data']);
+
+                $fields = ['title', 'identifier'];
+                $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+                $requestDataAttachment = AutoCompleteController::getDataForRequest([
+                    'search'        => $body['meta']['values'],
+                    'fields'        => $fields,
+                    'where'         => [],
+                    'data'          => [],
+                    'fieldsNumber'  => 2
+                ]);
+
+                if (!empty($requestDataDocument['where'])) {
+                    $whereClause[]      = implode(' OR ', $requestDataDocument['where']);
+                    $args['searchData'] = array_merge($args['searchData'], $requestDataDocument['data']);
+                }
+                if (!empty($requestDataAttachment['where'])) {
+                    $whereClause[]      = 'res_id in (select res_id_master from res_attachments where ' . implode(' OR ', $requestDataAttachment['where']) . ')';
+                    $args['searchData'] = array_merge($args['searchData'], $requestDataAttachment['data']);
+                }
+
+                if (ctype_digit(trim($body['meta']['values']))) {
+                    $whereClause[] = 'res_id = ?';
+                    $args['searchData'][] = trim($body['meta']['values']);
+                }
+
+                if (!empty($whereClause)) {
+                    $args['searchWhere'][] = '(' . implode(' OR ', $whereClause) . ')';
+                }
             }
         }
 
