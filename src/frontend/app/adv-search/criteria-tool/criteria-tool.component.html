@@ -129,9 +129,9 @@
                             <mat-form-field class="input-form input-date" floatLabel="never" (click)="picker.open()"
                                 style="cursor:pointer;">
                                 <mat-date-range-input [rangePicker]="picker">
-                                    <input matStartDate placeholder="Début"
+                                    <input matStartDate placeholder="Début" [value]="field.control.value.start"
                                         (dateChange)="field.control.value.start=$event.value">
-                                    <input matEndDate placeholder="Fin"
+                                    <input matEndDate placeholder="Fin" [value]="field.control.value.end"
                                         (dateChange)="field.control.value.end=$event.value">
                                 </mat-date-range-input>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>

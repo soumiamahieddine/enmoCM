@@ -229,14 +229,21 @@ export class CriteriaToolComponent implements OnInit {
     refreshCriteria(criteria: any) {
         this.currentCriteria.forEach((field: any, index: number) => {
             if (criteria[field.identifier] !== undefined) {
-                field.control.setValue(criteria[field.identifier].values);
+                if (this.currentCriteria[index].type === 'date' && this.functions.empty(criteria[field.identifier].values)) {
+                    field.control.setValue({
+                        start: null,
+                        end: null
+                    });
+                } else {
+                    field.control.setValue(criteria[field.identifier].values);
+
+                }
             }
         });
 
         if (Object.keys(criteria)[0] === 'meta') {
             this.searchTermControl.setValue(criteria['meta'].values);
         }
-
         this.getCurrentCriteriaValues();
     }
 
