@@ -53,6 +53,7 @@ import { NoteEditorComponent } from './notes/note-editor.component';
 
 import { PluginAutocomplete } from '../plugins/autocomplete/autocomplete.component';
 import { PluginSelectSearchComponent } from '../plugins/select-search/select-search.component';
+import { PluginSelectAutocompleteSearchComponent } from '../plugins/select-autocomplete-search/plugin-select-autocomplete-search.component';
 
 import { DragDropDirective } from '../app/viewer/upload-file-dnd.directive';
 import { AddressBanAutocompleteComponent } from './contact/ban-autocomplete/address-ban-autocomplete.component';
@@ -112,6 +113,7 @@ import { TranslateService } from '@ngx-translate/core';
         PluginAutocomplete,
         FieldListComponent,
         PluginSelectSearchComponent,
+        PluginSelectAutocompleteSearchComponent,
         DiffusionsListComponent,
         DragDropDirective,
         ContactAutocompleteComponent,
@@ -155,6 +157,7 @@ import { TranslateService } from '@ngx-translate/core';
         PluginAutocomplete,
         FieldListComponent,
         PluginSelectSearchComponent,
+        PluginSelectAutocompleteSearchComponent,
         DiffusionsListComponent,
         DragDropDirective,
         ContactAutocompleteComponent,

@@ -173,10 +173,18 @@ export class CriteriaToolComponent implements OnInit {
             };
         }
         this.currentCriteria.forEach((field: any) => {
-            if (!this.functions.empty(field.control.value)) {
-                objCriteria[field.identifier] = {
-                    values: field.control.value
-                };
+            if (field.type === 'date') {
+                if (!this.functions.empty(field.control.value.start) || !this.functions.empty(field.control.value.end)) {
+                    objCriteria[field.identifier] = {
+                        values: field.control.value
+                    };
+                }
+            } else {
+                if (!this.functions.empty(field.control.value)) {
+                    objCriteria[field.identifier] = {
+                        values: field.control.value
+                    };
+                }
             }
         });
         this.searchUrlGenerated.emit(objCriteria);
@@ -190,8 +198,12 @@ export class CriteriaToolComponent implements OnInit {
         } else  if (['doctype', 'destination'].indexOf(identifier) > -1) {
             return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].title;
         } else {
-            return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].label;
+            if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'selectAutocomplete') {
+                return 'toto';
+            } else {
+                return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].label;
 
+            }
         }
     }
 
@@ -311,8 +323,35 @@ export class CriteriaToolComponent implements OnInit {
         });
     }
 
-    set_role_field(elem: any) {
+    set_initiator_field(elem: any) {
         return new Promise((resolve, reject) => {
+            this.http.get(`../rest/indexingModels/entities`).pipe(
+                tap((data: any) => {
+                        let title = '';
+                        elem.values = elem.values.concat(data.entities.map((entity: any) => {
+                            title = entity.entity_label;
+
+                            for (let index = 0; index < entity.level; index++) {
+                                entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                            }
+                            return {
+                                id: entity.id,
+                                title: title,
+                                label: entity.entity_label,
+                                disabled: false
+                            };
+                        }));
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    set_role_field(elem: any) {
+        elem.type = 'selectAutocomplete';
+        elem.routeDatas = elem.identifier === 'role_dest' ? ['/rest/autocomplete/users'] : ['/rest/autocomplete/users', '/rest/autocomplete/entities'];
+
+        /*return new Promise((resolve, reject) => {
             this.http.get(`../rest/users`).pipe(
                 tap((data: any) => {
                     const arrValues: any[] = [];
@@ -327,7 +366,7 @@ export class CriteriaToolComponent implements OnInit {
                     resolve(true);
                 })
             ).subscribe();
-        });
+        });*/
     }
 
     getSearchTemplates() {
