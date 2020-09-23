@@ -178,7 +178,7 @@ trait ShippingTrait
             $resId = $resource['res_id'];
 
             $createSending = CurlModel::execSimple([
-                'url'           => $mailevaConfig['uri'] . '/mail/v1/sendings',
+                'url'           => $mailevaConfig['uri'] . '/registered_mail/v2/sendings',
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'POST',
@@ -188,13 +188,14 @@ trait ShippingTrait
                 $errors[] = "Maileva sending creation failed for attachment {$resId}";
                 continue;
             }
-            foreach ($createSending['headers'] as $header) {
-                if (strpos($header, 'Location:') !== false) {
-                    $sendingId = strrchr($header, '/');
-                    $sendingId = substr($sendingId, 1);
-                    break;
-                }
-            }
+            $sendingId = $createSending['response']['id'];
+//            foreach ($createSending['headers'] as $header) {
+//                if (strpos($header, 'Location:') !== false) {
+//                    $sendingId = strrchr($header, '/');
+//                    $sendingId = substr($sendingId, 1);
+//                    break;
+//                }
+//            }
             if (empty($sendingId)) {
                 $errors[] = "Maileva sending id not found for attachment {$resId}";
                 continue;
@@ -231,7 +232,7 @@ trait ShippingTrait
             }
 
             $createDocument = CurlModel::execSimple([
-                'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/documents",
+                'url'           => $mailevaConfig['uri'] . "/registered_mail/v2/sendings/{$sendingId}/documents",
                 'bearerAuth'    => ['token' => $token],
                 'method'        => 'POST',
                 'multipartBody' => ['document' => file_get_contents($pathToDocument), 'metadata' => json_encode(['priority' => 0, 'name' => $resource['title']])]
@@ -244,7 +245,7 @@ trait ShippingTrait
             $recipients = [];
             if ($resource['type'] == 'attachment') {
                 $createRecipient = CurlModel::execSimple([
-                    'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/recipients",
+                    'url'           => $mailevaConfig['uri'] . "/registered_mail/v2/sendings/{$sendingId}/recipients",
                     'bearerAuth'    => ['token' => $token],
                     'headers'       => ['Content-Type: application/json'],
                     'method'        => 'POST',
@@ -266,7 +267,7 @@ trait ShippingTrait
             } else {
                 foreach ($contacts[$key] as $contact) {
                     $createRecipient = CurlModel::execSimple([
-                        'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/recipients",
+                        'url'           => $mailevaConfig['uri'] . "/registered_mail/v2/sendings/{$sendingId}/recipients",
                         'bearerAuth'    => ['token' => $token],
                         'headers'       => ['Content-Type: application/json'],
                         'method'        => 'POST',
@@ -289,7 +290,7 @@ trait ShippingTrait
             }
 
             $setOptions = CurlModel::execSimple([
-                'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/options",
+                'url'           => $mailevaConfig['uri'] . "/registered_mail/v2/sendings/{$sendingId}",
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'PATCH',
@@ -306,7 +307,7 @@ trait ShippingTrait
             }
 
             $submit = CurlModel::execSimple([
-                'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/submit",
+                'url'           => $mailevaConfig['uri'] . "/registered_mail/v2/sendings/{$sendingId}/submit",
                 'bearerAuth'    => ['token' => $token],
                 'headers'       => ['Content-Type: application/json'],
                 'method'        => 'POST'
