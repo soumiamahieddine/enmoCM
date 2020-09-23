@@ -958,10 +958,10 @@ class ResourceListController
                             $value['displayValue'] = '';
                         }
                         $display[] = $value;
-                    }  elseif ($value['value'] == 'getRegisteredMailReference') {
+                    } elseif ($value['value'] == 'getRegisteredMailReference') {
                         $value['displayValue'] = !empty($registeredMail) ? $registeredMail['reference'] : '';
                         $display[] = $value;
-                    }  elseif ($value['value'] == 'getRegisteredMailIssuingSite') {
+                    } elseif ($value['value'] == 'getRegisteredMailIssuingSite') {
                         if (!empty($registeredMail)) {
                             $site = IssuingSiteModel::getById(['id' => $registeredMail['issuing_site'], 'select' => ['label']]);
                             $value['displayValue'] = $site['label'];
@@ -974,7 +974,9 @@ class ResourceListController
                         $customValue = json_decode($resource['custom_fields'], true);
 
                         $value['displayLabel'] = $customFieldsLabels[$customId] ?? '';
-                        if ($customFields[$customId] == 'banAutocomplete' && !empty($customValue[$customId])) {
+                        if ($customFields[$customId] == 'contact' && !empty($customValue[$customId])) {
+                            $value['displayValue'] = ContactController::getContactCustomField(['contacts' => $customValue[$customId], 'onlyContact' => true]);
+                        } elseif ($customFields[$customId] == 'banAutocomplete' && !empty($customValue[$customId])) {
                             $value['displayValue'] = $customValue[$customId][0]['addressNumber'] ?? '';
                             $value['displayValue'] .= ' ';
                             $value['displayValue'] .= $customValue[$customId][0]['addressStreet'] ?? '';

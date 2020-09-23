@@ -280,7 +280,7 @@ class CustomFieldController
     {
         $body = $args['body'];
 
-        if ($body['type'] == 'banAutocomplete') {
+        if (in_array($body['type'], ['banAutocomplete', 'contact'])) {
             return ['errors' => 'SQL is not allowed for type BAN'];
         }
         if (!Validator::stringType()->notEmpty()->validate($body['values']['key'])) {

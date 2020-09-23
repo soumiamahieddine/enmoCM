@@ -16,7 +16,6 @@ namespace Resource\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
-use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
 use CustomField\models\CustomFieldModel;
 use Entity\models\EntityModel;
@@ -30,7 +29,6 @@ use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\PreparedClauseController;
 use SrcCore\controllers\UrlController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
@@ -730,7 +728,10 @@ class ExportController
         $field = CustomFieldModel::getById(['select' => ['type', 'values'], 'id' => $customFieldId]);
         $values = json_decode($field['values'], true);
 
-        if ($field['type'] == 'banAutocomplete') {
+        if ($field['type'] == 'contact') {
+            $customValues = ContactController::getContactCustomField(['contacts' => $customValues]);
+            $customValues = implode("\n", $customValues);
+        } elseif ($field['type'] == 'banAutocomplete') {
             $line = "{$customValues[0]['addressNumber']} {$customValues[0]['addressStreet']} {$customValues[0]['addressTown']} ({$customValues[0]['addressPostcode']})";
             $line .= "\n";
             $line .= "{$customValues[0]['latitude']},{$customValues[0]['longitude']}";
