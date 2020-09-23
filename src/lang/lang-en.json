@@ -2006,7 +2006,10 @@
     "searchAdministration" : "Search administration",
     "searchTemplateAdded": "Search template added",
     "searchTemplateCreation": "Search template creation",
-    "addSearchTemplateMsg": "This template will be private. All criterias and values selected will be saved",
+    "addSearchTemplateMsg": "This template will be private. All criteria and values selected will be saved",
     "mySearchTemplates": "My templates",
-    "searchTemplateDeleted": "Search template deleted"
+    "searchTemplateDeleted": "Search template deleted",
+    "issuingSiteSample": "MAARCH - Nanterre",
+    "registeredMailReferenceSample": "01/01/2020 - My reference",
+    "registeredMailRecipientSample": "MAARCH-LES-BAINS PATRICIA PETIT"
 }

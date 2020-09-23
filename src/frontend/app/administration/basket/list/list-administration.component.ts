@@ -141,6 +141,24 @@ export class ListAdministrationComponent implements OnInit {
             'sample': this.translate.instant('lang.getBarcodeSample'),
             'cssClasses': ['align_leftData'],
             'icon': 'fa-barcode'
+        }, {
+            'value': 'getRegisteredMailRecipient',
+            'label': this.translate.instant('lang.registeredMailRecipient'),
+            'sample': this.translate.instant('lang.registeredMailRecipientSample'),
+            'cssClasses': ['align_leftData'],
+            'icon': 'fa-user'
+        }, {
+            'value': 'getRegisteredMailReference',
+            'label': this.translate.instant('lang.registeredMailReference'),
+            'sample': this.translate.instant('lang.registeredMailReferenceSample'),
+            'cssClasses': ['align_leftData'],
+            'icon': 'fa-hashtag'
+        }, {
+            'value': 'getRegisteredMailIssuingSite',
+            'label': this.translate.instant('lang.issuingSite'),
+            'sample': this.translate.instant('lang.issuingSiteSample'),
+            'cssClasses': ['align_leftData'],
+            'icon': 'fas fa-warehouse'
         }
     ];
     availableDataClone: any = [];

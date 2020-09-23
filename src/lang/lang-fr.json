@@ -2011,5 +2011,8 @@
     "mySearchTemplates": "Mes modèles",
     "searchTemplateDeleted": "Modèle de recherche supprimé",
     "searchAdministration" : "Administration recherche",
-    "contactInput" : "Champ contact"
+    "contactInput" : "Champ contact",
+    "issuingSiteSample": "MAARCH - Nanterre",
+    "registeredMailReferenceSample": "01/01/2020 - Ma référence",
+    "registeredMailRecipientSample": "MAARCH-LES-BAINS PATRICIA PETIT"
 }
