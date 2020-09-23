@@ -2010,5 +2010,6 @@
     "addSearchTemplateMsg": "Ce modèle sera privé. Tous les critères et valeurs sélectionnés seront enregistrés",
     "mySearchTemplates": "Mes modèles",
     "searchTemplateDeleted": "Modèle de recherche supprimé",
-    "searchAdministration" : "Administration recherche"
+    "searchAdministration" : "Administration recherche",
+    "contactInput" : "Champ contact"
 }
