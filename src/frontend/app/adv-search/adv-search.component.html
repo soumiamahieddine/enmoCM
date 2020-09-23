@@ -39,16 +39,16 @@
                         <ng-container *ngIf="isArrayType(critKey.value.values) && critKey.value.values.length > 3">
                             <span class="label badge-search"
                                 [title]="appCriteriaTool.getLabelValues(critKey.key,critKey.value.values)"
-                                (click)="removeCriteria(critKey.key, val)"><i
+                                (click)="removeCriteria(critKey.key)"><i
                                     class="fa {{indexingFieldService.getField(critKey.key).icon}}" [title]="indexingFieldService.getField(critKey.key).label"></i>&nbsp;{{critKey.value.values.length}} valeurs&nbsp;<i class="fa fa-times-circle"></i></span>
                         </ng-container>
                         <ng-container *ngIf="!isArrayType(critKey.value.values) && critKey.key !== 'meta'">
-                            <span class="label badge-search" [title]="appCriteriaTool.getFormatLabel(critKey.value.values)" (click)="removeCriteria(critKey.key, val)"><i
+                            <span class="label badge-search" [title]="appCriteriaTool.getFormatLabel(critKey.value.values)" (click)="removeCriteria(critKey.key)"><i
                                     class="fa {{indexingFieldService.getField(critKey.key).icon}}"
                                     [title]="indexingFieldService.getField(critKey.key).label"></i>&nbsp;{{appCriteriaTool.getFormatLabel(critKey.value.values)}}&nbsp;<i class="fa fa-times-circle"></i></span>
                         </ng-container>
                         <ng-container *ngIf="!isArrayType(critKey.value.values) && critKey.key === 'meta'">
-                            <span class="label badge-search" [title]="'meta'" (click)="removeCriteria(critKey.key, val)">"{{critKey.value.values}}"&nbsp;<i class="fa fa-times-circle"></i></span>
+                            <span class="label badge-search" [title]="'meta'" (click)="removeCriteria(critKey.key)">"{{critKey.value.values}}"&nbsp;<i class="fa fa-times-circle"></i></span>
                         </ng-container>
                     </ng-container>
                 </div>
@@ -78,12 +78,11 @@
                         </span>
                         <span>
                             <span>
-                                <app-tools-list #actionsList [selectedRes]="selectedRes"
-                                    [currentBasketInfo]="currentBasketInfo"></app-tools-list>
+                                <app-tools-list #actionsList [selectedRes]="selectedRes"></app-tools-list>
                             </span>
                             <span>
                                 <app-followed-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
-                                    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [menuShortcut]="menuShortcut"
+                                    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
                                     (refreshEvent)="refreshDaoAfterAction()">
                                 </app-followed-action-list>
                             </span>
@@ -226,5 +225,5 @@
 </mat-sidenav-container>
 <app-followed-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo"
     [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
-    [menuShortcut]="menuShortcut" (refreshPanelFolders)="foldersService.getFolders()">
+    (refreshPanelFolders)="foldersService.getFolders()">
 </app-followed-action-list>
