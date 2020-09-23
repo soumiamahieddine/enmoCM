@@ -165,6 +165,18 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
                     });
             });
         setTimeout(() => {
+            let group = '';
+            let index = 1;
+            this.datas.forEach((element: any) => {
+                if (element.isTitle) {
+                    group = `group_${index}`;
+                    element.id = group;
+                    index++;
+                } else {
+                    element.group = group;
+                }
+            });
+
             this.filteredDatas = this.formControlSearch.valueChanges
                 .pipe(
                     startWith(''),
@@ -350,7 +362,10 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             return this.datas.filter((option: any) => this.formControlSelect.value.indexOf(option['id']) > -1);
         } else if (typeof value === 'string' && value !== '') {
             const filterValue = this.latinisePipe.transform(value.toLowerCase());
-            return this.datas.filter((option: any) => !option['disabled'] && this.latinisePipe.transform(option['label'].toLowerCase()).includes(filterValue));
+
+            const group = this.datas.filter((option: any) => option['isTitle'] && this.latinisePipe.transform(option['label'].toLowerCase()).includes(filterValue)).map((opt: any) => opt.id);
+
+            return this.datas.filter((option: any) => (option['isTitle'] && group.indexOf(option['id']) > -1) || (group.indexOf(option['group']) > -1 || this.latinisePipe.transform(option['label'].toLowerCase()).includes(filterValue)));
         } else {
             return this.datas;
         }
