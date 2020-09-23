@@ -2014,5 +2014,6 @@
     "contactInput" : "Champ contact",
     "issuingSiteSample": "MAARCH - Nanterre",
     "registeredMailReferenceSample": "01/01/2020 - Ma référence",
-    "registeredMailRecipientSample": "MAARCH-LES-BAINS PATRICIA PETIT"
+    "registeredMailRecipientSample": "MAARCH-LES-BAINS PATRICIA PETIT",
+    "importRegisteredMails": "Importer des recommandés"
 }

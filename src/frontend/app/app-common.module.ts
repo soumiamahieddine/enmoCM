@@ -79,6 +79,9 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
 import { InternationalizationModule } from '../service/translate/internationalization.module';
 import { TranslateService } from '@ngx-translate/core';
 
+import { RegisteredMailImportComponent } from '@appRoot/registeredMail/import/registered-mail-import.component';
+
+
 @NgModule({
     imports: [
         CommonModule,
@@ -100,6 +103,7 @@ import { TranslateService } from '@ngx-translate/core';
         SearchHomeComponent,
         BasketHomeComponent,
         IndexingGroupModalComponent,
+        RegisteredMailImportComponent,
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
@@ -186,6 +190,7 @@ import { TranslateService } from '@ngx-translate/core';
     providers: [],
     entryComponents: [
         IndexingGroupModalComponent,
+        RegisteredMailImportComponent,
         AlertComponent,
         ConfirmComponent
     ],
