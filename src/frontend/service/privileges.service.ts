@@ -287,7 +287,7 @@ export class PrivilegeService {
         },
         {
             'id': 'admin_registered_mail',
-            'label': 'lang.registeredMail',
+            'label': 'lang.registeredMails',
             'comment': 'lang.adminRegisteredMailDesc',
             'route': '/administration/registeredMails',
             'unit': 'supervision',

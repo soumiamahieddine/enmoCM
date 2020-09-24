@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { FunctionsService } from '../../../service/functions.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
-import { filter, exhaustMap, tap, catchError, map } from 'rxjs/operators';
+import { filter, exhaustMap, tap, catchError, map, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
 import { AlertComponent } from '../../../plugins/modal/alert.component';
 import { LocalStorageService } from '../../../service/local-storage.service';
@@ -23,11 +23,9 @@ export class RegisteredMailImportComponent implements OnInit {
 
     loading: boolean = false;
 
+    registeredMailFields: string[] = ['registeredMail_warranty', 'registeredMail_type', 'departureDate', 'registeredMail_letter'];
+
     contactColumns: any[] = [
-        {
-            id: 'registeredMail_reference',
-            label: this.translate.instant('lang.registeredMailReference'),
-        },
         {
             id: 'company',
             label: this.translate.instant('lang.contactsParameters_company'),
@@ -73,21 +71,35 @@ export class RegisteredMailImportComponent implements OnInit {
             label: this.translate.instant('lang.contactsParameters_addressTown'),
         },
         {
-            id: 'addressCountry',
-            label: this.translate.instant('lang.contactsParameters_addressCountry'),
+            id: 'registeredMail_reference',
+            label: this.translate.instant('lang.registeredMailReference'),
         },
     ];
 
-    csvColumns: string[] = [
+    csvColumns: string[] = [];
 
-    ];
+    currentIndexingModel: number;
+    currentDoctype: number;
+
+    indexingModels: any[] = [];
 
     delimiters = [';', ',', '\t'];
     currentDelimiter = ';';
 
-    associatedColmuns: any = {};
+    associatedColumns: any = {
+        company : '0',
+        civility : '1',
+        firstname : '3',
+        lastname : '2',
+        addressAdditional1 : '5',
+        addressStreet : '4',
+        addressAdditional2 : '8',
+        addressPostcode : '7',
+        addressTown : '8',
+        registeredMail_reference : '9',
+    };
     dataSource = new MatTableDataSource(null);
-    hasHeader: boolean = true;
+    hasHeader: boolean = false;
     csvData: any[] = [];
     contactData: any[] = [];
     countAll: number = 0;
@@ -111,10 +123,8 @@ export class RegisteredMailImportComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void {
-        ['registeredMail_warranty', 'registeredMail_type', 'departureDate', 'registeredMail_letter'].forEach(element => {
-            console.log(element);
-
+    async ngOnInit(): Promise<void> {
+        this.registeredMailFields.forEach(element => {
             const field = this.indexingFields.getField(element);
 
             this.contactColumns.unshift({
@@ -123,15 +133,68 @@ export class RegisteredMailImportComponent implements OnInit {
                 values: field.values,
                 form: true
             });
-
         });
 
+        await this.getRegisteredMailIndexingModels();
+        await this.getDefaultValues();
 
-        console.log(this.contactColumns);
-
-
-        this.setConfiguration();
         // this.initCustomFields();
+    }
+
+    getRegisteredMailIndexingModels() {
+        return new Promise((resolve) => {
+            this.http.get('../rest/indexingModels').pipe(
+                map((data: any) => {
+                    data = data.indexingModels.filter((model: any) => model.category === 'registeredMail' && model.master === null).map((model: any) => {
+                        return {
+                            id: model.id,
+                            label: model.label
+                        };
+                    });
+                    return data;
+                }),
+                tap((data: any) => {
+                    if (data.length > 0) {
+                        this.indexingModels = data;
+                        this.currentIndexingModel = this.indexingModels[0].id;
+                        resolve(true);
+                    } else {
+                        this.dialogRef.close();
+                        this.notify.error(this.translate.instant('lang.noRegisteredMailModelAvailaible'));
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getDefaultValues() {
+        return new Promise((resolve) => {
+            this.http.get(`../rest/indexingModels/${this.currentIndexingModel}`).pipe(
+                tap((data: any) => {
+                    this.registeredMailFields.forEach(element => {
+                        if (element === 'departureDate') {
+                            if (this.contactColumns.filter((field: any) => field.id === element)[0].default_value === '_TODAY') {
+                                this.contactColumns.filter((field: any) => field.id === element)[0].default_value = new Date();
+                            } else {
+                                this.contactColumns.filter((field: any) => field.id === element)[0].default_value = !this.functionsService.empty(this.contactColumns.filter((field: any) => field.id === element)[0].default_value) ? this.functionsService.formatFrenchDateToObjectDate(data.indexingModel.fields.filter((field: any) => field.identifier === element)[0].default_value) : new Date();
+                            }
+                        } else {
+                            this.contactColumns.filter((field: any) => field.id === element)[0].default_value = data.indexingModel.fields.filter((field: any) => field.identifier === element)[0].default_value;
+                        }
+                    });
+                    this.currentDoctype = data.indexingModel.fields.filter((field: any) => field.identifier === 'doctype')[0].default_value;
+                }),
+                finalize(() => resolve(true)),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     getcontactColumnsIds() {
@@ -160,8 +223,11 @@ export class RegisteredMailImportComponent implements OnInit {
         ).subscribe();
     }*/
 
-    changeColumn(coldb: any, colCsv: string) {
+    changeColumn(coldb: any, colCsv: any) {
         this.contactData = [];
+
+        // console.log(this.associatedColumns);
+        // console.log(this.csvData);
 
         for (let index = this.hasHeader ? 1 : 0; index < this.csvData.length; index++) {
             const data = this.csvData[index];
@@ -169,14 +235,21 @@ export class RegisteredMailImportComponent implements OnInit {
             const objContact = {};
 
             this.contactColumns.forEach(key => {
-                objContact[key.id] = coldb === key.id ? data[this.csvColumns.filter(col => col === colCsv)[0]] : data[this.associatedColmuns[key.id]];
+                if (coldb.form) {
+                    if (coldb.id === key.id) {
+                        data[coldb.id] = colCsv;
+                        objContact[key.id] = colCsv;
+                    } else {
+                        objContact[key.id] = data[this.associatedColumns[key.id]];
+                    }
+                } else {
+                    objContact[key.id] = coldb.id === key.id ? data[this.csvColumns.filter(col => col === colCsv)[0]] : data[this.associatedColumns[key.id]];
+
+                }
             });
 
             this.contactData.push(objContact);
         }
-
-        this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-        this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
 
         setTimeout(() => {
             this.dataSource = new MatTableDataSource(this.contactData);
@@ -216,8 +289,6 @@ export class RegisteredMailImportComponent implements OnInit {
                             this.csvData.push(objData);
                         }
                         this.initData();
-                        this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-                        this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
                         this.localStorage.save(`importContactFields_${this.headerService.user.id}`, this.currentDelimiter);
 
                         this.loading = false;
@@ -241,11 +312,11 @@ export class RegisteredMailImportComponent implements OnInit {
         this.hasHeader = !this.hasHeader;
         this.countAll = this.hasHeader ? this.csvData.length - 1 : this.csvData.length;
         if (this.hasHeader) {
-            this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-            this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
+            this.countAdd = this.csvData.filter((data: any, index: number) => index > 0 && this.functionsService.empty(data[this.associatedColumns['id']])).length;
+            this.countUp = this.csvData.filter((data: any, index: number) => index > 0 && !this.functionsService.empty(data[this.associatedColumns['id']])).length;
         } else {
-            this.countAdd = this.csvData.filter((data: any, index: number) => this.functionsService.empty(data[this.associatedColmuns['id']])).length;
-            this.countUp = this.csvData.filter((data: any, index: number) => !this.functionsService.empty(data[this.associatedColmuns['id']])).length;
+            this.countAdd = this.csvData.filter((data: any, index: number) => this.functionsService.empty(data[this.associatedColumns['id']])).length;
+            this.countUp = this.csvData.filter((data: any, index: number) => !this.functionsService.empty(data[this.associatedColumns['id']])).length;
         }
         this.initData();
     }
@@ -258,8 +329,25 @@ export class RegisteredMailImportComponent implements OnInit {
 
             this.contactColumns.forEach((key, indexCol) => {
                 const indexCsvCol = this.csvColumns.indexOf(key.label);
-                this.associatedColmuns[key.id] = indexCsvCol > -1 ? this.csvColumns[indexCsvCol] : '';
-                objContact[key.id] = indexCsvCol > -1 ? data[this.csvColumns[indexCsvCol]] : '';
+
+                if (key.form) {
+                    this.associatedColumns[key.id] = key.id;
+                    this.csvData[index][key.id] = key.default_value;
+                    objContact[key.id] = key.default_value;
+                } else if (indexCsvCol > -1) {
+                    this.associatedColumns[key.id] = this.csvColumns[indexCsvCol];
+                    objContact[key.id] = data[this.csvColumns[indexCsvCol]];
+                } else {
+                    if (this.functionsService.empty(this.associatedColumns[key.id])) {
+                        this.associatedColumns[key.id] = data[indexCol];
+                        objContact[key.id] = data[indexCol];
+
+                    } else {
+                        objContact[key.id] = data[this.associatedColumns[key.id]];
+                    }
+                    // this.associatedColumns[key.id] = !this.functionsService.empty(this.associatedColumns[key.id]) ? data[this.associatedColumns[key.id]] : data[indexCol];
+                }
+
             });
             this.contactData.push(objContact);
 
@@ -284,9 +372,8 @@ export class RegisteredMailImportComponent implements OnInit {
     onSubmit() {
         const dataToSend: any[] = [];
         let confirmText = '';
-        this.translate.get('lang.confirmImportContacts', { 0: this.countAll }).subscribe((res: string) => {
+        this.translate.get('lang.confirmImportRegisteredMails', { 0: this.countAll }).subscribe((res: string) => {
             confirmText = `${res} ?<br/><br/>`;
-            // confirmText += `<ul><li><b>${this.countAdd}</b> ${this.translate.instant('lang.additions')}</li><li><b>${this.countUp}</b> ${this.translate.instant('lang.modifications')}</li></ul>`;
         });
         let dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.import'), msg: confirmText } });
         dialogRef.afterClosed().pipe(
@@ -297,18 +384,24 @@ export class RegisteredMailImportComponent implements OnInit {
                     if ((this.hasHeader && index > 0) || !this.hasHeader) {
                         const objContact = {};
                         this.contactColumns.forEach((key) => {
-                            if (element[this.associatedColmuns[key.id]] === undefined) {
+                            if (element[this.associatedColumns[key.id]] === undefined) {
                                 objContact[key.id] = '';
                             } else {
-                                objContact[key.id] = element[this.associatedColmuns[key.id]];
+                                if (element[this.associatedColumns[key.id]] instanceof Date && !isNaN(element[this.associatedColumns[key.id]].valueOf())) {
+                                    objContact[key.id] = this.functionsService.formatDateObjectToDateString(element[this.associatedColumns[key.id]], false, 'yyyy-mm-dd');
+                                } else {
+                                    objContact[key.id] = element[this.associatedColumns[key.id]];
+                                }
                             }
                         });
+                        objContact['doctype'] = this.currentDoctype;
+                        objContact['modelId'] = this.currentIndexingModel;
                         dataToSend.push(objContact);
                     }
                 });
                 console.log(dataToSend);
             }),
-            /*exhaustMap(() => this.http.put(`../rest/contacts/import`, { contacts: dataToSend })),
+            exhaustMap(() => this.http.put(`../rest/registeredMails/import`, { registeredMails: dataToSend })),
             tap((data: any) => {
                 let textModal = '';
                 if (data.errors.count > 0) {
@@ -318,9 +411,9 @@ export class RegisteredMailImportComponent implements OnInit {
                     });
                     textModal += '</ul>';
                 }
-                dialogRef = this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.import'), msg: '<b>' + data.success + '</b> / <b>' + this.countAll + '</b> ' + this.translate.instant('lang.importedContacts') + '.' + textModal } });
+                dialogRef = this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.import'), msg: '<b>' + data.success + '</b> / <b>' + this.countAll + '</b> ' + this.translate.instant('lang.importedRegisteredMails') + '.' + textModal } });
             }),
-            exhaustMap(() => dialogRef.afterClosed()),*/
+            exhaustMap(() => dialogRef.afterClosed()),
             tap(() => {
                 this.dialogRef.close('success');
             }),
@@ -330,11 +423,5 @@ export class RegisteredMailImportComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
-    }
-
-    setConfiguration() {
-        if (this.localStorage.get(`importContactFields_${this.headerService.user.id}`) !== null) {
-            this.currentDelimiter = this.localStorage.get(`importContactFields_${this.headerService.user.id}`);
-        }
     }
 }

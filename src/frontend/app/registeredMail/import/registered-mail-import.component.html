@@ -7,9 +7,19 @@
                     {{'lang.csvHeader' | translate}}
                 </mat-slide-toggle>
             </span>
-            <span style="flex:1;text-align: center;"><i class="fa fa-users"
+            <span style="flex:1;text-align: right;"><i class="fas fa-dolly-flatbed"
                     color="primary"></i>&nbsp;{{'lang.registeredMails' | translate}} : <b
                     color="primary">{{countAll}}</b>
+            </span>
+            <span style="flex:1;text-align: right;">
+                <mat-form-field style="width:250px !important;">
+                    <mat-label>{{'lang.indexingModel' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="currentIndexingModel" (click)="$event.stopPropagation()">
+                        <mat-option *ngFor="let model of indexingModels" [value]="model.id">
+                            {{model.label}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </span>
         </mat-toolbar>
         <ng-container *ngIf="loading; else elseTemplate">
@@ -47,7 +57,7 @@
                         <ng-container *ngFor="let column of contactColumns;let i=index;">
                             <ng-container [matColumnDef]="column.id">
                                 <mat-header-cell *matHeaderCellDef style="padding-left: 5px;padding-right: 5px;">
-                                    <ng-container *ngIf="!column.form; else elseTemplate">
+                                    <ng-container *ngIf="!column.form; else formTemplate">
                                         <i class="fas fa-database" color="primary"
                                             [title]="'lang.dbColumn' | translate"></i>&nbsp;<b color="primary"
                                             [title]="'lang.dbColumn' | translate">{{column.label}}</b>
@@ -55,7 +65,7 @@
                                         <i class="fas fa-file-csv" [title]="'lang.csvColumn' | translate"></i>&nbsp;
                                         <mat-form-field [title]="'lang.csvColumn' | translate"
                                             (click)="$event.stopPropagation()" style="width: 80px !important;">
-                                            <mat-select [(ngModel)]="associatedColmuns[column.id]"
+                                            <mat-select [(ngModel)]="associatedColumns[column.id]"
                                                 (selectionChange)="changeColumn(column, $event.value)">
                                                 <mat-option value=""></mat-option>
                                                 <mat-option *ngFor="let col of csvColumns" [value]="col">
@@ -64,30 +74,39 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </ng-container>
-                                    <ng-template #elseTemplate>
-                                        <i class="fas fa-database" color="primary"
-                                            [title]="'lang.dbColumn' | translate"></i>&nbsp;<b color="primary"
-                                            [title]="'lang.dbColumn' | translate">{{column.label}}</b>
-                                        &nbsp;<i class="fas fa-arrows-alt-h"></i>&nbsp;
-                                        <i class="fas fa-file-csv" [title]="'lang.csvColumn' | translate"></i>&nbsp;
-                                        <mat-form-field [title]="'lang.csvColumn' | translate"
-                                            (click)="$event.stopPropagation()" style="width: 80px !important;">
-                                            <mat-select [(ngModel)]="associatedColmuns[column.id]"
-                                                (selectionChange)="changeColumn(column, $event.value)">
-                                                <mat-option *ngFor="let val of column.values" [value]="val">
-                                                    {{val.label}}
-                                                </mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
+                                    <ng-template #formTemplate>
+                                        <ng-container *ngIf="column.id !== 'departureDate'; else elseDateType">
+                                            <button mat-button [matMenuTriggerFor]="menu"><b
+                                                    color="primary">{{column.label}}</b>
+                                                <mat-icon matSuffix class="fa fa-caret-down"></mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button *ngFor="let val of column.values" mat-menu-item
+                                                    (click)="changeColumn(column, val.id)">
+                                                    <span>{{val.label}}</span>
+                                                </button>
+                                            </mat-menu>
+                                        </ng-container>
+                                        <ng-template #elseDateType>
+                                            <mat-form-field style="display: none;">
+                                                <mat-label>Choose a date</mat-label>
+                                                <input matInput [matDatepicker]="picker" (dateChange)="changeColumn(column, $event.value)">
+                                                <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                            <button mat-button (click)="picker.open()"><b
+                                                    color="primary">{{column.label}}</b>
+                                                <mat-icon matSuffix class="fa fa-caret-down"></mat-icon>
+                                            </button>
+                                        </ng-template>
                                     </ng-template>
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let element" style="padding-left: 5px;padding-right: 5px;">
                                     <ng-container
-                                        *ngIf="column.emptyValueMode && functionsService.empty(element[column.id]); else elseTemplate">
-                                        <i style="opacity: 0.5;">{{'lang.emptyValue' | translate}}</i>
-                                    </ng-container>
-                                    <ng-template #elseTemplate>
+                                        *ngIf="!functionsService.isDate(element[column.id]); else elseDate">
                                         {{element[column.id]}}
+                                    </ng-container>
+                                    <ng-template #elseDate>
+                                        {{element[column.id] | date : "dd/MM/y"}}
                                     </ng-template>
                                 </mat-cell>
                             </ng-container>
