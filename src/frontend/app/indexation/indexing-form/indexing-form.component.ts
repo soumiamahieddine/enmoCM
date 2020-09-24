@@ -225,9 +225,9 @@ export class IndexingFormComponent implements OnInit {
         {
             identifier: 'registeredMail_recipient',
             label: this.translate.instant('lang.registeredMailRecipient'),
-            type: 'registeredMailRecipient',
+            type: 'autocomplete',
             default_value: null,
-            values: [],
+            values: ['/rest/autocomplete/correspondents'],
             enabled: true,
         },
         {
@@ -501,8 +501,8 @@ export class IndexingFormComponent implements OnInit {
 
                 formatData['customFields'][element.identifier.split('_')[1]] = element.default_value;
 
-            } else if (element.identifier === 'registeredMail_recipient') {
-                formatData[element.identifier] = this.appRegisteredMailRecipientInput.getFormatedAdress();
+            // } else if (element.identifier === 'registeredMail_recipient') {
+            //     formatData[element.identifier] = this.appRegisteredMailRecipientInput.getFormatedAdress();
             } else {
                 formatData[element.identifier] = element.default_value;
             }

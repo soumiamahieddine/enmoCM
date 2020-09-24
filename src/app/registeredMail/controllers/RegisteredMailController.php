@@ -35,6 +35,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 class RegisteredMailController
 {
@@ -410,8 +411,12 @@ class RegisteredMailController
 
     public static function generateRegisteredMailPDf(array $args)
     {
+        $resource = ResModel::getById(['select' => ['typist'], 'resId' => $args['resId']]);
+        $primaryEntity = UserModel::getPrimaryEntityById(['select' => ['short_label'], 'id' => $resource['typist']]);
+
         $sender = ContactController::getContactAfnor([
             'company'               => $args['issuingSite']['label'],
+            'firstname'             => $primaryEntity['short_label'],
             'address_number'        => $args['issuingSite']['address_number'],
             'address_street'        => $args['issuingSite']['address_street'],
             'address_additional1'   => $args['issuingSite']['address_additional1'],
