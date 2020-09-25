@@ -14,7 +14,6 @@
 
 namespace Resource\controllers;
 
-use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
 use CustomField\models\CustomFieldModel;
 use Endroid\QrCode\QrCode;
@@ -30,7 +29,6 @@ use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
@@ -369,6 +367,9 @@ class SummarySheetController
                                 } elseif ($fieldsType[$customFieldsId] == 'contact') {
                                     $customValues = ContactController::getContactCustomField(['contacts' => $customFieldsValues[$customFieldsId]]);
                                     $customValue = count($customValues) > 2 ? count($customValues) . ' ' . _CONTACTS : implode(", ", $customValues);
+                                    if (count($customValues) < 3) {
+                                        $pdf->SetFont('', '', 8);
+                                    }
                                 } else {
                                     $customValue = implode(',', $customFieldsValues[$customFieldsId]);
                                 }
@@ -380,6 +381,7 @@ class SummarySheetController
 
                         $nextLine = ($nextLine + 1) % 2;
                         $pdf->MultiCell($widthNotes, 30, $label . " : {$value}", 1, 'L', false, $nextLine, '', '', true, 0, true);
+                        $pdf->SetFont('', '', 10);
                     }
                 }
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
