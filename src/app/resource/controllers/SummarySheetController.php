@@ -710,16 +710,24 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
                 $pdf->Cell(0, 60, '', 1, 2, 'L', false);
             } elseif ($unit['unit'] == 'trafficRecords') {
-                $pdf->SetY($pdf->GetY() + 40);
-                if (($pdf->GetY() + 77) > $bottomHeight) {
+                $pdf->SetY($pdf->GetY() + 30);
+
+                $parameter = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'traffic_record_summary_sheet']);
+
+                $pdf2 = clone $pdf;
+                $pdf2->AddPage();
+                $pdf2->writeHTMLCell($widthNoMargins + $dimensions['lm'], 0, $widthNoMargins + $dimensions['lm'], 0, $parameter['param_value_string'], 0, 1, 0, true, 'C', true);
+                $height = 10 - ($pdf2->GetY());
+                if (($pdf->GetY() + abs($height)) > $bottomHeight) {
                     $pdf->AddPage();
                 }
+
                 $pdf->SetFont('', 'B', 11);
                 $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
                 $pdf->SetFont('', '', 9);
 
-                $parameter = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'traffic_record_summary_sheet']);
                 $pdf->writeHTMLCell($widthNoMargins + $dimensions['lm'], 0, $dimensions['lm'] - 2, $pdf->GetY(), $parameter['param_value_string']);
+                $pdf->SetY($pdf->GetY() + abs($height));
             }
         }
     }
