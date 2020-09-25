@@ -17,6 +17,7 @@ namespace Search\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
+use Configuration\models\ConfigurationModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use CustomField\models\CustomFieldModel;
@@ -243,6 +244,13 @@ class SearchController
         }
 
         return $response->withJson(['resources' => $resources, 'count' => count($allResources), 'allResources' => $allResources]);
+    }
+
+    public function getConfiguration(Request $request, Response $response) {
+        $configuration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_search']);
+        $configuration = json_decode($configuration['value'], true);
+
+        return $response->withJson(['configuration' => $configuration]);
     }
 
     private static function getUserDataClause(array $args)
