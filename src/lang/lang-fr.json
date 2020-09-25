@@ -2022,5 +2022,6 @@
     "noRegisteredMailModelAvailaible": "Aucun modèle d'enregistrement de recommandé disponible",
     "noIssuingSitesAvailaible": "Aucun site émetteur disponible",
     "true": "Oui",
-    "false": "Non"
+    "false": "Non",
+    "columns": "colonnes"
 }
