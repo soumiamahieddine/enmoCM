@@ -28,7 +28,10 @@ export class IssuingSiteInputComponent implements OnInit {
      * FormControl used when autocomplete is used in form and must be catched in a form control.
      */
     @Input() control: FormControl = new FormControl('');
+
     @Input() registedMailType: string = null;
+
+    @Input() showResetOption: boolean = false;
 
 
     @Output() afterSelected = new EventEmitter<string>();
@@ -75,15 +78,19 @@ export class IssuingSiteInputComponent implements OnInit {
     }
 
     setAddress(id: any) {
-        this.http.get(`../rest/registeredMail/sites/${id}`).pipe(
-            tap((data: any) => {
-                this.issuingSiteAddress = data['site'];
-            }),
-            catchError((err: any) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        if (id === null) {
+            this.issuingSiteAddress = null;
+        } else {
+            this.http.get(`../rest/registeredMail/sites/${id}`).pipe(
+                tap((data: any) => {
+                    this.issuingSiteAddress = data['site'];
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     goTo() {
