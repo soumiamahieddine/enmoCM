@@ -2016,7 +2016,7 @@
     "issuingSiteSample": "MAARCH - Nanterre",
     "registeredMailReferenceSample": "01/01/2020 - Ma référence",
     "registeredMailRecipientSample": "MAARCH-LES-BAINS PATRICIA PETIT",
-    "importRegisteredMails": "Importer des recommandés",
+    "importRegisteredMails": "Importer des recommandés en masse",
     "confirmImportRegisteredMails": "Voulez-vous importer <b>{{0}}</b> recommandé(s)",
     "importedRegisteredMails": "recommandés importés",
     "noRegisteredMailModelAvailaible": "Aucun modèle d'enregistrement de recommandé disponible",
