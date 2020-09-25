@@ -952,7 +952,13 @@ class ResourceListController
                     } elseif ($value['value'] == 'getRegisteredMailRecipient') {
                         if (!empty($registeredMail)) {
                             $recipient = json_decode($registeredMail['recipient'], true);
-                            $recipient = $recipient['company'] . ' ' . $recipient['firstname'] . ' ' . $recipient['lastname'];
+                            if (!empty($recipient['company']) && (!empty($recipient['firstname']) || !empty($recipient['lastname']))) {
+                                $recipient = $recipient['firstname'] . ' ' . $recipient['lastname'] . ' (' . $recipient['company'] . ')';
+                            } elseif (empty($recipient['company']) && (!empty($recipient['firstname']) || !empty($recipient['lastname']))) {
+                                $recipient = $recipient['firstname'] . ' ' . $recipient['lastname'];
+                            } elseif (!empty($recipient['company']) && empty($recipient['firstname']) && empty($recipient['lastname'])) {
+                                $recipient = $recipient['company'];
+                            }
                             $value['displayValue'] = $recipient;
                         } else {
                             $value['displayValue'] = '';
