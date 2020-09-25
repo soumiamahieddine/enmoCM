@@ -12,7 +12,7 @@
                     color="primary">{{countAll}}</b>
             </span>
             <span style="flex:1;text-align: right;">
-                <mat-form-field style="width:250px !important;">
+                <mat-form-field appearance="outline" style="width:250px !important;height: 55px;">
                     <mat-label>{{'lang.indexingModel' | translate}}</mat-label>
                     <mat-select [(ngModel)]="currentIndexingModel" (click)="$event.stopPropagation()">
                         <mat-option *ngFor="let model of indexingModels" [value]="model.id">
@@ -34,25 +34,25 @@
                 (onFileDropped)="dndUploadFile($event)" class="dndFile">
                 <div>
                     {{'lang.dndFileCsvDesc' | translate}}
-                    <mat-form-field appearance="outline" style="font-size:14px;" (click)="$event.stopPropagation()">
+                    <!--<mat-form-field appearance="outline" style="font-size:14px;" (click)="$event.stopPropagation()">
                         <mat-label>{{'lang.delimiter' | translate}}</mat-label>
                         <mat-select [(ngModel)]="currentDelimiter" (click)="$event.stopPropagation()">
                             <mat-option *ngFor="let delimiter of delimiters" [value]="delimiter">
                                 {{delimiter === '\t' ? 'TAB' : delimiter}}
                             </mat-option>
                         </mat-select>
-                    </mat-form-field>
+                    </mat-form-field>-->
                 </div>
             </div>
-            <div class="row" style="margin: 0px;">
+            <div *ngIf="csvData.length > 0" class="row" style="margin: 0px;">
                 <div class="col-md-12">
                     <mat-paginator #paginator [length]="100" [hidePageSize]="true" [pageSize]="10">
                     </mat-paginator>
                 </div>
             </div>
-            <div style="width:100%;box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.75);padding:10px;">
+            <div *ngIf="csvData.length > 0" class="tableContent">
                 <div style="overflow: auto;">
-                    <mat-table *ngIf="csvData.length > 0" #table [dataSource]="dataSource"
+                    <mat-table #table [dataSource]="dataSource"
                         [style.width.px]="contactColumns.length * 300">
                         <ng-container *ngFor="let column of contactColumns;let i=index;">
                             <ng-container [matColumnDef]="column.id">
@@ -60,7 +60,7 @@
                                     <ng-container *ngIf="!column.form; else formTemplate">
                                         <i class="fas fa-database" color="primary"
                                             [title]="'lang.dbColumn' | translate"></i>&nbsp;<b color="primary"
-                                            [title]="'lang.dbColumn' | translate">{{column.label}}</b>
+                                            [title]="'lang.dbColumn' | translate" class="colLabel">{{column.label}}</b>
                                         &nbsp;<i class="fas fa-arrows-alt-h"></i>&nbsp;
                                         <i class="fas fa-file-csv" [title]="'lang.csvColumn' | translate"></i>&nbsp;
                                         <mat-form-field [title]="'lang.csvColumn' | translate"
@@ -76,7 +76,7 @@
                                     </ng-container>
                                     <ng-template #formTemplate>
                                         <ng-container *ngIf="column.id !== 'departureDate'; else elseDateType">
-                                            <button mat-button [matMenuTriggerFor]="menu"><b
+                                            <button mat-button [matMenuTriggerFor]="menu"><b class="colLabel"
                                                     color="primary">{{column.label}}</b>
                                                 <mat-icon matSuffix class="fa fa-caret-down"></mat-icon>
                                             </button>
@@ -101,13 +101,7 @@
                                     </ng-template>
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let element" style="padding-left: 5px;padding-right: 5px;">
-                                    <ng-container
-                                        *ngIf="!functionsService.isDate(element[column.id]); else elseDate">
-                                        {{element[column.id]}}
-                                    </ng-container>
-                                    <ng-template #elseDate>
-                                        {{element[column.id] | date : "dd/MM/y"}}
-                                    </ng-template>
+                                    {{getLabel(column.id,element[column.id])}}
                                 </mat-cell>
                             </ng-container>
                         </ng-container>

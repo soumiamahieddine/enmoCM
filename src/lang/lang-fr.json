@@ -2019,5 +2019,8 @@
     "importRegisteredMails": "Importer des recommandés",
     "confirmImportRegisteredMails": "Voulez-vous importer <b>{{0}}</b> recommandé(s)",
     "importedRegisteredMails": "recommandés importés",
-    "noRegisteredMailModelAvailaible": "Aucun modèle d'enregistrement de recommandé disponible"
+    "noRegisteredMailModelAvailaible": "Aucun modèle d'enregistrement de recommandé disponible",
+    "noIssuingSitesAvailaible": "Aucun site émetteur disponible",
+    "true": "Oui",
+    "false": "Non"
 }

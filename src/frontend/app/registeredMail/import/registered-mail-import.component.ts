@@ -23,7 +23,7 @@ export class RegisteredMailImportComponent implements OnInit {
 
     loading: boolean = false;
 
-    registeredMailFields: string[] = ['registeredMail_warranty', 'registeredMail_type', 'departureDate', 'registeredMail_letter'];
+    registeredMailFields: string[] = ['registeredMail_issuingSite', 'registeredMail_warranty', 'registeredMail_type', 'departureDate', 'registeredMail_letter'];
 
     contactColumns: any[] = [
         {
@@ -136,6 +136,7 @@ export class RegisteredMailImportComponent implements OnInit {
         });
 
         await this.getRegisteredMailIndexingModels();
+        await this.getIssuingSites();
         await this.getDefaultValues();
 
         // this.initCustomFields();
@@ -169,6 +170,44 @@ export class RegisteredMailImportComponent implements OnInit {
                 })
             ).subscribe();
         });
+    }
+
+    getIssuingSites() {
+        return new Promise((resolve) => {
+            this.http.get('../rest/registeredMail/sites').pipe(
+                tap((data) => {
+                    if (data['sites'].length > 0) {
+                        this.contactColumns.filter((col: any) => col.id === 'registeredMail_issuingSite')[0].values = data['sites'].map((site: any) => {
+                            return {
+                                id: site.id,
+                                label: site.label
+                            };
+                        });
+                        resolve(true);
+                    } else {
+                        this.dialogRef.close();
+                        this.notify.error(this.translate.instant('lang.noIssuingSitesAvailaible'));
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getLabel(id: string, value: any) {
+        if (id === 'registeredMail_issuingSite') {
+            const sites = this.contactColumns.filter((col: any) => col.id === 'registeredMail_issuingSite')[0].values;
+            return sites.filter((site: any) => site.id === value)[0].label;
+        } else if ([true, false].indexOf(value) > -1) {
+            return this.translate.instant('lang.' + value);
+        } else if (this.functionsService.isDate(value)) {
+            return this.functionsService.formatDateObjectToDateString(value);
+        } else {
+            return value;
+        }
     }
 
     getDefaultValues() {

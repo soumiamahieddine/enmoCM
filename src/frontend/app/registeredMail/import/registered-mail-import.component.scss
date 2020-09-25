@@ -25,3 +25,15 @@
     opacity: 0.5 !important;
     cursor: pointer;
 }
+
+.colLabel {
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tableContent {
+    width: 100%;
+    box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+    padding: 10px;
+}
