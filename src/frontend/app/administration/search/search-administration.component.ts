@@ -386,7 +386,7 @@ export class SearchAdministrationComponent implements OnInit {
                             'icon': element.icon
                         });
                     });
-                    // console.log(this.displayedSecondaryData);
+                    console.log(this.displayedSecondaryData);
                     resolve(true);
                 }),
                 catchError((err: any) => {
