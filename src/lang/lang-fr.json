@@ -2023,5 +2023,9 @@
     "noIssuingSitesAvailaible": "Aucun site émetteur disponible",
     "true": "Oui",
     "false": "Non",
-    "columns": "colonnes"
+    "columns": "colonnes",
+    "start": "Début",
+    "end": "Fin",
+    "noDataToSave": "Aucune donnée à enregistrer",
+    "createSearchTemplate": "Enregistrer un modèle..."
 }

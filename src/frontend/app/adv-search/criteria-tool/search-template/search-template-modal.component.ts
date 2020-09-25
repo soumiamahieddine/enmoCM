@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotificationService } from '../../../../service/notification/notification.service';
 import { tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { FunctionsService } from '@service/functions.service';
 
 @Component({
     templateUrl: 'search-template-modal.component.html',
@@ -17,13 +18,11 @@ export class AddSearchTemplateModalComponent {
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<AddSearchTemplateModalComponent>,
-        private notify: NotificationService) {
+        private notify: NotificationService,
+        public functions: FunctionsService) {
     }
 
-    ngOnInit(): void { }
-
     onSubmit() {
-        console.log(this.data.searchTemplate);
         this.http.post('../rest/searchTemplates', this.data.searchTemplate).pipe(
             tap((data: any) => {
                 this.data.searchTemplate.id = data.id;

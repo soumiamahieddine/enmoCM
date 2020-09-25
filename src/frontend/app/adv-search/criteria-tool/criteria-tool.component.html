@@ -46,6 +46,14 @@
                                     (keydown)="$event.stopPropagation()">
                             </mat-form-field>
                         </div>
+                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;">
+                            <div style="flex:1;">
+                                {{'lang.createSearchTemplate' | translate}}
+                            </div>
+                            <button mat-icon-button class="listModels-menu-delete">
+                                <mat-icon class="fa fa-copy" color="primary"></mat-icon>
+                            </button>
+                        </button>
                         <ng-container
                             *ngFor="let searchTemplate of searchTemplates | filterList:listFilter.value:'label'; let i=index">
                             <button mat-menu-item (click)="selectSearchTemplate(searchTemplate)"
@@ -62,10 +70,6 @@
                             </button>
                         </ng-container>
                     </mat-menu>
-                    <mat-icon class="far fa-copy"
-                        style="color: white; width: 30px; text-align: center; padding-top: 2px;"
-                        (click)="$event.stopPropagation();saveSearchTemplate()">
-                    </mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <ng-container *ngIf="!loading; else loadingTemplate">
@@ -129,9 +133,9 @@
                             <mat-form-field class="input-form input-date" floatLabel="never" (click)="picker.open()"
                                 style="cursor:pointer;">
                                 <mat-date-range-input [rangePicker]="picker">
-                                    <input matStartDate placeholder="Début" [value]="field.control.value.start"
+                                    <input matStartDate [placeholder]="'lang.start' | translate" [value]="field.control.value.start"
                                         (dateChange)="field.control.value.start=$event.value">
-                                    <input matEndDate placeholder="Fin" [value]="field.control.value.end"
+                                    <input matEndDate [placeholder]="'lang.end' | translate" [value]="field.control.value.end"
                                         (dateChange)="field.control.value.end=$event.value">
                                 </mat-date-range-input>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
