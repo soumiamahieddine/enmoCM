@@ -535,7 +535,7 @@ export class PrivilegeService {
             'id': 'registered_mail_mass_import',
             'label': 'lang.importRegisteredMails',
             'comment': 'lang.importRegisteredMails',
-            'route': 'administration/contact/list/import/contact-import.component__modal',
+            'route': 'RegisteredMailImportComponent__modal',
             'style': 'fas fa-dolly-flatbed',
             'unit': 'registeredMails',
             'angular': true,

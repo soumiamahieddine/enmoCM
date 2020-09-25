@@ -52,12 +52,14 @@ export class HeaderRightComponent implements OnInit {
             const component = shortcut.route.split('__');
 
             if (component.length === 2) {
-                this.dialog.open(RegisteredMailImportComponent, {
-                    disableClose: true,
-                    width: '99vw',
-                    maxWidth: '99vw',
-                    panelClass: 'maarch-full-height-modal'
-                });
+                if (component[0] === 'RegisteredMailImportComponent') {
+                    this.dialog.open(RegisteredMailImportComponent, {
+                        disableClose: true,
+                        width: '99vw',
+                        maxWidth: '99vw',
+                        panelClass: 'maarch-full-height-modal'
+                    });
+                }
             } else {
                 this.router.navigate([shortcut.route]);
             }
