@@ -246,7 +246,8 @@ class SearchController
         return $response->withJson(['resources' => $resources, 'count' => count($allResources), 'allResources' => $allResources]);
     }
 
-    public function getConfiguration(Request $request, Response $response) {
+    public function getConfiguration(Request $request, Response $response)
+    {
         $configuration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_search']);
         $configuration = json_decode($configuration['value'], true);
 
@@ -452,6 +453,16 @@ class SearchController
                 $args['searchWhere'][] = 'destination in (?)';
             }
             $args['searchData'][] = $body['destination']['values'];
+        }
+        if (!empty($body['creationDate']) && !empty($body['creationDate']['values']) && is_array($body['creationDate']['values'])) {
+            if (Validator::date()->notEmpty()->validate($body['creationDate']['values']['start'])) {
+                $args['searchWhere'][] = 'creation_date >= ?';
+                $args['searchData'][] = $body['creationDate']['values']['start'];
+            }
+            if (Validator::date()->notEmpty()->validate($body['creationDate']['values']['end'])) {
+                $args['searchWhere'][] = 'creation_date <= ?';
+                $args['searchData'][] = $body['creationDate']['values']['end'];
+            }
         }
         if (!empty($body['documentDate']) && !empty($body['documentDate']['values']) && is_array($body['documentDate']['values'])) {
             if (Validator::date()->notEmpty()->validate($body['documentDate']['values']['start'])) {
