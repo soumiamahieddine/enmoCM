@@ -46,7 +46,7 @@
                                     (keydown)="$event.stopPropagation()">
                             </mat-form-field>
                         </div>
-                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;" [disabled]="functions.empty(currentCriteria)">
+                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;" [disabled]="functions.empty(currentCriteria) && functions.empty(searchTermControl.value)">
                             <div style="flex:1;">
                                 {{'lang.createSearchTemplate' | translate}}
                             </div>

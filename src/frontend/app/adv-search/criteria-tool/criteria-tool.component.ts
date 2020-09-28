@@ -394,6 +394,8 @@ export class CriteriaToolComponent implements OnInit {
             query.push({'identifier': field.identifier, 'values': field.control.value});
         });
 
+        query.push({'identifier': 'searchTerm', 'values': this.searchTermControl.value});
+
         const dialogRef = this.dialog.open(
             AddSearchTemplateModalComponent,
             {
@@ -456,5 +458,10 @@ export class CriteriaToolComponent implements OnInit {
                 this.addCriteria(element);
             }
         });
+
+        let index = searchTemplate.query.map((field: any) => field.identifier).indexOf('searchTerm');
+        if (index > -1) {
+            this.searchTermControl.setValue(searchTemplate.query[index].values);
+        }
     }
 }
