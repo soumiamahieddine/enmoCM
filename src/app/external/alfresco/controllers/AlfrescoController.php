@@ -554,7 +554,10 @@ class AlfrescoController
         $entityInformations['alfresco']['password'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfresco']['password']]);
 
         $document = ResModel::getById([
-            'select'    => ['filename', 'subject', 'alt_identifier', 'external_id', 'type_id', 'priority', 'creation_date', 'modification_date', 'doc_date', 'destination', 'process_limit_date', 'closing_date'],
+            'select'    => [
+                'filename', 'subject', 'alt_identifier', 'external_id', 'type_id', 'priority',
+                'creation_date', 'modification_date', 'doc_date', 'destination', 'process_limit_date', 'closing_date', 'docserver_id', 'path', 'filename'
+            ],
             'resId'     => $args['resId']
         ]);
         if (empty($document)) {
@@ -568,12 +571,12 @@ class AlfrescoController
             return ['errors' => 'Conversion error : ' . $convertedDocument['errors']];
         }
 
-        $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return ['errors' => 'Docserver does not exist'];
         }
 
-        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
         if (!is_file($pathToDocument)) {
             return ['errors' => 'Document not found on docserver'];
         }
@@ -681,15 +684,11 @@ class AlfrescoController
         $firstAttachment = true;
         $attachmentsTitlesSent = [];
         foreach ($attachments as $attachment) {
-            if ($attachment['format'] == 'xml') {
-                $adrInfo = [
-                    'docserver_id'  => $attachment['docserver_id'],
-                    'path'          => $attachment['path'],
-                    'filename'      => $attachment['filename']
-                ];
-            } else {
-                $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $attachment['res_id'], 'collId' => 'attachments_coll']);
-            }
+            $adrInfo = [
+                'docserver_id'  => $attachment['docserver_id'],
+                'path'          => $attachment['path'],
+                'filename'      => $attachment['filename']
+            ];
             if (empty($adrInfo['docserver_id'])) {
                 continue;
             }
