@@ -37,6 +37,7 @@ declare var $: any;
 export class AdvSearchComponent implements OnInit, OnDestroy {
 
     loading: boolean = false;
+    initSearch: boolean = false;
     docUrl: string = '';
     public innerHtml: SafeHtml;
     searchUrl: string = '../rest/search';
@@ -129,6 +130,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
             params => {
                 if (!this.functions.empty(params.value)) {
                     this.searchTerm = params.value;
+                    this.initSearch = true;
                     this.criteria = {
                         meta : {
                             values : this.searchTerm
@@ -149,8 +151,10 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
         this.headerService.setHeader(this.translate.instant('lang.searchMails'), '', '');
 
-        this.initResultList();
 
+        if (this.initSearch) {
+            this.initResultList();
+        }
         /*this.route.params.subscribe(params => {
             this.folderInfoOpened = false;
             this.dragInit = true;
@@ -202,7 +206,12 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
 
     launchSearch(criteria: any) {
         this.criteria = criteria;
-        this.refreshDao();
+        if (!this.initSearch) {
+            this.initResultList();
+            this.initSearch = true;
+        } else {
+            this.refreshDao();
+        }
     }
 
     initResultList() {
