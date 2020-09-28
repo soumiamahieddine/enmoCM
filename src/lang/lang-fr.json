@@ -2038,5 +2038,6 @@
     "start": "Début",
     "end": "Fin",
     "createSearchTemplate": "Enregistrer un modèle...",
-    "infoImportregisteredMails" : "Les fichiers <b>sans en-tête</b> sont mappés en fonction des <b>positions des colonnes</b> du fichier.<br/>Les valeurs <b>par défaut</b> définis dans le <b>modèle d'enregistrement</b> utilisé sont prises en compte."
+    "infoImportregisteredMails" : "Les fichiers <b>sans en-tête</b> sont organisés en fonction des <b>positions des colonnes</b> du fichier.<br/>Les valeurs <b>par défaut</b> définis dans le <b>modèle d'enregistrement</b> utilisé sont prises en compte.",
+    "searchInAttachmentsInfo" : "Indique que la recherche se fait sur les courriers et les pièces jointes."
 }

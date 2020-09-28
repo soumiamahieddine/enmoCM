@@ -247,6 +247,10 @@ export class CriteriaToolComponent implements OnInit {
         this.getCurrentCriteriaValues();
     }
 
+    searchInAttachments(identifier: string) {
+        return ['subject', 'chrono'].indexOf(identifier) > -1;
+    }
+
     set_meta_field(value: any) {
         this.searchTermControl.setValue(value);
     }

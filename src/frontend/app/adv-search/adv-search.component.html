@@ -48,7 +48,7 @@
                                     [title]="indexingFieldService.getField(critKey.key).label"></i>&nbsp;{{appCriteriaTool.getFormatLabel(critKey.value.values)}}&nbsp;<i class="fa fa-times-circle"></i></span>
                         </ng-container>
                         <ng-container *ngIf="!isArrayType(critKey.value.values) && critKey.key === 'meta'">
-                            <span class="label badge-search" [title]="'meta'" (click)="removeCriteria(critKey.key)">"{{critKey.value.values}}"&nbsp;<i class="fa fa-times-circle"></i></span>
+                            <span class="label badge-search" [title]="'meta'" (click)="removeCriteria(critKey.key)">{{critKey.value.values}}&nbsp;<i class="fa fa-times-circle"></i></span>
                         </ng-container>
                     </ng-container>
                 </div>
