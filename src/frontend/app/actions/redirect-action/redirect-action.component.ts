@@ -106,7 +106,8 @@ export class RedirectActionComponent implements OnInit {
                                     ...entity,
                                     state : {
                                         selected : false,
-                                        opened: false
+                                        opened: false,
+                                        disabled: entity.state.disabled
                                     }
                                 };
                             });
