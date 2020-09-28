@@ -93,6 +93,10 @@ export class IssuingSiteInputComponent implements OnInit {
         }
     }
 
+    getSiteLabel(id: string) {
+        return this.issuingSiteList.filter((site: any) => site.id === id)[0].label;
+    }
+
     goTo() {
         window.open(`https://www.google.com/maps/search/${this.issuingSiteAddress.addressNumber}+${this.issuingSiteAddress.addressStreet},+${this.issuingSiteAddress.addressPostcode}+${this.issuingSiteAddress.addressTown},+${this.issuingSiteAddress.addressCountry}`, '_blank');
     }

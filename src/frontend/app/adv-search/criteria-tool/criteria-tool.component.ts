@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Input, QueryList, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '../../../service/app.service';
@@ -15,6 +15,11 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { NotificationService } from '../../../service/notification/notification.service';
 import { AddSearchTemplateModalComponent } from './search-template/search-template-modal.component';
 import { DatePipe } from '@angular/common';
+import { ContactAutocompleteComponent } from '@appRoot/contact/autocomplete/contact-autocomplete.component';
+import { PluginSelectAutocompleteSearchComponent } from '@plugins/select-autocomplete-search/plugin-select-autocomplete-search.component';
+import { FolderInputComponent } from '@appRoot/folder/indexing/folder-input.component';
+import { TagInputComponent } from '@appRoot/tag/indexing/tag-input.component';
+import { IssuingSiteInputComponent } from '@appRoot/administration/registered-mail/issuing-site/indexing/issuing-site-input.component';
 
 @Component({
     selector: 'app-criteria-tool',
@@ -44,6 +49,13 @@ export class CriteriaToolComponent implements OnInit {
 
     @ViewChild('criteriaTool', { static: false }) criteriaTool: MatExpansionPanel;
     @ViewChild('searchCriteriaInput', { static: false }) searchCriteriaInput: ElementRef;
+    @ViewChild('appFolderInput', { static: false }) appFolderInput: FolderInputComponent;
+    @ViewChild('appTagInput', { static: false }) appTagInput: TagInputComponent;
+    @ViewChild('appIssuingSiteInput', { static: false }) appIssuingSiteInput: IssuingSiteInputComponent;
+
+    @ViewChildren('appContactAutocomplete') appContactAutocomplete: QueryList<ContactAutocompleteComponent>;
+    @ViewChildren('pluginSelectAutocompleteSearch') pluginSelectAutocompleteSearch: QueryList<PluginSelectAutocompleteSearchComponent>;
+
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -64,8 +76,6 @@ export class CriteriaToolComponent implements OnInit {
         }
 
     async ngOnInit(): Promise<void> {
-        // console.log('getAllFields()', await this.indexingFields.getAllFields());
-
         this.searchTermControl.setValue(this.searchTerm);
 
         this.criteria = await this.indexingFields.getAllFields();
@@ -192,14 +202,26 @@ export class CriteriaToolComponent implements OnInit {
     }
 
 
-    getLabelValue(identifier: string, value: string) {
+    getLabelValue(identifier: string, value: any) {
         if (this.functions.empty(value)) {
             return this.translate.instant('lang.undefined');
         } else  if (['doctype', 'destination'].indexOf(identifier) > -1) {
             return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].title;
         } else {
+            if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'contact' || this.criteria.filter((field: any) => field.identifier === identifier)[0].identifier === 'registeredMail_recipient') {
+                return this.appContactAutocomplete.toArray().filter((component: any) => component.id === identifier)[0].getFormatedContact(value.id);
+            } else
+            if (this.criteria.filter((field: any) => field.identifier === identifier)[0].identifier === 'folders') {
+                return this.appFolderInput.getFolderLabel(value);
+            } else
+            if (this.criteria.filter((field: any) => field.identifier === identifier)[0].identifier === 'tags') {
+                return this.appTagInput.getTagLabel(value);
+            } else
+            if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'banAutocomplete') {
+                return `${value.addressNumber} ${value.addressStreet}, ${value.addressTown} (${value.addressPostcode})`;
+            } else
             if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'selectAutocomplete') {
-                return 'toto';
+                return this.pluginSelectAutocompleteSearch.toArray().filter((component: any) => component.id === identifier)[0].getDataLabel(value);
             } else {
                 return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].label;
 
@@ -207,12 +229,15 @@ export class CriteriaToolComponent implements OnInit {
         }
     }
 
-    getFormatLabel(value: any) {
+    getFormatLabel(identifier: string, value: any) {
         if (typeof value === 'object') {
             return `${this.datePipe.transform(value.start, 'dd/MM/y') } - ${this.datePipe.transform(value.end, 'dd/MM/y')}`;
         } else {
-            return value;
-
+            if (identifier === 'registeredMail_issuingSite') {
+                return this.appIssuingSiteInput.getSiteLabel(value);
+            } else {
+                return value;
+            }
         }
     }
 
@@ -236,7 +261,6 @@ export class CriteriaToolComponent implements OnInit {
                     });
                 } else {
                     field.control.setValue(criteria[field.identifier].values);
-
                 }
             }
         });
@@ -304,6 +328,38 @@ export class CriteriaToolComponent implements OnInit {
             this.http.get(`../rest/priorities`).pipe(
                 tap((data: any) => {
                     elem.values = data.priorities;
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    set_status_field(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/statuses`).pipe(
+                tap((data: any) => {
+                    elem.values = data.statuses.map((val: any) => {
+                        return {
+                            id: val.identifier,
+                            label: val.label_status
+                        };
+                    });
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    set_category_field(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/categories`).pipe(
+                tap((data: any) => {
+                    elem.values = data.categories.map((val: any) => {
+                        return {
+                            id: val.id,
+                            label: val.label
+                        };
+                    });
                     resolve(true);
                 })
             ).subscribe();

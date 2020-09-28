@@ -58,6 +58,27 @@ export class IndexingFieldsService {
             default_value: [],
             values: [],
             enabled: true,
+            indexingHide: true
+        },
+        {
+            identifier: 'status',
+            label: this.translate.instant('lang.status'),
+            icon: 'fa-mail-bulk',
+            type: 'select',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        },
+        {
+            identifier: 'category',
+            label: this.translate.instant('lang.category_id'),
+            icon: 'fa-map-signs',
+            type: 'select',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
         },
         {
             identifier: 'creationDate',
@@ -67,6 +88,7 @@ export class IndexingFieldsService {
             default_value: [],
             values: [],
             enabled: true,
+            indexingHide: true
         },
         {
             identifier: 'recipients',

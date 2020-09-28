@@ -373,4 +373,8 @@ export class ContactAutocompleteComponent implements OnInit {
         this.controlAutocomplete.setValue([]);
         this.valuesToDisplay = {};
     }
+
+    getFormatedContact(id: number) {
+        return this.contactService.formatContact(this.valuesToDisplay[id]);
+    }
 }
