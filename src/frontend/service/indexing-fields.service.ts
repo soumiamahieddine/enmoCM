@@ -272,6 +272,16 @@ export class IndexingFieldsService {
             values: [],
             enabled: true,
         },
+        {
+            identifier: 'fulltext',
+            label: this.translate.instant('lang.fulltext'),
+            icon: 'fa-file-alt',
+            type: 'string',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        }
     ];
 
     customFields: any[] = [];

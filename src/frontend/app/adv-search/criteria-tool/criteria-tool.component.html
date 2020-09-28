@@ -8,7 +8,7 @@
         </button>
         <mat-autocomplete [class]="hideCriteriaList ? 'hide' : ''" #autoCriteria="matAutocomplete"
             (closed)="hideCriteriaList = true;" (optionSelected)="addCriteria($event.option.value)">
-            <mat-optgroup [label]="'Ajouter un critère de recherche'" class="criteria-list">
+            <mat-optgroup [label]="'lang.addCriteria' | translate" class="criteria-list">
                 <input type="text" #searchCriteriaInput [formControl]="getFilterControl()"
                     style="margin-left:5px;width:150px !important;height: 20px;border: 1px solid #6666663d;padding: 10px;border-radius: 5px;"
                     placeholder="{{'lang.filterBy' | translate}}">
@@ -85,7 +85,9 @@
                         *ngFor="let field of currentCriteria;let i=index">
                         <ng-container *ngIf="field.type === 'string'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} 
+                                <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>
+                                <sup color="primary" class="searchInAttachments" *ngIf="field.identifier=='fulltext'">(2)</sup>&nbsp;:&nbsp;
                             </span>
                             <mat-form-field class="input-form" floatLabel="never">
                                 <input [id]="field.identifier" type="text" matInput
@@ -190,10 +192,13 @@
                     </div>
                 </div>
                 <div class="infoSearchDesc" style="padding-top: 25px;">
-                    Les critères de recherche se cumulent sur la recherche rapide
+                    {{'lang.criteriaOverQuickSearch' | translate}}
                 </div>
-                <div class="infoSearchDesc">
+                <div class="infoSearchDesc" *ngIf="displayInfoSearch(1)">
                     <sup color="primary">(1)</sup> {{'lang.searchInAttachmentsInfo' | translate}}
+                </div>
+                <div class="infoSearchDesc" *ngIf="displayInfoSearch(2)">
+                    <sup color="primary">(2)</sup> <span [innerHTML]="'lang.searchFulltextInfo' | translate"></span>
                 </div>
             </ng-container>
             <ng-template #loadingTemplate>

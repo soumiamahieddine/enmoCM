@@ -2039,5 +2039,8 @@
     "end": "Fin",
     "createSearchTemplate": "Enregistrer un modèle...",
     "infoImportregisteredMails" : "Les fichiers <b>sans en-tête</b> sont organisés en fonction des <b>positions des colonnes</b> du fichier.<br/>Les valeurs <b>par défaut</b> définis dans le <b>modèle d'enregistrement</b> utilisé sont prises en compte.",
-    "searchInAttachmentsInfo" : "Indique que la recherche se fait sur les courriers et les pièces jointes."
+    "searchInAttachmentsInfo" : "Indique que la recherche se fait sur les courriers et les pièces jointes.",
+    "fulltext": "Plein texte",
+    "searchFulltextInfo" : "* : Pour effectuer une recherche avec joker sur plusieurs caractères (auto* trouve autoroute et automobile)<br>&nbsp;\" \" : Pour effectuer une recherche sur un groupe de mots (\"route nationale\" trouve l'expression entière route nationale)<br>&nbsp;~ : Pour effectuer une recherche approximative (vite~ trouve vote, vite)",
+    "criteriaOverQuickSearch" : "Les critères de recherche se cumulent sur la recherche rapide"
 }

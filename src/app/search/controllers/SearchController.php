@@ -20,7 +20,9 @@ use Basket\models\RedirectBasketModel;
 use Configuration\models\ConfigurationModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use Convert\controllers\FullTextController;
 use CustomField\models\CustomFieldModel;
+use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Folder\models\ResourceFolderModel;
@@ -34,6 +36,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use Tag\models\ResourceTagModel;
@@ -47,8 +50,8 @@ class SearchController
         $body = $request->getParsedBody();
 
         $userdataClause = SearchController::getUserDataClause(['userId' => $GLOBALS['id'], 'login' => $GLOBALS['login']]);
-        $searchWhere = $userdataClause['searchWhere'];
-        $searchData = $userdataClause['searchData'];
+        $searchWhere    = $userdataClause['searchWhere'];
+        $searchData     = $userdataClause['searchData'];
 
 
         //TODO à garder ?
@@ -102,8 +105,12 @@ class SearchController
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
+        $searchClause = SearchController::getFulltextClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        if (empty($searchClause)) {
+            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
+        }
         $searchWhere = $searchClause['searchWhere'];
-        $searchData = $searchClause['searchData'];
+        $searchData  = $searchClause['searchData'];
 
         $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
         if (!empty($nonSearchableStatuses)) {
@@ -154,9 +161,9 @@ class SearchController
                 'res_id as "resId"', 'category_id as "category"', 'alt_identifier as "chrono"', 'subject', 'barcode', 'filename', 'creation_date as "creationDate"',
                 'type_id as "type"', 'priority', 'status', 'dest_user as "destUser"'
             ],
-            'where'     => ['res_id in (?)'],
-            'data'      => [$resIds],
-            'orderBy'   => [$order]
+            'where'   => ['res_id in (?)'],
+            'data'    => [$resIds],
+            'orderBy' => [$order]
         ]);
         if (empty($resources)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
@@ -745,6 +752,73 @@ class SearchController
             $args['searchData'][] = $registeredMailsMatch;
         }
 
+        return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
+    }
+
+    private function getFulltextClause(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['searchWhere', 'searchData']);
+        ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
+
+        if (!empty($args['body']['fulltext']['values'])) {
+            $query_fulltext = explode(" ", trim($args['body']['fulltext']['values']));
+            foreach ($query_fulltext as $value) {
+                if (strpos($value, "*") !== false && (strlen(substr($value, 0, strpos($value, "*"))) < 3 || preg_match("([,':!+])", $value) === 1)) {
+                    return null;
+                    break;
+                }
+            }
+    
+            \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
+            \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
+            \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+    
+            $whereRequest = [];
+            foreach (['letterbox_coll', 'attachments_coll'] as $tmpCollection) {
+                $fullTextDocserver = DocserverModel::getCurrentDocserver(['collId' => $tmpCollection, 'typeId' => 'FULLTEXT']);
+                $pathToLuceneIndex = $fullTextDocserver['path_template'];
+    
+                if (is_dir($pathToLuceneIndex) && !FullTextController::isDirEmpty($pathToLuceneIndex)) {
+                    $index     = \Zend_Search_Lucene::open($pathToLuceneIndex);
+                    $hits      = $index->find(TextFormatModel::normalize(['string' => $args['body']['fulltext']['values']]));
+                    $listIds   = [];
+                    $cptIds    = 0;
+                    foreach ($hits as $hit) {
+                        if ($cptIds < 500) {
+                            $listIds[] = $hit->Id;
+                        } else {
+                            break;
+                        }
+                        $cptIds ++;
+                    }
+    
+                    if (empty($listIds)) {
+                        continue;
+                    }
+    
+                    if ($tmpCollection == 'attachments_coll') {
+                        $idMasterDatas = AttachmentModel::get([
+                            'select' => ['DISTINCT res_id_master'],
+                            'where'  => ['res_id in (?)', 'status in (?)'],
+                            'data'   => [$listIds, ['DEL','OBS','TMP']]
+                        ]);
+    
+                        $listIds = array_column($idMasterDatas, 'res_id_master');
+                    }
+    
+                    if (!empty($listIds)) {
+                        $whereRequest[] = " res_id in (?) ";
+                        $args['searchData'][] = $listIds;
+                    }
+                }
+            }
+    
+            if (!empty($whereRequest)) {
+                $args['searchWhere'][] = '(' . implode(" or ", $whereRequest) . ')';
+            } else {
+                return null;
+            }
+        }
         return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
     }
 }

@@ -272,7 +272,16 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     searchInAttachments(identifier: string) {
-        return ['subject', 'chrono'].indexOf(identifier) > -1;
+        return ['subject', 'chrono', 'fulltext'].indexOf(identifier) > -1;
+    }
+
+    displayInfoSearch(infoSearchNumber: number) {
+        if (infoSearchNumber === 1 && (this.isCurrentCriteria('subject') || this.isCurrentCriteria('chrono') || this.isCurrentCriteria('fulltext') )) {
+            return true;
+        } else if (infoSearchNumber === 2 && this.isCurrentCriteria('fulltext')) {
+            return true;
+        }
+        return false;
     }
 
     set_meta_field(value: any) {
