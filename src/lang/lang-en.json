@@ -2028,5 +2028,5 @@
     "columns": "columns",
     "start": "Début",
     "end": "Fin",
-    "noDataToSave": "No data to save"
+    "createSearchTemplate": "Save search template..."
 }

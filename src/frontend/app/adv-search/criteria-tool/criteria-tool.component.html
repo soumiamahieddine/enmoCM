@@ -46,13 +46,11 @@
                                     (keydown)="$event.stopPropagation()">
                             </mat-form-field>
                         </div>
-                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;">
+                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;" [disabled]="functions.empty(currentCriteria)">
                             <div style="flex:1;">
                                 {{'lang.createSearchTemplate' | translate}}
                             </div>
-                            <button mat-icon-button class="listModels-menu-delete">
-                                <mat-icon class="fa fa-copy" color="primary"></mat-icon>
-                            </button>
+                            <mat-icon class="fa fa-copy" color="primary"></mat-icon>
                         </button>
                         <ng-container
                             *ngFor="let searchTemplate of searchTemplates | filterList:listFilter.value:'label'; let i=index">
@@ -61,12 +59,8 @@
                                 <div style="flex:1;">
                                     {{searchTemplate.label | shorten: 45: '...'}}
                                 </div>
-                                <button mat-icon-button class="listModels-menu-delete"
-                                    [title]="this.translate.instant('lang.delete')"
-                                    (click)="$event.stopPropagation();deleteSearchTemplate(searchTemplate.id, i)">
-                                    <mat-icon class="fa fa-trash" color="warn">
-                                    </mat-icon>
-                                </button>
+                                <mat-icon class="fa fa-trash" color="warn" [title]="this.translate.instant('lang.delete')" (click)="$event.stopPropagation();deleteSearchTemplate(searchTemplate.id, i)">
+                                </mat-icon>
                             </button>
                         </ng-container>
                     </mat-menu>

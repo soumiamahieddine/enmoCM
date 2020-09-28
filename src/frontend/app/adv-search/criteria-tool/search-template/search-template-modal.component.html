@@ -1,9 +1,6 @@
 <div class="mat-dialog-content-container">
     <h1 mat-dialog-title>{{'lang.searchTemplateCreation' | translate}}</h1>
     <mat-dialog-content>
-        <div class="alert-message alert-message-danger" role="alert" *ngIf="functions.empty(data.searchTemplate.query)">
-            {{'lang.noDataToSave' | translate}}
-        </div>
         <form #submitForm="ngForm" (ngSubmit)="onSubmit()">
             <div class="alert-message alert-message-info" role="alert" style="margin-top: 15px;">{{'lang.addSearchTemplateMsg' | translate}}
             </div>
@@ -16,7 +13,7 @@
     </mat-dialog-content>
     <mat-dialog-actions>
         <button mat-raised-button color="primary" type="submit" (click)="submitForm.ngSubmit.emit()"
-            [disabled]="!submitForm.form.valid || functions.empty(data.searchTemplate.query)">{{'lang.validate' | translate}}</button>
+            [disabled]="!submitForm.form.valid">{{'lang.validate' | translate}}</button>
         <button mat-raised-button color="default" type="button" (click)="dialogRef.close()">{{'lang.cancel' | translate}}</button>
     </mat-dialog-actions>
 </div>
