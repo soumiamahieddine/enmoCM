@@ -16,11 +16,16 @@ namespace Alfresco\controllers;
 
 use Attachment\models\AttachmentModel;
 use Configuration\models\ConfigurationModel;
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
+use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
+use Priority\models\PriorityModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -549,7 +554,7 @@ class AlfrescoController
         $entityInformations['alfresco']['password'] = PasswordModel::decrypt(['cryptedPassword' => $entityInformations['alfresco']['password']]);
 
         $document = ResModel::getById([
-            'select'    => ['filename', 'subject', 'alt_identifier', 'external_id', 'type_id', 'priority'],
+            'select'    => ['filename', 'subject', 'alt_identifier', 'external_id', 'type_id', 'priority', 'creation_date', 'modification_date', 'doc_date', 'destination', 'process_limit_date', 'closing_date'],
             'resId'     => $args['resId']
         ]);
         if (empty($document)) {
@@ -605,15 +610,53 @@ class AlfrescoController
         }
         $documentId = $curlResponse['response']['entry']['id'];
 
+        $properties = [
+            'cm:description'    => $document['alt_identifier']
+        ];
+        $alfrescoParameters = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/alfresco.json']);
+        if (!empty($alfrescoParameters['mapping'])) {
+            $resourceContacts = ResourceContactModel::get([
+                'where'     => ['res_id = ?', 'mode = ?'],
+                'data'      => [$args['resId'], 'sender']
+            ]);
+            $contactRaw = [];
+            if ($resourceContacts[0]['type'] == 'contact') {
+                $contactRaw = ContactModel::getById([
+                    'select'    => ['*'],
+                    'id'        => $resourceContacts[0]['item_id']
+                ]);
+            }
+
+            foreach ($alfrescoParameters['mapping'] as $key => $alfrescoParameter) {
+                if ($alfrescoParameter == 'alfrescoLogin') {
+                    $properties[$key] = $entityInformations['alfresco']['login'];
+                } elseif ($alfrescoParameter == 'doctypeLabel') {
+                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $document['type_id']]);
+                    $properties[$key] = $doctype['description'];
+                } elseif ($alfrescoParameter == 'priorityLabel') {
+                    $priority = PriorityModel::getById(['select' => ['label'], 'id' => $document['priority']]);
+                    $properties[$key] = $priority['label'];
+                } elseif ($alfrescoParameter == 'senderCompany') {
+                    $properties[$key] = $contactRaw['company'];
+                } elseif ($alfrescoParameter == 'senderCivility') {
+                    $properties[$key] = ContactModel::getCivilityLabel(['civilityId' => $contactRaw['civility']]);
+                } elseif ($alfrescoParameter == 'senderFirstname') {
+                    $properties[$key] = $contactRaw['firstname'];
+                } elseif ($alfrescoParameter == 'senderLastname') {
+                    $properties[$key] = $contactRaw['lastname'];
+                } elseif ($alfrescoParameter == 'senderFunction') {
+                    $properties[$key] = $contactRaw['function'];
+                } elseif ($alfrescoParameter == 'senderAddress') {
+                    $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contactRaw]);
+                    $properties[$key] = $contactToDisplay['contact']['address'];
+                } else {
+                    $properties[$key] = $document[$alfrescoParameter];
+                }
+            }
+        }
+
         $body = [
-            'properties' => [
-                'cm:description'    => $document['alt_identifier'],
-                'cm:author'         => $entityInformations['alfresco']['login'],
-                'cm:owner'          => $entityInformations['alfresco']['login'],
-                'cm:creator'        => $entityInformations['alfresco']['login'],
-//                'maarch:type'       => $document['type_id'],
-//                'maarch:chrono'     => $document['alt_identifier']
-            ],
+            'properties' => $properties,
         ];
         $curlResponse = CurlModel::execSimple([
             'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$documentId}",
