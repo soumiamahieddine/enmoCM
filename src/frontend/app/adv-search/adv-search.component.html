@@ -113,7 +113,7 @@
                                             style="margin-bottom: 5px;"></mat-icon>
                                     </button>
                                     <span *ngIf="!appService.getViewMode()" style="cursor:pointer;"
-                                        class="main-info-status">
+                                        class="main-info-status" (click)="launch(row);">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
                                             [ngStyle]="{'color': row.priorityColor}" color="primary"
                                             class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
@@ -125,7 +125,7 @@
                                             style="color: red;" class="fa fa-lock fa-2x">
                                         </mat-icon>
                                     </span>
-                                    <span *ngIf="!appService.getViewMode()" class="main-info-data"
+                                    <span *ngIf="!appService.getViewMode()" (click)="launch(row);" class="main-info-data"
                                         style="width:200px;text-align:center;cursor:pointer;">
                                         <ng-container
                                             *ngIf="row.chrono == this.translate.instant('lang.undefined') && row.barcode != this.translate.instant('lang.undefined')">
@@ -137,7 +137,7 @@
                                             {{row.chrono}}
                                         </ng-container>
                                     </span>
-                                    <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
+                                    <span class="main-info-data" (click)="launch(row);" style="font-weight:bold;flex:1;cursor:pointer;"
                                         [class.undefined]="row.subject == this.translate.instant('lang.undefined')"
                                         title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                                     <span class="main-info-action">
@@ -188,7 +188,7 @@
                             </td>
                         </ng-container>
                         <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
-                            (contextmenu)="open($event,row);" (click)="open($event,row);" class="rowData"
+                            (contextmenu)="open($event,row);" class="rowData"
                             style="cursor: pointer;" [class.locked]="row.isLocked == true" cdkDrag
                             [cdkDragDisabled]="!row.allowed" (cdkDragStarted)="selectSpecificRes(row);"
                             [cdkDragData]="row">

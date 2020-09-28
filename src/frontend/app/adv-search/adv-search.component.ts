@@ -204,6 +204,15 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
         this.destroy$.next(true);
     }
 
+    launch(row: any) {
+        const thisSelect = { checked: true };
+        const thisDeselect = { checked: false };
+        row.checked = true;
+        this.toggleAllRes(thisDeselect);
+        this.toggleRes(thisSelect, row);
+        this.router.navigate([`/resources/${row.resId}`]);
+    }
+
     launchSearch(criteria: any) {
         this.criteria = criteria;
         if (!this.initSearch) {
