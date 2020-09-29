@@ -163,8 +163,6 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
 
         this.listProperties = this.criteriaSearchService.initListsProperties(this.headerService.user.id);
 
-        console.log(this.listProperties);
-
         this.loading = false;
     }
 
@@ -179,9 +177,6 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
             });
             this.appCriteriaTool.selectSearchTemplate(obj, false);
             this.criteria = this.listProperties.criteria;
-
-            console.log('criteria initsaved', this.criteria);
-
             this.initResultList();
         } else if (this.initSearch) {
             this.initResultList();

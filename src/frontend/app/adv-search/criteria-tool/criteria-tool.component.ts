@@ -124,8 +124,6 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     async addCriteria(criteria: any, openPanel: boolean = true) {
-        console.log('addCriteria', openPanel);
-        
         if (this.functions.empty(criteria.control) || this.functions.empty(criteria.control.value)) {
             criteria.control = criteria.type === 'date' ? new FormControl({}) : new FormControl('');
         }
@@ -210,10 +208,7 @@ export class CriteriaToolComponent implements OnInit {
         if (state) {
             this.criteriaTool.open();
         } else {
-            console.log('close');
-            
             this.criteriaTool.close();
-
         }
 
     }
