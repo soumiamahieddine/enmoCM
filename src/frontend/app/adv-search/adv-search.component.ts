@@ -19,13 +19,12 @@ import { FoldersService } from '../folder/folders.service';
 import { FunctionsService } from '../../service/functions.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { merge } from 'rxjs/internal/observable/merge';
 import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { CriteriaToolComponent } from './criteria-tool/criteria-tool.component';
-import { FormControl } from '@angular/forms';
 import { IndexingFieldsService } from '@service/indexing-fields.service';
 import { CriteriaSearchService } from '@service/criteriaSearch.service';
+import { merge } from 'rxjs';
 
 declare var $: any;
 
