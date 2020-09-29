@@ -199,7 +199,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
     }
 
     launchSearch(criteria: any) {
-        this.criteria = criteria;
+        this.criteria = JSON.parse(JSON.stringify(criteria));
         if (!this.initSearch) {
             this.initResultList();
             this.initSearch = true;
@@ -477,6 +477,15 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
         this.criteriaSearchService.updateListsProperties(this.listProperties);
 
         this.refreshDao();
+    }
+
+    changeOrderDir() {
+        if (this.listProperties.orderDir === 'ASC') {
+            this.listProperties.orderDir = 'DESC';
+        } else {
+            this.listProperties.orderDir = 'ASC';
+        }
+        this.updateFilters();
     }
 }
 export interface BasketList {

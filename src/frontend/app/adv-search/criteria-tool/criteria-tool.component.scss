@@ -145,3 +145,26 @@
     font-style: italic;
     opacity: 0.8;
 }
+
+.range-number-container {
+    display: flex;
+}
+
+.range-number-input-element {
+    border: none;
+    background: none;
+    padding: 0 !important;
+    outline: none;
+    font: inherit;
+    text-align: center;
+    color: $primary;
+}
+
+
+.range-number-input-element::placeholder {
+    color: initial;
+}
+
+.range-number-container {
+    color: $primary;
+}

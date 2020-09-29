@@ -53,12 +53,15 @@
                                 <div style="flex:1;">
                                     {{searchTemplate.label | shorten: 45: '...'}}
                                 </div>
-                                <mat-icon class="fa fa-trash" color="warn" [title]="this.translate.instant('lang.delete')" (click)="$event.stopPropagation();deleteSearchTemplate(searchTemplate.id, i)">
+                                <mat-icon class="fa fa-trash" color="warn"
+                                    [title]="this.translate.instant('lang.delete')"
+                                    (click)="$event.stopPropagation();deleteSearchTemplate(searchTemplate.id, i)">
                                 </mat-icon>
                             </button>
                         </ng-container>
                         <mat-divider></mat-divider>
-                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;" [disabled]="functions.empty(currentCriteria) && functions.empty(searchTermControl.value)">
+                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;"
+                            [disabled]="functions.empty(currentCriteria) && functions.empty(searchTermControl.value)">
                             <mat-icon class="fa fa-copy" color="primary" style="line-height: 21px;"></mat-icon>
                             <div style="flex:1;">
                                 {{'lang.createSearchTemplate' | translate}}
@@ -86,9 +89,12 @@
                         *ngFor="let field of currentCriteria;let i=index">
                         <ng-container *ngIf="field.type === 'string'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} 
-                                <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>
-                                <sup color="primary" class="searchInAttachments" *ngIf="field.identifier=='fulltext'">(2)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}}
+                                <sup color="primary" class="searchInAttachments"
+                                    *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>
+                                <sup color="primary" class="searchInAttachments"
+                                    *ngIf="field.identifier=='fulltext'">(2)</sup>&nbsp;:&nbsp;
                             </span>
                             <mat-form-field class="input-form" floatLabel="never">
                                 <input [id]="field.identifier" type="text" matInput
@@ -97,16 +103,24 @@
                         </ng-container>
                         <ng-container *ngIf="field.type === 'integer'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <mat-form-field class="input-form" floatLabel="never">
-                                <input [id]="field.identifier" type="number" matInput [formControl]="field.control"
-                                    [placeholder]="'lang.typeValue' | translate" min="0" step="1">
+                                <div role="group" class="range-number-container" >
+                                    <input matInput style="display: none;">
+                                    <input type="number" class="range-number-input-element" (input)="field.control.value.start = $event.target.value" [value]="field.control.value.start" [placeholder]="'lang.start' | translate" min="0" step="1">
+                                    <span class="range-number-spacer">&ndash;</span>
+                                    <input type="number" class="range-number-input-element" (input)="field.control.value.end = $event.target.value" [value]="field.control.value.end" [placeholder]="'lang.end' | translate" min="0" step="1">
+                                </div>
                             </mat-form-field>
                         </ng-container>
                         <ng-container *ngIf="['select', 'radio', 'checkbox'].indexOf(field.type) > -1">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <plugin-select-search [id]="field.identifier" [showResetOption]="true" [label]="field.label"
                                 [placeholderLabel]="'lang.chooseValue' | translate" [formControlSelect]="field.control"
@@ -115,7 +129,9 @@
                         </ng-container>
                         <ng-container *ngIf="['selectAutocomplete'].indexOf(field.type) > -1">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <plugin-select-autocomplete-search #pluginSelectAutocompleteSearch [id]="field.identifier"
                                 [showResetOption]="true" [label]="field.label"
@@ -126,7 +142,9 @@
                         </ng-container>
                         <ng-container *ngIf="field.type === 'date'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <mat-form-field class="input-form input-date" floatLabel="never" (click)="picker.open()"
                                 style="cursor:pointer;">
@@ -142,48 +160,62 @@
                                 <mat-date-range-picker #picker></mat-date-range-picker>
                             </mat-form-field>
                         </ng-container>
-                        <ng-container *ngIf="['senders','recipients'].indexOf(field.identifier) > -1 || field.type === 'contact'">
+                        <ng-container
+                            *ngIf="['senders','recipients'].indexOf(field.identifier) > -1 || field.type === 'contact'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
-                            <app-contact-autocomplete #appContactAutocomplete [id]="field.identifier" [control]="field.control"
-                                style="width:100%;">
+                            <app-contact-autocomplete #appContactAutocomplete [id]="field.identifier"
+                                [control]="field.control" style="width:100%;">
                             </app-contact-autocomplete>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'folders'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <app-folder-input #appFolderInput [control]="field.control" style="width:100%;">
                             </app-folder-input>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'tags'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <app-tag-input #appTagInput [control]="field.control" style="width:100%;">
                             </app-tag-input>
                         </ng-container>
                         <ng-container *ngIf="field.type === 'banAutocomplete'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <app-address-ban-input [control]="field.control" style="width:100%;">
                             </app-address-ban-input>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'registeredMail_issuingSite'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
                             <app-issuing-site-input #appIssuingSiteInput [control]="field.control" style="width:100%;">
                             </app-issuing-site-input>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'registeredMail_recipient'">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary" class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)" [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
+                                <i class="fa {{field.icon}}"></i> {{field.label}} <sup color="primary"
+                                    class="searchInAttachments" *ngIf="searchInAttachments(field.identifier)"
+                                    [title]="'lang.searchInAttachmentsInfo' | translate">(1)</sup>&nbsp;:&nbsp;
                             </span>
-                            <app-contact-autocomplete #appContactAutocomplete  [id]="field.identifier"
-                                [control]="field.control" [exclusion]="'?noUsers=true&noEntities=true&noContactsGroups=true'" style="width:100%;">
+                            <app-contact-autocomplete #appContactAutocomplete [id]="field.identifier"
+                                [control]="field.control"
+                                [exclusion]="'?noUsers=true&noEntities=true&noContactsGroups=true'" style="width:100%;">
                             </app-contact-autocomplete>
                         </ng-container>
                         <button mat-icon-button type="button" matSuffix color="warn"

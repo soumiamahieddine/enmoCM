@@ -125,7 +125,7 @@ export class CriteriaToolComponent implements OnInit {
 
     async addCriteria(criteria: any, openPanel: boolean = true) {
         if (this.functions.empty(criteria.control) || this.functions.empty(criteria.control.value)) {
-            criteria.control = criteria.type === 'date' ? new FormControl({}) : new FormControl('');
+            criteria.control = criteria.type === 'date' || criteria.type === 'integer' ? new FormControl({}) : new FormControl('');
         }
         this.initField(criteria);
         this.currentCriteria.push(criteria);
@@ -187,10 +187,13 @@ export class CriteriaToolComponent implements OnInit {
             };
         }
         this.currentCriteria.forEach((field: any) => {
-            if (field.type === 'date') {
+            if (field.type === 'date' || field.type === 'integer') {
                 if (!this.functions.empty(field.control.value.start) || !this.functions.empty(field.control.value.end)) {
                     objCriteria[field.identifier] = {
-                        values: field.control.value
+                        values: {
+                            start: !this.functions.empty(field.control.value.start) ? field.control.value.start : field.control.value.end,
+                            end: !this.functions.empty(field.control.value.end) ? field.control.value.end : field.control.value.start
+                        }
                     };
                 }
             } else {
@@ -241,8 +244,11 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     getFormatLabel(identifier: string, value: any) {
-        if (typeof value === 'object') {
+
+        if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'date') {
             return `${this.datePipe.transform(value.start, 'dd/MM/y') } - ${this.datePipe.transform(value.end, 'dd/MM/y')}`;
+        } else if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'integer') {
+            return `${value.start} - ${value.end}`;
         } else {
             if (identifier === 'registeredMail_issuingSite') {
                 return this.appIssuingSiteInput.getSiteLabel(value);
