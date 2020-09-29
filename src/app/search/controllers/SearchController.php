@@ -426,12 +426,30 @@ class SearchController
             $args['searchData'][] = "%{$body['chrono']['values']}%";
         }
         if (!empty($body['resId']) && !empty($body['resId']['values']) && is_array($body['resId']['values'])) {
-            $args['searchWhere'][] = 'res_id in (?)';
-            $args['searchData'][] = $body['resId']['values'];
+            if (Validator::intVal()->notEmpty()->validate($body['resId']['values']['start'])) {
+                $args['searchWhere'][] = 'res_id >= ?';
+                $args['searchData'][] = $body['resId']['values']['start'];
+            }
+            if (Validator::intVal()->notEmpty()->validate($body['resId']['values']['end'])) {
+                $args['searchWhere'][] = 'res_id <= ?';
+                $args['searchData'][] = $body['resId']['values']['end'];
+            }
         }
         if (!empty($body['doctype']) && !empty($body['doctype']['values']) && is_array($body['doctype']['values'])) {
             $args['searchWhere'][] = 'type_id in (?)';
             $args['searchData'][] = $body['doctype']['values'];
+        }
+        if (!empty($body['category']) && !empty($body['category']['values']) && is_array($body['category']['values'])) {
+            $args['searchWhere'][] = 'category_id in (?)';
+            $args['searchData'][] = $body['category']['values'];
+        }
+        if (!empty($body['status']) && !empty($body['status']['values']) && is_array($body['status']['values'])) {
+            if (in_array(null, $body['status']['values'])) {
+                $args['searchWhere'][] = '(status in (?) OR status is NULL)';
+            } else {
+                $args['searchWhere'][] = 'status in (?)';
+            }
+            $args['searchData'][] = $body['status']['values'];
         }
         if (!empty($body['priority']) && !empty($body['priority']['values']) && is_array($body['priority']['values'])) {
             if (in_array(null, $body['priority']['values'])) {
@@ -468,7 +486,7 @@ class SearchController
             }
             if (Validator::date()->notEmpty()->validate($body['creationDate']['values']['end'])) {
                 $args['searchWhere'][] = 'creation_date <= ?';
-                $args['searchData'][] = $body['creationDate']['values']['end'];
+                $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['creationDate']['values']['end']]);
             }
         }
         if (!empty($body['documentDate']) && !empty($body['documentDate']['values']) && is_array($body['documentDate']['values'])) {
@@ -478,7 +496,7 @@ class SearchController
             }
             if (Validator::date()->notEmpty()->validate($body['documentDate']['values']['end'])) {
                 $args['searchWhere'][] = 'doc_date <= ?';
-                $args['searchData'][] = $body['documentDate']['values']['end'];
+                $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['documentDate']['values']['end']]);
             }
         }
         if (!empty($body['arrivalDate']) && !empty($body['arrivalDate']['values']) && is_array($body['arrivalDate']['values'])) {
@@ -488,7 +506,7 @@ class SearchController
             }
             if (Validator::date()->notEmpty()->validate($body['arrivalDate']['values']['end'])) {
                 $args['searchWhere'][] = 'admission_date <= ?';
-                $args['searchData'][] = $body['arrivalDate']['values']['end'];
+                $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['arrivalDate']['values']['end']]);
             }
         }
         if (!empty($body['departureDate']) && !empty($body['departureDate']['values']) && is_array($body['departureDate']['values'])) {
@@ -498,7 +516,7 @@ class SearchController
             }
             if (Validator::date()->notEmpty()->validate($body['departureDate']['values']['end'])) {
                 $args['searchWhere'][] = 'departure_date <= ?';
-                $args['searchData'][] = $body['departureDate']['values']['end'];
+                $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['departureDate']['values']['end']]);
             }
         }
         if (!empty($body['processLimitDate']) && !empty($body['processLimitDate']['values']) && is_array($body['processLimitDate']['values'])) {
@@ -508,7 +526,7 @@ class SearchController
             }
             if (Validator::date()->notEmpty()->validate($body['processLimitDate']['values']['end'])) {
                 $args['searchWhere'][] = 'process_limit_date <= ?';
-                $args['searchData'][] = $body['processLimitDate']['values']['end'];
+                $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['processLimitDate']['values']['end']]);
             }
         }
 
@@ -637,9 +655,15 @@ class SearchController
                         }
                     }
                 } elseif ($customField['type'] == 'integer') {
-                    if (!empty($value) && !empty($value['values']) && is_numeric($value['values'])) {
-                        $args['searchWhere'][] = "custom_fields->>'{$customFieldId}' = ?";
-                        $args['searchData'][] = $value['values'];
+                    if (!empty($value) && !empty($value['values']) && is_array($value['values'])) {
+                        if (Validator::intVal()->notEmpty()->validate($value['values']['start'])) {
+                            $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}')::int >= ?";
+                            $args['searchData'][] = $value['values']['start'];
+                        }
+                        if (Validator::intVal()->notEmpty()->validate($value['values']['end'])) {
+                            $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}')::int <= ?";
+                            $args['searchData'][] = $value['values']['end'];
+                        }
                     }
                 } elseif ($customField['type'] == 'radio' || $customField['type'] == 'select') {
                     if (!empty($value) && !empty($value['values']) && is_array($value['values'])) {
@@ -670,7 +694,7 @@ class SearchController
                     }
                     if (Validator::date()->notEmpty()->validate($value['values']['end'])) {
                         $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}')::timestamp <= ?";
-                        $args['searchData'][] = $value['values']['end'];
+                        $args['searchData'][] = SearchController::getEndDayDate(['date' => $value['values']['end']]);
                     }
                 }
             }
@@ -768,16 +792,16 @@ class SearchController
                     break;
                 }
             }
-    
+
             \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
             \Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(\Zend_Search_Lucene_Search_QueryParser::B_AND);
             \Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-    
+
             $whereRequest = [];
             foreach (['letterbox_coll', 'attachments_coll'] as $tmpCollection) {
                 $fullTextDocserver = DocserverModel::getCurrentDocserver(['collId' => $tmpCollection, 'typeId' => 'FULLTEXT']);
                 $pathToLuceneIndex = $fullTextDocserver['path_template'];
-    
+
                 if (is_dir($pathToLuceneIndex) && !FullTextController::isDirEmpty($pathToLuceneIndex)) {
                     $index     = \Zend_Search_Lucene::open($pathToLuceneIndex);
                     $hits      = $index->find(TextFormatModel::normalize(['string' => $args['body']['fulltext']['values']]));
@@ -791,28 +815,28 @@ class SearchController
                         }
                         $cptIds ++;
                     }
-    
+
                     if (empty($listIds)) {
                         continue;
                     }
-    
+
                     if ($tmpCollection == 'attachments_coll') {
                         $idMasterDatas = AttachmentModel::get([
                             'select' => ['DISTINCT res_id_master'],
                             'where'  => ['res_id in (?)', 'status in (?)'],
                             'data'   => [$listIds, ['DEL','OBS','TMP']]
                         ]);
-    
+
                         $listIds = array_column($idMasterDatas, 'res_id_master');
                     }
-    
+
                     if (!empty($listIds)) {
                         $whereRequest[] = " res_id in (?) ";
                         $args['searchData'][] = $listIds;
                     }
                 }
             }
-    
+
             if (!empty($whereRequest)) {
                 $args['searchWhere'][] = '(' . implode(" or ", $whereRequest) . ')';
             } else {
@@ -820,5 +844,16 @@ class SearchController
             }
         }
         return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
+    }
+
+    private static function getEndDayDate(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['date']);
+        ValidatorModel::stringType($args, ['date']);
+
+        $date = new \DateTime($args['date']);
+        $date->setTime(23, 59, 59);
+
+        return $date->format('d-m-Y H:i');
     }
 }
