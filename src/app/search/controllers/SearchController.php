@@ -53,33 +53,6 @@ class SearchController
         $searchWhere    = $userdataClause['searchWhere'];
         $searchData     = $userdataClause['searchData'];
 
-
-        //TODO à garder ?
-//        if (!empty($queryParams['contactField'])) {
-//            $fields = ['company', 'firstname', 'lastname'];
-//            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-//            $requestData = AutoCompleteController::getDataForRequest([
-//                'search'        => $queryParams['contactField'],
-//                'fields'        => $fields,
-//                'where'         => ['type = ?'],
-//                'data'          => ['contact'],
-//                'fieldsNumber'  => 3
-//            ]);
-//
-//            $contactsMatch = DatabaseModel::select([
-//                'select'    => ['res_id'],
-//                'table'     => ['resource_contacts', 'contacts'],
-//                'left_join' => ['resource_contacts.item_id = contacts.id'],
-//                'where'     => $requestData['where'],
-//                'data'      => $requestData['data']
-//            ]);
-//            if (empty($contactsMatch)) {
-//                return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
-//            }
-//            $contactsMatch = array_column($contactsMatch, 'res_id');
-//            $searchWhere[] = 'res_id in (?)';
-//            $searchData[] = $contactsMatch;
-//        }
         $searchClause = SearchController::getQuickFieldClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
@@ -554,6 +527,38 @@ class SearchController
             $args['searchWhere'][] = 'res_id in (?)';
             $args['searchData'][] = $sendersMatch;
         }
+        if (!empty($body['senders']) && is_string($body['senders']['values']) && !empty($body['senders']['values'])) {
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['company']]);
+    
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'       => $body['senders']['values'],
+                'fields'       => $fields,
+                'fieldsNumber' => 1
+            ]);
+    
+            $contacts = ContactModel::get([
+                'select' => ['id'],
+                'where'  => $requestData['where'],
+                'data'   => $requestData['data']
+            ]);
+            $contactIds = array_column($contacts, 'id');
+            if (empty($contactIds)) {
+                return null;
+            } else {
+                $recipientsMatch = ResourceContactModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['item_id in (?)', 'type = ?', 'mode = ?'],
+                    'data'      => [$contactIds, 'contact', 'sender']
+                ]);
+                $resourceByRecipients = array_column($recipientsMatch, 'res_id');
+                if (empty($resourceByRecipients)) {
+                    return null;
+                } else {
+                    $args['searchWhere'][] = 'res_id in (?)';
+                    $args['searchData'][] = $resourceByRecipients;
+                }
+            }
+        }
         if (!empty($body['recipients']) && is_array($body['recipients']['values']) && !empty($body['recipients']['values'])) {
             $where = '';
             $data = [];
@@ -577,6 +582,38 @@ class SearchController
             $recipientsMatch = array_column($recipientsMatch, 'res_id');
             $args['searchWhere'][] = 'res_id in (?)';
             $args['searchData'][] = $recipientsMatch;
+        }
+        if (!empty($body['recipients']) && is_string($body['recipients']['values']) && !empty($body['recipients']['values'])) {
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['company']]);
+    
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'       => $body['recipients']['values'],
+                'fields'       => $fields,
+                'fieldsNumber' => 1
+            ]);
+    
+            $contacts = ContactModel::get([
+                'select' => ['id'],
+                'where'  => $requestData['where'],
+                'data'   => $requestData['data']
+            ]);
+            $contactIds = array_column($contacts, 'id');
+            if (empty($contactIds)) {
+                return null;
+            } else {
+                $recipientsMatch = ResourceContactModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['item_id in (?)', 'type = ?', 'mode = ?'],
+                    'data'      => [$contactIds, 'contact', 'recipient']
+                ]);
+                $resourceByRecipients = array_column($recipientsMatch, 'res_id');
+                if (empty($resourceByRecipients)) {
+                    return null;
+                } else {
+                    $args['searchWhere'][] = 'res_id in (?)';
+                    $args['searchData'][] = $resourceByRecipients;
+                }
+            }
         }
         if (!empty($body['tags']) && is_array($body['tags']['values']) && !empty($body['tags']['values'])) {
             if (!(in_array(null, $body['tags']['values']) && count($body['tags']['values']) === 1)) {
@@ -695,6 +732,40 @@ class SearchController
                     if (Validator::date()->notEmpty()->validate($value['values']['end'])) {
                         $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}')::timestamp <= ?";
                         $args['searchData'][] = SearchController::getEndDayDate(['date' => $value['values']['end']]);
+                    }
+                } elseif ($customField['type'] == 'contact') {
+                    if (!empty($value['values']) && is_array($value['values'])) {
+                        $contactSearchWhere = [];
+                        foreach ($value['values'] as $contactValue) {
+                            $contactSearchWhere[] = "custom_fields->'{$customFieldId}' @> ?";
+                            $args['searchData'][] = '[{"id": ' . $contactValue['id'] . ', "type": "' . $contactValue['type'] . '"}]';
+                        }
+                        $args['searchWhere'][] = '(' . implode(' or ', $contactSearchWhere) . ')';
+                    } elseif (!empty($value['values']) && is_string($value['values'])) {
+                        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['company']]);
+                
+                        $requestData = AutoCompleteController::getDataForRequest([
+                            'search'       => $value['values'],
+                            'fields'       => $fields,
+                            'fieldsNumber' => 1
+                        ]);
+                
+                        $contacts = ContactModel::get([
+                            'select'    => ['id'],
+                            'where'     => $requestData['where'],
+                            'data'      => $requestData['data']
+                        ]);
+                        $contactIds = array_column($contacts, 'id');
+                        if (empty($contactIds)) {
+                            return null;
+                        }
+
+                        $contactsStandalone = [];
+                        foreach ($contactIds as $contactIdStandalone) {
+                            $contactsStandalone[] = "custom_fields->'{$customFieldId}' @> ?";
+                            $args['searchData'][] = '[{"id": ' . $contactIdStandalone . ', "type": "contact"}]';
+                        }
+                        $args['searchWhere'][] = '(' . implode(' or ', $contactsStandalone) . ')';
                     }
                 }
             }
