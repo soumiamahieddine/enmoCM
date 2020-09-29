@@ -42,6 +42,21 @@ export class CriteriaToolComponent implements OnInit {
 
     hideCriteriaList: boolean = true;
 
+    infoFields: any = [
+        {
+            id : 1,
+            desc : 'lang.searchInAttachmentsInfo'
+        },
+        {
+            id : 2,
+            desc : 'lang.searchFulltextInfo'
+        },
+        {
+            id : 3,
+            desc : 'lang.manualSearchInfo'
+        },
+    ];
+
     @Input() searchTerm: string = 'Foo';
     @Input() defaultCriteria: any = [];
 
@@ -119,8 +134,13 @@ export class CriteriaToolComponent implements OnInit {
         }
     }
 
-    isCurrentCriteria(criteriaId: string) {
-        return this.currentCriteria.filter((currCrit: any) => currCrit.identifier === criteriaId).length > 0;
+    isCurrentCriteriaById(criteriaIds: string[]) {
+        return this.currentCriteria.filter((currCrit: any) => criteriaIds.indexOf(currCrit.identifier) > -1).length > 0;
+    }
+
+
+    isCurrentCriteriaByType(criteriaTypes: string[]) {
+        return this.currentCriteria.filter((currCrit: any) => criteriaTypes.indexOf(currCrit.type) > -1).length > 0;
     }
 
     async addCriteria(criteria: any, openPanel: boolean = true) {
@@ -187,6 +207,7 @@ export class CriteriaToolComponent implements OnInit {
             };
         }
         this.currentCriteria.forEach((field: any) => {
+
             if (field.type === 'date' || field.type === 'integer') {
                 if (!this.functions.empty(field.control.value.start) || !this.functions.empty(field.control.value.end)) {
                     objCriteria[field.identifier] = {
@@ -201,6 +222,12 @@ export class CriteriaToolComponent implements OnInit {
                     objCriteria[field.identifier] = {
                         values: field.control.value
                     };
+                } else {
+                    if (['recipients', 'senders'].indexOf(field.identifier) > -1 || field.type === 'contact') {
+                        objCriteria[field.identifier] = {
+                            values: [this.appContactAutocomplete.toArray().filter((component: any) => component.id === field.identifier)[0].getInputValue()]
+                        };
+                    }
                 }
             }
         });
@@ -293,12 +320,29 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     displayInfoSearch(infoSearchNumber: number) {
-        if (infoSearchNumber === 1 && (this.isCurrentCriteria('subject') || this.isCurrentCriteria('chrono') || this.isCurrentCriteria('fulltext') )) {
+        if (infoSearchNumber === 1 && (this.isCurrentCriteriaById(['subject', 'chrono', 'fulltext']))) {
             return true;
-        } else if (infoSearchNumber === 2 && this.isCurrentCriteria('fulltext')) {
+        } else if (infoSearchNumber === 2 && this.isCurrentCriteriaById(['fulltext'])) {
+            return true;
+        } else if (infoSearchNumber === 3 && (this.isCurrentCriteriaById(['recipients', 'senders', 'registeredMail_recipient']) || this.isCurrentCriteriaByType(['contact']))) {
             return true;
         }
         return false;
+    }
+
+    getBadgesInfoField(field: any) {
+        const badges = [];
+
+        if (['subject', 'chrono', 'fulltext'].indexOf(field.identifier) > -1) {
+            badges.push(1);
+        }
+        if (['fulltext'].indexOf(field.identifier) > -1) {
+            badges.push(2);
+        }
+        if (['recipients', 'senders', 'registeredMail_recipient'].indexOf(field.identifier) > -1 || field.type === 'contact') {
+            badges.push(3);
+        }
+        return badges;
     }
 
     set_meta_field(value: any) {
