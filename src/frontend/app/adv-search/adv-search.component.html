@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="filterBadges">
-                    <span *ngIf="!emptyCriteria()" class="label badge-eraser"
+                    <span *ngIf="!emptyCriteria()" class="label badge-eraser" (click)="removeCriteria('_ALL')"
                         title="{{'lang.eraseAllFilters' | translate}}"><i class="fas fa-eraser"></i></span>
                     <ng-container *ngFor="let critKey of criteria | keyvalue">
                         <ng-container

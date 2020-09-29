@@ -461,12 +461,18 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
     }
 
     removeCriteria(identifier: string, value: any = null) {
-        const tmpArrCrit = [];
-        if (value === null || this.criteria[identifier].values.length === 1) {
-            this.criteria[identifier].values = [];
+        if (identifier !== '_ALL') {
+            const tmpArrCrit = [];
+            if (value === null || this.criteria[identifier].values.length === 1) {
+                this.criteria[identifier].values = [];
+            } else {
+                const indexArr = this.criteria[identifier].values.indexOf(value);
+                this.criteria[identifier].values.splice(indexArr, 1);
+            }
         } else {
-            const indexArr = this.criteria[identifier].values.indexOf(value);
-            this.criteria[identifier].values.splice(indexArr, 1);
+            Object.keys(this.criteria).forEach(key => {
+                this.criteria[key].values = [];
+            });
         }
         this.appCriteriaTool.refreshCriteria(this.criteria);
     }
