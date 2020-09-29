@@ -46,6 +46,7 @@ export class CriteriaToolComponent implements OnInit {
     @Input() defaultCriteria: any = [];
 
     @Output() searchUrlGenerated = new EventEmitter<any>();
+    @Output() loaded = new EventEmitter<any>();
 
     @ViewChild('criteriaTool', { static: false }) criteriaTool: MatExpansionPanel;
     @ViewChild('searchCriteriaInput', { static: false }) searchCriteriaInput: ElementRef;
@@ -83,9 +84,11 @@ export class CriteriaToolComponent implements OnInit {
         this.criteria.forEach((element: any) => {
             if (this.defaultCriteria.indexOf(element.identifier) > -1) {
                 element.control = new FormControl('');
-                this.addCriteria(element);
+                this.addCriteria(element, false);
             }
         });
+
+        this.loaded.emit(true);
 
         this.filteredCriteria = this.searchCriteria.valueChanges
             .pipe(
@@ -103,7 +106,6 @@ export class CriteriaToolComponent implements OnInit {
                     }
                 })
             ).subscribe();
-            this.criteriaTool.open();
         }, 500);
         this.getSearchTemplates();
     }
@@ -121,7 +123,9 @@ export class CriteriaToolComponent implements OnInit {
         return this.currentCriteria.filter((currCrit: any) => currCrit.identifier === criteriaId).length > 0;
     }
 
-    async addCriteria(criteria: any) {
+    async addCriteria(criteria: any, openPanel: boolean = true) {
+        console.log('addCriteria', openPanel);
+        
         if (this.functions.empty(criteria.control) || this.functions.empty(criteria.control.value)) {
             criteria.control = criteria.type === 'date' ? new FormControl({}) : new FormControl('');
         }
@@ -130,9 +134,11 @@ export class CriteriaToolComponent implements OnInit {
         this.searchTermControl.setValue(this.searchTerm);
         this.searchCriteria.reset();
         // this.searchCriteriaInput.nativeElement.blur();
-        setTimeout(() => {
-            this.criteriaTool.open();
-        }, 0);
+        if (openPanel) {
+            setTimeout(() => {
+                this.criteriaTool.open();
+            }, 0);
+        }
     }
 
     initField(field: any) {
@@ -198,9 +204,19 @@ export class CriteriaToolComponent implements OnInit {
             }
         });
         this.searchUrlGenerated.emit(objCriteria);
-        this.criteriaTool.close();
     }
 
+    toggleTool(state: boolean) {
+        if (state) {
+            this.criteriaTool.open();
+        } else {
+            console.log('close');
+            
+            this.criteriaTool.close();
+
+        }
+
+    }
 
     getLabelValue(identifier: string, value: any) {
         if (this.functions.empty(value)) {
@@ -208,7 +224,7 @@ export class CriteriaToolComponent implements OnInit {
         } else  if (['doctype', 'destination'].indexOf(identifier) > -1) {
             return this.criteria.filter((field: any) => field.identifier === identifier)[0].values.filter((val: any) => val.id === value)[0].title;
         } else {
-            if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'contact' || this.criteria.filter((field: any) => field.identifier === identifier)[0].identifier === 'registeredMail_recipient') {
+            if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'contact' || ['registeredMail_recipient', 'senders', 'recipients'].indexOf(this.criteria.filter((field: any) => field.identifier === identifier)[0].identifier)  > -1 ) {
                 return this.appContactAutocomplete.toArray().filter((component: any) => component.id === identifier)[0].getFormatedContact(value.id);
             } else
             if (this.criteria.filter((field: any) => field.identifier === identifier)[0].identifier === 'folders') {
@@ -513,14 +529,14 @@ export class CriteriaToolComponent implements OnInit {
         ).subscribe();
     }
 
-    selectSearchTemplate(searchTemplate: any) {
+    selectSearchTemplate(searchTemplate: any, openPanel: boolean = true) {
         this.currentCriteria = [];
         this.criteria.forEach((element: any) => {
             let index = searchTemplate.query.map((field: any) => field.identifier).indexOf(element.identifier);
             if (index > -1) {
                 element.control = new FormControl({ value: searchTemplate.query[index].values, disabled: false });
                 element.control.value = searchTemplate.query[index].values;
-                this.addCriteria(element);
+                this.addCriteria(element, openPanel);
             }
         });
 
