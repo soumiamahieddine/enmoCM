@@ -46,12 +46,6 @@
                                     (keydown)="$event.stopPropagation()">
                             </mat-form-field>
                         </div>
-                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;" [disabled]="functions.empty(currentCriteria) && functions.empty(searchTermControl.value)">
-                            <div style="flex:1;">
-                                {{'lang.createSearchTemplate' | translate}}
-                            </div>
-                            <mat-icon class="fa fa-copy" color="primary"></mat-icon>
-                        </button>
                         <ng-container
                             *ngFor="let searchTemplate of searchTemplates | filterList:listFilter.value:'label'; let i=index">
                             <button mat-menu-item (click)="selectSearchTemplate(searchTemplate)"
@@ -63,6 +57,13 @@
                                 </mat-icon>
                             </button>
                         </ng-container>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;" [disabled]="functions.empty(currentCriteria) && functions.empty(searchTermControl.value)">
+                            <mat-icon class="fa fa-copy" color="primary" style="line-height: 21px;"></mat-icon>
+                            <div style="flex:1;">
+                                {{'lang.createSearchTemplate' | translate}}
+                            </div>
+                        </button>
                     </mat-menu>
                 </mat-panel-description>
             </mat-expansion-panel-header>
