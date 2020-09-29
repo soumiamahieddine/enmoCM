@@ -783,6 +783,18 @@ class SearchController
                         $args['searchWhere'][] = "(custom_fields->>'{$customFieldId}')::timestamp <= ?";
                         $args['searchData'][] = SearchController::getEndDayDate(['date' => $value['values']['end']]);
                     }
+                } elseif ($customField['type'] == 'banAutocomplete') {
+                    if (!empty($value) && !empty($value['values']) && is_array($value['values'])) {
+                        $where = '';
+                        foreach ($value['values'] as $item) {
+                            if (!empty($where)) {
+                                $where .= ' OR ';
+                            }
+                            $where .= "custom_fields->'{$customFieldId}'->0->>'id' = ?";
+                            $args['searchData'][] = "{$item['id']}";
+                        }
+                        $args['searchWhere'][] = $where;
+                    }
                 } elseif ($customField['type'] == 'contact') {
                     if (!empty($value['values']) && is_array($value['values'])) {
                         $contactSearchWhere = [];
