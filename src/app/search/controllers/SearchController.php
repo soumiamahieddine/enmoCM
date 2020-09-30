@@ -798,14 +798,14 @@ class SearchController
                         $args['searchWhere'][] = $where;
                     }
                 } elseif ($customField['type'] == 'contact') {
-                    if (!empty($value['values']) && is_array($value['values'])) {
+                    if (!empty($value['values']) && is_array($value['values']) && is_array($value['values'][0])) {
                         $contactSearchWhere = [];
                         foreach ($value['values'] as $contactValue) {
                             $contactSearchWhere[] = "custom_fields->'{$customFieldId}' @> ?";
                             $args['searchData'][] = '[{"id": ' . $contactValue['id'] . ', "type": "' . $contactValue['type'] . '"}]';
                         }
                         $args['searchWhere'][] = '(' . implode(' or ', $contactSearchWhere) . ')';
-                    } elseif (!empty($value['values']) && is_string($value['values'])) {
+                    } elseif (!empty($value['values']) && is_array($value['values']) && is_string($value['values'][0])) {
                         $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['company']]);
 
                         $requestData = AutoCompleteController::getDataForRequest([
@@ -895,11 +895,12 @@ class SearchController
             $args['searchWhere'][] = 'res_id in (?)';
             $args['searchData'][] = $registeredMailsMatch;
         }
-        if (!empty($body['registeredMail_recipient']) && !empty($body['registeredMail_recipient']['values']) && is_array($body['registeredMail_recipient']['values'])) {
+        if (!empty($body['registeredMail_recipient']) && !empty($body['registeredMail_recipient']['values']) && is_array($body['registeredMail_recipient']['values']) && is_array($body['registeredMail_recipient']['values'][0])) {
+            $contactsIds = array_column($body['registeredMail_recipient']['values'], 'id');
             $contacts = ContactModel::get([
                 'select'    => ['company', 'lastname', 'address_number', 'address_street', 'address_postcode', 'address_country'],
                 'where'     => ['id in (?)'],
-                'data'      => [$body['registeredMail_recipient']['values']]
+                'data'      => [$contactsIds]
             ]);
             if (empty($contacts)) {
                 return null;
@@ -921,6 +922,26 @@ class SearchController
                 'select'    => ['res_id'],
                 'where'     => [$where],
                 'data'      => $data
+            ]);
+            if (empty($registeredMailsMatch)) {
+                return null;
+            }
+            $registeredMailsMatch = array_column($registeredMailsMatch, 'res_id');
+            $args['searchWhere'][] = 'res_id in (?)';
+            $args['searchData'][] = $registeredMailsMatch;
+        }
+        if (!empty($body['registeredMail_recipient']) && !empty($body['registeredMail_recipient']['values']) && is_array($body['registeredMail_recipient']['values']) && is_string($body['registeredMail_recipient']['values'][0])) {
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ["recipient->>'company'"]]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'       => $body['registeredMail_recipient']['values'][0],
+                'fields'       => $fields,
+                'fieldsNumber' => 1
+            ]);
+
+            $registeredMailsMatch = RegisteredMailModel::get([
+                'select'    => ['res_id'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data']
             ]);
             if (empty($registeredMailsMatch)) {
                 return null;
