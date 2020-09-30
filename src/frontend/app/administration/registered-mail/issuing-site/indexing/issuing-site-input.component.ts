@@ -61,13 +61,23 @@ export class IssuingSiteInputComponent implements OnInit {
         this.http.get(`../rest/registeredMail/sites`).pipe(
             tap((data: any) => {
                 this.issuingSiteAddress = null;
-                this.issuingSiteList = data['sites'].filter((item: any) => item.entities.indexOf(this.headerService.user.entities[0].id) > -1).map((item: any) => {
-                    return {
-                        ...item,
-                        id: item.id,
-                        label: `${item.label} (${item.accountNumber})`
-                    };
-                });
+                if (this.functions.empty(this.headerService.user.entities)) {
+                    this.issuingSiteList = data['sites'].map((item: any) => {
+                        return {
+                            ...item,
+                            id: item.id,
+                            label: `${item.label} (${item.accountNumber})`
+                        };
+                    });
+                } else {
+                    this.issuingSiteList = data['sites'].filter((item: any) => item.entities.indexOf(this.headerService.user.entities[0].id) > -1).map((item: any) => {
+                        return {
+                            ...item,
+                            id: item.id,
+                            label: `${item.label} (${item.accountNumber})`
+                        };
+                    });
+                }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
