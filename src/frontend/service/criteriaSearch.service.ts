@@ -17,7 +17,7 @@ export class CriteriaSearchService {
     listsProperties: ListProperties = {
         page : 0,
         pageSize : 0,
-        order: 'creation_date',
+        order: 'creationDate',
         orderDir: 'DESC',
         criteria: [],
         filters: []
@@ -68,8 +68,6 @@ export class CriteriaSearchService {
     }
 
     formatDatas(data: any) {
-        console.log(data);
-
         Object.keys(data).forEach(key => {
             if (['folders', 'tags', 'registeredMail_issuingSite'].indexOf(key) > -1 || ['select', 'radio', 'checkbox'].indexOf(data[key].type) > -1) {
                 data[key].values = data[key].values.map((val: any) => val.id);
@@ -77,7 +75,7 @@ export class CriteriaSearchService {
                 data[key].values.start = this.datePipe.transform(data[key].values.start, 'y-MM-dd');
                 data[key].values.end = this.datePipe.transform(data[key].values.end, 'y-MM-dd');
             }
-            // delete data[key].type;
+            delete data[key].type;
         });
 
         return data;

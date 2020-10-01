@@ -97,16 +97,16 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
     subscription: Subscription;
 
     displayColsOrder = [
-        { 'id': 'dest_user' },
-        { 'id': 'category_id' },
-        { 'id': 'creation_date' },
-        { 'id': 'process_limit_date' },
-        { 'id': 'entity_label' },
+        { 'id': 'destUser' },
+        { 'id': 'categoryId' },
+        { 'id': 'creationDate' },
+        { 'id': 'processLimitDate' },
+        { 'id': 'entityLabel' },
         { 'id': 'subject' },
-        { 'id': 'alt_identifier' },
+        { 'id': 'chrono' },
         { 'id': 'priority' },
         { 'id': 'status' },
-        { 'id': 'type_label' }
+        { 'id': 'typeLabel' }
     ];
 
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
