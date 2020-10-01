@@ -242,7 +242,6 @@ export class SearchAdministrationComponent implements OnInit {
     selectedProcessToolClone: string = null;
 
     searchAdv: any = { listEvent: {}, listDisplay: {}, listEvent_data: {} };
-    colNum: any = 0;
 
     constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public appService: AppService, public headerService: HeaderService) { }
 
@@ -258,7 +257,6 @@ export class SearchAdministrationComponent implements OnInit {
 
         this.availableDataClone = JSON.parse(JSON.stringify(this.availableData));
         let indexData: number;
-        this.selectedTemplateDisplayedSecondaryData = this.searchAdv.listDisplay.templateColumns;
         this.selectedTemplateDisplayedSecondaryDataClone = this.selectedTemplateDisplayedSecondaryData;
         this.displayedSecondaryData.forEach((element: any) => {
             indexData = this.availableData.map((e: any) => e.value).indexOf(element.value);
@@ -378,6 +376,7 @@ export class SearchAdministrationComponent implements OnInit {
                     const subInfos = templateData.configuration.listDisplay.subInfos;
                     const displayData = JSON.parse(JSON.stringify(subInfos));
                     this.selectedProcessTool.defaultTab = defaultTab;
+                    this.selectedTemplateDisplayedSecondaryData = templateData.configuration.listDisplay.templateColumns;
                     displayData.forEach((element: { value: any; cssClasses: any; icon: any; }) => {
                         this.displayedSecondaryData.push({
                             'value': element.value,
