@@ -12,7 +12,7 @@
                 <input type="text" #searchCriteriaInput [formControl]="getFilterControl()"
                     style="margin-left:5px;width:150px !important;height: 20px;border: 1px solid #6666663d;padding: 10px;border-radius: 5px;"
                     placeholder="{{'lang.filterBy' | translate}}">
-                <mat-option *ngIf="(getFilteredCriterias() | async)?.length===0" disabled>Aucun résultat</mat-option>
+                <mat-option *ngIf="(getFilteredCriterias() | async)?.length===0" disabled>{{'lang.noResult' | translate}}</mat-option>
                 <mat-option *ngFor="let item of getFilteredCriterias()  | async | sortBy : 'label'" [value]="item"
                     [disabled]="isCurrentCriteriaById(item.identifier)" style="padding-left: 0px;;">
                     <i class="fa {{item.icon}}" color="primary"
