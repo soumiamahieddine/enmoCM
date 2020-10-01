@@ -119,6 +119,7 @@ import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.com
 import { DevToolComponent } from '../service/debug/dev-tool.component';
 import { DevLangComponent } from '../service/debug/dev-lang.component';
 import { AcknowledgementReceptionComponent } from './registeredMail/acknowledgement-reception/acknowledgement-reception.component';
+import { DatePipe } from '@angular/common';
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
@@ -289,7 +290,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         ViewDocActionComponent,
         ReconcileActionComponent,
     ],
-    providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, FiltersListService, CriteriaSearchService, FoldersService, ActionsService, PrivilegeService, {
+    providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, DatePipe, FiltersListService, CriteriaSearchService, FoldersService, ActionsService, PrivilegeService, {
         provide: HAMMER_GESTURE_CONFIG,
         useClass: MyHammerConfig
     }],

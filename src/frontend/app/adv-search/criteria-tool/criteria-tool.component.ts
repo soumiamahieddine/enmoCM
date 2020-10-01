@@ -224,8 +224,6 @@ export class CriteriaToolComponent implements OnInit {
                         values: field.control.value
                     };
                 } else {
-                    console.log(field.type);
-                    
                     if (['recipients', 'senders'].indexOf(field.identifier) > -1 || field.type === 'contact') {
                         if (!this.functions.empty(this.appContactAutocomplete.toArray().filter((component: any) => component.id === field.identifier)[0].getInputValue())) {
                             objCriteria[field.identifier] = {

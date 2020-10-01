@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FunctionsService } from './functions.service';
 
@@ -23,6 +24,7 @@ export class CriteriaSearchService {
     };
 
     constructor(
+        private datePipe: DatePipe,
         public functions: FunctionsService
     ) { }
 
@@ -69,15 +71,13 @@ export class CriteriaSearchService {
         console.log(data);
 
         Object.keys(data).forEach(key => {
-            if (['folders', 'tags'].indexOf(key) > -1 || ['select', 'radio', 'checkbox'].indexOf(data[key].type) > -1) {
+            if (['folders', 'tags', 'registeredMail_issuingSite'].indexOf(key) > -1 || ['select', 'radio', 'checkbox'].indexOf(data[key].type) > -1) {
                 data[key].values = data[key].values.map((val: any) => val.id);
             } else if (data[key].type === 'date') {
-                data[key].values.start = this.functions.formatSerializedDateToDateString(data[key].values.start);
-                data[key].values.end = this.functions.formatSerializedDateToDateString(data[key].values.end);
+                data[key].values.start = this.datePipe.transform(data[key].values.start, 'y-MM-dd');
+                data[key].values.end = this.datePipe.transform(data[key].values.end, 'y-MM-dd');
             }
-            console.log(data[key].values);
             // delete data[key].type;
-            /*data[key].values = data[key].values.map((item: any) => item.id);*/
         });
 
         return data;
