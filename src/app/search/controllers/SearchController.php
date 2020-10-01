@@ -114,9 +114,9 @@ class SearchController
         if (!empty($queryParams['offset']) && is_numeric($queryParams['offset'])) {
             $offset = (int)$queryParams['offset'];
         }
-        $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
-        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate', 'category'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date', 'category_id'], $queryParams['orderBy']);
-        $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date', 'category_id']) ? ['creation_date'] : ["{$orderBy} {$order}"];
+        $order = !in_array($queryParams['orderDir'], ['ASC', 'DESC']) ? '' : $queryParams['orderDir'];
+        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate', 'category', 'destUser', 'processLimitDate', 'entityLabel'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date', 'category_id', 'dest_user', 'process_limit_date', 'entity_label'], $queryParams['order']);
+        $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date', 'category_id', 'dest_user', 'process_limit_date', 'entity_label', 'priority']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
         $allResources = ResModel::getOnView([
             'select'    => ['res_id as "resId"'],
