@@ -129,7 +129,7 @@ import { SearchAdministrationComponent } from './search/search-administration.co
             { path: 'issuingSites', canActivate: [AppGuard], component: IssuingSiteListComponent },
             { path: 'issuingSites/new', canActivate: [AppGuard], component: IssuingSiteComponent },
             { path: 'issuingSites/:id', canActivate: [AppGuard], component: IssuingSiteComponent },
-            { path : 'searchAdministration', canActivate : [AppGuard], component : SearchAdministrationComponent}
+            { path : 'search', canActivate : [AppGuard], component : SearchAdministrationComponent}
         ]),
     ],
     exports: [
