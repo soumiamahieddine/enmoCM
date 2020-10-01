@@ -185,7 +185,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
                     startWith(''),
                     map(value => this._filter(value))
                 );
-        }, 0);
+        }, 200);
 
 
         // this.initMultipleHandling();
@@ -393,8 +393,6 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
             } else {
                 this.selected = this.selected.filter((val: any) => val.id !== ev.source.value.id);
             }
-            console.log(this.selected);
-            
         }
     }
 
