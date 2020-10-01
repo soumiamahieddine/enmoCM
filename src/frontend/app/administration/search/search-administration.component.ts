@@ -268,11 +268,11 @@ export class SearchAdministrationComponent implements OnInit {
         this.selectedListEvent = this.searchAdv.listEvent;
         this.selectedListEventClone = this.selectedListEvent;
         if (this.searchAdv.listEvent === 'processDocument') {
-            this.selectedProcessTool.defaultTab = this.searchAdv.listEvent_data === null ? 'dashboard' : this.searchAdv.listEvent_data.defaultTab;
-            this.selectedProcessTool.canUpdateData = this.searchAdv.listEvent_data === null ? false : this.searchAdv.listEvent_data.canUpdateData;
-            this.selectedProcessTool.canUpdateModel = this.searchAdv.listEvent_data === null ? false : this.searchAdv.listEvent_data.canUpdateModel;
+            this.selectedProcessTool.defaultTab = this.searchAdv.list_event_data === null ? 'dashboard' : this.searchAdv.list_event_data.defaultTab;
+            this.selectedProcessTool.canUpdateData = this.searchAdv.list_event_data === null ? false : this.searchAdv.list_event_data.canUpdateData;
+            this.selectedProcessTool.canUpdateModel = this.searchAdv.list_event_data === null ? false : this.searchAdv.list_event_data.canUpdateModel;
         } else if (this.searchAdv.listEvent === 'signatureBookAction') {
-            this.selectedProcessTool.canUpdateDocuments = this.searchAdv.listEvent_data === null ? false : this.searchAdv.listEvent_data.canUpdateDocuments;
+            this.selectedProcessTool.canUpdateDocuments = this.searchAdv.list_event_data === null ? false : this.searchAdv.list_event_data.canUpdateDocuments;
         }
 
         this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
@@ -377,7 +377,6 @@ export class SearchAdministrationComponent implements OnInit {
                     const displayData = JSON.parse(JSON.stringify(subInfos));
                     this.selectedProcessTool.defaultTab = defaultTab;
                     this.selectedTemplateDisplayedSecondaryData = templateData.configuration.listDisplay.templateColumns;
-                    
                     displayData.forEach((element: { value: any; cssClasses: any; icon: any; }) => {
                         this.displayedSecondaryData.push({
                             'value': element.value,
@@ -413,6 +412,9 @@ export class SearchAdministrationComponent implements OnInit {
             templateColumns: this.selectedTemplateDisplayedSecondaryData,
             subInfos: template
         };
+        this.selectedListEvent = JSON.parse(JSON.stringify({
+            'defaultTab' : this.selectedProcessTool.defaultTab
+        }));
         this.http.put('../rest/configurations/admin_search ', { 'listDisplay': objToSend, 'listEvent': this.selectedListEvent, 'list_event_data': this.selectedProcessTool })
             .subscribe(() => {
                 this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
@@ -423,8 +425,8 @@ export class SearchAdministrationComponent implements OnInit {
                 this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
                 this.selectedTemplateDisplayedSecondaryDataClone = JSON.parse(JSON.stringify(this.selectedTemplateDisplayedSecondaryData));
                 this.notify.success(this.translate.instant('lang.modificationsProcessed'));
+                console.log(this.selectedListEvent);
             }, (err) => {
-                console.log(this.displayedSecondaryData.length);
                 this.notify.error(err.error.errors);
             });
     }
