@@ -191,8 +191,6 @@ export class PluginSelectAutocompleteSearchComponent implements OnInit, OnDestro
                 // tap(() => this.loading = true),
                 switchMap((data: any) => this.getDatas(data)),
                 tap((data: any) => {
-                    console.log(data);
-
                     let selectedDatas = [];
                     let unselectedDatasSearch = [];
                     let selectedDatasId = [];

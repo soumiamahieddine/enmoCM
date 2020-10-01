@@ -389,6 +389,24 @@ export class IndexingFieldsService {
                             enabled: true,
                         });
                     });
+                    fields.push({
+                        identifier: `role_visa`,
+                        label: this.translate.instant('lang.visaUser'),
+                        icon: 'fa-user-check',
+                        type: 'select',
+                        default_value: null,
+                        values: [],
+                        enabled: true,
+                    });
+                    fields.push({
+                        identifier: `role_sign`,
+                        label: this.translate.instant('lang.signUser'),
+                        icon: 'fa-user-tie',
+                        type: 'select',
+                        default_value: null,
+                        values: [],
+                        enabled: true,
+                    });
                     this.roleFields = fields;
                 }),
                 finalize(() => resolve(this.roleFields)),
