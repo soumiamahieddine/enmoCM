@@ -2045,7 +2045,7 @@
     "infoImportregisteredMails" : "Les fichiers <b>sans en-tête</b> sont organisés en fonction des <b>positions des colonnes</b> du fichier.<br/>Les valeurs <b>par défaut</b> définies dans le <b>modèle d'enregistrement</b> sont prises en compte.",
     "searchInAttachmentsInfo" : "Indique que la recherche se fait sur les courriers et les pièces jointes.",
     "fulltext": "Plein texte",
-    "searchFulltextInfo" : "* : Pour effectuer une recherche avec joker sur plusieurs caractères (auto* trouve autoroute et automobile)<br>&nbsp;\" \" : Pour effectuer une recherche sur un groupe de mots (\"route nationale\" trouve l'expression entière route nationale)<br>&nbsp;~ : Pour effectuer une recherche approximative (vite~ trouve vote, vite)",
+    "searchFulltextInfo" : "\" \" : Pour effectuer une recherche sur un groupe de mots (\"route nationale\" trouve l'expression entière route nationale)<br>&nbsp;~ : Pour effectuer une recherche approximative (vite~ trouve vote, vite)",
     "criteriaOverQuickSearch" : "Les critères de recherche se cumulent sur la recherche rapide",
     "manualSearchInfo" : "Vous pouvez laisser le terme dans le champ sans sélectionner de valeur pour la recherche.",
     "groupSign" : "Groupe du signataire"

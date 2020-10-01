@@ -960,12 +960,16 @@ class SearchController
         ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
 
         if (!empty($args['body']['fulltext']['values'])) {
-            $query_fulltext = explode(" ", trim($args['body']['fulltext']['values']));
-            foreach ($query_fulltext as $value) {
-                if (strpos($value, "*") !== false && (strlen(substr($value, 0, strpos($value, "*"))) < 3 || preg_match("([,':!+])", $value) === 1)) {
-                    return null;
-                    break;
+            if (strpos($args['body']['fulltext']['values'], "'") === false && ($args['body']['fulltext']['values'][0] != '"' || $args['body']['fulltext']['values'][strlen($args['body']['fulltext']['values']) - 1] != '"')) {
+                $query_fulltext = explode(" ", trim($args['body']['fulltext']['values']));
+                foreach ($query_fulltext as $key => $value) {
+                    if (strpos($value, "*") !== false && (strlen(substr($value, 0, strpos($value, "*"))) < 4 || preg_match("([,':!+])", $value) === 1)) {
+                        return null;
+                        break;
+                    }
+                    $query_fulltext[$key] = $value . "*";
                 }
+                $args['body']['fulltext']['values'] = implode(" ", $query_fulltext);
             }
 
             \Zend_Search_Lucene_Analysis_Analyzer::setDefault(new \Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive());
