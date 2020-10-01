@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '../../../service/notification/notification.service';
@@ -10,6 +10,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { AppService } from '../../../service/app.service';
 import { HeaderService } from '../../../service/header.service';
 import { data } from 'jquery';
+import { CriteriaToolComponent } from '@appRoot/adv-search/criteria-tool/criteria-tool.component';
 
 declare var $: any;
 
@@ -242,6 +243,8 @@ export class SearchAdministrationComponent implements OnInit {
     selectedProcessToolClone: string = null;
 
     searchAdv: any = { listEvent: {}, listDisplay: {}, list_event_data: {} };
+
+    @ViewChild('appCriteriaTool', { static: true }) appCriteriaTool: CriteriaToolComponent;
 
     constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public appService: AppService, public headerService: HeaderService) { }
 

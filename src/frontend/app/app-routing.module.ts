@@ -29,10 +29,6 @@ const routes: Routes = [
         path: 'install',
         loadChildren: () => import('./installer/installer.module').then(m => m.InstallerModule)
     },
-    {
-        path: 'administration',
-        loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
-    },
     { path: 'signatureBook/users/:userId/groups/:groupId/baskets/:basketId/resources/:resId', canActivate: [AppGuard], component: SignatureBookComponent },
     { path: 'followed', canActivate: [AppGuard], component: FollowedDocumentListComponent },
     { path: 'saveNumericPackage', canActivate: [AppGuard], component: SaveNumericPackageComponent },

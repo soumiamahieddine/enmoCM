@@ -123,7 +123,12 @@ export class CriteriaToolComponent implements OnInit {
                     })
                 ).subscribe();
         }, 500);
-        this.getSearchTemplates();
+
+        if (!this.adminMode) {
+            this.getSearchTemplates();
+        } else {
+            this.toggleTool(true);
+        }
     }
 
     private _filter(value: string): string[] {

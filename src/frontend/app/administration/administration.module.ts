@@ -11,7 +11,6 @@ import { DocumentViewerModule } from '../viewer/document-viewer.module';
 
 import { AdministrationService } from './administration.service';
 
-
 import { AccountLinkComponent } from './user/account-link/account-link.component';
 import { ActionAdministrationComponent } from './action/action-administration.component';
 import { ActionsAdministrationComponent } from './action/actions-administration.component';
