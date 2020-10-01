@@ -1,6 +1,6 @@
 <form (ngSubmit)="getCurrentCriteriaValues()" #criteriaFormUp="ngForm">
     <mat-form-field *ngIf="!adminMode" floatLabel="never" class="basket-search">
-        <input class="metaSearch" type="text" matInput
+        <input class="metaSearch" type="text" matInput [formControl]="searchTermControl"
             [placeholder]="'lang.quickSearch' | translate">
         <button mat-icon-button matPrefix>
             <mat-icon class="fas fa-search"></mat-icon>
@@ -15,8 +15,8 @@
                         <button type="button" mat-icon-button [matMenuTriggerFor]="menu" (menuOpened)="focusFilter()" (click)="$event.stopPropagation()" [title]="'lang.displayCriteria' | translate">
                             <mat-icon class="fa fa-plus"></mat-icon>
                         </button>
-                        <mat-menu #menu="matMenu">
-                            <div class="menuTitle" style="position: sticky;top: 0px;background: white;z-index: 1;">
+                        <mat-menu #menu="matMenu" class="searchTemplateMenu">
+                            <div class="menuTitle" style="position: sticky;top: 0px;background: white;z-index: 1;display: flex;justify-content: center;">
                                 <mat-form-field floatLabel="never" appearance="outline" class="smallInput" (click)="$event.stopPropagation();" style="width: 220px !important; padding-top: 10px;">
                                     <input matInput id="searchTerm" #searchCriteriaInput [formControl]="getFilterControl()"  placeholder="{{'lang.filterBy' | translate}}"
                                         #listFilter autocomplete="off" (click)="$event.stopPropagation();"

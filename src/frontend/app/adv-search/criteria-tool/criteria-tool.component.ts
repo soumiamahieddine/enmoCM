@@ -155,7 +155,6 @@ export class CriteriaToolComponent implements OnInit {
         }
         this.initField(criteria);
         this.currentCriteria.push(criteria);
-        this.searchTermControl.setValue(this.searchTerm);
         if (this.adminMode) {
             criteria.control.disable();
         }
@@ -657,7 +656,6 @@ export class CriteriaToolComponent implements OnInit {
             if (index > -1) {
                 element.control = new FormControl({ value: searchTemplate.query[index].values, disabled: false });
                 element.control.value = searchTemplate.query[index].values;
-                console.log(element.control);
 
                 this.addCriteria(element, openPanel);
 
