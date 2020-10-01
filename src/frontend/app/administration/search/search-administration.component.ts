@@ -377,6 +377,7 @@ export class SearchAdministrationComponent implements OnInit {
                     const displayData = JSON.parse(JSON.stringify(subInfos));
                     this.selectedProcessTool.defaultTab = defaultTab;
                     this.selectedTemplateDisplayedSecondaryData = templateData.configuration.listDisplay.templateColumns;
+                    
                     displayData.forEach((element: { value: any; cssClasses: any; icon: any; }) => {
                         this.displayedSecondaryData.push({
                             'value': element.value,
