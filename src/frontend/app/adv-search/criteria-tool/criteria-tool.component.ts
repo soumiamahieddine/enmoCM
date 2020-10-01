@@ -94,7 +94,7 @@ export class CriteriaToolComponent implements OnInit {
     async ngOnInit(): Promise<void> {
         this.searchTermControl.setValue(this.searchTerm);
 
-        this.criteria = await this.indexingFields.getAllFields();
+        this.criteria = await this.indexingFields.getAllSearchFields();
 
         this.criteria.forEach((element: any) => {
             if (this.defaultCriteria.indexOf(element.identifier) > -1) {
