@@ -282,9 +282,8 @@ export class SearchAdministrationComponent implements OnInit {
     initCustomFields() {
         return new Promise((resolve, reject) => {
             this.http.get('../rest/customFields').pipe(
-                // tslint:disable-next-line: no-shadowed-variable
-                map((data: any) => {
-                    data.customFields = data.customFields.map((info: any) => {
+                map((CustomData: any) => {
+                    CustomData.customFields = CustomData.customFields.map((info: any) => {
                         return {
                             'value': 'indexingCustomField_' + info.id,
                             'label': info.label,
@@ -293,7 +292,7 @@ export class SearchAdministrationComponent implements OnInit {
                             'icon': 'fa-hashtag'
                         };
                     });
-                    return data.customFields;
+                    return CustomData.customFields;
                 }),
                 tap((customs) => {
                     // console.log(customs);
@@ -348,10 +347,8 @@ export class SearchAdministrationComponent implements OnInit {
         this.dataControl.setValue('');
     }
 
-
-    // tslint:disable-next-line: no-shadowed-variable
-    removeData(data: any, i: number) {
-        this.availableData.push(data);
+    removeData(rmData: any, i: number) {
+        this.availableData.push(rmData);
         this.displayedSecondaryData.splice(i, 1);
         this.dataControl.setValue('');
     }
@@ -375,13 +372,14 @@ export class SearchAdministrationComponent implements OnInit {
                     const defaultTab = templateData.configuration.listEvent.defaultTab;
                     const subInfos = templateData.configuration.listDisplay.subInfos;
                     const displayData = JSON.parse(JSON.stringify(subInfos));
-                    this.selectedProcessTool.defaultTab = defaultTab;
                     this.selectedTemplateDisplayedSecondaryData = templateData.configuration.listDisplay.templateColumns;
+                    this.selectedProcessTool.defaultTab = defaultTab;
                     displayData.forEach((element: { value: any; cssClasses: any; icon: any; }) => {
+                        const sampleValue = this.availableData.filter((t: { value: any; }) => t.value === element.value)[0].sample;
                         this.displayedSecondaryData.push({
                             'value': element.value,
                             'label': this.translate.instant('lang.' + element.value),
-                            'sample': this.translate.instant('lang.' + element.value),
+                            'sample': sampleValue,
                             'cssClasses': element.cssClasses,
                             'icon': element.icon
                         });
@@ -425,7 +423,6 @@ export class SearchAdministrationComponent implements OnInit {
                 this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
                 this.selectedTemplateDisplayedSecondaryDataClone = JSON.parse(JSON.stringify(this.selectedTemplateDisplayedSecondaryData));
                 this.notify.success(this.translate.instant('lang.modificationsProcessed'));
-                console.log(this.selectedListEvent);
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
