@@ -285,7 +285,66 @@ export class IndexingFieldsService {
             values: [],
             enabled: true,
             indexingHide: true
-        }
+        },
+        {
+            identifier: 'closingDate',
+            label: this.translate.instant('lang.closingDate'),
+            icon: 'fa-stopwatch',
+            type: 'date',
+            default_value: [],
+            values: [],
+            enabled: true
+        },
+        {
+            identifier: 'notes',
+            label: this.translate.instant('lang.note'),
+            icon: 'fa-comments',
+            type: 'string',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        },
+        {
+            identifier: 'barcode',
+            label: this.translate.instant('lang.barcode'),
+            icon: 'fa-barcode',
+            type: 'string',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        },
+        {
+            identifier: 'attachment_type',
+            label: this.translate.instant('lang.attachmentType'),
+            icon: 'fa-paperclip',
+            type: 'select',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        },
+        {
+            identifier: 'attachment_departureDate',
+            label: `${this.translate.instant('lang.departureDate')} (PJ)`,
+            icon: 'fa-calendar-check',
+            type: 'select',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        },
+        {
+            identifier: 'groupSign',
+            label: this.translate.instant('lang.groupSign'),
+            icon: 'fa-user-friends',
+            type: 'select',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        },
     ];
 
     customFields: any[] = [];

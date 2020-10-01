@@ -20,12 +20,13 @@ import { PluginSelectAutocompleteSearchComponent } from '@plugins/select-autocom
 import { FolderInputComponent } from '@appRoot/folder/indexing/folder-input.component';
 import { TagInputComponent } from '@appRoot/tag/indexing/tag-input.component';
 import { IssuingSiteInputComponent } from '@appRoot/administration/registered-mail/issuing-site/indexing/issuing-site-input.component';
+import { SortPipe } from '@plugins/sorting.pipe';
 
 @Component({
     selector: 'app-criteria-tool',
     templateUrl: 'criteria-tool.component.html',
     styleUrls: ['criteria-tool.component.scss', '../../indexation/indexing-form/indexing-form.component.scss'],
-    providers: [DatePipe]
+    providers: [DatePipe, SortPipe]
 })
 export class CriteriaToolComponent implements OnInit {
 
@@ -39,8 +40,6 @@ export class CriteriaToolComponent implements OnInit {
 
     searchTermControl = new FormControl();
     searchCriteria = new FormControl();
-
-    hideCriteriaList: boolean = true;
 
     infoFields: any = [
         {
@@ -84,7 +83,8 @@ export class CriteriaToolComponent implements OnInit {
         private dialog: MatDialog,
         private notify: NotificationService,
         private datePipe: DatePipe,
-        private latinisePipe: LatinisePipe) {
+        private latinisePipe: LatinisePipe,
+        private sortPipe: SortPipe) {
         _activatedRoute.queryParams.subscribe(
             params => {
                 this.searchTerm = params.value;
@@ -446,6 +446,48 @@ export class CriteriaToolComponent implements OnInit {
                             label: val.label
                         };
                     });
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    set_attachment_type_field(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get('../rest/attachmentsTypes').pipe(
+                tap((data: any) => {
+                    Object.keys(data.attachmentsTypes).forEach(templateType => {
+                        elem.values.push({
+                            id: templateType,
+                            label: data.attachmentsTypes[templateType].label
+                        });
+                    });
+                    elem.values = this.sortPipe.transform(elem.values, 'label');
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    set_groupSign_field(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get('../rest/groups').pipe(
+                tap((data: any) => {
+                    elem.values = data.groups.map((group: any) => {
+                        return {
+                            id: group.id,
+                            label: group.group_desc
+                        };
+                    });
+                    elem.values = this.sortPipe.transform(elem.values, 'label');
                     resolve(true);
                 }),
                 catchError((err: any) => {
