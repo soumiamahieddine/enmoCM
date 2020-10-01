@@ -80,6 +80,7 @@ import { InternationalizationModule } from '../service/translate/internationaliz
 import { TranslateService } from '@ngx-translate/core';
 
 import { RegisteredMailImportComponent } from '@appRoot/registeredMail/import/registered-mail-import.component';
+import { CriteriaToolComponent } from '@appRoot/adv-search/criteria-tool/criteria-tool.component';
 
 
 @NgModule({
@@ -137,6 +138,7 @@ import { RegisteredMailImportComponent } from '@appRoot/registeredMail/import/re
         LinkedResourceListComponent,
         NotesListComponent,
         NoteEditorComponent,
+        CriteriaToolComponent
 
     ],
     exports: [
@@ -186,6 +188,7 @@ import { RegisteredMailImportComponent } from '@appRoot/registeredMail/import/re
         FolderInputComponent,
         IssuingSiteInputComponent,
         RegisteredMailRecipientInputComponent,
+        CriteriaToolComponent
     ],
     providers: [],
     entryComponents: [

@@ -3,6 +3,8 @@ import { NgModule, Injectable } from '@angular/core';
 import { SharedModule } from './app-common.module';
 import { AppRoutingModule } from './app-routing.module';
 
+import { AdministrationModule } from './administration/administration.module';
+
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -22,8 +24,6 @@ import { PrivilegeService } from '../service/privileges.service';
 import { ActionsService } from './actions/actions.service';
 
 import { AppComponent } from './app.component';
-
-import { CriteriaToolComponent } from './adv-search/criteria-tool/criteria-tool.component';
 
 // ACTIONS
 import { SearchAdvListComponent } from './adv-search/list/search-adv-list.component';
@@ -138,6 +138,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         JoyrideModule.forRoot(),
         SharedModule,
         AppRoutingModule,
+        AdministrationModule,
         DocumentViewerModule,
         AppListModule,
     ],
@@ -193,7 +194,6 @@ export class MyHammerConfig extends HammerGestureConfig {
         DevLangComponent,
         DevToolComponent,
         AcknowledgementReceptionComponent,
-        CriteriaToolComponent,
         SearchAdvListComponent,
         ConfirmActionComponent,
         ResMarkAsReadActionComponent,

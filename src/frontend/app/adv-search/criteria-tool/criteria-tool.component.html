@@ -1,12 +1,12 @@
 <form (ngSubmit)="getCurrentCriteriaValues()" #criteriaFormUp="ngForm">
-    <mat-form-field floatLabel="never" class="basket-search">
+    <mat-form-field *ngIf="!adminMode" floatLabel="never" class="basket-search">
         <input class="metaSearch" type="text" matInput
             [placeholder]="'lang.quickSearch' | translate">
         <button mat-icon-button matPrefix>
             <mat-icon class="fas fa-search"></mat-icon>
         </button>
     </mat-form-field>
-    <mat-accordion class="criteria-container">
+    <mat-accordion [class.criteria-container]="!adminMode" [class.criteria-container-admin]="adminMode">
         <mat-expansion-panel expanded #criteriaTool [expanded]="false" togglePosition="before">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -24,7 +24,7 @@
                                 </mat-form-field>
                             </div>
                         <button mat-menu-item *ngIf="(getFilteredCriterias() | async)?.length===0" disabled>{{'lang.noResult' | translate}}</button>
-                        <button mat-menu-item *ngFor="let item of getFilteredCriterias()  | async | sortBy : 'label'" (click)="addCriteria(item)" [disabled]="isCurrentCriteriaById(item.identifier)">
+                        <button mat-menu-item *ngFor="let item of getFilteredCriterias()  | async | sortBy : 'label'" (click)="addCriteria(item);$event.stopPropagation()" [disabled]="isCurrentCriteriaById(item.identifier)">
                             <i class="fa {{item.icon}}" color="primary"
                             style="font-size:14px;width:50px;text-align:center;"></i> {{item.label}}
                         </button>
@@ -33,7 +33,7 @@
                     <span style="background: white;height: 1px;flex: 1;margin-left: 10px;"></span>
                 </mat-panel-title>
                 <mat-panel-description class="myCriterias" (click)="$event.stopPropagation()">
-                    <button type="button" mat-button class="button-form-primary"
+                    <button type="button" *ngIf="!adminMode" mat-button class="button-form-primary"
                         style="width: auto; height: 24px; line-height: 0px;" [matMenuTriggerFor]="IndexingModelsMenu">
                         {{'lang.mySearchTemplates' | translate}}&nbsp;
                         <i class="fa fa-chevron-down" style="margin: 0 0 0 10px;"></i>
@@ -143,10 +143,10 @@
                                 style="cursor:pointer;">
                                 <mat-date-range-input [rangePicker]="picker">
                                     <input matStartDate [placeholder]="'lang.start' | translate"
-                                        [value]="field.control.value.start"
+                                        [value]="field.control.value.start" [disabled]="field.control.disabled"
                                         (dateChange)="field.control.value.start=$event.value">
                                     <input matEndDate [placeholder]="'lang.end' | translate"
-                                        [value]="field.control.value.end"
+                                        [value]="field.control.value.end" [disabled]="field.control.disabled"
                                         (dateChange)="field.control.value.end=$event.value">
                                 </mat-date-range-input>
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -215,7 +215,7 @@
             </ng-template>
         </mat-expansion-panel>
     </mat-accordion>
-    <div class="col-md-12" style="text-align: center;">
+    <div *ngIf="!adminMode" class="col-md-12" style="text-align: center;">
         <button mat-raised-button matSuffix color="default" type="submit">
             {{'lang.searchMails' | translate}}
         </button>
