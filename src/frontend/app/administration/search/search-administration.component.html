@@ -19,7 +19,6 @@
                         <div class="formType-title">
                             {{'lang.tabProcessPosition' | translate}}
                         </div>
-                        <!--<mat-label>{{'lang.tabProcessPosition' | translate}}</mat-label>-->
                         <mat-select [(ngModel)]="selectedProcessTool.defaultTab">
                             <mat-option *ngFor="let tool of processTool | sortBy: 'label'" [value]="tool.id">
                                 <span class="optionContent">
