@@ -376,9 +376,11 @@ export class SearchAdministrationComponent implements OnInit {
                     this.selectedProcessTool.defaultTab = defaultTab;
                     displayData.forEach((element: { value: any; cssClasses: any; icon: any; }) => {
                         const sampleValue = this.availableData.filter((t: { value: any; }) => t.value === element.value)[0].sample;
+                        const label = this.availableData.filter((t: { value: any; }) => t.value === element.value)[0].label;
+                        console.log(this.availableData.filter((t: { value: any; }) => t.value === element.value));
                         this.displayedSecondaryData.push({
                             'value': element.value,
-                            'label': this.translate.instant('lang.' + element.value),
+                            'label': label,
                             'sample': sampleValue,
                             'cssClasses': element.cssClasses,
                             'icon': element.icon
