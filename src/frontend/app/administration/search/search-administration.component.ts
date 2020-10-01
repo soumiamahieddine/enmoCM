@@ -383,7 +383,7 @@ export class SearchAdministrationComponent implements OnInit {
                         this.displayedSecondaryData.push({
                             'value': element.value,
                             'label': this.translate.instant('lang.' + element.value),
-                            'sample': this.translate.instant('lang.' + element.value + 'Sample'),
+                            'sample': this.translate.instant('lang.' + element.value),
                             'cssClasses': element.cssClasses,
                             'icon': element.icon
                         });
