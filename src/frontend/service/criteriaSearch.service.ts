@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { FunctionsService } from './functions.service';
 
 interface ListProperties {
     'page': number;
@@ -21,7 +22,9 @@ export class CriteriaSearchService {
         filters: []
     };
 
-    constructor() { }
+    constructor(
+        public functions: FunctionsService
+    ) { }
 
     initListsProperties(userId: number) {
 
@@ -62,4 +65,21 @@ export class CriteriaSearchService {
         return this.listsProperties.criteria;
     }
 
+    formatDatas(data: any) {
+        console.log(data);
+
+        Object.keys(data).forEach(key => {
+            if (['folders', 'tags'].indexOf(key) > -1 || ['select', 'radio', 'checkbox'].indexOf(data[key].type) > -1) {
+                data[key].values = data[key].values.map((val: any) => val.id);
+            } else if (data[key].type === 'date') {
+                data[key].values.start = this.functions.formatSerializedDateToDateString(data[key].values.start);
+                data[key].values.end = this.functions.formatSerializedDateToDateString(data[key].values.end);
+            }
+            console.log(data[key].values);
+            // delete data[key].type;
+            /*data[key].values = data[key].values.map((item: any) => item.id);*/
+        });
+
+        return data;
+    }
 }

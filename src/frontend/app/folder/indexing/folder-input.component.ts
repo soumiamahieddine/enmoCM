@@ -44,6 +44,8 @@ export class FolderInputComponent implements OnInit {
      */
     @Input('control') controlAutocomplete: FormControl;
 
+    @Input() returnValue: 'id' | 'object' = 'id';
+
     @ViewChild('autoCompleteInput', { static: true }) autoCompleteInput: ElementRef;
 
     constructor(
@@ -89,7 +91,7 @@ export class FolderInputComponent implements OnInit {
     }
 
     getDatas(data: string) {
-        return this.http.get('../rest/autocomplete/folders', { params: { "search": data } });
+        return this.http.get('../rest/autocomplete/folders', { params: { 'search': data } });
     }
 
     selectOpt(ev: any) {
@@ -117,7 +119,14 @@ export class FolderInputComponent implements OnInit {
             if (this.controlAutocomplete.value !== null) {
                 arrvalue = this.controlAutocomplete.value;
             }
-            arrvalue.push(item['id']);
+            if (this.returnValue === 'id') {
+                arrvalue.push(item['id']);
+            } else {
+                arrvalue.push({
+                    id: item['id'],
+                    label: item['idToDisplay']
+                });
+            }
             this.valuesToDisplay[item['id']] = item[this.key];
             this.controlAutocomplete.setValue(arrvalue);
         }
@@ -185,7 +194,7 @@ export class FolderInputComponent implements OnInit {
         ).subscribe();
     }
 
-    getFolderLabel(id: string) {
-        return this.valuesToDisplay[id];
+    getFolderLabel(data: any) {
+        return this.returnValue === 'id' ? this.valuesToDisplay[data] : this.valuesToDisplay[data.id];
     }
 }

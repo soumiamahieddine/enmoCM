@@ -115,7 +115,7 @@
                                 </div>
                             </mat-form-field>
                         </ng-container>
-                        <ng-container *ngIf="['select', 'radio', 'checkbox'].indexOf(field.type) > -1">
+                        <ng-container *ngIf="['select', 'radio', 'checkbox'].indexOf(field.type) > -1 || ['registeredMail_issuingSite'].indexOf(field.identifier) > -1">
                             <span class="criteria-label">
                                 <i class="fa {{field.icon}}"></i> {{field.label}}<ng-container *ngFor="let num of getBadgesInfoField(field)">
                                     <sup color="primary" class="searchInAttachments">({{num}})</sup>
@@ -123,7 +123,7 @@
                             </span>
                             <plugin-select-search [id]="field.identifier" [showResetOption]="true" [label]="field.label"
                                 [placeholderLabel]="'lang.chooseValue' | translate" [formControlSelect]="field.control"
-                                [datas]="field.values" [multiple]="true" style="width:100%;">
+                                [datas]="field.values" [returnValue]="'object'" [multiple]="true" style="width:100%;">
                             </plugin-select-search>
                         </ng-container>
                         <ng-container *ngIf="['selectAutocomplete'].indexOf(field.type) > -1">
@@ -136,7 +136,7 @@
                             <plugin-select-autocomplete-search #pluginSelectAutocompleteSearch [id]="field.identifier"
                                 [showResetOption]="true" [label]="field.label"
                                 [placeholderLabel]="'lang.chooseValue' | translate" [formControlSelect]="field.control"
-                                [datas]="field.values" [routeDatas]="field.routeDatas" [multiple]="true"
+                                [datas]="field.values" [routeDatas]="field.routeDatas" [extraModel]="['type']" [multiple]="true" [returnValue]="field.returnValue"
                                 style="width:100%;">
                             </plugin-select-autocomplete-search>
                         </ng-container>
@@ -170,7 +170,7 @@
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
                             <app-contact-autocomplete #appContactAutocomplete [id]="field.identifier"
-                                [control]="field.control" style="width:100%;">
+                                [control]="field.control" style="width:100%;" [exclusion]="field.identifier === 'registeredMail_recipient' ? '?noUsers=true&noEntities=true&noContactsGroups=true' : ''">
                             </app-contact-autocomplete>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'folders'">
@@ -180,7 +180,7 @@
                                     <sup color="primary" class="searchInAttachments">({{num}})</sup>
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
-                            <app-folder-input #appFolderInput [control]="field.control" style="width:100%;">
+                            <app-folder-input #appFolderInput [control]="field.control" [returnValue]="'object'" style="width:100%;">
                             </app-folder-input>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'tags'">
@@ -190,7 +190,7 @@
                                     <sup color="primary" class="searchInAttachments">({{num}})</sup>
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
-                            <app-tag-input #appTagInput [control]="field.control" style="width:100%;">
+                            <app-tag-input #appTagInput [control]="field.control" [returnValue]="'object'" style="width:100%;">
                             </app-tag-input>
                         </ng-container>
                         <ng-container *ngIf="field.type === 'banAutocomplete'">
@@ -203,7 +203,7 @@
                             <app-address-ban-input [control]="field.control" style="width:100%;">
                             </app-address-ban-input>
                         </ng-container>
-                        <ng-container *ngIf="field.identifier === 'registeredMail_issuingSite'">
+                        <!--<ng-container *ngIf="field.identifier === 'registeredMail_issuingSite'">
                             <span class="criteria-label">
                                 <i class="fa {{field.icon}}"></i> {{field.label}}
                                 <ng-container *ngFor="let num of getBadgesInfoField(field)">
@@ -224,7 +224,7 @@
                                 [control]="field.control"
                                 [exclusion]="'?noUsers=true&noEntities=true&noContactsGroups=true'" style="width:100%;">
                             </app-contact-autocomplete>
-                        </ng-container>
+                        </ng-container>-->
                         <button mat-icon-button type="button" matSuffix color="warn"
                             (click)="$event.stopPropagation();removeCriteria(i)">
                             <mat-icon class="fa fa-trash"></mat-icon>

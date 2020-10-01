@@ -510,7 +510,6 @@ export class ResultListHttpDao {
         this.criteriaSearchService.updateListsPropertiesCriteria(criteria);
         const offset = page * pageSize;
         const requestUrl = `${href}?limit=${pageSize}&offset=${offset}&order=${filters.order} ${filters.orderDir}`;
-        // console.log(criteria);
-        return this.http.post<BasketList>(requestUrl, criteria);
+        return this.http.post<BasketList>(requestUrl, this.criteriaSearchService.formatDatas(JSON.parse(JSON.stringify(criteria))));
     }
 }

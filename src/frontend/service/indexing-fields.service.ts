@@ -249,7 +249,7 @@ export class IndexingFieldsService {
             identifier: 'registeredMail_recipient',
             label: this.translate.instant('lang.registeredMailRecipient'),
             icon: 'fa-address-book',
-            type: 'registeredMailRecipient',
+            type: 'contact',
             default_value: null,
             values: [],
             enabled: true,

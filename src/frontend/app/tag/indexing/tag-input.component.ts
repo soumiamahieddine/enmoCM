@@ -48,6 +48,8 @@ export class TagInputComponent implements OnInit {
      */
     @Input('control') controlAutocomplete: FormControl;
 
+    @Input() returnValue: 'id' | 'object' = 'id';
+
     @ViewChild('autoCompleteInput', { static: true }) autoCompleteInput: ElementRef;
 
     constructor(
@@ -116,12 +118,20 @@ export class TagInputComponent implements OnInit {
     }
 
     setFormValue(item: any) {
-        if (this.controlAutocomplete.value.indexOf(item['id']) === -1) {
+        const isSelected = this.returnValue === 'id' ? this.controlAutocomplete.value.indexOf(item['id']) > -1 : this.controlAutocomplete.value.map((val: any) => val.id).indexOf(item['id']) > -1;
+        if (!isSelected) {
             let arrvalue = [];
             if (this.controlAutocomplete.value !== null) {
                 arrvalue = this.controlAutocomplete.value;
             }
-            arrvalue.push(item['id']);
+            if (this.returnValue === 'id') {
+                arrvalue.push(item['id']);
+            } else {
+                arrvalue.push({
+                    id: item['id'],
+                    label: item['idToDisplay']
+                });
+            }
             this.valuesToDisplay[item['id']] = item[this.key];
             this.controlAutocomplete.setValue(arrvalue);
         }
@@ -217,7 +227,7 @@ export class TagInputComponent implements OnInit {
         ).subscribe();
     }
 
-    getTagLabel(id: string) {
-        return this.valuesToDisplay[id];
+    getTagLabel(data: any) {
+        return this.returnValue === 'id' ? this.valuesToDisplay[data] : this.valuesToDisplay[data.id];
     }
 }
