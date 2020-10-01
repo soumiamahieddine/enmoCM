@@ -59,6 +59,7 @@ export class CriteriaToolComponent implements OnInit {
 
     @Input() searchTerm: string = 'Foo';
     @Input() defaultCriteria: any = [];
+    @Input() adminMode: boolean = false;
 
     @Output() searchUrlGenerated = new EventEmitter<any>();
     @Output() loaded = new EventEmitter<any>();
@@ -150,6 +151,9 @@ export class CriteriaToolComponent implements OnInit {
         this.initField(criteria);
         this.currentCriteria.push(criteria);
         this.searchTermControl.setValue(this.searchTerm);
+        if (this.adminMode) {
+            criteria.control.disable();
+        }
         this.searchCriteria.reset();
         // this.searchCriteriaInput.nativeElement.blur();
         if (openPanel) {
@@ -193,7 +197,6 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     focusFilter() {
-        this.hideCriteriaList = false;
         setTimeout(() => {
             this.searchCriteriaInput.nativeElement.focus();
         }, 100);
