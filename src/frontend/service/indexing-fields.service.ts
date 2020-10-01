@@ -299,7 +299,7 @@ export class IndexingFieldsService {
         public functions: FunctionsService) { }
 
     getCoreFields(exclude: string = '') {
-        return exclude === '' ? this.coreFields : this.coreFields.filter((field: any) => field[exclude]);
+        return exclude === '' ? this.coreFields : this.coreFields.filter((field: any) => !field[exclude]);
     }
 
     getFields(exclude: string = '') {
