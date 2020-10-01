@@ -208,6 +208,7 @@ export class IndexingFieldsService {
             default_value: null,
             values: [{ 'id': '2D', 'label': this.translate.instant('lang.registeredMail_2D') }, { 'id': '2C', 'label': this.translate.instant('lang.registeredMail_2C') }, { 'id': 'RW', 'label': this.translate.instant('lang.registeredMail_RW') }],
             enabled: true,
+            searchHide: true
         },
         {
             identifier: 'registeredMail_issuingSite',
@@ -226,6 +227,7 @@ export class IndexingFieldsService {
             default_value: null,
             values: [],
             enabled: false,
+            searchHide: true
         },
         {
             identifier: 'registeredMail_warranty',
@@ -235,6 +237,7 @@ export class IndexingFieldsService {
             default_value: null,
             values: [{ 'id': 'R1', 'label': 'R1' }, { 'id': 'R2', 'label': 'R2' }, { 'id': 'R3', 'label': 'R3' }],
             enabled: true,
+            searchHide: true
         },
         {
             identifier: 'registeredMail_letter',
@@ -244,6 +247,7 @@ export class IndexingFieldsService {
             default_value: null,
             values: [{ 'id': true, 'label': this.translate.instant('lang.yes') }, { 'id': false, 'label': this.translate.instant('lang.no') }],
             enabled: true,
+            searchHide: true
         },
         {
             identifier: 'registeredMail_recipient',
@@ -294,12 +298,12 @@ export class IndexingFieldsService {
         private notify: NotificationService,
         public functions: FunctionsService) { }
 
-    getCoreFields() {
-        return this.coreFields;
+    getCoreFields(exclude: string = '') {
+        return exclude === '' ? this.coreFields : this.coreFields.filter((field: any) => field[exclude]);
     }
 
-    getFields() {
-        return this.fields;
+    getFields(exclude: string = '') {
+        return exclude === '' ? this.fields : this.fields.filter((field: any) => !field[exclude]);
     }
 
     getCustomFields() {
@@ -352,6 +356,17 @@ export class IndexingFieldsService {
         const roleFields = await this.getRolesFields();
 
         let mergedFields = this.getCoreFields().concat(this.getFields());
+        mergedFields = mergedFields.concat(customFields);
+        mergedFields = mergedFields.concat(roleFields);
+
+        return mergedFields;
+    }
+
+    async getAllSearchFields() {
+        const customFields = await this.getCustomFields();
+        const roleFields = await this.getRolesFields();
+
+        let mergedFields = this.getCoreFields('searchHide').concat(this.getFields('searchHide'));
         mergedFields = mergedFields.concat(customFields);
         mergedFields = mergedFields.concat(roleFields);
 
