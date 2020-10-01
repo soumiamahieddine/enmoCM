@@ -241,7 +241,7 @@ export class SearchAdministrationComponent implements OnInit {
     };
     selectedProcessToolClone: string = null;
 
-    searchAdv: any = { listEvent: {}, listDisplay: {}, listEvent_data: {} };
+    searchAdv: any = { listEvent: {}, listDisplay: {}, list_event_data: {} };
 
     constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public appService: AppService, public headerService: HeaderService) { }
 
@@ -375,8 +375,10 @@ export class SearchAdministrationComponent implements OnInit {
                     const defaultTab = templateData.configuration.listEvent.defaultTab;
                     const subInfos = templateData.configuration.listDisplay.subInfos;
                     const displayData = JSON.parse(JSON.stringify(subInfos));
+
                     this.selectedProcessTool.defaultTab = defaultTab;
                     this.selectedTemplateDisplayedSecondaryData = templateData.configuration.listDisplay.templateColumns;
+
                     displayData.forEach((element: { value: any; cssClasses: any; icon: any; }) => {
                         this.displayedSecondaryData.push({
                             'value': element.value,
