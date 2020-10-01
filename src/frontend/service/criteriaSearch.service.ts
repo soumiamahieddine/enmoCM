@@ -17,7 +17,7 @@ export class CriteriaSearchService {
     listsProperties: ListProperties = {
         page : 0,
         pageSize : 0,
-        order: 'creation_date',
+        order: 'creationDate',
         orderDir: 'DESC',
         criteria: [],
         filters: []
