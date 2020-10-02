@@ -17,7 +17,7 @@
             </div>
             <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
                 <app-criteria-tool #appCriteriaTool (searchUrlGenerated)="launchSearch($event)"
-                    [defaultCriteria]="['doctype','subject']" style="width:100%;" (loaded)="initSavedCriteria()"></app-criteria-tool>
+                    [defaultCriteria]="['doctype','subject']" style="width:100%;padding-bottom: 10px;" (loaded)="initSavedCriteria()"></app-criteria-tool>
                 <div *ngIf="initSearch" class="filtersContent">
                     <div style="flex: 1"></div>
                     <div class="orderTool">
@@ -130,10 +130,10 @@
                                             [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']"
                                             style="margin-bottom: 5px;"></mat-icon>
                                     </button>
-                                    <span *ngIf="!appService.getViewMode()" style="cursor:pointer;"
+                                    <span style="cursor:pointer;"
                                         class="main-info-status" (click)="launch(row);">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
-                                            [ngStyle]="{'color': row.priorityColor}" color="primary"
+                                            [ngStyle]="{'color': row.priorityColor}" style="width: 100%;" color="primary"
                                             class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
                                         </mat-icon>
                                         <span *ngIf="row.confidentiality === 'Y'"
@@ -181,7 +181,7 @@
                                                 [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
                                             </mat-icon>
                                         </button>
-                                        <button mat-icon-button
+                                        <button mat-icon-button *ngIf="!appService.getViewMode()"
                                             title="{{row.hasDocument ? this.translate.instant('lang.viewResource') : this.translate.instant('lang.noDocument')}}"
                                             (click)="$event.stopPropagation();viewDocument(row)"
                                             (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
@@ -190,7 +190,7 @@
                                                 [ngClass]="[row.hasDocument ? 'fa-eye' : 'fa-eye-slash']">
                                             </mat-icon>
                                         </button>
-                                        <button mat-icon-button title="{{'lang.linkDetails' | translate}}"
+                                        <button mat-icon-button *ngIf="!appService.getViewMode()" title="{{'lang.linkDetails' | translate}}"
                                             (click)="$event.stopPropagation();goToDetail(row);">
                                             <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
                                         </button>

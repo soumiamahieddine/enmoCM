@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, OnDestroy, TemplateRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from '../../service/notification/notification.service';
+import { NotificationService } from '@service/notification/notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -9,22 +9,18 @@ import { MatSort } from '@angular/material/sort';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { startWith, switchMap, map, catchError, takeUntil, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HeaderService } from '../../service/header.service';
+import { HeaderService } from '@service/header.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { PanelListComponent } from '../list/panel/panel-list.component';
-import { AppService } from '../../service/app.service';
+import { AppService } from '@service/app.service';
 import { BasketHomeComponent } from '../basket/basket-home.component';
 import { FolderActionListComponent } from '../folder/folder-action-list/folder-action-list.component';
 import { FoldersService } from '../folder/folders.service';
-import { FunctionsService } from '../../service/functions.service';
-import { Subject } from 'rxjs/internal/Subject';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { of } from 'rxjs/internal/observable/of';
-import { Observable } from 'rxjs/internal/Observable';
+import { FunctionsService } from '@service/functions.service';
+import { of, merge, Subject, Subscription, Observable } from 'rxjs';
 import { CriteriaToolComponent } from './criteria-tool/criteria-tool.component';
 import { IndexingFieldsService } from '@service/indexing-fields.service';
 import { CriteriaSearchService } from '@service/criteriaSearch.service';
-import { merge } from 'rxjs';
 
 declare var $: any;
 
@@ -143,8 +139,8 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
                     this.searchTerm = params.value;
                     this.initSearch = true;
                     this.criteria = {
-                        meta : {
-                            values : this.searchTerm
+                        meta: {
+                            values: this.searchTerm
                         }
                     };
                 }
@@ -167,7 +163,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
 
     initSavedCriteria() {
         if (Object.keys(this.listProperties.criteria).length > 0) {
-            const obj = {query: []};
+            const obj = { query: [] };
             Object.keys(this.listProperties.criteria).forEach(key => {
                 const objectItem = {};
                 objectItem['identifier'] = key;
@@ -177,7 +173,7 @@ export class AdvSearchComponent implements OnInit, OnDestroy {
             this.appCriteriaTool.selectSearchTemplate(obj, false);
             this.criteria = this.listProperties.criteria;
             this.initResultList();
-        } else if (this.initSearch) {
+        } else if (this.initSearch) {
             this.initResultList();
         } else {
             this.appCriteriaTool.toggleTool(true);

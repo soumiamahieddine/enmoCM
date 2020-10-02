@@ -1,7 +1,7 @@
 <form (ngSubmit)="getCurrentCriteriaValues()" #criteriaFormUp="ngForm">
     <mat-form-field *ngIf="!adminMode" floatLabel="never" class="basket-search">
         <input class="metaSearch" type="text" matInput [formControl]="searchTermControl"
-            [placeholder]="'lang.quickSearch' | translate">
+            [placeholder]="'lang.quickSearchTarget' | translate">
         <button mat-icon-button matPrefix>
             <mat-icon class="fas fa-search"></mat-icon>
         </button>
@@ -12,22 +12,34 @@
                 <mat-panel-title>
                     <span>
                         {{'lang.criteriaSearch' | translate}}
-                        <button type="button" mat-icon-button [matMenuTriggerFor]="menu" (menuOpened)="focusFilter()" (click)="$event.stopPropagation()" [title]="'lang.displayCriteria' | translate">
+                        <button type="button" mat-icon-button [matMenuTriggerFor]="menu" (menuOpened)="focusFilter()"
+                            (click)="$event.stopPropagation()" [title]="'lang.displayCriteria' | translate">
                             <mat-icon class="fa fa-plus"></mat-icon>
                         </button>
                         <mat-menu #menu="matMenu" class="searchTemplateMenu">
-                            <div class="menuTitle" style="position: sticky;top: 0px;background: white;z-index: 1;display: flex;justify-content: center;">
-                                <mat-form-field floatLabel="never" appearance="outline" class="smallInput" (click)="$event.stopPropagation();" style="width: 220px !important; padding-top: 10px;">
-                                    <input matInput id="searchTerm" #searchCriteriaInput [formControl]="getFilterControl()"  placeholder="{{'lang.filterBy' | translate}}"
+                            <div class="menuTitle"
+                                style="position: sticky;top: 0px;background: white;z-index: 1;display: flex;justify-content: center;">
+                                <span>
+                                    {{'lang.criteria' | translate}}
+                                </span>
+                                <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
+                                    (click)="$event.stopPropagation();"
+                                    style="width: 220px !important; padding-top: 10px;">
+                                    <input matInput id="searchTerm" #searchCriteriaInput
+                                        [formControl]="getFilterControl()" placeholder="{{'lang.filterBy' | translate}}"
                                         #listFilter autocomplete="off" (click)="$event.stopPropagation();"
                                         (keydown)="$event.stopPropagation()">
                                 </mat-form-field>
                             </div>
-                        <button mat-menu-item *ngIf="(getFilteredCriterias() | async)?.length===0" disabled>{{'lang.noResult' | translate}}</button>
-                        <button mat-menu-item *ngFor="let item of getFilteredCriterias()  | async | sortBy : 'label'" (click)="addCriteria(item);$event.stopPropagation()" [disabled]="isCurrentCriteriaById(item.identifier)">
-                            <i class="fa {{item.icon}}" color="primary"
-                            style="font-size:14px;width:50px;text-align:center;"></i> {{item.label}}
-                        </button>
+                            <button mat-menu-item *ngIf="(getFilteredCriterias() | async)?.length===0"
+                                disabled>{{'lang.noResult' | translate}}</button>
+                            <button mat-menu-item
+                                *ngFor="let item of getFilteredCriterias()  | async | sortBy : 'label'"
+                                (click)="addCriteria(item);$event.stopPropagation()"
+                                [disabled]="isCurrentCriteriaById(item.identifier)">
+                                <i class="fa {{item.icon}}" color="primary"
+                                    style="font-size:14px;width:50px;text-align:center;"></i> {{item.label}}
+                            </button>
                         </mat-menu>
                     </span>
                     <span style="background: white;height: 1px;flex: 1;margin-left: 10px;"></span>
@@ -75,8 +87,7 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <ng-container *ngIf="!loading; else loadingTemplate">
-                <div
-                    style="display: grid;align-items: start;grid-template-columns: repeat(2, 1fr);max-height: 300px;overflow: hidden;overflow-y: auto;">
+                <div [class.criteria-content]="!appService.getViewMode()" [class.criteria-content-mobile]="appService.getViewMode()">
                     <div style="display: grid;align-items: baseline;grid-template-columns: 35% 60% 5%;padding:5px;"
                         *ngFor="let field of currentCriteria;let i=index">
                         <ng-container *ngIf="field.type === 'string'">
@@ -99,21 +110,29 @@
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
                             <mat-form-field class="input-form" floatLabel="never">
-                                <div role="group" class="range-number-container" >
+                                <div role="group" class="range-number-container">
                                     <input matInput style="display: none;">
-                                    <input type="number" class="range-number-input-element" (input)="field.control.value.start = $event.target.value" [value]="field.control.value.start" [placeholder]="'lang.start' | translate" min="0" step="1">
+                                    <input type="number" class="range-number-input-element"
+                                        (input)="field.control.value.start = $event.target.value"
+                                        [value]="field.control.value.start" [placeholder]="'lang.start' | translate"
+                                        min="0" step="1">
                                     <span class="range-number-spacer">&ndash;</span>
-                                    <input type="number" class="range-number-input-element" (input)="field.control.value.end = $event.target.value" [value]="field.control.value.end" [placeholder]="'lang.end' | translate" min="0" step="1">
+                                    <input type="number" class="range-number-input-element"
+                                        (input)="field.control.value.end = $event.target.value"
+                                        [value]="field.control.value.end" [placeholder]="'lang.end' | translate" min="0"
+                                        step="1">
                                 </div>
                             </mat-form-field>
                         </ng-container>
-                        <ng-container *ngIf="['select', 'radio', 'checkbox'].indexOf(field.type) > -1 || ['registeredMail_issuingSite'].indexOf(field.identifier) > -1">
+                        <ng-container
+                            *ngIf="['select', 'radio', 'checkbox'].indexOf(field.type) > -1 || ['registeredMail_issuingSite'].indexOf(field.identifier) > -1">
                             <span class="criteria-label">
-                                <i class="fa {{field.icon}}"></i> {{field.label}}<ng-container *ngFor="let num of getBadgesInfoField(field)">
+                                <i class="fa {{field.icon}}"></i> {{field.label}}<ng-container
+                                    *ngFor="let num of getBadgesInfoField(field)">
                                     <sup color="primary" class="searchInAttachments">({{num}})</sup>
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
-                            <plugin-select-search [id]="field.identifier" [showResetOption]="true" [label]="field.label"
+                            <plugin-select-search [id]="field.identifier" [showResetOption]="true"
                                 [placeholderLabel]="'lang.chooseValue' | translate" [formControlSelect]="field.control"
                                 [datas]="field.values" [returnValue]="'object'" [multiple]="true" style="width:100%;">
                             </plugin-select-search>
@@ -126,10 +145,10 @@
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
                             <plugin-select-autocomplete-search #pluginSelectAutocompleteSearch [id]="field.identifier"
-                                [showResetOption]="true" [label]="field.label"
+                                [showResetOption]="true"
                                 [placeholderLabel]="'lang.chooseValue' | translate" [formControlSelect]="field.control"
-                                [datas]="field.values" [routeDatas]="field.routeDatas" [extraModel]="['type']" [multiple]="true" [returnValue]="field.returnValue"
-                                style="width:100%;">
+                                [datas]="field.values" [routeDatas]="field.routeDatas" [extraModel]="['type']"
+                                [multiple]="true" [returnValue]="field.returnValue" style="width:100%;">
                             </plugin-select-autocomplete-search>
                         </ng-container>
                         <ng-container *ngIf="field.type === 'date'">
@@ -162,7 +181,8 @@
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
                             <app-contact-autocomplete #appContactAutocomplete [id]="field.identifier"
-                                [control]="field.control" style="width:100%;" [exclusion]="field.identifier === 'registeredMail_recipient' ? '?noUsers=true&noEntities=true&noContactsGroups=true' : ''">
+                                [control]="field.control" style="width:100%;"
+                                [exclusion]="field.identifier === 'registeredMail_recipient' ? '?noUsers=true&noEntities=true&noContactsGroups=true' : ''">
                             </app-contact-autocomplete>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'folders'">
@@ -172,7 +192,8 @@
                                     <sup color="primary" class="searchInAttachments">({{num}})</sup>
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
-                            <app-folder-input #appFolderInput [control]="field.control" [returnValue]="'object'" style="width:100%;">
+                            <app-folder-input #appFolderInput [control]="field.control" [returnValue]="'object'"
+                                style="width:100%;">
                             </app-folder-input>
                         </ng-container>
                         <ng-container *ngIf="field.identifier === 'tags'">
@@ -182,7 +203,8 @@
                                     <sup color="primary" class="searchInAttachments">({{num}})</sup>
                                 </ng-container>&nbsp;:&nbsp;
                             </span>
-                            <app-tag-input #appTagInput [control]="field.control" [returnValue]="'object'" style="width:100%;">
+                            <app-tag-input #appTagInput [control]="field.control" [returnValue]="'object'"
+                                style="width:100%;">
                             </app-tag-input>
                         </ng-container>
                         <ng-container *ngIf="field.type === 'banAutocomplete'">
@@ -213,11 +235,11 @@
             <ng-template #loadingTemplate>
                 <mat-spinner class="loader"></mat-spinner>
             </ng-template>
+            <div *ngIf="!adminMode" class="col-md-12" style="text-align: center;">
+                <button mat-raised-button matSuffix color="primary" type="submit">
+                    <mat-icon class="fa fa-search" style="height: auto;font-size: 24px;"></mat-icon> {{'lang.searchMails' | translate}}
+                </button>
+            </div>
         </mat-expansion-panel>
     </mat-accordion>
-    <div *ngIf="!adminMode" class="col-md-12" style="text-align: center;">
-        <button mat-raised-button matSuffix color="default" type="submit">
-            {{'lang.searchMails' | translate}}
-        </button>
-    </div>
 </form>

@@ -12,9 +12,9 @@ import { take, takeUntil, startWith, map, tap } from 'rxjs/operators';
 import { Subject, ReplaySubject, Observable } from 'rxjs';
 import { LatinisePipe } from 'ngx-pipes';
 import { TranslateService } from '@ngx-translate/core';
-import { AppService } from '../../service/app.service';
+import { AppService } from '@service/app.service';
 import { SortPipe } from '../../plugins/sorting.pipe';
-import { FunctionsService } from '../../service/functions.service';
+import { FunctionsService } from '@service/functions.service';
 
 @Component({
     selector: 'plugin-select-search',

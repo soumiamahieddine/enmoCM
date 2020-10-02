@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
-import { AppGuard, AfterProcessGuard } from '../service/app.guard';
+import { AppGuard, AfterProcessGuard } from '@service/app.guard';
 
 import { ActivateUserComponent } from './activate-user.component';
 import { PasswordModificationComponent } from './login/passwordModification/password-modification.component';

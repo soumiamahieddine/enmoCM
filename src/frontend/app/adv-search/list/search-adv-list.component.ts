@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild, EventEmitter, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from '../../../service/notification/notification.service';
-import { HeaderService }        from '../../../service/header.service';
-import { AppService } from '../../../service/app.service';
+import { NotificationService } from '@service/notification/notification.service';
+import { HeaderService }        from '@service/header.service';
+import { AppService } from '@service/app.service';
 import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
-import { FunctionsService } from '../../../service/functions.service';
+import { FunctionsService } from '@service/functions.service';
 
 @Component({
     selector: 'search-adv-list',

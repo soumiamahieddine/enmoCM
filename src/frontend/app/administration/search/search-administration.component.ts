@@ -1,15 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from '../../../service/notification/notification.service';
+import { NotificationService } from '@service/notification/notification.service';
 import { FormControl } from '@angular/forms';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { startWith, map, tap, catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
-import { AppService } from '../../../service/app.service';
-import { HeaderService } from '../../../service/header.service';
-import { data } from 'jquery';
+import { Observable, of } from 'rxjs';
+import { AppService } from '@service/app.service';
+import { HeaderService } from '@service/header.service';
 import { CriteriaToolComponent } from '@appRoot/adv-search/criteria-tool/criteria-tool.component';
 
 declare var $: any;

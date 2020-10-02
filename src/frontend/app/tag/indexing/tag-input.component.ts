@@ -1,17 +1,17 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationService } from '../../../service/notification/notification.service';
-import { HeaderService } from '../../../service/header.service';
+import { NotificationService } from '@service/notification/notification.service';
+import { HeaderService } from '@service/header.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { AppService } from '../../../service/app.service';
+import { AppService } from '@service/app.service';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
-import { PrivilegeService } from '../../../service/privileges.service';
-import { FunctionsService } from '../../../service/functions.service';
+import { PrivilegeService } from '@service/privileges.service';
+import { FunctionsService } from '@service/functions.service';
 import { ThesaurusModalComponent } from './thesaurus/thesaurus-modal.component';
 
 @Component({

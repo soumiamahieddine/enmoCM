@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { SharedModule } from '../app-common.module';
 
-import { InternationalizationModule } from '../../service/translate/internationalization.module';
+import { InternationalizationModule } from '@service/translate/internationalization.module';
 
 import { AdministrationRoutingModule } from './administration-routing.module';
 // import { NgxChartsModule } from '@swimlane/ngx-charts';

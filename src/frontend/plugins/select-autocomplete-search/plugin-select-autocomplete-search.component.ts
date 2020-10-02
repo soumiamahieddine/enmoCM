@@ -12,9 +12,9 @@ import { take, takeUntil, startWith, map, debounceTime, filter, tap, switchMap, 
 import { Subject, ReplaySubject, Observable, forkJoin, of } from 'rxjs';
 import { LatinisePipe } from 'ngx-pipes';
 import { TranslateService } from '@ngx-translate/core';
-import { AppService } from '../../service/app.service';
+import { AppService } from '@service/app.service';
 import { SortPipe } from '../sorting.pipe';
-import { FunctionsService } from '../../service/functions.service';
+import { FunctionsService } from '@service/functions.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({

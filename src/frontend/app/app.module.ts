@@ -8,7 +8,7 @@ import { AdministrationModule } from './administration/administration.module';
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { InternationalizationModule } from '../service/translate/internationalization.module';
+import { InternationalizationModule } from '@service/translate/internationalization.module';
 
 import { JoyrideModule } from 'ngx-joyride';
 
@@ -16,11 +16,11 @@ import { PanelListComponent } from './list/panel/panel-list.component';
 import { DocumentViewerModule } from './viewer/document-viewer.module';
 import { AppListModule } from './app-list.module';
 
-import { AuthInterceptor } from '../service/auth-interceptor.service';
-import { FiltersListService } from '../service/filtersList.service';
-import { CriteriaSearchService } from '../service/criteriaSearch.service';
+import { AuthInterceptor } from '@service/auth-interceptor.service';
+import { FiltersListService } from '@service/filtersList.service';
+import { CriteriaSearchService } from '@service/criteriaSearch.service';
 import { FoldersService } from './folder/folders.service';
-import { PrivilegeService } from '../service/privileges.service';
+import { PrivilegeService } from '@service/privileges.service';
 import { ActionsService } from './actions/actions.service';
 
 import { AppComponent } from './app.component';
@@ -116,8 +116,8 @@ import { SaveNumericPackageComponent } from './save-numeric-package.component';
 import { SignatureBookComponent } from './signature-book.component';
 import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.component';
 
-import { DevToolComponent } from '../service/debug/dev-tool.component';
-import { DevLangComponent } from '../service/debug/dev-lang.component';
+import { DevToolComponent } from '@service/debug/dev-tool.component';
+import { DevLangComponent } from '@service/debug/dev-lang.component';
 import { AcknowledgementReceptionComponent } from './registeredMail/acknowledgement-reception/acknowledgement-reception.component';
 import { DatePipe } from '@angular/common';
 
