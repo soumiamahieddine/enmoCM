@@ -410,6 +410,10 @@ class SearchController
             $args['searchData'][] = "%{$body['chrono']['values']}%";
             $args['searchData'][] = "%{$body['chrono']['values']}%";
         }
+        if (!empty($body['barcode']) && !empty($body['barcode']['values']) && is_string($body['barcode']['values'])) {
+            $args['searchWhere'][] = 'barcode ilike ?';
+            $args['searchData'][] = "%{$body['barcode']['values']}%";
+        }
         if (!empty($body['resId']) && !empty($body['resId']['values']) && is_array($body['resId']['values'])) {
             if (Validator::intVal()->notEmpty()->validate($body['resId']['values']['start'])) {
                 $args['searchWhere'][] = 'res_id >= ?';
@@ -512,6 +516,16 @@ class SearchController
             if (Validator::date()->notEmpty()->validate($body['processLimitDate']['values']['end'])) {
                 $args['searchWhere'][] = 'process_limit_date <= ?';
                 $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['processLimitDate']['values']['end']]);
+            }
+        }
+        if (!empty($body['closingDate']) && !empty($body['closingDate']['values']) && is_array($body['closingDate']['values'])) {
+            if (Validator::date()->notEmpty()->validate($body['closingDate']['values']['start'])) {
+                $args['searchWhere'][] = 'closing_date >= ?';
+                $args['searchData'][] = $body['closingDate']['values']['start'];
+            }
+            if (Validator::date()->notEmpty()->validate($body['closingDate']['values']['end'])) {
+                $args['searchWhere'][] = 'closing_date <= ?';
+                $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['closingDate']['values']['end']]);
             }
         }
         if (!empty($body['senders']) && !empty($body['senders']['values']) && is_array($body['senders']['values']) && is_array($body['senders']['values'][0])) {
@@ -663,6 +677,35 @@ class SearchController
                 $foldersMatch = array_column($foldersMatch, 'res_id');
                 $args['searchData'][] = $foldersMatch;
             }
+        }
+        if (!empty($body['notes']) && !empty($body['notes']['values']) && is_string($body['notes']['values'])) {
+            $notesMatch = NoteModel::get(['select' => ['identifier'], 'where' => ['note_text ilike ?'], 'data' => ["%{$body['notes']['values']}%"]]);
+            if (empty($notesMatch)) {
+                return null;
+            }
+
+            $args['searchWhere'][] = 'res_id in (?)';
+            $notesMatch = array_column($notesMatch, 'identifier');
+            $args['searchData'][] = $notesMatch;
+        }
+        if (!empty($body['attachment_type']) && !empty($body['attachment_type']['values']) && is_array($body['attachment_type']['values'])) {
+            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where attachment_type in (?))';
+            $args['searchData'][] = $body['attachment_type']['values'];
+        }
+        if (!empty($body['attachment_creationDate']) && !empty($body['attachment_creationDate']['values']) && is_array($body['attachment_creationDate']['values'])) {
+            if (Validator::date()->notEmpty()->validate($body['attachment_creationDate']['values']['start'])) {
+                $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where creation_date >= ?)';
+                $args['searchData'][] = $body['attachment_creationDate']['values']['start'];
+            }
+            if (Validator::date()->notEmpty()->validate($body['attachment_creationDate']['values']['end'])) {
+                $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where creation_date <= ?)';
+                $args['searchData'][] = SearchController::getEndDayDate(['date' => $body['attachment_creationDate']['values']['end']]);
+            }
+        }
+        if (!empty($body['groupSign']) && !empty($body['groupSign']['values']) && is_array($body['groupSign']['values'])) {
+            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id from listinstance where item_mode = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
+            $args['searchData'][] = 'sign';
+            $args['searchData'][] = $body['groupSign']['values'];
         }
 
         return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
