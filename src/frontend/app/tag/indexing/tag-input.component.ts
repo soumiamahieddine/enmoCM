@@ -71,8 +71,6 @@ export class TagInputComponent implements OnInit {
         this.controlAutocomplete.valueChanges
             .pipe(
                 tap((data: any) => {
-                    console.log('change!', this.returnValue, this.tmpObject, this.functionsService.empty(this.tmpObject));
-
                     if (this.returnValue === 'object') {
                         this.valuesToDisplay = {};
                         data.forEach((item: any) => {
@@ -83,7 +81,6 @@ export class TagInputComponent implements OnInit {
                             this.valuesToDisplay[this.tmpObject['id']] = this.tmpObject[this.key];
                             this.tmpObject = null;
                         } else {
-                            console.log('initFormValue');
                             this.initFormValue();
                         }
 
@@ -237,7 +234,6 @@ export class TagInputComponent implements OnInit {
                 };
             }),
             tap((tagItem: any) => {
-                console.log(tagItem);
                 this.tmpObject = tagItem;
                 this.setFormValue(tagItem);
             }),
