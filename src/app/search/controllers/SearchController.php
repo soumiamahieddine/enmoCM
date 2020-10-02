@@ -703,8 +703,8 @@ class SearchController
             }
         }
         if (!empty($body['groupSign']) && !empty($body['groupSign']['values']) && is_array($body['groupSign']['values'])) {
-            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id from listinstance where item_mode = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
-            $args['searchData'][] = 'sign';
+            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id from listinstance where requested_signature = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
+            $args['searchData'][] = 'true';
             $args['searchData'][] = $body['groupSign']['values'];
         }
 
