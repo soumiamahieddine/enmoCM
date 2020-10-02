@@ -324,9 +324,9 @@ export class IndexingFieldsService {
             indexingHide: true
         },
         {
-            identifier: 'attachment_departureDate',
-            label: `${this.translate.instant('lang.departureDate')} (PJ)`,
-            icon: 'fa-calendar-check',
+            identifier: 'attachment_creationDate',
+            label: `${this.translate.instant('lang.creationDate')} (PJ)`,
+            icon: 'fa-calendar-day',
             type: 'select',
             default_value: [],
             values: [],
