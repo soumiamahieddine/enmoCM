@@ -1033,6 +1033,6 @@ class SearchController
         $date = new \DateTime($args['date']);
         $date->setTime(23, 59, 59);
 
-        return $date->format('d-m-Y H:i');
+        return $date->format('d-m-Y H:i:s');
     }
 }
