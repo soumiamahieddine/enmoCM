@@ -1,5 +1,5 @@
 <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;">
-    <img style="max-height: 100vh;" [src]="thumbnailUrl | secureUrl | async" />
+    <img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" />
 </mat-card>
 <ng-template #filterTemplate>
     <app-filter-tool-adv-search *ngIf="!hideFilter && data.length > 0"></app-filter-tool-adv-search>

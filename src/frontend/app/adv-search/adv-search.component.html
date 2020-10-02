@@ -26,7 +26,7 @@
     </mat-sidenav-content>
     <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
         [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
-        class="panel-right" style="overflow-x:hidden;" [class.docView]="innerHtml"
+        class="panel-right" style="overflow-x:hidden;"
         [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
         <div id="panelTemplate"></div>
     </mat-sidenav>
