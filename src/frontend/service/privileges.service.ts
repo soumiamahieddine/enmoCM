@@ -296,8 +296,8 @@ export class PrivilegeService {
             'hasParams': false
         },
         {
-            'id': 'search_administration',
-            'label': 'lang.searchAdministration',
+            'id': 'admin_search',
+            'label': 'lang.search',
             'comment': 'lang.searchAdministration',
             'route': '/administration/search',
             'unit': 'supervision',

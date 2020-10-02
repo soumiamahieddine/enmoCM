@@ -30,8 +30,11 @@ use Folder\models\ResourceFolderModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use RegisteredMail\models\RegisteredMailModel;
+use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
+use Resource\models\ResourceListModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -60,35 +63,35 @@ class SearchController
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
         $searchWhere = $searchClause['searchWhere'];
-        $searchData = $searchClause['searchData'];
+        $searchData  = $searchClause['searchData'];
 
         $searchClause = SearchController::getMainFieldsClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
         $searchWhere = $searchClause['searchWhere'];
-        $searchData = $searchClause['searchData'];
+        $searchData  = $searchClause['searchData'];
 
         $searchClause = SearchController::getListFieldsClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
         $searchWhere = $searchClause['searchWhere'];
-        $searchData = $searchClause['searchData'];
+        $searchData  = $searchClause['searchData'];
 
         $searchClause = SearchController::getCustomFieldsClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
         $searchWhere = $searchClause['searchWhere'];
-        $searchData = $searchClause['searchData'];
+        $searchData  = $searchClause['searchData'];
 
         $searchClause = SearchController::getRegisteredMailsClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
         $searchWhere = $searchClause['searchWhere'];
-        $searchData = $searchClause['searchData'];
+        $searchData  = $searchClause['searchData'];
 
         $searchClause = SearchController::getFulltextClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
@@ -114,7 +117,7 @@ class SearchController
         if (!empty($queryParams['offset']) && is_numeric($queryParams['offset'])) {
             $offset = (int)$queryParams['offset'];
         }
-        $order = !in_array($queryParams['orderDir'], ['ASC', 'DESC']) ? '' : $queryParams['orderDir'];
+        $order   = !in_array($queryParams['orderDir'], ['ASC', 'DESC']) ? '' : $queryParams['orderDir'];
         $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate', 'category', 'destUser', 'processLimitDate', 'entityLabel'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date', 'category_id', 'dest_user', 'process_limit_date', 'entity_label'], $queryParams['order']);
         $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date', 'category_id', 'dest_user', 'process_limit_date', 'entity_label', 'priority']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
@@ -131,7 +134,7 @@ class SearchController
         $allResources = array_column($allResources, 'resId');
 
         $resIds = [];
-        $order = 'CASE res_id ';
+        $order  = 'CASE res_id ';
         for ($i = $offset; $i < ($offset + $limit); $i++) {
             if (empty($allResources[$i])) {
                 break;
@@ -141,101 +144,57 @@ class SearchController
         }
         $order .= 'END';
 
-        $resources = ResModel::get([
-            'select'    => [
-                'res_id as "resId"', 'category_id as "category"', 'alt_identifier as "chrono"', 'subject', 'barcode', 'filename', 'creation_date as "creationDate"',
-                'type_id as "type"', 'priority', 'status', 'dest_user as "destUser"'
-            ],
-            'where'   => ['res_id in (?)'],
-            'data'    => [$resIds],
-            'orderBy' => [$order]
+        $adminSearch   = ConfigurationModel::getByPrivilege(['privilege' => 'admin_search', 'select' => ['value']]);
+        $configuration = json_decode($adminSearch['value'], true);
+        $listDisplay   = $configuration['listDisplay']['subInfos'];
+
+        $selectData = ResourceListController::getSelectData(['listDisplay' => $listDisplay]);
+
+        $resources = ResourceListModel::getOnResource([
+            'select'    => $selectData['select'],
+            'table'     => $selectData['tableFunction'],
+            'leftJoin'  => $selectData['leftJoinFunction'],
+            'where'     => ['res_letterbox.res_id in (?)'],
+            'data'      => [$resIds],
+            'orderBy'   => [$order]
         ]);
         if (empty($resources)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
 
-        $resourcesIds = array_column($resources, 'resId');
-        $attachments = AttachmentModel::get(['select' => ['count(1)', 'res_id_master'], 'where' => ['res_id_master in (?)', 'status not in (?)'], 'data' => [$resourcesIds, ['DEL']], 'groupBy' => ['res_id_master']]);
-
-        $prioritiesIds = array_column($resources, 'priority');
-        $priorities = PriorityModel::get(['select' => ['id', 'color'], 'where' => ['id in (?)'], 'data' => [$prioritiesIds]]);
-
-        $statusesIds = array_column($resources, 'status');
-        $statuses = StatusModel::get(['select' => ['id', 'label_status', 'img_filename'], 'where' => ['id in (?)'], 'data' => [$statusesIds]]);
-
-        $doctypesIds = array_column($resources, 'type');
-        $doctypes = DoctypeModel::get(['select' => ['type_id', 'description'], 'where' => ['type_id in (?)'], 'data' => [$doctypesIds]]);
-
-        $notes = NoteModel::countByResId(['resId' => $resourcesIds, 'userId' => $GLOBALS['id']]);
-
-        $correspondents = ResourceContactModel::get([
-            'select'    => ['item_id', 'type', 'mode', 'res_id'],
-            'where'     => ['res_id in (?)'],
-            'data'      => [$resourcesIds]
+        $excludeAttachmentTypes = ['signed_response'];
+        $attachments = AttachmentModel::get([
+            'select'    => ['COUNT(res_id)', 'res_id_master'],
+            'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
+            'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['id'], 'TMP'],
+            'groupBy'   => ['res_id_master']
         ]);
 
-        foreach ($resources as $key => $resource) {
-            if (!empty($resource['priority'])) {
-                foreach ($priorities as $priority) {
-                    if ($priority['id'] == $resource['priority']) {
-                        $resources[$key]['priorityColor'] = $priority['color'];
-                        break;
-                    }
-                }
-            }
-            $resources[$key]['statusLabel'] = null;
-            $resources[$key]['statusImage'] = null;
-            if (!empty($resource['status'])) {
-                foreach ($statuses as $status) {
-                    if ($status['id'] == $resource['status']) {
-                        $resources[$key]['statusLabel'] = $status['label_status'];
-                        $resources[$key]['statusImage'] = $status['img_filename'];
-                        break;
-                    }
-                }
-            }
-            foreach ($doctypes as $doctype) {
-                if ($doctype['type_id'] == $resource['type']) {
-                    $resources[$key]['typeLabel'] = $doctype['description'];
-                    break;
-                }
-            }
-            if (!empty($resource['destUser'])) {
-                $resources[$key]['destUserLabel'] = UserModel::getLabelledUserById(['id' => $resource['destUser']]);
-            }
-            $resources[$key]['hasDocument'] = !empty($resource['filename']);
+        $followedDocuments = UserFollowedResourceModel::get([
+            'select' => ['res_id'],
+                'where'  => ['user_id = ?'],
+                'data'   => [$GLOBALS['id']],
+            ]);
+    
+        $trackedMails = array_column($followedDocuments, 'res_id');
 
-            $resources[$key]['senders'] = [];
-            $resources[$key]['recipients'] = [];
-            foreach ($correspondents as $correspondent) {
-                if ($correspondent['res_id'] == $resource['resId']) {
-                    if ($correspondent['type'] == 'contact') {
-                        $contactRaw = ContactModel::getById(['select' => ['firstname', 'lastname', 'company'], 'id' => $correspondent['item_id']]);
-                        $contactToDisplay = ContactController::getFormattedOnlyContact(['contact' => $contactRaw]);
-                        $formattedCorrespondent = $contactToDisplay['contact']['otherInfo'];
-                    } elseif ($correspondent['type'] == 'user') {
-                        $formattedCorrespondent = UserModel::getLabelledUserById(['id' => $correspondent['item_id']]);
-                    } else {
-                        $entity = EntityModel::getById(['id' => $correspondent['item_id'], 'select' => ['entity_label']]);
-                        $formattedCorrespondent = $entity['entity_label'];
-                    }
+        $formattedResources = ResourceListController::getFormattedResources([
+            'resources'     => $resources,
+            'userId'        => $GLOBALS['id'],
+            'attachments'   => $attachments,
+            'checkLocked'   => false,
+            'listDisplay'   => $listDisplay,
+            'trackedMails'  => $trackedMails
+        ]);
 
-                    $resources[$key]["{$correspondent['mode']}s"][] = $formattedCorrespondent;
-                }
-            }
-
-            $resources[$key]['countAttachments'] = 0;
-            foreach ($attachments as $attachment) {
-                if ($attachment['res_id_master'] == $resource['resId']) {
-                    $resources[$key]['countAttachments'] = $attachment['count'];
-                    break;
-                }
-            }
-
-            $resources[$key]['countNotes'] = $notes[$resource['resId']];
-        }
-
-        return $response->withJson(['resources' => $resources, 'count' => count($allResources), 'allResources' => $allResources]);
+        return $response->withJson([
+            'resources'         => $formattedResources,
+            'count'             => count($allResources),
+            'allResources'      => $allResources,
+            'defaultTab'        => $configuration['listEvent']['defaultTab'],
+            'displayFolderTags' => in_array('getFolders', array_column($listDisplay, 'value')),
+            'templateColumns'   => $configuration['listDisplay']['templateColumns'],
+        ]);
     }
 
     public function getConfiguration(Request $request, Response $response)
