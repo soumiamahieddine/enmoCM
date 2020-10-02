@@ -268,14 +268,6 @@ export class SearchAdministrationComponent implements OnInit {
         });
         this.selectedListEvent = this.searchAdv.listEvent;
         this.selectedListEventClone = this.selectedListEvent;
-        if (this.searchAdv.listEvent === 'processDocument') {
-            this.selectedProcessTool.defaultTab = this.searchAdv.list_event_data === null ? 'dashboard' : this.searchAdv.list_event_data.defaultTab;
-            this.selectedProcessTool.canUpdateData = this.searchAdv.list_event_data === null ? false : this.searchAdv.list_event_data.canUpdateData;
-            this.selectedProcessTool.canUpdateModel = this.searchAdv.list_event_data === null ? false : this.searchAdv.list_event_data.canUpdateModel;
-        } else if (this.searchAdv.listEvent === 'signatureBookAction') {
-            this.selectedProcessTool.canUpdateDocuments = this.searchAdv.list_event_data === null ? false : this.searchAdv.list_event_data.canUpdateDocuments;
-        }
-
         this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
         this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
     }
@@ -283,8 +275,8 @@ export class SearchAdministrationComponent implements OnInit {
     initCustomFields() {
         return new Promise((resolve, reject) => {
             this.http.get('../rest/customFields').pipe(
-                map((CustomData: any) => {
-                    CustomData.customFields = CustomData.customFields.map((info: any) => {
+                map((customData: any) => {
+                    customData.customFields = customData.customFields.map((info: any) => {
                         return {
                             'value': 'indexingCustomField_' + info.id,
                             'label': info.label,
@@ -293,7 +285,7 @@ export class SearchAdministrationComponent implements OnInit {
                             'icon': 'fa-hashtag'
                         };
                     });
-                    return CustomData.customFields;
+                    return customData.customFields;
                 }),
                 tap((customs) => {
                     // console.log(customs);
