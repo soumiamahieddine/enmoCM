@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
@@ -8,7 +8,6 @@ import { startWith, map, tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { AppService } from '@service/app.service';
 import { HeaderService } from '@service/header.service';
-import { CriteriaToolComponent } from '@appRoot/adv-search/criteria-tool/criteria-tool.component';
 
 declare var $: any;
 
@@ -242,8 +241,6 @@ export class SearchAdministrationComponent implements OnInit {
 
     searchAdv: any = { listEvent: {}, listDisplay: {}, list_event_data: {} };
 
-    @ViewChild('appCriteriaTool', { static: true }) appCriteriaTool: CriteriaToolComponent;
-
     constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public appService: AppService, public headerService: HeaderService) { }
 
     async ngOnInit(): Promise<void> {
@@ -288,7 +285,6 @@ export class SearchAdministrationComponent implements OnInit {
                     return customData.customFields;
                 }),
                 tap((customs) => {
-                    // console.log(customs);
                     this.availableData = this.availableData.concat(customs);
                     resolve(true);
 
@@ -370,7 +366,6 @@ export class SearchAdministrationComponent implements OnInit {
                     displayData.forEach((element: { value: any; cssClasses: any; icon: any; }) => {
                         const sampleValue = this.availableData.filter((t: { value: any; }) => t.value === element.value)[0].sample;
                         const label = this.availableData.filter((t: { value: any; }) => t.value === element.value)[0].label;
-                        console.log(this.availableData.filter((t: { value: any; }) => t.value === element.value));
                         this.displayedSecondaryData.push({
                             'value': element.value,
                             'label': label,
@@ -379,7 +374,6 @@ export class SearchAdministrationComponent implements OnInit {
                             'icon': element.icon
                         });
                     });
-                    // console.log(this.displayedSecondaryData);
                     resolve(true);
                 }),
                 catchError((err: any) => {
