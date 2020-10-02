@@ -114,6 +114,9 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
         private sortPipe: SortPipe) { }
 
     ngOnInit() {
+        if (this.multiple) {
+            this.matSelect.compareWith = (item1: any, item2: any) => item1 && item2 ? item1.id === item2.id : item1 === item2;
+        }
         if (this.optGroupList !== null) {
             this.initOptGroups();
         }
@@ -409,10 +412,6 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     getFirstDataLabel() {
         return this.formControlSelect.value[0].label.replace(/&nbsp;/g, '');
         // return this.returnValue === 'id' ? this.formControlSelect.value[0].label.replace(/\u00a0/g, '') : this.formControlSelect.value.map((item: any) => item !== null ? item.label : this.translate.instant('lang.emptyValue'))[0];
-    }
-
-    compareWithFn(item1: any, item2: any) {
-        return item1 && item2 ? item1.id === item2.id : item1 === item2;
     }
 
     emptyData() {

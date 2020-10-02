@@ -5,7 +5,7 @@ import { AppService } from '@service/app.service';
 import { FunctionsService } from '@service/functions.service';
 import { Observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { startWith, map, tap, filter, exhaustMap, catchError, elementAt } from 'rxjs/operators';
+import { startWith, map, tap, filter, exhaustMap, catchError } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { IndexingFieldsService } from '@service/indexing-fields.service';
@@ -59,6 +59,8 @@ export class CriteriaToolComponent implements OnInit {
     @Input() searchTerm: string = 'Foo';
     @Input() defaultCriteria: any = [];
     @Input() adminMode: boolean = false;
+    @Input() openedPanel: boolean = false;
+    @Input() class: 'main' | 'secondary' = 'main';
 
     @Output() searchUrlGenerated = new EventEmitter<any>();
     @Output() loaded = new EventEmitter<any>();
@@ -126,8 +128,6 @@ export class CriteriaToolComponent implements OnInit {
 
         if (!this.adminMode) {
             this.getSearchTemplates();
-        } else {
-            this.toggleTool(true);
         }
     }
 
@@ -594,7 +594,7 @@ export class CriteriaToolComponent implements OnInit {
             query.push({ 'identifier': field.identifier, 'values': field.control.value });
         });
 
-        query.push({ 'identifier': 'searchTerm', 'values': this.searchTermControl.value });
+        query.push({ 'identifier': 'meta', 'values': this.searchTermControl.value });
 
         const dialogRef = this.dialog.open(
             AddSearchTemplateModalComponent,
@@ -649,21 +649,20 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     selectSearchTemplate(searchTemplate: any, openPanel: boolean = true) {
-
         this.currentCriteria = [];
+        let index: number;
         this.criteria.forEach((element: any) => {
-            let index = searchTemplate.query.map((field: any) => field.identifier).indexOf(element.identifier);
+            index = searchTemplate.query.map((field: any) => field.identifier).indexOf(element.identifier);
             if (index > -1) {
-                element.control = new FormControl({ value: searchTemplate.query[index].values, disabled: false });
-                element.control.value = searchTemplate.query[index].values;
+                if (element.control === undefined) {
+                    element.control = new FormControl({ value: searchTemplate.query[index].values, disabled: false });
+                }
+                element.control.setValue(searchTemplate.query[index].values);
 
                 this.addCriteria(element, openPanel);
 
                 if (element.type === 'selectAutocomplete') {
                     setTimeout(() => {
-                        console.log(element.identifier);
-                        console.log(this.pluginSelectAutocompleteSearch.toArray());
-
                         this.pluginSelectAutocompleteSearch.toArray().filter((component: any) => component.id === element.identifier)[0].setDatas(element.control.value);
                         this.pluginSelectAutocompleteSearch.toArray().filter((component: any) => component.id === element.identifier)[0].resetACDatas();
                     }, 0);
@@ -671,7 +670,7 @@ export class CriteriaToolComponent implements OnInit {
             }
         });
 
-        let index = searchTemplate.query.map((field: any) => field.identifier).indexOf('searchTerm');
+        index = searchTemplate.query.map((field: any) => field.identifier).indexOf('meta');
         if (index > -1) {
             this.searchTermControl.setValue(searchTemplate.query[index].values);
         }

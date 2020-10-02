@@ -6,8 +6,8 @@
             <mat-icon class="fas fa-search"></mat-icon>
         </button>
     </mat-form-field>
-    <mat-accordion [class.criteria-container]="!adminMode" [class.criteria-container-admin]="adminMode">
-        <mat-expansion-panel expanded #criteriaTool [expanded]="false" togglePosition="before">
+    <mat-accordion [class.criteria-container]="class==='main'" [class.criteria-container-secondary]="class==='secondary'">
+        <mat-expansion-panel #criteriaTool [expanded]="openedPanel" togglePosition="before">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <span>

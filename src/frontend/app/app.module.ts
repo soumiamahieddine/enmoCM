@@ -26,8 +26,6 @@ import { ActionsService } from './actions/actions.service';
 import { AppComponent } from './app.component';
 
 // ACTIONS
-import { SearchAdvListComponent } from './adv-search/list/search-adv-list.component';
-
 import { ConfirmActionComponent } from './actions/confirm-action/confirm-action.component';
 import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
 import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence-action/enabled-basket-persistence-action.component';
@@ -84,6 +82,7 @@ import { SelectIndexingModelComponent } from './indexation/select-indexing-model
 import { FilterToolComponent } from './adv-search/filter-tool/filter-tool.component';
 
 import { AdvSearchComponent } from './adv-search/adv-search.component';
+import { SearchResultListComponent } from './adv-search/result-list/search-result-list.component';
 import { AboutUsComponent } from './about-us.component';
 import { ActivateUserComponent } from './activate-user.component';
 import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-modal.component';
@@ -159,6 +158,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         FilterToolComponent,
         PanelListComponent,
         AdvSearchComponent,
+        SearchResultListComponent,
         AboutUsComponent,
         ActivateUserComponent,
         AddAvisModelModalComponent,
@@ -194,7 +194,6 @@ export class MyHammerConfig extends HammerGestureConfig {
         DevLangComponent,
         DevToolComponent,
         AcknowledgementReceptionComponent,
-        SearchAdvListComponent,
         ConfirmActionComponent,
         ResMarkAsReadActionComponent,
         EnabledBasketPersistenceActionComponent,

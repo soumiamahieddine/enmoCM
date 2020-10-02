@@ -1,6 +1,6 @@
 <mat-form-field [class]="class + ' search-select'" [floatLabel]="appService.getViewMode() || showLabel ? '' : 'never'">
     <mat-label *ngIf="appService.getViewMode() || showLabel">{{label}}</mat-label>
-    <mat-select [id]="id" [compareWith]="compareWithFn" [formControl]="formControlSelect" [placeholder]="placeholderLabel" #test
+    <mat-select [id]="id" [formControl]="formControlSelect" [placeholder]="placeholderLabel" #test
         (selectionChange)="launchEvent($event)" [required]="required" [multiple]="multiple">
         <mat-select-trigger *ngIf="multiple">
             {{formControlSelect.value.length > 0 ? getFirstDataLabel() : ''}}
