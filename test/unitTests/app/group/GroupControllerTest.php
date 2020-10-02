@@ -275,10 +275,16 @@ class GroupControllerTest extends TestCase
         $GLOBALS['id'] = $userInfo['id'];
 
         $response     = $groupController->get($request, new \Slim\Http\Response());
-        $this->assertSame(403, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertSame('Service forbidden', $responseBody['errors']);
+        $this->assertNotEmpty($responseBody->groups);
+
+        foreach ($responseBody->groups as $value) {
+            $this->assertNotEmpty($value->group_desc);
+            $this->assertEmpty($value->users);
+            $this->assertIsInt($value->id);
+        }
 
         $GLOBALS['login'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
