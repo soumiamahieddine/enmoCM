@@ -1253,7 +1253,7 @@
     "qmail": "Serveur mail local (Qmail)",
     "qrcode": "QR code",
     "quickSearchInfo": "Cible de la recherche",
-    "quickSearchTarget": "Recherche sur le sujet (courrier / pièce jointe), numéro chrono (courrier / pièce jointe), contenu d'annotations, code à barre, numéro GED (courrier)",
+    "quickSearchTarget": "Recherche sur le sujet (courrier / pièce jointe), numéro chrono (courrier / pièce jointe), code à barre, numéro GED (courrier)",
     "quota": "Quota",
     "quotaExceeded": "Quota dépassé",
     "radioInput": "Liste à choix unique",
