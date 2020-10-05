@@ -117,3 +117,12 @@
     position:absolute;
     width:100%;
 }
+
+::ng-deep .highlightResult {
+    background: #FFFF00;
+}
+
+.highlightResultIcon {
+    font-size: 25px;
+    color: #FFFF00;
+}

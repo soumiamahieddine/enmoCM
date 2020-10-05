@@ -122,7 +122,7 @@
                     </button>
                     <span style="cursor:pointer;" class="main-info-status" (click)="launch(row);">
                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
-                            [ngStyle]="{'color': row.priorityColor}" style="width: 100%;" color="primary"
+                            [ngStyle]="{'color': row.priorityColor}" [class.highlightResult]="row.inStatus" style="width: 100%;" color="primary"
                             class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
                         </mat-icon>
                         <span *ngIf="row.confidentiality === 'Y'"
@@ -137,22 +137,22 @@
                         <ng-container
                             *ngIf="row.chrono == this.translate.instant('lang.undefined') && row.barcode != this.translate.instant('lang.undefined')">
                             <span style="color: rgba(0,0,0,0.4);font-size: 90%;">
-                                <i title="{{'lang.barcode' | translate}}" class="fas fa-barcode"></i>
-                                {{row.barcode}}</span>
+                                <i title="{{'lang.barcode' | translate}}" class="fas fa-barcode"></i>&nbsp;<span [innerHTML]="row.barcode"></span>
+                            </span>
                         </ng-container>
                         <ng-container *ngIf="row.chrono != this.translate.instant('lang.undefined')">
-                            {{row.chrono}}
+                            <span [innerHTML]="row.chrono"></span>
                         </ng-container>
                     </span>
                     <span class="main-info-data" (click)="launch(row);" style="font-weight:bold;flex:1;cursor:pointer;"
                         [class.undefined]="row.subject == this.translate.instant('lang.undefined')"
-                        title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
+                        title="{{row.subject}}" [innerHTML]="row.subject | shorten: 150: '...'"></span>
                     <span *ngIf="sidenavRight !== undefined" class="main-info-action">
                         <button mat-icon-button title="{{'lang.notes' | translate}}"
                             (click)="$event.stopPropagation();togglePanel('note',row)"
                             [class.noData]="row.countNotes == 0">
                             <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
-                                matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"
+                                matBadge="{{row.countNotes}}" [class.highlightResult]="row.inNotes" fontIcon="fa-comments fa-2x"
                                 [color]="sidenavRight.opened && row.checked && currentMode == 'note' ? 'primary' : ''">
                             </mat-icon>
                         </button>
@@ -160,13 +160,13 @@
                             (click)="$event.stopPropagation();togglePanel('attachment',row)"
                             [class.noData]="row.countAttachments == 0">
                             <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
-                                matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"
+                                matBadge="{{row.countAttachments}}" [class.highlightResult]="row.inAttachments" fontIcon="fa-paperclip fa-2x"
                                 [color]="sidenavRight.opened && row.checked && currentMode == 'attachment' ? 'primary' : ''">
                             </mat-icon>
                         </button>
                         <button mat-icon-button title="{{'lang.diffusionList' | translate}}"
                             (click)="$event.stopPropagation();togglePanel('diffusion',row)">
-                            <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"
+                            <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x" [class.highlightResult]="row.inDiffusions"
                                 [color]="sidenavRight.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
                             </mat-icon>
                         </button>
@@ -178,7 +178,7 @@
                             </mat-icon>
                         </button>
                         <button mat-icon-button *ngIf="!appService.getViewMode()"
-                            title="{{'lang.linkDetails' | translate}}"
+                            title="{{'lang.linkDetails' | translate}}" [class.highlightResult]="row.inDocument"
                             (click)="$event.stopPropagation();goToDetail(row);">
                             <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
                         </button>

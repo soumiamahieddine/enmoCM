@@ -21,13 +21,15 @@ import { of, merge, Subject, Subscription, Observable } from 'rxjs';
 import { CriteriaToolComponent } from '@appRoot/adv-search/criteria-tool/criteria-tool.component';
 import { IndexingFieldsService } from '@service/indexing-fields.service';
 import { CriteriaSearchService } from '@service/criteriaSearch.service';
+import { HighlightPipe } from '@plugins/highlight.pipe';
 
 declare var $: any;
 
 @Component({
     selector: 'app-search-result-list',
     templateUrl: 'search-result-list.component.html',
-    styleUrls: ['search-result-list.component.scss']
+    styleUrls: ['search-result-list.component.scss'],
+    providers: [HighlightPipe]
 })
 export class SearchResultListComponent implements OnInit, OnDestroy {
 
@@ -142,7 +144,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         public appService: AppService,
         public foldersService: FoldersService,
         public functions: FunctionsService,
-        public indexingFieldService: IndexingFieldsService) {
+        public indexingFieldService: IndexingFieldsService,
+        public highlightPipe: HighlightPipe,
+    ) {
         _activatedRoute.queryParams.subscribe(
             params => {
                 if (!this.functions.empty(params.value)) {
@@ -368,6 +372,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     }
 
     processPostData(data: any) {
+        console.log();
+
+
         data.resources.forEach((element: any) => {
             // Process main datas
             Object.keys(element).forEach((key) => {
@@ -376,8 +383,17 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 } else if ((element[key] == null || element[key] === '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument'].indexOf(key) === -1) {
                     element[key] = this.translate.instant('lang.undefined');
                 }
-            });
+                if (Object.keys(this.criteria).indexOf(key) > -1) {
+                    element[key] = this.highlightPipe.transform(element[key], this.criteria[key].values);
+                }
 
+                if (key === 'status' && !this.functions.empty(this.criteria[key])) {
+                    element['inStatus'] = this.criteria[key].map((item: any) => item.label).indexOf(element[key]) > -1;
+                }
+            });
+            // element['inNotes'] = true;
+            // element['inNotes'] = true;
+            // element['inAttachments'] = true;
             element['checked'] = this.selectedRes.indexOf(element['resId']) !== -1;
         });
 

@@ -289,10 +289,19 @@ export class MyHammerConfig extends HammerGestureConfig {
         ViewDocActionComponent,
         ReconcileActionComponent,
     ],
-    providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, DatePipe, FiltersListService, CriteriaSearchService, FoldersService, ActionsService, PrivilegeService, {
-        provide: HAMMER_GESTURE_CONFIG,
-        useClass: MyHammerConfig
-    }],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        DatePipe,
+        FiltersListService,
+        CriteriaSearchService,
+        FoldersService,
+        ActionsService,
+        PrivilegeService,
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: MyHammerConfig
+        }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
