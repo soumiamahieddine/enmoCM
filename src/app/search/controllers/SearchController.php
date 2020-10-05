@@ -18,17 +18,13 @@ use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
 use Configuration\models\ConfigurationModel;
-use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\FullTextController;
 use CustomField\models\CustomFieldModel;
 use Docserver\models\DocserverModel;
-use Doctype\models\DoctypeModel;
-use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\ResourceFolderModel;
 use Note\models\NoteModel;
-use Priority\models\PriorityModel;
 use RegisteredMail\models\RegisteredMailModel;
 use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
@@ -396,9 +392,9 @@ class SearchController
         }
         if (!empty($body['status']) && !empty($body['status']['values']) && is_array($body['status']['values'])) {
             if (in_array(null, $body['status']['values'])) {
-                $args['searchWhere'][] = '(status in (?) OR status is NULL)';
+                $args['searchWhere'][] = '(status in (select id from status where identifier in (?)) OR status is NULL)';
             } else {
-                $args['searchWhere'][] = 'status in (?)';
+                $args['searchWhere'][] = 'status in (select id from status where identifier in (?))';
             }
             $args['searchData'][] = $body['status']['values'];
         }
@@ -665,7 +661,7 @@ class SearchController
             }
         }
         if (!empty($body['groupSign']) && !empty($body['groupSign']['values']) && is_array($body['groupSign']['values'])) {
-            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id from listinstance where requested_signature = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
+            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id from listinstance where signatory = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
             $args['searchData'][] = 'true';
             $args['searchData'][] = $body['groupSign']['values'];
         }

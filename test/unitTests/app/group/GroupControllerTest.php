@@ -269,14 +269,13 @@ class GroupControllerTest extends TestCase
             $this->assertIsInt($value->id);
         }
 
-        // Fail
         $GLOBALS['login'] = 'bbain';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
         $response     = $groupController->get($request, new \Slim\Http\Response());
         $this->assertSame(200, $response->getStatusCode());
-        $responseBody = json_decode((string)$response->getBody(), true);
+        $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotEmpty($responseBody->groups);
 
