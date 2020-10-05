@@ -184,7 +184,7 @@
                         </button>
                     </span>
                 </div>
-                <div *ngIf="row.folders !== undefined && row.folders.length > 0" class="folder-info">
+                <div *ngIf="row.folders !== undefined && row.folders.length > 0 && actionMode" class="folder-info">
                     <span class="badge badge-folder" *ngFor="let folder of row.folders | sortBy : 'label'"
                         (click)="$event.stopPropagation();goToFolder(folder);"
                         title="{{'lang.goToFolder' | translate}} : {{folder.label}}"><i class="fa fa-folder"></i>
