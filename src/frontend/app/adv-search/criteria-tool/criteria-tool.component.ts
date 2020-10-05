@@ -86,7 +86,8 @@ export class CriteriaToolComponent implements OnInit {
         private notify: NotificationService,
         private datePipe: DatePipe,
         private latinisePipe: LatinisePipe,
-        private sortPipe: SortPipe) {
+        private sortPipe: SortPipe
+    ) {
         _activatedRoute.queryParams.subscribe(
             params => {
                 this.searchTerm = params.value;
