@@ -159,8 +159,6 @@ export class ContactAutocompleteComponent implements OnInit {
     }
 
     selectOpt(ev: any) {
-        console.log(ev);
-        
         this.setFormValue(ev.option.value);
         this.myControl.setValue('');
 

@@ -215,7 +215,6 @@ export class PluginSelectAutocompleteSearchComponent implements OnInit, OnDestro
     }
 
     resetACDatas() {
-        console.log(this.formControlSelect.value);
         if (this.returnValue === 'id') {
             this.datas = this.datas.filter((val: any) =>  this.formControlSelect.value.indexOf(val.id) > -1);
 
