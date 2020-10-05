@@ -141,7 +141,7 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     isCurrentCriteriaById(criteriaIds: string[]) {
-        return this.currentCriteria.filter((currCrit: any) => criteriaIds.indexOf(currCrit.identifier) > -1).length > 0;
+        return this.currentCriteria.filter((currCrit: any) => criteriaIds.indexOf(currCrit.identifier) === 0).length > 0;
     }
 
 
