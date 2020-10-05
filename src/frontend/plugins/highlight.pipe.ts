@@ -11,11 +11,11 @@ export class HighlightPipe {
     ) { }
 
     transform(text: string, args: string = '') {
-        const index = text.indexOf(args);
+
+        const index = this.latinisePipe.transform(text.toLowerCase()).indexOf(this.latinisePipe.transform(args.toLowerCase()));
         if (index >= 0) {
             text = text.substring(0, index) + '<span class=\'highlightResult\'>' + text.substring(index, index + args.length) + '</span>' + text.substring(index + args.length);
         }
-        console.log(text);
         return text;
     }
 }
