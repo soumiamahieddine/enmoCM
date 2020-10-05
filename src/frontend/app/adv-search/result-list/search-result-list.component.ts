@@ -247,16 +247,17 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         this.paginator.pageIndex = this.listProperties.page;
         this.paginator.pageSize = this.listProperties.pageSize;
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
         // When list is refresh (sort, page, filters)
         merge(this.sort.sortChange, this.paginator.page, this.filtersChange)
             .pipe(
                 takeUntil(this.destroy$),
                 startWith({}),
                 switchMap(() => {
-                    this.isLoadingResults = true;
-                    return this.resultListDatabase!.getRepoIssues(
-                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.searchUrl, this.listProperties, this.paginator.pageSize, this.criteria);
+                    if (!this.isLoadingResults) {
+                        this.isLoadingResults = true;
+                        return this.resultListDatabase!.getRepoIssues(
+                            this.sort.active, this.sort.direction, this.paginator.pageIndex, this.searchUrl, this.listProperties, this.paginator.pageSize, this.criteria);
+                    }
                 }),
                 map((data: any) => {
                     // Flip flag to show that loading has finished.
