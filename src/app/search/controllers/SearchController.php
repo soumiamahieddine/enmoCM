@@ -611,8 +611,12 @@ class SearchController
             }
             if (empty($tagsMatch)) {
                 $args['searchWhere'][] = 'res_id not in (select distinct res_id from resources_tags)';
-            } else {
+            } elseif (in_array(null, $body['tags']['values'])) {
                 $args['searchWhere'][] = '(res_id in (?) OR res_id not in (select distinct res_id from resources_tags))';
+                $tagsMatch = array_column($tagsMatch, 'res_id');
+                $args['searchData'][] = $tagsMatch;
+            } else {
+                $args['searchWhere'][] = 'res_id in (?)';
                 $tagsMatch = array_column($tagsMatch, 'res_id');
                 $args['searchData'][] = $tagsMatch;
             }
@@ -630,8 +634,12 @@ class SearchController
             }
             if (empty($foldersMatch)) {
                 $args['searchWhere'][] = 'res_id not in (select distinct res_id from resources_folders)';
-            } else {
+            } elseif (in_array(null, $body['folders']['values'])) {
                 $args['searchWhere'][] = '(res_id in (?) OR res_id not in (select distinct res_id from resources_folders))';
+                $foldersMatch = array_column($foldersMatch, 'res_id');
+                $args['searchData'][] = $foldersMatch;
+            } else {
+                $args['searchWhere'][] = 'res_id in (?)';
                 $foldersMatch = array_column($foldersMatch, 'res_id');
                 $args['searchData'][] = $foldersMatch;
             }
@@ -691,12 +699,21 @@ class SearchController
                         $data[] = $itemValue['id'];
                         $data[] = $itemValue['type'] == 'user' ? 'user_id' : 'entity_id';
                     }
-                    $data[] = $roleId;
-                    $rolesMatch = ListInstanceModel::get([
-                        'select'    => ['res_id'],
-                        'where'     => ["({$where})", 'item_mode = ?'],
-                        'data'      => $data
-                    ]);
+                    if ($roleId == 'sign') {
+                        $data[] = 'true';
+                        $rolesMatch = ListInstanceModel::get([
+                            'select'    => ['res_id'],
+                            'where'     => ["({$where})", 'signatory = ?'],
+                            'data'      => $data
+                        ]);
+                    } else {
+                        $data[] = $roleId;
+                        $rolesMatch = ListInstanceModel::get([
+                            'select'    => ['res_id'],
+                            'where'     => ["({$where})", 'item_mode = ?'],
+                            'data'      => $data
+                        ]);
+                    }
                     if (empty($rolesMatch)) {
                         return null;
                     }

@@ -117,8 +117,8 @@ foreach ($customs as $custom) {
                     }
                 }
                 $query[] = ['identifier' => 'status', 'values' => $allStatuses];
-            } elseif ($key == 'visa_user' && !empty($value['fields']['visa_user'][0])) {
-                $user = \User\models\UserModel::getByLogin(['login' => $value['fields']['visa_user'][0], 'select' => ['id', 'firstname', 'lastname']]);
+            } elseif ($key == 'visa_user' && !empty($value['fields']['user_visa'][0])) {
+                $user = \User\models\UserModel::getByLogin(['login' => $value['fields']['user_visa'][0], 'select' => ['id', 'firstname', 'lastname']]);
                 if (!empty($user)) {
                     $query[] = ['identifier' => 'role_visa', 'values' => [['id' => $user['id'], 'type' => 'user', 'label' => "{$user['firstname']} {$user['lastname']}"]]];
                 }
