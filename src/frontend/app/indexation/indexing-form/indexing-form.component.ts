@@ -605,7 +605,7 @@ export class IndexingFormComponent implements OnInit {
                         let title = '';
                         if (elem.default_value === '#myPrimaryEntity') {
                             this.selfDest = this.currentCategory === 'outgoing';
-                            elem.default_value = this.headerService.user.entities[0].id;
+                            elem.default_value = this.headerService.user.entities[0]?.id;
                             this.arrFormControl[elem.identifier].setValue(elem.default_value);
                         } else {
                             this.selfDest = false;
