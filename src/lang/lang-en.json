@@ -2033,5 +2033,6 @@
     "searchInAttachmentsInfo" : "Indicates that the search is done on mails and attachments.",
     "fulltext": "Fulltext",
     "searchFulltextInfo" : "\" \": To search on a group of words (\"route nationale\" finds the entire expression route nationale)<br>&nbsp;~: To perform an approximate search (vite~ find vote, vite)",
-    "criteriaOverQuickSearch" : "The search criteria are cumulative on the quick search"
+    "criteriaOverQuickSearch" : "The search criteria are cumulative on the quick search",
+    "noAdminSearchConfiguration": "Non administration configuration found"
 }

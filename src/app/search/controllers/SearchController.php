@@ -145,6 +145,9 @@ class SearchController
         $order .= 'END';
 
         $adminSearch   = ConfigurationModel::getByPrivilege(['privilege' => 'admin_search', 'select' => ['value']]);
+        if (empty($adminSearch)) {
+            return $response->withStatus(400)->withJson(['errors' => 'no admin_search configuration found', 'lang' => 'noAdminSearchConfiguration']);
+        }
         $configuration = json_decode($adminSearch['value'], true);
         $listDisplay   = $configuration['listDisplay']['subInfos'];
 

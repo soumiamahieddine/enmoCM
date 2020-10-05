@@ -2049,5 +2049,6 @@
     "searchFulltextInfo" : "\" \" : Pour effectuer une recherche sur un groupe de mots (\"route nationale\" trouve l'expression entière route nationale)<br>&nbsp;~ : Pour effectuer une recherche approximative (vite~ trouve vote, vite)",
     "criteriaOverQuickSearch" : "Les critères de recherche se cumulent sur la recherche rapide",
     "manualSearchInfo" : "Vous pouvez laisser le terme dans le champ sans sélectionner de valeur pour la recherche.",
-    "groupSign" : "Groupe du signataire"
+    "groupSign" : "Groupe du signataire",
+    "noAdminSearchConfiguration": "Aucune configuration de recherche trouvée"
 }
