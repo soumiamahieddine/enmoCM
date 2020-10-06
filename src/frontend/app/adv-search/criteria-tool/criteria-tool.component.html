@@ -75,14 +75,16 @@
                                 </mat-icon>
                             </button>
                         </ng-container>
-                        <mat-divider></mat-divider>
-                        <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;"
-                            [disabled]="functions.empty(currentCriteria) && functions.empty(searchTermControl.value)">
-                            <mat-icon class="fa fa-copy" color="primary" style="line-height: 21px;"></mat-icon>
-                            <div style="flex:1;">
-                                {{'lang.createSearchTemplate' | translate}}
-                            </div>
-                        </button>
+                        <div class="saveSearchTemplate">
+                            <mat-divider></mat-divider>
+                            <button mat-menu-item (click)="saveSearchTemplate()" style="display: flex;align-items: center;"
+                                [disabled]="functions.empty(currentCriteria) && functions.empty(searchTermControl.value)">
+                                <mat-icon class="fa fa-copy" color="primary" style="line-height: 21px;"></mat-icon>
+                                <div style="flex:1;">
+                                    {{'lang.createSearchTemplate' | translate}}
+                                </div>
+                            </button>
+                        </div>
                     </mat-menu>
                 </mat-panel-description>
             </mat-expansion-panel-header>
