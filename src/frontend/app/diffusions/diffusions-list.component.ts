@@ -18,7 +18,7 @@ import { HeaderService } from '@service/header.service';
 })
 export class DiffusionsListComponent implements OnInit {
 
-    
+
     roles: any = [];
     loading: boolean = true;
     availableRoles: any[] = [];
@@ -31,6 +31,7 @@ export class DiffusionsListComponent implements OnInit {
     listinstanceClone: any = [];
 
     hasNoDest: boolean = false;
+    keepDiffusionRoleInOutgoingIndexation: boolean = false;
 
     /**
      * Ressource identifier to load listinstance (Incompatible with templateId)
@@ -51,6 +52,11 @@ export class DiffusionsListComponent implements OnInit {
      * To specify the context to load listModel
      */
     @Input() selfDest: boolean = false;
+
+    /**
+     * To specify the context to load listModel
+     */
+    @Input() category: string = '';
 
     /**
      * For manage current loaded list
@@ -97,7 +103,7 @@ export class DiffusionsListComponent implements OnInit {
     ) { }
 
     async ngOnInit(): Promise<void> {
-
+        await this.initParams();
         await this.initRoles();
         if (this.resId !== null && this.resId != 0 && this.target !== 'redirect') {
             this.loadListinstance(this.resId);
@@ -173,6 +179,14 @@ export class DiffusionsListComponent implements OnInit {
             }
         }
 
+        if (this.category === 'outgoing' && this.keepDiffusionRoleInOutgoingIndexation) {
+            Object.keys(this.diffList).forEach(key => {
+                if (key !== 'dest') {
+                    this.diffList[key].items = [];
+                }
+            });
+        }
+
         if (this.diffFormControl !== undefined) {
             this.setFormValues();
         }
@@ -220,7 +234,7 @@ export class DiffusionsListComponent implements OnInit {
                 this.http.get(`../rest/resources/${resId}/listInstance`).pipe(
                     map((data: any) => {
                         data.listInstance = data.listInstance.map((item: any) => {
-    
+
                             const obj: any = {
                                 listinstance_id: item.listinstance_id,
                                 item_mode: item.item_mode,
@@ -348,6 +362,18 @@ export class DiffusionsListComponent implements OnInit {
         });
     }
 
+    initParams() {
+        return new Promise((resolve, reject) => {
+            this.http.get('../rest/parameters/keepDiffusionRoleInOutgoingIndexation')
+                .subscribe((data: any) => {
+                    this.keepDiffusionRoleInOutgoingIndexation = data.parameter.param_value_int;
+                    resolve(true);
+                }, (err) => {
+                    this.notify.handleSoftErrors(err);
+                });
+        });
+    }
+
     deleteItem(roleId: string, index: number) {
         this.diffList[roleId].items.splice(index, 1);
         if (this.diffFormControl !== undefined) {
@@ -357,7 +383,7 @@ export class DiffusionsListComponent implements OnInit {
 
     getCurrentListinstance() {
         let listInstanceFormatted: any = [];
-        
+
         if (this.diffList !== null) {
             Object.keys(this.diffList).forEach(role => {
                 if (this.diffList[role].items.length > 0) {
@@ -374,7 +400,7 @@ export class DiffusionsListComponent implements OnInit {
                 }
             });
         }
-        
+
 
         return listInstanceFormatted;
     }
@@ -456,11 +482,11 @@ export class DiffusionsListComponent implements OnInit {
 
     isItemInThisRole(element: any, roleId: string) {
         const result = this.diffList[roleId].items.map((item: any, index: number) => {
-                return {
-                    ...item,
-                    index: index
-                }
-            }).filter((item: any) => item.itemSerialId === element.itemSerialId && item.item_type === element.item_type);
+            return {
+                ...item,
+                index: index
+            };
+        }).filter((item: any) => item.itemSerialId === element.itemSerialId && item.item_type === element.item_type);
 
         return result.length > 0;
     }
@@ -555,13 +581,13 @@ export class DiffusionsListComponent implements OnInit {
                         return {
                             ...item,
                             index: index
-                        }
+                        };
                     }).filter((item: any) => item.itemSerialId === user.itemSerialId && item.item_type === user.item_type);
 
                     if (result.length > 0) {
                         this.diffList[oldRole.id].items.splice(result[0].index, 1);
                     }
-                    
+
                     user.item_mode = 'dest';
                     this.diffList['dest'].items[0] = user;
 

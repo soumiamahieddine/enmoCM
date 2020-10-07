@@ -262,6 +262,9 @@ INSERT INTO parameters (id, param_value_string) VALUES ('registeredMailImportedS
 DELETE FROM parameters WHERE id = 'traffic_record_summary_sheet';
 INSERT INTO parameters (id, description, param_value_string) VALUES ('traffic_record_summary_sheet', 'Module circulation pour la fiche de liaison', '');
 
+DELETE FROM parameters WHERE id = 'keepDiffusionRoleInOutgoingIndexation';
+INSERT INTO parameters (id, param_value_int) VALUES ('keepDiffusionRoleInOutgoingIndexation', 1);
+
 ALTER TABLE configurations RENAME COLUMN service TO privilege;
 DELETE FROM configurations WHERE privilege = 'admin_search';
 INSERT INTO configurations (privilege, value) VALUES ('admin_search', '{"listEvent": {"defaultTab": "dashboard"},"listDisplay":{"templateColumns":6,"subInfos":[{"value":"getPriority","cssClasses":["align_leftData"],"icon":"fa-traffic-light"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_leftData"],"icon":"fa-calendar"},{"value":"getAssignee","cssClasses":["align_leftData"],"icon":"fa-sitemap"},{"value":"getDoctype","cssClasses":["align_leftData"],"icon":"fa-suitcase"},{"value":"getRecipients","cssClasses":["align_leftData"],"icon":"fa-user"},{"value":"getSenders","cssClasses":["align_leftData"],"icon":"fa-book"}]}}');
