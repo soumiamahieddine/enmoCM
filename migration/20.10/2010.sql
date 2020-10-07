@@ -269,6 +269,13 @@ ALTER TABLE configurations RENAME COLUMN service TO privilege;
 DELETE FROM configurations WHERE privilege = 'admin_search';
 INSERT INTO configurations (privilege, value) VALUES ('admin_search', '{"listEvent": {"defaultTab": "dashboard"},"listDisplay":{"templateColumns":6,"subInfos":[{"value":"getPriority","cssClasses":["align_leftData"],"icon":"fa-traffic-light"},{"value":"getCreationAndProcessLimitDates","cssClasses":["align_leftData"],"icon":"fa-calendar"},{"value":"getAssignee","cssClasses":["align_leftData"],"icon":"fa-sitemap"},{"value":"getDoctype","cssClasses":["align_leftData"],"icon":"fa-suitcase"},{"value":"getRecipients","cssClasses":["align_leftData"],"icon":"fa-user"},{"value":"getSenders","cssClasses":["align_leftData"],"icon":"fa-book"}]}}');
 
+
+ALTER TABLE entities DROP COLUMN archival_agency;
+ALTER TABLE entities DROP COLUMN archival_agreement;
+ALTER TABLE entities DROP COLUMN IF EXISTS producer_service;
+ALTER TABLE entities ADD COLUMN producer_service character varying(255);
+UPDATE entities SET producer_service = entity_id;
+
 DROP TABLE IF EXISTS search_templates;
 CREATE TABLE search_templates (
   id serial,
