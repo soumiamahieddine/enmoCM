@@ -673,6 +673,39 @@ class SearchController
             $args['searchData'][] = 'true';
             $args['searchData'][] = $body['groupSign']['values'];
         }
+        if (!empty($body['senderDepartment']) && !empty($body['senderDepartment']['values']) && is_array($body['senderDepartment']['values'])) {
+            $departments = '';
+            foreach ($body['senderDepartment']['values'] as $value) {
+                if (!is_numeric($value)) {
+                    continue;
+                }
+                if (!empty($departments)) {
+                    $departments .= ', ';
+                }
+                $departments .= "'{$value}%'";
+            }
+            $contacts = ContactModel::get([
+                'select' => ['id'],
+                'where'  => ["address_postcode like any (array[{$departments}])"]
+            ]);
+            $contactIds = array_column($contacts, 'id');
+            if (empty($contactIds)) {
+                return null;
+            } else {
+                $sendersMatch = ResourceContactModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['item_id in (?)', 'type = ?', 'mode = ?'],
+                    'data'      => [$contactIds, 'contact', 'sender']
+                ]);
+                $sendersMatch = array_column($sendersMatch, 'res_id');
+                if (empty($sendersMatch)) {
+                    return null;
+                } else {
+                    $args['searchWhere'][] = 'res_id in (?)';
+                    $args['searchData'][] = $sendersMatch;
+                }
+            }
+        }
 
         return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
     }
