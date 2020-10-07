@@ -22,6 +22,7 @@ import { CriteriaToolComponent } from '@appRoot/adv-search/criteria-tool/criteri
 import { IndexingFieldsService } from '@service/indexing-fields.service';
 import { CriteriaSearchService } from '@service/criteriaSearch.service';
 import { HighlightPipe } from '@plugins/highlight.pipe';
+import { FilterToolComponent } from '@appRoot/adv-search/filter-tool/filter-tool.component';
 
 declare var $: any;
 
@@ -81,6 +82,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     data: any = [];
     resultsLength = 0;
     isLoadingResults = true;
+    dataFilters: any = {};
     listProperties: any = {};
     currentChrono: string = '';
     currentMode: string = '';
@@ -120,7 +122,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
     @ViewChild('actionsListContext', { static: false }) actionsList: FolderActionListComponent;
     @ViewChild('appPanelList', { static: false }) appPanelList: PanelListComponent;
-    // @ViewChild('appCriteriaTool', { static: true }) appCriteriaTool: CriteriaToolComponent;
+    @ViewChild('appFilterToolAdvSearch', { static: false }) appFilterToolAdvSearch: FilterToolComponent;
 
     currentSelectedChrono: string = '';
 
@@ -230,7 +232,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         }
     }
 
-    launchSearch(criteria: any) {
+    launchSearch(criteria: any = this.criteria) {
         this.criteria = JSON.parse(JSON.stringify(criteria));
         if (!this.initSearch) {
             this.initResultList();
@@ -263,9 +265,79 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
+                    // FOR TEST
+                    const filters = {
+                        categories: [
+                            {
+                                id: 'outgoing',
+                                label: 'Courrier départ',
+                                resCount: 24,
+                                selected: true,
+                            },
+                            {
+                                id: 'incoming',
+                                label: 'Courrier arrivé',
+                                resCount: 4,
+                                selected: true,
+                            }
+                        ],
+                        priorities: [
+                            {
+                                id: 'IUDZIZOJD',
+                                label: 'Normal',
+                                resCount: 4,
+                                selected: true,
+                            },
+                            {
+                                id: 'IUDZIZOJD',
+                                label: 'Urgent',
+                                resCount: 42,
+                                selected: true,
+                            }
+                        ],
+                        statuses: [
+                            {
+                                id: 'IUDZIZOJD',
+                                label: 'En cours',
+                                resCount: 42,
+                                selected: true,
+                            }
+                        ],
+                        doctypes: [
+                            {
+                                id: 'IUDZIZOJD',
+                                label: 'Convocations',
+                                resCount: 42,
+                                selected: true,
+                            },
+                            {
+                                id: 'IUDZIZOJD',
+                                label: 'Litiges',
+                                resCount: 42,
+                                selected: true,
+                            }
+                        ],
+                        destinations: [
+                            {
+                                id: 'IUDZIZOJD',
+                                label: 'Pôle Jeunesse et Sport',
+                                resCount: 42,
+                                selected: true,
+                            },
+                            {
+                                id: 'IUDZIZOJD',
+                                label: 'Pôle culturel',
+                                resCount: 42,
+                                selected: true,
+                            }
+                        ],
+                        folders: [
+
+                        ]
+                    };
+                    this.dataFilters = filters;
                     this.resultsLength = data.count;
                     this.allResInBasket = data.allResources;
-                    // this.headerService.setHeader('Dossier : ' + this.folderInfo.label);
                     return data.resources;
                 }),
                 catchError((err: any) => {

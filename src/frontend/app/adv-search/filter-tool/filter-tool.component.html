@@ -4,7 +4,7 @@
             <i class="fas fa-filter panelIconMenu"></i>&nbsp;{{'lang.filterBy' | translate}}
         </mat-panel-title>
     </mat-expansion-panel-header>
-    <mat-selection-list *ngFor="let filterKey of filters | keyvalue" class="filter-list">
+    <mat-selection-list *ngFor="let filterKey of filters | keyvalue" class="filter-list" (selectionChange)="filterChanged.emit()">
         <div class="catGroupTitle">{{filterKey.key}} ({{filters[filterKey.key].length}})</div>
         <mat-divider style="width: 80%;"></mat-divider>
         <mat-list-option color="primary" class="catContent" *ngFor="let cat of filters[filterKey.key]" [selected]="cat.selected" checkboxPosition="before">
