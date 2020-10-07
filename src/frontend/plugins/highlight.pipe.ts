@@ -11,11 +11,13 @@ export class HighlightPipe {
     ) { }
 
     transform(text: string, args: string = '') {
-
-        const index = this.latinisePipe.transform(text.toLowerCase()).indexOf(this.latinisePipe.transform(args.toLowerCase()));
-        if (index >= 0) {
-            text = text.substring(0, index) + '<span class=\'highlightResult\'>' + text.substring(index, index + args.length) + '</span>' + text.substring(index + args.length);
+        let formatedText = '';
+        if (typeof text === 'string') {
+            const index = this.latinisePipe.transform(text.toLowerCase()).indexOf(this.latinisePipe.transform(args.toLowerCase()));
+            if (index >= 0) {
+                formatedText = text.substring(0, index) + '<span class=\'highlightResult\'>' + text.substring(index, index + args.length) + '</span>' + text.substring(index + args.length);
+            }
         }
-        return text;
+        return !this.functions.empty(formatedText) ? formatedText : text;
     }
 }

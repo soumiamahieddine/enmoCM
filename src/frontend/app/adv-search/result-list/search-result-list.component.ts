@@ -373,9 +373,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     }
 
     processPostData(data: any) {
-        console.log();
-
-
         data.resources.forEach((element: any) => {
             // Process main datas
             Object.keys(element).forEach((key) => {
@@ -386,6 +383,8 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 }
                 if (Object.keys(this.criteria).indexOf(key) > -1) {
                     element[key] = this.highlightPipe.transform(element[key], this.criteria[key].values);
+                } else if (['subject', 'chrono', 'resId'].indexOf(key) > -1 && Object.keys(this.criteria).indexOf('meta') > -1) {
+                    element[key] = this.highlightPipe.transform(element[key], this.criteria['meta'].values);
                 }
 
                 if (key === 'status' && !this.functions.empty(this.criteria[key])) {

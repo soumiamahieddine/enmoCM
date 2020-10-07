@@ -220,8 +220,8 @@ export class CriteriaToolComponent implements OnInit {
                     objCriteria[field.identifier] = {
                         type : field.type,
                         values: {
-                            start: !this.functions.empty(field.control.value.start) ? field.control.value.start : field.control.value.end,
-                            end: !this.functions.empty(field.control.value.end) ? field.control.value.end : field.control.value.start
+                            start: !this.functions.empty(field.control.value.start) ? field.control.value.start : null,
+                            end: !this.functions.empty(field.control.value.end) ? field.control.value.end : null
                         }
                     };
                 }
@@ -272,9 +272,9 @@ export class CriteriaToolComponent implements OnInit {
     getFormatLabel(identifier: string, value: any) {
 
         if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'date') {
-            return `${this.datePipe.transform(value.start, 'dd/MM/y')} - ${this.datePipe.transform(value.end, 'dd/MM/y')}`;
+            return `${value.start !== null ? this.datePipe.transform(value.start, 'dd/MM/y') : '∞'} - ${value.end !== null ? this.datePipe.transform(value.end, 'dd/MM/y') : '∞'}`;
         } else if (this.criteria.filter((field: any) => field.identifier === identifier)[0].type === 'integer') {
-            return `${value.start} - ${value.end}`;
+            return `${value.start !== null ? value.start : '∞'} - ${value.end !== null ? value.end : '∞'}`;
         } else {
             if (identifier === 'registeredMail_issuingSite') {
                 return this.appIssuingSiteInput.getSiteLabel(value);
