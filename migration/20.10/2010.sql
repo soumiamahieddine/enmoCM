@@ -286,6 +286,11 @@ CREATE TABLE search_templates (
   CONSTRAINT search_templates_pkey PRIMARY KEY (id)
 ) WITH (OIDS=FALSE);
 
+/*ARCHIVAL*/
+ALTER TABLE doctypes DROP COLUMN IF EXISTS action_current_use;
+ALTER TABLE doctypes ADD COLUMN action_current_use character varying(255) DEFAULT NULL;
+UPDATE doctypes SET duration_current_use = duration_current_use * 30;
+
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
 SELECT r.res_id,

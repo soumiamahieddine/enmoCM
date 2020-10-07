@@ -73,6 +73,7 @@ CREATE TABLE doctypes
   doctypes_second_level_id integer,
   retention_final_disposition character varying(255) DEFAULT NULL,
   retention_rule character varying(15) DEFAULT NULL,
+  action_current_use character varying(255) DEFAULT NULL,
   duration_current_use integer,
   process_delay INTEGER NOT NULL,
   delay1 INTEGER NOT NULL,

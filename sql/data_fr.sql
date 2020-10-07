@@ -1629,7 +1629,7 @@ UPDATE entities SET business_id = concat('45239273100025/',entity_id);
 
 UPDATE doctypes SET retention_final_disposition = 'destruction';
 UPDATE doctypes SET retention_rule = 'compta_3_03';
-UPDATE doctypes SET duration_current_use = 12;
+UPDATE doctypes SET duration_current_use = 365;
 
 -----
 -- Password management
