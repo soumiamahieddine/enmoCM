@@ -463,6 +463,97 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     element['inStatus'] = this.criteria[key].map((item: any) => item.label).indexOf(element[key]) > -1;
                 }
             });
+            // Process secondary datas
+            element.display.forEach((key: any) => {
+                key.event = false;
+                key.displayTitle = key.displayValue;
+                if ((key.displayValue == null || key.displayValue === '') && ['getCreationAndProcessLimitDates', 'getParallelOpinionsNumber'].indexOf(key.value) === -1) {
+                    key.displayValue = this.translate.instant('lang.undefined');
+                    key.displayTitle = '';
+                } else if (['getSenders', 'getRecipients'].indexOf(key.value) > -1) {
+                    key.event = true;
+                    if (key.displayValue.length > 1) {
+                        key.displayTitle = key.displayValue.join(' - ');
+                        key.displayValue = '<b>' + key.displayValue.length + '</b> ' + this.translate.instant('lang.contactsAlt');
+                    } else if (key.displayValue.length === 1) {
+                        key.displayValue = key.displayValue[0];
+                    } else {
+                        key.displayValue = this.translate.instant('lang.undefined');
+                    }
+                } else if (key.value === 'getCreationAndProcessLimitDates') {
+                    key.icon = '';
+                } else if (key.value === 'getVisaWorkflow') {
+                    let formatWorkflow: any = [];
+                    let content = '';
+                    let user = '';
+                    const displayTitle: string[] = [];
+
+                    key.displayValue.forEach((visa: any, keyVis: number) => {
+                        content = '';
+                        user = visa.user;
+                        displayTitle.push(user);
+
+                        if (visa.mode === 'sign') {
+                            user = '<u>' + user + '</u>';
+                        }
+                        if (visa.date === '') {
+                            content = '<i class="fa fa-hourglass-half"></i> <span title="' + this.translate.instant('lang.' + visa.mode + 'User') + '">' + user + '</span>';
+                        } else {
+                            content = '<span color="accent" style=""><i class="fa fa-check"></i> <span title="' + this.translate.instant('lang.' + visa.mode + 'User') + '">' + user + '</span></span>';
+                        }
+
+                        if (visa.current && keyVis >= 0) {
+                            content = '<b color="primary">' + content + '</b>';
+                        }
+
+                        formatWorkflow.push(content);
+
+                    });
+
+                    // TRUNCATE DISPLAY LIST
+                    const index = key.displayValue.map((e: any) => e.current).indexOf(true);
+                    if (index > 0) {
+                        formatWorkflow = formatWorkflow.slice(index - 1);
+                        formatWorkflow = formatWorkflow.reverse();
+                        const indexReverse = key.displayValue.map((e: any) => e.current).reverse().indexOf(true);
+                        if (indexReverse > 1) {
+                            formatWorkflow = formatWorkflow.slice(indexReverse - 1);
+                        }
+                        formatWorkflow = formatWorkflow.reverse();
+                    } else if (index === 0) {
+                        formatWorkflow = formatWorkflow.reverse();
+                        formatWorkflow = formatWorkflow.slice(index - 2);
+                        formatWorkflow = formatWorkflow.reverse();
+                    } else if (index === -1) {
+                        formatWorkflow = formatWorkflow.slice(formatWorkflow.length - 2);
+                    }
+                    if (index >= 2 || (index === -1 && key.displayValue.length >= 3)) {
+                        formatWorkflow.unshift('...');
+                    }
+                    if (index !== -1 && index - 2 <= key.displayValue.length && index + 2 < key.displayValue.length && key.displayValue.length >= 3) {
+                        formatWorkflow.push('...');
+                    }
+
+                    key.displayValue = formatWorkflow.join(' <i class="fas fa-long-arrow-alt-right"></i> ');
+                    key.displayTitle = displayTitle.join(' - ');
+                } else if (key.value === 'getSignatories') {
+                    const userList: any[] = [];
+                    key.displayValue.forEach((visa: any) => {
+                        userList.push(visa.user);
+                    });
+                    key.displayValue = userList.join(', ');
+                    key.displayTitle = userList.join(', ');
+                } else if (key.value === 'getParallelOpinionsNumber') {
+                    key.displayTitle = key.displayValue + ' ' + this.translate.instant('lang.opinionsSent');
+
+                    if (key.displayValue > 0) {
+                        key.displayValue = '<b color="primary">' + key.displayValue + '</b> ' + this.translate.instant('lang.opinionsSent');
+                    } else {
+                        key.displayValue = key.displayValue + ' ' + this.translate.instant('lang.opinionsSent');
+                    }
+                }
+                key.label = key.displayLabel === undefined ? this.translate.instant('lang.' + key.value) : key.displayLabel;
+            });
             // element['inNotes'] = true;
             // element['inNotes'] = true;
             // element['inAttachments'] = true;
