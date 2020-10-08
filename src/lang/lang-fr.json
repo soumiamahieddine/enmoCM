@@ -2057,7 +2057,7 @@
     "groupSign" : "Groupe du signataire",
     "noAdminSearchConfiguration": "Aucune configuration de recherche trouvée",
     "producerService": "Service producteur",
-    "recipientsDepartment": "Département des expéditeurs",
+    "sendersDepartment": "Département des expéditeurs",
     "recordManagement": "Archivage électronique",
     "slipLabel": "Label du bordereau",
     "slipId": "Identifiant du bordereau",

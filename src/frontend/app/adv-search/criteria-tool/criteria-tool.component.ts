@@ -581,7 +581,7 @@ export class CriteriaToolComponent implements OnInit {
         elem.returnValue = 'object';
     }
 
-    set_recipientsDepartment_field(elem: any) {
+    set_senderDepartment_field(elem: any) {
         return new Promise((resolve, reject) => {
             this.http.get(`../rest/departments`).pipe(
                 tap((data: any) => {

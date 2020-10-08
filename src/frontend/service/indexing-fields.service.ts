@@ -344,8 +344,8 @@ export class IndexingFieldsService {
             indexingHide: true
         },
         {
-            identifier: 'recipientsDepartment',
-            label: this.translate.instant('lang.recipientsDepartment'),
+            identifier: 'senderDepartment',
+            label: this.translate.instant('lang.sendersDepartment'),
             icon: 'fa-map',
             type: 'select',
             default_value: [],

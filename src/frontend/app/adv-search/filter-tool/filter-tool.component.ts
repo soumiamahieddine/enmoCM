@@ -27,4 +27,9 @@ export class FilterToolComponent implements OnInit {
         console.log(filters);
         this.filters = filters;
     }
+
+    toggleFilter(key: string, index: number) {
+        this.filters[key][index].selected = !this.filters[key][index].selected;
+        this.filterChanged.emit();
+    }
 }

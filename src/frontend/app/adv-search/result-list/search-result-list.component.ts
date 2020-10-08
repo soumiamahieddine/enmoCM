@@ -234,7 +234,10 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         }
     }
 
-    launchSearch(criteria: any = this.criteria) {
+    launchSearch(criteria: any = this.criteria, initSearch = false) {
+        if (initSearch) {
+            this.dataFilters = {};
+        }
         this.criteria = JSON.parse(JSON.stringify(criteria));
         if (!this.initSearch) {
             this.initResultList();
@@ -260,7 +263,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     if (!this.isLoadingResults) {
                         this.isLoadingResults = true;
                         return this.resultListDatabase!.getRepoIssues(
-                            this.sort.active, this.sort.direction, this.paginator.pageIndex, this.searchUrl, this.listProperties, this.paginator.pageSize, this.criteria);
+                            this.sort.active, this.sort.direction, this.paginator.pageIndex, this.searchUrl, this.listProperties, this.paginator.pageSize, this.criteria, this.dataFilters);
                     }
                 }),
                 map((data: any) => {
@@ -268,77 +271,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.templateColumns = data.templateColumns;
-                    // FOR TEST
-                    const filters = {
-                        categories: [
-                            {
-                                id: 'outgoing',
-                                label: 'Courrier départ',
-                                resCount: 24,
-                                selected: true,
-                            },
-                            {
-                                id: 'incoming',
-                                label: 'Courrier arrivé',
-                                resCount: 4,
-                                selected: true,
-                            }
-                        ],
-                        priorities: [
-                            {
-                                id: 'IUDZIZOJD',
-                                label: 'Normal',
-                                resCount: 4,
-                                selected: true,
-                            },
-                            {
-                                id: 'IUDZIZOJD',
-                                label: 'Urgent',
-                                resCount: 42,
-                                selected: true,
-                            }
-                        ],
-                        statuses: [
-                            {
-                                id: 'IUDZIZOJD',
-                                label: 'En cours',
-                                resCount: 42,
-                                selected: true,
-                            }
-                        ],
-                        doctypes: [
-                            {
-                                id: 'IUDZIZOJD',
-                                label: 'Convocations',
-                                resCount: 42,
-                                selected: true,
-                            },
-                            {
-                                id: 'IUDZIZOJD',
-                                label: 'Litiges',
-                                resCount: 42,
-                                selected: true,
-                            }
-                        ],
-                        destinations: [
-                            {
-                                id: 'IUDZIZOJD',
-                                label: 'Pôle Jeunesse et Sport',
-                                resCount: 42,
-                                selected: true,
-                            },
-                            {
-                                id: 'IUDZIZOJD',
-                                label: 'Pôle culturel',
-                                resCount: 42,
-                                selected: true,
-                            }
-                        ],
-                        folders: [
-
-                        ]
-                    };
-                    this.dataFilters = filters;
+                    this.dataFilters = data.filters;
                     this.resultsLength = data.count;
                     this.allResInBasket = data.allResources;
                     return data.resources;
@@ -717,18 +650,20 @@ export interface BasketList {
     resources: any[];
     countResources: number;
     allResources: number[];
+    filter: any[];
 }
 
 export class ResultListHttpDao {
 
     constructor(private http: HttpClient, private criteriaSearchService: CriteriaSearchService) { }
 
-    getRepoIssues(sort: string, order: string, page: number, href: string, filters: any, pageSize: number, criteria: any): Observable<BasketList> {
+    getRepoIssues(sort: string, order: string, page: number, href: string, filters: any, pageSize: number, criteria: any, sideFilters: any): Observable<BasketList> {
         this.criteriaSearchService.updateListsPropertiesPage(page);
         this.criteriaSearchService.updateListsPropertiesPageSize(pageSize);
         this.criteriaSearchService.updateListsPropertiesCriteria(criteria);
         const offset = page * pageSize;
         const requestUrl = `${href}?limit=${pageSize}&offset=${offset}&order=${filters.order}&orderDir=${filters.orderDir}`;
-        return this.http.post<BasketList>(requestUrl, this.criteriaSearchService.formatDatas(JSON.parse(JSON.stringify(criteria))));
+        const dataToSend = Object.assign({}, this.criteriaSearchService.formatDatas(JSON.parse(JSON.stringify(criteria))), {filters: sideFilters});
+        return this.http.post<BasketList>(requestUrl, dataToSend);
     }
 }
