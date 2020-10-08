@@ -623,6 +623,9 @@ $app->post('/collaboraOnline/file', \ContentManagement\controllers\CollaboraOnli
 $app->delete('/collaboraOnline/file', \ContentManagement\controllers\CollaboraOnlineController::class . ':deleteTmpFile');
 $app->post('/collaboraOnline/encodedFile', \ContentManagement\controllers\CollaboraOnlineController::class . ':saveTmpEncodedDocument');
 
+// Archival
+$app->get('/resources/{resId}/initSeda', \ExportSeda\controllers\SedaController::class . ':initSeda');
+
 // Registered mail
 $app->get('/registeredMail/sites', \RegisteredMail\controllers\IssuingSiteController::class . ':get');
 $app->get('/registeredMail/sites/{id}', \RegisteredMail\controllers\IssuingSiteController::class . ':getById');
