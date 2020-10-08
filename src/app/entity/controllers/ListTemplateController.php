@@ -20,7 +20,6 @@ use Entity\models\ListTemplateModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
-use Parameter\controllers\ParameterController;
 use Parameter\models\ParameterModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
