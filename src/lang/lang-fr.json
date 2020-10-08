@@ -2057,5 +2057,11 @@
     "groupSign" : "Groupe du signataire",
     "noAdminSearchConfiguration": "Aucune configuration de recherche trouvée",
     "producerService": "Service producteur",
-    "recipientsDepartment": "Département des expéditeurs"
+    "recipientsDepartment": "Département des expéditeurs",
+    "recordManagement": "Archivage électronique",
+    "slipLabel": "Label du bordereau",
+    "slipId": "Identifiant du bordereau",
+    "transferEntity": "Entité de transfert",
+    "sirenNumber": "Numéro SIREN",
+    "sirenNumberArchiveEntity": "Numéro SIREN entité d'archive"
 }
