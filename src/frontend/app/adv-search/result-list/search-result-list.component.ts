@@ -124,7 +124,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     @ViewChild('appPanelList', { static: false }) appPanelList: PanelListComponent;
     @ViewChild('appFilterToolAdvSearch', { static: false }) appFilterToolAdvSearch: FilterToolComponent;
 
+
     currentSelectedChrono: string = '';
+    templateColumns: number = 7;
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
@@ -265,6 +267,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
+                    this.templateColumns = data.templateColumns;
                     // FOR TEST
                     const filters = {
                         categories: [
