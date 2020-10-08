@@ -171,7 +171,7 @@ class UserController
         $check = $check && Validator::stringType()->length(1, 255)->notEmpty()->validate($data['lastname']);
         $check = $check && Validator::stringType()->length(0, 32)->validate($data['initials'] ?? '');
         $check = $check && Validator::stringType()->length(1, 255)->notEmpty()->validate($data['mail']);
-        $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
+        $check = $check && filter_var($data['mail'], FILTER_VALIDATE_EMAIL);
         if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
             $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $data['phone'])) && Validator::stringType()->length(0, 32)->validate($data['phone'] ?? '');
         }
