@@ -328,8 +328,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     this.http.get('../rest/search/configuration').pipe(
                         tap((myData: any) => {
                             this.currentTool = myData.configuration.listEvent.defaultTab;
-                            console.log(this.currentTool);
-                            
                         }),
                         catchError((err: any) => {
                             this.notify.handleErrors(err);
