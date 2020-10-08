@@ -161,6 +161,13 @@ foreach ($customs as $custom) {
                     }
                 }
                 $query[] = ['identifier' => 'doctype', 'values' => $types];
+            } elseif ($key == 'department_number_mu') {
+                $departments = [];
+                foreach ($value['fields']['department_number_chosen'] as $department) {
+                    $label = \Resource\controllers\DepartmentController::FRENCH_DEPARTMENTS[$department];
+                    $departments[] = ['id' => $department, 'label' => "{$department} - {$label}"];
+                }
+                $query[] = ['identifier' => 'senderDepartment', 'values' => $departments];
             }
         }
 
