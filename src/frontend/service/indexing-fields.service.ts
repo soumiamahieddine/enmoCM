@@ -343,6 +343,16 @@ export class IndexingFieldsService {
             enabled: true,
             indexingHide: true
         },
+        {
+            identifier: 'recipientsDepartment',
+            label: this.translate.instant('lang.recipientsDepartment'),
+            icon: 'fa-map',
+            type: 'select',
+            default_value: [],
+            values: [],
+            enabled: true,
+            indexingHide: true
+        },
     ];
 
     customFields: any[] = [];

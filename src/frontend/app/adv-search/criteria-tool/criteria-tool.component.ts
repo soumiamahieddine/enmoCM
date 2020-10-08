@@ -581,6 +581,28 @@ export class CriteriaToolComponent implements OnInit {
         elem.returnValue = 'object';
     }
 
+    set_recipientsDepartment_field(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/departments`).pipe(
+                tap((data: any) => {
+                    Object.keys(data.departments).forEach(key => {
+                        elem.values.push({
+                            id: key,
+                            label: `${key} - ${data.departments[key]}`
+                        });
+                    });
+                    elem.values = this.sortPipe.transform(elem.values, 'label');
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+
     getSearchTemplates() {
         this.http.get(`../rest/searchTemplates`).pipe(
             tap((data: any) => {

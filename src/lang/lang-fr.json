@@ -2056,5 +2056,6 @@
     "manualSearchInfo" : "Vous pouvez laisser le terme dans le champ sans sélectionner de valeur pour la recherche.",
     "groupSign" : "Groupe du signataire",
     "noAdminSearchConfiguration": "Aucune configuration de recherche trouvée",
-    "producerService": "Service producteur"
+    "producerService": "Service producteur",
+    "recipientsDepartment": "Département des expéditeurs"
 }
