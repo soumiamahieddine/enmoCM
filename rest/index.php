@@ -188,6 +188,9 @@ $app->put('/customFields/{id}', \CustomField\controllers\CustomFieldController::
 $app->delete('/customFields/{id}', \CustomField\controllers\CustomFieldController::class . ':delete');
 $app->get('/customFieldsWhiteList', \CustomField\controllers\CustomFieldController::class . ':getWhiteList');
 
+//Departments
+$app->get('/departments', \Resource\controllers\DepartmentController::class . ':getFrenchDepartments');
+
 //Docservers
 $app->get('/docservers', \Docserver\controllers\DocserverController::class . ':get');
 $app->post('/docservers', \Docserver\controllers\DocserverController::class . ':create');
