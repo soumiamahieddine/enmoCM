@@ -325,9 +325,9 @@ export class IndexingFieldsService {
         },
         {
             identifier: 'attachment_creationDate',
-            label: `${this.translate.instant('lang.creationDate')} (PJ)`,
+            label: `${this.translate.instant('lang.creationDate')} (${this.translate.instant('lang.attachmentShort')})`,
             icon: 'fa-calendar-day',
-            type: 'select',
+            type: 'date',
             default_value: [],
             values: [],
             enabled: true,
