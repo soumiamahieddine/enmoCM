@@ -140,7 +140,7 @@
     "arAlreadySend": "accusé(s) de réception déjà envoyé(s)",
     "arGenWithModelMessage": "Les fiches de liaisons seront générées avec les champs définis dans le modèle d'enregistrement du courrier.",
     "archival": "Archivage",
-    "archivalAgency": "Service d'archive",
+    "archivalAgency": "Service d'archive destinataire",
     "archivalAgreement": "Accord de versement",
     "arrivalDate": "Date d'arrivée",
     "ascOrder": "Ordre ascendant",
@@ -2060,9 +2060,11 @@
     "producerService": "Service producteur",
     "sendersDepartment": "Département des expéditeurs",
     "recordManagement": "Archivage électronique",
-    "slipLabel": "Label du bordereau",
+    "slipLabel": "Libellé du bordereau",
     "slipId": "Identifiant du bordereau",
     "transferEntity": "Entité de transfert",
     "sirenNumber": "Numéro SIREN",
-    "sirenNumberArchiveEntity": "Numéro SIREN entité d'archive"
+    "senderArchiveEntity": "Service versant",
+    "descriptionLevel": "Niveau de description",
+    "archiveId": "Identifiant de l'archive"
 }

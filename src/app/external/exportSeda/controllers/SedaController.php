@@ -62,7 +62,7 @@ class SedaController
         if (empty($doctype['retention_rule']) || empty($doctype['retention_final_disposition'])) {
             return $response->withStatus(400)->withJson(['errors' => 'retention_rule or retention_final_disposition is empty for doctype', 'lang' => 'noRetentionInfo']);
         }
-        $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['producer_service', 'entity_label', 'business_id']]);
+        $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['producer_service', 'entity_label']]);
         if (empty($entity['producer_service'])) {
             return $response->withStatus(400)->withJson(['errors' => 'producer_service is empty for this entity', 'lang' => 'noProducerService']);
         }
@@ -72,34 +72,57 @@ class SedaController
             return $response->withStatus(400)->withJson(['errors' => 'No senderOrgRegNumber found in config.xml (export_seda)']);
         }
 
+        $date = new \DateTime();
+
         $return = [
             'data' => [
                 'entity' => [
-                    'label'              => $entity['entity_label'],
-                    'siren'              => $entity['business_id'],
-                    'archiveEntitySiren' => (string)$sedaXml->CONFIG->senderOrgRegNumber
+                    'label'               => $entity['entity_label'],
+                    'producerService'     => $entity['producer_service'],
+                    'senderArchiveEntity' => (string)$sedaXml->CONFIG->senderOrgRegNumber
                 ],
                 'doctype' => [
                     'label'                     => $doctype['description'],
                     'retentionRule'             => $doctype['retention_rule'],
                     'retentionFinalDisposition' => $doctype['retention_final_disposition']
+                ],
+                'slipInfo' => [
+                    'slipId'    => $GLOBALS['login'] . '-' . $date->format('Ymd-His'),
+                    'archiveId' => 'archive_' . $firstResource
                 ]
             ],
             'archiveUnits' => [
                 [
-                    'id'    => 'letterbox_' . $firstResource,
-                    'label' => $resource['subject'],
-                    'type'  => 'mainDocument'
+                    'id'               => 'letterbox_' . $firstResource,
+                    'label'            => $resource['subject'],
+                    'type'             => 'mainDocument',
+                    'descriptionLevel' => 'Item'
                 ]
             ]
         ];
 
+        $attachments = AttachmentModel::get([
+            'select'  => ['res_id', 'title'],
+            'where'   => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
+            'data'    => [$firstResource, ['DEL', 'OBS', 'TMP'], ['signed_response']],
+            'orderBy' => ['modification_date DESC']
+        ]);
+        foreach ($attachments as $attachment) {
+            $return['archiveUnits'][] = [
+                'id'               => 'attachment_' . $attachment['res_id'],
+                'label'            => $attachment['title'],
+                'type'             => 'attachment',
+                'descriptionLevel' => 'Item'
+            ];
+        }
+
         $notes = NoteModel::get(['select' => ['note_text', 'id'], 'where' => ['identifier = ?'], 'data' => [$firstResource]]);
         foreach ($notes as $note) {
             $return['archiveUnits'][] = [
-                'id'    => 'note_' . $note['id'],
-                'label' => $note['note_text'],
-                'type'  => 'note'
+                'id'               => 'note_' . $note['id'],
+                'label'            => $note['note_text'],
+                'type'             => 'note',
+                'descriptionLevel' => 'Item'
             ];
         }
 
@@ -111,31 +134,19 @@ class SedaController
         ]);
         foreach ($emails as $email) {
             $return['archiveUnits'][] = [
-                'id'    => 'note_' . $email['id'],
-                'label' => $email['object'],
-                'type'  => 'email'
+                'id'               => 'note_' . $email['id'],
+                'label'            => $email['object'],
+                'type'             => 'email',
+                'descriptionLevel' => 'Item'
             ];
         }
 
         $return['archiveUnits'][] = [
-            'id'    => 'summarySheet_' . $firstResource,
-            'label' => 'Fiche de liaison',
-            'type'  => 'summarySheet'
+            'id'               => 'summarySheet_' . $firstResource,
+            'label'            => 'Fiche de liaison',
+            'type'             => 'summarySheet',
+            'descriptionLevel' => 'Item'
         ];
-
-        $attachments = AttachmentModel::get([
-            'select'    => ['res_id', 'title'],
-            'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
-            'data'      => [$firstResource, ['DEL', 'OBS', 'TMP'], ['signed_response']],
-            'orderBy'   => ['modification_date DESC']
-        ]);
-        foreach ($attachments as $attachment) {
-            $return['archiveUnits'][] = [
-                'id'    => 'attachment_' . $attachment['res_id'],
-                'label' => $attachment['title'],
-                'type'  => 'attachment'
-            ];
-        }
 
         $linkedResourcesIds = json_decode($resource['linked_resources'], true);
         if (!empty($linkedResourcesIds)) {
@@ -156,15 +167,16 @@ class SedaController
         }
 
         $folders = FolderModel::getWithEntitiesAndResources([
-            'select'    => ['DISTINCT(folders.id)', 'folders.label'],
-            'where'     => ['res_id = ?', '(entity_id in (?) OR keyword = ?)', 'folders.public = TRUE'],
-            'data'      => [$firstResource, $entities, 'ALL_ENTITIES']
+            'select' => ['DISTINCT(folders.id)', 'folders.label'],
+            'where'  => ['res_id = ?', '(entity_id in (?) OR keyword = ?)', 'folders.public = TRUE'],
+            'data'   => [$firstResource, $entities, 'ALL_ENTITIES']
         ]);
         foreach ($folders as $folder) {
             $return['additionalData']['folders'][] = [
-                'id'    => 'folder_' . $folder['id'],
-                'label' => $folder['label'],
-                'type'  => 'folder'
+                'id'               => 'folder_' . $folder['id'],
+                'label'            => $folder['label'],
+                'type'             => 'folder',
+                'descriptionLevel' => 'Item'
             ];
         }
         

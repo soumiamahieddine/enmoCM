@@ -1043,7 +1043,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (6,  '', 'Supprimer le courrier', 'DEL', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (18, 'redirect', 'Qualifier le courrier', 'NEW', 'N', 'redirect', 'Y', 'redirectAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (19, '', 'Traiter courrier', 'COU', 'N', 'confirm_status', 'N', 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (20, '', 'Cloturer', 'END', 'N', 'close_mail', 'Y', 'closeMailAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component, parameters) VALUES (20, '', 'Cloturer', 'END', 'N', 'close_mail', 'Y', 'closeMailAction', '{"requiredFields": []}');
 INSERT INTO actions (id, label_action, id_status, is_system, history, component) VALUES (21, 'Envoyer le courrier en validation', 'VAL', 'N', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (22, '', 'Attribuer au service', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (23, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
@@ -1073,7 +1073,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (502, '', 'Valider l''archivage du courrier', 'REPLY_SEDA', 'N', 'check_reply', 'Y', 'v1Action');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (503, '', 'Purger le courrier', 'DEL', 'N', 'purge_letter', 'Y', 'v1Action');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (504, '', 'Remise à zero du courrier', 'END', 'N', 'reset_letter', 'Y', 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (505, '', 'Clôturer avec suivi', 'STDBY', 'N', 'close_mail', 'Y', 'closeMailAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component, parameters) VALUES (505, '', 'Clôturer avec suivi', 'STDBY', 'N', 'close_mail', 'Y', 'closeMailAction', '{"requiredFields": []}');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (506, '', 'Terminer le suivi', 'END', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (507, '', 'Acter l’envoi', 'ENVDONE', 'N', 'confirm_status', 'Y', 'confirmAction');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (522, '', 'Envoyer en validation DGS', 'VAL', 'N', 'confirm_status', 'Y', 'confirmAction');

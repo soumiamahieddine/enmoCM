@@ -16,36 +16,64 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 export class SendToRecordManagementComponent implements OnInit {
 
     loading: boolean = false;
-    archiveSenders: [
+    entityArchiveRecipients = [
         {
             id: 1,
-            label: 'test'
+            label: 'Service 1'
         }
     ];
-    archivalAgreement: [
+    archivalAgreements = [
         {
             id: 1,
-            label: 'test'
+            label: 'Accord 1'
+        }
+    ];
+
+    descriptionLevels = [
+        {
+            id: 'Class',
+            label: 'Classe'
+        },
+        {
+            id: 'Collection',
+            label: 'Collection'
+        },
+        {
+            id: 'File',
+            label: 'Dossier'
+        },
+        {
+            id: 'Fonds',
+            label: 'Fonds'
+        },
+        {
+            id: 'Item',
+            label: 'Pièce'
+        },
+        {
+            id: 'RecordGrp',
+            label: 'Groupe de documents'
+        },
+        {
+            id: 'Series',
+            label: 'Série organique'
+        },
+        {
+            id: 'Subfonds',
+            label: 'Sous-fonds'
+        },
+        {
+            id: 'SubGrp',
+            label: 'Sous-groupe de documents'
+        },
+        {
+            id: 'Subseries',
+            label: 'Sous-série organique'
         }
     ];
 
     actionFormGroup: FormGroup;
-
-    archives: any[] = [
-        {
-            id : 'letterbox_100',
-            label : 'Procédure INSTALLATION du patch MAARCH 1_7_ARCHIVAGE',
-            type : 'Document principal',
-            descService : '???'
-        },
-        {
-            id : 'attachment_1_1',
-            label : 'Réponse de Jean',
-            type : 'Projet de réponse',
-            descService : '???'
-        }
-    ];
-
+    archives: any[] = [];
 
     constructor(
         public translate: TranslateService,
@@ -57,20 +85,19 @@ export class SendToRecordManagementComponent implements OnInit {
         public functions: FunctionsService
     ) {
         this.actionFormGroup = this._formBuilder.group({
-            packageName: ['test', Validators.required],
-            slipId: [{value: 'bblier-20201008-123809', disabled: true}, Validators.required],
+            packageName: ['', Validators.required],
+            slipId: [{value: '', disabled: true}, Validators.required],
             slipDate: [new Date(), Validators.required],
-            entityLabelTransferEntity: [{value: 'Direction Général des services', disabled: true}, Validators.required],
-            entitySirenTransferEntity: [{value: 'org_987654321_DGS_SA', disabled: true}, Validators.required],
-            sirenArchiveEntity: [{value: 'org_123456789_Archives', disabled: true}, Validators.required],
-            archiveId: [{value: 'letterbox_100', disabled: true}, Validators.required],
-            doctype: [{value: 'Convocation', disabled: true}, Validators.required],
-            entityRetentionRule: [{value: 'compta_3_03', disabled: true}, Validators.required],
-            doctypeRetentionFinalDisposition: [{value: 'Destruction', disabled: true}, Validators.required],
-            doctypeDurationCurrentUse: [{value: '23 jours', disabled: true}, Validators.required],
-            doctypeActionCurrentUse: [{value: 'Envoi SAE (puis accès restreint)', disabled: true}, Validators.required],
-            sendDate: ['??? (voir equipe RM)', Validators.required],
-            receiveDate: ['??? (voir equipe RM)', Validators.required],
+            archivalAgreement: [{value: '', disabled: false}, Validators.required],
+            entityArchiveRecipient: [{value: '', disabled: false}, Validators.required],
+            entityLabelTransferEntity: [{value: '', disabled: true}, Validators.required],
+            producerTransferEntity: [{value: '', disabled: true}, Validators.required],
+            senderArchiveEntity: [{value: '', disabled: true}, Validators.required],
+            archiveId: [{value: '', disabled: true}, Validators.required],
+            archiveDescriptionLevel: [{value: 'File', disabled: false}, Validators.required],
+            doctype: [{value: '', disabled: true}, Validators.required],
+            entityRetentionRule: [{value: '', disabled: true}, Validators.required],
+            doctypeRetentionFinalDisposition: [{value: '', disabled: true}, Validators.required]
         });
     }
 
@@ -82,14 +109,20 @@ export class SendToRecordManagementComponent implements OnInit {
         this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkSendToRecordManagement`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
                 this.archives = data.archiveUnits;
+                this.archives.forEach((element: any) => {
+                    element.type = this.translate.instant('lang.' + element.type);
+                });
                 this.actionFormGroup = this._formBuilder.group({
-                    packageName: ['test', Validators.required],
-                    slipId: [{value: 'bblier-20201008-123809', disabled: true}, Validators.required],
+                    packageName: ['', Validators.required],
+                    slipId: [{value: data.data.slipInfo.slipId, disabled: true}, Validators.required],
                     slipDate: [new Date(), Validators.required],
+                    archivalAgreement: [{value: '', disabled: false}, Validators.required],
+                    entityArchiveRecipient: [{value: '', disabled: false}, Validators.required],
                     entityLabelTransferEntity: [{value: data.data.entity.label, disabled: true}, Validators.required],
-                    entitySirenTransferEntity: [{value: data.data.entity.siren, disabled: true}, Validators.required],
-                    sirenArchiveEntity: [{value: data.data.entity.archiveEntitySiren, disabled: true}, Validators.required],
-                    archiveId: [{value: 'letterbox_100', disabled: true}, Validators.required],
+                    producerTransferEntity: [{value: data.data.entity.producerService, disabled: true}, Validators.required],
+                    senderArchiveEntity: [{value: data.data.entity.senderArchiveEntity, disabled: true}, Validators.required],
+                    archiveId: [{value: data.data.slipInfo.archiveId, disabled: true}, Validators.required],
+                    archiveDescriptionLevel: [{value: 'File', disabled: false}, Validators.required],
                     doctype: [{value: data.data.doctype.label, disabled: true}, Validators.required],
                     entityRetentionRule: [{value: data.data.doctype.retentionRule, disabled: true}, Validators.required],
                     doctypeRetentionFinalDisposition: [{value: data.data.doctype.retentionFinalDisposition, disabled: true}, Validators.required],

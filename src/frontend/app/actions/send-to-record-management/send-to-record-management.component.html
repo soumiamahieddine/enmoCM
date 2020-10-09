@@ -13,6 +13,24 @@
                 <mat-label>{{'lang.slipId' | translate}}</mat-label>
                 <input type="text" matInput formControlName="slipId">
             </mat-form-field>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field>
+                        <mat-label>{{'lang.archivalAgreement' | translate}}</mat-label>
+                        <mat-select formControlName="archivalAgreement">
+                            <mat-option *ngFor="let agreement of archivalAgreements" [value]="agreement.id">{{agreement.label}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field>
+                        <mat-label>{{'lang.archivalAgency' | translate}}</mat-label>
+                        <mat-select formControlName="entityArchiveRecipient">
+                            <mat-option *ngFor="let entity of entityArchiveRecipients" [value]="entity.id">{{entity.label}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
             <div class="form-group" style="display:flex;flex-direction: row; flex-wrap: wrap;">
                 <div class="formType ratio-2 col-sm-12">
                     <div class="formType-title">
@@ -23,12 +41,12 @@
                         <input type="text" matInput formControlName="entityLabelTransferEntity">
                     </mat-form-field>
                     <mat-form-field>
-                        <mat-label>{{'lang.sirenNumber' | translate}}</mat-label>
-                        <input type="text" matInput formControlName="entitySirenTransferEntity">
+                        <mat-label>{{'lang.producerService' | translate}}</mat-label>
+                        <input type="text" matInput formControlName="producerTransferEntity">
                     </mat-form-field>
                     <mat-form-field>
-                        <mat-label>{{'lang.sirenNumberArchiveEntity' | translate}}</mat-label>
-                        <input type="text" matInput formControlName="sirenArchiveEntity">
+                        <mat-label>{{'lang.senderArchiveEntity' | translate}}</mat-label>
+                        <input type="text" matInput formControlName="senderArchiveEntity">
                     </mat-form-field>
                 </div>
                 <div class="formType ratio-2 col-sm-12">
@@ -49,9 +67,25 @@
                     </mat-form-field>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{'lang.archiveId' | translate}}</mat-label>
+                        <input type="text" matInput formControlName="archiveId">
+                    </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                    <mat-form-field>
+                        <mat-label>{{'lang.descriptionLevel' | translate}}</mat-label>
+                        <mat-select formControlName="archiveDescriptionLevel">
+                            <mat-option *ngFor="let descriptionLevel of descriptionLevels" [value]="descriptionLevel.id">{{descriptionLevel.label}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
         </form>
         <mat-tab-group>
-            <mat-tab *ngFor="let archive of archives; let i=index" label="Archive {{i + 1}}">
+            <mat-tab *ngFor="let archive of archives; let i=index" label="Unité d'archive n°{{i + 1}}">
                 <mat-form-field>
                     <mat-label>{{'lang.id' | translate}}</mat-label>
                     <input type="text" matInput [(ngModel)]="archive.id" disabled>
@@ -65,8 +99,10 @@
                     <input type="text" matInput [(ngModel)]="archive.type" disabled>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>{{'lang.descService' | translate}}</mat-label>
-                    <input type="text" matInput [(ngModel)]="archive.descService" disabled>
+                    <mat-label>{{'lang.descriptionLevel' | translate}}</mat-label>
+                    <mat-select [(ngModel)]="archive.descriptionLevel" required>
+                        <mat-option *ngFor="let descriptionLevel of descriptionLevels" [value]="descriptionLevel.id">{{descriptionLevel.label}}</mat-option>
+                    </mat-select>
                 </mat-form-field>
             </mat-tab>
         </mat-tab-group>
