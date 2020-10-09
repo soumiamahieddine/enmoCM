@@ -51,6 +51,11 @@ class SearchController
 {
     public function get(Request $request, Response $response)
     {
+        $adminSearch = ConfigurationModel::getByPrivilege(['privilege' => 'admin_search', 'select' => ['value']]);
+        if (empty($adminSearch)) {
+            return $response->withStatus(400)->withJson(['errors' => 'No admin_search configuration found', 'lang' => 'noAdminSearchConfiguration']);
+        }
+
         $body = $request->getParsedBody();
 
         $userdataClause = SearchController::getUserDataClause(['userId' => $GLOBALS['id'], 'login' => $GLOBALS['login']]);
@@ -149,7 +154,6 @@ class SearchController
         if (empty($allResources[$offset])) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => [], 'filters' => $filters]);
         }
-
         $allResources = array_column($allResources, 'resId');
 
         $resIds = [];
@@ -163,10 +167,6 @@ class SearchController
         }
         $order .= 'END';
 
-        $adminSearch   = ConfigurationModel::getByPrivilege(['privilege' => 'admin_search', 'select' => ['value']]);
-        if (empty($adminSearch)) {
-            return $response->withStatus(400)->withJson(['errors' => 'no admin_search configuration found', 'lang' => 'noAdminSearchConfiguration']);
-        }
         $configuration = json_decode($adminSearch['value'], true);
         $listDisplay   = $configuration['listDisplay']['subInfos'];
 
@@ -194,10 +194,9 @@ class SearchController
 
         $followedDocuments = UserFollowedResourceModel::get([
             'select' => ['res_id'],
-                'where'  => ['user_id = ?'],
-                'data'   => [$GLOBALS['id']],
-            ]);
-    
+            'where'  => ['user_id = ?'],
+            'data'   => [$GLOBALS['id']],
+        ]);
         $trackedMails = array_column($followedDocuments, 'res_id');
 
         $formattedResources = ResourceListController::getFormattedResources([
@@ -208,6 +207,12 @@ class SearchController
             'listDisplay'   => $listDisplay,
             'trackedMails'  => $trackedMails
         ]);
+
+        $ids = array_column($formattedResources, 'resId');
+        $matchingResources = SearchController::getAttachmentsInsider(['resources' => $ids, 'body' => $body]);
+        foreach ($formattedResources as $key => $formattedResource) {
+            $formattedResources[$key]['inAttachments'] = in_array($formattedResource['resId'], $matchingResources);
+        }
 
         return $response->withJson([
             'resources'         => $formattedResources,
@@ -1351,28 +1356,6 @@ class SearchController
             }
         }
 
-//        if (!empty($data['entitiesChildren'])) {
-//            $entities = explode(',', $data['entitiesChildren']);
-//            $entitiesChildren = [];
-//            foreach ($entities as $entity) {
-//                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
-//                $entitiesChildren = array_merge($entitiesChildren, $children);
-//            }
-//            if (!empty($entitiesChildren)) {
-//                $wherePriorities[] = 'destination in (?)';
-//                $dataPriorities[]  = $entitiesChildren;
-//                $whereCategories[] = 'destination in (?)';
-//                $dataCategories[]  = $entitiesChildren;
-//                $whereStatuses[]   = 'destination in (?)';
-//                $dataStatuses[]    = $entitiesChildren;
-//                $whereDocTypes[]   = 'destination in (?)';
-//                $dataDocTypes[]    = $entitiesChildren;
-//                $whereFolders[]    = 'destination in (?)';
-//                $dataFolders[]     = $entitiesChildren;
-//            }
-//        }
-
-
         $priorities = [];
         $rawPriorities = ResModel::get([
             'select'    => ['count(res_id)', 'priority'],
@@ -1623,6 +1606,48 @@ class SearchController
 
 
         return ['priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses, 'doctypes' => $docTypes, 'entities' => $entities, 'folders' => $folders];
+    }
+
+    private static function getAttachmentsInsider(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resources']);
+        ValidatorModel::arrayType($args, ['resources', 'body']);
+
+        $body = $args['body'];
+
+        $where = ['res_id in (?)'];
+        $data = [$args['resources']];
+        $wherePlus = '';
+        if (!empty($body['subject']) && !empty($body['subject']['values']) && is_string($body['subject']['values'])) {
+            if ($body['subject']['values'][0] == '"' && $body['subject']['values'][strlen($body['subject']['values']) - 1] == '"') {
+                $wherePlus = 'res_id in (select res_id_master from res_attachments where title = ?)';
+                $subject = trim($body['subject']['values'], '"');
+                $data[] = $subject;
+            } else {
+                $wherePlus = "res_id in (select res_id_master from res_attachments where title ilike ?)";
+                $data[] = "%{$body['subject']['values']}%";
+            }
+        }
+        if (!empty($body['chrono']) && !empty($body['chrono']['values']) && is_string($body['chrono']['values'])) {
+            if (!empty($wherePlus)) {
+                $wherePlus .= ' OR ';
+            }
+            $wherePlus .= 'res_id in (select res_id_master from res_attachments where identifier ilike ?)';
+            $data[] = "%{$body['chrono']['values']}%";
+        }
+        if (empty($wherePlus)) {
+            return [];
+        }
+
+        $where[] = "({$wherePlus})";
+        $matchingResources = ResModel::get([
+            'select'    => ['res_id'],
+            'where'     => $where,
+            'data'      => $data
+        ]);
+        $matchingResources = array_column($matchingResources, 'res_id');
+
+        return $matchingResources;
     }
 
     private static function getEndDayDate(array $args)
