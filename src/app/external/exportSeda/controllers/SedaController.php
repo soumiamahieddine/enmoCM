@@ -18,22 +18,40 @@ use Attachment\models\AttachmentModel;
 use Doctype\models\DoctypeModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
+use Folder\models\FolderModel;
 use Note\models\NoteModel;
+use Resource\controllers\ResController;
+use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
 
 class SedaController
 {
-    public function initSeda(Request $request, Response $response, array $aArgs)
+    public function checkSendToRecordManagement(Request $request, Response $response, array $aArgs)
     {
-        if (!Validator::intVal()->validate($aArgs['resId'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
         }
 
-        $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination', 'type_id', 'subject', 'linked_resources']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $firstResource = $body['resources'][0];
+
+        $resource = ResModel::getById(['resId' => $firstResource, 'select' => ['destination', 'type_id', 'subject', 'linked_resources']]);
         if (empty($resource)) {
             return $response->withStatus(400)->withJson(['errors' => 'resource does not exists']);
         } elseif (empty($resource['destination'])) {
@@ -59,7 +77,7 @@ class SedaController
                 'entity' => [
                     'label'              => $entity['entity_label'],
                     'siren'              => $entity['business_id'],
-                    'archiveEntitySiren' => $sedaXml->CONFIG->senderOrgRegNumber
+                    'archiveEntitySiren' => (string)$sedaXml->CONFIG->senderOrgRegNumber
                 ],
                 'doctype' => [
                     'label'                     => $doctype['description'],
@@ -67,18 +85,18 @@ class SedaController
                     'retentionFinalDisposition' => $doctype['retention_final_disposition']
                 ]
             ],
-            'archiveUnit' => [
+            'archiveUnits' => [
                 [
-                    'id'    => 'letterbox_' . $aArgs['resId'],
+                    'id'    => 'letterbox_' . $firstResource,
                     'label' => $resource['subject'],
                     'type'  => 'mainDocument'
                 ]
             ]
         ];
 
-        $notes = NoteModel::get(['select' => ['note_text', 'id'], 'where' => ['identifier = ?'], 'data' => [$aArgs['resId']]]);
+        $notes = NoteModel::get(['select' => ['note_text', 'id'], 'where' => ['identifier = ?'], 'data' => [$firstResource]]);
         foreach ($notes as $note) {
-            $return['archiveUnit'][] = [
+            $return['archiveUnits'][] = [
                 'id'    => 'note_' . $note['id'],
                 'label' => $note['note_text'],
                 'type'  => 'note'
@@ -88,19 +106,19 @@ class SedaController
         $emails = EmailModel::get([
             'select'  => ['object', 'id'],
             'where'   => ['document->>\'id\' = ?', 'status = ?'],
-            'data'    => [$aArgs['resId'], 'SENT'],
+            'data'    => [$firstResource, 'SENT'],
             'orderBy' => ['send_date desc']
         ]);
         foreach ($emails as $email) {
-            $return['archiveUnit'][] = [
+            $return['archiveUnits'][] = [
                 'id'    => 'note_' . $email['id'],
                 'label' => $email['object'],
                 'type'  => 'email'
             ];
         }
 
-        $return['archiveUnit'][] = [
-            'id'    => 'summarySheet_' . $aArgs['resId'],
+        $return['archiveUnits'][] = [
+            'id'    => 'summarySheet_' . $firstResource,
             'label' => 'Fiche de liaison',
             'type'  => 'summarySheet'
         ];
@@ -108,11 +126,11 @@ class SedaController
         $attachments = AttachmentModel::get([
             'select'    => ['res_id', 'title'],
             'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
-            'data'      => [$aArgs['resId'], ['DEL', 'OBS', 'TMP'], ['signed_response']],
+            'data'      => [$firstResource, ['DEL', 'OBS', 'TMP'], ['signed_response']],
             'orderBy'   => ['modification_date DESC']
         ]);
         foreach ($attachments as $attachment) {
-            $return['archiveUnit'][] = [
+            $return['archiveUnits'][] = [
                 'id'    => 'attachment_' . $attachment['res_id'],
                 'label' => $attachment['title'],
                 'type'  => 'attachment'
@@ -120,9 +138,8 @@ class SedaController
         }
 
         $linkedResourcesIds = json_decode($resource['linked_resources'], true);
-
-        $linkedResources = [];
         if (!empty($linkedResourcesIds)) {
+            $linkedResources = [];
             $linkedResources = ResModel::get([
                 'select' => ['res_id', 'alt_identifier'],
                 'where'  => ['res_id in (?)'],
@@ -131,7 +148,25 @@ class SedaController
             $return['additionalData']['linkedResources'] = array_column($linkedResources, 'alt_identifier');
         }
 
-        // TODO Folders
+        $entities = UserModel::getEntitiesById(['id' => $aArgs['userId'], 'select' => ['entities.id']]);
+        $entities = array_column($entities, 'id');
+
+        if (empty($entities)) {
+            $entities = [0];
+        }
+
+        $folders = FolderModel::getWithEntitiesAndResources([
+            'select'    => ['DISTINCT(folders.id)', 'folders.label'],
+            'where'     => ['res_id = ?', '(entity_id in (?) OR keyword = ?)', 'folders.public = TRUE'],
+            'data'      => [$firstResource, $entities, 'ALL_ENTITIES']
+        ]);
+        foreach ($folders as $folder) {
+            $return['additionalData']['folders'][] = [
+                'id'    => 'folder_' . $folder['id'],
+                'label' => $folder['label'],
+                'type'  => 'folder'
+            ];
+        }
         
         return $response->withJson($return);
     }

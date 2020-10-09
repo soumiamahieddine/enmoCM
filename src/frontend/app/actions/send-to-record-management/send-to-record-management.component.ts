@@ -79,17 +79,28 @@ export class SendToRecordManagementComponent implements OnInit {
     }
 
     getData() {
-
-        // TODO
-        /*this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkSendToRecordManagement`, { resources: this.data.resIds }).pipe(
+        this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkSendToRecordManagement`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
+                this.archives = data.archiveUnits;
+                this.actionFormGroup = this._formBuilder.group({
+                    packageName: ['test', Validators.required],
+                    slipId: [{value: 'bblier-20201008-123809', disabled: true}, Validators.required],
+                    slipDate: [new Date(), Validators.required],
+                    entityLabelTransferEntity: [{value: data.data.entity.label, disabled: true}, Validators.required],
+                    entitySirenTransferEntity: [{value: data.data.entity.siren, disabled: true}, Validators.required],
+                    sirenArchiveEntity: [{value: data.data.entity.archiveEntitySiren, disabled: true}, Validators.required],
+                    archiveId: [{value: 'letterbox_100', disabled: true}, Validators.required],
+                    doctype: [{value: data.data.doctype.label, disabled: true}, Validators.required],
+                    entityRetentionRule: [{value: data.data.doctype.retentionRule, disabled: true}, Validators.required],
+                    doctypeRetentionFinalDisposition: [{value: data.data.doctype.retentionFinalDisposition, disabled: true}, Validators.required],
+                });
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();*/
+        ).subscribe();
     }
 
     onSubmit() {
