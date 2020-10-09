@@ -114,6 +114,10 @@ class SearchController
         ]);
         $resourcesBeforeFilters = array_column($resourcesBeforeFilters, 'res_id');
 
+        $filters = [];
+        if (empty($queryParams['filters'])) {
+            $filters = SearchController::getFilters(['body' => $body, 'resources' => $resourcesBeforeFilters]);
+        }
 
         $searchClause = SearchController::getFiltersClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
@@ -143,7 +147,7 @@ class SearchController
             'orderBy'   => $orderBy
         ]);
         if (empty($allResources[$offset])) {
-            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
+            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => [], 'filters' => $filters]);
         }
 
         $allResources = array_column($allResources, 'resId');
@@ -204,11 +208,6 @@ class SearchController
             'listDisplay'   => $listDisplay,
             'trackedMails'  => $trackedMails
         ]);
-
-        $filters = [];
-        if (empty($queryParams['filters'])) {
-            $filters = SearchController::getFilters(['body' => $body, 'resources' => $resourcesBeforeFilters]);
-        }
 
         return $response->withJson([
             'resources'         => $formattedResources,
@@ -1562,6 +1561,13 @@ class SearchController
         }
 
         $folders = [];
+        $resources = ResModel::get([
+            'select' => ['res_id'],
+            'where'  => $whereFolders,
+            'data'   => $dataFolders
+        ]);
+        $resources = !empty($resources) ? array_column($resources, 'res_id') : [0];
+
         $userEntities = EntityModel::getWithUserEntities([
             'select' => ['entities.id'],
             'where'  => ['users_entities.user_id = ?'],
@@ -1572,7 +1578,7 @@ class SearchController
         $rawFolders = FolderModel::getWithEntitiesAndResources([
             'select'  => ['folders.id', 'folders.label', 'count(resources_folders.res_id) as count'],
             'where'   => ['resources_folders.res_id in (?)', '(folders.user_id = ? OR entities_folders.entity_id in (?) or keyword = ?)'],
-            'data'    => [$args['resources'], $GLOBALS['id'], $userEntities, 'ALL_ENTITIES'],
+            'data'    => [$resources, $GLOBALS['id'], $userEntities, 'ALL_ENTITIES'],
             'groupBy' => ['folders.id', 'folders.label']
         ]);
         if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
