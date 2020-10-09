@@ -585,6 +585,7 @@ export class CriteriaToolComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get(`../rest/departments`).pipe(
                 tap((data: any) => {
+                    elem.values = [];
                     Object.keys(data.departments).forEach(key => {
                         elem.values.push({
                             id: key,
