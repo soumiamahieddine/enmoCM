@@ -123,7 +123,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
     modalModule: any[] = [];
 
-    currentTool: string = '';
+    currentTool: string ;
 
     subscription: Subscription;
 
@@ -325,15 +325,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     this.loadRecipients();
                 }
                 if (redirectDefautlTool) {
-                    this.http.get('../rest/search/configuration').pipe(
-                        tap((myData: any) => {
-                            this.currentTool = myData.configuration.listEvent.defaultTab;
-                        }),
-                        catchError((err: any) => {
-                            this.notify.handleErrors(err);
-                            return of(false);
-                        })
-                    ).subscribe();
                     this.setEditDataPrivilege();
                 }
 
@@ -350,6 +341,19 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
     setEditDataPrivilege() {
         if (this.detailMode) {
+            this.http.get('../rest/search/configuration').pipe(
+                tap((myData: any) => {
+                    if (myData.configuration.listEvent.defaultTab == null) {
+                        this.currentTool = 'dashboard';
+                    } else {
+                        this.currentTool = myData.configuration.listEvent.defaultTab;
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
             this.canEditData = this.privilegeService.hasCurrentUserPrivilege('edit_resource') && this.currentResourceInformations.statusAlterable && this.functions.empty(this.currentResourceInformations.registeredMail_deposit_id);
             if (this.isMailing && this.isToolEnabled('attachments')) {
                 this.currentTool = 'attachments';
@@ -363,9 +367,9 @@ export class ProcessComponent implements OnInit, OnDestroy {
             this.http.get(`../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {
                     if (data.listEventData !== null) {
-                        /*if (this.isToolEnabled(data.listEventData.defaultTab)) {
+                        if (this.isToolEnabled(data.listEventData.defaultTab)) {
                             this.currentTool = data.listEventData.defaultTab;
-                        }*/
+                        }
                         this.canEditData = data.listEventData.canUpdateData && this.functions.empty(this.currentResourceInformations.registeredMail_deposit_id);
                         this.canChangeModel = data.listEventData.canUpdateModel;
                     }
