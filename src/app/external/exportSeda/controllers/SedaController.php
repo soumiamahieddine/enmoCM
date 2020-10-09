@@ -33,7 +33,7 @@ class SedaController
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
         }
 
-        $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination', 'type_id', 'subject']]);
+        $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['destination', 'type_id', 'subject', 'linked_resources']]);
         if (empty($resource)) {
             return $response->withStatus(400)->withJson(['errors' => 'resource does not exists']);
         } elseif (empty($resource['destination'])) {
@@ -98,6 +98,40 @@ class SedaController
                 'type'  => 'email'
             ];
         }
+
+        $return['archiveUnit'][] = [
+            'id'    => 'summarySheet_' . $aArgs['resId'],
+            'label' => 'Fiche de liaison',
+            'type'  => 'summarySheet'
+        ];
+
+        $attachments = AttachmentModel::get([
+            'select'    => ['res_id', 'title'],
+            'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
+            'data'      => [$aArgs['resId'], ['DEL', 'OBS', 'TMP'], ['signed_response']],
+            'orderBy'   => ['modification_date DESC']
+        ]);
+        foreach ($attachments as $attachment) {
+            $return['archiveUnit'][] = [
+                'id'    => 'attachment_' . $attachment['res_id'],
+                'label' => $attachment['title'],
+                'type'  => 'attachment'
+            ];
+        }
+
+        $linkedResourcesIds = json_decode($resource['linked_resources'], true);
+
+        $linkedResources = [];
+        if (!empty($linkedResourcesIds)) {
+            $linkedResources = ResModel::get([
+                'select' => ['res_id', 'alt_identifier'],
+                'where'  => ['res_id in (?)'],
+                'data'   => [$linkedResourcesIds]
+            ]);
+            $return['additionalData']['linkedResources'] = array_column($linkedResources, 'alt_identifier');
+        }
+
+        // TODO Folders
         
         return $response->withJson($return);
     }
