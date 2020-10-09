@@ -100,19 +100,27 @@ class SearchController
         $searchWhere = $searchClause['searchWhere'];
         $searchData  = $searchClause['searchData'];
 
-        $searchClause = SearchController::getFiltersClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
-        if (empty($searchClause)) {
-            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
-        }
-        $searchWhere = $searchClause['searchWhere'];
-        $searchData  = $searchClause['searchData'];
-
         $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
         if (!empty($nonSearchableStatuses)) {
             $nonSearchableStatuses = array_column($nonSearchableStatuses, 'id');
             $searchWhere[] = 'status not in (?)';
             $searchData[] = $nonSearchableStatuses;
         }
+
+        $resourcesBeforeFilters = ResModel::getOnView([
+            'select'    => ['res_id'],
+            'where'     => $searchWhere,
+            'data'      => $searchData
+        ]);
+        $resourcesBeforeFilters = array_column($resourcesBeforeFilters, 'res_id');
+
+
+        $searchClause = SearchController::getFiltersClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        if (empty($searchClause)) {
+            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
+        }
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData  = $searchClause['searchData'];
 
         $queryParams = $request->getQueryParams();
 
@@ -199,7 +207,7 @@ class SearchController
 
         $filters = [];
         if (empty($queryParams['filters'])) {
-            $filters = SearchController::getFilters(['body' => $body, 'resources' => $allResources]);
+            $filters = SearchController::getFilters(['body' => $body, 'resources' => $resourcesBeforeFilters]);
         }
 
         return $response->withJson([
@@ -1188,154 +1196,369 @@ class SearchController
 
         $body = $args['body'];
 
+        $where = ['res_id in (?)'];
+        $queryData = [$args['resources']];
+
+        $wherePriorities = $where;
+        $whereCategories = $where;
+        $whereStatuses   = $where;
+        $whereEntities   = $where;
+        $whereDocTypes   = $where;
+        $whereFolders    = $where;
+        $dataPriorities  = $queryData;
+        $dataCategories  = $queryData;
+        $dataStatuses    = $queryData;
+        $dataEntities    = $queryData;
+        $dataDocTypes    = $queryData;
+        $dataFolders     = $queryData;
+
+        if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
+            $priorities = [];
+            foreach ($body['filters']['priorities'] as $filter) {
+                if ($filter['selected']) {
+                    $priorities[] = $filter['id'];
+                }
+            }
+            if (!empty($priorities)) {
+                $tmpWhere = 'priority in (?)';
+
+                $whereCategories[]  = $tmpWhere;
+                $whereStatuses[]    = $tmpWhere;
+                $whereEntities[]    = $tmpWhere;
+                $whereDocTypes[]    = $tmpWhere;
+                $whereFolders[]     = $tmpWhere;
+
+                $dataCategories[]   = $priorities;
+                $dataStatuses[]     = $priorities;
+                $dataEntities[]     = $priorities;
+                $dataDocTypes[]     = $priorities;
+                $dataFolders[]      = $priorities;
+            }
+        }
+        if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
+            $categories = [];
+            foreach ($body['filters']['categories'] as $filter) {
+                if ($filter['selected']) {
+                    $categories[] = $filter['id'];
+                }
+            }
+            if (!empty($categories)) {
+                $tmpWhere = 'category_id in (?)';
+
+                $wherePriorities[]  = $tmpWhere;
+                $whereStatuses[]    = $tmpWhere;
+                $whereEntities[]    = $tmpWhere;
+                $whereDocTypes[]    = $tmpWhere;
+                $whereFolders[]     = $tmpWhere;
+
+                $dataPriorities[]   = $categories;
+                $dataStatuses[]     = $categories;
+                $dataEntities[]     = $categories;
+                $dataDocTypes[]     = $categories;
+                $dataFolders[]      = $categories;
+            }
+        }
+        if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
+            $statuses = [];
+            foreach ($body['filters']['statuses'] as $filter) {
+                if ($filter['selected']) {
+                    $statuses[] = $filter['id'];
+                }
+            }
+            if (!empty($statuses)) {
+                $tmpWhere = 'status in (?)';
+
+                $wherePriorities[]  = $tmpWhere;
+                $whereCategories[]  = $tmpWhere;
+                $whereEntities[]    = $tmpWhere;
+                $whereDocTypes[]    = $tmpWhere;
+                $whereFolders[]     = $tmpWhere;
+
+                $dataPriorities[]   = $statuses;
+                $dataCategories[]   = $statuses;
+                $dataEntities[]     = $statuses;
+                $dataDocTypes[]     = $statuses;
+                $dataFolders[]      = $statuses;
+            }
+        }
+        if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
+            $doctypes = [];
+            foreach ($body['filters']['doctypes'] as $filter) {
+                if ($filter['selected']) {
+                    $doctypes[] = $filter['id'];
+                }
+            }
+            if (!empty($doctypes)) {
+                $tmpWhere = 'type_id in (?)';
+
+                $wherePriorities[]  = $tmpWhere;
+                $whereCategories[]  = $tmpWhere;
+                $whereEntities[]    = $tmpWhere;
+                $whereStatuses[]    = $tmpWhere;
+                $whereFolders[]     = $tmpWhere;
+
+                $dataPriorities[]   = $doctypes;
+                $dataCategories[]   = $doctypes;
+                $dataEntities[]     = $doctypes;
+                $dataStatuses[]     = $doctypes;
+                $dataFolders[]      = $doctypes;
+            }
+        }
+        if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
+            $entities = [];
+            foreach ($body['filters']['entities'] as $filter) {
+                if ($filter['selected']) {
+                    $entities[] = $filter['id'];
+                }
+            }
+            if (!empty($entities)) {
+                $tmpWhere = 'destination in (?)';
+
+                $wherePriorities[]  = $tmpWhere;
+                $whereCategories[]  = $tmpWhere;
+                $whereDocTypes[]    = $tmpWhere;
+                $whereStatuses[]    = $tmpWhere;
+                $whereFolders[]     = $tmpWhere;
+
+                $dataPriorities[]   = $entities;
+                $dataCategories[]   = $entities;
+                $dataDocTypes[]     = $entities;
+                $dataStatuses[]     = $entities;
+                $dataFolders[]      = $entities;
+            }
+        }
+
+        if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
+            $folders = [];
+            foreach ($body['filters']['folders'] as $filter) {
+                if ($filter['selected']) {
+                    $folders[] = $filter['id'];
+                }
+            }
+            if (!empty($folders)) {
+                $tmpWhere = 'res_id in (select distinct res_id from resources_folders where folder_id in (?))';
+
+                $wherePriorities[]  = $tmpWhere;
+                $whereCategories[]  = $tmpWhere;
+                $whereDocTypes[]    = $tmpWhere;
+                $whereStatuses[]    = $tmpWhere;
+                $whereEntities[]    = $tmpWhere;
+
+                $dataPriorities[]   = $folders;
+                $dataCategories[]   = $folders;
+                $dataDocTypes[]     = $folders;
+                $dataStatuses[]     = $folders;
+                $dataEntities[]     = $folders;
+            }
+        }
+
+//        if (!empty($data['entitiesChildren'])) {
+//            $entities = explode(',', $data['entitiesChildren']);
+//            $entitiesChildren = [];
+//            foreach ($entities as $entity) {
+//                $children = EntityModel::getEntityChildren(['entityId' => $entity]);
+//                $entitiesChildren = array_merge($entitiesChildren, $children);
+//            }
+//            if (!empty($entitiesChildren)) {
+//                $wherePriorities[] = 'destination in (?)';
+//                $dataPriorities[]  = $entitiesChildren;
+//                $whereCategories[] = 'destination in (?)';
+//                $dataCategories[]  = $entitiesChildren;
+//                $whereStatuses[]   = 'destination in (?)';
+//                $dataStatuses[]    = $entitiesChildren;
+//                $whereDocTypes[]   = 'destination in (?)';
+//                $dataDocTypes[]    = $entitiesChildren;
+//                $whereFolders[]    = 'destination in (?)';
+//                $dataFolders[]     = $entitiesChildren;
+//            }
+//        }
+
 
         $priorities = [];
         $rawPriorities = ResModel::get([
             'select'    => ['count(res_id)', 'priority'],
-            'where'     => ['res_id in (?)'],
-            'data'      => [$args['resources']],
+            'where'     => $wherePriorities,
+            'data'      => $dataPriorities,
             'groupBy'   => ['priority']
         ]);
-        foreach ($rawPriorities as $key => $value) {
-            $label = null;
-            $selected = false;
-            if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
-                foreach ($body['filters']['priorities'] as $filter) {
+        if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
+            foreach ($body['filters']['priorities'] as $key => $filter) {
+                $count = 0;
+                foreach ($rawPriorities as $value) {
                     if ($filter['id'] == $value['priority']) {
-                        $selected = $filter['selected'];
-                        $label = $filter['label'];
+                        $count = $value['count'];
                     }
                 }
+                $priorities[] = [
+                    'id'        => $filter['id'],
+                    'label'     => $filter['label'],
+                    'count'     => $count,
+                    'selected'  => $filter['selected']
+                ];
             }
-            if (!empty($value['priority']) && empty($label)) {
-                $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
-                $label = $priority['label'];
-            }
+        } else {
+            foreach ($rawPriorities as $value) {
+                $label = null;
+                if (!empty($value['priority'])) {
+                    $priority = PriorityModel::getById(['select' => ['label'], 'id' => $value['priority']]);
+                    $label = $priority['label'];
+                }
 
-            $priorities[] = [
-                'id'        => $value['priority'],
-                'label'     => $label ?? '_UNDEFINED',
-                'count'     => $value['count'],
-                'selected'  => $selected
-            ];
+                $priorities[] = [
+                    'id'        => $value['priority'],
+                    'label'     => $label ?? '_UNDEFINED',
+                    'count'     => $value['count'],
+                    'selected'  => false
+                ];
+            }
         }
 
         $categories = [];
         $rawCategories = ResModel::get([
             'select'    => ['count(res_id)', 'category_id'],
-            'where'     => ['res_id in (?)'],
-            'data'      => [$args['resources']],
+            'where'     => $whereCategories,
+            'data'      => $dataCategories,
             'groupBy'   => ['category_id']
         ]);
-        foreach ($rawCategories as $key => $value) {
-            $selected = false;
-            if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
-                foreach ($body['filters']['categories'] as $filter) {
+        if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
+            foreach ($body['filters']['categories'] as $key => $filter) {
+                $count = 0;
+                foreach ($rawCategories as $value) {
                     if ($filter['id'] == $value['category_id']) {
-                        $selected = $filter['selected'];
+                        $count = $value['count'];
                     }
                 }
+                $categories[] = [
+                    'id'        => $filter['id'],
+                    'label'     => $filter['label'],
+                    'count'     => $count,
+                    'selected'  => $filter['selected']
+                ];
             }
-            $label = ResModel::getCategoryLabel(['categoryId' => $value['category_id']]);
-            $categories[] = [
-                'id'        => $value['category_id'],
-                'label'     => empty($label) ? '_UNDEFINED' : $label,
-                'count'     => $value['count'],
-                'selected'  => $selected
-            ];
+        } else {
+            foreach ($rawCategories as $value) {
+                $label = ResModel::getCategoryLabel(['categoryId' => $value['category_id']]);
+                $categories[] = [
+                    'id'        => $value['category_id'],
+                    'label'     => empty($label) ? '_UNDEFINED' : $label,
+                    'count'     => $value['count'],
+                    'selected'  => false
+                ];
+            }
         }
 
         $statuses = [];
         $rawStatuses = ResModel::get([
             'select'    => ['count(res_id)', 'status'],
-            'where'     => ['res_id in (?)'],
-            'data'      => [$args['resources']],
+            'where'     => $whereStatuses,
+            'data'      => $dataStatuses,
             'groupBy'   => ['status']
         ]);
-        foreach ($rawStatuses as $key => $value) {
-            $label = null;
-            $selected = false;
-            if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
-                foreach ($body['filters']['statuses'] as $filter) {
-                    if ($filter['id'] == $value['category_id']) {
-                        $selected = $filter['selected'];
-                        $label = $filter['label'];
+        if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
+            foreach ($body['filters']['statuses'] as $key => $filter) {
+                $count = 0;
+                foreach ($rawStatuses as $value) {
+                    if ($filter['id'] == $value['status']) {
+                        $count = $value['count'];
                     }
                 }
+                $statuses[] = [
+                    'id'        => $filter['id'],
+                    'label'     => $filter['label'],
+                    'count'     => $count,
+                    'selected'  => $filter['selected']
+                ];
             }
-            if (!empty($value['status']) && empty($label)) {
-                $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
-                $label = $status['label_status'];
-            }
+        } else {
+            foreach ($rawStatuses as $value) {
+                $label = null;
+                if (!empty($value['status'])) {
+                    $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
+                    $label = $status['label_status'];
+                }
 
-            $statuses[] = [
-                'id'        => $value['status'],
-                'label'     => $label ?? '_UNDEFINED',
-                'count'     => $value['count'],
-                'selected'  => $selected
-            ];
+                $statuses[] = [
+                    'id'        => $value['status'],
+                    'label'     => $label ?? '_UNDEFINED',
+                    'count'     => $value['count'],
+                    'selected'  => false
+                ];
+            }
         }
 
         $docTypes = [];
-        $rawDocType = ResModel::get([
+        $rawDocTypes = ResModel::get([
             'select'    => ['count(res_id)', 'type_id'],
-            'where'     => ['res_id in (?)'],
-            'data'      => [$args['resources']],
+            'where'     => $whereDocTypes,
+            'data'      => $dataDocTypes,
             'groupBy'   => ['type_id']
         ]);
-        foreach ($rawDocType as $key => $value) {
-            $label = null;
-            $selected = false;
-            if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
-                foreach ($body['filters']['doctypes'] as $filter) {
+        if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
+            foreach ($body['filters']['doctypes'] as $key => $filter) {
+                $count = 0;
+                foreach ($rawDocTypes as $value) {
                     if ($filter['id'] == $value['type_id']) {
-                        $selected = $filter['selected'];
-                        $label = $filter['label'];
+                        $count = $value['count'];
                     }
                 }
+                $docTypes[] = [
+                    'id'        => $filter['id'],
+                    'label'     => $filter['label'],
+                    'count'     => $count,
+                    'selected'  => $filter['selected']
+                ];
             }
-            if (empty($label)) {
+        } else {
+            foreach ($rawDocTypes as $value) {
                 $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $value['type_id']]);
                 $label = $doctype['description'];
-            }
 
-            $docTypes[] = [
-                'id'        => $value['type_id'],
-                'label'     => $label ?? '_UNDEFINED',
-                'count'     => $value['count'],
-                'selected'  => $selected
-            ];
+                $docTypes[] = [
+                    'id'        => $value['type_id'],
+                    'label'     => $label ?? '_UNDEFINED',
+                    'count'     => $value['count'],
+                    'selected'  => false
+                ];
+            }
         }
 
         $entities = [];
         $rawEntities = ResModel::get([
             'select'    => ['count(res_id)', 'destination'],
-            'where'     => ['res_id in (?)'],
-            'data'      => [$args['resources']],
+            'where'     => $whereEntities,
+            'data'      => $dataEntities,
             'groupBy'   => ['destination']
         ]);
-        foreach ($rawEntities as $key => $value) {
-            $label = null;
-            $selected = false;
-            if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
-                foreach ($body['filters']['entities'] as $filter) {
+        if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
+            foreach ($body['filters']['entities'] as $key => $filter) {
+                $count = 0;
+                foreach ($rawEntities as $value) {
                     if ($filter['id'] == $value['destination']) {
-                        $selected = $filter['selected'];
-                        $label = $filter['label'];
+                        $count = $value['count'];
                     }
                 }
+                $entities[] = [
+                    'id'        => $filter['id'],
+                    'label'     => $filter['label'],
+                    'count'     => $count,
+                    'selected'  => $filter['selected']
+                ];
             }
-            if (!empty($value['destination']) && empty($label)) {
-                $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
-                $label = $entity['entity_label'];
-            }
+        } else {
+            foreach ($rawEntities as $value) {
+                $label = null;
+                if (!empty($value['destination'])) {
+                    $entity = EntityModel::getByEntityId(['select' => ['entity_label'], 'entityId' => $value['destination']]);
+                    $label = $entity['entity_label'];
+                }
 
-            $entities[] = [
-                'id'        => $value['destination'],
-                'label'     => $label ?? '_UNDEFINED',
-                'count'     => $value['count'],
-                'selected'  => $selected
-            ];
+                $entities[] = [
+                    'id'        => $value['destination'],
+                    'label'     => $label ?? '_UNDEFINED',
+                    'count'     => $value['count'],
+                    'selected'  => false
+                ];
+            }
         }
 
         $folders = [];
@@ -1352,30 +1575,38 @@ class SearchController
             'data'    => [$args['resources'], $GLOBALS['id'], $userEntities, 'ALL_ENTITIES'],
             'groupBy' => ['folders.id', 'folders.label']
         ]);
-        foreach ($rawFolders as $key => $value) {
-            $selected = false;
-            if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
-                foreach ($body['filters']['folders'] as $filter) {
+        if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
+            foreach ($body['filters']['folders'] as $key => $filter) {
+                $count = 0;
+                foreach ($rawFolders as $value) {
                     if ($filter['id'] == $value['id']) {
-                        $selected = $filter['selected'];
+                        $count = $value['count'];
                     }
                 }
+                $folders[] = [
+                    'id'        => $filter['id'],
+                    'label'     => $filter['label'],
+                    'count'     => $count,
+                    'selected'  => $filter['selected']
+                ];
             }
-
-            $folders[] = [
-                'id'        => $value['id'],
-                'label'     => $value['label'],
-                'count'     => $value['count'],
-                'selected'  => $selected
-            ];
+        } else {
+            foreach ($rawFolders as $value) {
+                $folders[] = [
+                    'id'        => $value['id'],
+                    'label'     => $value['label'],
+                    'count'     => $value['count'],
+                    'selected'  => false
+                ];
+            }
         }
 
-        $priorities = (count($priorities) >= 2) ? $priorities : [];
-        $categories = (count($categories) >= 2) ? $categories : [];
-        $statuses   = (count($statuses) >= 2) ? $statuses : [];
-        $docTypes   = (count($docTypes) >= 2) ? $docTypes : [];
-        $entities   = (count($entities) >= 2) ? $entities : [];
-        $folders    = (count($folders) >= 2) ? $folders : [];
+//        $priorities = (count($priorities) >= 2) ? $priorities : [];
+//        $categories = (count($categories) >= 2) ? $categories : [];
+//        $statuses   = (count($statuses) >= 2) ? $statuses : [];
+//        $docTypes   = (count($docTypes) >= 2) ? $docTypes : [];
+//        $entities   = (count($entities) >= 2) ? $entities : [];
+//        $folders    = (count($folders) >= 2) ? $folders : [];
 
         usort($priorities, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
         usort($categories, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
