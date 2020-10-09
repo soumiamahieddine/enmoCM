@@ -144,6 +144,7 @@ class JnlpController
         $tagArg10 = $jnlpDocument->createElement('argument', 'false'); //ConvertPdf //Useless
         $tagArg11 = $jnlpDocument->createElement('argument', 'false'); //OnlyConvert //Useless
         $tagArg12 = $jnlpDocument->createElement('argument', 0); //HashFile //Useless
+        $tagArg13 = $jnlpDocument->createElement('argument', $body['authToken']); //Token authentication
 
 
         $tagJnlp->appendChild($tagInformation);
@@ -177,6 +178,7 @@ class JnlpController
         $tagApplication->appendChild($tagArg10);
         $tagApplication->appendChild($tagArg11);
         $tagApplication->appendChild($tagArg12);
+        $tagApplication->appendChild($tagArg13);
 
         $jnlpDocument->appendChild($tagJnlp);
 
