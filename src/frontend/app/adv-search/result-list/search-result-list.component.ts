@@ -285,6 +285,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     }
                 }),
                 map((data: any) => {
+                    this.selectedRes = [];
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
