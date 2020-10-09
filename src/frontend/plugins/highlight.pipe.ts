@@ -12,7 +12,8 @@ export class HighlightPipe {
 
     transform(text: string, args: string = '') {
         let formatedText = '';
-        if (typeof text === 'string') {
+
+        if (typeof text === 'string' && typeof args === 'string') {
             const index = this.latinisePipe.transform(text.toLowerCase()).indexOf(this.latinisePipe.transform(args.toLowerCase()));
             if (index >= 0) {
                 formatedText = text.substring(0, index) + '<span class=\'highlightResult\'>' + text.substring(index, index + args.length) + '</span>' + text.substring(index + args.length);
