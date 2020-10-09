@@ -397,6 +397,8 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
 
     processPostData(data: any) {
         data.resources.forEach((element: any) => {
+            console.log(element);
+            
             // Process main datas
             Object.keys(element).forEach((key) => {
                 if (key === 'statusImage' && element[key] == null) {
