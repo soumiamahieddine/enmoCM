@@ -208,6 +208,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
             });
             this.appCriteriaTool.selectSearchTemplate(obj, false);
             this.criteria = this.listProperties.criteria;
+            if (!this.functions.empty(this.listProperties.filters)) {
+                this.dataFilters = this.listProperties.filters;
+            }
             this.initResultList();
         } else if (this.initSearch) {
             this.initResultList();
@@ -287,6 +290,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     data = this.processPostData(data);
                     this.templateColumns = data.templateColumns;
                     this.dataFilters = data.filters;
+                    this.criteriaSearchService.updateListsPropertiesFilters(data.filters);
                     this.resultsLength = data.count;
                     this.allResInBasket = data.allResources;
                     return data.resources;
