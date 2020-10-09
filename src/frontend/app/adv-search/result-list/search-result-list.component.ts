@@ -23,6 +23,7 @@ import { IndexingFieldsService } from '@service/indexing-fields.service';
 import { CriteriaSearchService } from '@service/criteriaSearch.service';
 import { HighlightPipe } from '@plugins/highlight.pipe';
 import { FilterToolComponent } from '@appRoot/adv-search/filter-tool/filter-tool.component';
+import { ContactResourceModalComponent } from '@appRoot/contact/contact-resource/modal/contact-resource-modal.component';
 
 declare var $: any;
 
@@ -232,6 +233,20 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
             row.checked = !row.checked;
             this.toggleRes(row.checked ? thisSelect : thisDeselect, row);
         }
+    }
+
+    launchEventSubData(data: any, row: any) {
+        if (data.event) {
+            if (['getSenders', 'getRecipients'].indexOf(data.value) > -1 && data.displayValue !== this.translate.instant('lang.undefined')) {
+                const mode = data.value === 'getSenders' ? 'senders' : 'recipients';
+                this.openContact(row, mode);
+            }
+        }
+    }
+
+    openContact(row: any, mode: string) {
+        this.dialog.open(ContactResourceModalComponent, { panelClass: 'maarch-modal', data: { title: `${row.chrono} - ${row.subject}`, mode: mode, resId: row.resId } });
+
     }
 
     launchSearch(criteria: any = this.criteria, initSearch = false) {

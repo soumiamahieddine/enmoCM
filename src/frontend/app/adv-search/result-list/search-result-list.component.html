@@ -100,10 +100,8 @@
     </div>
 </div>
 <div [class.integratedContent]="!standalone">
-    <table #tableBasketListSort="matSort" cdkDropList id="folder-list" [cdkDropListConnectedTo]="listTodrag()"
-        [cdkDropListData]="data" [cdkDropListDisabled]="dragInit || appService.getViewMode()" mat-table
-        [dataSource]="data" matSort matSortActive="resId" matSortDisableClear matSortDirection="asc"
-        style="width:100%;">
+    <table cdkDropList id="document-list" [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data" #tableBasketListSort="matSort" mat-table [dataSource]="data" matSort
+    matSortActive="resId" matSortDisableClear matSortDirection="asc" style="width:100%;" [cdkDropListDisabled]="dragInit || appService.getViewMode()">
 
         <ng-container matColumnDef="resId">
             <td mat-cell *matCellDef="let row" style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);">
@@ -111,7 +109,7 @@
                     <span class="sub-info-data" [class]="data.cssClasses.join(' ')"
                         *ngFor="let data of row.display" style="flex:1;white-space: pre;overflow: hidden;text-overflow: ellipsis;
                                 padding-left: 5px;
-                                padding-right: 5px;" [class.hasEvent]="data.event && data.displayValue !== this.translate.instant('lang.undefined')">
+                                padding-right: 5px;" [class.hasEvent]="data.event && data.displayValue !== this.translate.instant('lang.undefined')" (click)="launchEventSubData(data, row)">
                         <ng-container *ngIf="data.value == 'getCreationAndProcessLimitDates'">
                             <ng-container *ngIf="row.closing_date != this.translate.instant('lang.undefined')">
                                 <i class="fa fa-lock" title="{{'lang.closingDate' | translate}}"></i>&nbsp;<span
