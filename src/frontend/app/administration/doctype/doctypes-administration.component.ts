@@ -8,6 +8,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 import { AppService } from '@service/app.service';
+import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     templateUrl: 'doctypes-administration.component.html'
@@ -20,7 +22,6 @@ export class DoctypesAdministrationComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
     config: any = {};
-    
 
     doctypes: any[] = [];
     currentType: any = false;
@@ -31,12 +32,19 @@ export class DoctypesAdministrationComponent implements OnInit {
     secondLevels: any = false;
     processModes: any = false;
 
+    state: any;
+
     loading: boolean = false;
     creationMode: any = false;
     newSecondLevel: any = false;
     newFirstLevel: any = false;
 
-    listRules: any = {};
+    conservationRules: any = {
+        listRules: [],
+        ruleSelected: null
+    };
+
+    inputRule: any;
 
     displayedColumns = ['label', 'use', 'mandatory', 'column'];
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -145,25 +153,24 @@ export class DoctypesAdministrationComponent implements OnInit {
     }
 
     getRules() {
-        const rules: any = [
-            {
-                'id': '1',
-                'value': 'rule1',
-                'label': 'Règle 1'
-            },
-            {
-                'id': '2',
-                'value': 'rule2',
-                'label': 'Règle 2'
-            },
-            {
-                'id': '3',
-                'value': 'rule3',
-                'label': 'Règle 3'
-            },
-        ];
-        this.listRules = JSON.parse(JSON.stringify(rules));
-        console.log(this.listRules);
+        /* return new Promise((resolve, reject) => {
+            this.http.get('').pipe(
+                tap((data: any) => {
+                    if (Object.keys(this.conservationRules.listRules).length === 0) {
+                    this.state = false;
+                    } else {
+                        this.state = true;
+                        // foreach + push
+                        console.log(this.conservationRules);
+                    }
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }); */
     }
 
     loadDoctype(data: any, move: boolean) {
