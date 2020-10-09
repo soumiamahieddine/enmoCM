@@ -576,7 +576,7 @@ export class CriteriaToolComponent implements OnInit {
 
     set_role_field(elem: any) {
         elem.type = 'selectAutocomplete';
-        elem.routeDatas = ['role_dest', 'role_visa', 'role_sign'].indexOf(elem.identifier) > -1 ? ['/rest/autocomplete/users?serial=serialId'] : ['/rest/autocomplete/users', '/rest/autocomplete/entities?serial=serialId'];
+        elem.routeDatas = ['role_dest', 'role_visa', 'role_sign'].indexOf(elem.identifier) > -1 ? ['/rest/autocomplete/users?serial=serialId'] : ['/rest/autocomplete/users?serial=serialId', '/rest/autocomplete/entities?serial=serialId'];
         elem.extraModel = ['type'];
         elem.returnValue = 'object';
     }
