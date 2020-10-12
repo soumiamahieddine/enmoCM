@@ -724,6 +724,9 @@ class SearchController
                 }
                 $departments .= "'{$value}%'";
             }
+            if (empty($departments)) {
+                return null;
+            }
             $contacts = ContactModel::get([
                 'select' => ['id'],
                 'where'  => ["address_postcode like any (array[{$departments}])"]
