@@ -538,7 +538,8 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 this.criteria['role_dest'].values.forEach((val: any) => {
                     data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
                 });
-            } else if (Object.keys(this.criteria).indexOf('destination') > -1) {
+            }
+            if (Object.keys(this.criteria).indexOf('destination') > -1) {
                 this.criteria['destination'].values.forEach((val: any) => {
                     data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
                 });
