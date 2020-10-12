@@ -509,6 +509,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     }
                 }
                 key.label = key.displayLabel === undefined ? this.translate.instant('lang.' + key.value) : key.displayLabel;
+
+                key.displayValue = this.setHighLightData(key);
+
             });
             // element['inNotes'] = true;
             // element['inNotes'] = true;
@@ -517,6 +520,39 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         });
 
         return data;
+    }
+
+    setHighLightData(data: any) {
+        const regex = /indexingCustomField_[.]*/g;
+
+        if (Object.keys(this.criteria).indexOf(this.indexingFieldService.mappingdata[data.value]) > -1) {
+            if (Array.isArray(this.criteria[this.indexingFieldService.mappingdata[data.value]].values)) {
+                this.criteria[this.indexingFieldService.mappingdata[data.value]].values.forEach((val: any) => {
+                    data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
+                });
+            } else {
+                data.displayValue = this.highlightPipe.transform(data.displayValue, this.criteria[this.indexingFieldService.mappingdata[data.value]].values);
+            }
+        } else if (data.value === 'getAssignee') {
+            if (Object.keys(this.criteria).indexOf('role_dest') > -1) {
+                this.criteria['role_dest'].values.forEach((val: any) => {
+                    data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
+                });
+            } else if (Object.keys(this.criteria).indexOf('destination') > -1) {
+                this.criteria['destination'].values.forEach((val: any) => {
+                    data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
+                });
+            }
+        } else if (data.value.match(regex) !== null && Object.keys(this.criteria).indexOf(data.value) > -1) {
+            if (Array.isArray(this.criteria[data.value].values)) {
+                this.criteria[data.value].values.forEach((val: any) => {
+                    data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
+                });
+            } else {
+                data.displayValue = this.highlightPipe.transform(data.displayValue, this.criteria[data.value].values);
+            }
+        }
+        return data.displayValue;
     }
 
     toggleRes(e: any, row: any) {
@@ -683,7 +719,7 @@ export class ResultListHttpDao {
         this.criteriaSearchService.updateListsPropertiesCriteria(criteria);
         const offset = page * pageSize;
         const requestUrl = `${href}?limit=${pageSize}&offset=${offset}&order=${filters.order}&orderDir=${filters.orderDir}`;
-        const dataToSend = Object.assign({}, this.criteriaSearchService.formatDatas(JSON.parse(JSON.stringify(criteria))), {filters: sideFilters});
+        const dataToSend = Object.assign({}, this.criteriaSearchService.formatDatas(JSON.parse(JSON.stringify(criteria))), { filters: sideFilters });
         return this.http.post<BasketList>(requestUrl, dataToSend);
     }
 }
