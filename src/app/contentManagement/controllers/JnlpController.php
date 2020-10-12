@@ -52,6 +52,9 @@ class JnlpController
             }
             $allCookies .= $body['cookies'];
         }
+        if (empty($allCookies)) {
+            $allCookies = 'noCookie=noCookie';
+        }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/content_management/xml/config.xml']);
         $jarPath = $coreUrl;
