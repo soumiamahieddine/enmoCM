@@ -39,12 +39,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     newSecondLevel: any = false;
     newFirstLevel: any = false;
 
-    conservationRules: any = {
-        listRules: [],
-        ruleSelected: null
-    };
-
-    inputRule: any;
+    conservationRules: any = [];
 
     displayedColumns = ['label', 'use', 'mandatory', 'column'];
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -62,7 +57,6 @@ export class DoctypesAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.translate.instant('lang.administration') + ' ' + this.translate.instant('lang.documentTypes'));
-        this.getRules();
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.loading = true;
@@ -153,15 +147,13 @@ export class DoctypesAdministrationComponent implements OnInit {
     }
 
     getRules() {
-        /* return new Promise((resolve, reject) => {
-            this.http.get('').pipe(
+        return new Promise((resolve, reject) => {
+            this.http.get('../rest/archival/retentionRules').pipe(
                 tap((data: any) => {
-                    if (Object.keys(this.conservationRules.listRules).length === 0) {
-                    this.state = false;
+                    if (data.retentionRules.length != 0) {
+                        this.conservationRules = data.retentionRules;
                     } else {
-                        this.state = true;
-                        // foreach + push
-                        console.log(this.conservationRules);
+                        this.conservationRules = [];
                     }
                     resolve(true);
                 }),
@@ -170,7 +162,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
-        }); */
+        });
     }
 
     loadDoctype(data: any, move: boolean) {
@@ -185,6 +177,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                     this.currentType = dataValue['doctype'];
                     this.secondLevels = dataValue['secondLevel'];
                     this.processModes = ['NORMAL', 'SVA', 'SVR'];
+                    this.getRules();
 
                     if (move) {
                         if (this.currentType) {

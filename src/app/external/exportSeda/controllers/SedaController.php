@@ -19,6 +19,7 @@ use Doctype\models\DoctypeModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
 use Folder\models\FolderModel;
+use Group\controllers\PrivilegeController;
 use Note\models\NoteModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
@@ -27,6 +28,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
 use User\models\UserModel;
 
 class SedaController
@@ -181,5 +183,60 @@ class SedaController
         }
         
         return $response->withJson($return);
+    }
+
+    public function getRetentionRules(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_architecture', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $sedaXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/export_seda/xml/config.xml']);
+        if (empty($sedaXml->CONFIG->sae)) {
+            return $response->withStatus(400)->withJson(['errors' => 'No SAE found in config.xml (export_seda)']);
+        }
+
+        $retentionRules = [];
+        if (strtolower((string)$sedaXml->CONFIG->sae) == 'maarchrm') {
+            $curlResponse = CurlModel::execSimple([
+                'url'     => rtrim((string)$sedaXml->CONFIG->urlSAEService, '/') . '/recordsManagement/retentionRule/Index',
+                'method'  => 'GET',
+                'cookie'  => 'LAABS-AUTH=' . urlencode((string)$sedaXml->CONFIG->token),
+                'headers' => [
+                    'Accept: application/json',
+                    'Content-Type: application/json',
+                    'User-Agent: ' . (string)$sedaXml->CONFIG->userAgent
+                ]
+            ]);
+
+            if (!empty($curlResponse['errors'])) {
+                return ['error' => 'Error during processing in getRetentionRules : ' . $curlResponse['errors']];
+            }
+
+            $retentionRules[] = [
+                'id'    => "",
+                'label' => null
+            ];
+            foreach ($curlResponse['response'] as $retentionRule) {
+                $retentionRules[] = [
+                    'id'    => $retentionRule['code'],
+                    'label' => $retentionRule['label']
+                ];
+            }
+        } else {
+            foreach ($sedaXml->externalSAE as $value) {
+                if ((string)$value->id == (string)$sedaXml->CONFIG->sae) {
+                    foreach ($value->retentionRules->retentionRule as $rule) {
+                        $retentionRules[] = [
+                            'id'    => (string)$rule->id,
+                            'label' => (string)$rule->label
+                        ];
+                    }
+                    break;
+                }
+            }
+        }
+
+        return $response->withJson(['retentionRules' => $retentionRules]);
     }
 }

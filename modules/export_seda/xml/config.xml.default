@@ -14,7 +14,21 @@
         <accessRuleCode>AR039</accessRuleCode>
         <deleteData>true</deleteData>
         <certificateSSL></certificateSSL>
+        <userAgent>service</userAgent>
     </CONFIG>
+    <externalSAE>
+        <id>otherSAE</id>
+        <retentionRules>
+            <retentionRule>
+                <id>id1</id>
+                <label>label1</label>
+            </retentionRule>
+            <retentionRule>
+                <id>id2</id>
+                <label>label2</label>
+            </retentionRule>
+        </retentionRules>
+    </externalSAE>
     <TABLENAME/>
     <HISTORY>
         <sedaup>true</sedaup>
