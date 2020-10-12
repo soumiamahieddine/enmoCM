@@ -486,3 +486,6 @@ define('_REGISTERED_MAIL_NOT_DISTRIBUTED', 'Accusé de réception reçu : recomm
 define('_CONFIGURATION_UPDATED', 'Configuration modifiée');
 define('_SEND_TO_RECORD_MANAGEMENT', 'Envoyer dans un Système d\'Archivage Électronique');
 define('_SEND_TO_RECORD_MANAGEMENT_DESC', 'Envoyer dans un Système d\'Archivage Électronique');
+
+define('_CHECK_REPLY_RECORD_MANAGEMENT', 'Vérification de la réponse au transfert');
+define('_CHECK_REPLY_RECORD_MANAGEMENT_DESC', 'Vérification de la réponse au transfert');

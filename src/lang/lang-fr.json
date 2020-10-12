@@ -2066,5 +2066,7 @@
     "sirenNumber": "Numéro SIREN",
     "senderArchiveEntity": "Service versant",
     "descriptionLevel": "Niveau de description",
-    "archiveId": "Identifiant de l'archive"
+    "archiveId": "Identifiant de l'archive",
+    "checkReplyRecordManagementDesc": "Vérifie les <b>réponses</b> des paquets transférés au <b>système d'archivage</b>",
+    "checkInProgress": "Vérification en cours"
 }
