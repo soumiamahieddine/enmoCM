@@ -287,6 +287,10 @@ ALTER TABLE entities DROP COLUMN IF EXISTS producer_service;
 ALTER TABLE entities ADD COLUMN producer_service character varying(255);
 UPDATE entities SET producer_service = entity_id;
 
+UPDATE component = 'sendToRecordManagementAction' where action_page = 'export_seda';
+UPDATE component = 'checkAcknowledgmentRecordManagementAction' where action_page = 'check_acknowledgement';
+UPDATE component = 'checkReplyRecordManagementAction' where action_page = 'check_reply';
+
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
 SELECT r.res_id,

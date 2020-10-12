@@ -16,18 +16,8 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 export class SendToRecordManagementComponent implements OnInit {
 
     loading: boolean = false;
-    entityArchiveRecipients = [
-        {
-            id: 1,
-            label: 'Service 1'
-        }
-    ];
-    archivalAgreements = [
-        {
-            id: 1,
-            label: 'Accord 1'
-        }
-    ];
+    recipientArchiveEntities = [];
+    archivalAgreements = [];
 
     descriptionLevels = [
         {
@@ -112,6 +102,8 @@ export class SendToRecordManagementComponent implements OnInit {
                 this.archives.forEach((element: any) => {
                     element.type = this.translate.instant('lang.' + element.type);
                 });
+                this.recipientArchiveEntities = data.recipientArchiveEntities;
+                this.archivalAgreements = data.archivalAgreements;
                 this.actionFormGroup = this._formBuilder.group({
                     packageName: ['', Validators.required],
                     slipId: [{value: data.data.slipInfo.slipId, disabled: true}, Validators.required],
@@ -145,7 +137,6 @@ export class SendToRecordManagementComponent implements OnInit {
     }
 
     executeAction() {
-
         const realResSelected: number[] = this.data.resIds;
 
         this.http.put(this.data.processActionRoute, { resources: realResSelected, data: {} }).pipe(
@@ -165,8 +156,17 @@ export class SendToRecordManagementComponent implements OnInit {
         ).subscribe();
     }
 
-    isValidAction() {
-        return true;
+    archivalAgreementSelected(ev: any) {
+        const archivalAgreement = this.archivalAgreements.filter((element: any) => element.id === ev.value);
+        this.actionFormGroup.patchValue({entityArchiveRecipient: archivalAgreement[0].archiveEntityRegNumber});
     }
 
+    entityArchiveRecipientSelected(ev: any) {
+        if (!this.functions.empty(this.actionFormGroup.get('archivalAgreement').value) && !this.functions.empty(ev.value)) {
+            const archivalAgreement = this.archivalAgreements.filter((element: any) => element.id === this.actionFormGroup.get('archivalAgreement').value && element.archiveEntityRegNumber === ev.value);
+            if (archivalAgreement.length === 0) {
+                this.actionFormGroup.patchValue({archivalAgreement: null});
+            }
+        }
+    }
 }

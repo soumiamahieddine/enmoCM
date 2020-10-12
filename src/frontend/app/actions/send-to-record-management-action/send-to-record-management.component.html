@@ -17,7 +17,7 @@
                 <div class="col-md-6">
                     <mat-form-field>
                         <mat-label>{{'lang.archivalAgreement' | translate}}</mat-label>
-                        <mat-select formControlName="archivalAgreement">
+                        <mat-select formControlName="archivalAgreement" (selectionChange)="archivalAgreementSelected($event)">
                             <mat-option *ngFor="let agreement of archivalAgreements" [value]="agreement.id">{{agreement.label}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -25,8 +25,8 @@
                 <div class="col-md-6">
                     <mat-form-field>
                         <mat-label>{{'lang.archivalAgency' | translate}}</mat-label>
-                        <mat-select formControlName="entityArchiveRecipient">
-                            <mat-option *ngFor="let entity of entityArchiveRecipients" [value]="entity.id">{{entity.label}}</mat-option>
+                        <mat-select formControlName="entityArchiveRecipient" (selectionChange)="entityArchiveRecipientSelected($event)">
+                            <mat-option *ngFor="let entity of recipientArchiveEntities" [value]="entity.id">{{entity.label}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -109,9 +109,9 @@
     </div>
     <span class="divider-modal"></span>
     <div mat-dialog-actions class="actions">
-        <button mat-raised-button mat-button color="primary" [disabled]="loading || !isValidAction()"
+        <button mat-raised-button mat-button color="primary" [disabled]="loading || !this.actionFormGroup.valid"
             (click)="onSubmit()">{{'lang.validate' | translate}}</button>
-        <button mat-raised-button mat-button color="primary" [disabled]="loading || !isValidAction()"
+        <button mat-raised-button mat-button color="primary" [disabled]="loading || !this.actionFormGroup.valid"
             (click)="onSubmit()">{{'lang.download' | translate}}</button>
         <button mat-raised-button mat-button [disabled]="loading"
             [mat-dialog-close]="">{{'lang.cancel' | translate}}</button>
