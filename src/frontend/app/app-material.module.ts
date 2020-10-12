@@ -63,10 +63,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
@@ -78,7 +78,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
@@ -89,7 +89,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { MatTreeModule } from '@angular/material/tree';
-import { getFrenchPaginatorIntl, getTranslatedPaginator } from './french-paginator-intl';
+import { CustomMatPaginatorIntl } from '@plugins/mat-paginator-int';
 
 @NgModule({
     imports: [
@@ -169,7 +169,10 @@ import { getFrenchPaginatorIntl, getTranslatedPaginator } from './french-paginat
         DndModule
     ],
     providers: [
-        { provide: MatPaginatorIntl, useValue: getTranslatedPaginator('FR-fr') },
+        {
+            provide: MatPaginatorIntl,
+            useClass: CustomMatPaginatorIntl
+        },
         { provide: MAT_DATE_LOCALE, useValue: 'FR-fr' },
         { provide: DateAdapter, useClass: AppDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },
