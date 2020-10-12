@@ -66,6 +66,7 @@ import { PrintRegisteredMailActionComponent } from './actions/print-registered-m
 import { PrintDepositListActionComponent } from './actions/print-deposit-list-action/print-deposit-list-action.component';
 import { SendToRecordManagementComponent } from './actions/send-to-record-management/send-to-record-management.component';
 import { CheckReplyRecordManagementComponent } from './actions/check-reply-record-management/check-reply-record-management.component';
+import { CheckAcknowledgmentRecordManagementComponent } from './actions/check-acknowledgment-record-management/check-acknowledgment-record-management.component';
 
 
 // PROCESS
@@ -236,6 +237,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         ReconcileActionComponent,
         SendToRecordManagementComponent,
         CheckReplyRecordManagementComponent,
+        CheckAcknowledgmentRecordManagementComponent,
     ],
     exports : [
         SharedModule

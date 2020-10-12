@@ -484,8 +484,11 @@ define('_REGISTERED_MAIL_DISTRIBUTED', 'Accusé de réception reçu : recommand�
 define('_REGISTERED_MAIL_NOT_DISTRIBUTED', 'Accusé de réception reçu : recommandé non distribué');
 
 define('_CONFIGURATION_UPDATED', 'Configuration modifiée');
-define('_SEND_TO_RECORD_MANAGEMENT', 'Envoyer dans un Système d\'Archivage Électronique');
-define('_SEND_TO_RECORD_MANAGEMENT_DESC', 'Envoyer dans un Système d\'Archivage Électronique');
+define('_SEND_TO_RECORD_MANAGEMENT', 'Envoyer dans un système d\'archivage électronique');
+define('_SEND_TO_RECORD_MANAGEMENT_DESC', 'Envoyer dans un système d\'archivage électronique');
 
-define('_CHECK_REPLY_RECORD_MANAGEMENT', 'Vérification de la réponse au transfert');
-define('_CHECK_REPLY_RECORD_MANAGEMENT_DESC', 'Vérification de la réponse au transfert');
+define('_CHECK_REPLY_RECORD_MANAGEMENT', 'Vérification de la réponse au transfert du système d\'archivage électronique');
+define('_CHECK_REPLY_RECORD_MANAGEMENT_DESC', 'Vérification de la réponse au transfert du système d\'archivage électronique');
+
+define('_CHECK_ACKNOWLEDGMENT_RECORD_MANAGEMENT', 'Vérification du transfert du paquet au système d\'archivage électronique');
+define('_CHECK_ACKNOWLEDGMENT_RECORD_MANAGEMENT_DESC', 'Vérification du transfert du paquet au système d\'archivage électronique');

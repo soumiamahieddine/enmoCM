@@ -486,4 +486,14 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>recordManagement</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>checkAcknowledgmentRecordManagement</ID>
+        <LABEL>_CHECK_ACKNOWLEDGMENT_RECORD_MANAGEMENT</LABEL>
+        <NAME>checkAcknowledgmentRecordManagement</NAME>
+        <DESC>_CHECK_ACKNOWLEDGMENT_RECORD_MANAGEMENT_DESC</DESC>
+        <component>checkAcknowledgmentRecordManagementAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE>recordManagement</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
