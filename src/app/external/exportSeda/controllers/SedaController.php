@@ -181,8 +181,150 @@ class SedaController
                 'descriptionLevel' => 'Item'
             ];
         }
+
+        $archivalAgreements       = SedaController::getArchivalAgreements([
+            'configXml'           => $sedaXml,
+            'senderArchiveEntity' => (string)$sedaXml->CONFIG->senderOrgRegNumber,
+            'producerService'     => $entity['producer_service']
+        ]);
+        if (!empty($archivalAgreements['error'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'ArchivalAgreements error : ' . $archivalAgreements['error']]);
+        }
+        $recipientArchiveEntities = SedaController::getRecipientArchiveEntities(['configXml' => $sedaXml, 'archivalAgreements' => $archivalAgreements['archivalAgreements']]);
+        if (!empty($recipientArchiveEntities['error'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'ArchivalEntities error : ' . $recipientArchiveEntities['error']]);
+        }
+
+        $return['archivalAgreements']       = $archivalAgreements['archivalAgreements'];
+        $return['recipientArchiveEntities'] = $recipientArchiveEntities['archiveEntities'];
         
         return $response->withJson($return);
+    }
+
+    public function getRecipientArchiveEntities($args = [])
+    {
+        $archiveEntities = [];
+        if (strtolower((string)$args['configXml']->CONFIG->sae) == 'maarchrm') {
+            $curlResponse = CurlModel::execSimple([
+                'url'     => rtrim((string)$args['configXml']->CONFIG->urlSAEService, '/') . '/organization/organization/Byrole/archiver',
+                'method'  => 'GET',
+                'cookie'  => 'LAABS-AUTH=' . urlencode((string)$args['configXml']->CONFIG->token),
+                'headers' => [
+                    'Accept: application/json',
+                    'Content-Type: application/json',
+                    'User-Agent: ' . (string)$args['configXml']->CONFIG->userAgent
+                ]
+            ]);
+
+            if (!empty($curlResponse['errors'])) {
+                return ['error' => 'Error during processing in getRecipientArchiveEntities : ' . $curlResponse['errors']];
+            }
+
+            $archiveEntitiesAllowed = array_column($args['archivalAgreements'], 'archiveEntityRegNumber');
+
+            $archiveEntities[] = [
+                'id'    => "",
+                'label' => null
+            ];
+            foreach ($curlResponse['response'] as $retentionRule) {
+                if (in_array($retentionRule['registrationNumber'], $archiveEntitiesAllowed)) {
+                    $archiveEntities[] = [
+                        'id'    => $retentionRule['registrationNumber'],
+                        'label' => $retentionRule['displayName']
+                    ];
+                }
+            }
+        } else {
+            foreach ($args['configXml']->externalSAE as $value) {
+                if ((string)$value->id == (string)$args['configXml']->CONFIG->sae) {
+                    foreach ($value->archiveEntities->archiveEntity as $rule) {
+                        $archiveEntities[] = [
+                            'id'    => (string)$rule->id,
+                            'label' => (string)$rule->label
+                        ];
+                    }
+                    break;
+                }
+            }
+        }
+
+        return ['archiveEntities' => $archiveEntities];
+    }
+
+    public function getArchivalAgreements($args = [])
+    {
+        $archivalAgreements = [];
+        if (strtolower((string)$args['configXml']->CONFIG->sae) == 'maarchrm') {
+            $curlResponse = CurlModel::execSimple([
+                'url'     => rtrim((string)$args['configXml']->CONFIG->urlSAEService, '/') . '/medona/archivalAgreement/Index',
+                'method'  => 'GET',
+                'cookie'  => 'LAABS-AUTH=' . urlencode((string)$args['configXml']->CONFIG->token),
+                'headers' => [
+                    'Accept: application/json',
+                    'Content-Type: application/json',
+                    'User-Agent: ' . (string)$args['configXml']->CONFIG->userAgent
+                ]
+            ]);
+
+            if (!empty($curlResponse['errors'])) {
+                return ['error' => 'Error during processing in getArchivalAgreements : ' . $curlResponse['errors']];
+            }
+
+            $producerService = SedaController::getProducerServiceInfo(['configXml' => $args['configXml'], 'producerServiceName' => $args['producerService']]);
+            if (!empty($producerService['errors'])) {
+                return ['error' => 'Error during processing in getArchivalAgreements producer service info : ' . $curlResponse['errors']];
+            } elseif (empty($producerService['producerServiceInfo'])) {
+                return ['error' => 'ProducerService does not exists in MaarchRM'];
+            }
+
+            $archivalAgreements[] = [
+                'id'    => "",
+                'label' => null
+            ];
+            foreach ($curlResponse['response'] as $retentionRule) {
+                if ($retentionRule['depositorOrgRegNumber'] == $args['senderArchiveEntity'] && in_array($producerService['producerServiceInfo']['orgId'], $retentionRule['originatorOrgIds'])) {
+                    $archivalAgreements[] = [
+                        'id'            => $retentionRule['reference'],
+                        'label'         => $retentionRule['name'],
+                        'archiveEntityRegNumber' => $retentionRule['archiverOrgRegNumber']
+                    ];
+                }
+            }
+        } else {
+            foreach ($args['configXml']->externalSAE as $value) {
+                if ((string)$value->id == (string)$args['configXml']->CONFIG->sae) {
+                    foreach ($value->archivalAgreements->archivalAgreement as $rule) {
+                        $archivalAgreements[] = [
+                            'id'    => (string)$rule->id,
+                            'label' => (string)$rule->label
+                        ];
+                    }
+                    break;
+                }
+            }
+        }
+
+        return ['archivalAgreements' => $archivalAgreements];
+    }
+
+    public function getProducerServiceInfo($args = [])
+    {
+        $curlResponse = CurlModel::execSimple([
+            'url'     => rtrim((string)$args['configXml']->CONFIG->urlSAEService, '/') . '/organization/organization/Search?term=' . $args['producerServiceName'],
+            'method'  => 'GET',
+            'cookie'  => 'LAABS-AUTH=' . urlencode((string)$args['configXml']->CONFIG->token),
+            'headers' => [
+                'Accept: application/json',
+                'Content-Type: application/json',
+                'User-Agent: ' . (string)$args['configXml']->CONFIG->userAgent
+            ]
+        ]);
+
+        if (!empty($curlResponse['errors'])) {
+            return ['error' => $curlResponse['errors']];
+        }
+
+        return ['producerServiceInfo' => $curlResponse['response'][0]];
     }
 
     public function getRetentionRules(Request $request, Response $response)
@@ -210,7 +352,7 @@ class SedaController
             ]);
 
             if (!empty($curlResponse['errors'])) {
-                return ['error' => 'Error during processing in getRetentionRules : ' . $curlResponse['errors']];
+                return $response->withStatus(400)->withJson(['errors' => 'Error during processing in getRetentionRules : ' . $curlResponse['errors']]);
             }
 
             $retentionRules[] = [
