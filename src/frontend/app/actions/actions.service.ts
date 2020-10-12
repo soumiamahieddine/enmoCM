@@ -41,9 +41,9 @@ import { SaveAndPrintRegisteredMailActionComponent } from './save-and-print-regi
 import { SaveAndIndexRegisteredMailActionComponent } from './save-and-index-registered-mail-action/save-and-index-registered-mail-action.component';
 import { PrintRegisteredMailActionComponent } from './print-registered-mail-action/print-registered-mail-action.component';
 import { PrintDepositListActionComponent } from './print-deposit-list-action/print-deposit-list-action.component';
-import { SendToRecordManagementComponent } from './send-to-record-management/send-to-record-management.component';
-import { CheckReplyRecordManagementComponent } from './check-reply-record-management/check-reply-record-management.component';
-import { CheckAcknowledgmentRecordManagementComponent } from './check-acknowledgment-record-management/check-acknowledgment-record-management.component';
+import { SendToRecordManagementComponent } from './send-to-record-management-action/send-to-record-management.component';
+import { CheckReplyRecordManagementComponent } from './check-reply-record-management-action/check-reply-record-management.component';
+import { CheckAcknowledgmentRecordManagementComponent } from './check-acknowledgment-record-management-action/check-acknowledgment-record-management.component';
 
 @Injectable()
 export class ActionsService implements OnDestroy {

@@ -18,11 +18,11 @@ import { FolderActionListComponent } from '@appRoot/folder/folder-action-list/fo
 import { FoldersService } from '@appRoot/folder/folders.service';
 import { FunctionsService } from '@service/functions.service';
 import { of, merge, Subject, Subscription, Observable } from 'rxjs';
-import { CriteriaToolComponent } from '@appRoot/adv-search/criteria-tool/criteria-tool.component';
+import { CriteriaToolComponent } from '@appRoot/search/criteria-tool/criteria-tool.component';
 import { IndexingFieldsService } from '@service/indexing-fields.service';
 import { CriteriaSearchService } from '@service/criteriaSearch.service';
 import { HighlightPipe } from '@plugins/highlight.pipe';
-import { FilterToolComponent } from '@appRoot/adv-search/filter-tool/filter-tool.component';
+import { FilterToolComponent } from '@appRoot/search/filter-tool/filter-tool.component';
 import { ContactResourceModalComponent } from '@appRoot/contact/contact-resource/modal/contact-resource-modal.component';
 
 declare var $: any;

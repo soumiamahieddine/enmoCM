@@ -11,10 +11,10 @@ import { SearchResultListComponent } from './result-list/search-result-list.comp
 
 
 @Component({
-    templateUrl: 'adv-search.component.html',
-    styleUrls: ['adv-search.component.scss']
+    templateUrl: 'search.component.html',
+    styleUrls: ['search.component.scss']
 })
-export class AdvSearchComponent implements OnInit {
+export class SearchComponent implements OnInit {
 
     searchTerm: string = '';
 
