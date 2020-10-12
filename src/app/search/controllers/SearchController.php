@@ -104,6 +104,7 @@ class SearchController
         }
         $searchWhere = $searchClause['searchWhere'];
         $searchData  = $searchClause['searchData'];
+        $matchingFullTextResources = $searchClause['matchingResources'];
 
         $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
         if (!empty($nonSearchableStatuses)) {
@@ -210,6 +211,7 @@ class SearchController
 
         $ids = array_column($formattedResources, 'resId');
         $matchingResources = SearchController::getAttachmentsInsider(['resources' => $ids, 'body' => $body]);
+        $matchingResources = array_merge($matchingResources, $matchingFullTextResources);
         foreach ($formattedResources as $key => $formattedResource) {
             $formattedResources[$key]['inAttachments'] = in_array($formattedResource['resId'], $matchingResources);
         }
@@ -386,9 +388,11 @@ class SearchController
                     'fieldsNumber'  => 1
                 ]);
                 $subjectGlue = implode(' AND ', $requestData['where']);
-                $subjectGlue = "(($subjectGlue) OR res_id in (select res_id_master from res_attachments where title ilike ?))";
+                $attachmentField = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['title']]);
+                $subjectGlue = "(($subjectGlue) OR res_id in (select res_id_master from res_attachments where {$attachmentField}))";
                 $args['searchWhere'][] = $subjectGlue;
                 $args['searchData'] = array_merge($args['searchData'], $requestData['data']);
+
                 $args['searchData'][] = "%{$body['subject']['values']}%";
             }
         }
@@ -435,23 +439,30 @@ class SearchController
             }
             $args['searchData'][] = $body['priority']['values'];
         }
-        if (!empty($body['confidentiality']) && is_bool($body['confidentiality']['values'])) {
-            $args['searchWhere'][] = 'confidentiality = ?';
-            $args['searchData'][] = empty($body['confidentiality']['values']) ? 'N' : 'Y';
+        if (!empty($body['confidentiality']) && !empty($body['confidentiality']['values']) && is_array($body['confidentiality']['values'])) {
+            $confidentialityData = [];
+            $confidentialityData[] = in_array(true, $body['confidentiality']['values'], true) ? 'Y' : '0';
+            $confidentialityData[] = in_array(false, $body['confidentiality']['values'], true) ? 'N' : '0';
+            if (in_array(null, $body['confidentiality']['values'])) {
+                $args['searchWhere'][] = '(confidentiality in (?) OR confidentiality is NULL)';
+            } else {
+                $args['searchWhere'][] = 'confidentiality in (?)';
+            }
+            $args['searchData'][] = $confidentialityData;
         }
         if (!empty($body['initiator']) && !empty($body['initiator']['values']) && is_array($body['initiator']['values'])) {
             if (in_array(null, $body['initiator']['values'])) {
-                $args['searchWhere'][] = '(initiator in (?) OR priority is NULL)';
+                $args['searchWhere'][] = '(initiator in (select entity_id from entities where id in (?)) OR initiator is NULL)';
             } else {
-                $args['searchWhere'][] = 'initiator in (?)';
+                $args['searchWhere'][] = 'initiator in (select entity_id from entities where id in (?))';
             }
             $args['searchData'][] = $body['initiator']['values'];
         }
         if (!empty($body['destination']) && !empty($body['destination']['values']) && is_array($body['destination']['values'])) {
             if (in_array(null, $body['destination']['values'])) {
-                $args['searchWhere'][] = '(destination in (?) OR priority is NULL)';
+                $args['searchWhere'][] = '(destination in (select entity_id from entities where id in (?)) OR destination is NULL)';
             } else {
-                $args['searchWhere'][] = 'destination in (?)';
+                $args['searchWhere'][] = 'destination in (select entity_id from entities where id in (?))';
             }
             $args['searchData'][] = $body['destination']['values'];
         }
@@ -1039,6 +1050,7 @@ class SearchController
         ValidatorModel::notEmpty($args, ['searchWhere', 'searchData']);
         ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
 
+        $matchingResources = [];
         if (!empty($args['body']['fulltext']['values'])) {
             if (strpos($args['body']['fulltext']['values'], "'") === false && ($args['body']['fulltext']['values'][0] != '"' || $args['body']['fulltext']['values'][strlen($args['body']['fulltext']['values']) - 1] != '"')) {
                 $query_fulltext = explode(" ", trim($args['body']['fulltext']['values']));
@@ -1083,10 +1095,11 @@ class SearchController
                         $idMasterDatas = AttachmentModel::get([
                             'select' => ['DISTINCT res_id_master'],
                             'where'  => ['res_id in (?)', 'status in (?)'],
-                            'data'   => [$listIds, ['DEL','OBS','TMP']]
+                            'data'   => [$listIds, ['A_TRA', 'TRA']]
                         ]);
 
                         $listIds = array_column($idMasterDatas, 'res_id_master');
+                        $matchingResources = $listIds;
                     }
 
                     if (!empty($listIds)) {
@@ -1102,7 +1115,7 @@ class SearchController
                 return null;
             }
         }
-        return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
+        return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData'], 'matchingResources' => $matchingResources];
     }
 
     private static function getFiltersClause(array $args)
@@ -1618,13 +1631,15 @@ class SearchController
         $where = ['res_id in (?)'];
         $data = [$args['resources']];
         $wherePlus = '';
+
         if (!empty($body['subject']) && !empty($body['subject']['values']) && is_string($body['subject']['values'])) {
             if ($body['subject']['values'][0] == '"' && $body['subject']['values'][strlen($body['subject']['values']) - 1] == '"') {
                 $wherePlus = 'res_id in (select res_id_master from res_attachments where title = ?)';
                 $subject = trim($body['subject']['values'], '"');
                 $data[] = $subject;
             } else {
-                $wherePlus = "res_id in (select res_id_master from res_attachments where title ilike ?)";
+                $attachmentField = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['title']]);
+                $wherePlus = "res_id in (select res_id_master from res_attachments where {$attachmentField})";
                 $data[] = "%{$body['subject']['values']}%";
             }
         }
@@ -1634,6 +1649,38 @@ class SearchController
             }
             $wherePlus .= 'res_id in (select res_id_master from res_attachments where identifier ilike ?)';
             $data[] = "%{$body['chrono']['values']}%";
+        }
+        if (!empty($body['meta']) && !empty($body['meta']['values']) && is_string($body['meta']['values'])) {
+            if ($body['meta']['values'][0] == '"' && $body['meta']['values'][strlen($body['meta']['values']) - 1] == '"') {
+                if (!empty($wherePlus)) {
+                    $wherePlus .= ' OR ';
+                }
+                $quick = trim($body['meta']['values'], '"');
+                $wherePlus .= "(res_id in (select res_id_master from res_attachments where title = ?)";
+                $wherePlus .= ' OR res_id in (select res_id_master from res_attachments where identifier = ?))';
+
+                $data[] = $quick;
+                $data[] = $quick;
+            } else {
+                $fields = ['title', 'identifier'];
+                $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+                $requestDataAttachment = AutoCompleteController::getDataForRequest([
+                    'search'        => $body['meta']['values'],
+                    'fields'        => $fields,
+                    'where'         => [],
+                    'data'          => [],
+                    'fieldsNumber'  => 2
+                ]);
+
+                if (!empty($requestDataAttachment['where'])) {
+                    if (!empty($wherePlus)) {
+                        $wherePlus .= ' OR ';
+                    }
+
+                    $wherePlus .= 'res_id in (select res_id_master from res_attachments where ' . implode(' OR ', $requestDataAttachment['where']) . ')';
+                    $data = array_merge($data, $requestDataAttachment['data']);
+                }
+            }
         }
         if (empty($wherePlus)) {
             return [];
