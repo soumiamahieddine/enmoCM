@@ -8,7 +8,7 @@
         <div class="catGroupTitle">{{'lang.'+filterKey.key | translate}} ({{filters[filterKey.key].length}})</div>
         <mat-divider style="width: 80%;"></mat-divider>
         <mat-list-option color="primary" class="catContent" *ngFor="let cat of filters[filterKey.key];let i=index" (click)="toggleFilter(filterKey.key,i)" [selected]="cat.selected" checkboxPosition="before">
-            <span class="catLabel" [title]="cat.label">{{cat.label}}</span><span class="catBadge">{{cat.count}}</span>
+            <span class="catLabel" [title]="cat.label">{{cat.id !== null ? cat.label : 'lang.undefined' | translate}}</span><span class="catBadge">{{cat.count}}</span>
         </mat-list-option>
     </mat-selection-list>
 </mat-expansion-panel>
