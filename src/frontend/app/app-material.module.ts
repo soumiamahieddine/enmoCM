@@ -1,57 +1,5 @@
-import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
-
-@Injectable()
-export class AppDateAdapter extends NativeDateAdapter {
-    parse(value: any): Date | null {
-        if ((typeof value === 'string') && (value.indexOf('/') > -1)) {
-            const str = value.split('/');
-            const year = Number(str[2]);
-            const month = Number(str[1]) - 1;
-            const date = Number(str[0]);
-            return new Date(year, month, date);
-        }
-        const timestamp = typeof value === 'number' ? value : Date.parse(value);
-        return isNaN(timestamp) ? null : new Date(timestamp);
-    }
-
-    format(date: Date, displayFormat: Object): string {
-        if (displayFormat == "input") {
-            let day = date.getDate();
-            let month = date.getMonth() + 1;
-            let year = date.getFullYear();
-            return this._to2digit(day) + '/' + this._to2digit(month) + '/' + year;
-        } else {
-            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-            return date.toLocaleDateString('fr-FR', options);
-        }
-    }
-
-    private _to2digit(n: number) {
-        return ('00' + n).slice(-2);
-    }
-
-    getFirstDayOfWeek(): number {
-        return 1;
-    }
-
-}
-
-export const APP_DATE_FORMATS =
-{
-    parse: {
-        dateInput: { month: 'short', year: 'numeric', day: 'numeric' }
-    },
-    display: {
-        // dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
-        dateInput: 'input',
-        monthYearLabel: { month: 'short', year: 'numeric', day: 'numeric' },
-        dateA11yLabel: { year: 'numeric', month: 'long', day: 'numeric' },
-        monthYearA11yLabel: { year: 'numeric', month: 'long' },
-    }
-};
-
-
-import { NgModule, Injectable } from '@angular/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { NgModule } from '@angular/core';
 import { DndModule } from 'ng2-dnd';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -90,6 +38,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 
 import { MatTreeModule } from '@angular/material/tree';
 import { CustomMatPaginatorIntl } from '@plugins/mat-paginator-int';
+import { AppDateAdapter, APP_DATE_FORMATS } from '@plugins/mat-date-int';
 
 @NgModule({
     imports: [
