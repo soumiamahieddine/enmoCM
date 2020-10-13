@@ -21,6 +21,7 @@ export class SearchComponent implements OnInit {
     filtersChange = new EventEmitter();
 
     dialogRef: MatDialogRef<any>;
+    loadingResult: boolean = false;
 
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 

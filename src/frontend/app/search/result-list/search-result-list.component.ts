@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, OnDestroy, TemplateRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, OnDestroy, TemplateRef, Input, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
@@ -43,6 +43,8 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     @Input() appCriteriaTool: CriteriaToolComponent;
     @Input() sidenavRight: MatSidenav;
 
+    @Output() loadingResult = new EventEmitter<boolean>();
+
     loading: boolean = true;
     initSearch: boolean = false;
     docUrl: string = '';
@@ -82,7 +84,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     resultListDatabase: ResultListHttpDao | null;
     data: any = [];
     resultsLength = 0;
-    isLoadingResults = true;
+    isLoadingResults = false;
     dataFilters: any = {};
     listProperties: any = {};
     currentChrono: string = '';
@@ -283,6 +285,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     if (!this.isLoadingResults) {
                         this.sidenavRight.close();
                         this.isLoadingResults = true;
+                        this.loadingResult.emit(true);
                         return this.resultListDatabase!.getRepoIssues(
                             this.sort.active, this.sort.direction, this.paginator.pageIndex, this.searchUrl, this.listProperties, this.paginator.pageSize, this.criteria, this.dataFilters);
                     }
@@ -291,6 +294,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     this.selectedRes = [];
                     // Flip flag to show that loading has finished.
                     this.isLoadingResults = false;
+                    this.loadingResult.emit(false);
                     data = this.processPostData(data);
                     this.templateColumns = data.templateColumns;
                     this.dataFilters = data.filters;
@@ -307,6 +311,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     this.dataFilters = {};
                     this.allResInBasket =  [];
                     this.isLoadingResults = false;
+                    this.loadingResult.emit(false);
                     this.initSearch = false;
                     return of(false);
                 })
@@ -688,20 +693,22 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     }
 
     removeCriteria(identifier: string, value: any = null) {
-        if (identifier !== '_ALL') {
-            const tmpArrCrit = [];
-            if (value === null || this.criteria[identifier].values.length === 1) {
-                this.criteria[identifier].values = [];
+        if (!this.isLoadingResults) {
+            if (identifier !== '_ALL') {
+                const tmpArrCrit = [];
+                if (value === null || this.criteria[identifier].values.length === 1) {
+                    this.criteria[identifier].values = [];
+                } else {
+                    const indexArr = this.criteria[identifier].values.indexOf(value);
+                    this.criteria[identifier].values.splice(indexArr, 1);
+                }
             } else {
-                const indexArr = this.criteria[identifier].values.indexOf(value);
-                this.criteria[identifier].values.splice(indexArr, 1);
+                Object.keys(this.criteria).forEach(key => {
+                    this.criteria[key].values = [];
+                });
             }
-        } else {
-            Object.keys(this.criteria).forEach(key => {
-                this.criteria[key].values = [];
-            });
+            this.appCriteriaTool.refreshCriteria(this.criteria);
         }
-        this.appCriteriaTool.refreshCriteria(this.criteria);
     }
 
     updateFilters() {

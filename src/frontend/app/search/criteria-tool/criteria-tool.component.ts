@@ -60,6 +60,7 @@ export class CriteriaToolComponent implements OnInit {
     @Input() defaultCriteria: any = [];
     @Input() adminMode: boolean = false;
     @Input() openedPanel: boolean = false;
+    @Input() isLoadingResult: boolean = false;
     @Input() class: 'main' | 'secondary' = 'main';
 
     @Output() searchUrlGenerated = new EventEmitter<any>();
