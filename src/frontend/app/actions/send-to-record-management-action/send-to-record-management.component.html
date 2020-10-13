@@ -8,6 +8,14 @@
         <div *ngIf="loading" class="loading" color="primary">
             <mat-spinner></mat-spinner>
         </div>
+        <div *ngIf="!checking">
+            {{'lang.makeActionOn' | translate}}
+            <b *ngIf="data.resIds.length === 0" color="primary"
+                class="highlight">{{'lang.currentIndexingMail' | translate}}</b>
+            <b *ngIf="data.resIds.length === 1" color="primary" class="highlight">{{data.resource.chrono}}</b>
+            <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
+                {{'lang.elements' | translate}}</b> ?
+        </div>
         <ng-container *ngIf="!checking && resourcesErrors.length === 0">
             <form [formGroup]="actionFormGroup" style="display: contents;">
                 <mat-form-field appearance="outline">
