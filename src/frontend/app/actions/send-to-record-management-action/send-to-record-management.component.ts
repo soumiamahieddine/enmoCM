@@ -16,6 +16,8 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 export class SendToRecordManagementComponent implements OnInit {
 
     loading: boolean = false;
+    checking: boolean = false;
+    resourcesErrors: any[] = [];
     recipientArchiveEntities = [];
     archivalAgreements = [];
 
@@ -92,10 +94,15 @@ export class SendToRecordManagementComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getData();
+        if (this.data.resIds.length === 1) {
+            this.getData();
+        } else {
+            this.resourcesErrors.push({lang : 'onlySingleResourceAllowed'});
+        }
     }
 
     getData() {
+        this.checking = true;
         this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkSendToRecordManagement`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
                 this.archives = data.archiveUnits;
@@ -120,9 +127,10 @@ export class SendToRecordManagementComponent implements OnInit {
                     doctypeRetentionFinalDisposition: [{value: data.data.doctype.retentionFinalDisposition, disabled: true}, Validators.required],
                 });
             }),
-            finalize(() => this.loading = false),
+            finalize(() => this.checking = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.resourcesErrors.push(err.error);
+                // this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();
