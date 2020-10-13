@@ -402,6 +402,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
 
     processPostData(data: any) {
         data.resources.forEach((element: any) => {
+            if (Object.keys(this.criteria).filter((crit) => crit.indexOf('role_') > -1).length > 0) {
+                element['inDiffusions'] = true;
+            }
             // Process main datas
             Object.keys(element).forEach((key) => {
                 if (key === 'statusImage' && element[key] == null) {
@@ -409,14 +412,21 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 } else if ((element[key] == null || element[key] === '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument'].indexOf(key) === -1) {
                     element[key] = this.translate.instant('lang.undefined');
                 }
+
+                // HighLight data
                 if (Object.keys(this.criteria).indexOf(key) > -1) {
                     element[key] = this.highlightPipe.transform(element[key], this.criteria[key].values);
                 } else if (['subject', 'chrono', 'resId'].indexOf(key) > -1 && Object.keys(this.criteria).indexOf('meta') > -1) {
                     element[key] = this.highlightPipe.transform(element[key], this.criteria['meta'].values);
                 }
-
-                if (key === 'status' && !this.functions.empty(this.criteria[key])) {
-                    element['inStatus'] = this.criteria[key].map((item: any) => item.label).indexOf(element[key]) > -1;
+                if (key === 'countAttachments' && Object.keys(this.criteria).indexOf('attachment_type') > -1) {
+                    element['inAttachments'] = true;
+                }
+                if (key === 'countNotes' && Object.keys(this.criteria).indexOf('notes') > -1) {
+                    element['inNotes'] = true;
+                }
+                if (key === 'statusLabel' && Object.keys(this.criteria).indexOf('status') > -1) {
+                    element['inStatus'] = true;
                 }
             });
             // Process secondary datas
@@ -510,12 +520,10 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 }
                 key.label = key.displayLabel === undefined ? this.translate.instant('lang.' + key.value) : key.displayLabel;
 
+                // HighLight sub data
                 key.displayValue = this.setHighLightData(key);
 
             });
-            // element['inNotes'] = true;
-            // element['inNotes'] = true;
-            // element['inAttachments'] = true;
             element['checked'] = this.selectedRes.indexOf(element['resId']) !== -1;
         });
 
@@ -543,6 +551,13 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 this.criteria['destination'].values.forEach((val: any) => {
                     data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
                 });
+            }
+        } else if (data.value === 'getCreationAndProcessLimitDates') {
+            if (Object.keys(this.criteria).indexOf('creationDate') > -1) {
+                data.displayValue.creationDateHighlighted = true;
+            }
+            if (Object.keys(this.criteria).indexOf('processLimitDate') > -1) {
+                data.displayValue.processLimitDateHighlighted = true;
             }
         } else if (data.value.match(regex) !== null && Object.keys(this.criteria).indexOf(data.value) > -1) {
             if (Array.isArray(this.criteria[data.value].values)) {

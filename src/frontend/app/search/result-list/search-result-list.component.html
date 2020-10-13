@@ -119,10 +119,12 @@
                             <ng-container *ngIf="row.closing_date == this.translate.instant('lang.undefined')">
                                 <i class="fa fa-calendar"
                                     title="{{'lang.creationDate' | translate}}"></i>&nbsp;<span
+                                    [class.highlightResult]="data.displayValue.creationDateHighlighted"
                                     [innerHTML]="data.displayValue.creationDate | timeAgo"
                                     title='{{data.displayValue.creationDate | fullDate}}'></span>
                                 - <i class="fa fa-stopwatch"
                                     title="{{'lang.processLimitDate' | translate}}"></i>&nbsp;<span
+                                    [class.highlightResult]="data.displayValue.processLimitDateHighlighted"
                                     [innerHTML]="data.displayValue.processLimitDate | timeLimit"
                                     title='{{data.displayValue.processLimitDate | fullDate}}'></span>
                             </ng-container>
@@ -158,9 +160,9 @@
                         <mat-icon [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']"
                             style="margin-bottom: 5px;"></mat-icon>
                     </button>
-                    <span style="cursor:pointer;" class="main-info-status" (click)="launch(row);">
+                    <span style="cursor:pointer;" [class.highlightResultIcon]="row.inStatus" class="main-info-status" (click)="launch(row);">
                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
-                            [ngStyle]="{'color': row.priorityColor}" [class.highlightResult]="row.inStatus" style="width: 100%;" color="primary"
+                            [ngStyle]="{'color': row.priorityColor}" style="width: 100%;" color="primary"
                             class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
                         </mat-icon>
                         <span *ngIf="row.confidentiality === 'Y'"
@@ -186,25 +188,27 @@
                         [class.undefined]="row.subject == this.translate.instant('lang.undefined')"
                         title="{{row.subject}}" [innerHTML]="row.subject | shorten: 150: '...'"></span>
                     <span *ngIf="sidenavRight !== undefined" class="main-info-action">
-                        <button mat-icon-button title="{{'lang.notes' | translate}}"
+                        <button mat-icon-button [class.highlightResultIcon]="row.inNotes" title="{{'lang.notes' | translate}}"
                             (click)="$event.stopPropagation();togglePanel('note',row)"
                             [class.noData]="row.countNotes == 0">
                             <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
-                                matBadge="{{row.countNotes}}" [class.highlightResult]="row.inNotes" fontIcon="fa-comments fa-2x"
+                                matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"
                                 [color]="sidenavRight.opened && row.checked && currentMode == 'note' ? 'primary' : ''">
                             </mat-icon>
                         </button>
                         <button mat-icon-button title="{{'lang.attachments' | translate}}"
+                            [class.highlightResultIcon]="row.inAttachments"
                             (click)="$event.stopPropagation();togglePanel('attachment',row)"
                             [class.noData]="row.countAttachments == 0">
                             <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
-                                matBadge="{{row.countAttachments}}" [class.highlightResult]="row.inAttachments" fontIcon="fa-paperclip fa-2x"
+                                matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"
                                 [color]="sidenavRight.opened && row.checked && currentMode == 'attachment' ? 'primary' : ''">
                             </mat-icon>
                         </button>
                         <button mat-icon-button title="{{'lang.diffusionList' | translate}}"
+                            [class.highlightResultIcon]="row.inDiffusions"
                             (click)="$event.stopPropagation();togglePanel('diffusion',row)">
-                            <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x" [class.highlightResult]="row.inDiffusions"
+                            <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"
                                 [color]="sidenavRight.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
                             </mat-icon>
                         </button>

@@ -457,6 +457,7 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     set_attachment_type_field(elem: any) {
+        elem.values = [];
         return new Promise((resolve, reject) => {
             this.http.get('../rest/attachmentsTypes').pipe(
                 tap((data: any) => {
@@ -499,6 +500,7 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     set_destination_field(elem: any) {
+        elem.values = [];
         return new Promise((resolve, reject) => {
             this.http.get(`../rest/indexingModels/entities`).pipe(
                 tap((data: any) => {
@@ -527,6 +529,7 @@ export class CriteriaToolComponent implements OnInit {
     }
 
     set_initiator_field(elem: any) {
+        elem.values = [];
         return new Promise((resolve, reject) => {
             this.http.get(`../rest/indexingModels/entities`).pipe(
                 tap((data: any) => {
