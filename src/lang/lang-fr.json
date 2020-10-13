@@ -2067,7 +2067,7 @@
     "senderArchiveEntity": "Service versant",
     "descriptionLevel": "Niveau de description",
     "archiveId": "Identifiant de l'archive",
-    "checkReplyRecordManagementDesc": "Vérifie les <b>réponses</b> des paquets qui on été transférés au <b>système d'archivage électronique</b>.",
+    "checkReplyRecordManagementDesc": "Vérifie les <b>réponses</b> des paquets qui ont été transférés au <b>système d'archivage électronique</b>.",
     "checkAcknowledgmentRecordManagementDesc": "Vérifie si le <b>système d'archivage électronique</b> a bien reçu les <b>paquets</b>.",
     "checkInProgress": "Vérification en cours",
     "nextPage": "Page suivante",
