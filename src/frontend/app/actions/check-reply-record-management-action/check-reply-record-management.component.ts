@@ -32,23 +32,16 @@ export class CheckReplyRecordManagementComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        // this.checkReply();
-
-        // FOR TEST
-        setTimeout(() => {
-            this.checking = false;
-            this.selectedRes = this.data.resIds;
-        }, 2000);
+        this.checkReply();
     }
 
     checkReply() {
-        this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkCloseWithFieldsAction`, { resources: this.data.resIds }).pipe(
+        this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/checkReplyRecordManagement`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
-                // TO DO
-                this.resourcesErrors = data.errors;
-                this.selectedRes = data.success;
+                this.resourcesErrors = data.resourcesInformations.errors;
+                this.selectedRes = data.resourcesInformations.success;
             }),
-            finalize(() => this.loading = false),
+            finalize(() => this.checking = false),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
                 return of(false);
@@ -58,12 +51,7 @@ export class CheckReplyRecordManagementComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-        // this.executeAction();
-
-        // FOR TEST
-        setTimeout(() => {
-            this.loading = false;
-        }, 3000);
+        this.executeAction();
     }
 
     executeAction() {
