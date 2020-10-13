@@ -253,6 +253,8 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     }
 
     launchSearch(criteria: any = this.criteria, initSearch = false) {
+        this.listProperties.page = 0;
+        this.listProperties.pageSize = 0;
         if (initSearch) {
             this.dataFilters = {};
         }
@@ -279,6 +281,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 startWith({}),
                 switchMap(() => {
                     if (!this.isLoadingResults) {
+                        this.sidenavRight.close();
                         this.isLoadingResults = true;
                         return this.resultListDatabase!.getRepoIssues(
                             this.sort.active, this.sort.direction, this.paginator.pageIndex, this.searchUrl, this.listProperties, this.paginator.pageSize, this.criteria, this.dataFilters);
@@ -298,8 +301,13 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
-                    // this.router.navigate(['/home']);
+                    this.selectedRes = [];
+                    this.data = [];
+                    this.resultsLength = 0;
+                    this.dataFilters = {};
+                    this.allResInBasket =  [];
                     this.isLoadingResults = false;
+                    this.initSearch = false;
                     return of(false);
                 })
             ).subscribe(data => this.data = data);
