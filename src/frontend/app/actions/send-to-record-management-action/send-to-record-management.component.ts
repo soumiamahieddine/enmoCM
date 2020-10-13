@@ -130,7 +130,7 @@ export class SendToRecordManagementComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-
+        this.formatData();
         if (this.data.resIds.length > 0) {
             this.executeAction();
         }
@@ -139,7 +139,7 @@ export class SendToRecordManagementComponent implements OnInit {
     executeAction() {
         const realResSelected: number[] = this.data.resIds;
 
-        this.http.put(this.data.processActionRoute, { resources: realResSelected, data: {} }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, data: this.formatData() }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');
@@ -154,6 +154,14 @@ export class SendToRecordManagementComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    formatData() {
+        const dataToSend = {};
+        Object.keys(this.actionFormGroup.controls).forEach(element => {
+            dataToSend[element] = this.actionFormGroup.controls[element].value;
+        });
+        return dataToSend;
     }
 
     archivalAgreementSelected(ev: any) {
