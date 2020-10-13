@@ -309,13 +309,22 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     this.data = [];
                     this.resultsLength = 0;
                     this.dataFilters = {};
-                    this.allResInBasket =  [];
+                    this.allResInBasket = [];
                     this.isLoadingResults = false;
                     this.loadingResult.emit(false);
                     this.initSearch = false;
                     return of(false);
                 })
             ).subscribe(data => this.data = data);
+    }
+
+    goToPage(page: number) {
+        this.paginator.pageIndex = page;
+        this.paginator.page.next({
+            pageIndex: page,
+            pageSize: this.paginator.pageSize,
+            length: this.paginator.length
+        });
     }
 
     goTo(row: any) {
@@ -693,7 +702,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     }
 
     removeCriteria(identifier: string, value: any = null) {
-        if (!this.isLoadingResults) {
+        if (!this.isLoadingResults) {
             if (identifier !== '_ALL') {
                 const tmpArrCrit = [];
                 if (value === null || this.criteria[identifier].values.length === 1) {
@@ -730,6 +739,10 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
 
     getSelectedResources() {
         return this.selectedRes;
+    }
+
+    counter(i: number) {
+        return new Array(i);
     }
 }
 export interface BasketList {

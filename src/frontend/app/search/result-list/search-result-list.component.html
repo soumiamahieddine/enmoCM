@@ -2,7 +2,8 @@
     <img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" />
 </mat-card>
 <ng-template #filterTemplate>
-    <app-filter-tool-adv-search #appFilterToolAdvSearch [filters]="dataFilters" (filterChanged)="launchSearch()" *ngIf="!hideFilter && !isLoadingResults"></app-filter-tool-adv-search>
+    <app-filter-tool-adv-search #appFilterToolAdvSearch [filters]="dataFilters" (filterChanged)="launchSearch()"
+        *ngIf="!hideFilter && !isLoadingResults"></app-filter-tool-adv-search>
 </ng-template>
 <ng-template #toolTemplate>
     <div *ngIf="data.length > 0" class="filtersContent">
@@ -10,7 +11,8 @@
         <div class="orderTool">
             <mat-form-field class="basket-order">
                 <mat-icon matPrefix class="fa fa-list"></mat-icon>
-                <mat-select [(ngModel)]="this.listProperties.order" (selectionChange)="updateFilters()" [disabled]="isLoadingResults">
+                <mat-select [(ngModel)]="this.listProperties.order" (selectionChange)="updateFilters()"
+                    [disabled]="isLoadingResults">
                     <mat-option [value]="column.id" *ngFor="let column of displayColsOrder">
                         {{'lang.' + column.id | translate}}
                     </mat-option>
@@ -72,7 +74,8 @@
 </div>
 <div class="table-head">
     <div class="table-head-result">
-        <mat-checkbox *ngIf="!singleSelection" color="primary" [checked]="selectedRes.length == allResInBasket.length && selectedRes.length > 0"
+        <mat-checkbox *ngIf="!singleSelection" color="primary"
+            [checked]="selectedRes.length == allResInBasket.length && selectedRes.length > 0"
             [indeterminate]="selectedRes.length > 0 && selectedRes.length < allResInBasket.length"
             style="margin: 10px;padding-right: 10px;" title="{{'lang.selectAllResInBasket' | translate}}"
             (change)="toggleAllRes($event)">
@@ -82,9 +85,13 @@
             {{'lang.selected' | translate}}</small>
     </div>
     <div class="table-head-tool">
-        <span>
+        <span style="position: relative;">
             <mat-paginator #paginatorResultList [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100, 150]"
-                class="paginatorResultList"></mat-paginator>
+             class="paginatorResultList"></mat-paginator>
+            <div *ngIf="paginatorResultList.getNumberOfPages() > 0" [matMenuTriggerFor]="page" class="pageList"></div>
+            <mat-menu #page="matMenu">
+                <button mat-menu-item *ngFor="let count of counter(paginatorResultList.getNumberOfPages());let i=index" (click)="goToPage(i)">{{i+1}}</button>
+            </mat-menu>
         </span>
         <span>
             <span>
@@ -100,16 +107,20 @@
     </div>
 </div>
 <div [class.integratedContent]="!standalone">
-    <table cdkDropList id="document-list" [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data" #tableBasketListSort="matSort" mat-table [dataSource]="data" matSort
-    matSortActive="resId" matSortDisableClear matSortDirection="asc" style="width:100%;" [cdkDropListDisabled]="dragInit || appService.getViewMode()">
+    <table cdkDropList id="document-list" [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data"
+        #tableBasketListSort="matSort" mat-table [dataSource]="data" matSort matSortActive="resId" matSortDisableClear
+        matSortDirection="asc" style="width:100%;" [cdkDropListDisabled]="dragInit || appService.getViewMode()">
 
         <ng-container matColumnDef="resId">
             <td mat-cell *matCellDef="let row" style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);">
-                <div *ngIf="!appService.getViewMode() && row.display.length > 0" class="sub-info column-{{templateColumns}}-list" style="cursor: initial;">
-                    <span class="sub-info-data" [class]="data.cssClasses.join(' ')"
-                        *ngFor="let data of row.display" style="flex:1;white-space: pre;overflow: hidden;text-overflow: ellipsis;
+                <div *ngIf="!appService.getViewMode() && row.display.length > 0"
+                    class="sub-info column-{{templateColumns}}-list" style="cursor: initial;">
+                    <span class="sub-info-data" [class]="data.cssClasses.join(' ')" *ngFor="let data of row.display"
+                        style="flex:1;white-space: pre;overflow: hidden;text-overflow: ellipsis;
                                 padding-left: 5px;
-                                padding-right: 5px;" [class.hasEvent]="data.event && data.displayValue !== this.translate.instant('lang.undefined')" (click)="launchEventSubData(data, row)">
+                                padding-right: 5px;"
+                        [class.hasEvent]="data.event && data.displayValue !== this.translate.instant('lang.undefined')"
+                        (click)="launchEventSubData(data, row)">
                         <ng-container *ngIf="data.value == 'getCreationAndProcessLimitDates'">
                             <ng-container *ngIf="row.closing_date != this.translate.instant('lang.undefined')">
                                 <i class="fa fa-lock" title="{{'lang.closingDate' | translate}}"></i>&nbsp;<span
@@ -117,8 +128,7 @@
                                     title='{{row.closing_date | fullDate}}'></span>
                             </ng-container>
                             <ng-container *ngIf="row.closing_date == this.translate.instant('lang.undefined')">
-                                <i class="fa fa-calendar"
-                                    title="{{'lang.creationDate' | translate}}"></i>&nbsp;<span
+                                <i class="fa fa-calendar" title="{{'lang.creationDate' | translate}}"></i>&nbsp;<span
                                     [class.highlightResult]="data.displayValue.creationDateHighlighted"
                                     [innerHTML]="data.displayValue.creationDate | timeAgo"
                                     title='{{data.displayValue.creationDate | fullDate}}'></span>
@@ -143,8 +153,7 @@
                             *ngIf="data.value != 'getCategory' && data.value != 'getCreationAndProcessLimitDates'">
                             <span *ngIf="!data.value.includes('Date')" title="{{data.displayTitle}}"
                                 [innerHTML]="data.displayValue"></span>
-                            <span *ngIf="data.value.includes('Date')"
-                                [innerHTML]="data.displayValue | timeAgo"></span>
+                            <span *ngIf="data.value.includes('Date')" [innerHTML]="data.displayValue | timeAgo"></span>
                         </ng-container>
                     </span>
                 </div>
@@ -160,7 +169,8 @@
                         <mat-icon [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']"
                             style="margin-bottom: 5px;"></mat-icon>
                     </button>
-                    <span style="cursor:pointer;" [class.highlightResultIcon]="row.inStatus" class="main-info-status" (click)="launch(row);">
+                    <span style="cursor:pointer;" [class.highlightResultIcon]="row.inStatus" class="main-info-status"
+                        (click)="launch(row);">
                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
                             [ngStyle]="{'color': row.priorityColor}" style="width: 100%;" color="primary"
                             class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
@@ -177,7 +187,8 @@
                         <ng-container
                             *ngIf="row.chrono == this.translate.instant('lang.undefined') && row.barcode != this.translate.instant('lang.undefined')">
                             <span style="color: rgba(0,0,0,0.4);font-size: 90%;">
-                                <i title="{{'lang.barcode' | translate}}" class="fas fa-barcode"></i>&nbsp;<span [innerHTML]="row.barcode"></span>
+                                <i title="{{'lang.barcode' | translate}}" class="fas fa-barcode"></i>&nbsp;<span
+                                    [innerHTML]="row.barcode"></span>
                             </span>
                         </ng-container>
                         <ng-container *ngIf="row.chrono != this.translate.instant('lang.undefined')">
@@ -188,7 +199,8 @@
                         [class.undefined]="row.subject == this.translate.instant('lang.undefined')"
                         title="{{row.subject}}" [innerHTML]="row.subject | shorten: 150: '...'"></span>
                     <span *ngIf="sidenavRight !== undefined" class="main-info-action">
-                        <button mat-icon-button [class.highlightResultIcon]="row.inNotes" title="{{'lang.notes' | translate}}"
+                        <button mat-icon-button [class.highlightResultIcon]="row.inNotes"
+                            title="{{'lang.notes' | translate}}"
                             (click)="$event.stopPropagation();togglePanel('note',row)"
                             [class.noData]="row.countNotes == 0">
                             <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
