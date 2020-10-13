@@ -31,6 +31,9 @@
                     </div>
                 </div>
             </ng-container>
+            <div *ngIf="selectedRes.length > 0">
+                <app-note-editor #noteEditor [resIds]="selectedRes"></app-note-editor>
+            </div>
         </div>
     </div>
     <span class="divider-modal"></span>
