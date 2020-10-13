@@ -69,9 +69,9 @@ class SedaController
             return $response->withStatus(400)->withJson(['errors' => 'producer_service is empty for this entity', 'lang' => 'noProducerService']);
         }
 
-        $sedaXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/export_seda/xml/config.xml']);
-        if (empty($sedaXml->CONFIG->senderOrgRegNumber)) {
-            return $response->withStatus(400)->withJson(['errors' => 'No senderOrgRegNumber found in config.xml (export_seda)', 'lang' => 'noSenderOrgRegNumber']);
+        $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+        if (empty($config['exportSeda']['senderOrgRegNumber'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'No senderOrgRegNumber found in config.json', 'lang' => 'noSenderOrgRegNumber']);
         }
 
         $date = new \DateTime();
@@ -81,7 +81,7 @@ class SedaController
                 'entity' => [
                     'label'               => $entity['entity_label'],
                     'producerService'     => $entity['producer_service'],
-                    'senderArchiveEntity' => (string)$sedaXml->CONFIG->senderOrgRegNumber
+                    'senderArchiveEntity' => $config['exportSeda']['senderOrgRegNumber']
                 ],
                 'doctype' => [
                     'label'                     => $doctype['description'],
@@ -183,14 +183,14 @@ class SedaController
         }
 
         $archivalAgreements = SedaController::getArchivalAgreements([
-            'configXml'           => $sedaXml,
-            'senderArchiveEntity' => (string)$sedaXml->CONFIG->senderOrgRegNumber,
+            'config'              => $config,
+            'senderArchiveEntity' => $config['exportSeda']['senderOrgRegNumber'],
             'producerService'     => $entity['producer_service']
         ]);
         if (!empty($archivalAgreements['errors'])) {
             return $response->withStatus(400)->withJson($archivalAgreements);
         }
-        $recipientArchiveEntities = SedaController::getRecipientArchiveEntities(['configXml' => $sedaXml, 'archivalAgreements' => $archivalAgreements['archivalAgreements']]);
+        $recipientArchiveEntities = SedaController::getRecipientArchiveEntities(['config' => $config, 'archivalAgreements' => $archivalAgreements['archivalAgreements']]);
         if (!empty($recipientArchiveEntities['errors'])) {
             return $response->withStatus(400)->withJson($recipientArchiveEntities);
         }
@@ -204,15 +204,15 @@ class SedaController
     public function getRecipientArchiveEntities($args = [])
     {
         $archiveEntities = [];
-        if (strtolower((string)$args['configXml']->CONFIG->sae) == 'maarchrm') {
+        if (strtolower($args['config']['exportSeda']['sae']) == 'maarchrm') {
             $curlResponse = CurlModel::execSimple([
-                'url'     => rtrim((string)$args['configXml']->CONFIG->urlSAEService, '/') . '/organization/organization/Byrole/archiver',
+                'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/organization/organization/Byrole/archiver',
                 'method'  => 'GET',
-                'cookie'  => 'LAABS-AUTH=' . urlencode((string)$args['configXml']->CONFIG->token),
+                'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
                 'headers' => [
                     'Accept: application/json',
                     'Content-Type: application/json',
-                    'User-Agent: ' . (string)$args['configXml']->CONFIG->userAgent
+                    'User-Agent: ' . $args['config']['exportSeda']['userAgent']
                 ]
             ]);
 
@@ -237,15 +237,12 @@ class SedaController
                 }
             }
         } else {
-            foreach ($args['configXml']->externalSAE as $value) {
-                if ((string)$value->id == (string)$args['configXml']->CONFIG->sae) {
-                    foreach ($value->archiveEntities->archiveEntity as $rule) {
-                        $archiveEntities[] = [
-                            'id'    => (string)$rule->id,
-                            'label' => (string)$rule->label
+            if (is_array($args['config']['exportSeda']['externalSAE']['archiveEntities'])) {
+                foreach ($args['config']['exportSeda']['externalSAE']['archiveEntities'] as $archiveEntity) {
+                    $archiveEntities[] = [
+                            'id'    => $archiveEntity['id'],
+                            'label' => $archiveEntity['label']
                         ];
-                    }
-                    break;
                 }
             }
         }
@@ -256,15 +253,15 @@ class SedaController
     public function getArchivalAgreements($args = [])
     {
         $archivalAgreements = [];
-        if (strtolower((string)$args['configXml']->CONFIG->sae) == 'maarchrm') {
+        if (strtolower($args['config']['exportSeda']['sae']) == 'maarchrm') {
             $curlResponse = CurlModel::execSimple([
-                'url'     => rtrim((string)$args['configXml']->CONFIG->urlSAEService, '/') . '/medona/archivalAgreement/Index',
+                'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/archivalAgreement/Index',
                 'method'  => 'GET',
-                'cookie'  => 'LAABS-AUTH=' . urlencode((string)$args['configXml']->CONFIG->token),
+                'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
                 'headers' => [
                     'Accept: application/json',
                     'Content-Type: application/json',
-                    'User-Agent: ' . (string)$args['configXml']->CONFIG->userAgent
+                    'User-Agent: ' . $args['config']['exportSeda']['userAgent']
                 ]
             ]);
 
@@ -274,7 +271,7 @@ class SedaController
                 return ['errors' => 'Error returned by the route /medona/archivalAgreement/Index : ' . $curlResponse['response']['message']];
             }
 
-            $producerService = SedaController::getProducerServiceInfo(['configXml' => $args['configXml'], 'producerServiceName' => $args['producerService']]);
+            $producerService = SedaController::getProducerServiceInfo(['config' => $args['config'], 'producerServiceName' => $args['producerService']]);
             if (!empty($producerService['errors'])) {
                 return ['errors' => $curlResponse['errors']];
             } elseif (empty($producerService['producerServiceInfo'])) {
@@ -295,15 +292,12 @@ class SedaController
                 }
             }
         } else {
-            foreach ($args['configXml']->externalSAE as $value) {
-                if ((string)$value->id == (string)$args['configXml']->CONFIG->sae) {
-                    foreach ($value->archivalAgreements->archivalAgreement as $rule) {
-                        $archivalAgreements[] = [
-                            'id'    => (string)$rule->id,
-                            'label' => (string)$rule->label
-                        ];
-                    }
-                    break;
+            if (is_array($args['config']['exportSeda']['externalSAE']['archivalAgreements'])) {
+                foreach ($args['config']['exportSeda']['externalSAE']['archivalAgreements'] as $archivalAgreement) {
+                    $archivalAgreements[] = [
+                        'id'    => $archivalAgreement['id'],
+                        'label' => $archivalAgreement['label']
+                    ];
                 }
             }
         }
@@ -314,13 +308,13 @@ class SedaController
     public function getProducerServiceInfo($args = [])
     {
         $curlResponse = CurlModel::execSimple([
-            'url'     => rtrim((string)$args['configXml']->CONFIG->urlSAEService, '/') . '/organization/organization/Search?term=' . $args['producerServiceName'],
+            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/organization/organization/Search?term=' . $args['producerServiceName'],
             'method'  => 'GET',
-            'cookie'  => 'LAABS-AUTH=' . urlencode((string)$args['configXml']->CONFIG->token),
+            'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
             'headers' => [
                 'Accept: application/json',
                 'Content-Type: application/json',
-                'User-Agent: ' . (string)$args['configXml']->CONFIG->userAgent
+                'User-Agent: ' . $args['config']['exportSeda']['userAgent']
             ]
         ]);
 
@@ -339,21 +333,21 @@ class SedaController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $sedaXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/export_seda/xml/config.xml']);
-        if (empty($sedaXml->CONFIG->sae)) {
-            return $response->withStatus(400)->withJson(['errors' => 'No SAE found in config.xml (export_seda)']);
+        $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+        if (empty($config['exportSeda']['sae'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'No SAE found in config.json']);
         }
 
         $retentionRules = [];
-        if (strtolower((string)$sedaXml->CONFIG->sae) == 'maarchrm') {
+        if (strtolower($config['exportSeda']['sae']) == 'maarchrm') {
             $curlResponse = CurlModel::execSimple([
-                'url'     => rtrim((string)$sedaXml->CONFIG->urlSAEService, '/') . '/recordsManagement/retentionRule/Index',
+                'url'     => rtrim($config['exportSeda']['urlSAEService'], '/') . '/recordsManagement/retentionRule/Index',
                 'method'  => 'GET',
-                'cookie'  => 'LAABS-AUTH=' . urlencode((string)$sedaXml->CONFIG->token),
+                'cookie'  => 'LAABS-AUTH=' . urlencode($config['exportSeda']['token']),
                 'headers' => [
                     'Accept: application/json',
                     'Content-Type: application/json',
-                    'User-Agent: ' . (string)$sedaXml->CONFIG->userAgent
+                    'User-Agent: ' . $config['exportSeda']['userAgent']
                 ]
             ]);
 
@@ -374,15 +368,12 @@ class SedaController
                 ];
             }
         } else {
-            foreach ($sedaXml->externalSAE as $value) {
-                if ((string)$value->id == (string)$sedaXml->CONFIG->sae) {
-                    foreach ($value->retentionRules->retentionRule as $rule) {
-                        $retentionRules[] = [
-                            'id'    => (string)$rule->id,
-                            'label' => (string)$rule->label
-                        ];
-                    }
-                    break;
+            if (is_array($config['exportSeda']['externalSAE']['retentionRules'])) {
+                foreach ($config['exportSeda']['externalSAE']['retentionRules'] as $rule) {
+                    $retentionRules[] = [
+                        'id'    => $rule['id'],
+                        'label' => $rule['label']
+                    ];
                 }
             }
         }

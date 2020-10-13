@@ -2081,7 +2081,7 @@
     "noDestination": "Le courrier n'a pas d'entité traitante",
     "noRetentionInfo": "Le type de courrier n'a pas de règle de conservation ou de sort final",
     "noProducerService": "L'entité traitante n'a pas d'identifiant de service producteur",
-    "noSenderOrgRegNumber": "Aucun service versant défini (Balise senderOrgRegNumber dans config.xml)",
+    "noSenderOrgRegNumber": "Aucun service versant défini (senderOrgRegNumber dans config.json)",
     "producerServiceDoesNotExists": "Le service producteur n'existe pas dans MaarchRM",
     "nextPage": "Page suivante",
     "prevPage": "Page précédente",
