@@ -174,6 +174,12 @@ export class SendToRecordManagementComponent implements OnInit {
         Object.keys(this.actionFormGroup.controls).forEach(element => {
             dataToSend[element] = this.actionFormGroup.controls[element].value;
         });
+        dataToSend['archives'] = this.archives.map((archive: any) => {
+            return {
+                id: archive.id,
+                descriptionLevel : archive.descriptionLevel
+            };
+        });
         return dataToSend;
     }
 
