@@ -1766,6 +1766,6 @@ SELECT setval('registered_mail_issuing_sites_id_seq', (select max(id)+1 from reg
 INSERT INTO registered_mail_issuing_sites_entities (site_id, entity_id) VALUES (1, 6);
 INSERT INTO registered_mail_issuing_sites_entities (site_id, entity_id) VALUES (1, 13);
 
-INSERT INTO registered_mail_number_range (type, tracking_account_number, range_start, range_end, creator, creation_date, status) VALUES ('2C', 'SuiviNumber', 1, 10, 23, '2020-09-14 14:38:09.008644', 'OK');
-INSERT INTO registered_mail_number_range (type, tracking_account_number, range_start, range_end, creator, creation_date, status) VALUES ('RW', 'SuiviNumberInternational', 1, 10, 23, '2020-09-14 14:39:32.972626', 'OK');
-INSERT INTO registered_mail_number_range (type, tracking_account_number, range_start, range_end, creator, creation_date, status) VALUES ('2D', 'suiviNumber', 1, 10, 23, '2020-09-14 14:39:16.779322', 'OK');
+INSERT INTO registered_mail_number_range (type, tracking_account_number, range_start, range_end, creator, creation_date, status, current_number) VALUES ('2C', 'SuiviNumber', 1, 10, 23, '2020-09-14 14:38:09.008644', 'OK', 1);
+INSERT INTO registered_mail_number_range (type, tracking_account_number, range_start, range_end, creator, creation_date, status, current_number) VALUES ('RW', 'SuiviNumberInternational', 1, 10, 23, '2020-09-14 14:39:32.972626', 'OK', 1);
+INSERT INTO registered_mail_number_range (type, tracking_account_number, range_start, range_end, creator, creation_date, status, current_number) VALUES ('2D', 'suiviNumber', 1, 10, 23, '2020-09-14 14:39:16.779322', 'OK', 1);
