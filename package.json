@@ -47,7 +47,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@swimlane/ngx-charts": "^16.0.0",
     "@types/datatables.net": "^1.10.19",
-    "@types/jquery": "^3.5.1",
+    "@types/jquery": "^3.5.3",
     "@types/jquery.nicescroll": "^3.7.1",
     "@types/jstree": "^3.3.40",
     "@types/tooltipster": "0.0.30",
