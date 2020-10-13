@@ -10,7 +10,7 @@
         <div class="row" *ngIf="!checking">
             <div class="alert-message alert-message-info" role="alert" style="margin-top: 0px;" [innerHTML]="'lang.checkAcknowledgmentRecordManagementDesc' | translate"></div>
             <ng-container *ngIf="data.resIds.length > 0">
-                <div class="col-md-12">
+                <div>
                     {{'lang.makeActionOn' | translate}}
                     <b *ngIf="data.resIds.length === 0" color="primary"
                         class="highlight">{{'lang.currentIndexingMail' | translate}}</b>
@@ -18,9 +18,8 @@
                     <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                         {{'lang.elements' | translate}}</b> ?
                 </div>
-                <div class="col-md-12">
-                    <div *ngIf="resourcesErrors.length > 0" class="alert-message alert-message-danger mailList"
-                        style="max-width: 100%;">
+                <div>
+                    <div *ngIf="resourcesErrors.length > 0" class="alert-message alert-message-danger mailList">
                         <p>
                             {{'lang.canNotMakeAction' | translate}} :
                         </p>
