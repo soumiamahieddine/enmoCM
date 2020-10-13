@@ -71,7 +71,7 @@ class SedaController
 
         $sedaXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/export_seda/xml/config.xml']);
         if (empty($sedaXml->CONFIG->senderOrgRegNumber)) {
-            return $response->withStatus(400)->withJson(['errors' => 'No senderOrgRegNumber found in config.xml (export_seda)']);
+            return $response->withStatus(400)->withJson(['errors' => 'No senderOrgRegNumber found in config.xml (export_seda)', 'lang' => 'noSenderOrgRegNumber']);
         }
 
         $date = new \DateTime();
@@ -182,17 +182,17 @@ class SedaController
             ];
         }
 
-        $archivalAgreements       = SedaController::getArchivalAgreements([
+        $archivalAgreements = SedaController::getArchivalAgreements([
             'configXml'           => $sedaXml,
             'senderArchiveEntity' => (string)$sedaXml->CONFIG->senderOrgRegNumber,
             'producerService'     => $entity['producer_service']
         ]);
-        if (!empty($archivalAgreements['error'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'ArchivalAgreements error : ' . $archivalAgreements['error']]);
+        if (!empty($archivalAgreements['errors'])) {
+            return $response->withStatus(400)->withJson($archivalAgreements);
         }
         $recipientArchiveEntities = SedaController::getRecipientArchiveEntities(['configXml' => $sedaXml, 'archivalAgreements' => $archivalAgreements['archivalAgreements']]);
-        if (!empty($recipientArchiveEntities['error'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'ArchivalEntities error : ' . $recipientArchiveEntities['error']]);
+        if (!empty($recipientArchiveEntities['errors'])) {
+            return $response->withStatus(400)->withJson($recipientArchiveEntities);
         }
 
         $return['archivalAgreements']       = $archivalAgreements['archivalAgreements'];
@@ -217,7 +217,9 @@ class SedaController
             ]);
 
             if (!empty($curlResponse['errors'])) {
-                return ['error' => 'Error during processing in getRecipientArchiveEntities : ' . $curlResponse['errors']];
+                return ['errors' => 'Error returned by the route /organization/organization/Byrole/archiver : ' . $curlResponse['errors']];
+            } elseif ($curlResponse['code'] != 200) {
+                return ['errors' => 'Error returned by the route /organization/organization/Byrole/archiver : ' . $curlResponse['response']['message']];
             }
 
             $archiveEntitiesAllowed = array_column($args['archivalAgreements'], 'archiveEntityRegNumber');
@@ -267,14 +269,16 @@ class SedaController
             ]);
 
             if (!empty($curlResponse['errors'])) {
-                return ['error' => 'Error during processing in getArchivalAgreements : ' . $curlResponse['errors']];
+                return ['errors' => 'Error returned by the route /medona/archivalAgreement/Index : ' . $curlResponse['errors']];
+            } elseif ($curlResponse['code'] != 200) {
+                return ['errors' => 'Error returned by the route /medona/archivalAgreement/Index : ' . $curlResponse['response']['message']];
             }
 
             $producerService = SedaController::getProducerServiceInfo(['configXml' => $args['configXml'], 'producerServiceName' => $args['producerService']]);
             if (!empty($producerService['errors'])) {
-                return ['error' => 'Error during processing in getArchivalAgreements producer service info : ' . $curlResponse['errors']];
+                return ['errors' => $curlResponse['errors']];
             } elseif (empty($producerService['producerServiceInfo'])) {
-                return ['error' => 'ProducerService does not exists in MaarchRM'];
+                return ['errors' => 'ProducerService does not exists in MaarchRM', 'lang' => 'producerServiceDoesNotExists'];
             }
 
             $archivalAgreements[] = [
@@ -321,7 +325,9 @@ class SedaController
         ]);
 
         if (!empty($curlResponse['errors'])) {
-            return ['error' => $curlResponse['errors']];
+            return ['errors' => 'Error returned by the route /organization/organization/Search : ' . $curlResponse['errors']];
+        } elseif ($curlResponse['code'] != 200) {
+            return ['errors' => 'Error returned by the route /organization/organization/Search : ' . $curlResponse['response']['message']];
         }
 
         return ['producerServiceInfo' => $curlResponse['response'][0]];
@@ -352,7 +358,9 @@ class SedaController
             ]);
 
             if (!empty($curlResponse['errors'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Error during processing in getRetentionRules : ' . $curlResponse['errors']]);
+                return $response->withStatus(400)->withJson(['errors' => 'Error returned by the route /recordsManagement/retentionRule/Index : ' . $curlResponse['errors']]);
+            } elseif ($curlResponse['code'] != 200) {
+                return $response->withStatus(400)->withJson(['errors' => 'Error returned by the route /recordsManagement/retentionRule/Index : ' . $curlResponse['response']['message']]);
             }
 
             $retentionRules[] = [
