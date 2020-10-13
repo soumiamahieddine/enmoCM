@@ -231,8 +231,6 @@ class CoreConfigModel
             $mailevaConfig['enabled']       = filter_var((string)$loadedXml->ENABLED, FILTER_VALIDATE_BOOLEAN);
             $mailevaConfig['connectionUri'] = (string)$loadedXml->CONNECTION_URI;
             $mailevaConfig['uri']           = (string)$loadedXml->URI;
-            $mailevaConfig['clientId']      = (string)$loadedXml->CLIENT_ID;
-            $mailevaConfig['clientSecret']  = (string)$loadedXml->CLIENT_SECRET;
         }
 
         if (!empty($mailevaConfig['uri']) && $mailevaConfig['uri'] == 'https://api.maileva.com') {
