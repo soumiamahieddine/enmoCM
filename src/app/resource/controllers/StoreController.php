@@ -37,8 +37,9 @@ class StoreController
             if (empty($args['resId'])) {
                 $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
 
-                $args['resId'] = $resId;
-                $data = StoreController::prepareResourceStorage($args);
+                $data = $args;
+                $data['resId'] = $resId;
+                $data = StoreController::prepareResourceStorage($data);
             } else {
                 $resId = $args['resId'];
                 $data = StoreController::prepareUpdateResourceStorage($args);
@@ -92,8 +93,9 @@ class StoreController
         try {
             if (empty($args['id'])) {
                 $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_attachment_res_id_seq']);
-                $args['resId'] = $resId;
-                $data = StoreController::prepareAttachmentStorage($args);
+                $data = $args;
+                $data['resId'] = $resId;
+                $data = StoreController::prepareAttachmentStorage($data);
             } else {
                 $resId = $args['id'];
                 $data = StoreController::prepareUpdateAttachmentStorage($args);
