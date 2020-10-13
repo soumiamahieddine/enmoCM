@@ -127,7 +127,7 @@
             </mat-tab-group>
         </ng-container>
         <div *ngIf="resourcesErrors.length > 0" class="alert-message alert-message-danger">
-            {{'lang.' + resourcesErrors[0].lang | translate}}
+            {{resourcesErrors[0]}}
         </div>
     </div>
     <span class="divider-modal"></span>

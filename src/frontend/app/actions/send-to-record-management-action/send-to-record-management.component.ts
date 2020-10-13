@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { FunctionsService } from '@service/functions.service';
 import { NotificationService } from '@service/notification/notification.service';
+import { error } from 'jquery';
 import { of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 
@@ -129,7 +130,11 @@ export class SendToRecordManagementComponent implements OnInit {
             }),
             finalize(() => this.checking = false),
             catchError((err: any) => {
-                this.resourcesErrors.push(err.error);
+                if (!this.functions.empty(err.error.lang)) {
+                    this.resourcesErrors.push(this.translate.instant('lang.' + err.error.lang));
+                } else {
+                    this.resourcesErrors.push(err.error.errors);
+                }
                 // this.notify.handleErrors(err);
                 return of(false);
             })
