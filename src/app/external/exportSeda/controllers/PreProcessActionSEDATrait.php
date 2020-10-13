@@ -89,7 +89,7 @@ trait PreProcessActionSEDATrait
                 continue;
             }
             
-            $acknowledgementXml = simplexml_load_file($pathToDocument);
+            $acknowledgementXml = @simplexml_load_file($pathToDocument);
             if (empty($acknowledgementXml)) {
                 $resourcesInformations['errors'][] = ['alt_identifier' => $altIdentifiers[$resId], 'res_id' => $resId, 'reason' => 'recordManagement_acknowledgementNotReadable'];
                 continue;
@@ -107,7 +107,7 @@ trait PreProcessActionSEDATrait
                 continue;
             }
 
-            $resourcesInformation['success'][] = ['alt_identifier' => $altIdentifiers[$resId], 'res_id' => $resId];
+            $resourcesInformations['success'][] = $resId;
         }
 
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
@@ -175,7 +175,7 @@ trait PreProcessActionSEDATrait
                 continue;
             }
             
-            $replyXml = simplexml_load_file($pathToDocument);
+            $replyXml = @simplexml_load_file($pathToDocument);
             if (empty($replyXml)) {
                 $resourcesInformations['errors'][] = ['alt_identifier' => $altIdentifiers[$resId], 'res_id' => $resId, 'reason' => 'recordManagement_replyNotReadable'];
                 continue;
@@ -193,7 +193,7 @@ trait PreProcessActionSEDATrait
                 continue;
             }
 
-            $resourcesInformation['success'][] = ['alt_identifier' => $altIdentifiers[$resId]['alt_identifier'], 'res_id' => $resId];
+            $resourcesInformations['success'][] = $resId;
         }
 
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
