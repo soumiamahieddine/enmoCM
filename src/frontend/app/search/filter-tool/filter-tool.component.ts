@@ -12,6 +12,7 @@ import { FunctionsService } from '@service/functions.service';
 export class FilterToolComponent implements OnInit {
 
     @Input() filters: any = {};
+    @Input() isLoadingResults: boolean = false;
 
     @Output() filterChanged = new EventEmitter<any>();
 

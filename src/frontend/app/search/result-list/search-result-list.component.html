@@ -2,8 +2,8 @@
     <img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" />
 </mat-card>
 <ng-template #filterTemplate>
-    <app-filter-tool-adv-search #appFilterToolAdvSearch [filters]="dataFilters" (filterChanged)="launchSearch()"
-        *ngIf="!hideFilter && !isLoadingResults"></app-filter-tool-adv-search>
+    <app-filter-tool-adv-search #appFilterToolAdvSearch [filters]="dataFilters" [isLoadingResults]="isLoadingResults" (filterChanged)="launchSearch()"
+        *ngIf="!hideFilter"></app-filter-tool-adv-search>
 </ng-template>
 <ng-template #toolTemplate>
     <div *ngIf="data.length > 0" class="filtersContent">

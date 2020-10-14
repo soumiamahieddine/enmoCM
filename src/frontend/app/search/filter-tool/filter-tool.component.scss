@@ -49,8 +49,17 @@
         font-size: 12px;
         font-weight: bold;
     }
+
+    ::ng-deep.mat-pseudo-checkbox-disabled {
+        opacity: 0.5;
+    }
 }
 
 .panelIconMenu {
     font-size: 22px;
 }
+
+.mat-list-item-disabled {
+    background: initial;
+}
+
