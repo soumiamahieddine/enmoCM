@@ -250,10 +250,10 @@ class SearchController
             $entities = empty($entities) ? [0] : $entities;
 
             $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
-            $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
+            $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ? OR entities_folders.keyword = ?)';
 
             $whereClause = "(res_id in (select res_id from users_followed_resources where user_id = ?)) OR ({$foldersClause})";
-            $dataClause = [$args['userId'], $entities, $args['userId']];
+            $dataClause = [$args['userId'], $entities, $args['userId'], 'ALL_ENTITIES'];
 
             $groups = UserModel::getGroupsByLogin(['login' => $args['login'], 'select' => ['where_clause']]);
             $groupsClause = '';
@@ -1599,7 +1599,7 @@ class SearchController
         $userEntities = !empty($userEntities) ? array_column($userEntities, 'id') : [0];
 
         $rawFolders = FolderModel::getWithEntitiesAndResources([
-            'select'  => ['folders.id', 'folders.label', 'count(resources_folders.res_id) as count'],
+            'select'  => ['folders.id', 'folders.label', 'count(DISTINCT resources_folders.res_id) as count'],
             'where'   => ['resources_folders.res_id in (?)', '(folders.user_id = ? OR entities_folders.entity_id in (?) or keyword = ?)'],
             'data'    => [$resources, $GLOBALS['id'], $userEntities, 'ALL_ENTITIES'],
             'groupBy' => ['folders.id', 'folders.label']
@@ -1629,7 +1629,7 @@ class SearchController
                 ];
             }
         }
-        
+
         usort($priorities, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
         usort($categories, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
         usort($statuses, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
