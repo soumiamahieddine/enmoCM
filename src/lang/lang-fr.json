@@ -2085,5 +2085,8 @@
     "producerServiceDoesNotExists": "Le service producteur n'existe pas dans MaarchRM",
     "nextPage": "Page suivante",
     "prevPage": "Page précédente",
-    "onlySingleResourceAllowed": "Seule une ressource peut être traité par cette action"
+    "onlySingleResourceAllowed": "Seule une ressource peut être traité par cette action",
+    "showTechnicalInfo": "Afficher les informations techniques",
+    "filename": "Nom de fichier",
+    "size": "Taille"
 }

@@ -26,6 +26,7 @@ import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 import { FunctionsService } from '@service/functions.service';
 import { PrintedFolderModalComponent } from '../printedFolder/printed-folder-modal.component';
 import { of, Subscription } from 'rxjs';
+import { TechnicalInformationComponent } from '@appRoot/indexation/technical-information/technical-information.component';
 
 
 @Component({
@@ -631,6 +632,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
     createModal() {
         this.modalModule.push(this.processTool.filter(module => module.id === this.currentTool)[0]);
+    }
+
+    openTechnicalInfo() {
+        this.dialog.open(TechnicalInformationComponent, { panelClass: 'maarch-modal', autoFocus: false, data: { resId : this.currentResourceInformations.resId} });
     }
 
     removeModal(index: number) {

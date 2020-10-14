@@ -83,6 +83,7 @@ import { SentNumericPackagePageComponent } from './sentResource/sent-numeric-pac
 import { ThesaurusModalComponent } from './tag/indexing/thesaurus/thesaurus-modal.component';
 import { SelectIndexingModelComponent } from './indexation/select-indexing-model/select-indexing-model.component';
 import { FilterToolComponent } from './search/filter-tool/filter-tool.component';
+import { TechnicalInformationComponent } from './indexation/technical-information/technical-information.component';
 
 import { SearchComponent } from './search/search.component';
 import { SearchResultListComponent } from './search/result-list/search-result-list.component';
@@ -238,6 +239,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         SendToRecordManagementComponent,
         CheckReplyRecordManagementComponent,
         CheckAcknowledgmentRecordManagementComponent,
+        TechnicalInformationComponent
     ],
     exports : [
         SharedModule
@@ -294,6 +296,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         PrintDepositListActionComponent,
         ViewDocActionComponent,
         ReconcileActionComponent,
+        TechnicalInformationComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
