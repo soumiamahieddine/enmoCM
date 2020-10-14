@@ -56,6 +56,8 @@ class SearchController
             return $response->withStatus(400)->withJson(['errors' => 'No admin_search configuration found', 'lang' => 'noAdminSearchConfiguration']);
         }
 
+        ini_set('memory_limit', -1);
+
         $body = $request->getParsedBody();
 
         $userdataClause = SearchController::getUserDataClause(['userId' => $GLOBALS['id'], 'login' => $GLOBALS['login']]);
