@@ -113,6 +113,12 @@ export class LoginComponent implements OnInit {
                 this.applicationName = data.applicationName;
                 this.loginMessage = data.loginMessage;
                 this.authService.setEvent('authenticationInformations');
+
+                if (['cas', 'openid'].indexOf(this.authService.authMode) > -1) {
+                    this.loginForm.disable();
+                    this.loginForm.setValidators(null);
+                    this.onSubmit();
+                }
             }),
             finalize(() => this.showForm = true),
             catchError((err: any) => {

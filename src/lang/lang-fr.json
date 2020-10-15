@@ -2089,5 +2089,8 @@
     "showTechnicalInfo": "Afficher les informations techniques",
     "filename": "Nom de fichier",
     "size": "Taille",
-    "linkedMails": "Courrier(s) lié(s)"
+    "linkedMails": "Courrier(s) lié(s)",
+    "ldapEnabled": "Ldap activé",
+    "openidEnabled": "Openid activé",
+    "casEnabled": "CAS activé"
 }
