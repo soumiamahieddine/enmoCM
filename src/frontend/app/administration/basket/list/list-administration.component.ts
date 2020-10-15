@@ -369,7 +369,7 @@ export class ListAdministrationComponent implements OnInit {
 
     addData(event: any) {
         const i = this.availableData.map((e: any) => e.value).indexOf(event.option.value.value);
-        if (this.displayedSecondaryData[this.displayedSecondaryData.length - 1].length >= this.selectedTemplateDisplayedSecondaryData) {
+        if ((this.displayedSecondaryData.length === 0) || (this.displayedSecondaryData[this.displayedSecondaryData.length - 1].length >= this.selectedTemplateDisplayedSecondaryData)) {
             this.displayedSecondaryData.push([]);
         }
         this.displayedSecondaryData[this.displayedSecondaryData.length - 1].push(event.option.value);
@@ -385,7 +385,9 @@ export class ListAdministrationComponent implements OnInit {
     }
 
     removeAllData() {
-        this.availableData = this.availableData.concat(this.displayedSecondaryData);
+        this.displayedSecondaryData.forEach(element => {
+            this.availableData = this.availableData.concat(element);
+        });
         this.displayedSecondaryData = [];
         this.dataControl.setValue('');
     }

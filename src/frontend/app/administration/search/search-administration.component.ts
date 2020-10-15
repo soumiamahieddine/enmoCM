@@ -8,7 +8,6 @@ import { startWith, map, tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { AppService } from '@service/app.service';
 import { HeaderService } from '@service/header.service';
-import { each } from 'jquery';
 
 declare var $: any;
 
