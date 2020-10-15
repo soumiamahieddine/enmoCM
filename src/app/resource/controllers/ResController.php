@@ -39,7 +39,6 @@ use MessageExchange\models\MessageExchangeModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use RegisteredMail\controllers\RegisteredMailController;
-use RegisteredMail\models\IssuingSiteModel;
 use RegisteredMail\models\RegisteredMailModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
@@ -1359,8 +1358,16 @@ class ResController extends ResourceControlController
 
         $resource = ResModel::getById([
             'resId'  => $args['resId'],
-            'select' => ['format', 'fingerprint', 'filesize', 'fulltext_result']
+            'select' => ['format', 'fingerprint', 'filesize', 'fulltext_result', 'creation_date', 'filename', 'docserver_id', 'path']
         ]);
+
+        if (!empty($resource['docserver_id'])) {
+            $docserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+            $resource['docserverPathFile'] = $resource['path'] . $docserver['path_template'] . $resource['filename'];
+        }
+
+        $resource['creationDate'] = $resource['creation_date'];
+        unset($resource['creation_date']);
 
         $allowedFiles = StoreController::getAllowedFiles();
         $allowedFiles = array_column($allowedFiles, 'canConvert', 'extension');
