@@ -16,7 +16,7 @@
             <input matInput [value]="data.value.value" readonly>
         </mat-form-field>
 
-        <mat-accordion>
+        <mat-accordion *ngIf="!isEmptyCustom()">
             <mat-expansion-panel expanded>
                 <mat-expansion-panel-header>
                     <mat-panel-title>

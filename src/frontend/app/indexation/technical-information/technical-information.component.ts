@@ -80,7 +80,7 @@ export class TechnicalInformationComponent implements OnInit {
             tap((data: any) => {
                 this.techData.format.value = data.information.format,
                     this.techData.fingerprint.value = data.information.fingerprint,
-                    this.techData.size.value = data.information.filesize,
+                    this.techData.size.value = this.functions.formatBytes(data.information.filesize),
                     this.techData.fulltext.value = data.information.fulltext_result,
                     this.loading = false;
 
@@ -97,11 +97,13 @@ export class TechnicalInformationComponent implements OnInit {
             exhaustMap(() => this.http.get(`../rest/resources/${this.data.resId}`)),
             tap((data: any) => {
                 Object.keys(data.customFields).forEach(key => {
-                    this.customsData[key] = {
-                        label: this.customs[key]['label'],
-                        value: data.customFields[key],
-                        icon: 'fas fa-hashtag'
-                    };
+                    if (this.customs[key]['mode'] === 'technical') {
+                        this.customsData[key] = {
+                            label: this.customs[key]['label'],
+                            value: data.customFields[key],
+                            icon: 'fas fa-hashtag'
+                        };
+                    }
                 });
             }),
             catchError((err: any) => {
@@ -109,5 +111,9 @@ export class TechnicalInformationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    isEmptyCustom() {
+        return Object.keys(this.customsData).length === 0;
     }
 }
