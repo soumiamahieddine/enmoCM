@@ -8,6 +8,7 @@ import { startWith, map, tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { AppService } from '@service/app.service';
 import { HeaderService } from '@service/header.service';
+import { each } from 'jquery';
 
 declare var $: any;
 
@@ -347,7 +348,6 @@ export class SearchAdministrationComponent implements OnInit {
         }
         this.displayedSecondaryData[this.displayedSecondaryData.length - 1].push(event.option.value);
         this.availableData.splice(i, 1);
-        console.log(this.availableData.indexOf(this.availableData[i]));
         $('#availableData').blur();
         this.dataControl.setValue('');
     }
@@ -359,7 +359,9 @@ export class SearchAdministrationComponent implements OnInit {
     }
 
     removeAllData() {
-        this.availableData = this.availableData.concat(this.displayedSecondaryData);
+        this.displayedSecondaryData.forEach(element => {
+            this.availableData = this.availableData.concat(element);
+        });
         this.dataControl.setValue('');
         this.displayedSecondaryData = [];
     }
