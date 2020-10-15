@@ -567,7 +567,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         } else if (data.value === 'getAssignee') {
             if (Object.keys(this.criteria).indexOf('role_dest') > -1) {
                 this.criteria['role_dest'].values.forEach((val: any) => {
-                    data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
+                    if (val !== null) {
+                        data.displayValue = this.highlightPipe.transform(data.displayValue, val.label.replace(/&nbsp;/g, ''));
+                    }
                 });
             }
             if (Object.keys(this.criteria).indexOf('destination') > -1) {

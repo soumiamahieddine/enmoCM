@@ -111,7 +111,11 @@ class SearchController
         $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
         if (!empty($nonSearchableStatuses)) {
             $nonSearchableStatuses = array_column($nonSearchableStatuses, 'id');
-            $searchWhere[] = 'status not in (?)';
+            if (!empty($body['status']['values']) && in_array(null, $body['status']['values'])) {
+                $searchWhere[] = 'status not in (?) or status is null';
+            } else {
+                $searchWhere[] = 'status not in (?)';
+            }
             $searchData[] = $nonSearchableStatuses;
         }
 
@@ -188,9 +192,13 @@ class SearchController
         }
 
         $excludeAttachmentTypes = ['signed_response'];
+        $whereExcludeAttachmentTypes = 'attachment_type not in (?)';
+        if (!empty($body['attachment_type']['values']) && in_array(null, $body['attachment_type']['values'])) {
+            $whereExcludeAttachmentTypes .= ' or attachment_type is null';
+        }
         $attachments = AttachmentModel::get([
             'select'    => ['COUNT(res_id)', 'res_id_master'],
-            'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
+            'where'     => ['res_id_master in (?)', 'status not in (?)', $whereExcludeAttachmentTypes, '((status = ? AND typist = ?) OR status != ?)'],
             'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['id'], 'TMP'],
             'groupBy'   => ['res_id_master']
         ]);
@@ -695,8 +703,13 @@ class SearchController
             $notesMatch = array_column($notesMatch, 'identifier');
             $args['searchData'][] = $notesMatch;
         }
+
         if (!empty($body['attachment_type']) && !empty($body['attachment_type']['values']) && is_array($body['attachment_type']['values'])) {
-            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where attachment_type in (?) and status in (\'TRA\', \'A_TRA\'))';
+            if (in_array(null, $body['attachment_type']['values'])) {
+                $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where (attachment_type in (?) or attachment_type is null) and status in (\'TRA\', \'A_TRA\'))';
+            } else {
+                $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where attachment_type in (?) and status in (\'TRA\', \'A_TRA\'))';
+            }
             $args['searchData'][] = $body['attachment_type']['values'];
         }
         if (!empty($body['attachment_creationDate']) && !empty($body['attachment_creationDate']['values']) && is_array($body['attachment_creationDate']['values'])) {
@@ -710,14 +723,24 @@ class SearchController
             }
         }
         if (!empty($body['groupSign']) && !empty($body['groupSign']['values']) && is_array($body['groupSign']['values'])) {
-            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id from listinstance where signatory = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
+            $where = 'res_id in (select DISTINCT res_id from listinstance where signatory = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
             $args['searchData'][] = 'true';
             $args['searchData'][] = $body['groupSign']['values'];
+
+            if (in_array(null, $body['groupSign']['values'])) {
+                $where .= ' or res_id in (select DISTINCT res_id from listinstance where signatory = ? AND item_id not in (select DISTINCT user_id from usergroup_content))';
+                $args['searchData'][] = 'true';
+            }
+            $args['searchWhere'][] = $where;
         }
         if (!empty($body['senderDepartment']) && !empty($body['senderDepartment']['values']) && is_array($body['senderDepartment']['values'])) {
             $departments = '';
+            $withEmpty = false;
             foreach ($body['senderDepartment']['values'] as $value) {
                 if (!is_numeric($value)) {
+                    if ($value == null) {
+                        $withEmpty = true;
+                    }
                     continue;
                 }
                 if (!empty($departments)) {
@@ -725,12 +748,20 @@ class SearchController
                 }
                 $departments .= "'{$value}%'";
             }
-            if (empty($departments)) {
+            if (empty($departments) && !$withEmpty) {
                 return null;
             }
+            $where = [];
+            if (!empty($departments)) {
+                $where[] = "address_postcode like any (array[{$departments}])";
+            }
+            if ($withEmpty) {
+                $where[] = "address_postcode IS NULL or address_postcode = ''";
+            }
+            $where = implode(' OR ', $where);
             $contacts = ContactModel::get([
                 'select' => ['id'],
-                'where'  => ["address_postcode like any (array[{$departments}])"]
+                'where'  => [$where]
             ]);
             $contactIds = array_column($contacts, 'id');
             if (empty($contactIds)) {
@@ -791,8 +822,26 @@ class SearchController
                             'data'      => $data
                         ]);
                     }
+                    if (in_array(null, $value['values'])) {
+                        $diffListType = [];
+                        if ($roleId == 'dest' || $roleId == 'cc' || $roleId == 'avis') {
+                            $diffListType[] = 'entity_id';
+                        }
+                        if ($roleId == 'visa' || $roleId == 'sign') {
+                            $diffListType[] = 'VISA_CIRCUIT';
+                        }
+                        if ($roleId == 'avis' || $roleId == 'avis_cc') {
+                            $diffListType[] = 'AVIS_CIRCUIT';
+                        }
+                        $args['searchWhere'][] = 'res_id not in (select res_id from listinstance where item_mode = ?)';
+                        $args['searchData'][] = $roleId;
+                        if (!empty($diffListType)) {
+                            $args['searchWhere'][] = 'res_id in (select res_id from listinstance where difflist_type in (?))';
+                            $args['searchData'][] = $diffListType;
+                        }
+                    }
                     if (empty($rolesMatch)) {
-                        return null;
+                        continue;
                     }
                     $rolesMatch = array_column($rolesMatch, 'res_id');
                     $args['searchWhere'][] = 'res_id in (?)';
@@ -1061,7 +1110,6 @@ class SearchController
                 foreach ($query_fulltext as $key => $value) {
                     if (strpos($value, "*") !== false && (strlen(substr($value, 0, strpos($value, "*"))) < 4 || preg_match("([,':!+])", $value) === 1)) {
                         return null;
-                        break;
                     }
                     $query_fulltext[$key] = $value . "*";
                 }
