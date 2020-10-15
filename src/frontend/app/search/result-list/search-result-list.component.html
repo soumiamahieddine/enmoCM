@@ -188,16 +188,17 @@
                             *ngIf="row.chrono == this.translate.instant('lang.undefined') && row.barcode != this.translate.instant('lang.undefined')">
                             <span style="color: rgba(0,0,0,0.4);font-size: 90%;">
                                 <i title="{{'lang.barcode' | translate}}" class="fas fa-barcode"></i>&nbsp;<span
+                                    title="{{row.barcode_title}}"
                                     [innerHTML]="row.barcode"></span>
                             </span>
                         </ng-container>
                         <ng-container *ngIf="row.chrono != this.translate.instant('lang.undefined')">
-                            <span [innerHTML]="row.chrono"></span>
+                            <span title="{{row.chrono_title}}" [innerHTML]="row.chrono"></span>
                         </ng-container>
                     </span>
                     <span class="main-info-data" (click)="launch(row);" style="font-weight:bold;flex:1;cursor:pointer;"
                         [class.undefined]="row.subject == this.translate.instant('lang.undefined')"
-                        title="{{row.subject}}" [innerHTML]="row.subject | shorten: 150: '...'"></span>
+                        title="{{row.subject_title}}" [innerHTML]="row.subject | shorten: 150: '...'"></span>
                     <span *ngIf="sidenavRight !== undefined" class="main-info-action">
                         <button mat-icon-button [class.highlightResultIcon]="row.inNotes"
                             title="{{'lang.notes' | translate}}"

@@ -429,6 +429,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
             }
             // Process main datas
             Object.keys(element).forEach((key) => {
+                element[key + '_title'] = element[key];
                 if (key === 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
                 } else if ((element[key] == null || element[key] === '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument'].indexOf(key) === -1) {
