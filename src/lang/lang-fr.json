@@ -2088,5 +2088,6 @@
     "onlySingleResourceAllowed": "Seule une ressource peut être traité par cette action",
     "showTechnicalInfo": "Afficher les informations techniques",
     "filename": "Nom de fichier",
-    "size": "Taille"
+    "size": "Taille",
+    "linkedMails": "Courrier(s) lié(s)"
 }
