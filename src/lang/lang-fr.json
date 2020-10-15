@@ -2090,7 +2090,12 @@
     "filename": "Nom de fichier",
     "size": "Taille",
     "linkedMails": "Courrier(s) lié(s)",
+<<<<<<< HEAD
     "ldapEnabled": "Ldap activé",
     "openidEnabled": "Openid activé",
     "casEnabled": "CAS activé"
+=======
+    "displayAsTechnicalData" : "Afficher en tant que donnée technique",
+    "displayInForm" : "Afficher dans le formulaire"
+>>>>>>> FEAT #14383 TIME 1 add the mode column + persist in the database + add the mode modification button
 }
