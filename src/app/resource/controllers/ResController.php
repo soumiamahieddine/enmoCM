@@ -1363,7 +1363,8 @@ class ResController extends ResourceControlController
 
         if (!empty($resource['docserver_id'])) {
             $docserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
-            $resource['docserverPathFile'] = $resource['path'] . $docserver['path_template'];
+            $resource['docserverPathFile'] = $docserver['path_template'] . $resource['path'];
+            $resource['docserverPathFile'] = str_replace('//', '/', $resource['docserverPathFile']);
         }
 
         $resource['creationDate'] = $resource['creation_date'];
