@@ -39,8 +39,8 @@ export class TechnicalInformationComponent implements OnInit {
             value: '',
             icon: 'fas fa-fingerprint'
         },
-        docserverPath: {
-            label: 'docserverPath',
+        docserverPathFile: {
+            label: 'docserverPathFile',
             value: '',
             icon: 'fas fa-terminal'
         },
@@ -82,6 +82,9 @@ export class TechnicalInformationComponent implements OnInit {
                     this.techData.fingerprint.value = data.information.fingerprint,
                     this.techData.size.value = this.functions.formatBytes(data.information.filesize),
                     this.techData.fulltext.value = data.information.fulltext_result,
+                    this.techData.docserverPathFile.value = data.information.docserverPathFile,
+                    this.techData.filename.value = data.information.filename,
+                    this.techData.creationDate.value = this.datePipe.transform(data.information.creationDate, 'dd/MM/y HH:mm') ,
                     this.loading = false;
 
             }),

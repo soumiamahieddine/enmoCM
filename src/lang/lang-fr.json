@@ -2094,6 +2094,7 @@
     "openidEnabled": "Openid activé",
     "casEnabled": "CAS activé",
     "displayAsTechnicalData" : "Afficher en tant que donnée technique",
-    "displayInForm" : "Afficher dans le formulaire"
+    "displayInForm" : "Afficher dans le formulaire",
+    "technicalInformations" : "Informations techniques"
 
 }
