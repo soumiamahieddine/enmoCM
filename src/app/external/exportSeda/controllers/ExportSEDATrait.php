@@ -15,8 +15,14 @@ namespace ExportSeda\controllers;
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
+use Doctype\models\DoctypeModel;
+use Entity\models\EntityModel;
+use ExportSeda\controllers\ExportSEDATrait;
+use ExportSeda\controllers\SedaController;
 use MessageExchange\models\MessageExchangeModel;
 use Resource\controllers\StoreController;
+use Resource\models\ResModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 
 trait ExportSEDATrait
@@ -26,8 +32,66 @@ trait ExportSEDATrait
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        // TODO : CONTROL + GET DATAS
-        $data = [];
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources']]);
+        if (empty($resource)) {
+            return ['errors' => ['resource does not exists']];
+        } elseif (empty($resource['destination'])) {
+            return ['errors' => ['resource has no destination']];
+        }
+
+        $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['description', 'retention_rule', 'retention_final_disposition']]);
+        if (empty($doctype['retention_rule']) || empty($doctype['retention_final_disposition'])) {
+            return ['errors' => ['retention_rule or retention_final_disposition is empty for doctype']];
+        }
+        $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['producer_service', 'entity_label']]);
+        if (empty($entity['producer_service'])) {
+            return ['errors' => ['producer_service is empty for this entity']];
+        }
+
+        $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+        if (empty($config['exportSeda']['senderOrgRegNumber'])) {
+            return ['errors' => ['No senderOrgRegNumber found in config.json']];
+        }
+
+        if (empty($args['data']['packageName'])) {
+            return ['errors' => ['packageName is empty']];
+        }
+        if (empty($args['data']['archivalAgreement'])) {
+            return ['errors' => ['archivalAgreement is empty']];
+        }
+        if (empty($args['data']['slipId'])) {
+            return ['errors' => ['slipId is empty']];
+        }
+        if (empty($args['data']['entityArchiveRecipient'])) {
+            return ['errors' => ['entityArchiveRecipient is empty']];
+        }
+        if (empty($args['data']['archiveDescriptionLevel'])) {
+            return ['errors' => ['archiveDescriptionLevel is empty']];
+        }
+
+        foreach ($args['data']['archives'] as $archiveUnit) {
+            if (empty($archiveUnit['id']) or empty($archiveUnit['descriptionLevel'])) {
+                return ['errors' => ['Missing id or descriptionLevel for an archiveUnit']];
+            }
+        }
+
+        $initData = SedaController::initArchivalData([
+            'resource'           => $resource,
+            'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
+            'entity'             => $entity,
+            'doctype'            => $doctype
+        ])['archivalData'];
+
+        $data = [
+            'type' => 'ArchiveTransfer',
+            'messageObject' => [
+                'messageIdentifier'  => $initData['data']['slipInfo']['slipId'],
+                'archivalAgreement'  => $args['data']['archivalAgreement'],
+                'dataObjectPackage'  => [],
+                'archivalAgency'     => $args['data']['entityArchiveRecipient'],
+                'transferringAgency' => $initData['data']['entity']['senderArchiveEntity']
+            ]
+        ];
 
         $controller = ExportSEDATrait::generateSEDAPackage(['data' => $data]);
         if (!empty($controller['errors'])) {

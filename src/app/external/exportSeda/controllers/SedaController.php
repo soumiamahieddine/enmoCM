@@ -53,7 +53,7 @@ class SedaController
 
         $firstResource = $body['resources'][0];
 
-        $resource = ResModel::getById(['resId' => $firstResource, 'select' => ['destination', 'type_id', 'subject', 'linked_resources']]);
+        $resource = ResModel::getById(['resId' => $firstResource, 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources']]);
         if (empty($resource)) {
             return $response->withStatus(400)->withJson(['errors' => 'resource does not exists']);
         } elseif (empty($resource['destination'])) {
@@ -74,113 +74,12 @@ class SedaController
             return $response->withStatus(400)->withJson(['errors' => 'No senderOrgRegNumber found in config.json', 'lang' => 'noSenderOrgRegNumber']);
         }
 
-        $date = new \DateTime();
-
-        $return = [
-            'data' => [
-                'entity' => [
-                    'label'               => $entity['entity_label'],
-                    'producerService'     => $entity['producer_service'],
-                    'senderArchiveEntity' => $config['exportSeda']['senderOrgRegNumber']
-                ],
-                'doctype' => [
-                    'label'                     => $doctype['description'],
-                    'retentionRule'             => $doctype['retention_rule'],
-                    'retentionFinalDisposition' => $doctype['retention_final_disposition']
-                ],
-                'slipInfo' => [
-                    'slipId'    => $GLOBALS['login'] . '-' . $date->format('Ymd-His'),
-                    'archiveId' => 'archive_' . $firstResource
-                ]
-            ],
-            'archiveUnits' => [
-                [
-                    'id'               => 'letterbox_' . $firstResource,
-                    'label'            => $resource['subject'],
-                    'type'             => 'mainDocument',
-                    'descriptionLevel' => 'Item'
-                ]
-            ]
-        ];
-
-        $attachments = AttachmentModel::get([
-            'select'  => ['res_id', 'title'],
-            'where'   => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
-            'data'    => [$firstResource, ['DEL', 'OBS', 'TMP'], ['signed_response']],
-            'orderBy' => ['modification_date DESC']
-        ]);
-        foreach ($attachments as $attachment) {
-            $return['archiveUnits'][] = [
-                'id'               => 'attachment_' . $attachment['res_id'],
-                'label'            => $attachment['title'],
-                'type'             => 'attachment',
-                'descriptionLevel' => 'Item'
-            ];
-        }
-
-        $notes = NoteModel::get(['select' => ['note_text', 'id'], 'where' => ['identifier = ?'], 'data' => [$firstResource]]);
-        foreach ($notes as $note) {
-            $return['archiveUnits'][] = [
-                'id'               => 'note_' . $note['id'],
-                'label'            => $note['note_text'],
-                'type'             => 'note',
-                'descriptionLevel' => 'Item'
-            ];
-        }
-
-        $emails = EmailModel::get([
-            'select'  => ['object', 'id'],
-            'where'   => ['document->>\'id\' = ?', 'status = ?'],
-            'data'    => [$firstResource, 'SENT'],
-            'orderBy' => ['send_date desc']
-        ]);
-        foreach ($emails as $email) {
-            $return['archiveUnits'][] = [
-                'id'               => 'note_' . $email['id'],
-                'label'            => $email['object'],
-                'type'             => 'email',
-                'descriptionLevel' => 'Item'
-            ];
-        }
-
-        $return['archiveUnits'][] = [
-            'id'               => 'summarySheet_' . $firstResource,
-            'label'            => 'Fiche de liaison',
-            'type'             => 'summarySheet',
-            'descriptionLevel' => 'Item'
-        ];
-
-        $linkedResourcesIds = json_decode($resource['linked_resources'], true);
-        if (!empty($linkedResourcesIds)) {
-            $linkedResources = [];
-            $linkedResources = ResModel::get([
-                'select' => ['res_id', 'alt_identifier'],
-                'where'  => ['res_id in (?)'],
-                'data'   => [$linkedResourcesIds]
-            ]);
-            $return['additionalData']['linkedResources'] = array_column($linkedResources, 'alt_identifier');
-        }
-
-        $entities = UserModel::getEntitiesById(['id' => $aArgs['userId'], 'select' => ['entities.id']]);
-        $entities = array_column($entities, 'id');
-
-        if (empty($entities)) {
-            $entities = [0];
-        }
-
-        $folders = FolderModel::getWithEntitiesAndResources([
-            'select' => ['DISTINCT(folders.id)', 'folders.label'],
-            'where'  => ['res_id = ?', '(entity_id in (?) OR keyword = ?)', 'folders.public = TRUE'],
-            'data'   => [$firstResource, $entities, 'ALL_ENTITIES']
-        ]);
-        foreach ($folders as $folder) {
-            $return['additionalData']['folders'][] = [
-                'id'               => 'folder_' . $folder['id'],
-                'label'            => $folder['label'],
-                'type'             => 'folder',
-                'descriptionLevel' => 'Item'
-            ];
-        }
+        $return = SedaController::initArchivalData([
+            'resource'           => $resource,
+            'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
+            'entity'             => $entity,
+            'doctype'            => $doctype
+        ])['archivalData'];
 
         $archivalAgreements = SedaController::getArchivalAgreements([
             'config'              => $config,
@@ -199,6 +98,117 @@ class SedaController
         $return['recipientArchiveEntities'] = $recipientArchiveEntities['archiveEntities'];
         
         return $response->withJson($return);
+    }
+
+    public function initArchivalData($args = [])
+    {
+        $date = new \DateTime();
+
+        $return = [
+            'data' => [
+                'entity' => [
+                    'label'               => $args['entity']['entity_label'],
+                    'producerService'     => $args['entity']['producer_service'],
+                    'senderArchiveEntity' => $args['senderOrgRegNumber'],
+                ],
+                'doctype' => [
+                    'label'                     => $args['doctype']['description'],
+                    'retentionRule'             => $args['doctype']['retention_rule'],
+                    'retentionFinalDisposition' => $args['doctype']['retention_final_disposition']
+                ],
+                'slipInfo' => [
+                    'slipId'    => $GLOBALS['login'] . '-' . $date->format('Ymd-His'),
+                    'archiveId' => 'archive_' . $args['resource']['res_id']
+                ]
+            ],
+            'archiveUnits' => [
+                [
+                    'id'               => 'letterbox_' . $args['resource']['res_id'],
+                    'label'            => $args['resource']['subject'],
+                    'type'             => 'mainDocument',
+                    'descriptionLevel' => 'Item'
+                ]
+            ]
+        ];
+
+        $attachments = AttachmentModel::get([
+            'select'  => ['res_id', 'title'],
+            'where'   => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
+            'data'    => [$args['resource']['res_id'], ['DEL', 'OBS', 'TMP'], ['signed_response']],
+            'orderBy' => ['modification_date DESC']
+        ]);
+        foreach ($attachments as $attachment) {
+            $return['archiveUnits'][] = [
+                'id'               => 'attachment_' . $attachment['res_id'],
+                'label'            => $attachment['title'],
+                'type'             => 'attachment',
+                'descriptionLevel' => 'Item'
+            ];
+        }
+
+        $notes = NoteModel::get(['select' => ['note_text', 'id'], 'where' => ['identifier = ?'], 'data' => [$args['resource']['res_id']]]);
+        foreach ($notes as $note) {
+            $return['archiveUnits'][] = [
+                'id'               => 'note_' . $note['id'],
+                'label'            => $note['note_text'],
+                'type'             => 'note',
+                'descriptionLevel' => 'Item'
+            ];
+        }
+
+        $emails = EmailModel::get([
+            'select'  => ['object', 'id'],
+            'where'   => ['document->>\'id\' = ?', 'status = ?'],
+            'data'    => [$args['resource']['res_id'], 'SENT'],
+            'orderBy' => ['send_date desc']
+        ]);
+        foreach ($emails as $email) {
+            $return['archiveUnits'][] = [
+                'id'               => 'note_' . $email['id'],
+                'label'            => $email['object'],
+                'type'             => 'email',
+                'descriptionLevel' => 'Item'
+            ];
+        }
+
+        $return['archiveUnits'][] = [
+            'id'               => 'summarySheet_' . $args['resource']['res_id'],
+            'label'            => 'Fiche de liaison',
+            'type'             => 'summarySheet',
+            'descriptionLevel' => 'Item'
+        ];
+
+        $linkedResourcesIds = json_decode($args['resource']['linked_resources'], true);
+        if (!empty($linkedResourcesIds)) {
+            $linkedResources = [];
+            $linkedResources = ResModel::get([
+                'select' => ['subject', 'alt_identifier'],
+                'where'  => ['res_id in (?)'],
+                'data'   => [$linkedResourcesIds]
+            ]);
+            $return['additionalData']['linkedResources'] = array_column($linkedResources, 'subject', 'alt_identifier');
+        }
+
+        $entities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
+        $entities = array_column($entities, 'id');
+
+        if (empty($entities)) {
+            $entities = [0];
+        }
+
+        $folders = FolderModel::getWithEntitiesAndResources([
+            'select' => ['DISTINCT(folders.id)', 'folders.label'],
+            'where'  => ['res_id = ?', '(entity_id in (?) OR keyword = ?)', 'folders.public = TRUE'],
+            'data'   => [$args['resource']['res_id'], $entities, 'ALL_ENTITIES']
+        ]);
+        foreach ($folders as $folder) {
+            $return['additionalData']['folders'][] = [
+                'id'    => 'folder_' . $folder['id'],
+                'label' => $folder['label']
+            ];
+        }
+
+        return ['archivalData' => $return];
     }
 
     public function getRecipientArchiveEntities($args = [])
