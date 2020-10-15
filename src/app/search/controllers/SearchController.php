@@ -313,7 +313,7 @@ class SearchController
             if ($body['meta']['values'][0] == '"' && $body['meta']['values'][strlen($body['meta']['values']) - 1] == '"') {
                 $quick = trim($body['meta']['values'], '"');
                 $quickWhere = "subject = ? OR alt_identifier = ? OR barcode = ?";
-                $quickWhere .= " OR res_id in (select res_id_master from res_attachments where title = ? OR identifier = ? and status in ('TRA', 'A_TRA'))";
+                $quickWhere .= " OR res_id in (select res_id_master from res_attachments where (title = ? OR identifier = ?) and status in ('TRA', 'A_TRA'))";
                 if (ctype_digit($quick)) {
                     $quickWhere .= ' OR res_id = ?';
                     $args['searchData'][] = $quick;
@@ -1677,7 +1677,7 @@ class SearchController
                     $wherePlus .= ' OR ';
                 }
                 $quick = trim($body['meta']['values'], '"');
-                $wherePlus .= "res_id in (select res_id_master from res_attachments where title = ? OR identifier = ? and status in ('TRA', 'A_TRA'))";
+                $wherePlus .= "res_id in (select res_id_master from res_attachments where (title = ? OR identifier = ?) and status in ('TRA', 'A_TRA'))";
                 $data[] = $quick;
                 $data[] = $quick;
             } else {

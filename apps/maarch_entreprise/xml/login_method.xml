@@ -2,14 +2,10 @@
 <ROOT>
     <METHOD>
         <ID>standard</ID>
-        <NAME>_STANDARD_LOGIN</NAME>
-        <SCRIPT>standard_connect.php</SCRIPT>
         <ENABLED>true</ENABLED>
     </METHOD>
     <METHOD>
         <ID>ldap</ID>
-        <NAME>_STANDARD_LOGIN</NAME>
-        <SCRIPT>standard_connect.php</SCRIPT>
         <ENABLED>false</ENABLED>
     </METHOD>
     <METHOD>

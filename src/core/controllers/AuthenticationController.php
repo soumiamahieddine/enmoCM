@@ -222,25 +222,24 @@ class AuthenticationController
         }
 
         $login = strtolower($body['login']);
-        $authenticated = AuthenticationModel::authentication(['login' => $login, 'password' => $body['password']]);
-        if (empty($authenticated)) {
-            $user = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'status']]);
-            if (empty($user)) {
-                return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
-            } elseif ($user['status'] == 'SPD') {
-                return $response->withStatus(401)->withJson(['errors' => 'Account Suspended']);
-            } else {
-                $handle = AuthenticationController::handleFailedAuthentication(['userId' => $user['id']]);
-                if (!empty($handle['accountLocked'])) {
-                    return $response->withStatus(401)->withJson(['errors' => 'Account Locked', 'date' => $handle['lockedDate']]);
-                }
-                return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
-            }
+        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'mode', 'refresh_token', 'user_id', 'status']]);
+        if (empty($user) || $user['mode'] == 'rest' || $user['status'] == 'SPD') {
+            return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
         }
 
-        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'mode', 'refresh_token', 'user_id']]);
-        if (empty($user) || $user['mode'] == 'rest') {
-            return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if ($loggingMethod['id'] == 'standard') {
+            $authenticated = AuthenticationController::standardConnection(['login' => $login, 'password' => $body['password']]);
+            if (!empty($authenticated['date'])) {
+                return $response->withStatus(401)->withJson(['errors' => $authenticated['errors'], 'date' => $authenticated['date']]);
+            } elseif (!empty($authenticated['errors'])) {
+                return $response->withStatus(401)->withJson(['errors' => $authenticated['errors']]);
+            }
+        } elseif ($loggingMethod['id'] == 'ldap') {
+            $authenticated = AuthenticationController::ldapConnection(['login' => $login, 'password' => $body['password']]);
+            if (!empty($authenticated['errors'])) {
+                return $response->withStatus(401)->withJson(['errors' => $authenticated['errors']]);
+            }
         }
 
         $GLOBALS['id'] = $user['id'];
@@ -280,6 +279,87 @@ class AuthenticationController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    private static function standardConnection(array $args)
+    {
+        $login = $args['login'];
+        $password = $args['password'];
+
+        $authenticated = AuthenticationModel::authentication(['login' => $login, 'password' => $password]);
+        if (empty($authenticated)) {
+            $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
+            $handle = AuthenticationController::handleFailedAuthentication(['userId' => $user['id']]);
+            if (!empty($handle['accountLocked'])) {
+                return ['errors' => 'Account Locked', 'date' => $handle['lockedDate']];
+            }
+            return ['errors' => 'Authentication Failed'];
+        }
+
+        return true;
+    }
+
+    private static function ldapConnection(array $args)
+    {
+        $login = $args['login'];
+        $password = $args['password'];
+
+        $ldapConfigurations = CoreConfigModel::getXmlLoaded(['path' => 'modules/ldap/xml/config.xml']);
+        if (empty($ldapConfigurations)) {
+            return ['errors' => 'No ldap configurations'];
+        }
+
+        foreach ($ldapConfigurations->config->ldap as $ldapConfiguration) {
+            $ssl = (string)$ldapConfiguration->ssl;
+            $domain = (string)$ldapConfiguration->domain;
+            $prefix = (string)$ldapConfiguration->prefix_login;
+            $suffix = (string)$ldapConfiguration->suffix_login;
+            $standardConnect = (string)$ldapConfiguration->standardConnect;
+
+            $uri = ($ssl == 'true' ? "LDAPS://{$domain}" : $domain);
+
+            $ldap = @ldap_connect($uri);
+            if ($ldap === false) {
+                $error = 'Ldap connect failed : uri is maybe wrong';
+                continue;
+            }
+            ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+            ldap_set_option($ldap, LDAP_OPT_NETWORK_TIMEOUT, 10);
+            $ldapLogin = (!empty($prefix) ? $prefix . '\\' . $login : $login);
+            $ldapLogin = (!empty($suffix) ? $ldapLogin . $suffix : $ldapLogin);
+            if (!empty((string)$ldapConfiguration->baseDN)) { //OpenLDAP
+                $search = @ldap_search($ldap, (string)$ldapConfiguration->baseDN, "(uid={$ldapLogin})", ['dn']);
+                if ($search === false) {
+                    $error = 'Ldap search failed : baseDN is maybe wrong => ' . ldap_error($ldap);
+                    continue;
+                }
+                $entries = ldap_get_entries($ldap, $search);
+                $ldapLogin = $entries[0]['dn'];
+            }
+            $authenticated = @ldap_bind($ldap, $ldapLogin, $password);
+            if ($authenticated) {
+                break;
+            }
+            $error = ldap_error($ldap);
+        }
+
+        if (!empty($standardConnect) && $standardConnect == 'true') {
+            if (empty($authenticated)) {
+                $authenticated = AuthenticationModel::authentication(['login' => $login, 'password' => $password]);
+            } else {
+                $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
+                UserModel::updatePassword(['id' => $user['id'], 'password' => $password]);
+            }
+        }
+
+        if (empty($authenticated) && !empty($error) && $error != 'Invalid credentials') {
+            return ['errors' => $error];
+        } elseif (empty($authenticated) && !empty($error) && $error == 'Invalid credentials') {
+            return ['errors' => 'Authentication Failed'];
+        }
+
+        return true;
     }
 
     public function getRefreshedToken(Request $request, Response $response)
