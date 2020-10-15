@@ -14,6 +14,8 @@ export class FilterToolComponent implements OnInit {
     @Input() filters: any = {};
     @Input() isLoadingResults: boolean = false;
 
+    showMore = {};
+
     @Output() filterChanged = new EventEmitter<any>();
 
     constructor(
@@ -32,5 +34,9 @@ export class FilterToolComponent implements OnInit {
     toggleFilter(key: string, index: number) {
         this.filters[key][index].selected = !this.filters[key][index].selected;
         this.filterChanged.emit();
+    }
+
+    toggleDisplay(key: string) {
+        this.showMore[key] = !this.showMore[key];
     }
 }
