@@ -17,11 +17,15 @@ use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
+use Entity\models\ListInstanceModel;
 use ExportSeda\controllers\ExportSEDATrait;
 use ExportSeda\controllers\SedaController;
 use MessageExchange\models\MessageExchangeModel;
+use Note\controllers\NoteController;
 use Resource\controllers\StoreController;
+use Resource\controllers\SummarySheetController;
 use Resource\models\ResModel;
+use setasign\Fpdi\Tcpdf\Fpdi;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 
@@ -79,8 +83,33 @@ trait ExportSEDATrait
             'resource'           => $resource,
             'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
             'entity'             => $entity,
-            'doctype'            => $doctype
-        ])['archivalData'];
+            'doctype'            => $doctype,
+            'getFile'            => true
+        ]);
+
+        if (!empty($initData['errors'])) {
+            return ['errors' => $initData['errors']];
+        } else {
+            $initData = $initData['archivalData'];
+        }
+
+        $dataObjectPackage = [];
+        $initialArchiveUnits = $initData['archiveUnits'];
+        foreach ($initialArchiveUnits as $archiveUnit) {
+            $archiveFound = false;
+            foreach ($args['data']['archives'] as $userArchiveUnit) {
+                if ($userArchiveUnit['id'] == $archiveUnit['id']) {
+                    $archiveUnit['descriptionLevel'] = $userArchiveUnit['descriptionLevel'];
+                    $dataObjectPackage[]             = $archiveUnit;
+                    $archiveFound                    = true;
+                    break;
+                }
+            }
+            if (!$archiveFound) {
+                $archiveUnit['descriptionLevel'] = 'Item';
+                $dataObjectPackage = $archiveUnit;
+            }
+        }
 
         $data = [
             'type' => 'ArchiveTransfer',
@@ -101,6 +130,127 @@ trait ExportSEDATrait
         // TODO : SEND PACKAGE TO RM
 
         return true;
+    }
+
+    public static function getAttachmentFilePath($args = [])
+    {
+        $document['docserver_id'] = $args['data']['docserver_id'];
+        $document['path']         = $args['data']['path'];
+        $document['filename']     = $args['data']['filename'];
+        $document['fingerprint']  = $args['data']['fingerprint'];
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return ['errors' => 'Docserver does not exist'];
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+
+        if (!file_exists($pathToDocument)) {
+            return ['errors' => 'Attachment not found on docserver'];
+        }
+
+        $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+        $fingerprint   = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        if (empty($document['fingerprint'])) {
+            AttachmentModel::update(['set' => ['fingerprint' => $fingerprint], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            $document['fingerprint'] = $fingerprint;
+        }
+
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            return ['errors' => 'Fingerprints do not match'];
+        }
+
+        $fileContent = file_exists($pathToDocument);
+        if ($fileContent === false) {
+            return ['errors' => 'Document not found on docserver'];
+        }
+
+        return ['filePath' => $pathToDocument];
+    }
+
+    public static function getNoteFilePath($args = [])
+    {
+        $encodedDocument = NoteController::getEncodedPdfByIds(['ids' => [$args['id']]]);
+
+        $tmpPath  = CoreConfigModel::getTmpPath();
+        $filePath = $tmpPath . 'note_' . $args['id'] . '.pdf';
+        file_put_contents($filePath, base64_decode($encodedDocument['encodedDocument']));
+
+        return ['filePath' => $filePath];
+    }
+
+    public static function getEmailFilePath($args = [])
+    {
+        $body   = str_replace('###', ';', $args['data']['body']);
+        $sender = json_decode($args['data']['sender'], true);
+        $data   = "Courriel n°" . $args['data']['id'] . "\nDe : " . $sender['email'] . "\nPour : " . implode(", ", json_decode($args['data']['recipients'], true)) . "\nObjet : " . $args['data']['object'] . "\n\n" . strip_tags(html_entity_decode($body));
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        $pdf->AddPage();
+        $pdf->MultiCell(0, 10, $data, 0, 'L');
+
+        $tmpPath  = CoreConfigModel::getTmpPath();
+        $filePath = $tmpPath . 'email_' . $args['data']['id'] . '.pdf';
+        $pdf->Output($filePath, "F");
+
+        return ['filePath' => $filePath];
+    }
+
+    public static function getSummarySheetFilePath($args = [])
+    {
+        $units   = [];
+        $units[] = ['unit' => 'primaryInformations'];
+        $units[] = ['unit' => 'secondaryInformations',       'label' => _SECONDARY_INFORMATION];
+        $units[] = ['unit' => 'senderRecipientInformations', 'label' => _DEST_INFORMATION];
+        $units[] = ['unit' => 'diffusionList',               'label' => _DIFFUSION_LIST];
+        $units[] = ['unit' => 'visaWorkflow',                'label' => _VISA_WORKFLOW];
+        $units[] = ['unit' => 'opinionWorkflow',             'label' => _AVIS_WORKFLOW];
+        $units[] = ['unit' => 'notes',                       'label' => _NOTES_COMMENT];
+        
+        $tmpIds = [$args['resId']];
+        $data   = [];
+        foreach ($units as $unit) {
+            if ($unit['unit'] == 'opinionWorkflow') {
+                $data['listInstancesOpinion'] = ListInstanceModel::get([
+                    'select'    => ['item_id', 'process_date', 'res_id'],
+                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'      => ['AVIS_CIRCUIT', $tmpIds],
+                    'orderBy'   => ['listinstance_id']
+                ]);
+            } elseif ($unit['unit'] == 'visaWorkflow') {
+                $data['listInstancesVisa'] = ListInstanceModel::get([
+                    'select'    => ['item_id', 'requested_signature', 'process_date', 'res_id'],
+                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'      => ['VISA_CIRCUIT', $tmpIds],
+                    'orderBy'   => ['listinstance_id']
+                ]);
+            } elseif ($unit['unit'] == 'diffusionList') {
+                $data['listInstances'] = ListInstanceModel::get([
+                    'select'  => ['item_id', 'item_type', 'item_mode', 'res_id'],
+                    'where'   => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'    => ['entity_id', $tmpIds],
+                    'orderBy' => ['listinstance_id']
+                ]);
+            }
+        }
+
+        $mainResource = ResModel::getOnView([
+            'select' => ['process_limit_date', 'status', 'alt_identifier', 'subject', 'priority', 'res_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination', 'filename'],
+            'where'  => ['res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        SummarySheetController::createSummarySheet($pdf, ['resource' => $mainResource[0], 'units' => $units, 'login' => $GLOBALS['login'], 'data' => $data]);
+
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $summarySheetFilePath = $tmpPath . "summarySheet_".$args['resId'] . "_" . $aArgs['userId'] . "_" . rand() . ".pdf";
+        $pdf->Output($summarySheetFilePath, 'F');
+
+        return ['filePath' => $summarySheetFilePath];
     }
 
     public static function generateSEDAPackage(array $args)

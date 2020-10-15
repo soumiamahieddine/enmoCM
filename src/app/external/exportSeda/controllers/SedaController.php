@@ -15,14 +15,19 @@
 namespace ExportSeda\controllers;
 
 use Attachment\models\AttachmentModel;
+use Convert\models\AdrModel;
+use Docserver\models\DocserverModel;
+use Docserver\models\DocserverTypeModel;
 use Doctype\models\DoctypeModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
+use ExportSeda\controllers\ExportSEDATrait;
 use Folder\models\FolderModel;
 use Group\controllers\PrivilegeController;
 use Note\models\NoteModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
+use Resource\controllers\StoreController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -79,7 +84,13 @@ class SedaController
             'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
             'entity'             => $entity,
             'doctype'            => $doctype
-        ])['archivalData'];
+        ]);
+
+        if (!empty($return['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $return['errors']]);
+        } else {
+            $return = $return['archivalData'];
+        }
 
         $archivalAgreements = SedaController::getArchivalAgreements([
             'config'              => $config,
@@ -121,62 +132,123 @@ class SedaController
                     'archiveId' => 'archive_' . $args['resource']['res_id']
                 ]
             ],
-            'archiveUnits' => [
-                [
-                    'id'               => 'letterbox_' . $args['resource']['res_id'],
-                    'label'            => $args['resource']['subject'],
-                    'type'             => 'mainDocument',
-                    'descriptionLevel' => 'Item'
-                ]
-            ]
+            'archiveUnits' => []
         ];
 
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'version', 'fingerprint'], 'resId' => $args['resource']['res_id']]);
+        if (!empty($document['docserver_id']) && empty($document['filename'])) {
+            $convertedDocument = AdrModel::getDocuments([
+                'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
+                'where'     => ['res_id = ?', 'type = ?', 'version = ?'],
+                'data'      => [$args['resource']['res_id'], 'SIGN', $document['version']],
+                'limit'     => 1
+            ]);
+            $document = $convertedDocument[0] ?? $document;
+    
+            $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+            if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                return ['errors' => 'Docserver does not exist'];
+            }
+    
+            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+            if (!file_exists($pathToDocument)) {
+                return ['errors' => 'Document not found on docserver'];
+            }
+    
+            $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+            $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+            if (empty($convertedDocument) && empty($document['fingerprint'])) {
+                ResModel::update(['set' => ['fingerprint' => $fingerprint], 'where' => ['res_id = ?'], 'data' => [$args['resource']['res_id']]]);
+                $document['fingerprint'] = $fingerprint;
+            }
+    
+            if ($document['fingerprint'] != $fingerprint) {
+                return ['errors' => 'Fingerprints do not match'];
+            }
+    
+            $fileContent = file_exists($pathToDocument);
+            if ($fileContent === false) {
+                return ['errors' => 'Document not found on docserver'];
+            }
+
+            $return['data']['archiveUnits'][0] = [
+                'id'               => 'letterbox_' . $args['resource']['res_id'],
+                'label'            => $args['resource']['subject'],
+                'type'             => 'mainDocument',
+                'descriptionLevel' => 'Item'
+            ];
+
+            if ($args['getFile']) {
+                $return['data']['archiveUnits'][0]['filePath'] = $pathToDocument;
+            }
+        }
+        
         $attachments = AttachmentModel::get([
-            'select'  => ['res_id', 'title'],
-            'where'   => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
-            'data'    => [$args['resource']['res_id'], ['DEL', 'OBS', 'TMP'], ['signed_response']],
+            'select'  => ['res_id', 'title', 'docserver_id', 'path', 'filename', 'res_id_master', 'fingerprint'],
+            'where'   => ['res_id_master = ?', 'status in (?)'],
+            'data'    => [$args['resource']['res_id'], ['A_TRA', 'TRA']],
             'orderBy' => ['modification_date DESC']
         ]);
         foreach ($attachments as $attachment) {
-            $return['archiveUnits'][] = [
+            $tmpAttachment = [
                 'id'               => 'attachment_' . $attachment['res_id'],
                 'label'            => $attachment['title'],
                 'type'             => 'attachment',
                 'descriptionLevel' => 'Item'
             ];
+            if ($args['getFile']) {
+                $attachment = ExportSEDATrait::getAttachmentFilePath(['data' => $attachment]);
+                $tmpAttachment['filePath'] = $attachment['filePath'];
+            }
+            $return['archiveUnits'][] = $tmpAttachment;
         }
 
         $notes = NoteModel::get(['select' => ['note_text', 'id'], 'where' => ['identifier = ?'], 'data' => [$args['resource']['res_id']]]);
         foreach ($notes as $note) {
-            $return['archiveUnits'][] = [
+            $tmpNote = [
                 'id'               => 'note_' . $note['id'],
                 'label'            => $note['note_text'],
                 'type'             => 'note',
                 'descriptionLevel' => 'Item'
             ];
+            if ($args['getFile']) {
+                $note = ExportSEDATrait::getNoteFilePath(['id' => $note['id']]);
+                $tmpNote['filePath'] = $note['filePath'];
+            }
+            $return['archiveUnits'][] = $tmpNote;
         }
 
         $emails = EmailModel::get([
-            'select'  => ['object', 'id'],
+            'select'  => ['object', 'id', 'body', 'sender', 'recipients'],
             'where'   => ['document->>\'id\' = ?', 'status = ?'],
             'data'    => [$args['resource']['res_id'], 'SENT'],
             'orderBy' => ['send_date desc']
         ]);
         foreach ($emails as $email) {
-            $return['archiveUnits'][] = [
-                'id'               => 'note_' . $email['id'],
+            $tmpEmail = [
+                'id'               => 'email_' . $email['id'],
                 'label'            => $email['object'],
                 'type'             => 'email',
                 'descriptionLevel' => 'Item'
             ];
+            if ($args['getFile']) {
+                $email = ExportSEDATrait::getEmailFilePath(['data' => $email]);
+                $tmpEmail['filePath'] = $email['filePath'];
+            }
+            $return['archiveUnits'][] = $tmpEmail;
         }
 
-        $return['archiveUnits'][] = [
+        $tmpSummarySheet = [
             'id'               => 'summarySheet_' . $args['resource']['res_id'],
             'label'            => 'Fiche de liaison',
             'type'             => 'summarySheet',
             'descriptionLevel' => 'Item'
         ];
+        if ($args['getFile']) {
+            $summarySheet = ExportSEDATrait::getSummarySheetFilePath(['resId' => $args['resource']['res_id']]);
+            $tmpSummarySheet['filePath'] = $summarySheet['filePath'];
+        }
+        $return['archiveUnits'][] = $tmpSummarySheet;
 
         $linkedResourcesIds = json_decode($args['resource']['linked_resources'], true);
         if (!empty($linkedResourcesIds)) {
