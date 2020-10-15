@@ -64,7 +64,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     ];
     customFields: any[] = [];
     customFieldsClone: any[] = [];
-    mode: String = 'form';
+    mode: string = 'form';
 
     incrementCreation: number = 1;
 
