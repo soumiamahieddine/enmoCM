@@ -307,7 +307,6 @@ export class IndexingFormComponent implements OnInit {
             this.http.get('../rest/customFields').pipe(
                 tap((data: any) => {
                     const withFormMode = data.customFields.filter((item: { mode: any; }) => item.mode === 'form');
-                    console.log(withFormMode);
                     this.availableCustomFields = withFormMode.map((info: any) => {
                         info.identifier = 'indexingCustomField_' + info.id;
                         info.system = false;
