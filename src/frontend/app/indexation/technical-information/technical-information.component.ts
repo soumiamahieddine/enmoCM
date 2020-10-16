@@ -101,10 +101,13 @@ export class TechnicalInformationComponent implements OnInit {
             exhaustMap(() => this.http.get(`../rest/resources/${this.data.resId}`)),
             tap((data: any) => {
                 Object.keys(this.customsData).forEach(key => {
-                    console.log(key);
+                    const values = [];
+                    this.customsData[key].values.forEach(element => {
+                        values.push(element.label);
+                    });
                         this.customsData[key] = {
                             label: this.customsData[key].label,
-                            value: this.customsData[key].values,
+                            value: values,
                             icon: 'fas fa-hashtag'
                         };
                 });
