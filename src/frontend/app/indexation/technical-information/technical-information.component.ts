@@ -96,17 +96,17 @@ export class TechnicalInformationComponent implements OnInit {
                         type : info.type
                     };
                 });
+                this.customsData = data.customFields.filter((item: { mode: any; }) => item.mode === 'technical');
             }),
             exhaustMap(() => this.http.get(`../rest/resources/${this.data.resId}`)),
             tap((data: any) => {
-                Object.keys(data.customFields).forEach(key => {
-                    if (this.customs[key]['mode'] === 'technical') {
+                Object.keys(this.customsData).forEach(key => {
+                    console.log(key);
                         this.customsData[key] = {
-                            label: this.customs[key]['label'],
-                            value: data.customFields[key],
+                            label: this.customsData[key].label,
+                            value: this.customsData[key].values,
                             icon: 'fas fa-hashtag'
                         };
-                    }
                 });
             }),
             catchError((err: any) => {
