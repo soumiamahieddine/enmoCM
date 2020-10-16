@@ -12,6 +12,7 @@ import { Observable, Subject } from 'rxjs';
 export class AuthService {
 
     authMode: string = 'default';
+    authUrl: string = '';
     changeKey: boolean = null;
     user: any = {};
     private eventAction = new Subject<any>();

@@ -2092,8 +2092,8 @@
     "size": "Taille",
     "linkedMails": "Courrier(s) lié(s)",
     "ldapEnabled": "Ldap activé",
-    "openidEnabled": "Openid activé",
-    "casEnabled": "CAS activé",
+    "keycloakEnabled": "Authentification Keycloak activée",
+    "casEnabled": "Authentification CAS activée",
     "displayAsTechnicalData" : "Afficher en tant que donnée technique",
     "displayInForm" : "Afficher dans le formulaire",
     "technicalInformations" : "Informations techniques"

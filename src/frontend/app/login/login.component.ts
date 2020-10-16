@@ -63,13 +63,14 @@ export class LoginComponent implements OnInit {
         }
     }
 
-    onSubmit() {
+    onSubmit(ssoToken = null) {
         this.loading = true;
         this.http.post(
             '../rest/authenticate',
             {
                 'login': this.loginForm.get('login').value,
-                'password': this.loginForm.get('password').value
+                'password': this.loginForm.get('password').value,
+                'ssoToken' : ssoToken
             },
             {
                 observe: 'response'
@@ -114,10 +115,19 @@ export class LoginComponent implements OnInit {
                 this.loginMessage = data.loginMessage;
                 this.authService.setEvent('authenticationInformations');
 
-                if (['cas', 'openid'].indexOf(this.authService.authMode) > -1) {
+                // FOR TEST
+                this.authService.authMode = 'cas';
+                this.authService.authUrl = 'https://10.2.95.72:8443/cas-server-webapp-4.0.0/login?service=http://localhost/maarch_courrier_develop/cs_recette/dist/index.html#/login';
+
+                if (['cas', 'keycloak'].indexOf(this.authService.authMode) > -1) {
                     this.loginForm.disable();
                     this.loginForm.setValidators(null);
-                    this.onSubmit();
+                    const regex = /ticket=[.]*/g;
+                    if (window.location.search.match(regex) !== null) {
+                        this.onSubmit(window.location.search.substring(1, window.location.search.length));
+                    } else {
+                        window.location.href = this.authService.authUrl;
+                    }
                 }
             }),
             finalize(() => this.showForm = true),
