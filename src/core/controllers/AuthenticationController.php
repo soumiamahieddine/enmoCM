@@ -308,6 +308,17 @@ class AuthenticationController
         return $response->withStatus(204);
     }
 
+    public function logout(Request $request, Response $response)
+    {
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+
+        if ($loggingMethod['id'] == 'cas') {
+            AuthenticationController::casDisconnection();
+        }
+
+        return $response->withStatus(204);
+    }
+
     private static function standardConnection(array $args)
     {
         $login = $args['login'];
@@ -427,6 +438,32 @@ class AuthenticationController
         }
 
         return ['login' => $login];
+    }
+
+    private static function casDisconnection()
+    {
+        $casConfiguration = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/cas_config.xml']);
+
+        $version = (string)$casConfiguration->CAS_VERSION;
+        $hostname = (string)$casConfiguration->WEB_CAS_URL;
+        $port = (string)$casConfiguration->WEB_CAS_PORT;
+        $uri = (string)$casConfiguration->WEB_CAS_CONTEXT;
+        $certificate = (string)$casConfiguration->PATH_CERTIFICATE;
+
+        \phpCAS::setDebug();
+        \phpCAS::setVerbose(true);
+        \phpCAS::client(constant($version), $hostname, (int)$port, $uri, $version != 'CAS_VERSION_3_0');
+
+        if (!empty($certificate)) {
+            \phpCAS::setCasServerCACert($certificate);
+        } else {
+            \phpCAS::setNoCasServerValidation();
+        }
+        \phpCAS::setFixedServiceURL(UrlController::getCoreUrl() . 'dist/index.html');
+        \phpCAS::setNoClearTicketsFromUrl();
+        \phpCAS::logout();
+
+        return true;
     }
 
     public function getRefreshedToken(Request $request, Response $response)
