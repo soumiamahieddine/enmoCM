@@ -183,6 +183,10 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     updateCustomField(customField: any, indexCustom: number) {
 
         const customFieldToUpdate = { ...customField };
+        if (customField.mode !== this.mode) {
+            customFieldToUpdate.mode = 'technical';
+        }
+        customFieldToUpdate.mode = this.mode;
         if (!customField.SQLMode) {
             customField.values = customField.values.filter((x: any, i: any, a: any) => a.map((info: any) => info.label).indexOf(x.label) === i);
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES
@@ -201,7 +205,6 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                 }];
             }
         }
-        customField.mode = this.mode;
         this.http.put('../rest/customFields/' + customField.id, customFieldToUpdate).pipe(
             tap(() => {
                 this.customFieldsClone[indexCustom] = JSON.parse(JSON.stringify(customField));
@@ -219,7 +222,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     }
 
     isModified(customField: any, indexCustomField: number) {
-        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField]) || customField.label === '' || this.SQLMode) {
+        if (JSON.stringify(customField) === JSON.stringify(this.customFieldsClone[indexCustomField]) || customField.label === '' || this.SQLMode || JSON.stringify(customField.mode) === this.mode) {
             return true;
         } else {
             return false;
