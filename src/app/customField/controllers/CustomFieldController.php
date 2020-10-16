@@ -137,7 +137,7 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Body mode is empty, not a string or value is incorrect']);
         }
 
-        $field = CustomFieldModel::getById(['select' => ['type', 'values'], 'id' => $args['id']]);
+        $field = CustomFieldModel::getById(['select' => ['type', 'values', 'mode'], 'id' => $args['id']]);
         if (empty($field)) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom field not found']);
         }
@@ -195,6 +195,10 @@ class CustomFieldController
                     }
                 }
             }
+        }
+
+        if ($field['mode'] == 'form' && $body['mode'] == 'technical') {
+            IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => ['indexingCustomField_' . $args['id']]]);
         }
 
         CustomFieldModel::update([
