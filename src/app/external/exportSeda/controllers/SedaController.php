@@ -24,6 +24,7 @@ use Entity\models\EntityModel;
 use ExportSeda\controllers\ExportSEDATrait;
 use Folder\models\FolderModel;
 use Group\controllers\PrivilegeController;
+use MessageExchange\models\MessageExchangeModel;
 use Note\models\NoteModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
@@ -110,6 +111,12 @@ class SedaController
 
         $return['archivalAgreements']       = $archivalAgreements['archivalAgreements'];
         $return['recipientArchiveEntities'] = $recipientArchiveEntities['archiveEntities'];
+
+        $unitIdentifier = MessageExchangeModel::getUnitIdentifierByResId(['select' => ['message_id'], 'resId' => (string)$firstResource]);
+        if (!empty($unitIdentifier['message_id'])) {
+            MessageExchangeModel::delete(['where' => ['message_id = ?'], 'data' => [$unitIdentifier['message_id']]]);
+        }
+        MessageExchangeModel::deleteUnitIdentifier(['where' => ['res_id = ?'], 'data' => [$firstResource]]);
         
         return $response->withJson($return);
     }
@@ -135,7 +142,8 @@ class SedaController
                     'archiveId' => 'archive_' . $args['resource']['res_id']
                 ]
             ],
-            'archiveUnits' => []
+            'archiveUnits'   => [],
+            'additionalData' => ['folders' => [], 'linkedResources' => []]
         ];
 
         $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'version', 'fingerprint'], 'resId' => $args['resource']['res_id']]);

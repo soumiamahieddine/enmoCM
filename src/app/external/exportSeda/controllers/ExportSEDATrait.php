@@ -154,14 +154,57 @@ trait ExportSEDATrait
             ]
         ];
 
-        $controller = ExportSEDATrait::generateSEDAPackage(['data' => $data]);
-        if (!empty($controller['errors'])) {
-            return ['errors' => [$controller['errors']]];
+        $sedaPackage = ExportSEDATrait::generateSEDAPackage(['data' => $data]);
+        if (!empty($sedaPackage['errors'])) {
+            return ['errors' => [$sedaPackage['errors']]];
         }
 
-        // TODO : SEND PACKAGE TO RM
+        $messageSaved = ExportSEDATrait::saveMessage(['messageObject' => $sedaPackage['messageObject']]);
+        MessageExchangeModel::insertMessage([
+            'messageId' => $messageSaved['messageId'],
+            'tableName' => 'res_letterbox',
+            'resId'     => $resource['res_id']
+        ]);
 
         return true;
+    }
+
+    private static function saveMessage($args = [])
+    {
+        $data = new stdClass();
+
+        $data->messageId                             = $args['messageObject']->MessageIdentifier->value;
+        $data->date                                  = $args['messageObject']->Date;
+
+        $data->MessageIdentifier                     = new stdClass();
+        $data->MessageIdentifier->value              = $args['messageObject']->MessageIdentifier->value;
+
+        $data->TransferringAgency                    = new stdClass();
+        $data->TransferringAgency->Identifier        = new stdClass();
+        $data->TransferringAgency->Identifier->value = $args['messageObject']->TransferringAgency->Identifier->value;
+
+        $data->ArchivalAgency                        = new stdClass();
+        $data->ArchivalAgency->Identifier            = new stdClass();
+        $data->ArchivalAgency->Identifier->value     = $args['messageObject']->ArchivalAgency->Identifier->value;
+
+        $data->ArchivalAgreement                     = new stdClass();
+        $data->ArchivalAgreement->value              = $args['messageObject']->ArchivalAgreement->value;
+
+        $data->ReplyCode                             = $args['messageObject']->ReplyCode;
+
+        $dataExtension                      = [];
+        $dataExtension['fullMessageObject'] = $args['messageObject'];
+        $dataExtension['SenderOrgNAme']     = '';
+        $dataExtension['RecipientOrgNAme']  = '';
+
+        $message = MessageExchangeModel::insertMessage([
+            'data'          => $data,
+            'type'          => 'ArchiveTransfer',
+            'dataExtension' => $dataExtension,
+            'userId'        => $GLOBALS['id']
+        ]);
+
+        return ['messageId' => $message['messageId']];
     }
 
     public static function getFolderPath($args = [])
