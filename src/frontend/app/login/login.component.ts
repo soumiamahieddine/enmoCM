@@ -109,24 +109,23 @@ export class LoginComponent implements OnInit {
         this.http.get('../rest/authenticationInformations').pipe(
             tap((data: any) => {
                 this.authService.setAppSession(data.instanceId);
-                // this.authService.authMode = data.connection;
                 this.authService.changeKey = data.changeKey;
                 this.applicationName = data.applicationName;
                 this.loginMessage = data.loginMessage;
                 this.authService.setEvent('authenticationInformations');
-
-                // FOR TEST
-                this.authService.authMode = 'cas';
-                this.authService.authUrl = 'https://10.2.95.72:8443/cas-server-webapp-4.0.0/login?service=http://localhost/maarch_courrier_develop/cs_recette/dist/index.html#/login';
+                this.authService.authMode = data.authMode;
+                this.authService.authUri = data.authUri;
 
                 if (['cas', 'keycloak'].indexOf(this.authService.authMode) > -1) {
                     this.loginForm.disable();
                     this.loginForm.setValidators(null);
                     const regex = /ticket=[.]*/g;
                     if (window.location.search.match(regex) !== null) {
-                        this.onSubmit(window.location.search.substring(1, window.location.search.length));
+                        const ssoToken = window.location.search.substring(1, window.location.search.length);
+                        window.location.search = '';
+                        this.onSubmit(ssoToken);
                     } else {
-                        window.location.href = this.authService.authUrl;
+                        window.location.href = this.authService.authUri;
                     }
                 }
             }),
