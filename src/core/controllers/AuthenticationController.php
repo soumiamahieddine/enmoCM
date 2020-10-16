@@ -66,7 +66,7 @@ class AuthenticationController
             'loginMessage'      => $parameter['param_value_string'] ?? null,
             'changeKey'         => $encryptKey == 'Security Key Maarch Courrier #2008',
             'authMode'          => $loggingMethod['id'],
-            'authUrl'           => $authUri
+            'authUri'           => $authUri
         ]);
     }
 
