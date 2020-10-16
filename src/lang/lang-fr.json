@@ -2096,7 +2096,9 @@
     "casEnabled": "Authentification CAS activée",
     "displayAsTechnicalData" : "Afficher en tant que donnée technique",
     "displayInForm" : "Afficher dans le formulaire",
+    "formDescription" : "Permet d'utiliser ce champs dans les modèle d'enregistrement",
     "technicalInformations" : "Informations techniques",
+    "technicalDescription" : "Ce type est persistant et n'as pas besoin d'être associé à un modèle d'enregistrement",
     "displayMode" :"Mode d'affichage"
 
 }
