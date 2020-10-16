@@ -305,6 +305,16 @@ export class PrivilegeService {
             'angular': true,
             'hasParams': false
         },
+        {
+            'id': 'admin_connections',
+            'label': 'lang.connections',
+            'comment': 'lang.connectionsDesc',
+            'route': '/administration/connections',
+            'unit': 'supervision',
+            'style': 'fas fa-plug',
+            'angular': true,
+            'hasParams': false
+        },
     ];
 
     private privileges: privilege[] = [
