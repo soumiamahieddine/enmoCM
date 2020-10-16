@@ -313,10 +313,9 @@ class AuthenticationController
         $loggingMethod = CoreConfigModel::getLoggingMethod();
 
         if ($loggingMethod['id'] == 'cas') {
-            AuthenticationController::casDisconnection();
+            $res = AuthenticationController::casDisconnection();
         }
-
-        return $response->withStatus(204);
+        return $response->withJson(['logoutUrl' => $res['logoutUrl'], 'redirectUrl' => $res['redirectUrl']]);
     }
 
     private static function standardConnection(array $args)
@@ -461,9 +460,8 @@ class AuthenticationController
         }
         \phpCAS::setFixedServiceURL(UrlController::getCoreUrl() . 'dist/index.html');
         \phpCAS::setNoClearTicketsFromUrl();
-        \phpCAS::logout();
-
-        return true;
+        $logoutUrl = \phpCAS::getServerLogoutURL();
+        return ['logoutUrl' => $logoutUrl, 'redirectUrl' => UrlController::getCoreUrl() . 'dist/index.html'];
     }
 
     public function getRefreshedToken(Request $request, Response $response)

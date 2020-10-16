@@ -5,6 +5,7 @@ import { LocalStorageService } from './local-storage.service';
 import { NotificationService } from './notification/notification.service';
 import { HeaderService } from './header.service';
 import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -89,11 +90,28 @@ export class AuthService {
     }
 
     async logout(cleanUrl: boolean = true) {
+        if (['cas', 'keycloak'].indexOf(this.authMode) > -1) {
+            this.SsoLogout(cleanUrl);
+        } else {
+            this.redirectAfterLogout(cleanUrl);
+            await this.router.navigate(['/login']);
+        }
+    }
+
+    SsoLogout(cleanUrl: boolean = true) {
+        this.http.get('../rest/authenticate/logout').pipe(
+            tap(async (data: any) => {
+                this.redirectAfterLogout(cleanUrl);
+                window.location.href = data.logoutUrl + '?service=' + encodeURI(data.redirectUrl);
+            })
+        ).subscribe();
+    }
+
+    redirectAfterLogout(cleanUrl: boolean = true) {
         if (this.getToken() !== null && cleanUrl) {
             this.cleanUrl(JSON.parse(atob(this.getToken().split('.')[1])).user.id);
         }
         this.headerService.setUser();
-        await this.router.navigate(['/login']);
         this.clearTokens();
     }
 
