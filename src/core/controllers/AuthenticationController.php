@@ -413,9 +413,11 @@ class AuthenticationController
         } else {
             \phpCAS::setNoCasServerValidation();
         }
-        \phpCAS::setFixedServiceURL(UrlController::getCoreUrl() . 'dist/index.html#/login');
-//        \phpCAS::setNoClearTicketsFromUrl();
-        \phpCAS::forceAuthentication();
+        \phpCAS::setFixedServiceURL(UrlController::getCoreUrl() . 'dist/index.html');
+        \phpCAS::setNoClearTicketsFromUrl();
+        if (!\phpCAS::isAuthenticated()) {
+            return ['errors' => 'Cas authentication failed'];
+        }
 
         $casId = \phpCAS::getUser();
         if (!empty($separator)) {
