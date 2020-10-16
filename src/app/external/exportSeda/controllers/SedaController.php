@@ -147,7 +147,7 @@ class SedaController
         ];
 
         $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'version', 'fingerprint'], 'resId' => $args['resource']['res_id']]);
-        if (!empty($document['docserver_id']) && empty($document['filename'])) {
+        if (!empty($document['docserver_id']) && !empty($document['filename'])) {
             $convertedDocument = AdrModel::getDocuments([
                 'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
                 'where'     => ['res_id = ?', 'type = ?', 'version = ?'],
@@ -182,7 +182,7 @@ class SedaController
                 return ['errors' => 'Document not found on docserver'];
             }
 
-            $return['data']['archiveUnits'][0] = [
+            $return['archiveUnits'][0] = [
                 'id'               => 'letterbox_' . $args['resource']['res_id'],
                 'label'            => $args['resource']['subject'],
                 'type'             => 'mainDocument',
@@ -190,7 +190,7 @@ class SedaController
             ];
 
             if ($args['getFile']) {
-                $return['data']['archiveUnits'][0]['filePath'] = $pathToDocument;
+                $return['archiveUnits'][0]['filePath'] = $pathToDocument;
             }
         }
         
