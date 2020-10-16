@@ -430,12 +430,13 @@ class SedaController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        $retentionRules = [];
+
         $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
         if (empty($config['exportSeda']['sae'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'No SAE found in config.json']);
+            return $response->withJson(['retentionRules' => $retentionRules]);
         }
-
-        $retentionRules = [];
+        
         if (strtolower($config['exportSeda']['sae']) == 'maarchrm') {
             $curlResponse = CurlModel::execSimple([
                 'url'     => rtrim($config['exportSeda']['urlSAEService'], '/') . '/recordsManagement/retentionRule/Index',

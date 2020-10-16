@@ -161,7 +161,13 @@ trait ExportSEDATrait
         }
 
         $messageSaved = ExportSEDATrait::saveMessage(['messageObject' => $sedaPackage['messageObject']]);
-        $elementSend  = ExportSEDATrait::sendSedaPackage(['messageId' => $messageSaved, 'config' => $config, 'encodedFile' => $sedaPackage['encodedFile'], 'resId' => $resource['res_id']]);
+        $elementSend  = ExportSEDATrait::sendSedaPackage([
+            'messageId'       => $messageSaved['messageId'],
+            'config'          => $config,
+            'encodedFilePath' => $sedaPackage['encodedFilePath'],
+            'messageFilename' => $sedaPackage['messageFilename'],
+            'resId'           => $resource['res_id']
+        ]);
         if (!empty($elementSend['errors'])) {
             return ['errors' => [$elementSend['errors']]];
         }
@@ -171,15 +177,21 @@ trait ExportSEDATrait
 
     private static function sendSedaPackage()
     {
+        $bodyData = [
+            'messageFile' => base64_encode(file_get_contents($args['encodedFilePath'])),
+            'filename'    => $args['messageFilename'],
+            'schema'      => 'seda2'
+        ];
         $curlResponse = CurlModel::execSimple([
-            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/create',
+            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/archiveTransfer',
             'method'  => 'POST',
             'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
             'headers' => [
                 'Accept: application/json',
                 'Content-Type: application/json',
                 'User-Agent: ' . $args['config']['exportSeda']['userAgent']
-            ]
+            ],
+            'body'   => json_encode($bodyData)
         ]);
 
         if (!empty($curlResponse['errors'])) {
@@ -189,6 +201,7 @@ trait ExportSEDATrait
         }
 
         // TODO GET XML
+        $pathToDocument = 'xmlFile';
 
         $id = StoreController::storeAttachment([
             'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
