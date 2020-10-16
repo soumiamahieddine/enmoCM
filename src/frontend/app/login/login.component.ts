@@ -66,11 +66,10 @@ export class LoginComponent implements OnInit {
     onSubmit(ssoToken = null) {
         this.loading = true;
         this.http.post(
-            '../rest/authenticate',
+            '../rest/authenticate?' + ssoToken,
             {
                 'login': this.loginForm.get('login').value,
                 'password': this.loginForm.get('password').value,
-                'ssoToken' : ssoToken
             },
             {
                 observe: 'response'
@@ -122,7 +121,6 @@ export class LoginComponent implements OnInit {
                     const regex = /ticket=[.]*/g;
                     if (window.location.search.match(regex) !== null) {
                         const ssoToken = window.location.search.substring(1, window.location.search.length);
-                        window.location.search = '';
                         this.onSubmit(ssoToken);
                     } else {
                         window.location.href = this.authService.authUri;
