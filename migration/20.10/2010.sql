@@ -298,7 +298,7 @@ UPDATE res_attachments SET attachment_type = 'reply_record_management' WHERE att
 ALTER TABLE custom_fields DROP COLUMN IF EXISTS mode;
 DROP TYPE IF EXISTS custom_fields_modes;
 CREATE TYPE custom_fields_modes AS ENUM ('form', 'technical');
-ALTER TABLE custom_fields ADD COLUMN mode custom_fields_modes DEFAULT 'form';
+ALTER TABLE custom_fields ADD COLUMN mode custom_fields_modes NOT NULL DEFAULT 'form';
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
