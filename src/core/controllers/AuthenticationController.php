@@ -50,11 +50,23 @@ class AuthenticationController
 
         $encryptKey = CoreConfigModel::getEncryptKey();
 
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        $authUri = null;
+        if ($loggingMethod['id'] == 'cas') {
+            $casConfiguration = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/cas_config.xml']);
+            $hostname = (string)$casConfiguration->WEB_CAS_URL;
+            $port = (string)$casConfiguration->WEB_CAS_PORT;
+            $uri = (string)$casConfiguration->WEB_CAS_CONTEXT;
+            $authUri = "https://{$hostname}:{$port}{$uri}/login?service=" . UrlController::getCoreUrl() . 'dist/index.html#/login';
+        }
+
         return $response->withJson([
-            'instanceId'      => $hashedPath,
-            'applicationName' => $appName,
-            'loginMessage'    => $parameter['param_value_string'] ?? null,
-            'changeKey'       => $encryptKey == 'Security Key Maarch Courrier #2008'
+            'instanceId'        => $hashedPath,
+            'applicationName'   => $appName,
+            'loginMessage'      => $parameter['param_value_string'] ?? null,
+            'changeKey'         => $encryptKey == 'Security Key Maarch Courrier #2008',
+            'authMode'          => $loggingMethod['id'],
+            'authUrl'           => $authUri
         ]);
     }
 
@@ -215,14 +227,13 @@ class AuthenticationController
     {
         $body = $request->getParsedBody();
 
-        //TODO check login + password
-//        $check = Validator::stringType()->notEmpty()->validate($body['login']);
-//        $check = $check && Validator::stringType()->notEmpty()->validate($body['password']);
-//        if (!$check) {
-//            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-//        }
-
         $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if (in_array($loggingMethod['id'], ['standard', 'ldap'])) {
+            if (!Validator::stringType()->notEmpty()->validate($body['login']) || !Validator::stringType()->notEmpty()->validate($body['password'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            }
+        }
+
         if ($loggingMethod['id'] == 'standard') {
             $login = strtolower($body['login']);
             if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
