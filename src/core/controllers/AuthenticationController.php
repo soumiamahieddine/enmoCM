@@ -413,6 +413,8 @@ class AuthenticationController
         } else {
             \phpCAS::setNoCasServerValidation();
         }
+        \phpCAS::setFixedServiceURL(UrlController::getCoreUrl() . 'dist/index.html#/login');
+//        \phpCAS::setNoClearTicketsFromUrl();
         \phpCAS::forceAuthentication();
 
         $casId = \phpCAS::getUser();
