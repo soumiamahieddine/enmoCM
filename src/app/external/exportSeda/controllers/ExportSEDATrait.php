@@ -30,6 +30,7 @@ use Resource\controllers\SummarySheetController;
 use Resource\models\ResModel;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
@@ -160,13 +161,48 @@ trait ExportSEDATrait
         }
 
         $messageSaved = ExportSEDATrait::saveMessage(['messageObject' => $sedaPackage['messageObject']]);
-        MessageExchangeModel::insertMessage([
-            'messageId' => $messageSaved['messageId'],
-            'tableName' => 'res_letterbox',
-            'resId'     => $resource['res_id']
-        ]);
+        $elementSend  = ExportSEDATrait::sendSedaPackage(['messageId' => $messageSaved, 'config' => $config, 'encodedFile' => $sedaPackage['encodedFile'], 'resId' => $resource['res_id']]);
+        if (!empty($elementSend['errors'])) {
+            return ['errors' => [$elementSend['errors']]];
+        }
 
         return true;
+    }
+
+    private static function sendSedaPackage()
+    {
+        $curlResponse = CurlModel::execSimple([
+            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/create',
+            'method'  => 'POST',
+            'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
+            'headers' => [
+                'Accept: application/json',
+                'Content-Type: application/json',
+                'User-Agent: ' . $args['config']['exportSeda']['userAgent']
+            ]
+        ]);
+
+        if (!empty($curlResponse['errors'])) {
+            return ['errors' => 'Error returned by the route /medona/create : ' . $curlResponse['errors']];
+        } elseif ($curlResponse['code'] != 200) {
+            return ['errors' => 'Error returned by the route /medona/create : ' . $curlResponse['response']['message']];
+        }
+
+        // TODO GET XML
+
+        $id = StoreController::storeAttachment([
+            'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
+            'type'          => 'acknowledgement_record_management',
+            'resIdMaster'   => $args['resId'],
+            'title'         => 'Accusé de réception',
+            'format'        => 'xml',
+            'status'        => 'TRA'
+        ]);
+        if (empty($id) || !empty($id['errors'])) {
+            return ['errors' => ['[storeAttachment] ' . $id['errors']]];
+        }
+
+        return [];
     }
 
     private static function saveMessage($args = [])
