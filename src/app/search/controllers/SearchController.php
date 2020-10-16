@@ -111,11 +111,7 @@ class SearchController
         $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
         if (!empty($nonSearchableStatuses)) {
             $nonSearchableStatuses = array_column($nonSearchableStatuses, 'id');
-            if (!empty($body['status']['values']) && in_array(null, $body['status']['values'])) {
-                $searchWhere[] = 'status not in (?) or status is null';
-            } else {
-                $searchWhere[] = 'status not in (?)';
-            }
+            $searchWhere[] = 'status not in (?)';
             $searchData[] = $nonSearchableStatuses;
         }
 
@@ -192,13 +188,9 @@ class SearchController
         }
 
         $excludeAttachmentTypes = ['signed_response'];
-        $whereExcludeAttachmentTypes = 'attachment_type not in (?)';
-        if (!empty($body['attachment_type']['values']) && in_array(null, $body['attachment_type']['values'])) {
-            $whereExcludeAttachmentTypes .= ' or attachment_type is null';
-        }
         $attachments = AttachmentModel::get([
             'select'    => ['COUNT(res_id)', 'res_id_master'],
-            'where'     => ['res_id_master in (?)', 'status not in (?)', $whereExcludeAttachmentTypes, '((status = ? AND typist = ?) OR status != ?)'],
+            'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
             'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['id'], 'TMP'],
             'groupBy'   => ['res_id_master']
         ]);
@@ -705,11 +697,7 @@ class SearchController
         }
 
         if (!empty($body['attachment_type']) && !empty($body['attachment_type']['values']) && is_array($body['attachment_type']['values'])) {
-            if (in_array(null, $body['attachment_type']['values'])) {
-                $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where (attachment_type in (?) or attachment_type is null) and status in (\'TRA\', \'A_TRA\'))';
-            } else {
-                $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where attachment_type in (?) and status in (\'TRA\', \'A_TRA\'))';
-            }
+            $args['searchWhere'][] = 'res_id in (select DISTINCT res_id_master from res_attachments where attachment_type in (?) and status in (\'TRA\', \'A_TRA\'))';
             $args['searchData'][] = $body['attachment_type']['values'];
         }
         if (!empty($body['attachment_creationDate']) && !empty($body['attachment_creationDate']['values']) && is_array($body['attachment_creationDate']['values'])) {
