@@ -6,6 +6,7 @@ import { FormControl } from '@angular/forms';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { startWith, map, tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { FunctionsService } from '@service/functions.service';
 
 declare var $: any;
 
@@ -257,7 +258,7 @@ export class ListAdministrationComponent implements OnInit {
     @Input('currentBasketGroup') private basketGroup: any;
     @Output('refreshBasketGroup') refreshBasketGroup = new EventEmitter<any>();
 
-    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, private functions: FunctionsService) { }
 
     async ngOnInit(): Promise<void> {
         await this.initCustomFields();
@@ -401,7 +402,7 @@ export class ListAdministrationComponent implements OnInit {
             this.displayedSecondaryData.forEach((subArray: any, index) => {
                 if (subArray.length > this.selectedTemplateDisplayedSecondaryData) {
                     transferArrayItem(subArray, this.displayedSecondaryData[index + 1], subArray.length, 0);
-                } else if (subArray.length < this.selectedTemplateDisplayedSecondaryData) {
+                } else if (subArray.length < this.selectedTemplateDisplayedSecondaryData && !this.functions.empty(this.displayedSecondaryData[index + 1])) {
                     transferArrayItem(this.displayedSecondaryData[index + 1], subArray, 0, subArray.length);
                 }
             });

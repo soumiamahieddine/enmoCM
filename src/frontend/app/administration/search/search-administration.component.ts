@@ -8,6 +8,7 @@ import { startWith, map, tap, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { AppService } from '@service/app.service';
 import { HeaderService } from '@service/header.service';
+import { FunctionsService } from '@service/functions.service';
 
 declare var $: any;
 
@@ -241,7 +242,7 @@ export class SearchAdministrationComponent implements OnInit {
 
     searchAdv: any = { listEvent: {}, listDisplay: {}, list_event_data: {} };
 
-    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public appService: AppService, public headerService: HeaderService) { }
+    constructor(public translate: TranslateService, public http: HttpClient, private notify: NotificationService, public appService: AppService, public headerService: HeaderService, private functions: FunctionsService) { }
 
     async ngOnInit(): Promise<void> {
         this.headerService.setHeader(this.translate.instant('lang.searchAdministration'));
@@ -371,10 +372,10 @@ export class SearchAdministrationComponent implements OnInit {
         } else {
             transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex - 1);
 
-            this.displayedSecondaryData.forEach((subArray: any, index) => {
+            this.displayedSecondaryData.forEach((subArray: any, index: any) => {
                 if (subArray.length > this.selectedTemplateDisplayedSecondaryData) {
                     transferArrayItem(subArray, this.displayedSecondaryData[index + 1], subArray.length, 0);
-                } else if (subArray.length < this.selectedTemplateDisplayedSecondaryData) {
+                } else if (subArray.length < this.selectedTemplateDisplayedSecondaryData && !this.functions.empty(this.displayedSecondaryData[index + 1])) {
                     transferArrayItem(this.displayedSecondaryData[index + 1], subArray, 0, subArray.length);
                 }
             });
