@@ -78,6 +78,9 @@ class SedaController
         if (empty($config['exportSeda']['senderOrgRegNumber'])) {
             return $response->withStatus(400)->withJson(['errors' => 'No senderOrgRegNumber found in config.json', 'lang' => 'noSenderOrgRegNumber']);
         }
+        if (empty($config['exportSeda']['accessRuleCode'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'No accessRuleCode found in config.json', 'lang' => 'noAccessRuleCode']);
+        }
 
         $return = SedaController::initArchivalData([
             'resource'           => $resource,
@@ -254,11 +257,11 @@ class SedaController
         if (!empty($linkedResourcesIds)) {
             $linkedResources = [];
             $linkedResources = ResModel::get([
-                'select' => ['subject', 'alt_identifier'],
+                'select' => ['subject as object', 'alt_identifier as chrono'],
                 'where'  => ['res_id in (?)'],
                 'data'   => [$linkedResourcesIds]
             ]);
-            $return['additionalData']['linkedResources'] = array_column($linkedResources, 'subject', 'alt_identifier');
+            $return['additionalData']['linkedResources'] = $linkedResources;
         }
 
         $entities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);

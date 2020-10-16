@@ -93,30 +93,52 @@ trait ExportSEDATrait
             $initData = $initData['archivalData'];
         }
 
-        $dataObjectPackage = [];
+        $archivesAttachment = [];
         $initialArchiveUnits = $initData['archiveUnits'];
         foreach ($initialArchiveUnits as $archiveUnit) {
             $archiveFound = false;
             foreach ($args['data']['archives'] as $userArchiveUnit) {
                 if ($userArchiveUnit['id'] == $archiveUnit['id']) {
                     $archiveUnit['descriptionLevel'] = $userArchiveUnit['descriptionLevel'];
-                    $dataObjectPackage[]             = $archiveUnit;
+                    $archivesAttachment[]             = $archiveUnit;
                     $archiveFound                    = true;
                     break;
                 }
             }
             if (!$archiveFound) {
                 $archiveUnit['descriptionLevel'] = 'Item';
-                $dataObjectPackage = $archiveUnit;
+                $archivesAttachment = $archiveUnit;
             }
         }
+
+        $dataObjectPackage = [
+            'archiveId'                 => $initData['data']['slipInfo']['archiveId'],
+            'chrono'                    => '',
+            'originatorAgency'          => [
+                'id'    => '',
+                'label' => ''
+            ],
+            'descriptionLevel'          => $args['data']['archiveDescriptionLevel'],
+            'creationDate'              => '',
+            'modificationDate'          => '',
+            'retentionRule'             => $initData['data']['doctype']['retentionRule'],
+            'retentionFinalDisposition' => $initData['data']['doctype']['retentionFinalDisposition'],
+            'accessRuleCode'            => $config['exportSeda']['accessRuleCode'],
+            'history'                   => '',
+            'filePath'                  => '',
+            'contacts'                  => [],
+            'attachments'               => $archivesAttachment,
+            'folders'                   => '',
+            'links'                     => $initData['additionalData']['linkedResources']
+        ];
 
         $data = [
             'type' => 'ArchiveTransfer',
             'messageObject' => [
+                'messageName '       => $args['data']['packageName'],
                 'messageIdentifier'  => $initData['data']['slipInfo']['slipId'],
                 'archivalAgreement'  => $args['data']['archivalAgreement'],
-                'dataObjectPackage'  => [],
+                'dataObjectPackage'  => $dataObjectPackage,
                 'archivalAgency'     => $args['data']['entityArchiveRecipient'],
                 'transferringAgency' => $initData['data']['entity']['senderArchiveEntity']
             ]
