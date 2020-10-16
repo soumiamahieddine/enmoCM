@@ -215,20 +215,19 @@ class AuthenticationController
     {
         $body = $request->getParsedBody();
 
-        $check = Validator::stringType()->notEmpty()->validate($body['login']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($body['password']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $login = strtolower($body['login']);
-        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'mode', 'refresh_token', 'user_id', 'status']]);
-        if (empty($user) || $user['mode'] == 'rest' || $user['status'] == 'SPD') {
-            return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
-        }
+        //TODO check login + password
+//        $check = Validator::stringType()->notEmpty()->validate($body['login']);
+//        $check = $check && Validator::stringType()->notEmpty()->validate($body['password']);
+//        if (!$check) {
+//            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+//        }
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if ($loggingMethod['id'] == 'standard') {
+            $login = strtolower($body['login']);
+            if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+            }
             $authenticated = AuthenticationController::standardConnection(['login' => $login, 'password' => $body['password']]);
             if (!empty($authenticated['date'])) {
                 return $response->withStatus(401)->withJson(['errors' => $authenticated['errors'], 'date' => $authenticated['date']]);
@@ -236,11 +235,28 @@ class AuthenticationController
                 return $response->withStatus(401)->withJson(['errors' => $authenticated['errors']]);
             }
         } elseif ($loggingMethod['id'] == 'ldap') {
+            $login = strtolower($body['login']);
+            if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+            }
             $authenticated = AuthenticationController::ldapConnection(['login' => $login, 'password' => $body['password']]);
             if (!empty($authenticated['errors'])) {
                 return $response->withStatus(401)->withJson(['errors' => $authenticated['errors']]);
             }
+        } elseif ($loggingMethod['id'] == 'cas') {
+            $authenticated = AuthenticationController::casConnection();
+            if (!empty($authenticated['errors'])) {
+                return $response->withStatus(401)->withJson(['errors' => $authenticated['errors']]);
+            }
+            $login = strtolower($authenticated['login']);
+            if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+            }
+        } else {
+            return $response->withStatus(403)->withJson(['errors' => 'Logging method unauthorized']);
         }
+
+        $user = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'refresh_token', 'user_id']]);
 
         $GLOBALS['id'] = $user['id'];
         $GLOBALS['login'] = $user['user_id'];
@@ -362,6 +378,42 @@ class AuthenticationController
         return true;
     }
 
+    private static function casConnection()
+    {
+        $casConfiguration = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/cas_config.xml']);
+
+        $version = (string)$casConfiguration->CAS_VERSION;
+        $hostname = (string)$casConfiguration->WEB_CAS_URL;
+        $port = (string)$casConfiguration->WEB_CAS_PORT;
+        $uri = (string)$casConfiguration->WEB_CAS_CONTEXT;
+        $certificate = (string)$casConfiguration->PATH_CERTIFICATE;
+        $separator = (string)$casConfiguration->ID_SEPARATOR;
+
+        if (!in_array($version, ['CAS_VERSION_2_0', 'CAS_VERSION_3_0'])) {
+            return ['errors' => 'Cas version not supported'];
+        }
+
+        \phpCAS::setDebug();
+        \phpCAS::setVerbose(true);
+        \phpCAS::client(constant($version), $hostname, (int)$port, $uri, $version != 'CAS_VERSION_3_0');
+
+        if (!empty($certificate)) {
+            \phpCAS::setCasServerCACert($certificate);
+        } else {
+            \phpCAS::setNoCasServerValidation();
+        }
+        \phpCAS::forceAuthentication();
+
+        $casId = \phpCAS::getUser();
+        if (!empty($separator)) {
+            $login = explode($separator, $casId)[0];
+        } else {
+            $login = $casId;
+        }
+
+        return ['login' => $login];
+    }
+
     public function getRefreshedToken(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();
@@ -476,6 +528,16 @@ class AuthenticationController
                 'status'        => 'WAITING'
             ]
         ]);
+
+        return true;
+    }
+
+    private static function isUserAuthorized(array $args)
+    {
+        $user = UserModel::getByLogin(['login' => $args['login'], 'select' => ['mode', 'status']]);
+        if (empty($user) || $user['mode'] == 'rest' || $user['status'] == 'SPD') {
+            return false;
+        }
 
         return true;
     }
