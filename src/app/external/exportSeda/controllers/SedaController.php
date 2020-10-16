@@ -187,7 +187,7 @@ class SedaController
         }
         
         $attachments = AttachmentModel::get([
-            'select'  => ['res_id', 'title', 'docserver_id', 'path', 'filename', 'res_id_master', 'fingerprint'],
+            'select'  => ['res_id', 'title', 'docserver_id', 'path', 'filename', 'res_id_master', 'fingerprint', 'creation_date'],
             'where'   => ['res_id_master = ?', 'status in (?)'],
             'data'    => [$args['resource']['res_id'], ['A_TRA', 'TRA']],
             'orderBy' => ['modification_date DESC']
@@ -197,7 +197,8 @@ class SedaController
                 'id'               => 'attachment_' . $attachment['res_id'],
                 'label'            => $attachment['title'],
                 'type'             => 'attachment',
-                'descriptionLevel' => 'Item'
+                'descriptionLevel' => 'Item',
+                'creationDate'     => $attachment['creation_date']
             ];
             if ($args['getFile']) {
                 $attachment = ExportSEDATrait::getAttachmentFilePath(['data' => $attachment]);
@@ -206,13 +207,14 @@ class SedaController
             $return['archiveUnits'][] = $tmpAttachment;
         }
 
-        $notes = NoteModel::get(['select' => ['note_text', 'id'], 'where' => ['identifier = ?'], 'data' => [$args['resource']['res_id']]]);
+        $notes = NoteModel::get(['select' => ['note_text', 'id', 'creation_date'], 'where' => ['identifier = ?'], 'data' => [$args['resource']['res_id']]]);
         foreach ($notes as $note) {
             $tmpNote = [
                 'id'               => 'note_' . $note['id'],
                 'label'            => $note['note_text'],
                 'type'             => 'note',
-                'descriptionLevel' => 'Item'
+                'descriptionLevel' => 'Item',
+                'creationDate'     => $note['creation_date']
             ];
             if ($args['getFile']) {
                 $note = ExportSEDATrait::getNoteFilePath(['id' => $note['id']]);
@@ -222,7 +224,7 @@ class SedaController
         }
 
         $emails = EmailModel::get([
-            'select'  => ['object', 'id', 'body', 'sender', 'recipients'],
+            'select'  => ['object', 'id', 'body', 'sender', 'recipients', 'creation_date'],
             'where'   => ['document->>\'id\' = ?', 'status = ?'],
             'data'    => [$args['resource']['res_id'], 'SENT'],
             'orderBy' => ['send_date desc']
@@ -232,7 +234,8 @@ class SedaController
                 'id'               => 'email_' . $email['id'],
                 'label'            => $email['object'],
                 'type'             => 'email',
-                'descriptionLevel' => 'Item'
+                'descriptionLevel' => 'Item',
+                'creationDate'     => $email['creation_date']
             ];
             if ($args['getFile']) {
                 $email = ExportSEDATrait::getEmailFilePath(['data' => $email]);
@@ -245,7 +248,8 @@ class SedaController
             'id'               => 'summarySheet_' . $args['resource']['res_id'],
             'label'            => 'Fiche de liaison',
             'type'             => 'summarySheet',
-            'descriptionLevel' => 'Item'
+            'descriptionLevel' => 'Item',
+            'creationDate'     => $date->format('Y-m-d H:i:s')
         ];
         if ($args['getFile']) {
             $summarySheet = ExportSEDATrait::getSummarySheetFilePath(['resId' => $args['resource']['res_id']]);

@@ -13,6 +13,7 @@
 namespace ExportSeda\controllers;
 
 use Attachment\models\AttachmentModel;
+use Contact\controllers\ContactController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Doctype\models\DoctypeModel;
@@ -20,6 +21,8 @@ use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use ExportSeda\controllers\ExportSEDATrait;
 use ExportSeda\controllers\SedaController;
+use Folder\models\FolderModel;
+use History\models\HistoryModel;
 use MessageExchange\models\MessageExchangeModel;
 use Note\controllers\NoteController;
 use Resource\controllers\StoreController;
@@ -28,6 +31,7 @@ use Resource\models\ResModel;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserModel;
 
 trait ExportSEDATrait
 {
@@ -36,7 +40,7 @@ trait ExportSEDATrait
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources', 'alt_identifier', 'admission_date', 'creation_date', 'modification_date']]);
         if (empty($resource)) {
             return ['errors' => ['resource does not exists']];
         } elseif (empty($resource['destination'])) {
@@ -111,24 +115,30 @@ trait ExportSEDATrait
             }
         }
 
+        $history = ExportSEDATrait::getHistory(['resId' => $resource['res_id']]);
+        $folder  = ExportSEDATrait::getFolderPath(['selectedFolder' => $args['data']['folder'], 'folders' => $initData['additionalData']['folders']]);
+
         $dataObjectPackage = [
             'archiveId'                 => $initData['data']['slipInfo']['archiveId'],
-            'chrono'                    => '',
+            'chrono'                    => $resource['alt_identifier'],
             'originatorAgency'          => [
-                'id'    => '',
-                'label' => ''
+                'id'    => $entity['producer_service'],
+                'label' => $entity['entity_label']
             ],
             'descriptionLevel'          => $args['data']['archiveDescriptionLevel'],
-            'creationDate'              => '',
-            'modificationDate'          => '',
+            'receivedDate'              => $resource['admission_date'],
+            'creationDate'              => $resource['creation_date'],
+            'modificationDate'          => $resource['modification_date'],
             'retentionRule'             => $initData['data']['doctype']['retentionRule'],
             'retentionFinalDisposition' => $initData['data']['doctype']['retentionFinalDisposition'],
             'accessRuleCode'            => $config['exportSeda']['accessRuleCode'],
-            'history'                   => '',
-            'filePath'                  => '',
-            'contacts'                  => [],
+            'history'                   => $history['history'],
+            'contacts'                  => [
+                'senders'    => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']),
+                'recipients' => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient'])
+            ],
             'attachments'               => $archivesAttachment,
-            'folders'                   => '',
+            'folders'                   => $folder['folderPath'],
             'links'                     => $initData['additionalData']['linkedResources']
         ];
 
@@ -152,6 +162,38 @@ trait ExportSEDATrait
         // TODO : SEND PACKAGE TO RM
 
         return true;
+    }
+
+    public static function getFolderPath($args = [])
+    {
+        $folderPath = null;
+        if (!empty($args['selectedFolder'])) {
+            foreach ($args['folders'] as $folder) {
+                if ($folder['id'] == $args['selectedFolder']) {
+                    $folderId   = explode("_", $folder['id'])[1];
+                    $folderPath = FolderModel::getFolderPath(['id' => $folderId]);
+                    break;
+                }
+            }
+        }
+
+        return ['folderPath' => $folderPath];
+    }
+
+    public static function getHistory($args = [])
+    {
+        $history = HistoryModel::get([
+            'select'  => ['event_date', 'user_id', 'info', 'remote_ip'],
+            'where'   => ['table_name in (?)', 'record_id = ?', 'event_type like ?'],
+            'data'    => [['res_letterbox', 'res_view_letterbox'], $args['resId'], 'ACTION#%'],
+            'orderBy' => ['event_date DESC']
+        ]);
+
+        foreach ($history as $key => $value) {
+            $history[$key]['userLabel'] = UserModel::getLabelledUserById(['id' => $value['user_id']]);
+        }
+
+        return ['history' => $history];
     }
 
     public static function getAttachmentFilePath($args = [])
