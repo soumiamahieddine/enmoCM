@@ -1410,39 +1410,17 @@ class ResController extends ResourceControlController
             }
         }
 
-        // Checking if model has a custom field. If yes, the customs are reset in the update, if not, we set it to an empty JSON object
-        $newModelHasCustomFields = false;
-        foreach ($newModelFields as $newModelField) {
-            if (strpos($newModelField, 'indexingCustomField_') !== false) {
-                $newModelHasCustomFields = true;
-                break;
-            }
-        }
+        $customFieldsToDelete = array_diff($oldFieldList, $newModelFields);
+        $customFieldsToDelete = array_filter($customFieldsToDelete, function ($field) {
+            return strpos($field, 'indexingCustomField_') !== false;
+        });
+        $customFieldsToDelete = array_map(function ($field) {
+            return explode('_', $field)[1];
+        }, $customFieldsToDelete);
 
-        $oldModelHasCustomFields = false;
-        foreach ($oldFieldList as $oldModelField) {
-            if (strpos($oldModelField, 'indexingCustomField_') !== false) {
-                $oldModelHasCustomFields = true;
-                break;
-            }
-        }
-
-        $postSet = [];
-        if ($oldModelHasCustomFields && !$newModelHasCustomFields) {
-            $set['custom_fields'] = '{}';
-        } else {
-            $customFieldsToDelete = array_diff($oldFieldList, $newModelFields);
-            $customFieldsToDelete = array_filter($customFieldsToDelete, function ($field) {
-                return strpos($field, 'indexingCustomField_') !== false;
-            });
-            $customFieldsToDelete = array_map(function ($field) {
-                return explode('_', $field)[1];
-            }, $customFieldsToDelete);
-
-            $postSet['custom_fields'] = 'custom_fields ';
-            foreach ($customFieldsToDelete as $item) {
-                $postSet['custom_fields'] .= " - '$item'";
-            }
+        $postSet = ['custom_fields' => 'custom_fields '];
+        foreach ($customFieldsToDelete as $item) {
+            $postSet['custom_fields'] .= " - '$item'";
         }
 
         if (!empty($set) || !empty($postSet)) {
