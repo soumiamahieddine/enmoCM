@@ -80,6 +80,8 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Body type is empty, not a string or value is incorrect']);
         } elseif (!empty($body['values']) && !Validator::arrayType()->notEmpty()->validate($body['values'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body values is not an array']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['mode']) || !in_array($body['mode'], ['form', 'technical'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body mode is empty, not a string or value is incorrect']);
         }
 
         $fields = CustomFieldModel::get(['select' => [1], 'where' => ['label = ?'], 'data' => [$body['label']]]);
@@ -99,6 +101,7 @@ class CustomFieldController
         $id = CustomFieldModel::create([
             'label'         => $body['label'],
             'type'          => $body['type'],
+            'mode'          => $body['mode'],
             'values'        => empty($body['values']) ? '[]' : json_encode($body['values'])
         ]);
 
@@ -130,6 +133,8 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         } elseif (!empty($body['values']) && !Validator::arrayType()->notEmpty()->validate($body['values'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body values is not an array']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['mode']) || !in_array($body['mode'], ['form', 'technical'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body mode is empty, not a string or value is incorrect']);
         }
 
         $field = CustomFieldModel::getById(['select' => ['type', 'values'], 'id' => $args['id']]);
@@ -195,6 +200,7 @@ class CustomFieldController
         CustomFieldModel::update([
             'set'   => [
                 'label'  => $body['label'],
+                'mode'   => $body['mode'],
                 'values' => empty($body['values']) ? '[]' : json_encode($body['values'])
             ],
             'where' => ['id = ?'],
