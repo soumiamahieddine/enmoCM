@@ -144,6 +144,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                     label: this.translate.instant('lang.newField') + ' ' + this.incrementCreation,
                     type: customFieldType.type,
                     values: [],
+                    mode : 'form'
                 };
             }),
             exhaustMap((data) => this.http.post('../rest/customFields', newCustomField)),
