@@ -121,6 +121,7 @@ export class LoginComponent implements OnInit {
                     const regex = /ticket=[.]*/g;
                     if (window.location.search.match(regex) !== null) {
                         const ssoToken = window.location.search.substring(1, window.location.search.length);
+                        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
                         this.onSubmit(ssoToken);
                     } else {
                         window.location.href = this.authService.authUri;
