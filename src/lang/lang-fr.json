@@ -2096,6 +2096,7 @@
     "casEnabled": "Authentification CAS activée",
     "displayAsTechnicalData" : "Afficher en tant que donnée technique",
     "displayInForm" : "Afficher dans le formulaire",
-    "technicalInformations" : "Informations techniques"
+    "technicalInformations" : "Informations techniques",
+    "displayMode" :"Mode d'affichage"
 
 }
