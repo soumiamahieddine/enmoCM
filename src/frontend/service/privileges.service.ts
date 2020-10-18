@@ -137,8 +137,8 @@ export class PrivilegeService {
         },
         {
             'id': 'admin_priorities',
-            'label': 'lang.prioritiesAlt',
-            'comment': 'lang.prioritiesAlt',
+            'label': 'lang.priorities',
+            'comment': 'lang.priorities',
             'route': '/administration/priorities',
             'unit': 'production',
             'style': 'fa fa-clock',

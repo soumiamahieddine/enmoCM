@@ -27,7 +27,6 @@ export class FilterToolComponent implements OnInit {
     ngOnInit(): void { }
 
     setfilters(filters: any) {
-        console.log(filters);
         this.filters = filters;
     }
 

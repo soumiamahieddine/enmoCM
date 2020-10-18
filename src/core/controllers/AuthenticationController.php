@@ -237,7 +237,7 @@ class AuthenticationController
         if ($loggingMethod['id'] == 'standard') {
             $login = strtolower($body['login']);
             if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
-                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication Failed']);
             }
             $authenticated = AuthenticationController::standardConnection(['login' => $login, 'password' => $body['password']]);
             if (!empty($authenticated['date'])) {
@@ -248,7 +248,7 @@ class AuthenticationController
         } elseif ($loggingMethod['id'] == 'ldap') {
             $login = strtolower($body['login']);
             if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
-                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication Failed']);
             }
             $authenticated = AuthenticationController::ldapConnection(['login' => $login, 'password' => $body['password']]);
             if (!empty($authenticated['errors'])) {
@@ -261,7 +261,7 @@ class AuthenticationController
             }
             $login = strtolower($authenticated['login']);
             if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
-                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication Failed']);
             }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'Logging method unauthorized']);

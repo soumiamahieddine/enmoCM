@@ -134,6 +134,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
     @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
+    paginatorLength: any;
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -300,6 +301,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     this.dataFilters = data.filters;
                     this.criteriaSearchService.updateListsPropertiesFilters(data.filters);
                     this.resultsLength = data.count;
+                    this.paginatorLength = data.count > 10000 ? 10000 : data.count;
                     this.allResInBasket = data.allResources;
                     return data.resources;
                 }),
@@ -308,6 +310,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     this.selectedRes = [];
                     this.data = [];
                     this.resultsLength = 0;
+                    this.paginatorLength = 0;
                     this.dataFilters = {};
                     this.allResInBasket = [];
                     this.isLoadingResults = false;

@@ -75,8 +75,8 @@
 <div class="table-head">
     <div class="table-head-result">
         <mat-checkbox *ngIf="!singleSelection" color="primary"
-            [checked]="selectedRes.length == allResInBasket.length && selectedRes.length > 0"
-            [indeterminate]="selectedRes.length > 0 && selectedRes.length < allResInBasket.length"
+            [checked]="selectedRes.length == resultsLength && selectedRes.length > 0"
+            [indeterminate]="selectedRes.length > 0 && selectedRes.length < resultsLength"
             style="margin: 10px;padding-right: 10px;" title="{{'lang.selectAllResInBasket' | translate}}"
             (change)="toggleAllRes($event)">
         </mat-checkbox>&nbsp;{{resultsLength}}
@@ -86,7 +86,7 @@
     </div>
     <div class="table-head-tool">
         <span style="position: relative;">
-            <mat-paginator #paginatorResultList [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100, 150]"
+            <mat-paginator #paginatorResultList [length]="paginatorLength" [pageSizeOptions]="[10, 25, 50, 100, 150]"
              class="paginatorResultList"></mat-paginator>
             <div *ngIf="paginatorResultList.getNumberOfPages() > 0" [matMenuTriggerFor]="page" class="pageList"></div>
             <mat-menu #page="matMenu">
@@ -99,7 +99,7 @@
             </span>
             <span *ngIf="actionMode">
                 <app-followed-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
-                    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
+                    [totalRes]="resultsLength" [selectedRes]="selectedRes"
                     (refreshEvent)="refreshDaoAfterAction()">
                 </app-followed-action-list>
             </span>
@@ -274,6 +274,6 @@
     <mat-divider></mat-divider>
 </ng-template>
 <app-followed-action-list #actionsListContext *ngIf="actionMode" [contextMode]="true" [currentFolderInfo]="folderInfo"
-    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
+    [totalRes]="resultsLength" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
     (refreshPanelFolders)="foldersService.getFolders()">
 </app-followed-action-list>

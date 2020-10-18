@@ -92,8 +92,6 @@ export class LoginComponent implements OnInit {
                 this.loading = false;
                 if (err.error.errors === 'Authentication Failed') {
                     this.notify.error(this.translate.instant('lang.wrongLoginPassword'));
-                } else if (err.error.errors === 'Account Suspended') {
-                    this.notify.error(this.translate.instant('lang.accountSuspended'));
                 } else if (err.error.errors === 'Account Locked') {
                     this.notify.error(this.translate.instant('lang.accountLocked') + ' ' + this.timeLimit.transform(err.error.date));
                 } else {
