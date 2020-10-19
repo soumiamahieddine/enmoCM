@@ -1203,9 +1203,9 @@ class SearchController
         $body = $args['body'];
 
         if (!empty($body['filters'])) {
-            if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
+            if (!empty($body['filters']['doctypes']['values']) && is_array($body['filters']['doctypes']['values'])) {
                 $doctypes = [];
-                foreach ($body['filters']['doctypes'] as $filter) {
+                foreach ($body['filters']['doctypes']['values'] as $filter) {
                     if ($filter['selected']) {
                         $doctypes[] = $filter['id'];
                     }
@@ -1215,9 +1215,9 @@ class SearchController
                     $args['searchData'][] = $doctypes;
                 }
             }
-            if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
+            if (!empty($body['filters']['categories']['values']) && is_array($body['filters']['categories']['values'])) {
                 $categories = [];
-                foreach ($body['filters']['categories'] as $filter) {
+                foreach ($body['filters']['categories']['values'] as $filter) {
                     if ($filter['selected']) {
                         $categories[] = $filter['id'];
                     }
@@ -1227,9 +1227,9 @@ class SearchController
                     $args['searchData'][] = $categories;
                 }
             }
-            if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
+            if (!empty($body['filters']['priorities']['values']) && is_array($body['filters']['priorities']['values'])) {
                 $priorities = [];
-                foreach ($body['filters']['priorities'] as $filter) {
+                foreach ($body['filters']['priorities']['values'] as $filter) {
                     if ($filter['selected']) {
                         $priorities[] = $filter['id'];
                     }
@@ -1243,9 +1243,9 @@ class SearchController
                     $args['searchData'][] = $priorities;
                 }
             }
-            if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
+            if (!empty($body['filters']['statuses']['values']) && is_array($body['filters']['statuses']['values'])) {
                 $statuses = [];
-                foreach ($body['filters']['statuses'] as $filter) {
+                foreach ($body['filters']['statuses']['values'] as $filter) {
                     if ($filter['selected']) {
                         $statuses[] = $filter['id'];
                     }
@@ -1259,9 +1259,9 @@ class SearchController
                     $args['searchData'][] = $statuses;
                 }
             }
-            if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
+            if (!empty($body['filters']['entities']['values']) && is_array($body['filters']['entities']['values'])) {
                 $entities = [];
-                foreach ($body['filters']['entities'] as $filter) {
+                foreach ($body['filters']['entities']['values'] as $filter) {
                     if ($filter['selected']) {
                         $entities[] = $filter['id'];
                     }
@@ -1275,9 +1275,9 @@ class SearchController
                     $args['searchData'][] = $entities;
                 }
             }
-            if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
+            if (!empty($body['filters']['folders']['values']) && is_array($body['filters']['folders']['values'])) {
                 $folders = [];
-                foreach ($body['filters']['folders'] as $filter) {
+                foreach ($body['filters']['folders']['values'] as $filter) {
                     if ($filter['selected']) {
                         $folders[] = $filter['id'];
                     }
