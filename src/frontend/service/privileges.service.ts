@@ -498,6 +498,12 @@ export class PrivilegeService {
             'comment': 'lang.includeFolderPerimeter',
             'unit': 'application'
         },
+        {
+            'id': 'show_technical_informations',
+            'label': 'lang.showTechnicalInformations',
+            'comment': 'lang.showTechnicalInformations',
+            'unit': 'application'
+        },
     ];
 
     private menus: menu[] = [

@@ -2102,5 +2102,7 @@
     "connections": "Connexions",
     "connectionsDesc": "Administrer les modes de connexion de l'application",
     "ssoConnections": "Connexions SSO",
-    "sso": "SSO"
+    "sso": "SSO",
+    "docserverPathFile": "Chemin du fichier stocké",
+    "showTechnicalInformations": "Afficher les informations techniques du courrier sur la page de traitement / fiche détaillée"
 }
