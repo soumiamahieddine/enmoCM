@@ -1468,11 +1468,11 @@ class SearchController
 
         $priorities = [];
         $rawPriorities = DatabaseModel::select([
-            'select' => ['count(1)', 'priority'],
-            'table'  => ['search_tmp_' . $GLOBALS['id']],
-            'where'     => $wherePriorities,
-            'data'      => $dataPriorities,
-            'groupBy'   => ['priority']
+            'select'  => ['count(1)', 'priority'],
+            'table'   => ['search_tmp_' . $GLOBALS['id']],
+            'where'   => $wherePriorities,
+            'data'    => $dataPriorities,
+            'groupBy' => ['priority']
         ]);
         if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
             foreach ($body['filters']['priorities'] as $filter) {
@@ -1510,11 +1510,11 @@ class SearchController
 
         $categories = [];
         $rawCategories = DatabaseModel::select([
-            'select' => ['count(1)', 'category_id'],
-            'table'  => ['search_tmp_' . $GLOBALS['id']],
-            'where'     => $whereCategories,
-            'data'      => $dataCategories,
-            'groupBy'   => ['category_id']
+            'select'  => ['count(1)', 'category_id'],
+            'table'   => ['search_tmp_' . $GLOBALS['id']],
+            'where'   => $whereCategories,
+            'data'    => $dataCategories,
+            'groupBy' => ['category_id']
         ]);
         if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
             foreach ($body['filters']['categories'] as $key => $filter) {
@@ -1545,11 +1545,11 @@ class SearchController
 
         $statuses = [];
         $rawStatuses = DatabaseModel::select([
-            'select' => ['count(1)', 'status'],
-            'table'  => ['search_tmp_' . $GLOBALS['id']],
-            'where'     => $whereStatuses,
-            'data'      => $dataStatuses,
-            'groupBy'   => ['status']
+            'select'  => ['count(1)', 'status'],
+            'table'   => ['search_tmp_' . $GLOBALS['id']],
+            'where'   => $whereStatuses,
+            'data'    => $dataStatuses,
+            'groupBy' => ['status']
         ]);
         if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
             foreach ($body['filters']['statuses'] as $key => $filter) {
@@ -1587,11 +1587,11 @@ class SearchController
 
         $docTypes = [];
         $rawDocTypes = DatabaseModel::select([
-            'select' => ['count(1)', 'type_id'],
-            'table'  => ['search_tmp_' . $GLOBALS['id']],
-            'where'     => $whereDocTypes,
-            'data'      => $dataDocTypes,
-            'groupBy'   => ['type_id']
+            'select'  => ['count(1)', 'type_id'],
+            'table'   => ['search_tmp_' . $GLOBALS['id']],
+            'where'   => $whereDocTypes,
+            'data'    => $dataDocTypes,
+            'groupBy' => ['type_id']
         ]);
         if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
             foreach ($body['filters']['doctypes'] as $key => $filter) {
@@ -1626,11 +1626,11 @@ class SearchController
 
         $entities = [];
         $rawEntities = DatabaseModel::select([
-            'select' => ['count(1)', 'destination'],
-            'table'  => ['search_tmp_' . $GLOBALS['id']],
-            'where'     => $whereEntities,
-            'data'      => $dataEntities,
-            'groupBy'   => ['destination']
+            'select'  => ['count(1)', 'destination'],
+            'table'   => ['search_tmp_' . $GLOBALS['id']],
+            'where'   => $whereEntities,
+            'data'    => $dataEntities,
+            'groupBy' => ['destination']
         ]);
         if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
             foreach ($body['filters']['entities'] as $key => $filter) {
@@ -1669,8 +1669,8 @@ class SearchController
         $resources = DatabaseModel::select([
             'select' => ['res_id'],
             'table'  => ['search_tmp_' . $GLOBALS['id']],
-            'where'     => $whereFolders,
-            'data'      => $dataFolders
+            'where'  => $whereFolders,
+            'data'   => $dataFolders
         ]);
         $resources = !empty($resources) ? array_column($resources, 'res_id') : [0];
 

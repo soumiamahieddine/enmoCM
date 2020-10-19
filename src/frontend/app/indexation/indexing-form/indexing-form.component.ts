@@ -1049,9 +1049,6 @@ export class IndexingFormComponent implements OnInit {
                 const controlErrors: ValidationErrors = this.indexingFormGroup.get(key).errors;
                 if (controlErrors != null) {
                     this.indexingFormGroup.controls[key].markAsTouched();
-                    /*Object.keys(controlErrors).forEach(keyError => {
-                        console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-                    });*/
                 }
             });
         }
