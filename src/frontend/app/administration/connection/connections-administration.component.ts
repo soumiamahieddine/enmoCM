@@ -87,4 +87,12 @@ export class ConnectionsAdministrationComponent implements OnInit {
         ).subscribe(); */
     }
 
+    toggleConnection(elem: any, state: boolean) {
+
+    }
+
+    delete(elem: any) {
+
+    }
+
 }
