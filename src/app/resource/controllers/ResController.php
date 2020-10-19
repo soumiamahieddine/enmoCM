@@ -1377,6 +1377,13 @@ class ResController extends ResourceControlController
         $format = strtoupper($resource['format']);
         $resource['canConvert'] = !empty($allowedFiles[$format]);
 
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_technical_infos', 'userId' => $GLOBALS['id']])) {
+            $resource = [
+                'canConvert' => $resource['canConvert'],
+                'format'     => $resource['format']
+            ];
+        }
+
         return $response->withJson(['information' => $resource]);
     }
 
