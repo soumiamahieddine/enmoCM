@@ -120,6 +120,13 @@ export class LoginComponent implements OnInit {
                 this.authService.authMode = data.authMode;
                 this.authService.authUri = data.authUri;
 
+                if (this.authService.authMode === 'keycloak') {
+                    const keycloakState = this.localStorage.get('keycloakState');
+                    if (keycloakState === null || keycloakState === 'null') {
+                        this.localStorage.save('keycloakState', data.keycloakState);
+                    }
+                }
+
                 this.initConnection();
             }),
             finalize(() => this.showForm = true),
@@ -146,9 +153,25 @@ export class LoginComponent implements OnInit {
         if (['cas', 'keycloak'].indexOf(this.authService.authMode) > -1) {
             this.loginForm.disable();
             this.loginForm.setValidators(null);
-            const regex = /ticket=[.]*/g;
-            if (window.location.search.match(regex) !== null) {
+            const regexCas = /ticket=[.]*/g;
+            const regexKeycloak = /code=[.]*/g;
+            if (window.location.search.match(regexCas) !== null || window.location.search.match(regexKeycloak) !== null) {
                 const ssoToken = window.location.search.substring(1, window.location.search.length);
+
+                const regexKeycloakState = /state=[.]*/g;
+                if (ssoToken.match(regexKeycloakState) !== null) {
+                    const params = new URLSearchParams(window.location.search.substring(1));
+                    const keycloakState = this.localStorage.get('keycloakState');
+                    const paramState = params.get('state');
+
+                    this.localStorage.save('keycloakState', null);
+
+                    if (keycloakState !== paramState && keycloakState !== null) {
+                        window.location.href = this.authService.authUri;
+                        return;
+                    }
+                }
+
                 window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
                 this.onSubmit(`?${ssoToken}`);
             } else {

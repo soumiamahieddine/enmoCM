@@ -20,8 +20,6 @@
     </METHOD>
     <METHOD>
         <ID>keycloak</ID>
-        <NAME>Keycloak</NAME>
-        <SCRIPT>keycloakConnect.php</SCRIPT>
         <ENABLED>false</ENABLED>
     </METHOD>
     <METHOD>

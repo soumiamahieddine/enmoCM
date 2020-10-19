@@ -26,6 +26,7 @@ use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
 use SrcCore\models\ValidatorModel;
+use Stevenmaguire\OAuth2\Client\Provider\Keycloak;
 use User\models\UserModel;
 
 class AuthenticationController
@@ -58,16 +59,27 @@ class AuthenticationController
             $port = (string)$casConfiguration->WEB_CAS_PORT;
             $uri = (string)$casConfiguration->WEB_CAS_CONTEXT;
             $authUri = "https://{$hostname}:{$port}{$uri}/login?service=" . UrlController::getCoreUrl() . 'dist/index.html#/login';
+        } elseif ($loggingMethod['id'] == 'keycloak') {
+            $keycloakConfig = CoreConfigModel::getKeycloakConfiguration();
+            $provider = new Keycloak($keycloakConfig);
+            $authUri = $provider->getAuthorizationUrl(['scope' => $keycloakConfig['scope']]);
+            $keycloakState = $provider->getState();
         }
 
-        return $response->withJson([
+        $return = [
             'instanceId'        => $hashedPath,
             'applicationName'   => $appName,
             'loginMessage'      => $parameter['param_value_string'] ?? null,
             'changeKey'         => $encryptKey == 'Security Key Maarch Courrier #2008',
             'authMode'          => $loggingMethod['id'],
             'authUri'           => $authUri
-        ]);
+        ];
+
+        if (!empty($keycloakState)) {
+            $return['keycloakState'] = $keycloakState;
+        }
+
+        return $response->withJson($return);
     }
 
     public function getValidUrl(Request $request, Response $response)
@@ -263,6 +275,16 @@ class AuthenticationController
             if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Authentication Failed']);
             }
+        } elseif ($loggingMethod['id'] == 'keycloak') {
+            $queryParams = $request->getQueryParams();
+            $authenticated = AuthenticationController::keycloakConnection(['code' => $queryParams['code']]);
+            if (!empty($authenticated['errors'])) {
+                return $response->withStatus(401)->withJson(['errors' => $authenticated['errors']]);
+            }
+            $login = strtolower($authenticated['login']);
+            if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+            }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'Logging method unauthorized']);
         }
@@ -312,10 +334,14 @@ class AuthenticationController
     {
         $loggingMethod = CoreConfigModel::getLoggingMethod();
 
+        $res = ['logoutUrl' => null];
         if ($loggingMethod['id'] == 'cas') {
             $res = AuthenticationController::casDisconnection();
+        } elseif ($loggingMethod['id'] == 'keycloak') {
+            $res = AuthenticationController::keycloakDisconnection();
         }
-        return $response->withJson(['logoutUrl' => $res['logoutUrl'], 'redirectUrl' => $res['redirectUrl']]);
+
+        return $response->withJson(['logoutUrl' => $res['logoutUrl']]);
     }
 
     private static function standardConnection(array $args)
@@ -461,7 +487,69 @@ class AuthenticationController
         \phpCAS::setFixedServiceURL(UrlController::getCoreUrl() . 'dist/index.html');
         \phpCAS::setNoClearTicketsFromUrl();
         $logoutUrl = \phpCAS::getServerLogoutURL();
-        return ['logoutUrl' => $logoutUrl, 'redirectUrl' => UrlController::getCoreUrl() . 'dist/index.html'];
+        return ['logoutUrl' => $logoutUrl];
+    }
+
+    private static function keycloakConnection(array $args)
+    {
+        $keycloakConfig = CoreConfigModel::getKeycloakConfiguration();
+
+        if (empty($keycloakConfig) || empty($keycloakConfig['authServerUrl']) || empty($keycloakConfig['realm']) || empty($keycloakConfig['clientId']) || empty($keycloakConfig['clientSecret']) || empty($keycloakConfig['redirectUri'])) {
+            return ['errors' => 'Keycloak not configured'];
+        }
+
+        $provider = new Keycloak($keycloakConfig);
+
+        try {
+            $token = $provider->getAccessToken('authorization_code', ['code' => $args['code']]);
+        } catch (\Exception $e) {
+            return ['errors' => 'Authentication Failed'];
+        }
+
+        try {
+            // We got an access token, let's now get the user's details
+            $user = $provider->getResourceOwner($token);
+
+            $login = $user->getId();
+            $keycloakAccessToken = $token->getToken();
+
+            $userMaarch = UserModel::getByLogin(['login' => $login, 'select' => ['id', 'external_id']]);
+
+            if (empty($userMaarch)) {
+                return ['errors' => 'Authentication Failed'];
+            }
+
+            $userMaarch['external_id'] = json_decode($userMaarch['external_id'], true);
+            $userMaarch['external_id']['keycloakAccessToken'] = $keycloakAccessToken;
+            $userMaarch['external_id'] = json_encode($userMaarch['external_id']);
+
+            UserModel::updateExternalId(['id' => $userMaarch['id'], 'externalId' => $userMaarch['external_id']]);
+
+            return ['login' => $login];
+        } catch (\Exception $e) {
+            return ['errors' => 'Authentication Failed'];
+        }
+    }
+
+    private static function keycloakDisconnection()
+    {
+        $keycloakConfig = CoreConfigModel::getKeycloakConfiguration();
+
+        $provider = new Keycloak($keycloakConfig);
+
+        $externalId = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['external_id']]);
+        $externalId = json_decode($externalId['external_id'], true);
+        $accessToken = $externalId['keycloakAccessToken'];
+        unset($externalId['keycloakAccessToken']);
+        UserModel::update([
+            'set'   => ['external_id' => json_encode($externalId)],
+            'where' => ['id = ?'],
+            'data'  => [$GLOBALS['id']]
+        ]);
+
+        $url = $provider->getLogoutUrl(['client_id' => $keycloakConfig['clientId'], 'refresh_token' => $accessToken]);
+
+        return ['logoutUrl' => $url];
     }
 
     public function getRefreshedToken(Request $request, Response $response)

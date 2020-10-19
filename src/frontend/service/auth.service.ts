@@ -102,7 +102,7 @@ export class AuthService {
         this.http.get('../rest/authenticate/logout').pipe(
             tap(async (data: any) => {
                 this.redirectAfterLogout(cleanUrl);
-                window.location.href = data.logoutUrl + '?service=' + encodeURI(data.redirectUrl);
+                window.location.href = data.logoutUrl;
             })
         ).subscribe();
     }
