@@ -1314,9 +1314,9 @@ class SearchController
         $dataDocTypes    = $queryData;
         $dataFolders     = $queryData;
 
-        if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
+        if (!empty($body['filters']['priorities']['values']) && is_array($body['filters']['priorities']['values'])) {
             $priorities = [];
-            foreach ($body['filters']['priorities'] as $filter) {
+            foreach ($body['filters']['priorities']['values'] as $filter) {
                 if ($filter['selected']) {
                     $priorities[] = $filter['id'];
                 }
@@ -1341,9 +1341,9 @@ class SearchController
                 $dataFolders[]      = $priorities;
             }
         }
-        if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
+        if (!empty($body['filters']['categories']['values']) && is_array($body['filters']['categories']['values'])) {
             $categories = [];
-            foreach ($body['filters']['categories'] as $filter) {
+            foreach ($body['filters']['categories']['values'] as $filter) {
                 if ($filter['selected']) {
                     $categories[] = $filter['id'];
                 }
@@ -1364,9 +1364,9 @@ class SearchController
                 $dataFolders[]      = $categories;
             }
         }
-        if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
+        if (!empty($body['filters']['statuses']['values']) && is_array($body['filters']['statuses']['values'])) {
             $statuses = [];
-            foreach ($body['filters']['statuses'] as $filter) {
+            foreach ($body['filters']['statuses']['values'] as $filter) {
                 if ($filter['selected']) {
                     $statuses[] = $filter['id'];
                 }
@@ -1391,9 +1391,9 @@ class SearchController
                 $dataFolders[]      = $statuses;
             }
         }
-        if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
+        if (!empty($body['filters']['doctypes']['values']) && is_array($body['filters']['doctypes']['values'])) {
             $doctypes = [];
-            foreach ($body['filters']['doctypes'] as $filter) {
+            foreach ($body['filters']['doctypes']['values'] as $filter) {
                 if ($filter['selected']) {
                     $doctypes[] = $filter['id'];
                 }
@@ -1414,9 +1414,9 @@ class SearchController
                 $dataFolders[]      = $doctypes;
             }
         }
-        if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
+        if (!empty($body['filters']['entities']['values']) && is_array($body['filters']['entities']['values'])) {
             $entities = [];
-            foreach ($body['filters']['entities'] as $filter) {
+            foreach ($body['filters']['entities']['values'] as $filter) {
                 if ($filter['selected']) {
                     $entities[] = $filter['id'];
                 }
@@ -1442,9 +1442,9 @@ class SearchController
             }
         }
 
-        if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
+        if (!empty($body['filters']['folders']['values']) && is_array($body['filters']['folders']['values'])) {
             $folders = [];
-            foreach ($body['filters']['folders'] as $filter) {
+            foreach ($body['filters']['folders']['values'] as $filter) {
                 if ($filter['selected']) {
                     $folders[] = $filter['id'];
                 }
@@ -1474,8 +1474,8 @@ class SearchController
             'data'      => $dataPriorities,
             'groupBy'   => ['priority']
         ]);
-        if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
-            foreach ($body['filters']['priorities'] as $filter) {
+        if (!empty($body['filters']['priorities']['values']) && is_array($body['filters']['priorities']['values'])) {
+            foreach ($body['filters']['priorities']['values'] as $filter) {
                 $count = 0;
                 foreach ($rawPriorities as $value) {
                     if ($filter['id'] === $value['priority']) {
@@ -1489,6 +1489,10 @@ class SearchController
                     'selected'  => $filter['selected']
                 ];
             }
+            $priorities = [
+                'values'    => $priorities,
+                'expand'    => $body['filters']['priorities']['expand']
+            ];
         } elseif (!empty($rawPriorities)) {
             $resourcesPriorities = array_column($rawPriorities, 'priority');
             $prioritiesData      = PriorityModel::get(['select' => ['label', 'id'], 'where' => ['id in (?)'], 'data' => [$resourcesPriorities]]);
@@ -1506,6 +1510,10 @@ class SearchController
                     'selected'  => false
                 ];
             }
+            $priorities = [
+                'values'    => $priorities,
+                'expand'    => false
+            ];
         }
 
         $categories = [];
@@ -1516,8 +1524,8 @@ class SearchController
             'data'      => $dataCategories,
             'groupBy'   => ['category_id']
         ]);
-        if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
-            foreach ($body['filters']['categories'] as $key => $filter) {
+        if (!empty($body['filters']['categories']['values']) && is_array($body['filters']['categories']['values'])) {
+            foreach ($body['filters']['categories']['values'] as $key => $filter) {
                 $count = 0;
                 foreach ($rawCategories as $value) {
                     if ($filter['id'] === $value['category_id']) {
@@ -1531,6 +1539,10 @@ class SearchController
                     'selected'  => $filter['selected']
                 ];
             }
+            $categories = [
+                'values'    => $categories,
+                'expand'    => $body['filters']['categories']['expand']
+            ];
         } else {
             foreach ($rawCategories as $value) {
                 $label = ResModel::getCategoryLabel(['categoryId' => $value['category_id']]);
@@ -1541,6 +1553,10 @@ class SearchController
                     'selected'  => false
                 ];
             }
+            $categories = [
+                'values'    => $categories,
+                'expand'    => false
+            ];
         }
 
         $statuses = [];
@@ -1551,8 +1567,8 @@ class SearchController
             'data'      => $dataStatuses,
             'groupBy'   => ['status']
         ]);
-        if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
-            foreach ($body['filters']['statuses'] as $key => $filter) {
+        if (!empty($body['filters']['statuses']['values']) && is_array($body['filters']['statuses']['values'])) {
+            foreach ($body['filters']['statuses']['values'] as $key => $filter) {
                 $count = 0;
                 foreach ($rawStatuses as $value) {
                     if ($filter['id'] === $value['status']) {
@@ -1566,6 +1582,10 @@ class SearchController
                     'selected'  => $filter['selected']
                 ];
             }
+            $statuses = [
+                'values'    => $statuses,
+                'expand'    => $body['filters']['statuses']['expand']
+            ];
         } elseif (!empty($rawStatuses)) {
             $resourcesStatuses = array_column($rawStatuses, 'status');
             $statusesData      = StatusModel::get(['select' => ['label_status', 'id'], 'where' => ['id in (?)'], 'data' => [$resourcesStatuses]]);
@@ -1583,6 +1603,10 @@ class SearchController
                     'selected'  => false
                 ];
             }
+            $statuses = [
+                'values'    => $statuses,
+                'expand'    => false
+            ];
         }
 
         $docTypes = [];
@@ -1593,8 +1617,8 @@ class SearchController
             'data'      => $dataDocTypes,
             'groupBy'   => ['type_id']
         ]);
-        if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
-            foreach ($body['filters']['doctypes'] as $key => $filter) {
+        if (!empty($body['filters']['doctypes']['values']) && is_array($body['filters']['doctypes']['values'])) {
+            foreach ($body['filters']['doctypes']['values'] as $key => $filter) {
                 $count = 0;
                 foreach ($rawDocTypes as $value) {
                     if ($filter['id'] === $value['type_id']) {
@@ -1608,6 +1632,10 @@ class SearchController
                     'selected'  => $filter['selected']
                 ];
             }
+            $docTypes = [
+                'values'    => $docTypes,
+                'expand'    => $body['filters']['doctypes']['expand']
+            ];
         } elseif (!empty($rawDocTypes)) {
             $resourcesDoctypes = array_column($rawDocTypes, 'type_id');
             $doctypesData      = DoctypeModel::get(['select' => ['description', 'type_id'], 'where' => ['type_id in (?)'], 'data' => [$resourcesDoctypes]]);
@@ -1622,6 +1650,10 @@ class SearchController
                     'selected'  => false
                 ];
             }
+            $docTypes = [
+                'values'    => $docTypes,
+                'expand'    => false
+            ];
         }
 
         $entities = [];
@@ -1632,8 +1664,8 @@ class SearchController
             'data'      => $dataEntities,
             'groupBy'   => ['destination']
         ]);
-        if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
-            foreach ($body['filters']['entities'] as $key => $filter) {
+        if (!empty($body['filters']['entities']['values']) && is_array($body['filters']['entities']['values'])) {
+            foreach ($body['filters']['entities']['values'] as $key => $filter) {
                 $count = 0;
                 foreach ($rawEntities as $value) {
                     if ($filter['id'] === $value['destination']) {
@@ -1647,6 +1679,10 @@ class SearchController
                     'selected'  => $filter['selected']
                 ];
             }
+            $entities = [
+                'values'    => $entities,
+                'expand'    => $body['filters']['entities']['expand']
+            ];
         } elseif (!empty($rawEntities)) {
             $resourcesEntities = array_column($rawEntities, 'destination');
             $entitiesData      = EntityModel::get(['select' => ['entity_label', 'entity_id'], 'where' => ['entity_id in (?)'], 'data' => [$resourcesEntities]]);
@@ -1664,11 +1700,15 @@ class SearchController
                     'selected'  => false
                 ];
             }
+            $entities = [
+                'values'    => $entities,
+                'expand'    => false
+            ];
         }
 
         $resources = DatabaseModel::select([
-            'select' => ['res_id'],
-            'table'  => ['search_tmp_' . $GLOBALS['id']],
+            'select'    => ['res_id'],
+            'table'     => ['search_tmp_' . $GLOBALS['id']],
             'where'     => $whereFolders,
             'data'      => $dataFolders
         ]);
@@ -1700,8 +1740,8 @@ class SearchController
         }
 
         $folders = [];
-        if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
-            foreach ($body['filters']['folders'] as $key => $filter) {
+        if (!empty($body['filters']['folders']['values']) && is_array($body['filters']['folders']['values'])) {
+            foreach ($body['filters']['folders']['values'] as $key => $filter) {
                 $count = 0;
                 foreach ($rawFolders as $value) {
                     if ($filter['id'] == $value['id']) {
@@ -1715,6 +1755,10 @@ class SearchController
                     'selected'  => $filter['selected']
                 ];
             }
+            $folders = [
+                'values'    => $folders,
+                'expand'    => $body['filters']['folders']['expand']
+            ];
         } else {
             foreach ($rawFolders as $value) {
                 $folders[] = [
@@ -1724,14 +1768,18 @@ class SearchController
                     'selected'  => false
                 ];
             }
+            $folders = [
+                'values'    => $folders,
+                'expand'    => false
+            ];
         }
 
-        usort($priorities, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
-        usort($categories, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
-        usort($statuses, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
-        usort($docTypes, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
-        usort($entities, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
-        usort($folders, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+        usort($priorities['values'], ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+        usort($categories['values'], ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+        usort($statuses['values'], ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+        usort($docTypes['values'], ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+        usort($entities['values'], ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+        usort($folders['values'], ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
 
         return ['priorities' => $priorities, 'categories' => $categories, 'statuses' => $statuses, 'doctypes' => $docTypes, 'entities' => $entities, 'folders' => $folders];
     }
