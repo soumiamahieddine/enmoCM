@@ -42,7 +42,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
@@ -841,22 +840,8 @@ class SearchController
                         ]);
                     }
                     if (in_array(null, $value['values'])) {
-                        $diffListType = [];
-                        if ($roleId == 'dest' || $roleId == 'cc' || $roleId == 'avis') {
-                            $diffListType[] = 'entity_id';
-                        }
-                        if ($roleId == 'visa' || $roleId == 'sign') {
-                            $diffListType[] = 'VISA_CIRCUIT';
-                        }
-                        if ($roleId == 'avis' || $roleId == 'avis_cc') {
-                            $diffListType[] = 'AVIS_CIRCUIT';
-                        }
                         $args['searchWhere'][] = 'res_id not in (select res_id from listinstance where item_mode = ?)';
                         $args['searchData'][] = $roleId;
-                        if (!empty($diffListType)) {
-                            $args['searchWhere'][] = 'res_id in (select res_id from listinstance where difflist_type in (?))';
-                            $args['searchData'][] = $diffListType;
-                        }
                     }
                     if (empty($rolesMatch)) {
                         continue;
