@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
 
         let url = '../rest/authenticate';
 
-        if (ssoToken === null) {
+        if (ssoToken !== null) {
             url += ssoToken;
         }
 
