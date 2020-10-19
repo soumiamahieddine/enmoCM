@@ -397,7 +397,7 @@ class MergeController
         $data = [
             'chrono'      => $prefix . $args['chrono'],
             'resIdMaster' => $args['resIdMaster'],
-            'originId'    => $args['originId'],
+            'resId'       => $args['resId'],
             'title'       => $args['title']
         ];
         $data = json_encode($data);
