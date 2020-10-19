@@ -51,14 +51,15 @@ class SearchModel
 
     public static function getTemporarySearchData(array $args)
     {
-        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy', 'groupBy']);
 
         $data = DatabaseModel::select([
             'select'   => $args['select'],
             'table'    => ['search_tmp_' . $GLOBALS['id']],
             'where'    => $args['where'],
             'data'     => $args['data'],
-            'order_by' => $args['orderBy']
+            'order_by' => $args['orderBy'],
+            'groupBy'  => $args['groupBy'],
         ]);
 
         return $data;

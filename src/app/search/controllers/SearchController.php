@@ -44,7 +44,6 @@ use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
-use SrcCore\models\DatabasePDO;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
@@ -1462,9 +1461,8 @@ class SearchController
         }
 
         $priorities = [];
-        $rawPriorities = DatabaseModel::select([
+        $rawPriorities = SearchModel::getTemporarySearchData([
             'select'  => ['count(1)', 'priority'],
-            'table'   => ['search_tmp_' . $GLOBALS['id']],
             'where'   => $wherePriorities,
             'data'    => $dataPriorities,
             'groupBy' => ['priority']
@@ -1512,9 +1510,8 @@ class SearchController
         }
 
         $categories = [];
-        $rawCategories = DatabaseModel::select([
+        $rawCategories = SearchModel::getTemporarySearchData([
             'select'  => ['count(1)', 'category_id'],
-            'table'   => ['search_tmp_' . $GLOBALS['id']],
             'where'   => $whereCategories,
             'data'    => $dataCategories,
             'groupBy' => ['category_id']
@@ -1555,9 +1552,8 @@ class SearchController
         }
 
         $statuses = [];
-        $rawStatuses = DatabaseModel::select([
+        $rawStatuses = SearchModel::getTemporarySearchData([
             'select'  => ['count(1)', 'status'],
-            'table'   => ['search_tmp_' . $GLOBALS['id']],
             'where'   => $whereStatuses,
             'data'    => $dataStatuses,
             'groupBy' => ['status']
@@ -1605,9 +1601,8 @@ class SearchController
         }
 
         $docTypes = [];
-        $rawDocTypes = DatabaseModel::select([
+        $rawDocTypes = SearchModel::getTemporarySearchData([
             'select'  => ['count(1)', 'type_id'],
-            'table'   => ['search_tmp_' . $GLOBALS['id']],
             'where'   => $whereDocTypes,
             'data'    => $dataDocTypes,
             'groupBy' => ['type_id']
@@ -1652,9 +1647,8 @@ class SearchController
         }
 
         $entities = [];
-        $rawEntities = DatabaseModel::select([
+        $rawEntities = SearchModel::getTemporarySearchData([
             'select'  => ['count(1)', 'destination'],
-            'table'   => ['search_tmp_' . $GLOBALS['id']],
             'where'   => $whereEntities,
             'data'    => $dataEntities,
             'groupBy' => ['destination']
@@ -1701,9 +1695,8 @@ class SearchController
             ];
         }
 
-        $resources = DatabaseModel::select([
+        $resources = SearchModel::getTemporarySearchData([
             'select' => ['res_id'],
-            'table'  => ['search_tmp_' . $GLOBALS['id']],
             'where'  => $whereFolders,
             'data'   => $dataFolders
         ]);
