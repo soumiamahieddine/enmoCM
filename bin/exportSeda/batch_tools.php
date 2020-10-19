@@ -140,39 +140,6 @@ function Bt_writeLog($args = [])
     ]);
 }
 
-function Bt_createAttachment($args = [])
-{
-    $opts = [
-        CURLOPT_URL => rtrim($GLOBALS['applicationUrl'], "/") . '/rest/attachments',
-        CURLOPT_HTTPHEADER => [
-            'accept:application/json',
-            'content-type:application/json',
-            'Authorization: Basic ' . base64_encode($GLOBALS['userWS']. ':' .$GLOBALS['passwordWS']),
-        ],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_POSTFIELDS => json_encode($args),
-        CURLOPT_POST => true
-    ];
-
-    $curl = curl_init();
-    curl_setopt_array($curl, $opts);
-    $rawResponse = curl_exec($curl);
-    $error       = curl_error($curl);
-    if (!empty($error)) {
-        Bt_writeLog(['level' => 'ERROR', 'message' => $error]);
-        exit;
-    }
-
-    $return = json_decode($rawResponse, true);
-    if (!empty($return['errors'])) {
-        Bt_writeLog(['level' => 'ERROR', 'message' => $return['errors']]);
-        exit;
-    }
-
-    return $return;
-}
-
 function Bt_getReply($args = [])
 {
     $refEncode = str_replace('.', '%2E', urlencode($args['reference']));
