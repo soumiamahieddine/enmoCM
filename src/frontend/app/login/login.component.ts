@@ -65,8 +65,15 @@ export class LoginComponent implements OnInit {
 
     onSubmit(ssoToken = null) {
         this.loading = true;
+
+        let url = '../rest/authenticate';
+
+        if (ssoToken !== null) {
+            url += ssoToken;
+        }
+
         this.http.post(
-            '../rest/authenticate?' + ssoToken,
+            url,
             {
                 'login': this.loginForm.get('login').value,
                 'password': this.loginForm.get('password').value,
@@ -113,18 +120,7 @@ export class LoginComponent implements OnInit {
                 this.authService.authMode = data.authMode;
                 this.authService.authUri = data.authUri;
 
-                if (['cas', 'keycloak'].indexOf(this.authService.authMode) > -1) {
-                    this.loginForm.disable();
-                    this.loginForm.setValidators(null);
-                    const regex = /ticket=[.]*/g;
-                    if (window.location.search.match(regex) !== null) {
-                        const ssoToken = window.location.search.substring(1, window.location.search.length);
-                        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-                        this.onSubmit(ssoToken);
-                    } else {
-                        window.location.href = this.authService.authUri;
-                    }
-                }
+                this.initConnection();
             }),
             finalize(() => this.showForm = true),
             catchError((err: any) => {
@@ -144,5 +140,20 @@ export class LoginComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    initConnection() {
+        if (['cas', 'keycloak'].indexOf(this.authService.authMode) > -1) {
+            this.loginForm.disable();
+            this.loginForm.setValidators(null);
+            const regex = /ticket=[.]*/g;
+            if (window.location.search.match(regex) !== null) {
+                const ssoToken = window.location.search.substring(1, window.location.search.length);
+                window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+                this.onSubmit(`?${ssoToken}`);
+            } else {
+                window.location.href = this.authService.authUri;
+            }
+        }
     }
 }
