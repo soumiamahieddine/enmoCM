@@ -9,7 +9,7 @@
     </mat-icon>&nbsp;<span [innerHTML]="this.currentResource.chrono"></span>
 </div>
 <div style="text-align: center;font-weight: bold;margin-bottom: 30px;padding-left: 10px;padding-right: 10px;"
-    title="{{this.currentResource.subject}}" [innerHTML]="this.currentResource.subject | shorten: 50: '...'">
+    title="{{this.currentResource.subject | stripTags}}" [innerHTML]="this.currentResource.subject | shorten: 50: '...'">
 </div>
 <mat-tab-group *ngIf="this.mode == 'diffusion'" [(selectedIndex)]="selectedDiffusionTab" class="diffusionTab">
     <mat-tab label="{{'lang.diffusionList' | translate}}">
