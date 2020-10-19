@@ -37,6 +37,7 @@ use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
 use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
+use Search\models\SearchModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\AutoCompleteController;
@@ -119,24 +120,16 @@ class SearchController
             $searchData[]  = $nonSearchableStatuses;
         }
 
-        $db = new DatabasePDO();
-        $db->beginTransaction();
-        $query = "DROP TABLE IF EXISTS search_tmp_".$GLOBALS['id'].";";
-        $db->query($query);
-        $query = "CREATE TEMPORARY TABLE search_tmp_".$GLOBALS['id']." (res_id bigint, priority character varying(16), type_id bigint, destination character varying(50), status character varying(10), category_id character varying(32)) ON COMMIT DROP;";
-        $db->query($query);
-
-        $resourcesBeforeFilters = "SELECT res_id, priority, type_id, destination, status, category_id FROM res_view_letterbox WHERE " . implode(' AND ', $searchWhere);
-        $query = "INSERT INTO search_tmp_".$GLOBALS['id']." (res_id, priority, type_id, destination, status, category_id)" . $resourcesBeforeFilters;
-        $db->query($query, $searchData);
+        // Begin transaction for temporarySearchData
+        DatabaseModel::beginTransaction();
+        SearchModel::createTemporarySearchData(['where' => $searchWhere, 'data' => $searchData]);
 
         $filters = [];
         if (empty($queryParams['filters'])) {
             $filters = SearchController::getFilters(['body' => $body]);
         }
-        $db->commitTransaction();
 
-        $searchClause = SearchController::getFiltersClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        $searchClause = SearchController::getFiltersClause(['body' => $body]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
@@ -157,16 +150,17 @@ class SearchController
         $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate', 'category', 'destUser', 'processLimitDate', 'entityLabel'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date', 'category_id', 'dest_user', 'process_limit_date', 'entity_label'], $queryParams['order']);
         $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date', 'category_id', 'dest_user', 'process_limit_date', 'entity_label', 'priority']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
-        $allResources = ResModel::getOnView([
-            'select'    => ['res_id as "resId"'],
-            'where'     => $searchWhere,
-            'data'      => $searchData,
-            'orderBy'   => $orderBy
+        $allResources = SearchModel::getTemporarySearchData([
+            'select'  => ['res_id'],
+            'where'   => $searchWhere,
+            'data'    => $searchData,
+            'orderBy' => $orderBy
         ]);
+        DatabaseModel::commitTransaction();
         if (empty($allResources[$offset])) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => [], 'filters' => $filters]);
         }
-        $allResources = array_column($allResources, 'resId');
+        $allResources = array_column($allResources, 'res_id');
 
         $resIds = [];
         $order  = 'CASE res_id ';
@@ -1197,10 +1191,11 @@ class SearchController
 
     private static function getFiltersClause(array $args)
     {
-        ValidatorModel::notEmpty($args, ['searchWhere', 'searchData']);
-        ValidatorModel::arrayType($args, ['body', 'searchWhere', 'searchData']);
+        ValidatorModel::arrayType($args, ['body']);
 
-        $body = $args['body'];
+        $body        = $args['body'];
+        $searchWhere = [];
+        $searchData  = [];
 
         if (!empty($body['filters'])) {
             if (!empty($body['filters']['doctypes']) && is_array($body['filters']['doctypes'])) {
@@ -1211,8 +1206,8 @@ class SearchController
                     }
                 }
                 if (!empty($doctypes)) {
-                    $args['searchWhere'][] = 'type_id in (?)';
-                    $args['searchData'][] = $doctypes;
+                    $searchWhere[] = 'type_id in (?)';
+                    $searchData[]  = $doctypes;
                 }
             }
             if (!empty($body['filters']['categories']) && is_array($body['filters']['categories'])) {
@@ -1223,8 +1218,8 @@ class SearchController
                     }
                 }
                 if (!empty($categories)) {
-                    $args['searchWhere'][] = 'category_id in (?)';
-                    $args['searchData'][] = $categories;
+                    $searchWhere[] = 'category_id in (?)';
+                    $searchData[]  = $categories;
                 }
             }
             if (!empty($body['filters']['priorities']) && is_array($body['filters']['priorities'])) {
@@ -1236,11 +1231,11 @@ class SearchController
                 }
                 if (!empty($priorities)) {
                     if (in_array(null, $priorities)) {
-                        $args['searchWhere'][] = '(priority in (?) OR priority is NULL)';
+                        $searchWhere[] = '(priority in (?) OR priority is NULL)';
                     } else {
-                        $args['searchWhere'][] = 'priority in (?)';
+                        $searchWhere[] = 'priority in (?)';
                     }
-                    $args['searchData'][] = $priorities;
+                    $searchData[] = $priorities;
                 }
             }
             if (!empty($body['filters']['statuses']) && is_array($body['filters']['statuses'])) {
@@ -1252,11 +1247,11 @@ class SearchController
                 }
                 if (!empty($statuses)) {
                     if (in_array(null, $statuses)) {
-                        $args['searchWhere'][] = '(status in (?) OR status is NULL)';
+                        $searchWhere[] = '(status in (?) OR status is NULL)';
                     } else {
-                        $args['searchWhere'][] = 'status in (?)';
+                        $searchWhere[] = 'status in (?)';
                     }
-                    $args['searchData'][] = $statuses;
+                    $searchData[] = $statuses;
                 }
             }
             if (!empty($body['filters']['entities']) && is_array($body['filters']['entities'])) {
@@ -1268,11 +1263,11 @@ class SearchController
                 }
                 if (!empty($entities)) {
                     if (in_array(null, $entities)) {
-                        $args['searchWhere'][] = '(destination in (?) OR destination is NULL)';
+                        $searchWhere[] = '(destination in (?) OR destination is NULL)';
                     } else {
-                        $args['searchWhere'][] = 'destination in (?)';
+                        $searchWhere[] = 'destination in (?)';
                     }
-                    $args['searchData'][] = $entities;
+                    $searchData[] = $entities;
                 }
             }
             if (!empty($body['filters']['folders']) && is_array($body['filters']['folders'])) {
@@ -1283,13 +1278,13 @@ class SearchController
                     }
                 }
                 if (!empty($folders)) {
-                    $args['searchWhere'][] = 'res_id in (select distinct res_id from resources_folders where folder_id in (?))';
-                    $args['searchData'][] = $folders;
+                    $searchWhere[] = 'res_id in (select distinct res_id from resources_folders where folder_id in (?))';
+                    $searchData[]  = $folders;
                 }
             }
         }
 
-        return ['searchWhere' => $args['searchWhere'], 'searchData' => $args['searchData']];
+        return ['searchWhere' => $searchWhere, 'searchData' => $searchData];
     }
 
     private static function getFilters(array $args)
