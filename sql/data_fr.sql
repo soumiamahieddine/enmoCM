@@ -1627,7 +1627,7 @@ Select setval('templates_association_id_seq', (select max(id)+1 from templates_a
 UPDATE entities SET business_id = concat('45239273100025/',entity_id);
 
 UPDATE entities SET business_id = concat('45239273100025/',entity_id);
--- UPDATE entities SET archival_agreement = 'MAARCH_LES_BAINS_ACTES_V2';
+--UPDATE entities SET archival_agreement = 'MAARCH_LES_BAINS_ACTES_V2';
 
 UPDATE doctypes SET retention_final_disposition = 'destruction';
 UPDATE doctypes SET retention_rule = 'compta_3_03';
