@@ -41,7 +41,7 @@ trait ExportSEDATrait
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources', 'alt_identifier', 'admission_date', 'creation_date', 'modification_date']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources', 'alt_identifier', 'admission_date', 'creation_date', 'modification_date', 'doc_date']]);
         if (empty($resource)) {
             return ['errors' => ['resource does not exists']];
         } elseif (empty($resource['destination'])) {
@@ -128,6 +128,7 @@ trait ExportSEDATrait
             ],
             'descriptionLevel'          => $args['data']['archiveDescriptionLevel'],
             'receivedDate'              => $resource['admission_date'],
+            'documentDate'              => $resource['doc_date'],
             'creationDate'              => $resource['creation_date'],
             'modificationDate'          => $resource['modification_date'],
             'retentionRule'             => $initData['data']['doctype']['retentionRule'],
