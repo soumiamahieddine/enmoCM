@@ -1964,7 +1964,7 @@
     "argumentRegisteredMailWarrantyEmpty": "La donnée registeredMail_warranty est vide ou non valide pour un recommandé.",
     "argumentRegisteredMailWarrantyNotAllowed": "La donnée registeredMail_warranty n'est pas autorisé pour ce type pour un recommandé.",
     "argumentRegisteredMailIssuingSiteEmpty": "La donnée registeredMail_issuingSite est vide ou n'existe pas pour un recommandé.",
-    "argumentRegisteredMailRecipientEmpty": "Une des données du destinataire est vide pour un recommandé.",
+    "argumentRegisteredMailRecipientEmpty": "Le destinataire doit avoir une organisation ou un prénom/nom, et tous ces champs renseignés : rue, code postal, ville, pays",
     "argumentCategoryNotValid": "La catégorie n'est pas valide pour un recommandé.",
     "argumentDoctypeEmpty": "Le type de document n'est pas renseigné pour un recommandé.",
     "NoRangeAvailable": "Pas de plage disponible pour un recommandé.",
