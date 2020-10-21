@@ -146,7 +146,7 @@ export class DiffusionsListComponent implements OnInit {
                 return {
                     item_mode: role,
                     item_type: item.type,
-                    itemSerialId: item.type,
+                    itemSerialId: item.id,
                     itemId: '',
                     itemLabel: item.labelToDisplay,
                     itemSubLabel: item.descriptionToDisplay,
