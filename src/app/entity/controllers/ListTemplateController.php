@@ -320,7 +320,7 @@ class ListTemplateController
             $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$listTemplate['id']]]);
             foreach ($listTemplateItems as $itemKey => $value) {
                 if ($value['item_type'] == 'entity') {
-                    $listTemplateItems[$itemKey]['labelToDisplay'] = Entitymodel::getById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                    $listTemplateItems[$itemKey]['labelToDisplay'] = EntityModel::getById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
                     $listTemplateItems[$itemKey]['descriptionToDisplay'] = '';
                 } else {
                     $user = UserModel::getById(['id' => $value['item_id'], 'select' => ['firstname', 'lastname', 'external_id']]);
@@ -421,7 +421,7 @@ class ListTemplateController
             $type = $aArgs['typeId'] == 'entity_id' ? 'diffusionList' : ($aArgs['typeId'] == 'VISA_CIRCUIT' ? 'visaCircuit' : 'opinionCircuit');
             $listTemplates = ListTemplateModel::getWithItems(['select' => ['DISTINCT entity_id'], 'where' => ['type = ?', 'item_mode = ?', 'entity_id is not null'], 'data' => [$type, $roles[$key]['id']]]);
             foreach ($listTemplates as $listTemplate) {
-                $entity = Entitymodel::getById(['select' => ['short_label'], 'id' => $listTemplate['entity_id']]);
+                $entity = EntityModel::getById(['select' => ['short_label'], 'id' => $listTemplate['entity_id']]);
                 $roles[$key]['usedIn'][] = $entity['short_label'];
             }
         }
