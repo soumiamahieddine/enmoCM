@@ -402,8 +402,6 @@ class MergeController
         ];
         $data = json_encode($data);
         $qrCode = new QrCode($data);
-        $qrCode->setSize(400);
-        $qrCode->setMargin(25);
         $qrCode->writeFile($qrcodeFile);
 
         if (!empty($args['path'])) {
