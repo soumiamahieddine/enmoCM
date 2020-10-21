@@ -6,16 +6,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '@service/app.service';
 import { HeaderService } from '@service/header.service';
 import { NotificationService } from '@service/notification/notification.service';
-import { of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { AdministrationService } from '../administration.service';
+import { AdministrationService } from '../../administration.service';
 
 @Component({
-    selector: 'app-connections-administration',
-    templateUrl: './connections-administration.component.html',
-    styleUrls: ['./connections-administration.component.scss']
+    selector: 'app-sso-list-administration',
+    templateUrl: './sso-list-administration.component.html',
+    styleUrls: ['./sso-list-administration.component.scss']
 })
-export class ConnectionsAdministrationComponent implements OnInit {
+export class SsoListAdministrationComponent implements OnInit {
 
     loading: boolean = true;
 
@@ -32,8 +30,10 @@ export class ConnectionsAdministrationComponent implements OnInit {
         }
     ];
 
-    displayedColumns = ['id', 'label', 'actions'];
+    displayedColumns = ['id', 'label'];
     filterColumns = ['id', 'label'];
+
+    currentConnection = 1;
 
     connections: any[] = [];
 
@@ -59,17 +59,11 @@ export class ConnectionsAdministrationComponent implements OnInit {
             {
                 id: 1,
                 label: 'Connexion SSO',
-                enabled: true
             },
-            {
-                id: 1,
-                label: 'Connexion SSO2',
-                enabled: false
-            }
         ];
         this.loading = false;
         setTimeout(() => {
-            this.adminService.setDataSource('admin_groups', this.connections, this.sort, this.paginator, this.filterColumns);
+            this.adminService.setDataSource('admin_sso', this.connections, this.sort, this.paginator, this.filterColumns);
         }, 0);
 
         /* this.http.get('../rest/???').pipe(
@@ -77,7 +71,7 @@ export class ConnectionsAdministrationComponent implements OnInit {
                 this.connections =  data;
                 this.loading = false;
                 setTimeout(() => {
-                    this.adminService.setDataSource('admin_groups', this.connections, this.sort, this.paginator, this.filterColumns);
+                    this.adminService.setDataSource('admin_sso', this.connections, this.sort, this.paginator, this.filterColumns);
                 }, 0);
             }),
             catchError((err: any) => {
@@ -85,10 +79,6 @@ export class ConnectionsAdministrationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe(); */
-    }
-
-    toggleConnection(elem: any, state: boolean) {
-
     }
 
     delete(elem: any) {

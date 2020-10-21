@@ -75,7 +75,8 @@ import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
 import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
 import { SearchAdministrationComponent } from './search/search-administration.component';
-import { ConnectionsAdministrationComponent } from './connection/connections-administration.component';
+import { SsoListAdministrationComponent } from './connection/sso/sso-list-administration.component';
+import { SsoAdministrationComponent } from './connection/sso/sso-administration.component';
 
 
 @NgModule({
@@ -160,7 +161,8 @@ import { ConnectionsAdministrationComponent } from './connection/connections-adm
         IssuingSiteComponent,
         RegisteredMailListComponent,
         SearchAdministrationComponent,
-        ConnectionsAdministrationComponent
+        SsoListAdministrationComponent,
+        SsoAdministrationComponent
     ],
     entryComponents: [
         AccountLinkComponent,

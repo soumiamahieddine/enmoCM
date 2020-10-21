@@ -1,0 +1,55 @@
+<mat-sidenav-container autosize class="maarch-container">
+    <ng-template #adminMenuTemplate>
+        <mat-nav-list>
+            <a mat-list-item *ngFor="let menu of subMenus" [class.active]="menu.current" [routerLink]="menu.route">
+                <mat-icon color="primary" mat-list-icon [class]="menu.icon"></mat-icon>
+                <p mat-line>
+                    {{menu.label}}
+                </p>
+            </a>
+        </mat-nav-list>
+    </ng-template>
+    <mat-sidenav-content>
+        <div class="bg-head">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
+                <div class="bg-head-title-label">
+                    <header-left></header-left>
+                </div>
+                <div class="bg-head-title-tool">
+                    <header-right></header-right>
+                </div>
+            </div>
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
+            </div>
+        </div>
+        <div class="container" [class.fullContainer]="appService.getViewMode()">
+            <div class="container-content">
+                <div *ngIf="loading" style="display:flex;height:100%;">
+                    <mat-spinner style="margin:auto;"></mat-spinner>
+                </div>
+                <mat-card *ngIf="!loading" class="card-app-content">
+                    <mat-form-field appearance="outline">
+                        <input matInput [placeholder]="'Url SSO'">
+                    </mat-form-field>
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title color="primary">
+                                Interfaçage des en-têtes
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <div class="row" style="margin:0px;">
+                            <div class="col-md-8">
+                                <mat-form-field *ngFor="let item of mapping">
+                                    <input matInput [(ngModel)]="item.ssoId" [placeholder]="item.maarchId">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                               
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-card>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

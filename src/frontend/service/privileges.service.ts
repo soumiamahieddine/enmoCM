@@ -309,7 +309,7 @@ export class PrivilegeService {
             'id': 'admin_connections',
             'label': 'lang.connections',
             'comment': 'lang.connectionsDesc',
-            'route': '/administration/connections',
+            'route': '/administration/connections/sso',
             'unit': 'supervision',
             'style': 'fas fa-plug',
             'angular': true,
