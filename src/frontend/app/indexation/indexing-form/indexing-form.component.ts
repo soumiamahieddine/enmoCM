@@ -454,12 +454,12 @@ export class IndexingFormComponent implements OnInit {
                     tap(() => {
                         if (this.currentCategory === 'registeredMail') {
                             this.http.put(`../rest/registeredMails/${this.resId}`, {
-                                    type: formatdatas.registeredMail_type,
-                                    warranty: formatdatas.registeredMail_warranty,
-                                    issuingSiteId: formatdatas.registeredMail_issuingSite,
-                                    letter: formatdatas.registeredMail_letter,
-                                    recipient: formatdatas.registeredMail_recipient,
-                                    reference: formatdatas.registeredMail_reference
+                                type: formatdatas.registeredMail_type,
+                                warranty: formatdatas.registeredMail_warranty,
+                                issuingSiteId: formatdatas.registeredMail_issuingSite,
+                                letter: formatdatas.registeredMail_letter,
+                                recipient: formatdatas.registeredMail_recipient,
+                                reference: formatdatas.registeredMail_reference
                             }).pipe(
                                 tap(() => {
                                     this.loadForm(this.indexingFormId);
@@ -503,8 +503,8 @@ export class IndexingFormComponent implements OnInit {
 
                 formatData['customFields'][element.identifier.split('_')[1]] = element.default_value;
 
-            // } else if (element.identifier === 'registeredMail_recipient') {
-            //     formatData[element.identifier] = this.appRegisteredMailRecipientInput.getFormatedAdress();
+                // } else if (element.identifier === 'registeredMail_recipient') {
+                //     formatData[element.identifier] = this.appRegisteredMailRecipientInput.getFormatedAdress();
             } else {
                 formatData[element.identifier] = element.default_value;
             }
@@ -1026,6 +1026,7 @@ export class IndexingFormComponent implements OnInit {
             let valArr: ValidatorFn[] = [];
             if (field.mandatory) {
                 valArr.push(Validators.required);
+                valArr.push(this.requireDestValidator({ 'isDest': '' }));
             }
 
             this.arrFormControl['diffusionList'] = new FormControl({ value: null, disabled: false });
@@ -1035,6 +1036,15 @@ export class IndexingFormComponent implements OnInit {
             this.arrFormControl['diffusionList'].setValue([]);
 
         }
+    }
+
+    requireDestValidator(error: ValidationErrors): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (!control.value) {
+                return null;
+            }
+            return control.value.filter((item: any) => item.mode === 'dest').length > 0 ? null : error;
+        };
     }
 
     regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
