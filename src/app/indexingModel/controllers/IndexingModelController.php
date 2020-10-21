@@ -337,7 +337,9 @@ class IndexingModelController
                         if (($field['identifier'] == 'destination' && $value['identifier'] == 'diffusionList')
                                 || ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit'] && $value['enabled'] == $field['enabled'])) {
                             $fieldsToKeep[] = $value;
-                            $found = true;
+                            if ($value['identifier'] != 'diffusionList') {
+                                $found = true;
+                            }
                         }
                     }
                     if (!$found) {
