@@ -2106,5 +2106,9 @@
     "ssoConnections": "Connexions SSO",
     "sso": "SSO",
     "docserverPathFile": "Chemin du fichier stocké",
-    "showTechnicalInformations": "Afficher les informations techniques du courrier sur la page de traitement / fiche détaillée"
+    "showTechnicalInformations": "Afficher les informations techniques du courrier sur la page de traitement / fiche détaillée",
+    "setBindingDocument": "Définir l'engagement d'un document",
+    "freezeRetentionRule": "Geler/dégeler la durée d'utilité courante d'un document",
+    "retentionRuleFrozen": "Durée d'utilité courante gelée",
+    "bindingMail": "Document engageant"
 }

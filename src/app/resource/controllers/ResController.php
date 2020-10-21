@@ -117,7 +117,7 @@ class ResController extends ResourceControlController
 
         $queryParams = $request->getQueryParams();
 
-        $select = ['model_id', 'category_id', 'priority', 'status', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date', 'integrations'];
+        $select = ['model_id', 'category_id', 'priority', 'status', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date', 'integrations', 'retention_frozen', 'binding'];
         if (empty($queryParams['light'])) {
             $select = array_merge($select, ['type_id', 'typist', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
         }
@@ -139,6 +139,8 @@ class ResController extends ResourceControlController
             'closingDate'       => $document['closing_date'],
             'creationDate'      => $document['creation_date'],
             'modificationDate'  => $document['modification_date'],
+            'retentionFrozen'   => $document['retention_frozen'],
+            'binding'           => $document['binding'],
             'integrations'      => json_decode($document['integrations'], true)
         ];
         $formattedData = [

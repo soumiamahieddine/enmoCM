@@ -629,6 +629,8 @@ $app->post('/collaboraOnline/encodedFile', \ContentManagement\controllers\Collab
 // Archival
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkSendToRecordManagement', \ExportSeda\controllers\SedaController::class . ':checkSendToRecordManagement');
 $app->get('/archival/retentionRules', \ExportSeda\controllers\SedaController::class . ':getRetentionRules');
+$app->put('/archival/binding', \ExportSeda\controllers\SedaController::class . ':setBindingDocument');
+$app->put('/archival/freezeRetentionRule', \ExportSeda\controllers\SedaController::class . ':freezeRetentionRule');
 
 // Registered mail
 $app->get('/registeredMail/sites', \RegisteredMail\controllers\IssuingSiteController::class . ':get');

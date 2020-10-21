@@ -452,6 +452,39 @@ class SearchController
             }
             $args['searchData'][] = $confidentialityData;
         }
+        if (!empty($body['binding']) && !empty($body['binding']['values']) && is_array($body['binding']['values'])) {
+            $bindingData  = [];
+            $bindingWhere = [];
+            if (in_array(true, $body['binding']['values'], true)) {
+                $bindingData[] = 'true';
+            }
+            if (in_array(false, $body['binding']['values'], true)) {
+                $bindingData[] = 'false';
+            }
+            if (count($bindingData) > 0) {
+                $args['searchData'][] = $bindingData;
+                $bindingWhere[]       = 'binding in (?)';
+            }
+            if (in_array(null, $body['binding']['values'], true)) {
+                $bindingWhere[] = 'binding is NULL';
+            }
+            $args['searchWhere'][] = '(' . implode(' OR ', $bindingWhere) . ')';
+        }
+        if (!empty($body['retentionFrozen']) && !empty($body['retentionFrozen']['values']) && is_array($body['retentionFrozen']['values'])) {
+            $retentionRuleFrozenData = [];
+            if (in_array(true, $body['retentionFrozen']['values'], true)) {
+                $retentionRuleFrozenData[] = 'true';
+            }
+            if (in_array(false, $body['retentionFrozen']['values'], true)) {
+                $retentionRuleFrozenData[] = 'false';
+            }
+            if (in_array(null, $body['retentionFrozen']['values'])) {
+                $args['searchWhere'][] = '(retention_frozen in (?) OR retention_frozen is NULL)';
+            } else {
+                $args['searchWhere'][] = 'retention_frozen in (?)';
+            }
+            $args['searchData'][] = $retentionRuleFrozenData;
+        }
         if (!empty($body['initiator']) && !empty($body['initiator']['values']) && is_array($body['initiator']['values'])) {
             if (in_array(null, $body['initiator']['values'])) {
                 $args['searchWhere'][] = '(initiator in (select entity_id from entities where id in (?)) OR initiator is NULL)';

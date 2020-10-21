@@ -41,11 +41,13 @@ trait ExportSEDATrait
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources', 'alt_identifier', 'admission_date', 'creation_date', 'modification_date', 'doc_date']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'destination', 'type_id', 'subject', 'linked_resources', 'alt_identifier', 'admission_date', 'creation_date', 'modification_date', 'doc_date', 'retention_frozen']]);
         if (empty($resource)) {
             return ['errors' => ['resource does not exists']];
         } elseif (empty($resource['destination'])) {
             return ['errors' => ['resource has no destination']];
+        } elseif (empty($resource['retention_frozen'])) {
+            return ['errors' => ['retention rule is frozen']];
         }
 
         $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['description', 'retention_rule', 'retention_final_disposition']]);

@@ -497,6 +497,18 @@ export class PrivilegeService {
             'label': 'lang.includeFolderPerimeter',
             'comment': 'lang.includeFolderPerimeter',
             'unit': 'application'
+        },
+        {
+            'id': 'set_binding_document',
+            'label': 'lang.setBindingDocument',
+            'comment': 'lang.setBindingDocument',
+            'unit': 'application'
+        },
+        {
+            'id': 'freeze_retention_rule',
+            'label': 'lang.freezeRetentionRule',
+            'comment': 'lang.freezeRetentionRule',
+            'unit': 'application'
         }
     ];
 
