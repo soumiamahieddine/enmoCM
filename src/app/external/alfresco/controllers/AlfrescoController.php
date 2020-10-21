@@ -556,8 +556,8 @@ class AlfrescoController
 
         $document = ResModel::getById([
             'select'    => [
-                'filename', 'subject', 'alt_identifier', 'external_id', 'type_id', 'priority', 'fingerprint', 'custom_fields',
-                'creation_date', 'modification_date', 'doc_date', 'destination', 'process_limit_date', 'closing_date', 'docserver_id', 'path', 'filename'
+                'filename', 'subject', 'alt_identifier', 'external_id', 'type_id', 'priority', 'fingerprint', 'custom_fields', 'dest_user',
+                'creation_date', 'modification_date', 'doc_date', 'destination', 'initiator', 'process_limit_date', 'closing_date', 'docserver_id', 'path', 'filename'
             ],
             'resId'     => $args['resId']
         ]);
@@ -618,40 +618,64 @@ class AlfrescoController
             'cm:description'    => $document['alt_identifier']
         ];
         $alfrescoParameters = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/alfresco.json']);
-        if (!empty($alfrescoParameters['mapping'])) {
+        if (!empty($alfrescoParameters['mapping']['document'])) {
             $resourceContacts = ResourceContactModel::get([
                 'where'     => ['res_id = ?', 'mode = ?'],
                 'data'      => [$args['resId'], 'sender']
             ]);
-            $contactRaw = [];
-            if ($resourceContacts[0]['type'] == 'contact') {
-                $contactRaw = ContactModel::getById([
-                    'select'    => ['*'],
-                    'id'        => $resourceContacts[0]['item_id']
-                ]);
+            $rawContacts = [];
+            foreach ($resourceContacts as $resourceContact) {
+                if ($resourceContact['type'] == 'contact') {
+                    $rawContacts[] = ContactModel::getById([
+                        'select'    => ['*'],
+                        'id'        => $resourceContact['item_id']
+                    ]);
+                }
             }
 
-            foreach ($alfrescoParameters['mapping'] as $key => $alfrescoParameter) {
+            foreach ($alfrescoParameters['mapping']['document'] as $key => $alfrescoParameter) {
                 if ($alfrescoParameter == 'alfrescoLogin') {
                     $properties[$key] = $entityInformations['alfresco']['login'];
                 } elseif ($alfrescoParameter == 'doctypeLabel') {
                     $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $document['type_id']]);
                     $properties[$key] = $doctype['description'];
                 } elseif ($alfrescoParameter == 'priorityLabel') {
-                    $priority = PriorityModel::getById(['select' => ['label'], 'id' => $document['priority']]);
-                    $properties[$key] = $priority['label'];
-                } elseif ($alfrescoParameter == 'senderCompany') {
-                    $properties[$key] = $contactRaw['company'];
-                } elseif ($alfrescoParameter == 'senderCivility') {
-                    $properties[$key] = ContactModel::getCivilityLabel(['civilityId' => $contactRaw['civility']]);
-                } elseif ($alfrescoParameter == 'senderFirstname') {
-                    $properties[$key] = $contactRaw['firstname'];
-                } elseif ($alfrescoParameter == 'senderLastname') {
-                    $properties[$key] = $contactRaw['lastname'];
-                } elseif ($alfrescoParameter == 'senderFunction') {
-                    $properties[$key] = $contactRaw['function'];
-                } elseif ($alfrescoParameter == 'senderAddress') {
-                    $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contactRaw]);
+                    if (!empty($document['priority'])) {
+                        $priority = PriorityModel::getById(['select' => ['label'], 'id' => $document['priority']]);
+                        $properties[$key] = $priority['label'];
+                    }
+                } elseif ($alfrescoParameter == 'destinationLabel') {
+                    if (!empty($document['destination'])) {
+                        $destination = EntityModel::getByEntityId(['entityId' => $document['destination'], 'select' => ['entity_label']]);
+                        $properties[$key] = $destination['entity_label'];
+                    }
+                } elseif ($alfrescoParameter == 'initiatorLabel') {
+                    if (!empty($document['initiator'])) {
+                        $initiator = EntityModel::getByEntityId(['entityId' => $document['initiator'], 'select' => ['entity_label']]);
+                        $properties[$key] = $initiator['entity_label'];
+                    }
+                } elseif ($alfrescoParameter == 'destUserLabel') {
+                    if (!empty($document['dest_user'])) {
+                        $properties[$key] = UserModel::getLabelledUserById(['id' => $document['dest_user']]);
+                    }
+                } elseif (strpos($alfrescoParameter, 'senderCompany_') !== false) {
+                    $contactNb = explode('_', $alfrescoParameter)[1];
+                    $properties[$key] = $rawContacts[$contactNb]['company'];
+                } elseif (strpos($alfrescoParameter, 'senderCivility_') !== false) {
+                    $contactNb = explode('_', $alfrescoParameter)[1];
+                    $properties[$key] = ContactModel::getCivilityLabel(['civilityId' => $rawContacts[$contactNb]['civility']]);
+                } elseif (strpos($alfrescoParameter, 'senderFirstname_') !== false) {
+                    $contactNb = explode('_', $alfrescoParameter)[1];
+                    $properties[$key] = $rawContacts[$contactNb]['firstname'];
+                } elseif (strpos($alfrescoParameter, 'senderLastname_') !== false) {
+                    $contactNb = explode('_', $alfrescoParameter)[1];
+                    $properties[$key] = $rawContacts[$contactNb]['lastname'];
+                } elseif (strpos($alfrescoParameter, 'senderFunction_') !== false) {
+                    $contactNb = explode('_', $alfrescoParameter)[1];
+                    $properties[$key] = $rawContacts[$contactNb]['function'];
+                } elseif (strpos($alfrescoParameter, 'senderAddress_') !== false) {
+                    $contactNb = explode('_', $alfrescoParameter)[1];
+                    $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $rawContacts[$contactNb]]);
                     $properties[$key] = $contactToDisplay['contact']['address'];
                 } elseif ($alfrescoParameter == 'doctypeSecondLevelLabel') {
                     $doctype = DoctypeModel::getById(['select' => ['doctypes_second_level_id'], 'id' => $document['type_id']]);
@@ -661,6 +685,9 @@ class AlfrescoController
                     $customId = explode('_', $alfrescoParameter)[1];
                     $customValue = json_decode($document['custom_fields'], true);
                     $properties[$key] = (!empty($customValue[$customId]) && is_string($customValue[$customId])) ? $customValue[$customId] : '';
+                } elseif ($alfrescoParameter == 'currentDate') {
+                    $date = new \DateTime();
+                    $properties[$key] = $date->format('d-m-Y H:i');
                 } else {
                     $properties[$key] = $document[$alfrescoParameter];
                 }
@@ -686,7 +713,7 @@ class AlfrescoController
         ResModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
 
         $attachments = AttachmentModel::get([
-            'select'    => ['res_id', 'title', 'identifier', 'external_id', 'docserver_id', 'path', 'filename', 'format'],
+            'select'    => ['res_id', 'title', 'identifier', 'external_id', 'docserver_id', 'path', 'filename', 'format', 'attachment_type'],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status not in (?)'],
             'data'      => [$args['resId'], ['signed_response'], ['DEL', 'OBS']]
         ]);
@@ -756,10 +783,17 @@ class AlfrescoController
 
             $attachmentId = $curlResponse['response']['entry']['id'];
 
+            $properties = [
+                'cm:description' => $attachment['identifier']
+            ];
+            if (!empty($alfrescoParameters['mapping']['attachment'])) {
+                foreach ($alfrescoParameters['mapping']['attachment'] as $key => $alfrescoParameter) {
+                    $properties[$key] = $attachment[$alfrescoParameter];
+                }
+            }
+
             $body = [
-                'properties' => [
-                    'cm:description'    => $attachment['identifier'],
-                ],
+                'properties' => $properties,
             ];
             $curlResponse = CurlModel::execSimple([
                 'url'           => "{$alfrescoUri}/alfresco/versions/1/nodes/{$attachmentId}",
