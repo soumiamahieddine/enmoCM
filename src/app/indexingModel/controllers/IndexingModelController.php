@@ -171,16 +171,16 @@ class IndexingModelController
             // if field in master is not in child, return an error
             // if field is not in master but in child, is ignored
             $arrayTmp = [];
-            $diffusionListFound = false;
             foreach ($fieldsMaster as $field) {
-                if ($field['identifier'] == 'diffusionList' && $diffusionListFound) {
-                    continue;
-                }
                 $found = false;
                 foreach ($body['fields'] as $value) {
-                    if ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit']) {
+                    if (($field['identifier'] == 'destination' && $value['identifier'] == 'diffusionList')
+                            || ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit'])) {
                         if (!$field['enabled']) {
                             $value = $field;
+                        }
+                        if ($field['identifier'] == 'destination' && $value['identifier'] == 'diffusionList') {
+                            $value['unit'] = $field['unit'];
                         }
 
                         array_push($arrayTmp, $value);
@@ -188,17 +188,6 @@ class IndexingModelController
                         if ($field['identifier'] != 'destination') {
                             break;
                         }
-                    }
-                    if ($field['identifier'] == 'destination' && $value['identifier'] == 'diffusionList') {
-                        if (!$field['enabled']) {
-                            $value = $field;
-                        }
-                        $diffusionListFound = true;
-                        $value['unit']      = $field['unit'];
-
-                        array_push($arrayTmp, $value);
-                        $found = true;
-                        break;
                     }
                 }
 
@@ -345,7 +334,8 @@ class IndexingModelController
                 foreach ($body['fields'] as $field) {
                     $found = false;
                     foreach ($childFields as $value) {
-                        if ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit'] && $value['enabled'] == $field['enabled']) {
+                        if (($field['identifier'] == 'destination' && $value['identifier'] == 'diffusionList')
+                                || ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit'] && $value['enabled'] == $field['enabled'])) {
                             $fieldsToKeep[] = $value;
                             $found = true;
                         }
