@@ -299,6 +299,11 @@ ALTER TABLE res_letterbox ADD COLUMN retention_frozen boolean DEFAULT FALSE NOT 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS binding;
 ALTER TABLE res_letterbox ADD COLUMN binding boolean;
 
+DELETE FROM parameters WHERE id = 'bindingDocumentFinalAction';
+INSERT INTO parameters (id, param_value_string) VALUES ('bindingDocumentFinalAction', 'copy');
+DELETE FROM parameters WHERE id = 'nonBindingDocumentFinalAction';
+INSERT INTO parameters (id, param_value_string) VALUES ('nonBindingDocumentFinalAction', 'delete');
+
 /* CUSTOM FIELDS */
 ALTER TABLE custom_fields DROP COLUMN IF EXISTS mode;
 DROP TYPE IF EXISTS custom_fields_modes;

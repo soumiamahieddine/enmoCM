@@ -471,19 +471,22 @@ class SearchController
             $args['searchWhere'][] = '(' . implode(' OR ', $bindingWhere) . ')';
         }
         if (!empty($body['retentionFrozen']) && !empty($body['retentionFrozen']['values']) && is_array($body['retentionFrozen']['values'])) {
-            $retentionRuleFrozenData = [];
+            $retentionFrozenData  = [];
+            $retentionFrozenWhere = [];
             if (in_array(true, $body['retentionFrozen']['values'], true)) {
-                $retentionRuleFrozenData[] = 'true';
+                $retentionFrozenData[] = 'true';
             }
             if (in_array(false, $body['retentionFrozen']['values'], true)) {
-                $retentionRuleFrozenData[] = 'false';
+                $retentionFrozenData[] = 'false';
             }
-            if (in_array(null, $body['retentionFrozen']['values'])) {
-                $args['searchWhere'][] = '(retention_frozen in (?) OR retention_frozen is NULL)';
-            } else {
-                $args['searchWhere'][] = 'retention_frozen in (?)';
+            if (count($retentionFrozenData) > 0) {
+                $args['searchData'][]   = $retentionFrozenData;
+                $retentionFrozenWhere[] = 'retention_frozen in (?)';
             }
-            $args['searchData'][] = $retentionRuleFrozenData;
+            if (in_array(null, $body['retentionFrozen']['values'], true)) {
+                $retentionFrozenWhere[] = 'retention_frozen is NULL';
+            }
+            $args['searchWhere'][] = '(' . implode(' OR ', $retentionFrozenWhere) . ')';
         }
         if (!empty($body['initiator']) && !empty($body['initiator']['values']) && is_array($body['initiator']['values'])) {
             if (in_array(null, $body['initiator']['values'])) {
