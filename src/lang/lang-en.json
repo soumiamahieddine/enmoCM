@@ -395,6 +395,7 @@
     "contactsParameters_function": "Function",
     "contactsParameters_lastname": "Last name",
     "contactsParameters_phone": "Phone",
+    "contactsParameters_notes": "Notes",
     "contactsReassign": "Contacts reassign",
     "content": "Content",
     "contentHtmlTemplate": "Html template content",

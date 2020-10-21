@@ -396,6 +396,7 @@
     "contactsParameters_function": "Fonction",
     "contactsParameters_lastname": "Nom",
     "contactsParameters_phone": "Téléphone",
+    "contactsParameters_notes": "Annotation",
     "contactsReassign": "Réaffectation de contacts",
     "content": "Contenu",
     "contentHtmlTemplate": "Contenu du modèle html",
