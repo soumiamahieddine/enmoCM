@@ -39,6 +39,9 @@ foreach ($customs as $custom) {
             $configuration = !empty($configuration) ? json_encode($configuration, JSON_UNESCAPED_SLASHES) : '{}';
             \Configuration\models\ConfigurationModel::create(['privilege' => 'admin_sso', 'value' => $configuration]);
             printf("Migration mapping SSO (CUSTOM {$custom}) : fichier de configuration mapping_sso.xml trouvé et migré.\n");
+            continue;
         }
     }
+
+    \Configuration\models\ConfigurationModel::create(['privilege' => 'admin_sso', 'value' => '{}']);
 }
