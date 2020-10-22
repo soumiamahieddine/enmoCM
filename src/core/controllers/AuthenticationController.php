@@ -64,6 +64,10 @@ class AuthenticationController
             $provider = new Keycloak($keycloakConfig);
             $authUri = $provider->getAuthorizationUrl(['scope' => $keycloakConfig['scope']]);
             $keycloakState = $provider->getState();
+        } elseif ($loggingMethod['id'] == 'sso') {
+            $ssoConfiguration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_sso', 'select' => ['value']]);
+            $ssoConfiguration = !empty($ssoConfiguration['value']) ? json_decode($ssoConfiguration['value'], true) : null;
+            $authUri = $ssoConfiguration['value']['uri'] ?? null;
         }
 
         $return = [
@@ -285,6 +289,15 @@ class AuthenticationController
             if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
             }
+        } elseif ($loggingMethod['id'] == 'sso') {
+            $authenticated = AuthenticationController::ssoConnection();
+            if (!empty($authenticated['errors'])) {
+                return $response->withStatus(401)->withJson(['errors' => $authenticated['errors']]);
+            }
+            $login = strtolower($authenticated['login']);
+            if (!AuthenticationController::isUserAuthorized(['login' => $login])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Authentication unauthorized']);
+            }
         } else {
             return $response->withStatus(403)->withJson(['errors' => 'Logging method unauthorized']);
         }
@@ -334,14 +347,16 @@ class AuthenticationController
     {
         $loggingMethod = CoreConfigModel::getLoggingMethod();
 
-        $res = ['logoutUrl' => null];
+        $logoutUrl = null;
         if ($loggingMethod['id'] == 'cas') {
-            $res = AuthenticationController::casDisconnection();
+            $disconnection = AuthenticationController::casDisconnection();
+            $logoutUrl = $disconnection['logoutUrl'];
         } elseif ($loggingMethod['id'] == 'keycloak') {
-            $res = AuthenticationController::keycloakDisconnection();
+            $disconnection = AuthenticationController::keycloakDisconnection();
+            $logoutUrl = $disconnection['logoutUrl'];
         }
 
-        return $response->withJson(['logoutUrl' => $res['logoutUrl']]);
+        return $response->withJson(['logoutUrl' => $logoutUrl]);
     }
 
     private static function standardConnection(array $args)
@@ -487,7 +502,29 @@ class AuthenticationController
         \phpCAS::setFixedServiceURL(UrlController::getCoreUrl() . 'dist/index.html');
         \phpCAS::setNoClearTicketsFromUrl();
         $logoutUrl = \phpCAS::getServerLogoutURL();
+
         return ['logoutUrl' => $logoutUrl];
+    }
+
+    private static function ssoConnection()
+    {
+        $ssoConfiguration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_sso', 'select' => ['value']]);
+        if (empty($ssoConfiguration['value'])) {
+            return ['errors' => 'Sso configuration missing'];
+        }
+
+        $ssoConfiguration = json_decode($ssoConfiguration['value'], true);
+        $mapping = array_column($ssoConfiguration['mapping'], 'ssoId', 'maarchId');
+        if (empty($mapping['login'])) {
+            return ['errors' => 'Sso configuration missing : no login mapping'];
+        }
+
+        $login = $_SERVER[$mapping['login']];
+        if (empty($login)) {
+            return ['errors' => 'Authentication Failed : login not present in header'];
+        }
+
+        return ['login' => $login];
     }
 
     private static function keycloakConnection(array $args)
@@ -507,7 +544,6 @@ class AuthenticationController
         }
 
         try {
-            // We got an access token, let's now get the user's details
             $user = $provider->getResourceOwner($token);
 
             $login = $user->getId();
