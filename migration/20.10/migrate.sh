@@ -9,4 +9,5 @@ php ./migrateCustomLang.php
 php ./migrateBasketListDisplay.php
 php ./migrateTemplates.php
 php ./migrateSavedQueries.php
+php ./migrateSsoMapping.php
 php ./migrateCustomXml.php # mettre en dernier
