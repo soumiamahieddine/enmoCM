@@ -41,7 +41,7 @@ export class SsoAdministrationComponent implements OnInit {
         url: '',
         mapping: [
             {
-                maarchId: 'userId',
+                maarchId: 'login',
                 ssoId: 'id',
                 desc: 'lang.fieldUserIdDescSso'
             }
