@@ -75,7 +75,6 @@ import { IssuingSiteListComponent } from './registered-mail/issuing-site/issuing
 import { IssuingSiteComponent } from './registered-mail/issuing-site/issuing-site.component';
 import { RegisteredMailListComponent } from './registered-mail/registered-mail-list.component';
 import { SearchAdministrationComponent } from './search/search-administration.component';
-import { SsoListAdministrationComponent } from './connection/sso/sso-list-administration.component';
 import { SsoAdministrationComponent } from './connection/sso/sso-administration.component';
 
 
@@ -161,7 +160,6 @@ import { SsoAdministrationComponent } from './connection/sso/sso-administration.
         IssuingSiteComponent,
         RegisteredMailListComponent,
         SearchAdministrationComponent,
-        SsoListAdministrationComponent,
         SsoAdministrationComponent
     ],
     entryComponents: [

@@ -28,26 +28,31 @@
                     <mat-spinner style="margin:auto;"></mat-spinner>
                 </div>
                 <mat-card *ngIf="!loading" class="card-app-content">
-                    <mat-form-field appearance="outline">
-                        <input matInput [placeholder]="'Url SSO'">
-                    </mat-form-field>
-                    <mat-expansion-panel hideToggle>
-                        <mat-expansion-panel-header>
-                            <mat-panel-title color="primary">
-                                Interfaçage des en-têtes
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <div class="row" style="margin:0px;">
-                            <div class="col-md-8">
-                                <mat-form-field *ngFor="let item of mapping">
-                                    <input matInput [(ngModel)]="item.ssoId" [placeholder]="item.maarchId">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-md-4">
-                               
-                            </div>
+                    <form style="display: contents;" (ngSubmit)="onSubmit()" #ssoForm="ngForm">
+                        <mat-form-field appearance="outline">
+                            <mat-label>{{'lang.ssoUrl' | translate}}</mat-label>
+                            <input matInput name="ssoUrl" [(ngModel)]="sso.url">
+                            <mat-hint>{{'lang.ssoUrlDesc' | translate}}</mat-hint>
+                        </mat-form-field>
+                        <mat-expansion-panel expanded style="margin-top: 10px;">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title color="primary">
+                                    {{'lang.mappingHeaders' | translate}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <mat-form-field *ngFor="let item of sso.mapping;let i=index">
+                                <input matInput name="input_{{i}}" [(ngModel)]="item.ssoId"
+                                    [placeholder]="item.maarchId" required>
+                                <mat-hint>{{item.desc | translate}}</mat-hint>
+                            </mat-form-field>
+                        </mat-expansion-panel>
+                        <div class="text-center" style="padding:10px;">
+                            <button mat-raised-button [disabled]="!isValid(ssoForm)"
+                                color="primary">{{'lang.validate' | translate}}</button>
+                            <button mat-raised-button type="button" (click)="cancel()" [disabled]="!isValid(ssoForm)"
+                                color="default">{{'lang.cancel' | translate}}</button>
                         </div>
-                    </mat-expansion-panel>
+                    </form>
                 </mat-card>
             </div>
         </div>
