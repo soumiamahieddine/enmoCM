@@ -221,25 +221,25 @@ trait ExportSEDATrait
         return [];
     }
 
-    private static function saveMessage($args = [])
+    public static function saveMessage($args = [])
     {
-        $data = new stdClass();
+        $data = new \stdClass();
 
         $data->messageId                             = $args['messageObject']->MessageIdentifier->value;
         $data->date                                  = $args['messageObject']->Date;
 
-        $data->MessageIdentifier                     = new stdClass();
+        $data->MessageIdentifier                     = new \stdClass();
         $data->MessageIdentifier->value              = $args['messageObject']->MessageIdentifier->value;
 
-        $data->TransferringAgency                    = new stdClass();
-        $data->TransferringAgency->Identifier        = new stdClass();
+        $data->TransferringAgency                    = new \stdClass();
+        $data->TransferringAgency->Identifier        = new \stdClass();
         $data->TransferringAgency->Identifier->value = $args['messageObject']->TransferringAgency->Identifier->value;
 
-        $data->ArchivalAgency                        = new stdClass();
-        $data->ArchivalAgency->Identifier            = new stdClass();
+        $data->ArchivalAgency                        = new \stdClass();
+        $data->ArchivalAgency->Identifier            = new \stdClass();
         $data->ArchivalAgency->Identifier->value     = $args['messageObject']->ArchivalAgency->Identifier->value;
 
-        $data->ArchivalAgreement                     = new stdClass();
+        $data->ArchivalAgreement                     = new \stdClass();
         $data->ArchivalAgreement->value              = $args['messageObject']->ArchivalAgreement->value;
 
         $data->ReplyCode                             = $args['messageObject']->ReplyCode;

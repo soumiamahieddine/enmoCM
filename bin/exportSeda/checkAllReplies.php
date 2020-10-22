@@ -114,15 +114,15 @@ Bt_writeLog(['level' => 'INFO', 'message' => 'Retrieve mail sent to archiving sy
 
 $acknowledgements = \Attachment\models\AttachmentModel::get([
     'select' => ['res_id_master'],
-    'where'  => ['attachment_type = ?'],
-    'data'   => ['acknowledgement_record_management']
+    'where'  => ['attachment_type = ?', 'status = ?'],
+    'data'   => ['acknowledgement_record_management', 'TRA']
 ]);
 $acknowledgements = array_column($acknowledgements, 'res_id_master');
 
 $replies = \Attachment\models\AttachmentModel::get([
     'select' => ['res_id_master'],
-    'where'  => ['attachment_type = ?'],
-    'data'   => ['reply_record_management']
+    'where'  => ['attachment_type = ?', 'status = ?'],
+    'data'   => ['reply_record_management', 'TRA']
 ]);
 $replies = array_column($replies, 'res_id_master');
 $pendingResources = array_diff($acknowledgements, $replies);
