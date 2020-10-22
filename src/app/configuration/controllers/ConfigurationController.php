@@ -102,8 +102,8 @@ class ConfigurationController
 
             $data = ['listDisplay' => $data['listDisplay'], 'listEvent' => $data['listEvent']];
         } elseif ($args['privilege'] == 'admin_sso') {
-            if (!Validator::notEmpty()->stringType()->validate($data['uri'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body uri is empty or not a string']);
+            if (!empty($data['url']) && !Validator::stringType()->validate($data['url'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body url is empty or not a string']);
             }
             if (!Validator::notEmpty()->arrayType()->validate($data['mapping'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body mapping is empty or not an array']);

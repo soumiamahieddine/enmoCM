@@ -26,7 +26,7 @@ foreach ($customs as $custom) {
         $loadedXml = simplexml_load_file($path);
 
         if (!empty($loadedXml)) {
-            $configuration['uri'] = (string)$loadedXml->WEB_SSO_URL;
+            $configuration['url'] = (string)$loadedXml->WEB_SSO_URL;
 
             $configuration['mapping'] = [];
 
