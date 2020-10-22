@@ -192,6 +192,10 @@
                                 <mat-icon class="followIcon {{this.resourceFollowed ? 'fas':'far'}} fa-star"
                                     style="font-size: 20px;"></mat-icon>
                             </button>
+                            <button mat-icon-button [title]="this.translate.instant('lang.freezeRetentionRule')"
+                            class="categoryLabel" (click)="toggleFreezing()">
+                                <mat-icon class="freezeThawIcon {{this.freezeThawResource ? 'fas':'far'}} fa-pause-circle" style="font-size: 20px;"></mat-icon>
+                            </button>
                             <div class="content-item" *ngIf="this.currentResourceInformations.priority !== undefined">
                                 <b><i class="fas fa-flag" [style.color]="this.currentResourceInformations.priorityColor"
                                         style="font-size: 25px;padding-right: 20px;"></i>

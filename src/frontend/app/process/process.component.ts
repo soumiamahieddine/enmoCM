@@ -154,6 +154,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     hasContact: boolean = false;
 
     resourceFollowed: boolean = false;
+    freezeThawResource: boolean = false;
 
     constructor(
         public translate: TranslateService,
@@ -238,7 +239,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
         this.currentResourceInformations = {
             resId: params['resId'],
-            mailtracking: false
+            mailtracking: false,
         };
 
         this.headerService.sideBarButton = {
@@ -291,7 +292,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
         this.detailMode = true;
         this.currentResourceInformations = {
             resId: params['detailResId'],
-            mailtracking: false
+            mailtracking: false,
+            retentionFrozen : false
         };
         this.headerService.sideBarButton = {
             icon: 'fas fa-arrow-left',
@@ -320,6 +322,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
             tap((data: any) => {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
+                this.freezeThawResource = data.retentionFrozen;
                 if (this.currentResourceInformations.categoryId !== 'outgoing') {
                     this.loadSenders();
                 } else {
@@ -831,6 +834,24 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 })
             ).subscribe();
         }
+    }
+
+    toggleFreezing() {
+        this.freezeThawResource = !this.freezeThawResource;
+            this.http.put('../rest/archival/freezeRetentionRule', { resources: [this.currentResourceInformations.resId], freeze : this.freezeThawResource }).pipe(
+                tap(() => {
+                    if (this.freezeThawResource) {
+                        this.notify.success(this.translate.instant('lang.retentionRuleFrozen'));
+                    } else {
+                        this.notify.success(this.translate.instant('lang.retentionRuleThawed'));
+                    }
+                }
+                ),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
     }
 
     isToolEnabled(id: string) {

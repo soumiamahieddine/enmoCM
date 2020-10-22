@@ -2116,5 +2116,6 @@
     "ssoUrl": "Url du portail SSO",
     "ssoUrlDesc": "Permet d'activer le bouton de déconnexion de l'application afin de retourner sur le portail de connexion SSO.",
     "warning": "Attention",
-    "fieldUserIdDescSso": "Permet faire le lien entre l'identifiant utilisateur maarch et l'identifiant SSO"
+    "fieldUserIdDescSso": "Permet faire le lien entre l'identifiant utilisateur maarch et l'identifiant SSO",
+    "retentionRuleThawed" : "Durée d'utilité courante dégelée"
 }
