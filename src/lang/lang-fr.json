@@ -2110,12 +2110,13 @@
     "setBindingDocument": "Définir l'engagement d'un document",
     "freezeRetentionRule": "Geler/dégeler la durée d'utilité courante d'un document",
     "retentionRuleFrozen": "Durée d'utilité courante gelée",
+    "retentionRuleThawed" : "Durée d'utilité courante dégelée",
     "bindingMail": "Document engageant",
     "warningConnectionMsg": "Vous pouvez rendre l'application <b>indisponible</b> si les informations sont erronées !",
     "mappingHeaders": "Interfaçage des en-têtes",
     "ssoUrl": "Url du portail SSO",
     "ssoUrlDesc": "Permet d'activer le bouton de déconnexion de l'application afin de retourner sur le portail de connexion SSO.",
     "warning": "Attention",
-    "fieldUserIdDescSso": "Permet faire le lien entre l'identifiant utilisateur maarch et l'identifiant SSO",
-    "retentionRuleThawed" : "Durée d'utilité courante dégelée"
+    "fieldUserIdDescSso": "Permet faire le lien entre l'identifiant utilisateur maarch et l'identifiant SSO"
+    
 }
