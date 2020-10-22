@@ -46,7 +46,7 @@ trait ExportSEDATrait
             return ['errors' => ['resource does not exists']];
         } elseif (empty($resource['destination'])) {
             return ['errors' => ['resource has no destination']];
-        } elseif (empty($resource['retention_frozen'])) {
+        } elseif ($resource['retention_frozen']) {
             return ['errors' => ['retention rule is frozen']];
         }
 
