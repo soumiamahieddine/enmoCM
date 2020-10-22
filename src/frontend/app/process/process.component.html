@@ -194,7 +194,11 @@
                             </button>
                             <button mat-icon-button [title]="this.translate.instant('lang.freezeRetentionRule')"
                             class="categoryLabel" (click)="toggleFreezing()">
-                                <mat-icon class="freezeThawIcon {{this.freezeThawResource ? 'fas':'far'}} fa-pause-circle" style="font-size: 30px;"></mat-icon>
+                                <mat-icon class="freezeThawIcon {{this.resourceFreezed ? 'fas':'far'}} fa-pause-circle" style="font-size: 20px;"></mat-icon>
+                            </button>
+                            <button mat-icon-button [title]="this.translate.instant('lang.setBindingDocument')"
+                            class="categoryLabel" (click)="toggleBinding()">
+                                <mat-icon class=" {{this.resourceBinded ? 'bindIcon' : 'noBindIcn'}} fas fa-paperclip" style="font-size: 20px;"></mat-icon>
                             </button>
                             <div class="content-item" *ngIf="this.currentResourceInformations.priority !== undefined">
                                 <b><i class="fas fa-flag" [style.color]="this.currentResourceInformations.priorityColor"

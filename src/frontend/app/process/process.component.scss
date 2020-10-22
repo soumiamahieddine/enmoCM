@@ -414,6 +414,14 @@
     color: $secondary;
 }
 
+.bindIcon {
+    color: $secondary;
+}
+
+.noBindIcon {
+    color: $primary;
+}
+
 .tool-disabled {
     cursor: not-allowed;
     opacity: 0.3;

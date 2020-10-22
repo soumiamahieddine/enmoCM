@@ -154,7 +154,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
     hasContact: boolean = false;
 
     resourceFollowed: boolean = false;
-    freezeThawResource: boolean = false;
+    resourceFreezed: boolean = false;
+    resourceBinded: boolean = false;
 
     constructor(
         public translate: TranslateService,
@@ -322,7 +323,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
             tap((data: any) => {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
-                this.freezeThawResource = data.retentionFrozen;
+                this.resourceBinded = data.binding;
+                this.resourceFreezed = data.retentionFrozen;
                 if (this.currentResourceInformations.categoryId !== 'outgoing') {
                     this.loadSenders();
                 } else {
@@ -837,10 +839,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
     }
 
     toggleFreezing() {
-        this.freezeThawResource = !this.freezeThawResource;
-            this.http.put('../rest/archival/freezeRetentionRule', { resources: [this.currentResourceInformations.resId], freeze : this.freezeThawResource }).pipe(
+        this.resourceFreezed = !this.resourceFreezed;
+            this.http.put('../rest/archival/freezeRetentionRule', { resources: [this.currentResourceInformations.resId], freeze : this.resourceFreezed }).pipe(
                 tap(() => {
-                    if (this.freezeThawResource) {
+                    if (this.resourceFreezed) {
                         this.notify.success(this.translate.instant('lang.retentionRuleFrozen'));
                     } else {
                         this.notify.success(this.translate.instant('lang.retentionRuleThawed'));
@@ -852,6 +854,24 @@ export class ProcessComponent implements OnInit, OnDestroy {
                     return of(false);
                 })
             ).subscribe();
+    }
+
+    toggleBinding() {
+        this.resourceBinded = !this.resourceBinded;
+        this.http.put('../rest/archival/binding', { resources: [this.currentResourceInformations.resId], binding : this.resourceBinded }).pipe(
+            tap(() => {
+                if (this.resourceBinded) {
+                    this.notify.success(this.translate.instant('lang.bindingMail'));
+                } else {
+                    this.notify.success(this.translate.instant('lang.noBindingMal'));
+                }
+            }
+            ),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     isToolEnabled(id: string) {
