@@ -18,7 +18,6 @@ use Attachment\models\AttachmentModel;
 use Configuration\models\ConfigurationModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
-use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Doctype\models\SecondLevelModel;
@@ -565,11 +564,8 @@ class AlfrescoController
             return ['errors' => 'Document does not exist'];
         } elseif (empty($document['filename'])) {
             return ['errors' => 'Document has no file'];
-        }
-
-        $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $args['resId'], 'collId' => 'letterbox_coll']);
-        if (!empty($convertedDocument['errors'])) {
-            return ['errors' => 'Conversion error : ' . $convertedDocument['errors']];
+        } elseif (empty($document['alt_identifier'])) {
+            return ['errors' => 'Document has no chrono'];
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
@@ -614,9 +610,7 @@ class AlfrescoController
         }
         $documentId = $curlResponse['response']['entry']['id'];
 
-        $properties = [
-            'cm:description'    => $document['alt_identifier']
-        ];
+        $properties = [];
         $alfrescoParameters = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/alfresco.json']);
         if (!empty($alfrescoParameters['mapping']['document'])) {
             $resourceContacts = ResourceContactModel::get([
@@ -783,9 +777,7 @@ class AlfrescoController
 
             $attachmentId = $curlResponse['response']['entry']['id'];
 
-            $properties = [
-                'cm:description' => $attachment['identifier']
-            ];
+            $properties = [];
             if (!empty($alfrescoParameters['mapping']['attachment'])) {
                 foreach ($alfrescoParameters['mapping']['attachment'] as $key => $alfrescoParameter) {
                     if ($alfrescoParameter == 'typeLabel') {
