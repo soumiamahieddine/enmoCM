@@ -502,13 +502,13 @@ export class PrivilegeService {
             'id': 'set_binding_document',
             'label': 'lang.setBindingDocument',
             'comment': 'lang.setBindingDocument',
-            'unit': 'application'
+            'unit': 'lifeCycle'
         },
         {
             'id': 'freeze_retention_rule',
             'label': 'lang.freezeRetentionRule',
             'comment': 'lang.freezeRetentionRule',
-            'unit': 'application'
+            'unit': 'lifeCycle'
         }
     ];
 
