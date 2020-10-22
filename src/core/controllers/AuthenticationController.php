@@ -35,10 +35,7 @@ class AuthenticationController
     const ROUTES_WITHOUT_AUTHENTICATION = [
         'GET/authenticationInformations', 'PUT/versionsUpdateSQL', 'GET/validUrl', 'GET/authenticate/token', 'GET/images', 'POST/password', 'PUT/password', 'GET/passwordRules',
         'GET/jnlp/{jnlpUniqueId}', 'GET/onlyOffice/mergedFile', 'POST/onlyOfficeCallback', 'POST/authenticate',
-        'GET/installer/prerequisites', 'GET/installer/databaseConnection', 'GET/installer/sqlDataFiles', 'GET/installer/docservers', 'GET/installer/custom',
-        'POST/installer/custom', 'POST/installer/database', 'POST/installer/docservers', 'POST/installer/customization',
-        'PUT/installer/administrator', 'DELETE/installer/lock',
-        'GET/wopi/files/{id}', 'GET/wopi/files/{id}/contents', 'POST/wopi/files/{id}/contents','GET/onlyOffice/content','GET/languages/{lang}',
+        'GET/wopi/files/{id}', 'GET/wopi/files/{id}/contents', 'POST/wopi/files/{id}/contents','GET/onlyOffice/content','GET/languages/{lang}'
     ];
 
     public function getInformations(Request $request, Response $response)
@@ -710,6 +707,23 @@ class AuthenticationController
     {
         $user = UserModel::getByLogin(['login' => $args['login'], 'select' => ['mode', 'status']]);
         if (empty($user) || $user['mode'] == 'rest' || $user['status'] == 'SPD') {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function canAccessInstallerWhitoutAuthentication(array $args)
+    {
+        $installerRoutes = [
+            'GET/installer/prerequisites', 'GET/installer/databaseConnection', 'GET/installer/sqlDataFiles', 'GET/installer/docservers', 'GET/installer/custom',
+            'GET/installer/customs', 'POST/installer/custom', 'POST/installer/database', 'POST/installer/docservers', 'POST/installer/customization',
+            'PUT/installer/administrator', 'DELETE/installer/lock'
+        ];
+
+        if (is_file("custom/custom.json")) {
+            return false;
+        } elseif (!in_array($args['route'], $installerRoutes)) {
             return false;
         }
 
