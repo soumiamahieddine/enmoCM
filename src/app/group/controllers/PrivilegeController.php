@@ -159,8 +159,14 @@ class PrivilegeController
         ValidatorModel::stringType($args, ['privilegeId']);
         ValidatorModel::intVal($args, ['userId']);
 
+        $isLock = false;
+        if (in_array($args['privilegeId'], ['create_custom', 'admin_update_control'])) {
+            $file   = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+            $isLock = !empty($file['config']['lockAdvancedPrivileges']);
+        }
+
         if (UserController::isRoot(['id' => $args['userId']])) {
-            return true;
+            return !$isLock;
         }
 
         $hasPrivilege = DatabaseModel::select([
@@ -175,7 +181,7 @@ class PrivilegeController
             'data'      => [$args['userId'], $args['privilegeId']]
         ]);
 
-        return !empty($hasPrivilege);
+        return !empty($hasPrivilege) && !$isLock;
     }
 
     public static function getPrivilegesByUser(array $args)
@@ -190,6 +196,16 @@ class PrivilegeController
         $privilegesStoredInDB = PrivilegeModel::getByUser(['id' => $args['userId']]);
         $privilegesStoredInDB = array_column($privilegesStoredInDB, 'service_id');
 
+        $file   = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+        $isLock = !empty($file['config']['lockAdvancedPrivileges']);
+        foreach (['create_custom', 'admin_update_control'] as $advancedPrivilege) {
+            $key = array_search($advancedPrivilege, $privilegesStoredInDB);
+            if ($isLock && $key !== false) {
+                unset($privilegesStoredInDB[$key]);
+            }
+        }
+
+        $privilegesStoredInDB = array_values($privilegesStoredInDB);
         return $privilegesStoredInDB;
     }
 

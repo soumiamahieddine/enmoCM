@@ -272,7 +272,7 @@ class InstallerController
 
     public function createCustom(Request $request, Response $response)
     {
-        if (!empty($GLOBALS['id']) && (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']]) || PrivilegeController::isAdvancedPrivilegesLocked())) {
+        if (!empty($GLOBALS['id']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Route forbidden']);
         }
 
@@ -332,7 +332,7 @@ class InstallerController
 
     public function createDatabase(Request $request, Response $response)
     {
-        if (!empty($GLOBALS['id']) && (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']]) || PrivilegeController::isAdvancedPrivilegesLocked())) {
+        if (!empty($GLOBALS['id']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Route forbidden']);
         }
 
@@ -433,7 +433,7 @@ class InstallerController
 
     public function createDocservers(Request $request, Response $response)
     {
-        if (!empty($GLOBALS['id']) && (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']]) || PrivilegeController::isAdvancedPrivilegesLocked())) {
+        if (!empty($GLOBALS['id']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Route forbidden']);
         }
 
@@ -518,7 +518,7 @@ class InstallerController
 
     public function createCustomization(Request $request, Response $response)
     {
-        if (!empty($GLOBALS['id']) && (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']]) || PrivilegeController::isAdvancedPrivilegesLocked())) {
+        if (!empty($GLOBALS['id']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Route forbidden']);
         }
 
@@ -595,7 +595,7 @@ class InstallerController
 
     public function updateAdministrator(Request $request, Response $response)
     {
-        if (!empty($GLOBALS['id']) && (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']]) || PrivilegeController::isAdvancedPrivilegesLocked())) {
+        if (!empty($GLOBALS['id']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Route forbidden']);
         }
 
@@ -662,7 +662,7 @@ class InstallerController
 
     public function terminateInstaller(Request $request, Response $response)
     {
-        if (!empty($GLOBALS['id']) && (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']]) || PrivilegeController::isAdvancedPrivilegesLocked())) {
+        if (!empty($GLOBALS['id']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'create_custom', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Route forbidden']);
         }
 
