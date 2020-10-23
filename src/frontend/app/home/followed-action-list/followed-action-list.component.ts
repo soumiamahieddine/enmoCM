@@ -129,4 +129,50 @@ export class FollowedActionListComponent implements OnInit {
         this.refreshEvent.emit();
     }
 
+    toggleFreezing() {
+        this.selectedRes.forEach(id => {
+            this.http.get(`../rest/resources/${id}?light=true`).pipe(
+                tap((data: any) => {
+                    this.http.put('../rest/archival/freezeRetentionRule', { resources: [id], freeze : !data.retentionFrozen }).pipe(
+                        tap(() => {
+                            this.notify.success(this.translate.instant('lang.parameterUpdated'));
+                        }
+                        ),
+                        catchError((err: any) => {
+                            this.notify.handleSoftErrors(err);
+                            return of(false);
+                        })
+                    ).subscribe();
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    toggleBinding() {
+        this.selectedRes.forEach(id => {
+            this.http.get(`../rest/resources/${id}?light=true`).pipe(
+                tap((data: any) => {
+                    this.http.put('../rest/archival/binding', { resources: [id], binding : !data.binding }).pipe(
+                        tap(() => {
+                            this.notify.success(this.translate.instant('lang.parameterUpdated'));
+                        }
+                        ),
+                        catchError((err: any) => {
+                            this.notify.handleSoftErrors(err);
+                            return of(false);
+                        })
+                    ).subscribe();
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
 }

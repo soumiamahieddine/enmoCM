@@ -83,12 +83,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         }
     ];
 
-    informationWithFreeze: any[] = [];
-    informationWithBinding: any[] = [];
-
-    resourceFreezed: boolean = false;
-    resourceBinded: boolean = false;
-
     resultListDatabase: ResultListHttpDao | null;
     data: any = [];
     resultsLength = 0;
@@ -313,7 +307,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     this.resultsLength = data.count;
                     this.paginatorLength = data.count > 10000 ? 10000 : data.count;
                     this.allResInBasket = data.allResources;
-                    this.getInfos(data.resources);
                     return data.resources;
                 }),
                 catchError((err: any) => {
@@ -692,76 +685,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 })
             ).subscribe();
         }
-    }
-
-    toggleFreezing(row: any) {
-        const indexData = this.informationWithFreeze.indexOf(row.resId);
-        if (this.informationWithFreeze.includes(row.resId)) {
-            this.resourceFreezed = false;
-            this.informationWithFreeze.splice(indexData, 1);
-        } else {
-            this.resourceFreezed = true;
-            this.informationWithFreeze.push(row.resId);
-        }
-            this.http.put('../rest/archival/freezeRetentionRule', { resources: [row.resId], freeze : this.resourceFreezed }).pipe(
-                tap(() => {
-                    if (this.resourceFreezed) {
-                        this.notify.success(this.translate.instant('lang.retentionRuleFrozen'));
-                    } else {
-                        this.notify.success(this.translate.instant('lang.retentionRuleThawed'));
-                    }
-                }
-                ),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-    }
-
-    toggleBinding(row: any) {
-        const indexData = this.informationWithBinding.indexOf(row.resId);
-        if (this.informationWithBinding.includes(row.resId)) {
-            this.resourceBinded = false;
-            this.informationWithBinding.splice(indexData, 1);
-        } else {
-            this.resourceBinded = true;
-            this.informationWithBinding.push(row.resId);
-        }
-        this.http.put('../rest/archival/binding', { resources: [row.resId], binding : this.resourceBinded }).pipe(
-            tap(() => {
-                if (this.resourceBinded) {
-                    this.notify.success(this.translate.instant('lang.bindingMail'));
-                } else {
-                    this.notify.success(this.translate.instant('lang.noBindingMal'));
-                }
-            }
-            ),
-            catchError((err: any) => {
-                this.resourceBinded = !this.resourceBinded;
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
-    }
-
-    getInfos(data) {
-        data.forEach(element => {
-            this.http.get(`../rest/resources/${element.resId}?light=true`).pipe(
-                tap((infos: any) => {
-                    if (infos.retentionFrozen) {
-                        this.informationWithFreeze.push(infos.resId);
-                    }
-                    if(infos.binding) {
-                        this.informationWithBinding.push(infos.resId);
-                    }
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        });
     }
 
     viewDocument(row: any) {
