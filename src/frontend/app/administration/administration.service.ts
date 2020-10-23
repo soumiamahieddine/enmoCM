@@ -139,17 +139,18 @@ export class AdministrationService {
         public headerService: HeaderService,
         public functionsService: FunctionsService,
         private localStorage: LocalStorageService,
-    ) {
-        if (this.localStorage.get(`filtersAdmin_${this.headerService.user.id}`) !== null) {
-            this.filters = JSON.parse(this.localStorage.get(`filtersAdmin_${this.headerService.user.id}`));
-        }
-    }
+    ) { }
 
     setAdminId(adminId: string) {
         this.currentAdminId = adminId;
     }
 
     setDataSource(adminId: string, data: any, sort: MatSort, paginator: MatPaginator, filterColumns: string[]) {
+        if (this.localStorage.get(`filtersAdmin_${this.headerService.user.id}`) !== null) {
+            this.filters = JSON.parse(this.localStorage.get(`filtersAdmin_${this.headerService.user.id}`));
+        } else {
+            this.saveDefaultFilter();
+        }
         this.currentAdminId = adminId;
         this.searchTerm = new FormControl('');
 
@@ -175,10 +176,6 @@ export class AdministrationService {
 
         this.dataSource.paginator = paginator;
         this.dataSource.sortingDataAccessor = this.functionsService.listSortingDataAccessor;
-
-        if (this.functionsService.empty(this.getFilter())) {
-            this.saveDefaultFilter();
-        }
 
         // sort.active = this.getFilter('sort');
         // sort.direction = this.getFilter('sortDirection');
