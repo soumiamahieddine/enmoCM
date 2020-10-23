@@ -34,6 +34,8 @@ use SrcCore\models\CurlModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
+use ExportSeda\models\AbstractMessage;
+
 trait ExportSEDATrait
 {
     public static function sendToRecordManagement(array $args)
@@ -412,11 +414,29 @@ trait ExportSEDATrait
         return ['filePath' => $summarySheetFilePath];
     }
 
+    public static function array2object($data){
+        if (!is_array($data)) {
+            return $data;
+        }
+        $object = new \stdClass();
+        foreach ($data as $name => $value) {
+            if (isset($name)) {
+                $object->{$name} = self::array2object($value);
+            }
+        }
+        return $object;
+    }
+
     public static function generateSEDAPackage(array $args)
     {
-        $encodedFile = '';
+        // var_dump($args); exit();
+        $data = [];
+        $data['messageObject'] = self::array2object($args["data"]["messageObject"]);
+        $data['type'] = $args["data"]["type"];
         
-        return ['encodedFile' => $encodedFile];
+        $informationsToSend = SendMessageController::generateMessageFile($data);
+        var_dump($informationsToSend); exit();
+        return $informationsToSend;
     }
 
     public static function checkAcknowledgmentRecordManagement(array $args)

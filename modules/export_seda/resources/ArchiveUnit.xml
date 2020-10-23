@@ -169,6 +169,24 @@
             <Corpname><?merge .Corpname ?></Corpname>
             <Identifier><?merge .Identifier ?></Identifier>
         </Recipient>
+        <?merge .Content.Sender.array() ?>
+        <Sender>
+            <FirstName><?merge .FirstName ?></FirstName>
+            <BirthName><?merge .BirthName ?></BirthName>
+            <GivenName><?merge .GivenName ?></GivenName>
+            <Gender><?merge .Gender ?></Gender>
+            <BirthDate><?merge .BirthDate ?></BirthDate>
+            <BirthPlace><?merge .BirthPlace ?></BirthPlace>
+            <DeathDate><?merge .DeathDate ?></DeathDate>
+            <DeathPlace><?merge .DeathPlace ?></DeathPlace>
+            <Nationality><?merge .Nationality ?></Nationality>
+            <Function><?merge .Function ?></Function>
+            <Activity><?merge .Activity ?></Activity>
+            <Position><?merge .Position ?></Position>
+            <Role><?merge .Role ?></Role>
+            <Corpname><?merge .Corpname ?></Corpname>
+            <Identifier><?merge .Identifier ?></Identifier>
+        </Sender>
         <Source><?merge .Content.Source ?></Source>
         <?merge .Content.RelatedObjectReference.bool() ?>
         <RelatedObjectReference>
