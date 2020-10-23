@@ -146,12 +146,16 @@ export class AdministrationService {
     }
 
     setDataSource(adminId: string, data: any, sort: MatSort, paginator: MatPaginator, filterColumns: string[]) {
+        this.currentAdminId = adminId;
+
         if (this.localStorage.get(`filtersAdmin_${this.headerService.user.id}`) !== null) {
             this.filters = JSON.parse(this.localStorage.get(`filtersAdmin_${this.headerService.user.id}`));
+            if (this.filters[adminId] === undefined) {
+                this.saveDefaultFilter();
+            }
         } else {
             this.saveDefaultFilter();
         }
-        this.currentAdminId = adminId;
         this.searchTerm = new FormControl('');
 
         this.searchTerm.valueChanges
