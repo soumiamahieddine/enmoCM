@@ -40,10 +40,10 @@ class AuthenticationController
 
     public function getInformations(Request $request, Response $response)
     {
-        $path = CoreConfigModel::getConfigPath();
+        $path       = CoreConfigModel::getConfigPath();
         $hashedPath = md5($path);
 
-        $appName = CoreConfigModel::getApplicationName();
+        $appName   = CoreConfigModel::getApplicationName();
         $parameter = ParameterModel::getById(['id' => 'loginpage_message', 'select' => ['param_value_string']]);
 
         $encryptKey = CoreConfigModel::getEncryptKey();
@@ -52,19 +52,19 @@ class AuthenticationController
         $authUri = null;
         if ($loggingMethod['id'] == 'cas') {
             $casConfiguration = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/cas_config.xml']);
-            $hostname = (string)$casConfiguration->WEB_CAS_URL;
-            $port = (string)$casConfiguration->WEB_CAS_PORT;
-            $uri = (string)$casConfiguration->WEB_CAS_CONTEXT;
-            $authUri = "https://{$hostname}:{$port}{$uri}/login?service=" . UrlController::getCoreUrl() . 'dist/index.html#/login';
+            $hostname         = (string)$casConfiguration->WEB_CAS_URL;
+            $port             = (string)$casConfiguration->WEB_CAS_PORT;
+            $uri              = (string)$casConfiguration->WEB_CAS_CONTEXT;
+            $authUri          = "https://{$hostname}:{$port}{$uri}/login?service=" . UrlController::getCoreUrl() . 'dist/index.html#/login';
         } elseif ($loggingMethod['id'] == 'keycloak') {
             $keycloakConfig = CoreConfigModel::getKeycloakConfiguration();
-            $provider = new Keycloak($keycloakConfig);
-            $authUri = $provider->getAuthorizationUrl(['scope' => $keycloakConfig['scope']]);
-            $keycloakState = $provider->getState();
+            $provider       = new Keycloak($keycloakConfig);
+            $authUri        = $provider->getAuthorizationUrl(['scope' => $keycloakConfig['scope']]);
+            $keycloakState  = $provider->getState();
         } elseif ($loggingMethod['id'] == 'sso') {
             $ssoConfiguration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_sso', 'select' => ['value']]);
             $ssoConfiguration = !empty($ssoConfiguration['value']) ? json_decode($ssoConfiguration['value'], true) : null;
-            $authUri = $ssoConfiguration['value']['uri'] ?? null;
+            $authUri          = $ssoConfiguration['url'] ?? null;
         }
 
         $return = [
@@ -516,7 +516,7 @@ class AuthenticationController
             return ['errors' => 'Sso configuration missing : no login mapping'];
         }
 
-        $login = $_SERVER[$mapping['login']];
+        $login = $_SERVER['HTTP_' . strtoupper($mapping['login'])];
         if (empty($login)) {
             return ['errors' => 'Authentication Failed : login not present in header'];
         }
