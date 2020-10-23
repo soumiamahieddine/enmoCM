@@ -110,9 +110,7 @@ class SendMessageController
 
         file_put_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml", $DOMTemplate->saveXML());
 
-        var_dump(file_get_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml")); 
-
-        $filename = self::generateZip($seda2Message, $tmpPath);exit();
+        $filename = self::generateZip($seda2Message, $tmpPath);
 
         $arrayReturn = [
             "messageObject" => $seda2Message,
