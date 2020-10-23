@@ -427,6 +427,7 @@ CREATE TABLE listinstance
   process_comment character varying(255),
   signatory boolean default false,
   requested_signature boolean default false,
+  delegate INTEGER,
   CONSTRAINT listinstance_pkey PRIMARY KEY (listinstance_id)
 )
 WITH (OIDS=FALSE);
