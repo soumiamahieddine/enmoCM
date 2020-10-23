@@ -2130,5 +2130,7 @@
     "installNewCustom": "Créer une nouvelle instance",
     "mustConnectToInstall" : "Veuillez vous connecter pour accéder à l'installeur",
     "mustPrivilegeToInstall" : "Vous n'avez pas le droit de créer une nouvelle instance",
-    "instancesList" : "Instances présentes"
+    "instancesList" : "Instances présentes",
+    "insteadOf": "À la place de"
+
 }

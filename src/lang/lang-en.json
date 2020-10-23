@@ -2078,5 +2078,6 @@
     "displayCriteria": "Show search criteria",
     "displaySelectedValues": "Show selected values",
     "quickSearch": "Quick search",
-    "contactInput": "Contact input"
+    "contactInput": "Contact input",
+    "insteadOf": "Instead of"
 }
