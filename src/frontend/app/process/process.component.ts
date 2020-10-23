@@ -850,7 +850,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 }
                 ),
                 catchError((err: any) => {
-                    this.notify.handleErrors(err);
+                    this.resourceFreezed = !this.resourceFreezed;
+                    this.notify.handleSoftErrors(err);
                     return of(false);
                 })
             ).subscribe();
@@ -868,7 +869,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
             }
             ),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.resourceBinded = !this.resourceBinded;
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();
