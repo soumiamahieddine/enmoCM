@@ -2119,7 +2119,7 @@
     "ssoUrl": "Url du portail SSO",
     "ssoUrlDesc": "Permet d'activer le bouton de déconnexion de l'application afin de retourner sur le portail de connexion SSO.",
     "warning": "Attention",
-    "fieldUserIdDescSso": "Permet faire le lien entre l'identifiant utilisateur maarch et l'identifiant SSO",
+    "fieldUserIdDescSso": "Permet de faire le lien entre l'identifiant utilisateur Maarch et l'identifiant SSO",
     "lifeCycle": "Cycle de vie",
     "bindingDocumentFinalAction": "Action finale relative aux documents engageants",
     "nonBindingDocumentFinalAction": "Action finale relative aux documents non engageants",

@@ -170,7 +170,7 @@ function Bt_purgeAll($args = [])
             'select'    => ['d.path_template', 'r.path', 'r.filename'],
             'table'     => ['res_letterbox r', 'docservers d'],
             'left_join' => ['r.docserver_id = d.docserver_id'],
-            'where'     => ['res_id in (?)'],
+            'where'     => ['res_id in (?)', 'filename is not null'],
             'data'      => [$args['resources']]
         ]);
         foreach ($resources as $resource) {
@@ -184,7 +184,7 @@ function Bt_purgeAll($args = [])
             'select'    => ['d.path_template', 'r.path', 'r.filename'],
             'table'     => ['res_attachments r', 'docservers d'],
             'left_join' => ['r.docserver_id = d.docserver_id'],
-            'where'     => ['res_id in (?)'],
+            'where'     => ['res_id in (?)', 'filename is not null'],
             'data'      => [$args['resources']]
         ]);
         foreach ($resources as $resource) {
@@ -195,9 +195,9 @@ function Bt_purgeAll($args = [])
         }
     
         $resources = \SrcCore\models\DatabaseModel::select([
-            'select'    => ['d.path_template', 'adrpath', 'adrfilename'],
+            'select'    => ['d.path_template', 'adr.path', 'adr.filename'],
             'table'     => ['adr_letterbox adr', 'docservers d'],
-            'left_join' => ['adrdocserver_id = d.docserver_id'],
+            'left_join' => ['adr.docserver_id = d.docserver_id'],
             'where'     => ['res_id in (?)'],
             'data'      => [$args['resources']]
         ]);
@@ -209,9 +209,9 @@ function Bt_purgeAll($args = [])
         }
     
         $resources = \SrcCore\models\DatabaseModel::select([
-            'select'    => ['d.path_template', 'adrpath', 'adrfilename'],
-            'table'     => ['adr_attachments', 'docservers d'],
-            'left_join' => ['adrdocserver_id = d.docserver_id'],
+            'select'    => ['d.path_template', 'adr.path', 'adr.filename'],
+            'table'     => ['adr_attachments adr', 'docservers d'],
+            'left_join' => ['adr.docserver_id = d.docserver_id'],
             'where'     => ['res_id in (?)'],
             'data'      => [$args['resources']]
         ]);
@@ -299,8 +299,13 @@ function Bt_purgeAll($args = [])
         ]);
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'shippings',
-            'where' => ['document_id in (?)'],
-            'data'  => [$args['resources']]
+            'where' => ['document_id in (?)', 'document_type = ?'],
+            'data'  => [$args['resources'], 'resource']
+        ]);
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'shippings',
+            'where' => ['document_id in (select res_id from res_attachments where res_id_master in (?))', 'document_type = ?'],
+            'data'  => [$args['resources'], 'attachment']
         ]);
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'notes',
@@ -319,8 +324,8 @@ function Bt_purgeAll($args = [])
         ]);
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'emails',
-            'where' => ['document->>\''.$args['resources'].'\''],
-            'data'  => []
+            'where' => ['document->>\'id\' in (?)'],
+            'data'  => [$args['resources']]
         ]);
     }
 }
