@@ -278,7 +278,7 @@ export class AuthService {
                             entities: data.entities,
                             groups: data.groups,
                             preferences: data.preferences,
-                            privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.privilegeService.getAllPrivileges() : data.privileges
+                            privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.privilegeService.getAllPrivileges(!data.lockAdvancedPrivileges) : data.privileges
                         };
                         this.headerService.nbResourcesFollowed = data.nbFollowedResources;
                         this.privilegeService.resfreshUserShortcuts();

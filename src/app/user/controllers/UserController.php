@@ -541,6 +541,7 @@ class UserController
         $user['passwordRules']      = PasswordModel::getEnabledRules();
         $user['canModifyPassword']  = true;
         $user['privileges']         = PrivilegeController::getPrivilegesByUser(['userId' => $user['id']]);
+        $user['lockAdvancedPrivileges'] = PrivilegeController::isAdvancedPrivilegesLocked();
         $userFollowed = UserFollowedResourceModel::get(['select' => ['count(1) as nb'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
         $user['nbFollowedResources'] = $userFollowed[0]['nb'];
 
