@@ -16,7 +16,7 @@
         <mat-label>{{'lang.nonBindingDocumentFinalAction' | translate}}</mat-label>
         <mat-select formControlName="nonBindingDocumentFinalAction" id="nonBindingDocumentFinalAction"
         name="nonBindingDocumentFinalAction" 
-        title="{{'lang.bindingDocumentFinalAction' | translate}}">
+        title="{{'lang.nonBindingDocumentFinalAction' | translate}}">
             <mat-option *ngFor="let item of finalActionValues" [value]="item">
                 {{ 'lang.' + item | translate}}
             </mat-option>
