@@ -14,6 +14,7 @@ use SignatureBook\controllers\SignatureBookController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\controllers\UserController;
@@ -33,6 +34,13 @@ class PrivilegeController
         }
         if (!Validator::stringType()->notEmpty()->validate($args['privilegeId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route privilegeId is empty or not an integer']);
+        }
+
+        if (in_array($args['privilegeId'], ['create_custom', 'admin_update_control'])) {
+            $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+            if (!empty($config['config']['lockAdvancedPrivileges'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
+            }
         }
 
         $group = GroupModel::getById(['id' => $args['id']]);
@@ -343,5 +351,12 @@ class PrivilegeController
         }
 
         return true;
+    }
+
+    public static function isAdvancedPrivilegesLocked()
+    {
+        $file = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+
+        return !empty($file['config']['lockAdvancedPrivileges']);
     }
 }
