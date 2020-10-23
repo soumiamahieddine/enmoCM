@@ -516,7 +516,11 @@ class AuthenticationController
             return ['errors' => 'Sso configuration missing : no login mapping'];
         }
 
-        $login = $_SERVER['HTTP_' . strtoupper($mapping['login'])];
+        if (in_array(strtoupper($mapping['login']), ['REMOTE_USER', 'PHP_AUTH_USER'])) {
+            $login = $_SERVER[strtoupper($mapping['login'])] ?? null;
+        } else {
+            $login = $_SERVER['HTTP_' . strtoupper($mapping['login'])] ?? null;
+        }
         if (empty($login)) {
             return ['errors' => 'Authentication Failed : login not present in header'];
         }
