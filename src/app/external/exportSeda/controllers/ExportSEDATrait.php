@@ -21,8 +21,10 @@ use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use ExportSeda\controllers\ExportSEDATrait;
 use ExportSeda\controllers\SedaController;
+use ExportSeda\models\AbstractMessage;
 use Folder\models\FolderModel;
 use History\models\HistoryModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use MessageExchange\models\MessageExchangeModel;
 use Note\controllers\NoteController;
 use Resource\controllers\StoreController;
@@ -31,10 +33,9 @@ use Resource\models\ResModel;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
+
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
-
-use ExportSeda\models\AbstractMessage;
 
 trait ExportSEDATrait
 {
@@ -166,18 +167,22 @@ trait ExportSEDATrait
         }
 
         $messageSaved = ExportSEDATrait::saveMessage(['messageObject' => $sedaPackage['messageObject']]);
-        $elementSend  = ExportSEDATrait::sendSedaPackage([
-            'messageId'       => $messageSaved['messageId'],
-            'config'          => $config,
-            'encodedFilePath' => $sedaPackage['encodedFilePath'],
-            'messageFilename' => $sedaPackage['messageFilename'],
-            'resId'           => $resource['res_id']
-        ]);
-        if (!empty($elementSend['errors'])) {
-            return ['errors' => [$elementSend['errors']]];
+        if ($args['data']['actionMode'] == 'download') {
+            return ['data' => ['encodedFile' => base64_encode(file_get_contents($sedaPackage['encodedFilePath']))]];
+        } else {
+            $elementSend  = ExportSEDATrait::sendSedaPackage([
+                'messageId'       => $messageSaved['messageId'],
+                'config'          => $config,
+                'encodedFilePath' => $sedaPackage['encodedFilePath'],
+                'messageFilename' => $sedaPackage['messageFilename'],
+                'resId'           => $resource['res_id']
+            ]);
+            if (!empty($elementSend['errors'])) {
+                return ['errors' => [$elementSend['errors']]];
+            }
+    
+            return true;
         }
-
-        return true;
     }
 
     public static function sendSedaPackage($args = [])
@@ -368,7 +373,6 @@ trait ExportSEDATrait
         $units[] = ['unit' => 'diffusionList',               'label' => _DIFFUSION_LIST];
         $units[] = ['unit' => 'visaWorkflow',                'label' => _VISA_WORKFLOW];
         $units[] = ['unit' => 'opinionWorkflow',             'label' => _AVIS_WORKFLOW];
-        $units[] = ['unit' => 'notes',                       'label' => _NOTES_COMMENT];
         
         $tmpIds = [$args['resId']];
         $data   = [];
@@ -403,12 +407,30 @@ trait ExportSEDATrait
             'data'   => [$args['resId']]
         ]);
 
+        $modelId = ResModel::getById([
+            'select' => ['model_id'],
+            'resId'  => $args['resId']
+        ]);
+        $indexingFields = IndexingModelFieldModel::get([
+            'select' => ['identifier', 'unit'],
+            'where'  => ['model_id = ?'],
+            'data'   => [$modelId['model_id']]
+        ]);
+        $fieldsIdentifier = array_column($indexingFields, 'identifier');
+
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
-        SummarySheetController::createSummarySheet($pdf, ['resource' => $mainResource[0], 'units' => $units, 'login' => $GLOBALS['login'], 'data' => $data]);
+
+        SummarySheetController::createSummarySheet($pdf, [
+            'resource'         => $mainResource[0],
+            'units'            => $units,
+            'login'            => $GLOBALS['login'],
+            'data'             => $data,
+            'fieldsIdentifier' => $fieldsIdentifier
+        ]);
 
         $tmpPath = CoreConfigModel::getTmpPath();
-        $summarySheetFilePath = $tmpPath . "summarySheet_".$args['resId'] . "_" . $aArgs['userId'] . "_" . rand() . ".pdf";
+        $summarySheetFilePath = $tmpPath . "summarySheet_".$args['resId'] . "_" . $GLOBALS['id'] . "_" . rand() . ".pdf";
         $pdf->Output($summarySheetFilePath, 'F');
 
         return ['filePath' => $summarySheetFilePath];
