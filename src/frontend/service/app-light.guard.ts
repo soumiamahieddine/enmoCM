@@ -22,14 +22,8 @@ export class AppLightGuard implements CanActivate {
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
-        private router: Router,
         private authService: AuthService,
-        private localStorage: LocalStorageService,
-        private functionService: FunctionsService,
         public headerService: HeaderService,
-        private privilegeService: PrivilegeService,
-        private dialog: MatDialog,
-        private functionsService: FunctionsService,
     ) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {

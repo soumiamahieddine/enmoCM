@@ -71,7 +71,7 @@ export class SsoAdministrationComponent implements OnInit {
     getConnection() {
         this.http.get(`../rest/configurations/admin_sso`).pipe(
             tap((data: any) => {
-                this.sso = data.configuration;
+                this.sso = data.configuration.value;
                 this.ssoClone = JSON.parse(JSON.stringify(this.sso));
                 this.loading = false;
             }),
