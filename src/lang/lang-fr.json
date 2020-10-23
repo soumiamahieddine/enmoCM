@@ -2125,5 +2125,9 @@
     "restrictAccess": "Accès retreint",
     "transfer": "Transfert SAE + destruction",
     "copy": "Transfert SAE + accès restreint",
-    "deleteAction": "Suppression"
+    "deleteAction": "Suppression",
+    "installNewCustom": "Créer une nouvelle instance",
+    "mustConnectToInstall" : "Veuillez vous connecter pour accéder à l'installeur",
+    "mustPrivilegeToInstall" : "Vous n'avez pas le droit de créer une nouvelle instance",
+    "instancesList" : "Instances présentes"
 }

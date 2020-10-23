@@ -572,6 +572,16 @@ export class PrivilegeService {
             'unit': 'registeredMails',
             'angular': true,
             'shortcut': false
+        },
+        {
+            'id': 'create_custom',
+            'label': 'lang.installNewCustom',
+            'comment': 'lang.installNewCustom',
+            'route': '/install',
+            'style': 'far fa-window-restore',
+            'unit': 'application',
+            'angular': true,
+            'shortcut': false
         }
     ];
 
