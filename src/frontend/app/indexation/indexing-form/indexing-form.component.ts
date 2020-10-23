@@ -1298,6 +1298,7 @@ export class IndexingFormComponent implements OnInit {
                     if (this.functions.empty(item.unit)) {
                         item.unit = 'mail';
                     }
+                    item.mandatory = true;
                     this.initValidator(item);
                 }
             });
