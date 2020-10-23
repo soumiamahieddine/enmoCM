@@ -180,7 +180,7 @@ trait ExportSEDATrait
         return true;
     }
 
-    private static function sendSedaPackage()
+    public static function sendSedaPackage($args = [])
     {
         $bodyData = [
             'messageFile' => base64_encode(file_get_contents($args['encodedFilePath'])),
@@ -414,7 +414,8 @@ trait ExportSEDATrait
         return ['filePath' => $summarySheetFilePath];
     }
 
-    public static function array2object($data){
+    public static function array2object($data)
+    {
         if (!is_array($data)) {
             return $data;
         }
@@ -429,13 +430,11 @@ trait ExportSEDATrait
 
     public static function generateSEDAPackage(array $args)
     {
-        // var_dump($args); exit();
         $data = [];
         $data['messageObject'] = self::array2object($args["data"]["messageObject"]);
         $data['type'] = $args["data"]["type"];
         
         $informationsToSend = SendMessageController::generateMessageFile($data);
-        var_dump($informationsToSend); exit();
         return $informationsToSend;
     }
 
