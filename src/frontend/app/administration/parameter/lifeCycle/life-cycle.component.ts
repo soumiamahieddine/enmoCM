@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, debounceTime } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { NotificationService } from '@service/notification/notification.service';
 
 @Component({
     selector: 'app-life-cyle',
@@ -10,12 +12,15 @@ import { of } from 'rxjs';
 })
 
 export class LifeCycleComponent implements OnInit {
+    documentFinalAction: FormGroup;
     finalActionValues: any[] = ['restrictAccess', 'transfer', 'copy', 'delete'];
-    bindingDocumentFinalAction: any[] = [];
-    nonBindingDocumentFinalAction: any[] = [];
-    notify: any;
 
-    constructor(public translate: TranslateService, public http: HttpClient) {}
+    constructor(public translate: TranslateService, public http: HttpClient, private _formBuilder: FormBuilder, private notify: NotificationService) {
+        this.documentFinalAction = this._formBuilder.group({
+            bindingDocumentFinalAction: [''],
+            nonBindingDocumentFinalAction: ['']
+        });
+    }
 
     async ngOnInit(): Promise<void> {
         await this.getFinalAction();
@@ -25,11 +30,23 @@ export class LifeCycleComponent implements OnInit {
         return new Promise((resolve) => {
             this.http.get('../rest/parameters').pipe(
                 tap((data: any) => {
-                        const bindDocumentFinalAction = data.parameters.filter((t: { id: any; }) => t.id === 'bindingDocumentFinalAction');
-                        const nonBindDocumentFinalAction = data.parameters.filter((t: { id: any; }) => t.id === 'nonBindingDocumentFinalAction');
-                        this.bindingDocumentFinalAction = bindDocumentFinalAction[0];
-                        this.nonBindingDocumentFinalAction = nonBindDocumentFinalAction[0];
-                        resolve(true);
+                    const bindDocumentFinalAction = data.parameters.filter((item: { id: any; }) => item.id === 'bindingDocumentFinalAction')[0].param_value_string;
+                    const nonBindDocumentFinalAction = data.parameters.filter((item: { id: any; }) => item.id === 'nonBindingDocumentFinalAction')[0].param_value_string;
+                    this.documentFinalAction.controls['bindingDocumentFinalAction'].setValue(bindDocumentFinalAction);
+                    this.documentFinalAction.controls['nonBindingDocumentFinalAction'].setValue(nonBindDocumentFinalAction);
+
+                    setTimeout(() => {
+                        this.documentFinalAction.controls['bindingDocumentFinalAction'].valueChanges.pipe(
+                            debounceTime(100),
+                            tap(() => this.saveParameter('bindingDocumentFinalAction'))
+                        ).subscribe();
+
+                        this.documentFinalAction.controls['nonBindingDocumentFinalAction'].valueChanges.pipe(
+                            debounceTime(100),
+                            tap(() => this.saveParameter('nonBindingDocumentFinalAction'))
+                        ).subscribe();
+                    });
+                    resolve(true);
                 }),
                 catchError((err: any) => {
                     this.notify.handleSoftErrors(err);
@@ -37,6 +54,19 @@ export class LifeCycleComponent implements OnInit {
                 })
             ).subscribe();
         });
+    }
+
+    saveParameter(id: string) {
+        let param =  {};
+        param = {
+            param_value_string : this.documentFinalAction.controls[id].value
+        };
+        this.http.put('../rest/parameters/' + id, param)
+            .subscribe(() => {
+                this.notify.success(this.translate.instant('lang.parameterUpdated'));
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 
 }
