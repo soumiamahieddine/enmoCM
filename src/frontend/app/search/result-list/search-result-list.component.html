@@ -169,6 +169,16 @@
                         <mat-icon [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']"
                             style="margin-bottom: 5px;"></mat-icon>
                     </button>
+                    <button *ngIf="privilegeService.hasCurrentUserPrivilege('freeze_retention_rule')"
+                            mat-icon-button [title]="this.translate.instant('lang.freezeRetentionRule')"
+                            class="categoryLabel" (click)="toggleFreezing(row)">
+                                <mat-icon class="{{informationWithFreeze.includes(row.resId) === true ? 'freezeIcon' : 'thawIcon'}} fas fa-snowflake" style="font-size: 20px;"></mat-icon>
+                    </button>
+                    <button *ngIf="privilegeService.hasCurrentUserPrivilege('set_binding_document')"
+                            mat-icon-button [title]="this.translate.instant('lang.setBindingDocument')"
+                            class="categoryLabel" (click)="toggleBinding(row)">
+                                <mat-icon class=" {{ informationWithBinding.includes(row.resId) === true ? 'bindIcon' : 'noBindIcon'}} fas fa-exclamation" style="font-size: 20px;"></mat-icon>
+                    </button>
                     <span style="cursor:pointer;" [class.highlightResultIcon]="row.inStatus" class="main-info-status"
                         (click)="launch(row);">
                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
