@@ -2094,6 +2094,7 @@
     "linkedMails": "Courrier(s) lié(s)",
     "ldapEnabled": "Ldap activé",
     "keycloakEnabled": "Authentification Keycloak activée",
+    "ssoEnabled": "Authentification SSO activée",
     "casEnabled": "Authentification CAS activée",
     "displayAsTechnicalData": "Afficher en tant que donnée technique",
     "displayInForm": "Afficher dans le formulaire",

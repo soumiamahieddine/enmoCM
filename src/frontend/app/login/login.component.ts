@@ -109,7 +109,11 @@ export class LoginComponent implements OnInit {
     }
 
     initConnection() {
-        if (['cas', 'keycloak'].indexOf(this.authService.authMode) > -1) {
+        if (['sso'].indexOf(this.authService.authMode) > -1) {
+            this.loginForm.disable();
+            this.loginForm.setValidators(null);
+            this.onSubmit();
+        } else if (['cas', 'keycloak'].indexOf(this.authService.authMode) > -1) {
             this.loginForm.disable();
             this.loginForm.setValidators(null);
             const regexCas = /ticket=[.]*/g;
