@@ -195,10 +195,8 @@ export class ActionsListComponent implements OnInit {
     getFreezeBindingValue(id) {
         this.http.get(`../rest/resources/${id}?light=true`).pipe(
             tap((infos: any) => {
-                if (infos.retentionFrozen) {
-                    this.isSelectedFreeze = id;
-                }
-                    this.isSelectedBinding = infos.binding;
+                this.isSelectedFreeze = infos.retentionFrozen;
+                this.isSelectedBinding = infos.binding;
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

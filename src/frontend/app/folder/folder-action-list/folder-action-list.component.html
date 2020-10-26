@@ -43,12 +43,12 @@
         <span>{{ 'lang.freezeRetentionRule' | translate }}</span>
     </button>
     <mat-menu  #freezeRentalRule = "matMenu" ng-switch="getValue(var)">
-        <button mat-menu-item (click)="toggleFreezing(true)"
+        <button mat-menu-item (click)="toggleFreezing(true)" class="{{this.isSelectedFreeze === true ? 'isSelectedMenu' : 'notSelectedMenu'}}"
                 [title]="this.translate.instant('lang.freezeTheCurrentUsefulLife')" >
             {{ 'lang.freezeTheCurrentUsefulLife' | translate }}
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item (click)="toggleFreezing(false)"
+        <button mat-menu-item (click)="toggleFreezing(false)" class="{{this.isSelectedFreeze === false ? 'isSelectedMenu' : 'notSelectedMenu'}}"
                 [title]="this.translate.instant('lang.thawTheCurrentUsefulLife')" >
             {{ 'lang.thawTheCurrentUsefulLife' | translate }}
         </button>
