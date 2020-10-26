@@ -175,7 +175,8 @@ trait ExportSEDATrait
                 'config'          => $config,
                 'encodedFilePath' => $sedaPackage['encodedFilePath'],
                 'messageFilename' => $sedaPackage['messageFilename'],
-                'resId'           => $resource['res_id']
+                'resId'           => $resource['res_id'],
+                'reference'       => $data['messageObject']['messageIdentifier']
             ]);
             if (!empty($elementSend['errors'])) {
                 return ['errors' => [$elementSend['errors']]];
@@ -210,11 +211,16 @@ trait ExportSEDATrait
             return ['errors' => 'Error returned by the route /medona/create : ' . $curlResponse['response']['message']];
         }
 
-        // TODO GET XML
-        $pathToDocument = 'xmlFile';
+        $acknowledgement = ExportSEDATrait::getAcknowledgement([
+            'config'    => $args['config'],
+            'reference' => $args['reference']
+        ]);
+        if (!empty($acknowledgement['errors'])) {
+            return ['errors' => 'Error returned in getAcknowledgement process : ' . $acknowledgement['errors']];
+        }
 
         $id = StoreController::storeAttachment([
-            'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
+            'encodedFile'   => $acknowledgement['encodedAcknowledgement'],
             'type'          => 'acknowledgement_record_management',
             'resIdMaster'   => $args['resId'],
             'title'         => 'Accusé de réception',
@@ -458,6 +464,85 @@ trait ExportSEDATrait
         
         $informationsToSend = SendMessageController::generateMessageFile($data);
         return $informationsToSend;
+    }
+
+    public static function getAcknowledgement($args = [])
+    {
+        $curlResponse = CurlModel::execSimple([
+            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/message/reference?reference='.urlencode($args['reference']."_Ack"),
+            'method'  => 'GET',
+            'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
+            'headers' => [
+                'Accept: application/json',
+                'Content-Type: application/json',
+                'User-Agent: ' . $args['config']['exportSeda']['userAgent']
+            ]
+        ]);
+
+        if (!empty($curlResponse['errors'])) {
+            return ['errors' => 'Error returned by the route /medona/message/reference : ' . $curlResponse['errors']];
+        } elseif ($curlResponse['code'] != 200) {
+            return ['errors' => 'Error returned by the route /medona/message/reference : ' . $curlResponse['response']['message']];
+        }
+
+        $messageId = $curlResponse['response']['messageId'];
+
+        $curlResponse = CurlModel::execSimple([
+            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/message/'.urlencode($curlResponse['response']['messageId']).'/Export',
+            'method'  => 'GET',
+            'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
+            'headers' => [
+                'Accept: application/zip',
+                'Content-Type: application/json',
+                'User-Agent: ' . $args['config']['exportSeda']['userAgent']
+            ]
+        ]);
+
+        if (!empty($curlResponse['errors'])) {
+            return ['errors' => 'Error returned by the route /medona/message/{messageId}/Export : ' . $curlResponse['errors']];
+        } elseif ($curlResponse['code'] != 200) {
+            return ['errors' => 'Error returned by the route /medona/message/{messageId}/Export : ' . $curlResponse['response']['message']];
+        }
+
+        $encodedAcknowledgement = ExportSEDATrait::getEncodedDocumentFromEncodedZip([
+            'encodedZipDocument' => base64_encode($curlResponse['response']),
+            'messageId'          => $messageId
+        ]);
+        if (!empty($encodedAcknowledgement['errors'])) {
+            return ['errors' => 'Error during getEncodedDocumentFromEncodedZip process : ' . $encodedAcknowledgement['errors']];
+        }
+
+        return ['encodedAcknowledgement' => $encodedAcknowledgement['encodedDocument']];
+    }
+
+    public static function getEncodedDocumentFromEncodedZip(array $args)
+    {
+        $tmpPath = CoreConfigModel::getTmpPath();
+
+        $zipDocumentOnTmp = $tmpPath . mt_rand() .'_' . $GLOBALS['id'] . '_acknowledgement.zip';
+        file_put_contents($zipDocumentOnTmp, base64_decode($args['encodedZipDocument']));
+
+        $zipArchive = new \ZipArchive();
+        $open = $zipArchive->open($zipDocumentOnTmp);
+        if ($open != true) {
+            return ['errors' => "getDocumentFromEncodedZip : $open"];
+        }
+
+        $dirOnTmp = $tmpPath . mt_rand() . '_acknowledgement';
+        if (!@$zipArchive->extractTo($dirOnTmp)) {
+            return ['errors' => "getDocumentFromEncodedZip : Extract failed"];
+        }
+
+        $filesOnTmp = scandir($dirOnTmp);
+        foreach ($filesOnTmp as $fileOnTmp) {
+            if ($fileOnTmp == $args['messageId']) {
+                $base64Content = base64_encode(file_get_contents("{$dirOnTmp}/{$fileOnTmp}"));
+                unlink($zipDocumentOnTmp);
+                return ['encodedDocument' => $base64Content];
+            }
+        }
+
+        return ['errors' => "getDocumentFromEncodedZip : No document was found in Zip"];
     }
 
     public static function checkAcknowledgmentRecordManagement(array $args)

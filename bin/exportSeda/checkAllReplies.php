@@ -158,11 +158,11 @@ foreach ($pendingResources as $resId) {
         // TODO GET XML
         $pathToDocument = 'xmlFile';
 
-        foreach ($resIds as $resId) {
+        foreach ($resIds as $res) {
             $id = Resource\controllers\StoreController::storeAttachment([
                 'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
                 'type'          => 'reply_record_management',
-                'resIdMaster'   => $resId,
+                'resIdMaster'   => $res,
                 'title'         => 'Réponse au transfert',
                 'format'        => 'xml',
                 'status'        => 'TRA'
@@ -173,7 +173,7 @@ foreach ($pendingResources as $resId) {
             \Resource\models\ResModel::update([
                 'set'   => ['status' => $GLOBALS['statusReplyReceived']],
                 'where' => ['res_id = ?'],
-                'data'  => [$resId]
+                'data'  => [$res]
             ]);
             $nbMailsRetrieved++;
         }
