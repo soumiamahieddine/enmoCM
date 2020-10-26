@@ -141,42 +141,38 @@ foreach ($pendingResources as $resId) {
     } else {
         $unitIdentifiers[$message['reference']] = $unitIdentifier[0]['res_id'];
     }
+}
 
-    foreach ($unitIdentifiers as $reference => $value) {
-        $messages = Bt_getReply(['reference' => $reference]);
-        if (!empty($messages['errors'])) {
-            Bt_writeLog(['level' => 'ERROR', 'message' => $messages['errors']]);
+foreach ($unitIdentifiers as $reference => $value) {
+    $messages = Bt_getReply(['reference' => $reference]);
+    if (!empty($messages['errors'])) {
+        Bt_writeLog(['level' => 'ERROR', 'message' => $messages['errors']]);
+        continue;
+    } elseif (empty($messages['encodedReply'])) {
+        Bt_writeLog(['level' => 'INFO', 'message' => 'Le bordereau avec la référence ' . $reference . ' est toujours en cours de traitement dans le SAE Maarch RM.']);
+        continue;
+    }
+
+    $resIds = explode(',', $value);
+
+    foreach ($resIds as $resId) {
+        $id = Resource\controllers\StoreController::storeAttachment([
+            'encodedFile'   => $messages['encodedReply'],
+            'type'          => 'reply_record_management',
+            'resIdMaster'   => $resId,
+            'title'         => 'Réponse au transfert',
+            'format'        => 'xml',
+            'status'        => 'TRA'
+        ]);
+        if (empty($id) || !empty($id['errors'])) {
+            return ['errors' => ['[storeAttachment] ' . $id['errors']]];
         }
-
-        if (!isset($messages['response']['replyMessage'])) {
-            continue;
-        }
-
-        $resIds = explode(',', $value);
-        $data   = json_decode($messages->replyMessage->data);
-
-        // TODO GET XML
-        $pathToDocument = 'xmlFile';
-
-        foreach ($resIds as $res) {
-            $id = Resource\controllers\StoreController::storeAttachment([
-                'encodedFile'   => base64_encode(file_get_contents($pathToDocument)),
-                'type'          => 'reply_record_management',
-                'resIdMaster'   => $res,
-                'title'         => 'Réponse au transfert',
-                'format'        => 'xml',
-                'status'        => 'TRA'
-            ]);
-            if (empty($id) || !empty($id['errors'])) {
-                return ['errors' => ['[storeAttachment] ' . $id['errors']]];
-            }
-            \Resource\models\ResModel::update([
-                'set'   => ['status' => $GLOBALS['statusReplyReceived']],
-                'where' => ['res_id = ?'],
-                'data'  => [$res]
-            ]);
-            $nbMailsRetrieved++;
-        }
+        \Resource\models\ResModel::update([
+            'set'   => ['status' => $GLOBALS['statusReplyReceived']],
+            'where' => ['res_id = ?'],
+            'data'  => [$resId]
+        ]);
+        $nbMailsRetrieved++;
     }
 }
 

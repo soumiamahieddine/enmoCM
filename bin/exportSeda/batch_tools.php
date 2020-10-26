@@ -160,7 +160,38 @@ function Bt_getReply($args = [])
         return ['errors' => 'Error returned by the route /organization/organization/Search : ' . $curlResponse['response']['message']];
     }
 
-    return ['response' => $curlResponse['response']];
+    if ($curlResponse['response']['status'] != "processed") {
+        return [];
+    }
+
+    $messageId = $curlResponse['response']['replyMessage']['messageId'];
+
+    $curlResponse = \SrcCore\models\CurlModel::execSimple([
+        'url'     => rtrim($GLOBALS['urlSAEService'], '/') . '/medona/message/'.urlencode($messageId).'/Export',
+        'method'  => 'GET',
+        'cookie'  => 'LAABS-AUTH=' . urlencode($GLOBALS['token']),
+        'headers' => [
+            'Accept: application/zip',
+            'Content-Type: application/json',
+            'User-Agent: ' . $GLOBALS['userAgent']
+        ]
+    ]);
+
+    if (!empty($curlResponse['errors'])) {
+        return ['errors' => 'Error returned by the route /medona/message/{messageId}/Export : ' . $curlResponse['errors']];
+    } elseif ($curlResponse['code'] != 200) {
+        return ['errors' => 'Error returned by the route /medona/message/{messageId}/Export : ' . $curlResponse['response']['message']];
+    }
+
+    $encodedReply = \ExportSeda\controllers\ExportSEDATrait::getXmlFromZipMessage([
+        'encodedZipDocument' => base64_encode($curlResponse['response']),
+        'messageId'          => $messageId
+    ]);
+    if (!empty($encodedReply['errors'])) {
+        return ['errors' => 'Error during getXmlFromZipMessage process : ' . $encodedReply['errors']];
+    }
+
+    return ['encodedReply' => $encodedReply['encodedDocument']];
 }
 
 function Bt_purgeAll($args = [])

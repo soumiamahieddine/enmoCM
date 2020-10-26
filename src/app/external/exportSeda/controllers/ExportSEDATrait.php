@@ -167,6 +167,11 @@ trait ExportSEDATrait
         }
 
         $messageSaved = ExportSEDATrait::saveMessage(['messageObject' => $sedaPackage['messageObject']]);
+        MessageExchangeModel::insertUnitIdentifier([
+            'messageId' => $messageSaved['messageId'],
+            'tableName' => 'res_letterbox',
+            'resId'     => $resource['res_id']
+        ]);
         if ($args['data']['actionMode'] == 'download') {
             return ['data' => ['encodedFile' => base64_encode(file_get_contents($sedaPackage['encodedFilePath']))]];
         } else {
@@ -488,7 +493,7 @@ trait ExportSEDATrait
         $messageId = $curlResponse['response']['messageId'];
 
         $curlResponse = CurlModel::execSimple([
-            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/message/'.urlencode($curlResponse['response']['messageId']).'/Export',
+            'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/message/'.urlencode($messageId).'/Export',
             'method'  => 'GET',
             'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
             'headers' => [
@@ -504,45 +509,37 @@ trait ExportSEDATrait
             return ['errors' => 'Error returned by the route /medona/message/{messageId}/Export : ' . $curlResponse['response']['message']];
         }
 
-        $encodedAcknowledgement = ExportSEDATrait::getEncodedDocumentFromEncodedZip([
+        $encodedAcknowledgement = ExportSEDATrait::getXmlFromZipMessage([
             'encodedZipDocument' => base64_encode($curlResponse['response']),
             'messageId'          => $messageId
         ]);
         if (!empty($encodedAcknowledgement['errors'])) {
-            return ['errors' => 'Error during getEncodedDocumentFromEncodedZip process : ' . $encodedAcknowledgement['errors']];
+            return ['errors' => 'Error during getXmlFromZipMessage process : ' . $encodedAcknowledgement['errors']];
         }
 
         return ['encodedAcknowledgement' => $encodedAcknowledgement['encodedDocument']];
     }
 
-    public static function getEncodedDocumentFromEncodedZip(array $args)
+    public function getXmlFromZipMessage(array $args)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
 
-        $zipDocumentOnTmp = $tmpPath . mt_rand() .'_' . $GLOBALS['id'] . '_acknowledgement.zip';
+        $zipDocumentOnTmp = $tmpPath . mt_rand() .'_' . $GLOBALS['id'] . '_acknowledgement.7z';
         file_put_contents($zipDocumentOnTmp, base64_decode($args['encodedZipDocument']));
 
-        $zipArchive = new \ZipArchive();
-        $open = $zipArchive->open($zipDocumentOnTmp);
-        if ($open != true) {
-            return ['errors' => "getDocumentFromEncodedZip : $open"];
-        }
+        $path = $tmpPath. mt_rand() .'_' . $GLOBALS['id'];
+        shell_exec("7z x $zipDocumentOnTmp -o$path");
 
-        $dirOnTmp = $tmpPath . mt_rand() . '_acknowledgement';
-        if (!@$zipArchive->extractTo($dirOnTmp)) {
-            return ['errors' => "getDocumentFromEncodedZip : Extract failed"];
+        $fullFilePath = $path."/".$args['messageId'].".xml";
+        if (!file_exists($fullFilePath)) {
+            return ['errors' => "getDocumentFromEncodedZip : No document was found in Zip"];
         }
+        
+        $content = file_get_contents($fullFilePath);
+        unlink($zipDocumentOnTmp);
+        unlink($fullFilePath);
 
-        $filesOnTmp = scandir($dirOnTmp);
-        foreach ($filesOnTmp as $fileOnTmp) {
-            if ($fileOnTmp == $args['messageId']) {
-                $base64Content = base64_encode(file_get_contents("{$dirOnTmp}/{$fileOnTmp}"));
-                unlink($zipDocumentOnTmp);
-                return ['encodedDocument' => $base64Content];
-            }
-        }
-
-        return ['errors' => "getDocumentFromEncodedZip : No document was found in Zip"];
+        return ['encodedDocument' => base64_encode($content)];
     }
 
     public static function checkAcknowledgmentRecordManagement(array $args)
