@@ -102,8 +102,8 @@ export class AuthService {
         this.localStorage.remove('MaarchCourrierRefreshToken');
     }
 
-    async logout(cleanUrl: boolean = true) {
-        if (['cas', 'keycloak'].indexOf(this.authMode) > -1) {
+    async logout(cleanUrl: boolean = true, forcePageLogin: boolean = false) {
+        if (['cas', 'keycloak'].indexOf(this.authMode) > -1 && !forcePageLogin) {
             this.SsoLogout(cleanUrl);
         } else {
             this.redirectAfterLogout(cleanUrl);

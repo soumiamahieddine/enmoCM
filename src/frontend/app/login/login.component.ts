@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         });
 
         this.environment = environment;
-        if (this.authService.isAuth()) {
+        if (this.authService.getToken() !== null) {
             if (!this.functionsService.empty(this.authService.getUrl(JSON.parse(atob(this.authService.getToken().split('.')[1])).user.id))) {
                 this.router.navigate([this.authService.getUrl(JSON.parse(atob(this.authService.getToken().split('.')[1])).user.id)]);
             } else {
