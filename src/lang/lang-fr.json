@@ -1901,6 +1901,7 @@
     "disableField": "Désactiver le champ",
     "emailSubject": "Objet du courriel",
     "authorizedRoutes": "Routes autorisées",
+    "authorizedRoutesNotWellFormatted": "Le champ 'Routes autorisées' n'est pas correctement formatté.",
     "infoImportusers": "La colonne <b>id</b> est utilisée pour identifier un utilisateur",
     "infoImportusers2": "Les colonnes <b>id</b> et <b>user_id</b> ne sont pas prises en compte lors de mise à jour d'utilisateurs",
     "hotkeyInfo": "Maintenez <b>SHIFT</b> pour propager vos sélections aux sous-éléments",
