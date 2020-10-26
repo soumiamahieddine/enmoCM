@@ -494,16 +494,16 @@ class SummarySheetController
                 $assignee    = '';
                 $destination = '';
                 $found       = false;
-                $roles = EntityModel::getRoles();
-                $rolesItems = [];
-                $nbItems = 0;
+                $roles       = EntityModel::getRoles();
+                $rolesItems  = [];
+                $nbItems     = 0;
                 foreach ($args['data']['listInstances'] as $listKey => $listInstance) {
                     if ($found && $listInstance['res_id'] != $resource['res_id']) {
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
                         $item = '';
                         if ($listInstance['item_type'] == 'user_id') {
-                            $user = UserModel::getById(['id' => $listInstance['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
+                            $user   = UserModel::getById(['id' => $listInstance['item_id'], 'select' => ['id', 'firstname', 'lastname']]);
                             $entity = UserModel::getPrimaryEntityById(['id' => $user['id'], 'select' => ['entities.entity_label']]);
 
                             if ($listInstance['item_mode'] == 'dest') {
@@ -512,10 +512,10 @@ class SummarySheetController
                                 $item = "{$user['firstname']} {$user['lastname']} ({$entity['entity_label']})";
                             }
                         } elseif ($listInstance['item_type'] == 'entity_id') {
-                            $item = $listInstance['item_id'];
-                            $entity = EntityModel::getById(['id' => $listInstance['item_id'], 'select' => ['short_label']]);
+                            $item   = $listInstance['item_id'];
+                            $entity = EntityModel::getById(['id' => $listInstance['item_id'], 'select' => ['short_label', 'entity_id']]);
                             if (!empty($entity)) {
-                                $item = "{$entity['short_label']} ({$item})";
+                                $item = "{$entity['short_label']} ({$entity['entity_id']})";
                             }
                         }
                         if ($listInstance['item_mode'] == 'dest') {
@@ -537,7 +537,7 @@ class SummarySheetController
 
                 // Sort keys to be in the same order defined in the roles.xml file
                 $rolesIDs = array_column($roles, 'id');
-                $tmp = [];
+                $tmp      = [];
                 foreach ($rolesIDs as $key) {
                     if (!empty($rolesItems[$key])) {
                         $tmp[$key] = $rolesItems[$key];
