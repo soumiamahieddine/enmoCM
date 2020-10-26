@@ -25,7 +25,6 @@ import { HighlightPipe } from '@plugins/highlight.pipe';
 import { FilterToolComponent } from '@appRoot/search/filter-tool/filter-tool.component';
 import { ContactResourceModalComponent } from '@appRoot/contact/contact-resource/modal/contact-resource-modal.component';
 import { PrivilegeService } from '@service/privileges.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 declare var $: any;
 
@@ -266,13 +265,18 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
             this.dataFilters = {};
         }
         this.criteria = JSON.parse(JSON.stringify(criteria));
-        if (!this.initSearch) {
+        if (!this.initSearch && Object.keys(criteria).length > 0) {
+            console.log('initSearch');
             this.initResultList();
             this.initSearch = true;
-        } else {
+            this.appCriteriaTool.toggleTool(false);
+        } else if (Object.keys(criteria).length > 0) {
             this.refreshDao();
+            this.appCriteriaTool.toggleTool(false);
+        } else {
+            this.resetDao();
+            this.appCriteriaTool.toggleTool(true);
         }
-        this.appCriteriaTool.toggleTool(false);
     }
 
     initResultList() {
@@ -414,6 +418,17 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         this.refreshDao();
         const e: any = { checked: false };
         this.toggleAllRes(e);
+    }
+
+    resetDao() {
+        this.data = [];
+        this.criteriaSearchService.resetCriteria();
+        this.dataFilters = [];
+        this.resultsLength = 0;
+        this.paginatorLength = 0;
+        this.allResInBasket = [];
+        this.selectedRes = [];
+        this.sidenavRight.close();
     }
 
     viewThumbnail(row: any) {

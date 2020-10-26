@@ -79,6 +79,10 @@ export class CriteriaSearchService {
         sessionStorage.setItem('criteriaSearch_' + this.headerService.user.id, JSON.stringify(this.listsProperties));
     }
 
+    resetCriteria() {
+        sessionStorage.removeItem('criteriaSearch_' + this.headerService.user.id);
+    }
+
     getCriteria() {
         return this.listsProperties.criteria;
     }
