@@ -34,6 +34,9 @@ export class FollowedActionListComponent implements OnInit {
     arrRes: any[] = [];
     folderList: any[] = [];
 
+    isSelectedFreeze: any;
+    isSelectedBinding: any;
+
     actionsList: any[] = [];
     basketList: any = {
         groups: [],
@@ -44,6 +47,7 @@ export class FollowedActionListComponent implements OnInit {
     @Input() totalRes: number;
     @Input() contextMode: boolean;
     @Input() currentFolderInfo: any;
+    @Input('currentResource') currentResource: any = {};
 
     @Input() menuShortcut: MenuShortcutComponent;
 
@@ -71,11 +75,13 @@ export class FollowedActionListComponent implements OnInit {
 
         this.contextMenuTitle = row.chrono;
         this.contextResId = row.resId;
+        this.currentResource = row;
 
         this.folderList = row.folders !== undefined ? row.folders : [];
         // Opens the menu
         this.contextMenu.openMenu();
 
+        this.getFreezeBindingValue(this.contextResId);
         // prevents default
         return false;
     }
@@ -166,5 +172,21 @@ export class FollowedActionListComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    getFreezeBindingValue(id) {
+        this.http.get(`../rest/resources/${id}?light=true`).pipe(
+            tap((infos: any) => {
+                if (infos.retentionFrozen) {
+                    this.isSelectedFreeze = id;
+                }
+                    this.isSelectedBinding = infos.binding;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
     }
 }

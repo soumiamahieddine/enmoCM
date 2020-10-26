@@ -35,6 +35,9 @@ export class ActionsListComponent implements OnInit {
     arrRes: any[] = [];
     folderList: any[] = [];
 
+    isSelectedFreeze: any;
+    isSelectedBinding: any;
+
     actionsList: any[] = [];
 
     @Input('selectedRes') selectedRes: any;
@@ -75,6 +78,8 @@ export class ActionsListComponent implements OnInit {
         this.contextResId = row.resId;
 
         this.folderList = row.folders !== undefined ? row.folders : [];
+
+        this.getFreezeBindingValue(this.contextResId);
 
         // Opens the menu
         this.contextMenu.openMenu();
@@ -185,5 +190,21 @@ export class ActionsListComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    getFreezeBindingValue(id) {
+        this.http.get(`../rest/resources/${id}?light=true`).pipe(
+            tap((infos: any) => {
+                if (infos.retentionFrozen) {
+                    this.isSelectedFreeze = id;
+                }
+                    this.isSelectedBinding = infos.binding;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
     }
 }

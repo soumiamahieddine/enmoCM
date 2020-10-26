@@ -98,7 +98,7 @@
                 <app-tools-list #actionsList [selectedRes]="selectedRes"></app-tools-list>
             </span>
             <span *ngIf="actionMode">
-                <app-followed-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
+                <app-followed-action-list #actionsList [contextMode]="false"  [currentFolderInfo]="folderInfo"
                     [totalRes]="resultsLength" [selectedRes]="selectedRes"
                     (refreshEvent)="refreshDaoAfterAction()">
                 </app-followed-action-list>

@@ -52,3 +52,11 @@
     color: $primary;
     margin-left: 5px;
 }
+
+.isSelectedMenu {
+    background: rgba(249, 152, 48, 0.14);
+  }
+
+.notSelectedMenu {
+    background: white;
+}

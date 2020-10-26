@@ -34,6 +34,9 @@ export class FolderActionListComponent implements OnInit {
     currentLock: any = null;
     arrRes: any[] = [];
 
+    isSelectedFreeze: any;
+    isSelectedBinding: any;
+
     actionsList: any[] = [];
     basketList: any = {
         groups: [],
@@ -44,6 +47,7 @@ export class FolderActionListComponent implements OnInit {
     @Input() totalRes: number;
     @Input() contextMode: boolean;
     @Input() currentFolderInfo: any;
+    @Input('currentResource') currentResource: any = {};
 
     @Output() refreshEvent = new EventEmitter<string>();
     @Output() refreshPanelFolders = new EventEmitter<string>();
@@ -69,8 +73,10 @@ export class FolderActionListComponent implements OnInit {
         this.contextMenuPosition.x = x + 'px';
         this.contextMenuPosition.y = y + 'px';
 
+        this.getFreezeBindingValue(this.contextResId);
         this.contextMenuTitle = row.chrono;
         this.contextResId = row.resId;
+        this.currentResource = row;
 
         // Opens the menu
         this.contextMenu.openMenu();
@@ -181,5 +187,21 @@ export class FolderActionListComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    getFreezeBindingValue(id) {
+        this.http.get(`../rest/resources/${id}?light=true`).pipe(
+            tap((infos: any) => {
+                if (infos.retentionFrozen) {
+                    this.isSelectedFreeze = id;
+                }
+                    this.isSelectedBinding = infos.binding;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
     }
 }
