@@ -11,6 +11,7 @@ import { filter, exhaustMap, tap, map, catchError } from 'rxjs/operators';
 import { HeaderService } from '@service/header.service';
 import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
 import { of } from 'rxjs';
+import { PrivilegeService } from '@service/privileges.service';
 
 @Component({
     selector: 'app-followed-action-list',
@@ -56,11 +57,12 @@ export class FollowedActionListComponent implements OnInit {
         public dialog: MatDialog,
         private router: Router,
         private headerService: HeaderService,
+        public privilegeService: PrivilegeService,
     ) { }
 
     dialogRef: MatDialogRef<any>;
 
-    ngOnInit(): void { }
+    ngOnInit(): void {}
 
     open(x: number, y: number, row: any) {
         // Adjust the menu anchor position
@@ -129,50 +131,40 @@ export class FollowedActionListComponent implements OnInit {
         this.refreshEvent.emit();
     }
 
-    toggleFreezing() {
-        this.selectedRes.forEach(id => {
-            this.http.get(`../rest/resources/${id}?light=true`).pipe(
-                tap((data: any) => {
-                    this.http.put('../rest/archival/freezeRetentionRule', { resources: [id], freeze : !data.retentionFrozen }).pipe(
-                        tap(() => {
-                            this.notify.success(this.translate.instant('lang.parameterUpdated'));
-                        }
-                        ),
-                        catchError((err: any) => {
-                            this.notify.handleSoftErrors(err);
-                            return of(false);
-                        })
-                    ).subscribe();
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        });
+    toggleFreezing(value) {
+        this.http.put('../rest/archival/freezeRetentionRule', { resources: this.selectedRes, freeze : value }).pipe(
+            tap(() => {
+                if (value) {
+                    this.notify.success(this.translate.instant('lang.retentionRuleFrozen'));
+                } else {
+                    this.notify.success(this.translate.instant('lang.retentionRuleThawed'));
+
+                }
+            }
+            ),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
-    toggleBinding() {
-        this.selectedRes.forEach(id => {
-            this.http.get(`../rest/resources/${id}?light=true`).pipe(
-                tap((data: any) => {
-                    this.http.put('../rest/archival/binding', { resources: [id], binding : !data.binding }).pipe(
-                        tap(() => {
-                            this.notify.success(this.translate.instant('lang.parameterUpdated'));
-                        }
-                        ),
-                        catchError((err: any) => {
-                            this.notify.handleSoftErrors(err);
-                            return of(false);
-                        })
-                    ).subscribe();
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        });
+    toogleBinding(value) {
+        this.http.put('../rest/archival/binding', { resources: this.selectedRes, binding : value }).pipe(
+            tap(() => {
+                if (value) {
+                    this.notify.success(this.translate.instant('lang.bindingMail'));
+                } else if (value === false) {
+                    this.notify.success(this.translate.instant('lang.noBindingMal'));
+                } else {
+                    this.notify.success(this.translate.instant('lang.bindingUndefined'));
+                }
+            }
+            ),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
-
 }

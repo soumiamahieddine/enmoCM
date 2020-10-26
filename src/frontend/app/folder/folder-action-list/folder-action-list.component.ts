@@ -11,6 +11,7 @@ import { filter, exhaustMap, tap, map, catchError } from 'rxjs/operators';
 import { HeaderService } from '@service/header.service';
 import { FoldersService } from '../folders.service';
 import { of } from 'rxjs';
+import { PrivilegeService } from '@service/privileges.service';
 
 @Component({
     selector: 'app-folder-action-list',
@@ -54,7 +55,8 @@ export class FolderActionListComponent implements OnInit {
         public dialog: MatDialog,
         private router: Router,
         private headerService: HeaderService,
-        private foldersService: FoldersService
+        private foldersService: FoldersService,
+        public privilegeService: PrivilegeService,
     ) { }
 
     dialogRef: MatDialogRef<any>;
@@ -137,6 +139,43 @@ export class FolderActionListComponent implements OnInit {
                 this.headerService.nbResourcesFollowed -= data.unFollowed;
                 this.refreshDaoAfterAction();
             }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    toggleFreezing(value) {
+        this.http.put('../rest/archival/freezeRetentionRule', { resources: this.selectedRes, freeze : value }).pipe(
+            tap(() => {
+                if (value) {
+                    this.notify.success(this.translate.instant('lang.retentionRuleFrozen'));
+                } else {
+                    this.notify.success(this.translate.instant('lang.retentionRuleThawed'));
+
+                }
+            }
+            ),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    toogleBinding(value) {
+        this.http.put('../rest/archival/binding', { resources: this.selectedRes, binding : value }).pipe(
+            tap(() => {
+                if (value) {
+                    this.notify.success(this.translate.instant('lang.bindingMail'));
+                } else if (value === false) {
+                    this.notify.success(this.translate.instant('lang.noBindingMal'));
+                } else {
+                    this.notify.success(this.translate.instant('lang.bindingUndefined'));
+                }
+            }
+            ),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
                 return of(false);

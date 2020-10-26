@@ -43,3 +43,16 @@
     font-style: italic;
     padding: 22px;
 }
+
+.freezeIcon {
+    color: $primary;
+}
+
+.bindidngIcon {
+    color: $primary;
+    margin-left: 5px;
+}
+
+.isSelectedMenu {
+    background: rgba(249, 152, 48, 0.14);
+  }
