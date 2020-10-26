@@ -108,7 +108,6 @@ class SendMessageController
         $DOMTemplateProcessor->removeEmptyNodes();
 
         file_put_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml", $DOMTemplate->saveXML());
-        var_dump(file_get_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml")); exit();
 
         $filename = self::generateZip($seda2Message, $tmpPath);
 
