@@ -364,9 +364,9 @@ export class ListAdministrationComponent implements OnInit {
         this.dataControl.setValue('');
     }
 
-    removeData(data: any, i: number, indexDisplayedData) {
+    removeData(data: any, i: number) {
         this.availableData.push(data);
-        this.displayedSecondaryData[indexDisplayedData].splice(i, 1);
+        this.displayedSecondaryData.splice(i, 1);
         this.dataControl.setValue('');
     }
 
