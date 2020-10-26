@@ -73,10 +73,11 @@ export class FolderActionListComponent implements OnInit {
         this.contextMenuPosition.x = x + 'px';
         this.contextMenuPosition.y = y + 'px';
 
-        this.getFreezeBindingValue(this.contextResId);
         this.contextMenuTitle = row.chrono;
         this.contextResId = row.resId;
         this.currentResource = row;
+        this.getFreezeBindingValue(this.contextResId);
+
 
         // Opens the menu
         this.contextMenu.openMenu();
