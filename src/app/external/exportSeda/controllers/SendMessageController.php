@@ -15,7 +15,6 @@
 namespace ExportSeda\controllers;
 
 use SrcCore\models\CoreConfigModel;
-use exportSeda\models\ArchiveTransfer;
 
 class SendMessageController
 {
@@ -44,7 +43,7 @@ class SendMessageController
         $messageObject = $aArgs['messageObject'];
         $type          = $aArgs['type'];
 
-        $seda2Message = SendMessageController::initMessage(new \stdClass);
+        $seda2Message = self::initMessage(new \stdClass);
 
         $seda2Message->MessageIdentifier->value = $messageObject->messageIdentifier;
         $seda2Message->ArchivalAgreement->value = $messageObject->archivalAgreement;
@@ -102,13 +101,14 @@ class SendMessageController
 
         // TODO : Externaliser la fonction de création du xml final
         $DOMTemplate = new \DOMDocument();
-        $DOMTemplate->load('modules/export_seda/resources/'.$type.'.xml');
+        $DOMTemplate->load('src/app/external/exportSeda/resources/'.$type.'.xml');
         $DOMTemplateProcessor = new DOMTemplateProcessorController($DOMTemplate);
         $DOMTemplateProcessor->setSource($type, $seda2Message);
         $DOMTemplateProcessor->merge();
         $DOMTemplateProcessor->removeEmptyNodes();
 
         file_put_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml", $DOMTemplate->saveXML());
+        var_dump(file_get_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml")); exit();
 
         $filename = self::generateZip($seda2Message, $tmpPath);
 
