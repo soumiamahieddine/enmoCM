@@ -856,9 +856,15 @@ class SearchController
                         if (!empty($where)) {
                             $where .= ' OR ';
                         }
-                        $where .= '(item_id = ? AND item_type = ?)';
+                        $where .= '(item_id = ? AND item_type = ?';
                         $data[] = $itemValue['id'];
                         $data[] = $itemValue['type'] == 'user' ? 'user_id' : 'entity_id';
+
+                        if ($itemValue['type'] == 'user') {
+                            $where .= ' OR delegate = ?';
+                            $data[] = $itemValue['id'];
+                        }
+                        $where .= ')';
                     }
                     if ($roleId == 'sign') {
                         $data[] = 'true';
