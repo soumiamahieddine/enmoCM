@@ -55,7 +55,7 @@ class SendMessageController
 
         $seda2Message->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[] = self::getArchiveUnit(
             "RecordGrp",
-            null,
+            $messageObject->dataObjectPackage,
             null,
             'group_1',
             null,
