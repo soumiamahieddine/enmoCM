@@ -233,7 +233,7 @@ class ResourceListController
                 $queryData[] = "{$cleanSearch[1]}";
                 $queryData[] = "{$cleanSearch[1]}";
             } else {
-                $where[] = '(alt_identifier ilike ? OR unaccent(subject) ilike unaccent(?))';
+                $where[] = '(alt_identifier ilike ? OR unaccent(subject) ilike unaccent(?::text))';
                 $queryData[] = "%{$args['data']['search']}%";
                 $queryData[] = "%{$args['data']['search']}%";
             }
@@ -1024,7 +1024,7 @@ class ResourceListController
             $where[] = 'process_limit_date < CURRENT_TIMESTAMP';
         }
         if (!empty($data['search']) && mb_strlen($data['search']) >= 2) {
-            $where[] = '(alt_identifier ilike ? OR unaccent(subject))';
+            $where[] = '(alt_identifier ilike ? OR unaccent(subject) ilike unaccent(?::text))';
             $queryData[] = "%{$data['search']}%";
             $queryData[] = "%{$data['search']}%";
         }
