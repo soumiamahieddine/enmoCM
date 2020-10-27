@@ -287,7 +287,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 startWith({}),
                 switchMap(() => {
                     if (!this.isLoadingResults) {
-                        this.sidenavRight.close();
+                        if (this.sidenavRight !== undefined) {
+                            this.sidenavRight.close();
+                        }
                         this.isLoadingResults = true;
                         this.loadingResult.emit(true);
                         return this.resultListDatabase!.getRepoIssues(
