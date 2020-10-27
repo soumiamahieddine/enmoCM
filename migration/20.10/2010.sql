@@ -9,6 +9,8 @@ UPDATE parameters SET param_value_string = '20.10.1' WHERE id = 'database_versio
 
 DROP VIEW IF EXISTS res_view_letterbox;
 
+CREATE EXTENSION unaccent;
+
 /* SENDMAIL */
 DROP TABLE IF EXISTS sendmail;
 

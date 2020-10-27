@@ -75,7 +75,7 @@ class ContactController
         if (!empty($queryParams['search'])) {
             $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country'];
             $fieldsNumber = count($fields);
-            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $fields = AutoCompleteController::getInsensitiveFieldsForRequest(['fields' => $fields]);
 
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $queryParams['search'],

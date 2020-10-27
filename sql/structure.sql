@@ -13,6 +13,8 @@ SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
+CREATE EXTENSION unaccent;
+
 CREATE TABLE actions
 (
   id serial NOT NULL,
