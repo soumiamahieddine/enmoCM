@@ -2114,7 +2114,7 @@
     "retentionRuleFrozen": "Durée d'utilité courante gelée",
     "retentionRuleThawed" : "Durée d'utilité courante dégelée",
     "freezeTheCurrentUsefulLife": "Geler la durée d'utilité courante",
-    "thawTheCurrentUsefulLife": "Dégeler la durée d'utilité courant",
+    "thawTheCurrentUsefulLife": "Dégeler la durée d'utilité courante",
     "bindingMail": "Document engageant",
     "noBindingMail": "Document non engageant",
     "bindingUndefined": "Engagement non défini",
