@@ -453,8 +453,6 @@ export class SentResourcePageComponent implements OnInit {
         this.emailsubject = `[${this.resourceData.chrono}] ${this.resourceData.subject}`;
         this.emailsubject = this.emailsubject.substring(0, 70);
         const withEmptyId = this.availableSenders.filter((element) => element.entityId === null);
-        console.log(withEmptyId);
-        console.log(this.headerService.user.entities.length);
         if (this.headerService.user.entities.length === 0) {
             this.currentSender = withEmptyId[0];
         } else {
