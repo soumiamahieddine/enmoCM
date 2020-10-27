@@ -30,14 +30,6 @@
                 (onFileDropped)="dndUploadFile($event)" class="dndFile">
                 <div>
                     {{'lang.dndFileCsvDesc' | translate}}
-                    <mat-form-field appearance="outline" style="font-size:14px;" (click)="$event.stopPropagation()">
-                        <mat-label>{{'lang.delimiter' | translate}}</mat-label>
-                        <mat-select [(ngModel)]="currentDelimiter" (click)="$event.stopPropagation()">
-                            <mat-option *ngFor="let delimiter of delimiters" [value]="delimiter">
-                                {{delimiter === '\t' ? 'TAB' : delimiter}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
                 </div>
             </div>
             <div class="row" style="margin: 0px;">
