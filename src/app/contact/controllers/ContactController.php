@@ -896,12 +896,10 @@ class ContactController
                     $order[] = 'custom_fields';
                 }
                 $customId = explode('_', $criterion)[1];
-                $criteria[] = "replace(lower(translate(custom_fields->>'" . $customId . "', 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
-                           'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr') ), ' ', '')";
+                $criteria[] = "replace(lower(unaccent(custom_fields->>'" . $customId . "') ), ' ', '')";
             } else {
                 $order[] = $allowedFields[$criterion];
-                $criteria[] = "replace(lower(translate(" . $allowedFields[$criterion] . ", 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
-                           'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr') ), ' ', '')";
+                $criteria[] = "replace(lower(unaccent(" . $allowedFields[$criterion] . ") ), ' ', '')";
             }
         }
 
