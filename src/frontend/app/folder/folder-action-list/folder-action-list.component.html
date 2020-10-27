@@ -60,11 +60,17 @@
         <span>{{ 'lang.setBindingDocument' | translate }}</span>
     </button>
     <mat-menu #bindingRentalRule="matMenu">
-        <buton mat-menu-item (click)="toogleBinding(true)" [title]="this.translate.instant('lang.bindingMail')">{{ 'lang.bindingMail' | translate}}</buton>
+        <buton mat-menu-item (click)="toogleBinding(true)" class="{{this.isSelectedBinding === true ? 'isSelectedMenu' : 'notSelectedMenu'}}"
+        [title]="this.translate.instant('lang.bindingMail')">
+            {{ 'lang.bindingMail' | translate}}</buton>
         <mat-divider></mat-divider>
-        <buton mat-menu-item (click)="toogleBinding(false)" [title]="this.translate.instant('lang.noBindingMal')">{{ 'lang.noBindingMal' | translate}}</buton>
+        <buton mat-menu-item (click)="toogleBinding(false)" class="{{this.isSelectedBinding === false ? 'isSelectedMenu' : 'notSelectedMenu'}}"
+        [title]="this.translate.instant('lang.noBindingMal')">
+            {{ 'lang.noBindingMal' | translate}}</buton>
         <mat-divider></mat-divider>
-        <buton mat-menu-item (click)="toogleBinding(null)" [title]="this.translate.instant('lang.doNotDEfine')">{{ 'lang.doNotDEfine' | translate}}</buton>
+        <buton mat-menu-item (click)="toogleBinding(null)" class="{{this.isSelectedBinding === null ? 'isSelectedMenu' : 'notSelectedMenu'}}"
+        [title]="this.translate.instant('lang.doNotDEfine')">
+            {{ 'lang.doNotDEfine' | translate}}</buton>
         <mat-divider></mat-divider>
     </mat-menu>
 </mat-menu>
