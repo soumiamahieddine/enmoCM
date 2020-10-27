@@ -380,7 +380,7 @@ class AuthenticationController
         $password = $args['password'];
 
         $ldapConfigurations = CoreConfigModel::getXmlLoaded(['path' => 'modules/ldap/xml/config.xml']);
-        if (empty($ldapConfigurations)) {
+        if (empty($ldapConfigurations) || empty($ldapConfigurations->config->ldap)) {
             return ['errors' => 'No ldap configurations'];
         }
 
@@ -430,7 +430,7 @@ class AuthenticationController
 
         if (empty($authenticated) && !empty($error) && $error != 'Invalid credentials') {
             return ['errors' => $error];
-        } elseif (empty($authenticated) && !empty($error) && $error == 'Invalid credentials') {
+        } elseif (empty($authenticated)) {
             return ['errors' => 'Authentication Failed'];
         }
 
