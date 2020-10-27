@@ -2,7 +2,7 @@
     <mat-form-field *ngIf="!adminMode" floatLabel="never" class="basket-search">
         <input class="metaSearch" type="text" matInput [formControl]="searchTermControl"
             [placeholder]="'lang.quickSearchTarget' | translate">
-        <button mat-icon-button matPrefix [disabled]="isLoadingResult || !hasCriteria()">
+        <button mat-icon-button matPrefix [disabled]="isLoadingResult">
             <mat-icon class="fas fa-search"></mat-icon>
         </button>
     </mat-form-field>
@@ -238,7 +238,7 @@
                 <mat-spinner class="loader"></mat-spinner>
             </ng-template>
             <div *ngIf="!adminMode" class="col-md-12" style="text-align: center;">
-                <button mat-raised-button matSuffix color="primary" type="submit" [disabled]="isLoadingResult || !hasCriteria()">
+                <button mat-raised-button matSuffix color="primary" type="submit" [disabled]="isLoadingResult">
                     <mat-icon class="fa fa-search" style="height: auto;font-size: 24px;"></mat-icon> {{'lang.searchMails' | translate}}
                 </button>
             </div>

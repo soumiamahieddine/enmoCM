@@ -706,8 +706,4 @@ export class CriteriaToolComponent implements OnInit {
             this.searchTermControl.setValue(searchTemplate.query[index].values);
         }
     }
-
-    hasCriteria() {
-        return this.currentCriteria.filter((item: any) => !this.functions.empty(item.control.value)).length > 0 || !this.functions.empty(this.searchTermControl.value);
-    }
 }

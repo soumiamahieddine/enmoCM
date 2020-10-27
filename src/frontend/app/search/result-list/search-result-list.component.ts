@@ -265,18 +265,13 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
             this.dataFilters = {};
         }
         this.criteria = JSON.parse(JSON.stringify(criteria));
-        if (!this.initSearch && Object.keys(criteria).length > 0) {
-            console.log('initSearch');
+        if (!this.initSearch) {
             this.initResultList();
             this.initSearch = true;
-            this.appCriteriaTool.toggleTool(false);
-        } else if (Object.keys(criteria).length > 0) {
-            this.refreshDao();
-            this.appCriteriaTool.toggleTool(false);
         } else {
-            this.resetDao();
-            this.appCriteriaTool.toggleTool(true);
+            this.refreshDao();
         }
+        this.appCriteriaTool.toggleTool(false);
     }
 
     initResultList() {
@@ -418,17 +413,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         this.refreshDao();
         const e: any = { checked: false };
         this.toggleAllRes(e);
-    }
-
-    resetDao() {
-        this.data = [];
-        this.criteriaSearchService.resetCriteria();
-        this.dataFilters = [];
-        this.resultsLength = 0;
-        this.paginatorLength = 0;
-        this.allResInBasket = [];
-        this.selectedRes = [];
-        this.sidenavRight.close();
     }
 
     viewThumbnail(row: any) {
