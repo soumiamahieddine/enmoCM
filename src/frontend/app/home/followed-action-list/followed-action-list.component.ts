@@ -47,7 +47,6 @@ export class FollowedActionListComponent implements OnInit {
     @Input() totalRes: number;
     @Input() contextMode: boolean;
     @Input() currentFolderInfo: any;
-    @Input('currentResource') currentResource: any = {};
 
     @Input() menuShortcut: MenuShortcutComponent;
 
@@ -75,7 +74,6 @@ export class FollowedActionListComponent implements OnInit {
 
         this.contextMenuTitle = row.chrono;
         this.contextResId = row.resId;
-        this.currentResource = row;
 
         this.folderList = row.folders !== undefined ? row.folders : [];
         // Opens the menu
@@ -161,7 +159,7 @@ export class FollowedActionListComponent implements OnInit {
                 if (value) {
                     this.notify.success(this.translate.instant('lang.bindingMail'));
                 } else if (value === false) {
-                    this.notify.success(this.translate.instant('lang.noBindingMal'));
+                    this.notify.success(this.translate.instant('lang.noBindingMail'));
                 } else {
                     this.notify.success(this.translate.instant('lang.bindingUndefined'));
                 }

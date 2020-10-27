@@ -206,10 +206,10 @@
                                     [title]="this.translate.instant('lang.bindingMail')">{{ 'lang.bindingMail' | translate}}</buton>
                                 <mat-divider></mat-divider>
                                 <buton mat-menu-item [class.isSelectedMenu]="this.resourceBinded === false" (click)="toggleBinding(false)" 
-                                    [title]="this.translate.instant('lang.noBindingMal')">{{ 'lang.noBindingMal' | translate}}</buton>
+                                    [title]="this.translate.instant('lang.noBindingMail')">{{ 'lang.noBindingMail' | translate}}</buton>
                                 <mat-divider></mat-divider>
                                 <buton mat-menu-item [class.isSelectedMenu]="this.resourceBinded === null" (click)="toggleBinding(null)" 
-                                    [title]="this.translate.instant('lang.doNotDEfine')">{{ 'lang.doNotDEfine' | translate}}</buton>
+                                    [title]="this.translate.instant('lang.doNotDefine')">{{ 'lang.doNotDefine' | translate}}</buton>
                                 <mat-divider></mat-divider>
                             </mat-menu>
                             <div class="content-item" *ngIf="this.currentResourceInformations.priority !== undefined">

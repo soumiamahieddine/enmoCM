@@ -47,7 +47,6 @@ export class FolderActionListComponent implements OnInit {
     @Input() totalRes: number;
     @Input() contextMode: boolean;
     @Input() currentFolderInfo: any;
-    @Input('currentResource') currentResource: any = {};
 
     @Output() refreshEvent = new EventEmitter<string>();
     @Output() refreshPanelFolders = new EventEmitter<string>();
@@ -75,9 +74,8 @@ export class FolderActionListComponent implements OnInit {
 
         this.contextMenuTitle = row.chrono;
         this.contextResId = row.resId;
-        this.currentResource = row;
-        this.getFreezeBindingValue(this.contextResId);
 
+        this.getFreezeBindingValue(this.contextResId);
 
         // Opens the menu
         this.contextMenu.openMenu();
@@ -177,7 +175,7 @@ export class FolderActionListComponent implements OnInit {
                 if (value) {
                     this.notify.success(this.translate.instant('lang.bindingMail'));
                 } else if (value === false) {
-                    this.notify.success(this.translate.instant('lang.noBindingMal'));
+                    this.notify.success(this.translate.instant('lang.noBindingMail'));
                 } else {
                     this.notify.success(this.translate.instant('lang.bindingUndefined'));
                 }

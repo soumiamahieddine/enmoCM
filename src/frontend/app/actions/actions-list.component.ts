@@ -179,7 +179,7 @@ export class ActionsListComponent implements OnInit {
                 if (value) {
                     this.notify.success(this.translate.instant('lang.bindingMail'));
                 } else if (value === false) {
-                    this.notify.success(this.translate.instant('lang.noBindingMal'));
+                    this.notify.success(this.translate.instant('lang.noBindingMail'));
                 } else {
                     this.notify.success(this.translate.instant('lang.bindingUndefined'));
                 }

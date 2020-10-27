@@ -2116,7 +2116,7 @@
     "freezeTheCurrentUsefulLife": "Geler la durée d'utilité courante",
     "thawTheCurrentUsefulLife": "Dégeler la durée d'utilité courant",
     "bindingMail": "Document engageant",
-    "noBindingMal": "Document non engageant",
+    "noBindingMail": "Document non engageant",
     "bindingUndefined": "Engagement non défini",
     "warningConnectionMsg": "Vous pouvez rendre l'application <b>indisponible</b> si les informations sont erronées !",
     "mappingHeaders": "Interfaçage des en-têtes",
@@ -2136,6 +2136,6 @@
     "mustPrivilegeToInstall" : "Vous n'avez pas le droit de créer une nouvelle instance",
     "instancesList" : "Instances présentes",
     "insteadOf": "À la place de",
-    "doNotDEfine": "Ne pas définir"
+    "doNotDefine": "Ne pas définir"
 
 }
