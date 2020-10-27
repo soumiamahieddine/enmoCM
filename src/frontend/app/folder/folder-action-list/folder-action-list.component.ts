@@ -47,6 +47,8 @@ export class FolderActionListComponent implements OnInit {
     @Input() totalRes: number;
     @Input() contextMode: boolean;
     @Input() currentFolderInfo: any;
+    @Input() currentResource: any;
+
 
     @Output() refreshEvent = new EventEmitter<string>();
     @Output() refreshPanelFolders = new EventEmitter<string>();
