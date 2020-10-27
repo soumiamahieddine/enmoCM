@@ -2079,5 +2079,6 @@
     "displaySelectedValues": "Show selected values",
     "quickSearch": "Quick search",
     "contactInput": "Contact input",
-    "insteadOf": "Instead of"
+    "insteadOf": "Instead of",
+    "infoImportNoIdToCreate": "The column <b>id</b> must be empty for creation"
 }

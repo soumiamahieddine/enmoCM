@@ -2136,6 +2136,6 @@
     "mustPrivilegeToInstall" : "Vous n'avez pas le droit de créer une nouvelle instance",
     "instancesList" : "Instances présentes",
     "insteadOf": "À la place de",
-    "doNotDefine": "Ne pas définir"
-
+    "doNotDefine": "Ne pas définir",
+    "infoImportNoIdToCreate": "La colonne <b>id</b> doit être vide pour la création"
 }
