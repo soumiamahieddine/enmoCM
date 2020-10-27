@@ -725,10 +725,21 @@ class AuthenticationController
             'PUT/installer/administrator', 'DELETE/installer/lock'
         ];
 
-        if (is_file("custom/custom.json")) {
+        if (!in_array($args['route'], $installerRoutes)) {
             return false;
-        } elseif (!in_array($args['route'], $installerRoutes)) {
-            return false;
+        } elseif (is_file("custom/custom.json")) {
+            $customs = scandir('custom');
+            if (count($customs) > 4) {
+                return false;
+            }
+            foreach ($customs as $custom) {
+                if (in_array($custom, ['custom.json', '.', '..'])) {
+                    continue;
+                }
+                if (!is_file("custom/{$custom}/initializing.lck")) {
+                    return false;
+                }
+            }
         }
 
         return true;
