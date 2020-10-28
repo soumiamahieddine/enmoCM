@@ -59,7 +59,7 @@ export class CriteriaToolComponent implements OnInit {
     @Input() searchTerm: string = 'Foo';
     @Input() defaultCriteria: any = [];
     @Input() adminMode: boolean = false;
-    @Input() openedPanel: boolean = false;
+    @Input() openedPanel: boolean = true;
     @Input() isLoadingResult: boolean = false;
     @Input() class: 'main' | 'secondary' = 'main';
 
@@ -252,7 +252,6 @@ export class CriteriaToolComponent implements OnInit {
         } else {
             this.criteriaTool.close();
         }
-
     }
 
     getLabelValue(identifier: string, value: any) {

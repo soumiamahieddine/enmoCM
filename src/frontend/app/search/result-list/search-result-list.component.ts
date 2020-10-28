@@ -220,8 +220,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
             this.initResultList();
         } else if (this.initSearch) {
             this.initResultList();
-        } else {
-            this.appCriteriaTool.toggleTool(true);
         }
     }
 
@@ -271,7 +269,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
         } else {
             this.refreshDao();
         }
-        this.appCriteriaTool.toggleTool(false);
     }
 
     initResultList() {
@@ -714,6 +711,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
 
     removeCriteria(identifier: string, value: any = null) {
         if (!this.isLoadingResults) {
+            console.log('removeCrit');
+            
+            this.appCriteriaTool.toggleTool(true);
             if (identifier !== '_ALL') {
                 const tmpArrCrit = [];
                 if (value === null || this.criteria[identifier].values.length === 1) {
