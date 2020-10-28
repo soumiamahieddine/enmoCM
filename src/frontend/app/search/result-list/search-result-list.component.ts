@@ -711,8 +711,6 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
 
     removeCriteria(identifier: string, value: any = null) {
         if (!this.isLoadingResults) {
-            console.log('removeCrit');
-            
             this.appCriteriaTool.toggleTool(true);
             if (identifier !== '_ALL') {
                 const tmpArrCrit = [];
@@ -722,12 +720,13 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     const indexArr = this.criteria[identifier].values.indexOf(value);
                     this.criteria[identifier].values.splice(indexArr, 1);
                 }
+                this.appCriteriaTool.resetCriteria(identifier);
             } else {
                 Object.keys(this.criteria).forEach(key => {
                     this.criteria[key].values = [];
                 });
+                this.appCriteriaTool.resetAllCriteria();
             }
-            this.appCriteriaTool.refreshCriteria(this.criteria);
         }
     }
 
