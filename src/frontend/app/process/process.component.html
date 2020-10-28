@@ -195,7 +195,7 @@
                             <button *ngIf="privilegeService.hasCurrentUserPrivilege('freeze_retention_rule')"
                             mat-icon-button [title]="this.translate.instant('lang.freezeRetentionRule')"
                             class="categoryLabel" (click)="toggleFreezing()">
-                                <mat-icon class="{{this.resourceFreezed ? 'freezeThawIcon':'nonFreeze'}} fas fa-snowflake" style="font-size: 20px;"></mat-icon>
+                                <mat-icon class="{{this.resourceFreezed ? 'freezeUnfreezIcon':'nonFreeze'}} fas fa-snowflake" style="font-size: 20px;"></mat-icon>
                             </button>
                             <button mat-icon-button *ngIf="privilegeService.hasCurrentUserPrivilege('set_binding_document')" [matMenuTriggerFor]="bindingRentalRule"
                                     [title]="this.translate.instant('lang.setBindingDocument')" class="categoryLabel">

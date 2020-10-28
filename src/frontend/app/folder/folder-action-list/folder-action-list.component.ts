@@ -159,7 +159,7 @@ export class FolderActionListComponent implements OnInit {
                 if (value) {
                     this.notify.success(this.translate.instant('lang.retentionRuleFrozen'));
                 } else {
-                    this.notify.success(this.translate.instant('lang.retentionRuleThawed'));
+                    this.notify.success(this.translate.instant('lang.retentionRuleUnfreezed'));
 
                 }
             }
