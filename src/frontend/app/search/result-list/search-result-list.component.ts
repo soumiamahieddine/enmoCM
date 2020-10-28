@@ -437,7 +437,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 element[key + '_title'] = element[key];
                 if (key === 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] === '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] === '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument', 'binding'].indexOf(key) === -1) {
                     element[key] = this.translate.instant('lang.undefined');
                 }
 
