@@ -586,16 +586,18 @@ class SummarySheetController
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
                         $mode = $listInstance['requested_signature'] ? 'Signataire' : 'Viseur';
-                        $userLabel = UserModel::getLabelledUserById(['id' => $listInstance['item_id']]) . " ({$mode}) ";
+                        $userLabel = UserModel::getLabelledUserById(['id' => $listInstance['item_id']]);
 
                         $delegate = !empty($listInstance['delegate']) ? UserModel::getLabelledUserById(['id' => $listInstance['delegate']]) : '';
                         if (!empty($delegate)) {
-                            $userLabel = $delegate . ' ' . _INSTEAD_OF . ' ' . $userLabel;
+                            $mode .= ', ' . _INSTEAD_OF . ' ' . $userLabel;
+                            $userLabel = $delegate . " ({$mode}) ";
+                        } else {
+                            $userLabel .= " ({$mode}) ";
                         }
 
                         $users[] = [
                             'user'  => $userLabel,
-                            'mode'  => $listInstance['requested_signature'] ? 'Signataire' : 'Viseur',
                             'date'  => TextFormatModel::formatDate($listInstance['process_date']),
                         ];
                         unset($args['data']['listInstancesVisa'][$listKey]);
@@ -630,11 +632,15 @@ class SummarySheetController
                         $user = UserModel::getLabelledUserById(['id' => $listInstance['item_id']]);
                         $entity = UserModel::getPrimaryEntityById(['id' => $listInstance['item_id'], 'select' => ['entities.entity_label']]);
 
-                        $userLabel = $user . " (" . $entity['entity_label'] . ")";
+                        $entityLabel = $entity['entity_label'];
+                        $userLabel = $user;
                         $delegate = !empty($listInstance['delegate']) ? UserModel::getLabelledUserById(['id' => $listInstance['delegate']]) : '';
 
                         if (!empty($delegate)) {
-                            $userLabel = $delegate . ' ' .  _INSTEAD_OF . ' ' . $userLabel;
+                            $entityLabel .= ', ' .  _INSTEAD_OF . ' ' . $userLabel;
+                            $userLabel = $delegate . " (" . $entityLabel . ")";
+                        } else {
+                            $userLabel .= " (" . $entityLabel . ")";
                         }
 
                         $users[] = [
