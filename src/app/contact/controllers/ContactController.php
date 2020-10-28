@@ -1229,8 +1229,14 @@ class ContactController
         $errors = [];
 
         $contactIds = array_column($body['contacts'], 'id');
-        $oldContact = ContactModel::get(['select' => ['custom_fields', 'id'], 'where' => ['id in (?)'], 'data' => [$contactIds]]);
-        $oldContact = array_column($oldContact, 'custom_fields', 'id');
+        $contactIds = array_filter($contactIds, function ($id) {
+            return !empty($id);
+        });
+        $oldContact = [];
+        if (!empty($contactIds)) {
+            $oldContact = ContactModel::get(['select' => ['custom_fields', 'id'], 'where' => ['id in (?)'], 'data' => [$contactIds]]);
+            $oldContact = array_column($oldContact, 'custom_fields', 'id');
+        }
 
         foreach ($body['contacts'] as $key => $contact) {
             if (!empty($contact['email']) && (!filter_var($contact['email'], FILTER_VALIDATE_EMAIL) || !Validator::length(1, 255)->validate($contact['email']))) {
