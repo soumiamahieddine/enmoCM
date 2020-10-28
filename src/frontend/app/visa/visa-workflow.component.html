@@ -99,17 +99,17 @@
                     </div>
                     <div *ngIf="diffusion.process_date != null && [this.translate.instant('lang.visaWorkflowInterrupted'), this.translate.instant('lang.hasInterruptedWorkflow')].indexOf(diffusion.process_comment) === -1" class="workflowLineProcessDate"
                         title='{{diffusion.process_date | fullDate}}'
-                        color="accent">{{diffusion.requested_signature ? this.translate.instant('lang.signedUserDate') : this.translate.instant('lang.approvedUserDate')}} {{diffusion.process_date
+                        color="accent">{{((functions.empty(diffusion.process_date) && diffusion.requested_signature) || diffusion.signatory) ? this.translate.instant('lang.signedUserDate') : this.translate.instant('lang.approvedUserDate')}} {{diffusion.process_date
                                                 | timeAgo : 'full'}}</div>
                     <div *ngIf="diffusion.process_date != null && ['A terminé le circuit'].indexOf(diffusion.process_comment) > -1" class="workflowLineProcessDate"
                             title='{{diffusion.process_date | fullDate}}'
                             color="warn">{{'lang.interrupted' | translate}} {{diffusion.process_date | timeAgo : 'full'}}</div>
                 </div>
                 <div *ngIf="diffusion.hasPrivilege && diffusion.isValid">
-                    <button class="currentRoleButton" [color]="diffusion.requested_signature ? 'primary': '' "
+                    <button class="currentRoleButton" [color]="((functions.empty(diffusion.process_date) && diffusion.requested_signature) || diffusion.signatory) ? 'primary': '' "
                         [disabled]="!canManageUser(diffusion, i)" mat-raised-button
                         title="{{'lang.' + diffusion.currentRole + 'User' | translate}}"
-                        (click)="changeRole(i)">{{diffusion.requested_signature ? this.translate.instant('lang.signUser') : this.translate.instant('lang.visaUser')}}</button>
+                        (click)="changeRole(i)">{{((functions.empty(diffusion.process_date) && diffusion.requested_signature) || diffusion.signatory) ? this.translate.instant('lang.signUser') : this.translate.instant('lang.visaUser')}}</button>
                 </div>
                 <div *ngIf="!diffusion.hasPrivilege" class="invalid">
                     {{'lang.noPrivileges' | translate}}

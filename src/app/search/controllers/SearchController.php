@@ -873,6 +873,15 @@ class SearchController
                             'where'     => ["({$where})", 'signatory = ?'],
                             'data'      => $data
                         ]);
+                    } elseif ($roleId == 'visa') {
+                        $data[] = 'VISA_CIRCUIT';
+                        $data[] = 'false';
+                        $data[] = 'false';
+                        $rolesMatch = ListInstanceModel::get([
+                            'select' => ['res_id'],
+                            'where'  => ["({$where})", 'difflist_type = ?', 'signatory = ?', 'requested_signature = ?'],
+                            'data'   => $data
+                        ]);
                     } else {
                         $data[] = $roleId;
                         $rolesMatch = ListInstanceModel::get([
@@ -884,13 +893,15 @@ class SearchController
                     if (in_array(null, $value['values'])) {
                         $args['searchWhere'][] = 'res_id not in (select res_id from listinstance where item_mode = ?)';
                         $args['searchData'][] = $roleId;
+                    } elseif (empty($rolesMatch)) {
+                        return null;
                     }
-                    if (empty($rolesMatch)) {
-                        continue;
+
+                    if (!empty($rolesMatch)) {
+                        $rolesMatch            = array_column($rolesMatch, 'res_id');
+                        $args['searchWhere'][] = 'res_id in (?)';
+                        $args['searchData'][]  = $rolesMatch;
                     }
-                    $rolesMatch = array_column($rolesMatch, 'res_id');
-                    $args['searchWhere'][] = 'res_id in (?)';
-                    $args['searchData'][] = $rolesMatch;
                 }
             }
         }

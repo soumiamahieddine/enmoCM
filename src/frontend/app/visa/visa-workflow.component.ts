@@ -21,7 +21,6 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class VisaWorkflowComponent implements OnInit {
 
-    
     visaWorkflow: any = {
         roles: ['sign', 'visa'],
         items: []
