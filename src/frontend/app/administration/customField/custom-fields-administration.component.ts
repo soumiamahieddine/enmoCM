@@ -29,7 +29,6 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     loading: boolean = true;
 
     idTable: any = [];
-    maxId: number = 1;
 
     customFieldsTypes: any[] = [
         {
