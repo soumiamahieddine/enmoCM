@@ -29,9 +29,9 @@
                     {{'lang.dndFileCsvDesc' | translate}}
                 </div>
             </div>
-            <div class="row" style="margin: 0px;">
+            <div *ngIf="csvData.length !== 0"  class="row" style="margin: 0px;">
                 <div class="col-md-12">
-                    <mat-paginator #paginator [length]="100" [hidePageSize]="true" [pageSize]="10">
+                    <mat-paginator #paginator [length]="100" [hidePageSize]="true" [pageSize]="8">
                     </mat-paginator>
                 </div>
             </div>
