@@ -625,7 +625,7 @@ trait ExportSEDATrait
             return ['errors' => ['Reply is not readable']];
         }
 
-        $messageExchange = MessageExchangeModel::getMessageByReference(['select' => ['message_id'], 'reference' => (string)$replyXml->MessageReceivedIdentifier]);
+        $messageExchange = MessageExchangeModel::getMessageByReference(['select' => ['message_id'], 'reference' => (string)$replyXml->MessageRequestIdentifier]);
         if (empty($messageExchange)) {
             return ['errors' => ['No reply found with this reference']];
         }
