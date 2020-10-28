@@ -723,7 +723,7 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                     const indexArr = this.criteria[identifier].values.indexOf(value);
                     this.criteria[identifier].values.splice(indexArr, 1);
                 }
-                this.appCriteriaTool.resetCriteria(identifier);
+                this.appCriteriaTool.resetCriteria(identifier, value);
             } else {
                 Object.keys(this.criteria).forEach(key => {
                     this.criteria[key].values = [];
