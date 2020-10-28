@@ -28,6 +28,9 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     loading: boolean = true;
 
+    idTable: any = [];
+    maxId: number = 1;
+
     customFieldsTypes: any[] = [
         {
             label: this.translate.instant('lang.stringInput'),
@@ -116,6 +119,11 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                     } else {
                         element.SQLMode = true;
                     }
+                    const label = element.label;
+                    if (label.includes(this.translate.instant('lang.newField'))) {
+                        this.idTable.push(label.slice(13));
+                        this.incrementCreation = Math.max( ... this.idTable) + 1;
+                    }
                 });
                 return data;
             }),
@@ -136,7 +144,6 @@ export class CustomFieldsAdministrationComponent implements OnInit {
         let newCustomField: any = {};
 
         this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.add'), msg: this.translate.instant('lang.confirmAction') } });
-
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             tap(() => {
