@@ -184,9 +184,6 @@ export class CriteriaToolComponent implements OnInit {
 
     removeCriteria(index: number) {
         this.currentCriteria.splice(index, 1);
-        if (this.currentCriteria.length === 0) {
-            this.criteriaTool.close();
-        }
     }
 
     getFilterControl() {
