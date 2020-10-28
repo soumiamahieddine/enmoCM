@@ -113,11 +113,12 @@ Bt_getWorkBatch();
 Bt_writeLog(['level' => 'INFO', 'message' => 'Retrieve mail sent to archiving system']);
 
 $acknowledgements = \Attachment\models\AttachmentModel::get([
-    'select' => ['res_id_master'],
+    'select' => ['res_id_master', 'typist'],
     'where'  => ['attachment_type = ?', 'status = ?'],
     'data'   => ['acknowledgement_record_management', 'TRA']
 ]);
-$acknowledgements = array_column($acknowledgements, 'res_id_master');
+$acknowledgementsTypist = array_column($acknowledgements, 'typist', 'res_id_master');
+$acknowledgements       = array_column($acknowledgements, 'res_id_master');
 
 $replies = \Attachment\models\AttachmentModel::get([
     'select' => ['res_id_master'],
@@ -162,10 +163,12 @@ foreach ($unitIdentifiers as $reference => $value) {
             'resIdMaster'   => $resId,
             'title'         => 'Réponse au transfert',
             'format'        => 'xml',
-            'status'        => 'TRA'
+            'status'        => 'TRA',
+            'typist'        => $acknowledgementsTypist[$resId]
         ]);
         if (empty($id) || !empty($id['errors'])) {
-            return ['errors' => ['[storeAttachment] ' . $id['errors']]];
+            Bt_writeLog(['level' => 'ERROR', 'message' => '[storeAttachment] ' . $id['errors']]);
+            continue;
         }
         \Resource\models\ResModel::update([
             'set'   => ['status' => $GLOBALS['statusReplyReceived']],
