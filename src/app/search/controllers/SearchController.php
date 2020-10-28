@@ -776,8 +776,9 @@ class SearchController
             }
         }
         if (!empty($body['groupSign']) && !empty($body['groupSign']['values']) && is_array($body['groupSign']['values'])) {
-            $where = 'res_id in (select DISTINCT res_id from listinstance where signatory = ? AND item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)))';
+            $where = 'res_id in (select DISTINCT res_id from listinstance where signatory = ? AND (item_id in (select DISTINCT user_id from usergroup_content where group_id in (?)) or delegate in (select DISTINCT user_id from usergroup_content where group_id in (?))))';
             $args['searchData'][] = 'true';
+            $args['searchData'][] = $body['groupSign']['values'];
             $args['searchData'][] = $body['groupSign']['values'];
 
             if (in_array(null, $body['groupSign']['values'])) {

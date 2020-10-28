@@ -470,10 +470,17 @@ class SignatureBookController
         ]);
         AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['resId'], 'TNL', $resource['version']]]);
 
+        $listInstance = ListInstanceModel::get([
+            'select'    => ['listinstance_id'],
+            'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'      => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy'   => ['listinstance_id'],
+            'limit'     => 1
+        ]);
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
-            'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-            'data'  => [$args['resId'], $GLOBALS['id'], 'VISA_CIRCUIT']
+            'where' => ['listinstance_id = ?'],
+            'data'  => [$listInstance[0]['listinstance_id']]
         ]);
 
         HistoryController::add([
@@ -502,13 +509,18 @@ class SignatureBookController
 
         AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type in (?)', 'version = ?'], 'data' => [$args['resId'], ['SIGN', 'TNL'], $resource['version']]]);
 
-        if (!AttachmentModel::hasAttachmentsSignedByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
-            ListInstanceModel::update([
-                'set'   => ['signatory' => 'false'],
-                'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-                'data'  => [$args['resId'], $GLOBALS['id'], 'VISA_CIRCUIT']
-            ]);
-        }
+        $listInstance = ListInstanceModel::get([
+            'select'    => ['listinstance_id'],
+            'where'     => ['res_id = ?', 'signatory = ?'],
+            'data'      => [$args['resId'], 'true'],
+            'orderBy'   => ['listinstance_id desc'],
+            'limit'     => 1
+        ]);
+        ListInstanceModel::update([
+            'set'   => ['signatory' => 'false'],
+            'where' => ['listinstance_id = ?'],
+            'data'  => [$listInstance[0]['listinstance_id']]
+        ]);
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
@@ -619,10 +631,17 @@ class SignatureBookController
             'data'  => [$args['id']]
         ]);
 
+        $listInstance = ListInstanceModel::get([
+            'select'    => ['listinstance_id'],
+            'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'      => [$attachment['res_id_master'], 'VISA_CIRCUIT'],
+            'orderBy'   => ['listinstance_id'],
+            'limit'     => 1
+        ]);
         ListInstanceModel::update([
             'set'   => ['signatory' => 'true'],
-            'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-            'data'  => [$attachment['res_id_master'], $GLOBALS['id'], 'VISA_CIRCUIT']
+            'where' => ['listinstance_id = ?'],
+            'data'  => [$listInstance[0]['listinstance_id']]
         ]);
 
         HistoryController::add([
@@ -660,11 +679,18 @@ class SignatureBookController
             'data'      => ["{$args['id']},res_attachments", 'DEL']
         ]);
 
-        if (!AttachmentModel::hasAttachmentsSignedByResId(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['id']])) {
+        if (AttachmentModel::hasAttachmentsSignedByResId(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['id']])) {
+            $listInstance = ListInstanceModel::get([
+                'select'    => ['listinstance_id'],
+                'where'     => ['res_id = ?', 'signatory = ?'],
+                'data'      => [$attachment['res_id_master'], 'true'],
+                'orderBy'   => ['listinstance_id desc'],
+                'limit'     => 1
+            ]);
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
-                'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-                'data'  => [$attachment['res_id_master'], $GLOBALS['id'], 'VISA_CIRCUIT']
+                'where' => ['listinstance_id = ?'],
+                'data'  => [$listInstance[0]['listinstance_id']]
             ]);
         }
 
