@@ -589,6 +589,9 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
             if (Object.keys(this.criteria).indexOf('processLimitDate') > -1) {
                 data.displayValue.processLimitDateHighlighted = true;
             }
+            if (Object.keys(this.criteria).indexOf('closingDate') > -1) {
+                data.displayValue.closingDateHighlighted = true;
+            }
         } else if (data.value.match(regex) !== null && Object.keys(this.criteria).indexOf(data.value) > -1) {
             if (Array.isArray(this.criteria[data.value].values)) {
                 this.criteria[data.value].values.forEach((val: any) => {
