@@ -164,6 +164,7 @@ export class ActionsListComponent implements OnInit {
                     this.notify.success(this.translate.instant('lang.retentionRuleUnfreezed'));
 
                 }
+                this.refreshList();
             }
             ),
             catchError((err: any) => {
@@ -183,6 +184,7 @@ export class ActionsListComponent implements OnInit {
                 } else {
                     this.notify.success(this.translate.instant('lang.bindingUndefined'));
                 }
+                this.refreshList();
             }
             ),
             catchError((err: any) => {
@@ -195,6 +197,5 @@ export class ActionsListComponent implements OnInit {
     getFreezeBindingValue() {
         this.isSelectedFreeze = this.currentResource.retentionFrozen;
         this.isSelectedBinding = this.currentResource.binding;
-        this.refreshList();
     }
 }
