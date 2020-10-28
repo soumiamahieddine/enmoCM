@@ -2004,7 +2004,6 @@
     "arReceived": "AR réceptionné",
     "arAlreadyReceived": "Cet AR a déjà été reçu",
     "contactsOfFile": "Contact du fichier",
-    "infoImportcontacts": "La colonne <b>id</b> est utilisée pour identifier un contact",
     "infoImportcontacts2": "Les valeurs <b>vides</b> ne sont <b>pas</b> prises en compte par défaut lors de modifications de contacts",
     "importContacts": "Importer des contacts",
     "argumentCivilityNotCorrect": "La donnée civility n'est pas une civilité valide pour un contact",
