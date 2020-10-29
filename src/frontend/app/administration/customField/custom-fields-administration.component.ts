@@ -120,7 +120,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
                     }
                     const label = element.label;
                     if (label.includes(this.translate.instant('lang.newField'))) {
-                        this.idTable.push(label.slice(13));
+                        this.idTable.push(label.slice(label.length - 1));
                         this.incrementCreation = Math.max( ... this.idTable) + 1;
                     }
                 });
