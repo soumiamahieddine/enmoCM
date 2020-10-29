@@ -284,6 +284,8 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
                 startWith({}),
                 switchMap(() => {
                     if (!this.isLoadingResults) {
+                        // To Reset scroll
+                        this.data = [];
                         if (this.sidenavRight !== undefined) {
                             this.sidenavRight.close();
                         }
