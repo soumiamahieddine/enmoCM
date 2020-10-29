@@ -2113,7 +2113,7 @@
     "setBindingDocument": "Définir l'engagement d'un document",
     "freezeRetentionRule": "Geler/dégeler la durée d'utilité courante d'un document",
     "retentionRuleFrozen": "Durée d'utilité courante gelée",
-    "retentionRuleUnfreezed" : "Durée d'utilité courante dégelée",
+    "retentionRuleUnfrozen" : "Durée d'utilité courante dégelée",
     "freezeTheCurrentUsefulLife": "Geler la durée d'utilité courante",
     "unfreezeTheCurrentUsefulLife": "Dégeler la durée d'utilité courante",
     "bindingMail": "Document engageant",
