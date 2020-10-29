@@ -161,7 +161,7 @@ export class ActionsListComponent implements OnInit {
                 if (value) {
                     this.notify.success(this.translate.instant('lang.retentionRuleFrozen'));
                 } else {
-                    this.notify.success(this.translate.instant('lang.retentionRuleUnfreezed'));
+                    this.notify.success(this.translate.instant('lang.retentionRuleUnfrozen'));
 
                 }
                 this.refreshList();
