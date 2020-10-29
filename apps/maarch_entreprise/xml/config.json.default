@@ -7,7 +7,7 @@
         "maarchDirectory" : "/var/www/html/MaarchCourrier/",
         "customID" : "",
         "maarchUrl" : "http://preview.maarchcourrier.com/",
-        "lockAdvancedPrivileges" : false
+        "lockAdvancedPrivileges" : true
     },
     "database": [
         {
