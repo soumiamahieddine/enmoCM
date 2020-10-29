@@ -86,10 +86,6 @@ export class FolderActionListComponent implements OnInit {
         // prevents default
         return false;
     }
-    setResource(row: any) {
-        throw new Error('Method not implemented.');
-    }
-
     refreshList() {
         this.refreshEvent.emit();
     }
