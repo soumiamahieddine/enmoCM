@@ -2130,7 +2130,7 @@
     "lifeCycle": "Cycle de vie",
     "bindingDocumentFinalAction": "Action finale relative aux documents engageants",
     "nonBindingDocumentFinalAction": "Action finale relative aux documents non engageants",
-    "restrictAccess": "Accès retreint",
+    "restrictAccess": "Accès restreint",
     "transfer": "Transfert SAE + destruction",
     "copy": "Transfert SAE + accès restreint",
     "deleteAction": "Suppression",
