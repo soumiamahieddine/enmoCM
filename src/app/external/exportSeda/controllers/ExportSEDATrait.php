@@ -635,6 +635,21 @@ trait ExportSEDATrait
             return ['errors' => ['Wrong reply']];
         }
 
+        if ($args['data']['resetAction']) {
+            if (strpos((string)$replyXml->ReplyCode, '000') !== false) {
+                return ['errors' => ['Mail already archived']];
+            }
+
+            AttachmentModel::update([
+                'set'   => ['status' => 'DEL'],
+                'where' => ['attachment_type in (?)', 'res_id_master = ?'],
+                'data'  => [['acknowledgement_record_management', 'reply_record_management'], $args['resId']]
+            ]);
+
+            MessageExchangeModel::deleteUnitIdentifier(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            MessageExchangeModel::delete(['where' => ['reference in (?)'], 'data' => [[(string) $replyXml->MessageRequestIdentifier, (string) $replyXml->MessageIdentifier]]]);
+        }
+
         return true;
     }
 }

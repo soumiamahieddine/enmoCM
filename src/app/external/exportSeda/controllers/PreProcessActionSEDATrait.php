@@ -193,6 +193,11 @@ trait PreProcessActionSEDATrait
                 continue;
             }
 
+            if ($body['resetAction'] && strpos((string)$replyXml->ReplyCode, '000') !== false) {
+                $resourcesInformations['errors'][] = ['alt_identifier' => $altIdentifiers[$resId], 'res_id' => $resId, 'reason' => 'recordManagement_alreadyArchived'];
+                continue;
+            }
+
             $resourcesInformations['success'][] = $resId;
         }
 

@@ -498,3 +498,6 @@ define('_REGISTERED_MAIL_DISTRIBUTED', 'Acknowledgement receipt received : regis
 define('_REGISTERED_MAIL_NOT_DISTRIBUTED', 'Acknowledgement receipt received : registered mail not distributed');
 
 define('_CONFIGURATION_UPDATED', 'Configuration updated');
+
+define('_RESET_RECORD_MANAGEMENT', 'Reset record management');
+define('_RESET_RECORD_MANAGEMENT_DESC', 'Reset record management');

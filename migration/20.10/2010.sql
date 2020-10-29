@@ -296,6 +296,8 @@ UPDATE entities SET producer_service = entity_id;
 UPDATE actions SET component = 'sendToRecordManagementAction' where action_page = 'export_seda';
 UPDATE actions SET component = 'checkAcknowledgmentRecordManagementAction' where action_page = 'check_acknowledgement';
 UPDATE actions SET component = 'checkReplyRecordManagementAction' where action_page = 'check_reply';
+UPDATE actions SET component = 'resetRecordManagementAction' where action_page = 'reset_letter';
+UPDATE actions SET component = 'confirmAction' where action_page = 'purge_letter';
 
 UPDATE res_attachments SET attachment_type = 'acknowledgement_record_management' WHERE attachment_type = 'simple_attachment' AND format = 'xml' AND title = 'Accusé de réception' AND relation = 1 AND status = 'TRA';
 UPDATE res_attachments SET attachment_type = 'reply_record_management' WHERE attachment_type = 'simple_attachment' AND format = 'xml' AND title = 'Réponse au transfert' AND relation = 1 AND status = 'TRA';
