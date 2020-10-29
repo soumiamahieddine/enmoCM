@@ -432,7 +432,7 @@ export class VisaWorkflowComponent implements OnInit {
                     return {
                         resId: resId,
                         listInstances: this.visaWorkflow.items
-                    }
+                    };
                 });
                 this.http.put(`../rest/circuits/visaCircuit`, { resources: arrVisa }).pipe(
                     tap((data: any) => {
@@ -525,7 +525,7 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     isValidWorkflow() {
-        if ((this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 && this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege || !item.isValid).length === 0) && this.visaWorkflow.items.length > 0) {
+        if ((this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 && this.visaWorkflow.items.filter((item: any) => (!item.hasPrivilege || !item.isValid) && item.process_date === null).length === 0) && this.visaWorkflow.items.length > 0) {
             return true;
         } else {
             return false;
@@ -537,7 +537,7 @@ export class VisaWorkflowComponent implements OnInit {
             return this.translate.instant('lang.signUserRequired');
         } else if (this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege).length > 0) {
             return this.translate.instant('lang.mustDeleteUsersWithNoPrivileges');
-        } else if (this.visaWorkflow.items.filter((item: any) => !item.isValid).length > 0) {
+        } else if (this.visaWorkflow.items.filter((item: any) => !item.isValid && item.process_date === null).length > 0) {
             return this.translate.instant('lang.mustDeleteInvalidUsers');
         }
     }
