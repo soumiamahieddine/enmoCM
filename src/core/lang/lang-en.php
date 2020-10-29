@@ -417,6 +417,7 @@ define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Contact cannot be added in M2M annuar
 define("_DATE_LOCALE", "en_US.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "User preferences updated");
+define("_USER_FEATURE_TOUR_UPDATED", "One or some steps done in the feature tour");
 
 define("_NO_SENDERS", "No sender linked to resource");
 

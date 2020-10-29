@@ -527,9 +527,10 @@ class UserController
 
     public function getProfile(Request $request, Response $response)
     {
-        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'preferences', 'external_id', 'status', 'mode']]);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'preferences', 'external_id', 'status', 'mode', 'feature_tour']]);
         $user['external_id']        = json_decode($user['external_id'], true);
         $user['preferences']        = json_decode($user['preferences'], true);
+        $user['featureTour']        = json_decode($user['feature_tour'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $user['emailSignatures']    = UserEmailSignatureModel::getByUserId(['userId' => $GLOBALS['id']]);
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
@@ -599,6 +600,33 @@ class UserController
             'eventType'    => 'UP',
             'eventId'      => 'userModification',
             'info'         => _USER_UPDATED . " {$body['firstname']} {$body['lastname']}"
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function updateCurrentUserFeatureTour(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::notEmpty()->validate($body['featureTour'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body featureTour is empty']);
+        }
+
+        UserModel::update([
+            'set'   => [
+                'feature_tour' => json_encode($body['featureTour'])
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$GLOBALS['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['id'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_FEATURE_TOUR_UPDATED . " {$user['firstname']} {$user['lastname']}"
         ]);
 
         return $response->withStatus(204);

@@ -67,20 +67,10 @@ trait ExportSEDATrait
             return ['errors' => ['No senderOrgRegNumber found in config.json']];
         }
 
-        if (empty($args['data']['packageName'])) {
-            return ['errors' => ['packageName is empty']];
-        }
-        if (empty($args['data']['archivalAgreement'])) {
-            return ['errors' => ['archivalAgreement is empty']];
-        }
-        if (empty($args['data']['slipId'])) {
-            return ['errors' => ['slipId is empty']];
-        }
-        if (empty($args['data']['entityArchiveRecipient'])) {
-            return ['errors' => ['entityArchiveRecipient is empty']];
-        }
-        if (empty($args['data']['archiveDescriptionLevel'])) {
-            return ['errors' => ['archiveDescriptionLevel is empty']];
+        foreach (['packageName', 'archivalAgreement', 'slipId', 'entityArchiveRecipient', 'archiveDescriptionLevel'] as $value) {
+            if (empty($args['data'][$value])) {
+                return ['errors' => [$value . ' is empty']];
+            }
         }
 
         foreach ($args['data']['archives'] as $archiveUnit) {
