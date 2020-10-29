@@ -2140,5 +2140,6 @@
     "instancesList" : "Instances présentes",
     "insteadOf": "À la place de",
     "doNotDefine": "Ne pas définir",
-    "infoImportNoIdToCreate": "La colonne <b>id</b> doit être vide pour la création"
+    "infoImportNoIdToCreate": "La colonne <b>id</b> doit être vide pour la création",
+    "almostThere": "Vous y êtes presque !"
 }
