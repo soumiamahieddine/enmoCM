@@ -875,12 +875,10 @@ class SearchController
                             'data'      => $data
                         ]);
                     } elseif ($roleId == 'visa') {
-                        $data[] = 'VISA_CIRCUIT';
-                        $data[] = 'false';
-                        $data[] = 'false';
+                        $data = array_merge($data, ['VISA_CIRCUIT', 'false', 'false', 'true']);
                         $rolesMatch = ListInstanceModel::get([
                             'select' => ['res_id'],
-                            'where'  => ["({$where})", 'difflist_type = ?', 'signatory = ?', 'requested_signature = ?'],
+                            'where'  => ["({$where})", 'difflist_type = ?', 'signatory = ?', '(requested_signature = ? or (requested_signature = ? and process_date is not null))'],
                             'data'   => $data
                         ]);
                     } else {
