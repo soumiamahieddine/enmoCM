@@ -128,7 +128,7 @@ export class AttachmentPageComponent implements OnInit {
                         relation: new FormControl({ value: data.relation, disabled: true }, [Validators.required]),
                         title: new FormControl({ value: data.title, disabled: !this.editMode }, [Validators.required]),
                         recipient: new FormControl({ value: contact, disabled: !this.editMode }),
-                        type: new FormControl({ value: data.type, disabled: !this.editMode }, [Validators.required]),
+                        type: new FormControl({ value: data.type, disabled: (!this.editMode || data.type === 'acknowledgement_record_management' || data.type === 'reply_record_management') }, [Validators.required]),
                         validationDate: new FormControl({ value: data.validationDate !== null ? new Date(data.validationDate) : null, disabled: !this.editMode }),
                         signedResponse: new FormControl({ value: data.signedResponse, disabled: false }),
                         encodedFile: new FormControl({ value: '_CURRENT_FILE', disabled: !this.editMode }, [Validators.required]),

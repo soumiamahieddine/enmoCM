@@ -148,7 +148,7 @@ class AttachmentController
 
     public function update(Request $request, Response $response, array $args)
     {
-        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'typist']]);
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'typist', 'attachment_type']]);
         if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA', 'SEND_MASS'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
@@ -165,6 +165,10 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Body is not set or empty']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['type'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body type is empty or not a string']);
+        }
+
+        if (in_array($attachment['attachment_type'], ['acknowledgement_record_management', 'reply_record_management'])) {
+            $body['type'] = $attachment['attachment_type'];
         }
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -232,6 +236,9 @@ class AttachmentController
         $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['origin_id', 'res_id_master', 'attachment_type', 'res_id', 'title', 'typist', 'status']]);
         if (empty($attachment) || $attachment['status'] == 'DEL') {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
+        }
+        if (in_array($attachment['attachment_type'], ['acknowledgement_record_management', 'reply_record_management'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Can not delete attachment use for record_management']);
         }
         if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
