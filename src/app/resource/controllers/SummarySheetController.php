@@ -178,7 +178,7 @@ class SummarySheetController
 
         $appName = CoreConfigModel::getApplicationName();
         $pdf->SetFont('', '', 8);
-        $pdf->Cell(0, 20, "$appName / " . date('d-m-Y'), 0, 2, 'L', false);
+        $pdf->Cell(0, 20, mb_strimwidth($appName, 0, 40, '...', 'utf8') . " / " . date('d-m-Y'), 0, 2, 'L', false);
         $pdf->SetY($pdf->GetY() - 20);
 
         $pdf->SetFont('', 'B', 12);
@@ -266,7 +266,9 @@ class SummarySheetController
                 $category = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                 $category = empty($category) ? '<i>'._UNDEFINED.'</i>' : "<b>{$category}</b>";
 
-                $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['label_status']]);
+                if (!empty($resource['status'])) {
+                    $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['label_status']]);
+                }
                 $status = empty($status['label_status']) ? '<i>' . _UNDEFINED . '</i>' : "<b>{$status['label_status']}</b>";
 
                 $retentionRuleFrozen = empty($resource['retention_frozen']) ? '<b>' . _NO . '</b>' : '<b>' . _YES . '</b>';
