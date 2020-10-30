@@ -323,6 +323,44 @@ ALTER TABLE custom_fields ADD COLUMN mode custom_fields_modes NOT NULL DEFAULT '
 ALTER TABLE listinstance DROP COLUMN IF EXISTS delegate;
 ALTER TABLE listinstance ADD COLUMN delegate INTEGER;
 
+/* ORDER ON CHRONO */
+CREATE OR REPLACE FUNCTION order_alphanum(text) RETURNS text AS $$
+declare
+    tmp text;
+begin
+    tmp := $1;
+    tmp := tmp || 'Z';
+    tmp := regexp_replace(tmp, E'(\\D)', E'\\1/', 'g');
+
+    IF count(regexp_match(tmp, E'(\\D(\\d{8})\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{8}\\D)', E'\\10\\2', 'g');
+    END IF;
+    IF count(regexp_match(tmp, E'(\\D)(\\d{7}\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{7}\\D)', E'\\100\\2', 'g');
+    END IF;
+    IF count(regexp_match(tmp, E'(\\D)(\\d{6}\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{6}\\D)', E'\\1000\\2', 'g');
+    END IF;
+    IF count(regexp_match(tmp, E'(\\D)(\\d{5}\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{5}\\D)', E'\\10000\\2', 'g');
+    END IF;
+    IF count(regexp_match(tmp, E'(\\D)(\\d{4}\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{4}\\D)', E'\\100000\\2', 'g');
+    END IF;
+    IF count(regexp_match(tmp, E'(\\D)(\\d{3}\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{3}\\D)', E'\\1000000\\2', 'g');
+    END IF;
+    IF count(regexp_match(tmp, E'(\\D)(\\d{2}\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{2}\\D)', E'\\10000000\\2', 'g');
+    END IF;
+    IF count(regexp_match(tmp, E'(\\D)(\\d{1}\\D)')) > 0 THEN
+        tmp := regexp_replace(tmp, E'(\\D)(\\d{1}\\D)', E'\\100000000\\2', 'g');
+    END IF;
+
+    RETURN tmp;
+end;
+$$ LANGUAGE plpgsql;
+
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
 SELECT r.res_id,
