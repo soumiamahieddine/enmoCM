@@ -2149,5 +2149,11 @@
     "doNotDefine": "Do not define",
     "almostThere": "You are almost there!",
     "resetRecordManagementDesc": "Resets the archiving process for mails refused processing in the EAS",
-    "recordManagement_alreadyArchived": "Mail is already archived in the EAS"
+    "recordManagement_alreadyArchived": "Mail is already archived in the EAS",
+    "durationCurrentUseNotExceeded": "The shelf life is not exceeded",
+    "recordManagement_alreadySent": "Mail is already sent to an EAS",
+    "recordManagement_rejectedReply": "The mail was refused in the EAS. See attachment 'Response to transfer (Archiving)'",
+    "noTransferCopyRecordManagement": "The final action of this type of mail does not correspond to an EAS shipment",
+    "noTransferCopyBindingRecordManagement": "Binding documents should not be sent to EAS",
+    "noTransferCopyNoBindingRecordManagement": "Non-binding documents should not be sent to EAS"
 }
