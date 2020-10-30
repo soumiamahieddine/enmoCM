@@ -99,7 +99,7 @@ class UserController
 
     public function getById(Request $request, Response $response, array $args)
     {
-        $user = UserModel::getById(['id' => $args['id'], 'select' => ['id', 'firstname', 'lastname', 'status']]);
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['id', 'firstname', 'lastname', 'status', 'mail']]);
         if (empty($user)) {
             return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
         }
