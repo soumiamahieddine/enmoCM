@@ -622,6 +622,7 @@ class UserController
             'data'  => [$GLOBALS['id']]
         ]);
 
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['firstname', 'lastname']]);
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $GLOBALS['id'],
