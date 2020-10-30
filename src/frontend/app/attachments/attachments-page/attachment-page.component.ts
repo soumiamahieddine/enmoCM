@@ -119,7 +119,7 @@ export class AttachmentPageComponent implements OnInit {
                         modifiedBy: new FormControl({ value: data.modifiedBy, disabled: true }),
                         signatory: new FormControl({ value: data.signatory, disabled: true }),
                         signatoryId: new FormControl({ value: data.signatoryId, disabled: true }),
-                        signDate: new FormControl({ value: data.signDate !== null ? new Date(data.signDate) : null, disabled: true }),
+                        signDate: new FormControl({ value: data.signDate, disabled: true }),
                         resId: new FormControl({ value: this.data.resId, disabled: true }, [Validators.required]),
                         chrono: new FormControl({ value: data.chrono, disabled: true }),
                         originId: new FormControl({ value: data.originId, disabled: true }),
