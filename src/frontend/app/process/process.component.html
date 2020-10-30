@@ -1,5 +1,11 @@
 <mat-sidenav-container class="maarch-container">
     <ng-template #adminMenuTemplate>
+        <div *ngIf="resourceFreezed" class="alert-message alert-message-info" [innerHTML]="'lang.retentionRuleFrozen' | translate"
+                style="min-width: 100%;">
+        </div>
+        <div *ngIf="resourceBinded" class="alert-message alert-message-info" [innerHTML]="'lang.bindingMail' | translate"
+                style="min-width: 100%">
+        </div>
         <div class="listModels">
             <div class="processTool">
                 <div class="processTool-module jiggle" *ngFor="let module of processTool"
