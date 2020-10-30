@@ -19,7 +19,7 @@ export class AuthService {
 
     applicationName: string = '';
     loginMessage: string = '';
-    authMode: string = 'default';
+    authMode: string = 'standard';
     authUri: string = '';
     changeKey: boolean = null;
     user: any = {};
