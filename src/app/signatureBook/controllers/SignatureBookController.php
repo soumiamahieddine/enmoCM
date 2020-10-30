@@ -384,6 +384,8 @@ class SignatureBookController
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
         } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of signatory book']);
+        } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
         }
 
         $body = $request->getParsedBody();
@@ -436,9 +438,9 @@ class SignatureBookController
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/config.xml']);
-        $width = (int)$loadedXml->CONFIG->width_blocsign ?? 150;
-        $height = (int)$loadedXml->CONFIG->height_blocsign ?? 100;
-        $tmpPath = CoreConfigModel::getTmpPath();
+        $width     = (int)$loadedXml->CONFIG->width_blocsign ?? 150;
+        $height    = (int)$loadedXml->CONFIG->height_blocsign ?? 100;
+        $tmpPath   = CoreConfigModel::getTmpPath();
 
         $command = "java -jar modules/visa/dist/SignPdf.jar {$pathToDocument} {$signaturePath} {$width} {$height} {$tmpPath} 2> /dev/null";
         exec($command, $output, $return);
@@ -502,20 +504,25 @@ class SignatureBookController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['typist', 'version']]);
-        if ($resource['typist'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
-        }
-
-        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type in (?)', 'version = ?'], 'data' => [$args['resId'], ['SIGN', 'TNL'], $resource['version']]]);
-
         $listInstance = ListInstanceModel::get([
-            'select'    => ['listinstance_id'],
+            'select'    => ['listinstance_id', 'item_id'],
             'where'     => ['res_id = ?', 'signatory = ?'],
             'data'      => [$args['resId'], 'true'],
             'orderBy'   => ['listinstance_id desc'],
             'limit'     => 1
         ]);
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['typist', 'version']]);
+        if (!empty($listInstance)) {
+            if ($listInstance[0]['item_id'] != $GLOBALS['id']) {
+                return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
+            }
+        } elseif ($resource['typist'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
+        }
+
+        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type in (?)', 'version = ?'], 'data' => [$args['resId'], ['SIGN', 'TNL'], $resource['version']]]);
+
         ListInstanceModel::update([
             'set'   => ['signatory' => 'false'],
             'where' => ['listinstance_id = ?'],
@@ -544,6 +551,8 @@ class SignatureBookController
             return $response->withStatus(403)->withJson(['errors' => 'Attachment out of perimeter']);
         } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of signatory book']);
+        } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
         }
 
         $body = $request->getParsedBody();
@@ -661,10 +670,17 @@ class SignatureBookController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'typist']]);
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master']]);
+
+        $signedDocument = AttachmentModel::get([
+            'select' => ['signatory_user_serial_id'],
+            'where'  => ['origin = ?', 'status != ?'],
+            'data'   => ["{$args['id']},res_attachments", 'DEL']
+        ]);
+
         if (empty($attachment) || !ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        } elseif ($attachment['typist'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
+        } elseif ($signedDocument[0]['signatory_user_serial_id'] != $GLOBALS['id']) {
             return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
         }
 
