@@ -201,6 +201,8 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
         if (JSON.stringify(this.datas) !== JSON.stringify(this.datasClone) && !this.isModelModified) {
             this.isModelModified = true;
 
+            this.datasClone = JSON.parse(JSON.stringify(this.datas));
+
             // if more data => contruct title again
             if (this.datasClone.length !== this.datas.length) {
                 let group = '';
@@ -215,8 +217,6 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
                     }
                 });
             }
-
-            this.datasClone = JSON.parse(JSON.stringify(this.datas));
             this.filteredDatas = this.formControlSearch.valueChanges
                 .pipe(
                     startWith(''),
