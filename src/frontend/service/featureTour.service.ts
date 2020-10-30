@@ -156,8 +156,6 @@ export class FeatureTourService {
         console.log(this.currentStepType);
         this.featureTourEnd.push(this.currentStepType);
         this.http.put('../rest/currentUser/profile/featureTour', {featureTour : this.featureTourEnd}).pipe(
-            tap(() => {
-            }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
                 return of(false);
