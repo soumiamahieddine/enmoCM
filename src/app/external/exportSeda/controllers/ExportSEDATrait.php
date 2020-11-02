@@ -497,7 +497,7 @@ trait ExportSEDATrait
         $data['messageObject'] = self::array2object($args["data"]["messageObject"]);
         $data['type'] = $args["data"]["type"];
         
-        $informationsToSend = SendMessageController::generateMessageFile($data);
+        $informationsToSend = SendMessageController::generateSedaFile($data);
         return $informationsToSend;
     }
 

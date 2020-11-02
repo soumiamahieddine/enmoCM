@@ -36,7 +36,36 @@ class SendMessageController
         return $res;
     }
 
-    public static function generateMessageFile($aArgs = [])
+
+    public static function generateMessageFile($aArgs = [], $isForSeda = false)
+    {
+        $messageObject = $aArgs['messageObject'];
+        $type          = $aArgs['type'];
+
+        $DOMTemplate = new \DOMDocument();
+        $DOMTemplate->load('modules/export_seda/resources/'.$type.'.xml');
+        $DOMTemplateProcessor = new DOMTemplateProcessorController($DOMTemplate);
+        $DOMTemplateProcessor->setSource($type, $messageObject);
+        $DOMTemplateProcessor->merge();
+        $DOMTemplateProcessor->removeEmptyNodes();
+
+        $tmpPath = CoreConfigModel::getTmpPath();
+        file_put_contents($tmpPath . $messageObject->MessageIdentifier->value . ".xml", $DOMTemplate->saveXML());
+
+        if ($messageObject->DataObjectPackage && !$isForSeda) {
+            foreach ($messageObject->DataObjectPackage->BinaryDataObject as $binaryDataObject) {
+                $base64_decoded = base64_decode($binaryDataObject->Attachment->value);
+                $file = fopen($tmpPath . $binaryDataObject->Attachment->filename, 'w');
+                fwrite($file, $base64_decoded);
+                fclose($file);
+            }
+        }
+        $filename = self::generateZip($messageObject, $tmpPath);
+
+        return $filename;
+    }
+
+    public static function generateSedaFile($aArgs = [])
     {
         $tmpPath = CoreConfigModel::getTmpPath();
 
@@ -99,9 +128,7 @@ class SendMessageController
             }
         }
 
-        $xmlFile = self::generateXML($seda2Message, $type, $tmpPath);
-
-        $filename = self::generateZip($seda2Message, $tmpPath);
+        $filename = self::generateMessageFile(["messageObject" => $seda2Message, "type" => $type], $isForSeda = true);
 
         $arrayReturn = [
             "messageObject" => $seda2Message,
@@ -110,20 +137,6 @@ class SendMessageController
         ];
 
         return $arrayReturn;
-    }
-
-    private static function generateXML($seda2Message, $type, $tmpPath)
-    {
-        $DOMTemplate = new \DOMDocument();
-        $DOMTemplate->load('src/app/external/exportSeda/resources/'.$type.'.xml');
-        $DOMTemplateProcessor = new DOMTemplateProcessorController($DOMTemplate);
-        $DOMTemplateProcessor->setSource($type, $seda2Message);
-        $DOMTemplateProcessor->merge();
-        $DOMTemplateProcessor->removeEmptyNodes();
-
-        file_put_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml", $DOMTemplate->saveXML());
-
-        return $tmpPath . $seda2Message->MessageIdentifier->value . ".xml";
     }
 
     private static function generateZip($seda2Message, $tmpPath)
@@ -181,7 +194,6 @@ class SendMessageController
         $binaryDataObject->MessageDigest->value = hash_file('sha256', $filePath);
         $binaryDataObject->MessageDigest->algorithm = "sha256";
         $binaryDataObject->Size = filesize($filePath);
-
 
         $binaryDataObject->Attachment = new \stdClass();
         $binaryDataObject->Attachment->filename = $filename;
