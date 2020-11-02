@@ -378,35 +378,47 @@ export class VisaWorkflowComponent implements OnInit {
 
     getCurrentVisaUserIndex() {
         if (this.getLastVisaUser().listinstance_id === undefined) {
-            return 0;
+            const index = 0;
+            return this.getRealIndex(index);
         } else {
-            const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
-            return (index + 1);
+            let index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
+            index++;
+            console.log(index);
+
+            return this.getRealIndex(index);
         }
     }
 
     getFirstVisaUser() {
-        return !this.functions.empty(this.visaWorkflow.items[0]) ? this.visaWorkflow.items[0] : '';
+        return !this.functions.empty(this.visaWorkflow.items[0]) && this.visaWorkflow.items[0].isValid ? this.visaWorkflow.items[0] : '';
     }
 
-    getCurrentVisaUser() {
+    /* getCurrentVisaUser() {
 
         const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
 
         return !this.functions.empty(this.visaWorkflow.items[index + 1]) ? this.visaWorkflow.items[index + 1] : '';
-    }
+    }*/
 
     getNextVisaUser() {
+        let index =  this.getCurrentVisaUserIndex();
+        index = index + 1;
+        const realIndex = this.getRealIndex(index);
 
-        const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
-
-        return !this.functions.empty(this.visaWorkflow.items[index + 2]) ? this.visaWorkflow.items[index + 2] : '';
+        return !this.functions.empty(this.visaWorkflow.items[realIndex]) ? this.visaWorkflow.items[realIndex] : '';
     }
 
     getLastVisaUser() {
-        let arrOnlyProcess = this.visaWorkflow.items.filter((item: any) => !this.functions.empty(item.process_date));
+        let arrOnlyProcess = this.visaWorkflow.items.filter((item: any) => !this.functions.empty(item.process_date) && item.isValid);
 
         return !this.functions.empty(arrOnlyProcess[arrOnlyProcess.length - 1]) ? arrOnlyProcess[arrOnlyProcess.length - 1] : '';
+    }
+
+    getRealIndex(index: number) {
+        while (index < this.visaWorkflow.items.length && !this.visaWorkflow.items[index].isValid) {
+            index++;
+        }
+        return index;
     }
 
     checkExternalSignatoryBook() {
@@ -611,7 +623,7 @@ export class VisaWorkflowComponent implements OnInit {
 
     canManageUser(item: any, i: number) {
         if (this.adminMode) {
-            if (!this.functions.empty(item.process_date) || (this.target === 'signatureBook' && this.getCurrentVisaUserIndex() === i)) {
+            if (!this.functions.empty(item.process_date) || (this.target === 'signatureBook' && this.getCurrentVisaUserIndex() === i) || !item.isValid) {
                 return false;
             } else {
                 return true;
