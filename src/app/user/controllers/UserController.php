@@ -622,13 +622,13 @@ class UserController
             'data'  => [$GLOBALS['id']]
         ]);
 
-        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['firstname', 'lastname']]);
+        $userData = UserModel::getLabelledUserById(['id' => $GLOBALS['id'], 'select' => ['firstname', 'lastname']]);
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $GLOBALS['id'],
             'eventType'    => 'UP',
             'eventId'      => 'userModification',
-            'info'         => _USER_FEATURE_TOUR_UPDATED . " {$user['firstname']} {$user['lastname']}"
+            'info'         => _USER_FEATURE_TOUR_UPDATED . " " . $userData
         ]);
 
         return $response->withStatus(204);

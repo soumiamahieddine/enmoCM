@@ -1951,6 +1951,7 @@
     "registeredMailNumberRangeModification": "Modification d'une plage de numéros de recommandés",
     "registeredMailNumberRangeModificationMsg": "La plage est en <b>cours d'utilisation</b> ou <b>clôturée</b>, vous ne pouvez pas la modifier.",
     "registeredMailNoIssuingSites": "Vous devez créer un site émetteur avant de créer une plage de numéros de recommandés",
+    "registeredMailMsgActivate": "En activant cette plage, cela clôturera la plage actuelle utilisée pour ce type de recommandé.",
     "userLoginAlreadyExists": "Un utilisateur avec ce login existe déjà.",
     "userDeletedNowActivated": "Un utilisateur était supprimé et est maintenant réactivé.",
     "phoneModificationNotAllowed": "Le numéro de téléphone n'est pas modifiable.",

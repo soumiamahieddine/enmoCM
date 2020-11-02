@@ -412,7 +412,7 @@ define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Le contact ne peut pas être ajouté 
 define("_DATE_LOCALE", "fr_FR.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "Préférences utilisateur modifiées");
-define("_USER_FEATURE_TOUR_UPDATED", "Une ou plusieurs étapes du tutorial ont été faites");
+define("_USER_FEATURE_TOUR_UPDATED", "Une ou plusieurs étapes du didacticiel ont été faites");
 
 define("_NO_SENDERS", "Aucun expéditeur lié au courrier");
 
