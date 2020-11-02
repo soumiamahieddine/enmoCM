@@ -170,7 +170,7 @@ class AttachmentController
         }
 
         if (in_array($attachment['attachment_type'], ['acknowledgement_record_management', 'reply_record_management'])) {
-            $body['type'] = $attachment['attachment_type'];
+            return $response->withStatus(400)->withJson(['errors' => 'Can not update attachment use for record_management']);
         }
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
