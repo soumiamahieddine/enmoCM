@@ -40,13 +40,13 @@ class SearchModel
             process_limit_date timestamp without time zone,
             entity_label character varying(255),
             type_label character varying(255),
-            dest_firstname character varying(255),
-            dest_lastname character varying(255)
+            firstname character varying(255),
+            lastname character varying(255)
         ) ON COMMIT DROP;";
         $database->query($query);
 
-        $selectValues  = "res_id, priority, type_id, destination, status, category_id, alt_identifier, subject, creation_date, dest_user, process_limit_date, entity_label, type_label, dest_firstname, dest_lastname";
-        $temporaryData = "SELECT " . $selectValues . " FROM res_view_letterbox WHERE " . implode(' AND ', $args['where']);
+        $selectValues  = "res_id, priority, type_id, destination, status, category_id, alt_identifier, subject, creation_date, dest_user, process_limit_date, entity_label, type_label, firstname, lastname";
+        $temporaryData = "SELECT " . $selectValues . " FROM res_view_letterbox LEFT JOIN (SELECT firstname, lastname, id from users) AS us ON us.id = res_view_letterbox.dest_user WHERE " . implode(' AND ', $args['where']);
         $query         = "INSERT INTO search_tmp_".$GLOBALS['id']." (" . $selectValues . ")" . $temporaryData;
         $database->query($query, $args['data']);
     }
