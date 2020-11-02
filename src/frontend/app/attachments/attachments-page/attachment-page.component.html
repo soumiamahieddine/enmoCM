@@ -25,8 +25,7 @@
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">
-                                <input matInput placeholder="{{'lang.status' | translate}}" [formControl]="attachment['status']"
-                                    [value]="this.translate.instant('lang.attachment_' + attachment['status'].value)">
+                                <input matInput placeholder="{{'lang.status' | translate}}" [formControl]="attachment['status']">
                             </mat-form-field>
                             <div class="fieldState">
                                 <i class="fas fa-asterisk noMandatory"></i>
