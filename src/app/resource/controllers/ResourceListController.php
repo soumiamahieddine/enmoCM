@@ -317,6 +317,9 @@ class ResourceListController
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'alt_identifier') !== false) {
             $order = 'order_alphanum(alt_identifier) ' . explode(' ', $args['data']['order'])[1];
         }
+        if (!empty($args['data']['order']) && strpos($args['data']['order'], 'dest_user') !== false) {
+            $order = '(dest_firstname, dest_lastname) ' . explode(' ', $args['data']['order'])[1];
+        }
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'priority') !== false) {
             $order = 'priorities.order ' . explode(' ', $args['data']['order'])[1];
             $table[] = 'priorities';
