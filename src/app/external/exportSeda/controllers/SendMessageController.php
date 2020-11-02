@@ -99,15 +99,7 @@ class SendMessageController
             }
         }
 
-        // TODO : Externaliser la fonction de création du xml final
-        $DOMTemplate = new \DOMDocument();
-        $DOMTemplate->load('src/app/external/exportSeda/resources/'.$type.'.xml');
-        $DOMTemplateProcessor = new DOMTemplateProcessorController($DOMTemplate);
-        $DOMTemplateProcessor->setSource($type, $seda2Message);
-        $DOMTemplateProcessor->merge();
-        $DOMTemplateProcessor->removeEmptyNodes();
-
-        file_put_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml", $DOMTemplate->saveXML());
+        $xmlFile = self::generateXML($seda2Message, $type, $tmpPath);
 
         $filename = self::generateZip($seda2Message, $tmpPath);
 
@@ -118,6 +110,20 @@ class SendMessageController
         ];
 
         return $arrayReturn;
+    }
+
+    private static function generateXML($seda2Message, $type, $tmpPath)
+    {
+        $DOMTemplate = new \DOMDocument();
+        $DOMTemplate->load('src/app/external/exportSeda/resources/'.$type.'.xml');
+        $DOMTemplateProcessor = new DOMTemplateProcessorController($DOMTemplate);
+        $DOMTemplateProcessor->setSource($type, $seda2Message);
+        $DOMTemplateProcessor->merge();
+        $DOMTemplateProcessor->removeEmptyNodes();
+
+        file_put_contents($tmpPath . $seda2Message->MessageIdentifier->value . ".xml", $DOMTemplate->saveXML());
+
+        return $tmpPath . $seda2Message->MessageIdentifier->value . ".xml";
     }
 
     private static function generateZip($seda2Message, $tmpPath)
