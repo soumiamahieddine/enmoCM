@@ -411,13 +411,10 @@ SELECT r.res_id,
        r.retention_frozen,
        r.binding,
        en.entity_label,
-       en.entity_type AS entitytype,
-       users.firstname AS dest_firstname,
-       users.lastname AS dest_lastname
+       en.entity_type AS entitytype
 FROM doctypes d,
      doctypes_first_level dfl,
      doctypes_second_level dsl,
      res_letterbox r
     LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-    LEFT JOIN users ON users.id = r.dest_user
 WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;

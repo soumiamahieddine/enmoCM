@@ -318,7 +318,9 @@ class ResourceListController
             $order = 'order_alphanum(alt_identifier) ' . explode(' ', $args['data']['order'])[1];
         }
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'dest_user') !== false) {
-            $order = '(dest_firstname, dest_lastname) ' . explode(' ', $args['data']['order'])[1];
+            $order = '(us.firstname, us.lastname) ' . explode(' ', $args['data']['order'])[1];
+            $table[] = '(SELECT firstname, lastname, id from users) AS us';
+            $leftJoin[] = 'us.id = res_view_letterbox.dest_user';
         }
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'priority') !== false) {
             $order = 'priorities.order ' . explode(' ', $args['data']['order'])[1];
