@@ -2156,5 +2156,7 @@
     "recordManagement_rejectedReply": "The mail was refused in the EAS. See attachment 'Response to transfer (Archiving)'",
     "noTransferCopyRecordManagement": "The final action of this type of mail does not correspond to an EAS shipment",
     "noTransferCopyBindingRecordManagement": "Binding documents should not be sent to EAS",
-    "noTransferCopyNoBindingRecordManagement": "Non-binding documents should not be sent to EAS"
+    "noTransferCopyNoBindingRecordManagement": "Non-binding documents should not be sent to EAS",
+    "bindingMailDesc": "A binding document involves a specific final action defined in the settings administration and is no longer linked to the document type.",
+    "noBindingMailDesc": "A non-binding document involves a specific final action defined in the settings administration and is no longer linked to the document type."
 }
