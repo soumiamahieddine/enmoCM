@@ -67,7 +67,9 @@ class SearchController
         $searchWhere    = $userdataClause['searchWhere'];
         $searchData     = $userdataClause['searchData'];
 
-
+        if (!empty($body['meta']['values'])) {
+            $body['meta']['values'] = trim($body['meta']['values']);
+        }
         $searchClause = SearchController::getQuickFieldClause(['body' => $body, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
         if (empty($searchClause)) {
             return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
