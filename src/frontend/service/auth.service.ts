@@ -106,8 +106,17 @@ export class AuthService {
         if (['cas', 'keycloak'].indexOf(this.authMode) > -1 && !forcePageLogin) {
             this.SsoLogout(cleanUrl);
         } else {
-            this.redirectAfterLogout(cleanUrl);
-            await this.router.navigate(['/login']);
+            // AVOID UNLOCK ON DESROY COMPONENT
+            if (['process', 'signatureBook'].indexOf(this.router.url.split('/')[1]) > -1) {
+                this.router.navigate(['/home']);
+                setTimeout(() => {
+                    this.redirectAfterLogout(cleanUrl);
+                    this.router.navigate(['/login']);
+                }, 500);
+            } else {
+                this.redirectAfterLogout(cleanUrl);
+                await this.router.navigate(['/login']);
+            }
         }
     }
 
