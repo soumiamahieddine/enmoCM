@@ -126,7 +126,6 @@ abstract class SendmailAbstract extends Database
 
     public function getAttachment($coll_id, $res_id_master, $res_attachment, $isVersion = false)
     {
-        include_once 'modules/attachments/attachments_tables.php';
         include_once 'core/core_tables.php';
         include_once 'core/docservers_tools.php';
 
