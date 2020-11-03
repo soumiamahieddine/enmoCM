@@ -160,8 +160,8 @@ foreach ($replies as $reply) {
         continue;
     }
 
-    $unitIdentifier = \MessageExchange\models\MessageExchangeModel::getUnitIdentifierByResId(['select' => ['message_id'], 'resId' => $args['resId']]);
-    if ($unitIdentifier['message_id'] != $messageExchange['message_id']) {
+    $unitIdentifier = \MessageExchange\models\MessageExchangeModel::getUnitIdentifierByResId(['select' => ['message_id'], 'resId' => $reply['res_id_master']]);
+    if ($unitIdentifier[0]['message_id'] != $messageExchange['message_id']) {
         Bt_writeLog(['level' => 'WARNING', 'message' => 'Wrong reply for attachment res_id : ' . $reply['res_id']]);
         continue;
     }
