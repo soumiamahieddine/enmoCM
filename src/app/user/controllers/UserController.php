@@ -744,7 +744,7 @@ class UserController
                     'where'  => ['basket_id =?', 'group_serial_id = ?', 'user_serial_id = ?'],
                     'data'   => [$value['basket_id'], $value['group_id'], $aArgs['id']]
                 ]);
-                if (empty($userBasketPreference['display'])) {
+                if (empty($userBasketPreference[0]['display'])) {
                     unset($data[$key]);
                     continue;
                 }
