@@ -99,12 +99,19 @@ class UserController
 
     public function getById(Request $request, Response $response, array $args)
     {
-        $user = UserModel::getById(['id' => $args['id'], 'select' => ['id', 'firstname', 'lastname', 'status', 'mail']]);
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['id', 'firstname', 'lastname', 'status', 'mail', 'phone']]);
         if (empty($user)) {
             return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
         }
         $user['enabled'] = $user['status'] != 'SPD';
         unset($user['status']);
+
+        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $args['id'], 'select' => ['entity_label']]);
+        $user['department'] = $primaryEntity['entity_label'];
+
+        if ($GLOBALS['id'] != $args['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']])) {
+            unset($user['phone']);
+        }
 
         return $response->withJson($user);
     }
