@@ -2151,5 +2151,6 @@
     "insteadOf": "À la place de",
     "doNotDefine": "Ne pas définir",
     "infoImportNoIdToCreate": "La colonne <b>id</b> doit être vide pour la création",
-    "almostThere": "Vous y êtes presque !"
+    "almostThere": "Vous y êtes presque !",
+    "redirectUserVisaWorkflow": "Changement de viseur / signataire pour les courriers en cours de visa / signature"
 }
