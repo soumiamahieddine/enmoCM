@@ -346,11 +346,11 @@ class SearchController
                 ]);
 
                 if (!empty($requestDataDocument['where'])) {
-                    $whereClause[]      = implode(' OR ', $requestDataDocument['where']);
+                    $whereClause[]      = implode(' AND ', $requestDataDocument['where']);
                     $args['searchData'] = array_merge($args['searchData'], $requestDataDocument['data']);
                 }
                 if (!empty($requestDataAttachment['where'])) {
-                    $whereClause[]      = 'res_id in (select res_id_master from res_attachments where (' . implode(' OR ', $requestDataAttachment['where']) . ') and status in (\'TRA\', \'A_TRA\', \'FRZ\'))';
+                    $whereClause[]      = 'res_id in (select res_id_master from res_attachments where (' . implode(' AND ', $requestDataAttachment['where']) . ') and status in (\'TRA\', \'A_TRA\', \'FRZ\'))';
                     $args['searchData'] = array_merge($args['searchData'], $requestDataAttachment['data']);
                 }
 
