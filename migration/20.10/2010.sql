@@ -323,6 +323,20 @@ ALTER TABLE custom_fields ADD COLUMN mode custom_fields_modes NOT NULL DEFAULT '
 ALTER TABLE listinstance DROP COLUMN IF EXISTS delegate;
 ALTER TABLE listinstance ADD COLUMN delegate INTEGER;
 
+/* Replace dest_user with the dest in listinstance, if the dests are differents */
+UPDATE res_letterbox
+SET dest_user = (
+    SELECT item_id FROM listinstance
+    WHERE item_mode = 'dest' AND item_type = 'user_id' AND listinstance.res_id = res_letterbox.res_id
+)
+WHERE res_id IN (
+    SELECT res_letterbox.res_id
+    FROM res_letterbox
+             JOIN listinstance l ON res_letterbox.res_id = l.res_id
+    WHERE dest_user != item_id AND item_type ='user_id' AND item_mode='dest'
+);
+
+
 /* ORDER ON CHRONO */
 CREATE OR REPLACE FUNCTION order_alphanum(text) RETURNS text AS $$
 declare
