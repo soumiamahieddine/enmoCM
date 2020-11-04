@@ -120,9 +120,11 @@ class SearchController
             $searchData[]  = $nonSearchableStatuses;
         }
 
+        $queryParams = $request->getQueryParams();
+
         // Begin transaction for temporarySearchData
         DatabaseModel::beginTransaction();
-        SearchModel::createTemporarySearchData(['where' => $searchWhere, 'data' => $searchData]);
+        SearchModel::createTemporarySearchData(['where' => $searchWhere, 'data' => $searchData, 'order' => $queryParams['order']]);
 
         $filters = [];
         if (empty($queryParams['filters'])) {
@@ -136,8 +138,6 @@ class SearchController
         $searchWhere = $searchClause['searchWhere'];
         $searchData  = $searchClause['searchData'];
 
-        $queryParams = $request->getQueryParams();
-
         $limit = 25;
         if (!empty($queryParams['limit']) && is_numeric($queryParams['limit'])) {
             $limit = (int)$queryParams['limit'];
@@ -147,8 +147,8 @@ class SearchController
             $offset = (int)$queryParams['offset'];
         }
         $order   = !in_array($queryParams['orderDir'], ['ASC', 'DESC']) ? '' : $queryParams['orderDir'];
-        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate', 'category', 'destUser', 'processLimitDate', 'entityLabel'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date', 'category_id', '(firstname, lastname)', 'process_limit_date', 'entity_label'], $queryParams['order']);
-        $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date', 'category_id', '(firstname, lastname)', 'process_limit_date', 'entity_label', 'priority']) ? ['creation_date'] : ["{$orderBy} {$order}"];
+        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate', 'category', 'destUser', 'processLimitDate', 'entityLabel'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date', 'category_id', '(lastname, firstname)', 'process_limit_date', 'entity_label'], $queryParams['order']);
+        $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date', 'category_id', '(lastname, firstname)', 'process_limit_date', 'entity_label', 'priority']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
         $allResources = SearchModel::getTemporarySearchData([
             'select'  => ['res_id'],
