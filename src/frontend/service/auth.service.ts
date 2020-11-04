@@ -287,7 +287,7 @@ export class AuthService {
                             entities: data.entities,
                             groups: data.groups,
                             preferences: data.preferences,
-                            privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.privilegeService.getAllPrivileges(!data.lockAdvancedPrivileges) : data.privileges,
+                            privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.privilegeService.getAllPrivileges(!data.lockAdvancedPrivileges, this.authMode) : data.privileges,
                             featureTour: data.featureTour
                         };
                         this.headerService.nbResourcesFollowed = data.nbFollowedResources;
