@@ -351,6 +351,15 @@ function Bt_purgeAll($args = [])
             'where' => ['note_id in (select id from notes where identifier in (?))'],
             'data'  => [$args['resources']]
         ]);
+
+        $linkedResources = implode("' - '", $args['resources']);
+        \SrcCore\models\DatabaseModel::update([
+            'table'     => 'res_letterbox',
+            'postSet'   => ['linked_resources' => "linked_resources - '{$linkedResources}'"],
+            'where'     => ['linked_resources != ?'],
+            'data'      => ['[]']
+        ]);
+
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'adr_attachments',
             'where' => ['res_id in (select res_id from res_attachments where res_id_master in (?))'],

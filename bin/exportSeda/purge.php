@@ -75,7 +75,6 @@ if (empty($file)) {
 $config = $file['config'];
 $GLOBALS['MaarchDirectory'] = $config['maarchDirectory'];
 $GLOBALS['customId']        = $config['customID'];
-$GLOBALS['applicationUrl']  = $config['maarchUrl'];
 $GLOBALS['batchDirectory']  = $GLOBALS['MaarchDirectory'] . 'bin/exportSeda';
 
 $config = $file['exportSeda'];
