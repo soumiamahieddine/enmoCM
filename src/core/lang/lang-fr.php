@@ -504,3 +504,5 @@ define('_CHECK_ACKNOWLEDGMENT_RECORD_MANAGEMENT', 'Vérification du transfert du
 define('_CHECK_ACKNOWLEDGMENT_RECORD_MANAGEMENT_DESC', 'Vérification du transfert du paquet au système d\'archivage électronique');
 define('_RESET_RECORD_MANAGEMENT', 'Remise à zéro du circuit d\'archivage');
 define('_RESET_RECORD_MANAGEMENT_DESC', 'Remise à zéro du circuit d\'archivage');
+
+define('_USER_SKIPPED', 'Utilisateur passé');
