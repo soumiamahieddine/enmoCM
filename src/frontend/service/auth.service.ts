@@ -224,9 +224,6 @@ export class AuthService {
                         console.debug('getLoginInformations');
                         this.setAppSession(data.instanceId);
 
-                        // FOR TEST
-                        data.lang = 'fr';
-
                         this.localStorage.save('lang', data.lang);
                         this.translate.use(data.lang);
 
