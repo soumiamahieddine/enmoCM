@@ -623,7 +623,7 @@ export class VisaWorkflowComponent implements OnInit {
 
     canManageUser(item: any, i: number) {
         if (this.adminMode) {
-            if (!this.functions.empty(item.process_date) || (this.target === 'signatureBook' && this.getCurrentVisaUserIndex() === i) || !item.isValid) {
+            if (!this.functions.empty(item.process_date) || (this.target === 'signatureBook' && this.getCurrentVisaUserIndex() === i)) {
                 return false;
             } else {
                 return true;
