@@ -171,7 +171,7 @@ export class UsersAdministrationRedirectModalComponent implements OnInit {
 
     updateVisaWorkflow() {
         this.userVisaWorkflowResources.forEach((res: any, index: number) => {
-            this.userVisaWorkflowResources[index].listInstances = this.userVisaWorkflowResources[index].workflow.map((item: any) => {
+            this.userVisaWorkflowResources[index].listInstances = this.userVisaWorkflowResources[index].listInstances.map((item: any) => {
                 return {
                     ...item,
                     item_id: (item.process_mode !== null && item.item_id === this.data.user.id) ? this.userVisaWorkflowResourcesRedirectUserId : item.item_id
