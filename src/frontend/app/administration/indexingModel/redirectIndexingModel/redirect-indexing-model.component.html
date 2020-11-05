@@ -13,7 +13,7 @@
     <div *ngIf="!loading">
       <mat-form-field style="padding: 10px; margin-top: 15px">
         <mat-select name="model" [(ngModel)]="modelIds"
-                    [placeholder]="this.translate.instant('lang.indexingModel')" required (selectionChange)="changeModel($event)">
+                    [placeholder]="'lang.indexingModel' | translate" required (selectionChange)="changeModel($event)">
           <mat-option *ngFor="let model of indexingModels;let i=index" [value]="model.id" [disabled]="model.id === mainIndexingModel.id">
             {{model.label}}
           </mat-option>

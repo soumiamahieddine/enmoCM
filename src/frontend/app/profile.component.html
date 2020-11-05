@@ -254,7 +254,7 @@
                                                       style="opacity: 0.5;font-style: italic;font-size: 80%;">
                                                     {{'lang.selectAll' | translate}}
                                                 </span>
-                                                    <plugin-autocomplete *ngIf="selectionBaskets.hasValue()" [labelPlaceholder]="this.translate.instant('lang.redirectBaskets')" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)" appearance="outline"></plugin-autocomplete>
+                                                    <plugin-autocomplete *ngIf="selectionBaskets.hasValue()" [labelPlaceholder]="'lang.redirectBaskets' | translate" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)" appearance="outline"></plugin-autocomplete>
                                                 </p>
                                             </mat-list-item>
                                             <mat-divider></mat-divider>
@@ -327,7 +327,7 @@
                                                                       style="font-weight:normal">{{basket.group_desc}}</span>
                                                             </h4>
                                                             <p mat-line>
-                                                                <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="this.translate.instant('lang.redirectBaskets')" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)" appearance="outline"></plugin-autocomplete>
+                                                                <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="'lang.redirectBaskets' | translate" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)" appearance="outline"></plugin-autocomplete>
                                                                 <mat-form-field>
                                                                     <input type="text" color="warn" matInput disabled
                                                                            value="{{'lang.assignBy' | translate}} {{basket.userToDisplay}}">
@@ -676,7 +676,7 @@
                                                             <div class="col-md-6 col-xs-6">
                                                                 <div class="alert alert-danger"
                                                                      *ngIf="dataSourceContactsListAutocomplete && dataSourceContactsListAutocomplete.data.length == 1000"
-                                                                     [innerHTML]="this.translate.instant('lang.limitDataReached_1000')"></div>
+                                                                     [innerHTML]="'lang.limitDataReached_1000' | translate"></div>
                                                             </div>
                                                             <div class="col-md-6 col-xs-6">
                                                                 <mat-paginator #paginatorGroupsListAutocomplete [length]="0"

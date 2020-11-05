@@ -223,7 +223,7 @@
                                                     <ng-container *ngFor="let mode of adminModes | sortBy : 'label'">
                                                         <mat-option [value]="mode.id"
                                                             [disabled]="headerService.user.mode === 'standard' && ['root_visible','root_invisible'].indexOf(mode.id) > -1"
-                                                            [title]="headerService.user.mode === 'standard' && ['root_visible','root_invisible'].indexOf(mode.id) > -1 ? this.translate.instant('lang.mustSuperadmin') : ''">
+                                                            [title]="headerService.user.mode === 'standard' && ['root_visible','root_invisible'].indexOf(mode.id) > -1 ? ('lang.mustSuperadmin' | translate) : ''">
                                                             {{mode.label}}
                                                         </mat-option>
                                                     </ng-container>
@@ -291,7 +291,7 @@
                                                 <mat-icon class="fa fa-check"></mat-icon>
                                             </button>
                                             <mat-menu #menu="matMenu" style="width:200px !important;">
-                                                <plugin-autocomplete [labelPlaceholder]="this.translate.instant('lang.redirectBaskets')"
+                                                <plugin-autocomplete [labelPlaceholder]="'lang.redirectBaskets' | translate"
                                                     [routeDatas]="['/rest/autocomplete/users']"
                                                     [targetSearchKey]="'idToDisplay'"
                                                     [subInfoKey]="'descriptionToDisplay'"
@@ -369,7 +369,7 @@
                                                     </h4>
                                                     <p mat-line>
                                                         <plugin-autocomplete *ngIf="basket.userToDisplay == null"
-                                                            [labelPlaceholder]="this.translate.instant('lang.redirectBaskets')"
+                                                            [labelPlaceholder]="'lang.redirectBaskets' | translate"
                                                             [routeDatas]="['/rest/autocomplete/users']"
                                                             [targetSearchKey]="'idToDisplay'"
                                                             [subInfoKey]="'descriptionToDisplay'"
