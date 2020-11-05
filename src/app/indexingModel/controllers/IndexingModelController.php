@@ -55,14 +55,16 @@ class IndexingModelController
 
         $models = IndexingModelModel::get(['where' => $where, 'data' => [$GLOBALS['id'], 'false']]);
 
-        foreach ($models as $key => $value) {
-            $resources = ResModel::get([
-                'select'  => ['status', 'count(1)'],
-                'where'   => ['model_id = ?'],
-                'data'    => [$value['id']],
-                'groupBy' => ['status']
-            ]);
-            $models[$key]['used'] = $resources;
+        if (!empty($query['admin'])) {
+            foreach ($models as $key => $value) {
+                $resources = ResModel::get([
+                    'select'  => ['status', 'count(1)'],
+                    'where'   => ['model_id = ?'],
+                    'data'    => [$value['id']],
+                    'groupBy' => ['status']
+                ]);
+                $models[$key]['used'] = $resources;
+            }
         }
 
         return $response->withJson(['indexingModels' => $models]);
