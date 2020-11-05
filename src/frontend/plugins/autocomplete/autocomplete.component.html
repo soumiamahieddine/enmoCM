@@ -13,7 +13,7 @@
         </button>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)" [displayWith]="displayFnWrapper()" >
             <ng-container *ngIf="options.length > 0 && !loading">
-                <mat-option *ngFor="let option of filteredOptions | async | sortBy: key"[value]="option" [disabled]="disableItems.indexOf(option['serialId']) > -1">
+                <mat-option *ngFor="let option of filteredOptions | async | sortBy: key" [value]="option" [disabled]="disableItems.indexOf(option['serialId']) > -1">
                     <mat-icon *ngIf="type[option['type']]" class="autcompleteIcon fas {{type[option['type']]}}"
                         color="primary">
                     </mat-icon>&nbsp;<span
