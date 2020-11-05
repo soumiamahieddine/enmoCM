@@ -2158,5 +2158,7 @@
     "noTransferCopyBindingRecordManagement": "Binding documents should not be sent to EAS",
     "noTransferCopyNoBindingRecordManagement": "Non-binding documents should not be sent to EAS",
     "bindingMailDesc": "A binding document involves a specific final action defined in the settings administration and is no longer linked to the document type.",
-    "noBindingMailDesc": "A non-binding document involves a specific final action defined in the settings administration and is no longer linked to the document type."
+    "noBindingMailDesc": "A non-binding document involves a specific final action defined in the settings administration and is no longer linked to the document type.",
+    "registeredMailMsgActivate": "Activating this range will close the current range used for that type of recommended.",
+    "redirectUserVisaWorkflow": "Change of viewfinder / signatory for letters in the process of visa / signature"
 }
