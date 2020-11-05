@@ -406,7 +406,27 @@ class UserController
             ];
         }
 
-        return $response->withJson(['isDeletable' => true, 'listTemplates' => $listTemplates, 'listInstances' => $listInstances]);
+        $rawWorkflowListInstances = ListInstanceModel::get([
+            'select'    => ['res_id'],
+            'where'     => ['item_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'      => [$aArgs['id'], 'VISA_CIRCUIT'],
+            'groupBy'   => ['res_id']
+        ]);
+        $workflowListInstances = [];
+        foreach ($rawWorkflowListInstances as $rawWorkflowListInstance) {
+            $rawListInstances = ListInstanceModel::get([
+                'select'    => ['*'],
+                'where'     => ['res_id = ?', 'difflist_type = ?'],
+                'data'      => [$rawWorkflowListInstance['res_id'], 'VISA_CIRCUIT'],
+                'orderBy'   => ['listinstance_id']
+            ]);
+            $workflowListInstances[] = [
+                'resId'         => $rawWorkflowListInstance['res_id'],
+                'listInstances' => $rawListInstances
+            ];
+        }
+
+        return $response->withJson(['isDeletable' => true, 'listTemplates' => $listTemplates, 'listInstances' => $listInstances, 'workflowListInstances' => $workflowListInstances]);
     }
 
     public function suspend(Request $request, Response $response, array $aArgs)
