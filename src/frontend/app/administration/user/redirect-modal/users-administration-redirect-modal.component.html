@@ -32,10 +32,10 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="userVisaWorkflowResources.length > 0">
-                <h2>{{'lang.redirectUserListInstances' | translate}}</h2>
+                <h2>{{'lang.redirectUserVisaWorkflow' | translate}}</h2>
                 <div class="alert-message alert-message-info" role="alert">
                     <b>{{data.user.firstname}} {{data.user.lastname}}</b>&nbsp;<span
-                        [innerHTML]="'lang.chooseNewDestUser' | translate"></span> :
+                        [innerHTML]="'lang.chooseNewVisaUser' | translate"></span> :
                 </div>
                 <div id="{{data.user.user_id}}" class="form-group">
                     <plugin-autocomplete [labelPlaceholder]="('lang.newDestRes' | translate)" [labelList]="('lang.availableUsers' | translate)"
