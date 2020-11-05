@@ -383,8 +383,6 @@ export class VisaWorkflowComponent implements OnInit {
         } else {
             let index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
             index++;
-            console.log(index);
-
             return this.getRealIndex(index);
         }
     }
