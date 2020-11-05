@@ -63,7 +63,7 @@ export class UsersAdministrationRedirectModalComponent implements OnInit {
                         if (this.isDeletable) {
                             this.userDestTemplates = response.listTemplates;
                             this.userDestDifflists = response.listInstances;
-                            this.userVisaWorkflowResources = response.visaWorflow;
+                            this.userVisaWorkflowResources = response.workflowListInstances;
                         } else {
                             this.modalTitle = this.data.user.actionMode === 'delete' ? 'lang.unableToDelete' : 'lang.unableToSuspend';
                             this.userDestTemplates = response.listTemplateEntities;
