@@ -112,17 +112,17 @@
                                     <span *ngIf="!appService.getViewMode()" class="main-info-data"
                                         style="width:200px;text-align:center;cursor:pointer;">
                                         <ng-container
-                                            *ngIf="(row.chrono == 'lang.undefined' | translate) && (row.barcode != 'lang.undefined' | translate)">
+                                            *ngIf="row.chrono == ('lang.undefined' | translate) && row.barcode != ('lang.undefined' | translate)">
                                             <span style="color: rgba(0,0,0,0.4);font-size: 90%;">
                                                 <i title="{{'lang.barcode' | translate}}" class="fas fa-barcode"></i>
                                                 {{row.barcode}}</span>
                                         </ng-container>
-                                        <ng-container *ngIf="row.chrono != 'lang.undefined' | translate">
+                                        <ng-container *ngIf="row.chrono != ('lang.undefined' | translate)">
                                             {{row.chrono}}
                                         </ng-container>
                                     </span>
                                     <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
-                                        [class.undefined]="row.subject == 'lang.undefined' | translate"
+                                        [class.undefined]="row.subject == ('lang.undefined' | translate)"
                                         title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                                     <span class="main-info-action">
                                         <div *ngIf="!row.allowed" color="warn">

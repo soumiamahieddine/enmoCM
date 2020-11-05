@@ -64,9 +64,9 @@
                                     overflow: hidden;
                                     text-overflow: ellipsis;
                                     padding-left: 5px;
-                                    padding-right: 5px;" [class.hasEvent]="data.event && data.displayValue !== 'lang.undefined' | translate" (click)="launchEventSubData(data, row)">
+                                    padding-right: 5px;" [class.hasEvent]="data.event && data.displayValue !== ('lang.undefined' | translate)" (click)="launchEventSubData(data, row)">
                                             <ng-container *ngIf="data.value == 'getCreationAndProcessLimitDates'">
-                                                <ng-container *ngIf="row.closing_date != 'lang.undefined' | translate">
+                                                <ng-container *ngIf="row.closing_date != ('lang.undefined' | translate)">
                                                     <i class="fa fa-calendar"
                                                         title="{{'lang.creationDate' | translate}}"></i>&nbsp;<span
                                                         [innerHTML]="data.displayValue.creationDate | timeAgo"
@@ -75,7 +75,7 @@
                                                         [innerHTML]="row.closing_date | timeAgo"
                                                         title='{{row.closing_date | fullDate}}'></span>
                                                 </ng-container>
-                                                <ng-container *ngIf="row.closing_date == 'lang.undefined' | translate">
+                                                <ng-container *ngIf="row.closing_date == ('lang.undefined' | translate)">
                                                     <i class="fa fa-calendar"
                                                         title="{{'lang.creationDate' | translate}}"></i>&nbsp;<span
                                                         [innerHTML]="data.displayValue.creationDate | timeAgo"
@@ -126,17 +126,17 @@
                                         </span>
                                         <span *ngIf="!appService.getViewMode()" class="main-info-data" style="width:200px;text-align:center;cursor:pointer;" (click)="launch(defaultAction,row);">
                                             <ng-container
-                                                *ngIf="(row.chrono == 'lang.undefined' | translate) && (row.barcode != 'lang.undefined' | translate)">
+                                                *ngIf="row.chrono == ('lang.undefined' | translate) && row.barcode != ('lang.undefined' | translate)">
                                                 <span style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
                                                         title="{{'lang.barcode' | translate}}" class="fas fa-barcode"></i>
                                                     {{row.barcode}}</span>
                                             </ng-container>
-                                            <ng-container *ngIf="row.chrono != 'lang.undefined' | translate">
+                                            <ng-container *ngIf="row.chrono != ('lang.undefined' | translate)">
                                                 {{row.chrono}}
                                             </ng-container>
                                         </span>
                                         <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
-                                            [class.undefined]="row.subject == 'lang.undefined' | translate"
+                                            [class.undefined]="row.subject == ('lang.undefined' | translate)"
                                             title="{{row.subject}}" (click)="launch(defaultAction,row);">{{row.subject | shorten: 150: '...'}}</span>
                                         <span class="main-info-action">
                                             <button mat-icon-button title="{{'lang.notes' | translate}}"

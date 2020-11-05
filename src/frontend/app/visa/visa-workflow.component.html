@@ -76,8 +76,8 @@
                 [title]="diffusion.process_comment !== null ? diffusion.process_comment : ''"
                 [class.fa-hourglass]="diffusion.process_date == null"
                 [class.fa-thumbs-up]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) === -1"
-                [class.fa-hand-paper]="diffusion.process_date != null && diffusion.process_comment === 'lang.hasInterruptedWorkflow' | translate"
-                [class.fa-times]="diffusion.process_date != null && diffusion.process_comment === 'lang.visaWorkflowInterrupted' | translate"
+                [class.fa-hand-paper]="diffusion.process_date != null && diffusion.process_comment === ('lang.hasInterruptedWorkflow' | translate)"
+                [class.fa-times]="diffusion.process_date != null && diffusion.process_comment === ('lang.visaWorkflowInterrupted' | translate)"
                 
                 [class.valid]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) === -1"
                 [class.invalid]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) > -1"
