@@ -3618,13 +3618,6 @@ if (!defined('_DOC_NOT_CLOSED')) {
     define('_DOC_NOT_CLOSED', 'This mail is not closed');
 }
 
-if (!defined('_SECURITY_MESSAGE')) {
-    define('_SECURITY_MESSAGE', 'Security message');
-}
-if (!defined('_SECURITY_MESSAGE_DETAILS')) {
-    define('_SECURITY_MESSAGE_DETAILS', 'XSS type resquest is not allowed');
-}
-
 if (!defined('_CHOOSE_ENTITY_SUBENTITIES')) {
     define('_CHOOSE_ENTITY_SUBENTITIES', 'Choose a department (+ sub-department(s))');
 }

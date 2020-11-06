@@ -1,21 +1,8 @@
 <?php
 /*
-*    Copyright 2008 - 2011 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 */
 
 /**
@@ -123,7 +110,6 @@ class dbquery extends functions
             if (isset($_SESSION['config']['databasename'])) {
                 $this->_database = $_SESSION['config']['databasename'];
             }
-            //$this->workspace = $_SESSION['config']['databaseworkspace'];
             if (isset($_SESSION['config']['databasetype'])) {
                 $this->_databasetype = $_SESSION['config']['databasetype'];
             }
@@ -150,14 +136,6 @@ class dbquery extends functions
                 } else {
                     $this->_user = $args[0]['user'];
                 }
-                //if(!isset($args[0]['workspace']))
-                //{
-                //  $this->workspace = 'public';
-                //}
-                //else
-                //{
-                //  $this->workspace = $args[0]['workspace'];
-                //}
                 if (! isset($args[0]['pass'])) {
                     $this->_password = '';
                 } else {
@@ -178,9 +156,6 @@ class dbquery extends functions
                 $this->_database = (string) $config->databasename;
                 $this->_user = (string) $config->databaseuser;
                 $this->_password = (string) $config->databasepassword;
-                //if (isset($config->databaseworkspace)) {
-                //  $this->workspace = (string) $config->databaseworkspace;
-                // }
                 $errorArgs = false;
             }
             if ($errorArgs) {
@@ -245,7 +220,6 @@ class dbquery extends functions
                     'UTF8'
                 );
             }
-            //$this->query("alter session set nls_date_format='dd-mm-yyyy HH24:MI:SS'");
             break;
             
         default:
@@ -271,48 +245,6 @@ class dbquery extends functions
                 $this->_sqlError = 2;
                 $this->error();
             }
-        }
-    }
-
-    /**
-    * Test if the specified column exists in the database
-    *
-    * @param  $table : Name of searched table
-    * @param  $field : Name of searched field in table
-    *  ==Return : true is field is founed, false is not
-    */
-    public function test_column($table, $field)
-    {
-        switch ($this->_databasetype) {
-        
-        case 'POSTGRESQL':
-            $this->connect();
-            $this->query("select column_name from information_schema.columns where table_name = '" . $table . "' and column_name = '" . $field . "'");
-            $res = $this->nb_result();
-            $this->disconnect();
-            if ($res > 0) {
-                return true;
-            } else {
-                return false;
-            }
-            
-            // no break
-        case 'ORACLE':
-            $this->connect();
-            $this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '" . $table . "' AND COLUMN_NAME = '" . $field . "'");
-            $res = $this->nb_result();
-            $this->disconnect();
-            if ($res > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        
-            // no break
-        case 'SQLSERVER': return true; // TO DO
-        case 'MYSQL': return true; // TO DO
-        default: return false;
-        
         }
     }
     
@@ -405,8 +337,6 @@ class dbquery extends functions
                 $this->query = false;
             }
             
-            //$this->show();
-            
             if ($this->query == false && !$catchError) {
                 $this->_sqlError = 3;
                 $this->error();
@@ -417,22 +347,6 @@ class dbquery extends functions
             return $this->query;
         } else {
             return false;
-        }
-    }
-    
-    public function start_transaction()
-    {
-        switch ($this->_databasetype) {
-        case 'MYSQL':
-            @mysqli_query($this->_sqlLink, 'BEGIN');
-            break;
-        case 'SQLSERVER':
-            break;
-        case 'POSTGRESQL':
-            @pg_query($this->_sqlLink, 'BEGIN');
-            break;
-        case 'ORACLE':
-            break;
         }
     }
     
@@ -495,42 +409,6 @@ class dbquery extends functions
             }
         return $sqlError;
     }
-    
-    /**
-    * Returns the query results in an object
-    *
-    * @return Object
-    */
-    public function fetch_object()
-    {
-        switch ($this->_databasetype) {
-        case 'MYSQL': return @mysqli_fetch_object($this->query);
-        case 'SQLSERVER': return @mssql_fetch_object($this->query);
-        case 'POSTGRESQL': return @pg_fetch_object($this->query);
-        case 'ORACLE':
-            $myObject = @oci_fetch_object($this->query);
-            //$myLowerObject = false;
-            $myLowerObject = new stdClass();
-            if (isset($myObject) && ! empty($myObject)) {
-                foreach ($myObject as $key => $value) {
-                    $myKey = strtolower($key);
-                    if (oci_field_type($this->query, $key) == 'CLOB') {
-                        $myBlob = $myObject->{$key};
-                        if (isset($myBlob)) {
-                            $myLowerObject->{$myKey} = $myBlob->read(
-                                $myBlob->size()
-                            );
-                        }
-                    } else {
-                        $myLowerObject->{$myKey} = $myObject->{$key};
-                    }
-                }
-                return $myLowerObject;
-            } else {
-                return false;
-            }
-        }
-    }
 
     /**
     * Returns the query results in an array
@@ -548,7 +426,6 @@ class dbquery extends functions
             $tmpStatement = @oci_fetch_array($this->query);
 
             if (is_array($tmpStatement)) {
-                //$this->show_array($tmp_statement);
                 foreach (array_keys($tmpStatement) as $key) {
                     if (! is_numeric($key)
                         && oci_field_type($this->query, $key) == 'CLOB'
@@ -582,7 +459,6 @@ class dbquery extends functions
             $tmpStatement = @oci_fetch_assoc($this->query);
 
             if (is_array($tmpStatement)) {
-                //$this->show_array($tmp_statement);
                 foreach (array_keys($tmpStatement) as $key) {
                     if (! is_numeric($key)
                         && oci_field_type($this->query, $key) == 'CLOB'
@@ -596,22 +472,6 @@ class dbquery extends functions
                 return array_change_key_case($tmpStatement, CASE_LOWER);
             }
             // no break
-        default: return false;
-        }
-    }
-    
-    /**
-    * Returns the query results in a row
-    *
-    * @return array
-    */
-    public function fetch_row()
-    {
-        switch ($this->_databasetype) {
-        case 'MYSQL': return @mysqli_fetch_row($this->query);
-        case 'POSTGRESQL': return @pg_fetch_row($this->query);
-        case 'SQLSERVER': return @mssql_fetch_row($this->query);
-        case 'ORACLE': return @oci_fetch_row($this->statement);
         default: return false;
         }
     }
@@ -775,82 +635,6 @@ class dbquery extends functions
     }
     
     /*************************************************************************
-    * Returns instruction to get date or part of the date
-    *
-    * Parameters
-    *   (string) date string
-    *   (string) date part name {year | month | day | hour | minute | second}
-    *
-    * Return
-    *   (string) date instruction
-    *
-    *************************************************************************/
-    public function extract_date($date_field, $arg = '')
-    {
-        switch ($this->_databasetype) {
-        case "SQLSERVER":
-            return '';
-        
-        case "MYSQL":
-            switch ($arg) {
-            case 'year': return ' date_format('.$date_field.', %Y)';
-            case 'month': return ' date_format('.$date_field.', %m)';
-            case 'day': return ' date_format('.$date_field.', %d)';
-            case 'hour': return ' date_format('.$date_field.', %k)';
-            case 'minute': return ' date_format('.$date_field.', %i)';
-            case 'second': return ' date_format('.$date_field.', %s)';
-            default: return ' date('.$date_field.')';
-            }
-        
-            // no break
-        case "POSTGRESQL":
-            switch ($arg) {
-            case 'year': return " date_part( 'year', ".$date_field.")";
-            case 'month': return " date_part( 'month', ".$date_field.")";
-            case 'day': return " date_part( 'day', ".$date_field.")";
-            case 'hour': return " date_part( 'hour', ".$date_field.")";
-            case 'minute': return " date_part( 'minute', ".$date_field.")";
-            case 'second': return " date_part( 'second', ".$date_field.")";
-            default: return ' date('.$date_field.')';
-            }
-        
-            // no break
-        case "ORACLE":
-            switch ($arg) {
-            case 'year': return " to_char(".$date_field.", 'YYYY')";
-            case 'month': return " to_char(".$date_field.", 'MM')";
-            case 'day': return " to_char(".$date_field.", 'DD')";
-            case 'hour': return " to_char(".$date_field.", 'HH24')";
-            case 'minute': return " to_char(".$date_field.", 'MI')";
-            case 'second': return " to_char(".$date_field.", 'SS')";
-            //default         : return " to_char(".$date_field.", 'DD/MM/YYYY')";
-            default: return $date_field;
-            }
-    
-        }
-    }
-    
-    public function escape_string($string)
-    {
-        switch ($this->_databasetype) {
-        case "SQLSERVER":
-            $string = str_replace("'", "''", $string);
-            $string = str_replace("\\", "\\\\", $string);
-            break;
-        case "ORACLE":
-            $string = str_replace("'", "''", $string);
-            $string = str_replace("\\", "\\\\", $string);
-            break;
-        case "MYSQL":
-            $string = mysql_escape_string($string);
-            break;
-        case "POSTGRESQL":
-            $string = pg_escape_string($string);
-        }
-        return $string;
-    }
-    
-    /*************************************************************************
     * Returns the word to get the current timestamp on a query
     *
     * Return
@@ -866,69 +650,5 @@ class dbquery extends functions
         case 'ORACLE': return 'SYSDATE';
         default: return ' ';
         }
-    }
-    
-    /*************************************************************************
-    * Returns a select query with limit clause
-    *
-    * Parameters
-    *   (integer) start : Offset of first result requested (default 0)
-    *   (integer) count : Number of result requested (default 0)
-    *   (string) select expression : Selected columns (comma separated)
-    *   (string) table references : One or more tables (can be prepared by function make_table_ref)
-    *   (string) where def
-    *   (string) other_clauses : group_by, order_by, having...
-    *   (string) select options : distinct
-    *
-    * Return
-    *   (string) query string
-    *
-    * Evolutions
-    *   Offset with MSSQL
-    *************************************************************************/
-    public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
-    {
-            
-        // LIMIT
-        if ($count || $start) {
-            switch ($this->_databasetype) {
-            case 'MYSQL':
-                $limit_clause = 'LIMIT ' . $start . ',' . $count;
-                break;
-                
-            case 'POSTGRESQL':
-                $limit_clause = 'OFFSET ' . $start . ' LIMIT ' . $count;
-                break;
-                
-            case 'SQLSERVER':
-                $select_opts .= ' TOP ' . $count;
-                break;
-                
-            case 'ORACLE':
-                if ($where_def) {
-                    $where_def .= ' AND ';
-                }
-                $where_def .= ' ROWNUM <= ' . $count;
-                break;
-                
-            default:
-                break;
-            }
-        }
-        
-        if (empty($where_def)) {
-            $where_def = '1=1';
-        }
-        
-        // CONSTRUCT QUERY
-        $query = 'SELECT' .
-            ' ' . $select_opts .
-            ' ' . $select_expr .
-            ' FROM ' . $table_refs .
-            ' WHERE ' . $where_def .
-            ' ' . $other_clauses .
-            ' ' . $limit_clause;
-        
-        return $query;
     }
 }

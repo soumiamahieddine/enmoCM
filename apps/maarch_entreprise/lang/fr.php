@@ -3645,13 +3645,6 @@ if (!defined('_DOC_NOT_CLOSED')) {
     define('_DOC_NOT_CLOSED', "Ce courrier n'est pas clôturé");
 }
 
-if (!defined('_SECURITY_MESSAGE')) {
-    define('_SECURITY_MESSAGE', 'Message de sécurité');
-}
-if (!defined('_SECURITY_MESSAGE_DETAILS')) {
-    define('_SECURITY_MESSAGE_DETAILS', 'Requête de type XSS non permise');
-}
-
 if (!defined('_CHOOSE_ENTITY_SUBENTITIES')) {
     define('_CHOOSE_ENTITY_SUBENTITIES', 'Choisissez une entité (+ sous-entité(s))');
 }

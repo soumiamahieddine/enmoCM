@@ -18,16 +18,6 @@ if (isset($_REQUEST['dir']) && !empty($_REQUEST['dir'])) {
     $_REQUEST['dir'] = str_replace("..", "", $_REQUEST['dir']);
 }
 
-//reset orders in previous basket list
-if (empty($_SESSION['current_basket'])) {
-    $_SESSION['save_list']['start'] = 0;
-    $_SESSION['save_list']['lines'] = "";
-    $_SESSION['save_list']['order'] = "";
-    $_SESSION['save_list']['order_field'] = "";
-    $_SESSION['save_list']['template'] = "";
-    $_SESSION['save_list']['full_count'] = 0;
-}
-
 // Useless ???
 if (isset($_GET['show'])) {
     $show = $_GET['show'];
@@ -255,9 +245,6 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
 
     //FOOTER
     echo '<p id="footer">';
-    if (isset($_SESSION['config']['showfooter']) && $_SESSION['config']['showfooter'] == 'true') {
-        $core->load_footer();
-    }
     echo '</p>';
 
     $_SESSION['error'] = '';
@@ -266,7 +253,6 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
     echo '</div>';
     echo '</div>';
     
-    $core->view_debug();
     echo '</body>';
     echo '</html>';
     exit();

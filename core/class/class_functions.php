@@ -1,21 +1,8 @@
 <?php
 /*
-*    Copyright 2008-2015 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+* Copyright Maarch since 2008 under licence GPLv3.
+* See LICENCE.txt file at the root folder for more details.
+* This file is part of Maarch software.
 */
 
 /**
@@ -45,37 +32,6 @@ class functions
     * @deprecated
          */
     private $f_page;
-
-    public function normalize($string)
-    {
-        $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ'
-            . 'ßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ';
-        $b = 'aaaaaaaceeeeiiiidnoooooouuuuy'
-            . 'bsaaaaaaaceeeeiiiidnoooooouuuyybyRr';
-        $string = utf8_decode($string);
-        $string = strtr($string, utf8_decode($a), $b);
-        $string = strtolower($string);
-
-        return utf8_encode($string);
-    }
-
-    /**
-    * Cuts a string at the maximum number of char to displayed
-    *
-    * @param     $string string String value
-    * @param     $max integer Maximum character number
-    */
-    public function cut_string($string, $max)
-    {
-        if (strlen($string) >= $max) {
-            $string = substr($string, 0, $max);
-            $espace = strrpos($string, " ");
-            $string = substr($string, 0, $espace)."...";
-            return $string;
-        } else {
-            return $string;
-        }
-    }
 
     /**
     * Adds en error to the errors log
@@ -286,74 +242,6 @@ class functions
     }
 
     /**
-    * Manages the location bar in session (4 levels max), then calls the where_am_i() function.
-    *
-    * @param     $path  string Url (empty by default)
-    * @param   $label string Label to show in the location bar (empty by default)
-    * @param   $id_pagestring  Page identifier (empty by default)
-    * @param   $init bool If true reinits the location bar (true by default)
-    * @param   $level string Level in the location bar (empty by default)
-    */
-    public function manage_location_bar($path = '', $label = '', $id_page = '', $init = true, $level = '')
-    {
-        //INIT LOCATION BAR
-        if (empty($_SESSION['location_bar_label'])) {
-            $_SESSION['location_bar_label'][0] = _WELCOME_TITLE;
-            $_SESSION['location_bar_path'][0] = 'index.php?reinit=true';
-        }
-        if (!empty($level)) {
-            //IF USER CLICKED ON LOCATION BAR
-            $arrLocationLabel = [];
-            $arrLocationPath = [];
-            foreach ($_SESSION['location_bar_label'] as $key => $value) {
-                $arrLocationLabel[] = $_SESSION['location_bar_label'][$key];
-                $arrLocationPath[] = $_SESSION['location_bar_path'][$key];
-                if ($key == $level) {
-                    break;
-                }
-            }
-            $_SESSION['location_bar_label'] = $arrLocationLabel;
-            $_SESSION['location_bar_path'] = $arrLocationPath;
-        } elseif (count($_SESSION['location_bar_label'])==4 && $_SESSION['location_bar_label'][count($_SESSION['location_bar_label'])-1] != $label) {
-            //ERASE BEGIN OF LOCATION BAR IF TOO MUCH ITEMS
-            array_shift($_SESSION['location_bar_label']);
-            array_shift($_SESSION['location_bar_path']);
-
-            $_SESSION['location_bar_label'][0] = _WELCOME_TITLE;
-            $_SESSION['location_bar_path'][0] = 'index.php?reinit=true';
-        }
-        
-        //ADD NEW LOCATION
-        if ($_SESSION['location_bar_label'][count($_SESSION['location_bar_label'])-1] != $label) {
-            $_SESSION['location_bar_label'][] = $label;
-            $_SESSION['location_bar_path'][] = $path;
-        }
-
-        //WRITE LOCATION BAR
-        foreach ($_SESSION['location_bar_label'] as $key => $value) {
-            ?>
-<script type="text/javascript">
-    writeLocationBar('<?php echo $_SESSION['location_bar_path'][$key]; ?>', '<?php echo $value; ?>', '<?php echo $key; ?>');
-</script><?php
-        }
-    }
-
-
-    /**
-    * For debug, displays an array in a more readable way
-    *
-    * @param   $arr array Array to display
-    */
-    public function show_array($arr)
-    {
-        echo "<table width=\"550\"><tr><td align=\"left\">";
-        echo "<pre>";
-        print_r($arr);
-        echo "</pre>";
-        echo "</td></tr></table>";
-    }
-
-    /**
     * Formats a datetime to a dd/mm/yyyy format (date)
     *
     * @param   $date datetime The date to format
@@ -373,46 +261,6 @@ class functions
             }
         }
         return $last_date;
-    }
-
-    /**
-    * Formats a datetime to a dd/mm/yyyy hh:ii:ss format (timestamp)
-    *
-    * @param   $date  datetime The date to format
-    * @return   datetime  The formatted date
-    */
-    public function dateformat($realDate, $sep='/')
-    {
-        if ($realDate <> '') {
-            if (preg_match('/ /', $realDate)) {
-                $hasTime = true;
-                $tmpArr = explode(" ", $realDate);
-                $date = $tmpArr[0];
-                $time = $tmpArr[1];
-                if (preg_match('/\./', $time)) {  // POSTGRES date
-                    $tmp = explode('.', $time);
-                    $time = $tmp[0];
-                } elseif (preg_match('/,/', $time)) { // ORACLE date
-                    $tmp = explode(',', $time);
-                    $time = $tmp[0];
-                }
-            } else {
-                $hasTime = false;
-                $date = $realDate;
-            }
-            if (preg_match('/-/', $date)) {
-                $dateArr = explode("-", $date);
-            } elseif (preg_match('@\/@', $date)) {
-                $dateArr = explode("/", $date);
-            }
-            if (! $hasTime || substr($tmpArr[1], 0, 2) == "00") {
-                return $dateArr[2] . $sep . $dateArr[1] . $sep . $dateArr[0];
-            } else {
-                return $dateArr[2] . $sep . $dateArr[1] . $sep . $dateArr[0]
-                    . " " . $time;
-            }
-        }
-        return '';
     }
 
     /**
@@ -641,27 +489,6 @@ class functions
             $result = "date2";
         } elseif ($date1 = $date2) {
             $result = "equal";
-        }
-        return $result;
-    }
-
-    /**
-    *  Compares to date and return dif between 2 dates
-    *
-    * @param  $date1 date First date
-    * @param  $date2 date Second date
-    * @return dif between 2 dates in days
-    */
-    public function nbDaysBetween2Dates($date1, $date2)
-    {
-        $date1 = strtotime($date1);
-        $date2 = strtotime($date2);
-        if ($date2 > $date1) {
-            $result = round((($date2 - $date1) / (3600)) / 24, 0);
-        } elseif ($date2 < $date1) {
-            $result = round((($date1 - $date2) / (3600)) / 24, 0);
-        } else {
-            $result = 0;
         }
         return $result;
     }

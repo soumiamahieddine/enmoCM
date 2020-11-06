@@ -3472,12 +3472,6 @@ if (!defined('_CLOSE_MAIL_AND_INDEX_DESC')) {
 if (!defined('_DOC_NOT_CLOSED')) {
     define('_DOC_NOT_CLOSED', 'Deze brief is niet afgesloten');
 }
-if (!defined('_SECURITY_MESSAGE')) {
-    define('_SECURITY_MESSAGE', 'Veiligheidsboodschap');
-}
-if (!defined('_SECURITY_MESSAGE_DETAILS')) {
-    define('_SECURITY_MESSAGE_DETAILS', 'Verzoek van XSS type niet toegestaan');
-}
 if (!defined('_CHOOSE_ENTITY_SUBENTITIES')) {
     define('_CHOOSE_ENTITY_SUBENTITIES', 'Kies een eenheid (+ subeenhe(i)d(en))');
 }
