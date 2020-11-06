@@ -168,6 +168,10 @@ export class FeatureTourService {
     }
 
     isComplete() {
-        return (this.headerService.user.mode === 'root_visible' || this.headerService.user.mode === 'root_invisible') && this.headerService.user.featureTour.length === this.getFeatureTourTypes().length;
+        if (this.headerService.user.mode === 'root_visible' || this.headerService.user.mode === 'root_invisible') {
+            return this.headerService.user.featureTour.length === this.getFeatureTourTypes().length;
+        } else {
+            return true;
+        }
     }
 }
