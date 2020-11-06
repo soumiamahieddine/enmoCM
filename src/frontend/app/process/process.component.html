@@ -1,6 +1,6 @@
 <mat-sidenav-container class="maarch-container">
     <ng-template #adminMenuTemplate>
-        <div *ngIf="resourceFreezed || resourceBinded !== null" class="alert-message alert-message-danger"
+        <div *ngIf="(resourceFreezed || resourceBinded !== null) && !loading" class="alert-message alert-message-danger"
             style="min-width: 100%; margin: 10px 0;">
             <div *ngIf="resourceFreezed" style="display: flex;align-items: center;">
                 <i class="fas fa-snowflake" style="width: 25px;text-align: center;"></i>&nbsp;<span [innerHTML]="'lang.retentionRuleFrozenAlt' | translate"></span>
