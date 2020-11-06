@@ -349,7 +349,7 @@ ALTER TABLE listinstance ADD COLUMN delegate INTEGER;
 UPDATE res_letterbox
 SET dest_user = (
     SELECT item_id FROM listinstance
-    WHERE item_mode = 'dest' AND item_type = 'user_id' AND listinstance.res_id = res_letterbox.res_id
+    WHERE item_mode = 'dest' AND item_type = 'user_id' AND listinstance.res_id = res_letterbox.res_id LIMIT 1
 );
 
 
