@@ -71,9 +71,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
             });
     }
 
-    ngAfterViewInit(): void {
-        console.log(this.headerService.user);
-        
+    ngAfterViewInit(): void {        
         if (this.headerService.user.mode === 'root_visible' || this.headerService.user.mode === 'root_invisible') {
             this.featureTourService.init();
         }
