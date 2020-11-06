@@ -22,8 +22,8 @@
         </ldap>
     </config>
     <!-- Synchronisation Ldap -->
-    <user>superadmin</user>
-    <password>superadmin</password>
+    <userWS>superadmin</userWS>
+    <passwordWS>superadmin</passwordWS>
     <synchronizeUsers>true</synchronizeUsers>
     <synchronizeEntities>true</synchronizeEntities>
     <mapping>

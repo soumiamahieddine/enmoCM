@@ -93,12 +93,12 @@ function initialize($customId)
         writeLog(['message' => "[ERROR] No ldap configurations"]);
         exit();
     }
-    if (empty((string)$xmlfile->user) || empty((string)$xmlfile->password)) {
+    if (empty((string)$xmlfile->userWS) || empty((string)$xmlfile->passwordWS)) {
         writeLog(['message' => "[ERROR] Rest user informations are missing"]);
         exit();
     }
-    $GLOBALS['user'] = (string)$xmlfile->user;
-    $GLOBALS['password'] = (string)$xmlfile->password;
+    $GLOBALS['user'] = (string)$xmlfile->userWS;
+    $GLOBALS['password'] = (string)$xmlfile->passwordWS;
 
     $path = 'apps/maarch_entreprise/xml/config.json';
     if (!empty($customId)) {
