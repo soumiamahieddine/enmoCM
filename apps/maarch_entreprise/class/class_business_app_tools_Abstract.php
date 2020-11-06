@@ -111,7 +111,6 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['config']['defaultPage']         = (string) $config->defaultPage;
             $_SESSION['config']['cookietime']          = (string) $config->cookieTime;
             $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
-            $_SESSION['config']['usePHPIDS']           = (string) $config->usePHPIDS;
             if (isset($config->showfooter)) {
                 $_SESSION['config']['showfooter'] = (string) $config->showfooter;
             } else {
@@ -263,10 +262,6 @@ abstract class business_app_tools_Abstract extends Database
                 $i ++;
             }
             $this->_loadActionsPages();
-        }
-
-        if ($_SESSION['config']['usePHPIDS'] == 'true') {
-            $this->_loadPHPIDSExludes();
         }
     }
 
@@ -756,51 +751,6 @@ abstract class business_app_tools_Abstract extends Database
                         'GOTOLIST' => $pathToList
                     );
                 }
-            }
-        }
-    }
-
-    /**
-    * Load phpids excludes in session
-    */
-    public function _loadPHPIDSExludes()
-    {
-        if (isset($_SESSION['config']['corepath'])
-            && isset($_SESSION['config']['app_id'])
-        ) {
-            $core = new core_tools();
-            if (file_exists(
-                $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-                . 'tools' . DIRECTORY_SEPARATOR . 'phpids' . DIRECTORY_SEPARATOR
-                . 'lib' . DIRECTORY_SEPARATOR . 'IDS' . DIRECTORY_SEPARATOR
-                . 'maarch_exclude.xml'
-            )
-            ) {
-                $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-                        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-                        . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-                        . 'tools' . DIRECTORY_SEPARATOR . 'phpids' . DIRECTORY_SEPARATOR
-                        . 'lib' . DIRECTORY_SEPARATOR . 'IDS' . DIRECTORY_SEPARATOR
-                        . 'maarch_exclude.xml';
-            } else {
-                $path = 'apps'
-                        . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-                        . 'tools' . DIRECTORY_SEPARATOR . 'phpids' . DIRECTORY_SEPARATOR
-                        . 'lib' . DIRECTORY_SEPARATOR . 'IDS' . DIRECTORY_SEPARATOR
-                        . 'maarch_exclude.xml';
-            }
-            $xmlfile = simplexml_load_file($path);
-            $_SESSION['PHPIDS_EXCLUDES'] = array();
-            foreach ($xmlfile->exclude as $exclude) {
-                array_push(
-                    $_SESSION['PHPIDS_EXCLUDES'],
-                    array(
-                        'TARGET' => (string) $exclude->target,
-                        'PAGE'   => (string) $exclude->page,
-                    )
-                );
             }
         }
     }
