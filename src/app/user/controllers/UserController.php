@@ -1306,7 +1306,7 @@ class UserController
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['entityId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
-        if (empty(Entitymodel::getByEntityId(['entityId' => $data['entityId']]))) {
+        if (empty(EntityModel::getByEntityId(['entityId' => $data['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         } elseif (UserModel::hasEntity(['id' => $aArgs['id'], 'entityId' => $data['entityId']])) {
             return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_ENTITY]);
