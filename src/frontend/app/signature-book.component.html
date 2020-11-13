@@ -268,7 +268,7 @@
                             </span>
                             <i *ngIf="loadingSign" class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                         </span>
-                        <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN' && signatureBook.attachments[rightSelectedThumbnail].recipient_id === this.userId; else elseBlock"
+                        <span *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN' && signatureBook.attachments[rightSelectedThumbnail].idTypist === this.userId; else elseBlock"
                             (click)="unsignFile(signatureBook.attachments[rightSelectedThumbnail])"
                             style="cursor: pointer;color: green;">
                             <i title="{{'lang.unsign' | translate}}" class="fa fa-check fa-2x" aria-hidden="true"></i>
