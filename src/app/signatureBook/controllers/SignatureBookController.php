@@ -228,6 +228,7 @@ class SignatureBookController
             }
             if (!empty($value['typist'])) {
                 $attachments[$key]['typist'] = UserModel::getLabelledUserById(['id' => $value['typist']]);
+                $attachments[$key]['idTypist'] = $value['typist'];
             }
 
             $attachments[$key]['canModify'] = false;
