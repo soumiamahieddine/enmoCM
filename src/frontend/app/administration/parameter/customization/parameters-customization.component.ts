@@ -196,11 +196,6 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    // I replaced the img with the mat-icon
-    /* logoURL() {
-        return this.sanitizer.bypassSecurityTrustUrl(this.stepFormGroup.controls['logo'].value);
-    } */
-
     selectBg(content: string) {
         if (!this.stepFormGroup.controls['bodyImage'].disabled) {
             this.stepFormGroup.controls['bodyImage'].setValue(content);
