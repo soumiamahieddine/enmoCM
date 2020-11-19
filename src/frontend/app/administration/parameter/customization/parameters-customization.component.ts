@@ -144,7 +144,6 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
     }
 
     uploadTrigger(fileInput: any, mode: string) {
-        console.log(fileInput);
         if (fileInput.target.files && fileInput.target.files[0]) {
             const res = this.canUploadFile(fileInput.target.files[0], mode);
             if (res === true) {
