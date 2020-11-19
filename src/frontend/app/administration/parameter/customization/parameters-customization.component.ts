@@ -144,6 +144,7 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
     }
 
     uploadTrigger(fileInput: any, mode: string) {
+        console.log(fileInput);
         if (fileInput.target.files && fileInput.target.files[0]) {
             const res = this.canUploadFile(fileInput.target.files[0], mode);
             if (res === true) {
@@ -196,9 +197,10 @@ export class ParametersCustomizationComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    logoURL() {
+    // I replaced the img with the mat-icon
+    /* logoURL() {
         return this.sanitizer.bypassSecurityTrustUrl(this.stepFormGroup.controls['logo'].value);
-    }
+    } */
 
     selectBg(content: string) {
         if (!this.stepFormGroup.controls['bodyImage'].disabled) {
