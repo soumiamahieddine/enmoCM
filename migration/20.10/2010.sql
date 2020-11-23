@@ -353,7 +353,9 @@ SET dest_user = (
 );
 
 /* VISA CIRCUIT PARAMETERS */
+DELETE FROM parameters WHERE id = 'minimumVisaRole';
 INSERT INTO parameters (id, description, param_value_int) VALUES ('minimumVisaRole', 'Nombre minimum de viseur dans les circuits de visa (0 pour désactiver)', 0);
+DELETE FROM parameters WHERE id = 'maximumSignRole';
 INSERT INTO parameters (id, description, param_value_int) VALUES ('maximumSignRole', 'Nombre maximum de signataires dans les circuits de visa (0 pour désactiver)', 0);
 
 /* ORDER ON CHRONO */

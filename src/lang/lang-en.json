@@ -2172,5 +2172,6 @@
     "notEnoughVisaUser": "Not enough approvers",
     "tooManySignUser": "Too many signatories",
     "requiredVisaUser": "{{min}} approvers required",
-    "authorizedSignUser": "{{max}} signatories authorized"
+    "authorizedSignUser": "{{max}} signatories authorized",
+    "templateNameMandatory": "Template name mandatory"
 }
