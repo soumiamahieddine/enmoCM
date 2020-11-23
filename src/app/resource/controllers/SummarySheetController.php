@@ -14,11 +14,13 @@
 
 namespace Resource\controllers;
 
+use Attachment\models\AttachmentModel;
 use Contact\controllers\ContactController;
 use CustomField\models\CustomFieldModel;
 use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
@@ -764,6 +766,89 @@ class SummarySheetController
 
                 $pdf->writeHTMLCell($widthNoMargins + $dimensions['lm'], 0, $dimensions['lm'] - 2, $pdf->GetY(), $parameter['param_value_string']);
                 $pdf->SetY($pdf->GetY() + abs($height));
+            } elseif ($unit['unit'] == 'visaWorkflowMaarchParapheur') {
+
+                $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+                if (empty($loadedXml)) {
+                    continue;
+                }
+
+                $config = ['data' => []];
+                foreach ($loadedXml->signatoryBook as $value) {
+                    if ($value->id == "maarchParapheur") {
+                        $config['data']['url'] = rtrim($value->url, '/');
+                        $config['data']['userId'] = (string)$value->userId;
+                        $config['data']['password'] = (string)$value->password;
+                        break;
+                    }
+                }
+
+                $mainDocument = ResModel::getById([
+                    'resId' => $resource['res_id'],
+                    'select' => ["external_id->>'signatureBookId' as external_id", 'alt_identifier', 'subject']
+                ]);
+
+                $documents = [];
+                if (!empty($mainDocument['external_id'])) {
+                    $documents[] = [
+                        'id'    => $mainDocument['external_id'],
+                        'label' => _MAIN_DOCUMENT . ' - ' . $mainDocument['alt_identifier'] . ' - ' . $mainDocument['subject']
+                    ];
+                }
+
+                $attachments = AttachmentModel::get([
+                    'select' => ['res_id', "external_id->>'signatureBookId' as external_id", 'title', 'identifier'],
+                    'where'  => ["external_id->>'signatureBookId' IS NOT NULL", "external_id->>'signatureBookId' != ''", 'res_id_master = ?'],
+                    'data'   => [$resource['res_id']]
+                ]);
+
+                if (empty($attachments)) {
+                    continue;
+                }
+
+                foreach ($attachments as $attachment) {
+                    $documents[] = [
+                        'id'    => $attachment['external_id'],
+                        'label' => _ATTACHMENT . ' - ' . $attachment['identifier'] . ' - ' . $attachment['title']
+                    ];
+                }
+
+                $pdf->SetY($pdf->GetY() + 40);
+                if (($pdf->GetY() + 37) > $bottomHeight) {
+                    $pdf->AddPage();
+                }
+                $pdf->SetFont('', 'B', 11);
+                $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
+                $pdf->SetY($pdf->GetY() + 2);
+
+                foreach ($documents as $document) {
+                    $workflow = MaarchParapheurController::getDocumentWorkflow(['config' => $config, 'documentId' => $document['id']]);
+
+                    $users = [];
+                    foreach ($workflow as $item) {
+                        $label = $item['userDisplay'] . ' (' . ($item['mode'] == 'visa' ? _VISA_USER_MIN : _SIGNATORY) . ')';
+                        $users[] = ['user' => $label, 'date' => $item['processDate']];
+                    }
+
+                    if (!empty($users)) {
+                        $pdf->SetY($pdf->GetY() + 2);
+                        if (($pdf->GetY() + 37 + count($users) * 20) > $bottomHeight) {
+                            $pdf->AddPage();
+                        }
+                        $pdf->SetFont('', 'B', 10);
+                        $pdf->Cell(0, 15, $document['label'], 0, 2, 'L', false);
+                        $pdf->SetY($pdf->GetY() + 2);
+
+                        $pdf->SetFont('', '', 10);
+                        $pdf->Cell($specialWidth * 3, 20, _USERS, 1, 0, 'L', false);
+                        $pdf->Cell($specialWidth, 20, _ACTION_DATE, 1, 1, 'L', false);
+                        foreach ($users as $keyUser => $user) {
+                            $pdf->Cell($specialWidth * 3, 20, $keyUser + 1 . ". {$user['user']}", 1, 0, 'L', false);
+                            $pdf->Cell($specialWidth, 20, $user['date'], 1, 1, 'L', false);
+                        }
+                    }
+                }
+
             }
         }
     }
