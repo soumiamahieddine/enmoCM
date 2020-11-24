@@ -127,6 +127,14 @@ export class SummarySheetComponent implements OnInit {
             css: 'col-md-4 text-center',
             desc: [],
             enabled: true
+        },
+        {
+            id: 'workflowHistory',
+            unit: 'workflowHistory',
+            label: this.translate.instant('lang.history'),
+            css: 'col-md-4 text-center',
+            desc: [],
+            enabled: true
         }
     ];
 

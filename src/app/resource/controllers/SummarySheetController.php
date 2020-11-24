@@ -21,6 +21,7 @@ use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
+use History\models\HistoryModel;
 use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
@@ -783,6 +784,10 @@ class SummarySheetController
                     }
                 }
 
+                if (empty($config['data'])) {
+                    continue;
+                }
+
                 $mainDocument = ResModel::getById([
                     'resId' => $resource['res_id'],
                     'select' => ["external_id->>'signatureBookId' as external_id", 'alt_identifier', 'subject']
@@ -801,10 +806,6 @@ class SummarySheetController
                     'where'  => ["external_id->>'signatureBookId' IS NOT NULL", "external_id->>'signatureBookId' != ''", 'res_id_master = ?'],
                     'data'   => [$resource['res_id']]
                 ]);
-
-                if (empty($attachments)) {
-                    continue;
-                }
 
                 foreach ($attachments as $attachment) {
                     $documents[] = [
@@ -848,7 +849,31 @@ class SummarySheetController
                         }
                     }
                 }
+            } elseif ($unit['unit'] == 'workflowHistory') {
+                $historyList = HistoryModel::get([
+                    'select'  => ['record_id', 'event_date', 'user_id', 'info', 'remote_ip', 'count(1) OVER()'],
+                    'where'   => ['table_name in (?)', 'event_type like ?', 'record_id = ?'],
+                    'data'    => [['res_letterbox', 'res_view_letterbox'], 'ACTION#%', $resource['res_id']],
+                    'orderBy' => ['event_date']
+                ]);
 
+                if (!empty($historyList)) {
+                    $pdf->SetY($pdf->GetY() + 40);
+                    if (($pdf->GetY() + 37 + count($historyList) * 20) > $bottomHeight) {
+                        $pdf->AddPage();
+                    }
+                    $pdf->SetFont('', 'B', 10);
+                    $pdf->Cell(0, 15, $unit['label'], 0, 2, 'L', false);
+                    $pdf->SetY($pdf->GetY() + 2);
+
+                    $pdf->SetFont('', '', 10);
+                    foreach ($historyList as $keyHistory => $history) {
+                        $date = new \DateTime($history['event_date']);
+                        $date = $date->format('d/m/Y H:i:s');
+                        $label = $date . " - " . UserModel::getLabelledUserById(['id' => $history['user_id']]) . "\n" . $history['info'];
+                        $pdf->MultiCell(0, 40, $label, 1, 'L', false);
+                    }
+                }
             }
         }
     }
