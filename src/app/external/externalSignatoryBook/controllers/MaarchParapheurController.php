@@ -15,6 +15,7 @@
 namespace ExternalSignatoryBook\controllers;
 
 use Attachment\models\AttachmentModel;
+use Attachment\models\AttachmentTypeModel;
 use Contact\controllers\ContactController;
 use Convert\controllers\ConvertPdfController;
 use Convert\models\AdrModel;
@@ -242,9 +243,10 @@ class MaarchParapheurController
                 return ['error' => 'No attachment to send'];
             } else {
                 $nonSignableAttachments = [];
-                $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+                $attachmentTypes = AttachmentTypeModel::get(['select' => ['type_id', 'signable']]);
+                $attachmentTypes = array_column($attachmentTypes, 'signable', 'type_id');
                 foreach ($attachments as $key => $value) {
-                    if (!$attachmentTypes[$value['attachment_type']]['sign']) {
+                    if (!$attachmentTypes[$value['attachment_type']]) {
                         $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $value['res_id'], 'collId' => 'attachments_coll']);
                         if (empty($adrInfo['docserver_id']) || strtolower(pathinfo($adrInfo['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                             return ['error' => 'Attachment ' . $value['res_id'] . ' is not converted in pdf'];

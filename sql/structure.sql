@@ -1502,6 +1502,7 @@ CREATE TABLE attachment_types
     email_link BOOLEAN NOT NULL,
     signable BOOLEAN NOT NULL,
     icon text,
+    chrono BOOLEAN NOT NULL,
     version_enabled BOOLEAN NOT NULL,
     new_version_default BOOLEAN NOT NULL,
     CONSTRAINT attachment_types_pkey PRIMARY KEY (id)
