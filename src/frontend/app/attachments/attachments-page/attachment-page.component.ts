@@ -74,8 +74,8 @@ export class AttachmentPageComponent implements OnInit {
                 tap((data: any) => {
                     Object.keys(data.attachmentsTypes).forEach(templateType => {
                         this.attachmentsTypes.push({
-                            id: templateType,
-                            ...data.attachmentsTypes[templateType]
+                            ...data.attachmentsTypes[templateType],
+                            id: templateType
                         });
                     });
                     this.attachmentsTypes = this.sortPipe.transform(this.attachmentsTypes, 'label');

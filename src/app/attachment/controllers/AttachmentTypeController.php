@@ -14,6 +14,7 @@
 
 namespace Attachment\controllers;
 
+use Attachment\models\AttachmentModel;
 use Attachment\models\AttachmentTypeModel;
 use Group\controllers\PrivilegeController;
 use Respect\Validation\Validator;
@@ -24,7 +25,12 @@ class AttachmentTypeController
 {
     public function get(Request $request, Response $response)
     {
-        $attachmentsTypes = AttachmentTypeModel::get(['select' => ['*']]);
+        $rawAttachmentsTypes = AttachmentTypeModel::get(['select' => ['*']]);
+
+        $attachmentsTypes = [];
+        foreach ($rawAttachmentsTypes as $rawAttachmentsType) {
+            $attachmentsTypes[$rawAttachmentsType['type_id']] = $rawAttachmentsType;
+        }
 
         return $response->withJson(['attachmentsTypes' => $attachmentsTypes]);
     }
@@ -51,6 +57,7 @@ class AttachmentTypeController
             'visible'               => empty($body['visible']) ? 'false' : 'true',
             'email_link'            => empty($body['emailLink']) ? 'false' : 'true',
             'signable'              => empty($body['signable']) ? 'false' : 'true',
+            'chrono'                => empty($body['chrono']) ? 'false' : 'true',
             'icon'                  => $body['icon'] ?? null,
             'version_enabled'       => empty($body['versionEnabled']) ? 'false' : 'true',
             'new_version_default'   => empty($body['newVersionDefault']) ? 'false' : 'true'
@@ -88,6 +95,9 @@ class AttachmentTypeController
         if (isset($body['signable'])) {
             $set['signable'] = empty($body['signable']) ? 'false' : 'true';
         }
+        if (isset($body['chrono'])) {
+            $set['chrono'] = empty($body['chrono']) ? 'false' : 'true';
+        }
         if (isset($body['versionEnabled'])) {
             $set['version_enabled'] = empty($body['versionEnabled']) ? 'false' : 'true';
         }
@@ -113,10 +123,14 @@ class AttachmentTypeController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        //TODO que faire quand on supprime
-        $attachmentType = AttachmentTypeModel::getById(['select' => 1, 'id' => $args['id']]);
+        $attachmentType = AttachmentTypeModel::getById(['select' => ['type_id'], 'id' => $args['id']]);
         if (empty($attachmentType)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type does not exist']);
+        }
+
+        $attachments = AttachmentModel::get(['select' => 1, 'where' => ['attachment_type = ?', 'status != ?'], 'data' => [$attachmentType['type_id'], 'DEL']]);
+        if (!empty($attachments)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Type is used in attachments']);
         }
 
         AttachmentTypeModel::delete([

@@ -693,13 +693,6 @@ class AttachmentController
         return $response->withJson($attachment);
     }
 
-    public function getAttachmentsTypes(Request $request, Response $response)
-    {
-        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
-
-        return $response->withJson(['attachmentsTypes' => $attachmentsTypes]);
-    }
-
     public static function getEncodedDocument(array $args)
     {
         ValidatorModel::notEmpty($args, ['id']);
