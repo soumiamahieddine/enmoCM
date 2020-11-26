@@ -29,10 +29,44 @@ class AttachmentTypeController
 
         $attachmentsTypes = [];
         foreach ($rawAttachmentsTypes as $rawAttachmentsType) {
-            $attachmentsTypes[$rawAttachmentsType['type_id']] = $rawAttachmentsType;
+            $attachmentsTypes[$rawAttachmentsType['type_id']] = [
+                'id'                => $rawAttachmentsType['id'],
+                'typeId'            => $rawAttachmentsType['type_id'],
+                'label'             => $rawAttachmentsType['label'],
+                'visible'           => $rawAttachmentsType['visible'],
+                'emailLink'         => $rawAttachmentsType['email_link'],
+                'signable'          => $rawAttachmentsType['signable'],
+                'icon'              => $rawAttachmentsType['icon'],
+                'chrono'            => $rawAttachmentsType['chrono'],
+                'versionEnabled'    => $rawAttachmentsType['version_enabled'],
+                'newVersionDefault' => $rawAttachmentsType['new_version_default']
+            ];
         }
 
         return $response->withJson(['attachmentsTypes' => $attachmentsTypes]);
+    }
+
+    public function getBydId(Request $request, Response $response, array $args)
+    {
+        $attachmentType = AttachmentTypeModel::getById(['select' => ['*'], 'id' => $args['id']]);
+        if (empty($attachmentType)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment type does not exist']);
+        }
+
+        $attachmentType = [
+            'id'                => $attachmentType['id'],
+            'typeId'            => $attachmentType['type_id'],
+            'label'             => $attachmentType['label'],
+            'visible'           => $attachmentType['visible'],
+            'emailLink'         => $attachmentType['email_link'],
+            'signable'          => $attachmentType['signable'],
+            'icon'              => $attachmentType['icon'],
+            'chrono'            => $attachmentType['chrono'],
+            'versionEnabled'    => $attachmentType['version_enabled'],
+            'newVersionDefault' => $attachmentType['new_version_default']
+        ];
+
+        return $response->withJson($attachmentType);
     }
 
     public function create(Request $request, Response $response)
