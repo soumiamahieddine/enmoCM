@@ -795,9 +795,8 @@ class AlfrescoController
             if (!empty($alfrescoParameters['mapping']['attachment'])) {
                 foreach ($alfrescoParameters['mapping']['attachment'] as $key => $alfrescoParameter) {
                     if ($alfrescoParameter == 'typeLabel') {
-                        $attachmentsTypes = AttachmentTypeModel::get(['select' => ['type_id', 'label']]);
-                        $attachmentsTypes = array_column($attachmentsTypes, 'label', 'type_id');
-                        $properties[$key] = $attachmentsTypes[$attachment['attachment_type']];
+                        $attachmentType = AttachmentTypeModel::getByTypeId(['select' => ['label'], 'typeId' => $attachment['attachment_type']]);
+                        $properties[$key] = $attachmentType['label'] ?? '';
                     } else {
                         $properties[$key] = $attachment[$alfrescoParameter];
                     }

@@ -1505,6 +1505,7 @@ CREATE TABLE attachment_types
     chrono BOOLEAN NOT NULL,
     version_enabled BOOLEAN NOT NULL,
     new_version_default BOOLEAN NOT NULL,
-    CONSTRAINT attachment_types_pkey PRIMARY KEY (id)
+    CONSTRAINT attachment_types_pkey PRIMARY KEY (id),
+    CONSTRAINT attachment_types_unique_key UNIQUE (type_id)
 )
 WITH (OIDS=FALSE);

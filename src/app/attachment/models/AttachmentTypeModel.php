@@ -58,6 +58,26 @@ class AttachmentTypeModel
         return $type[0];
     }
 
+    public static function getByTypeId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['typeId']);
+        ValidatorModel::stringType($args, ['typeId']);
+        ValidatorModel::arrayType($args, ['select']);
+
+        $type = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['attachment_types'],
+            'where'     => ['type_id = ?'],
+            'data'      => [$args['typeId']],
+        ]);
+
+        if (empty($type[0])) {
+            return [];
+        }
+
+        return $type[0];
+    }
+
     public static function create(array $args)
     {
         ValidatorModel::notEmpty($args, ['type_id', 'label', 'visible', 'email_link', 'signable', 'version_enabled', 'new_version_default', 'chrono']);
