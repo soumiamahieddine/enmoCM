@@ -2165,5 +2165,21 @@
     "tooManySignUser": "Nombre de signataire maximum dépassé",
     "templateNameMandatory": "Nom du modèle obligatoire",
     "requiredVisaUser": "{{min}} viseur(s) requis",
-    "authorizedSignUser": "{{max}} signataire(s) autorisé(s)"
+    "authorizedSignUser": "{{max}} signataire(s) autorisé(s)",
+    "visible_attachment": "Afficher le type",
+    "visible_attachmentDesc": "Sera possible de choisir ce type en création de pièce jointe.",
+    "emailLink_attachment": "Liaison automatique en envoi de courriel",
+    "emailLink_attachmentDesc": "Coche automatique les pièces jointes de ce type en envoi de courriel.",
+    "signable_attachment": "Autoriser la signature",
+    "signable_attachmentDesc": "Possibilité d'apposer une griffe sur les pièces jointes de ce type dans le parapheur.",
+    "newVersionDefault_attachment": "Nouvelle version par défaut en modification de pièce jointe",
+    "newVersionDefault_attachmentDesc": "Création par défaut d'une nouvelle version en modification de pièce jointe de ce type.",
+    "attachmentTypeCreation": "Création d'un type de pièce jointe",
+    "attachmentTypeAdded": "Type de pièce jointe ajouté",
+    "attachmentTypeUpdated": "Type de pièce jointe modifié",
+    "attachmentTypeDeleted": "Type de pièce jointe supprimé",
+    "attachmentsTypes": "Type(s) de pièce(s) jointe(s)",
+    "attachmentTypeModification": "Modification d'un type de pièce jointe",
+    "iconLetter": "Lettre icône",
+    "noneAlt": "Aucune"
 }
