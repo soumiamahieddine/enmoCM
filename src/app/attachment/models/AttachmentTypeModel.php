@@ -107,7 +107,7 @@ class AttachmentTypeModel
     public static function update(array $args)
     {
         ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($args, ['set', 'where', 'data', 'postSet']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
 
         DatabaseModel::update([
             'table'   => 'attachment_types',

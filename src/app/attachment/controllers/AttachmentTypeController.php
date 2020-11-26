@@ -114,7 +114,7 @@ class AttachmentTypeController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
 
-        $attachmentType = AttachmentTypeModel::getById(['select' => 1, 'id' => $args['id']]);
+        $attachmentType = AttachmentTypeModel::getById(['select' => [1], 'id' => $args['id']]);
         if (empty($attachmentType)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type does not exist']);
         }
