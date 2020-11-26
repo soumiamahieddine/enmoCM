@@ -86,7 +86,7 @@ class AttachmentTypeController
         }
 
         $id = AttachmentTypeModel::create([
-            'type_id'               => $body['type_id'],
+            'type_id'               => $body['typeId'],
             'label'                 => $body['label'],
             'visible'               => empty($body['visible']) ? 'false' : 'true',
             'email_link'            => empty($body['emailLink']) ? 'false' : 'true',
