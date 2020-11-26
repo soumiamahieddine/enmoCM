@@ -16,6 +16,7 @@ namespace Email\controllers;
 
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
+use Attachment\models\AttachmentTypeModel;
 use Configuration\models\ConfigurationModel;
 use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
@@ -395,7 +396,7 @@ class EmailController
         }
 
         $attachments = [];
-        $attachmentTypes = AttachmentModel::get(['select' => ['type_id', 'label', 'email_link']]);
+        $attachmentTypes = AttachmentTypeModel::get(['select' => ['type_id', 'label', 'email_link']]);
         $attachmentTypes = array_column($attachmentTypes, null, 'type_id');
         $rawAttachments = AttachmentModel::get([
             'select'    => ['res_id', 'title', 'identifier', 'attachment_type', 'typist', 'format', 'filesize', 'status'],
