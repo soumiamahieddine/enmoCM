@@ -89,8 +89,11 @@
                                         </mat-optgroup>
                                     </ng-container>
                                 </ng-container>
-
                             </mat-autocomplete>
+                            <button mat-button matSuffix mat-icon-button (click)="directSearchHistory()" [title]="'lang.search' | translate" style="float: right">
+                                <mat-icon color="primary" class="fa fa-search">
+                                </mat-icon>
+                            </button>
                         </mat-form-field>
                     </div>
                     <div class="table-head-tool">
