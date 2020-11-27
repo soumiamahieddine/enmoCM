@@ -55,8 +55,6 @@ export class HistoryComponent implements OnInit {
 
     loadingFilters: boolean = true;
 
-    searchValue: any = '';
-
     @Input() resId: number = null;
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
