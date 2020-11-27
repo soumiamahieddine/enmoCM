@@ -175,7 +175,7 @@ export class SummarySheetComponent implements OnInit {
             })
         ).subscribe();
 
-        if (!this.privilegeService.hasCurrentUserPrivilege('view_doc_history')) {
+        if (!this.privilegeService.hasCurrentUserPrivilege('view_doc_history') && !this.privilegeService.hasCurrentUserPrivilege('view_full_history')) {
             this.dataAvailable = this.dataAvailable.filter((item: any) => item.id !== 'workflowHistory');
         }
     }
