@@ -18,7 +18,7 @@ import { of } from 'rxjs';
 })
 export class SendExternalSignatoryBookActionComponent implements OnInit {
 
-    
+
     loading: boolean = false;
 
     additionalsInfos: any = {
@@ -27,6 +27,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         attachments: [],
         noAttachment: []
     };
+    resourcesToSign: any[] = [];
     resourcesMailing: any[] = [];
     signatoryBookEnabled: string = '';
 
@@ -44,7 +45,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     errors: any;
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
-    
+
     @ViewChild('xParaph', { static: false }) xParaph: XParaphComponent;
     @ViewChild('maarchParapheur', { static: false }) maarchParapheur: MaarchParaphComponent;
     @ViewChild('fastParapheur', { static: false }) fastParapheur: FastParaphComponent;
@@ -67,17 +68,30 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-        if ( this.data.resIds.length > 0) {
+        if (this.data.resIds.length > 0) {
             this.executeAction();
         }
     }
 
     checkExternalSignatureBook() {
         this.loading = true;
-        
+
         return new Promise((resolve, reject) => {
             this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/checkExternalSignatoryBook`, { resources: this.data.resIds }).pipe(
                 tap((data: any) => {
+                    // FOR TEST
+                    this.resourcesToSign = [
+                        {
+                            resId: 103,
+                            chrono: 'MAARCH/2020A/2',
+                            title: 'Réponse à signer',
+                        },
+                        {
+                            resId: 104,
+                            chrono: 'MAARCH/2020A/4',
+                            title: 'Réponse à signer 2',
+                        }
+                    ];
                     this.additionalsInfos = data.additionalsInfos;
                     if (this.additionalsInfos.attachments.length > 0) {
                         this.signatoryBookEnabled = data.signatureBookEnabled;
@@ -106,8 +120,8 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
 
         realResSelected = this[this.signatoryBookEnabled].getRessources();
         datas = this[this.signatoryBookEnabled].getDatas();
-        
-        this.http.put(this.data.processActionRoute, {resources : realResSelected, note : this.noteEditor.getNote(), data: datas}).pipe(
+
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNote(), data: datas }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close(realResSelected);
@@ -125,7 +139,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     }
 
     isValidAction() {
-        if (this[this.signatoryBookEnabled] !== undefined) {   
+        if (this[this.signatoryBookEnabled] !== undefined) {
             return this[this.signatoryBookEnabled].isValidParaph();
         } else {
             return false;
@@ -133,7 +147,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     }
 
     toggleIntegration(integrationId: string) {
-        this.http.put(`../rest/resourcesList/integrations`, {resources : this.data.resIds, integrations : { [integrationId] : !this.data.resource.integrations[integrationId]}}).pipe(
+        this.http.put(`../rest/resourcesList/integrations`, { resources: this.data.resIds, integrations: { [integrationId]: !this.data.resource.integrations[integrationId] } }).pipe(
             tap(async () => {
                 this.data.resource.integrations[integrationId] = !this.data.resource.integrations[integrationId];
                 await this.checkExternalSignatureBook();
