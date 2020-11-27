@@ -215,7 +215,21 @@ class MaarchParapheurController
         if ($aArgs['objectSent'] == 'attachment') {
             if (!empty($aArgs['steps'])) {
                 foreach ($aArgs['steps'] as $step) {
-                    $workflow[] = ['userId' => $step['externalId'], 'mode' => $step['action']];
+                    $signaturePositions = null;
+                    if (!empty($step['signaturePositions'])) {
+                        if (is_array($step['signaturePositions'])) {
+                            $valid = true;
+                            foreach ($step['signaturePositions'] as $keySP => $signaturePosition) {
+                                if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
+                                    $valid = false;
+                                }
+                            }
+                            if ($valid) {
+                                $signaturePositions = $step['signaturePositions'];
+                            }
+                        }
+                    }
+                    $workflow[] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions];
                 }
             } else {
                 return ['error' => 'steps is empty'];
