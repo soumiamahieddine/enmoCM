@@ -28,6 +28,7 @@ export class AttachmentTypeAdministrationComponent implements OnInit {
         emailLink: new FormControl({ value: false, disabled: false }),
         signable: new FormControl({ value: false, disabled: false }),
         icon: new FormControl({ value: '', disabled: false }),
+        versionEnabled: new FormControl({ value: false, disabled: false }),
         newVersionDefault: new FormControl({ value: false, disabled: false }),
     };
 
@@ -124,5 +125,14 @@ export class AttachmentTypeAdministrationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    isValidToggle(id: string) {
+        if (id === 'newVersionDefault' && !this.attachmentType['versionEnabled'].value) {
+            this.attachmentType['newVersionDefault'].setValue(false);
+            return false;
+        } else {
+            return true;
+        }
     }
 }

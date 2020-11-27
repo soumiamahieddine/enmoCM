@@ -38,7 +38,7 @@
                                 <mat-list-item>
                                     <div mat-line style="display: flex;">
                                         <mat-slide-toggle [formControlName]="idOpt" [name]="idOpt"
-                                            color="primary" [checked]="attachmentType[idOpt].value">
+                                            color="primary" [checked]="attachmentType[idOpt].value" [disabled]="!isValidToggle(idOpt)">
                                             {{'lang.' + idOpt + '_attachment' | translate}}</mat-slide-toggle>
                                         &nbsp;
                                         <i class="fa fa-question-circle" color="primary" style="cursor: help;"
