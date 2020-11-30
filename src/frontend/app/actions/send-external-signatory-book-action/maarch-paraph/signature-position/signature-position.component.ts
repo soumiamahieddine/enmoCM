@@ -79,7 +79,7 @@ export class SignaturePositionComponent implements OnInit {
         img.src = imgContent;
     }
 
-    moveSign(event: any, i: number) {
+    moveSign(event: any) {
         const percentx = (event.x * 100) / this.workingAreaWidth;
         const percenty = (event.y * 100) / this.workingAreaHeight;
         this.signList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionX = percentx;
