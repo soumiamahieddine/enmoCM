@@ -2173,5 +2173,6 @@
     "tooManySignUser": "Too many signatories",
     "requiredVisaUser": "{{min}} approvers required",
     "authorizedSignUser": "{{max}} signatories authorized",
-    "templateNameMandatory": "Template name mandatory"
+    "templateNameMandatory": "Template name mandatory",
+    "attachmentTypeUsed": "This type is used in attachment"
 }

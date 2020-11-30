@@ -2183,5 +2183,6 @@
     "attachmentsTypes": "Type(s) de pièce(s) jointe(s)",
     "attachmentTypeModification": "Modification d'un type de pièce jointe",
     "iconLetter": "Lettre icône",
-    "noneAlt": "Aucune"
+    "noneAlt": "Aucune",
+    "attachmentTypeUsed": "Ce type est utilisé pour certaines pièces jointes"
 }
