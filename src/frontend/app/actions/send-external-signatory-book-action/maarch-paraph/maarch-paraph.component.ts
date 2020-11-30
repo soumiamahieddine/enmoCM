@@ -77,22 +77,22 @@ export class MaarchParaphComponent implements OnInit {
         return this.externalSignatoryBookDatas;
     }
 
-    openSignaturePosition(resId: number) {
+    openSignaturePosition(resource: any) {
         console.log('this.additionalsInfos', this.additionalsInfos);
         const dialogRef = this.dialog.open(SignaturePositionComponent, {
             height: '99vh',
             panelClass: 'maarch-modal',
             disableClose: true,
             data: {
-                resId: resId,
+                resource: resource,
                 workflow: this.appVisaWorkflow.getWorkflow()
             }
         });
         dialogRef.afterClosed().pipe(
             filter((res: any) => !this.functions.empty(res)),
             tap((res: any) => {
-                this.signaturePositions[resId] = res;
-                console.log('result', this.signaturePositions);
+                this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'] = res;
+                console.log('result', this.resourcesToSign);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {

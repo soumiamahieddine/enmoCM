@@ -41,6 +41,9 @@ export class SignaturePositionComponent implements OnInit {
     ngOnInit(): void {
         this.currentPage = 1;
         this.getPageAttachment();
+        if (this.data.resource.signaturePositions !== undefined) {
+            this.signList = this.data.resource.signaturePositions;
+        }
         console.log(this.data.workflow);
     }
 

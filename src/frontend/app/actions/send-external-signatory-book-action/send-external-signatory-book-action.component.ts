@@ -62,7 +62,9 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-
+        if (this.data.resource.integrations['inSignatureBook']) {
+            this.toggleDocToSign(true, this.data.resource, true);
+        }
         this.checkExternalSignatureBook();
     }
 
@@ -80,18 +82,21 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
             this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/checkExternalSignatoryBook`, { resources: this.data.resIds }).pipe(
                 tap((data: any) => {
                     // FOR TEST
-                    this.resourcesToSign = [
+                    const test  = [
                         {
                             resId: 103,
                             chrono: 'MAARCH/2020A/2',
-                            title: 'Réponse à signer',
+                            subject: 'Réponse à signer',
                         },
                         {
                             resId: 104,
                             chrono: 'MAARCH/2020A/4',
-                            title: 'Réponse à signer 2',
+                            subject: 'Réponse à signer 2',
                         }
                     ];
+                    test.forEach((res: any) => {
+                        this.toggleDocToSign(true, res, false);
+                    });
                     this.additionalsInfos = data.additionalsInfos;
                     if (this.additionalsInfos.attachments.length > 0) {
                         this.signatoryBookEnabled = data.signatureBookEnabled;
@@ -150,6 +155,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         this.http.put(`../rest/resourcesList/integrations`, { resources: this.data.resIds, integrations: { [integrationId]: !this.data.resource.integrations[integrationId] } }).pipe(
             tap(async () => {
                 this.data.resource.integrations[integrationId] = !this.data.resource.integrations[integrationId];
+                this.toggleDocToSign(this.data.resource.integrations[integrationId], this.data.resource, true);
                 await this.checkExternalSignatureBook();
                 this.changeDetectorRef.detectChanges();
             }),
@@ -160,5 +166,18 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         ).subscribe();
     }
 
-
+    toggleDocToSign(state: boolean, document: any, mainDocument: boolean = true) {
+        if (state) {
+            this.resourcesToSign.push(
+                {
+                    resId: document.resId,
+                    chrono: document.chrono,
+                    title: document.subject,
+                    mainDocument: mainDocument,
+                });
+        } else {
+            const index = this.resourcesToSign.map((item: any) => `${item.resId}_${item.mainDocument}`).indexOf(`${document.resId}_${mainDocument}`);
+            this.resourcesToSign.splice(index, 1);
+        }
+    }
 }

@@ -13,9 +13,16 @@
     </div>
 </div>
 <div class="col-md-12" style="text-align: right;">
-    <button mat-button *ngIf="additionalsInfos.attachments.length === 1" color="primary" type="button" [matMenuTriggerFor]="menu" [disabled]="!isValidParaph()">Gérer les positions de signature...</button>
-    <mat-menu #menu="matMenu">
-        <button mat-menu-item *ngFor="let resource of resourcesToSign" (click)="openSignaturePosition(resource.resId)">{{resource.title}}</button>
+    <button mat-button *ngIf="additionalsInfos.attachments.length === 1" color="primary" type="button"
+        [matMenuTriggerFor]="menu" [disabled]="!isValidParaph()">Gérer les positions de signature...</button>
+    <mat-menu #menu="matMenu" class="docToSignTemplateMenu">
+        <button mat-menu-item *ngFor="let resource of resourcesToSign" (click)="openSignaturePosition(resource)"
+            style="font-size:12px;">
+            <mat-icon style="height: auto;" class="fas fa-compress-arrows-alt"></mat-icon>
+            <span>
+                <span color="primary">{{resource.chrono}}</span>&nbsp;- {{resource.title}}
+            </span>
+        </button>
     </mat-menu>
 </div>
 <div class="col-md-12" *ngIf="additionalsInfos.visaWorkflowError">
