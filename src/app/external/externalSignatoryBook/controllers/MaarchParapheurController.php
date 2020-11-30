@@ -213,25 +213,7 @@ class MaarchParapheurController
         $senderPrimaryEntity = UserModel::getPrimaryEntityById(['id' => $sender['id'], 'select' => ['entities.entity_label']]);
 
         if ($aArgs['objectSent'] == 'attachment') {
-            if (!empty($aArgs['steps'])) {
-                foreach ($aArgs['steps'] as $step) {
-                    $signaturePositions = null;
-                    if (!empty($step['signaturePositions'])) {
-                        if (is_array($step['signaturePositions'])) {
-                            $valid = true;
-                            foreach ($step['signaturePositions'] as $keySP => $signaturePosition) {
-                                if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
-                                    $valid = false;
-                                }
-                            }
-                            if ($valid) {
-                                $signaturePositions = $step['signaturePositions'];
-                            }
-                        }
-                    }
-                    $workflow[] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions];
-                }
-            } else {
+            if (empty($aArgs['steps'])) {
                 return ['error' => 'steps is empty'];
             }
 
@@ -338,6 +320,27 @@ class MaarchParapheurController
                     $attachmentsData = array_merge($nonSignableAttachments, $attachmentsData);
                     $metadata = MaarchParapheurController::setMetadata(['priority' => $priority['label'], 'primaryEntity' => $senderPrimaryEntity['entity_label'], 'recipient' => $recipients]);
 
+                    $workflow = [];
+                    foreach ($aArgs['steps'] as $step) {
+                        if ($step['resId'] == $resId && !$step['mainDocument']) {
+                            $signaturePositions = null;
+                            if (!empty($step['signaturePositions'])) {
+                                if (is_array($step['signaturePositions'])) {
+                                    $valid = true;
+                                    foreach ($step['signaturePositions'] as $keySP => $signaturePosition) {
+                                        if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
+                                            $valid = false;
+                                        }
+                                    }
+                                    if ($valid) {
+                                        $signaturePositions = $step['signaturePositions'];
+                                    }
+                                }
+                            }
+                            $workflow[(int)$step['sequence']] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions];
+                        }
+                    }
+
                     $bodyData = [
                         'title'             => $value['title'],
                         'reference'         => $value['identifier'],
@@ -381,6 +384,27 @@ class MaarchParapheurController
 
                     $attachmentsData = array_merge($nonSignableAttachments, $attachmentsData);
                     $metadata = MaarchParapheurController::setMetadata(['priority' => $priority['label'], 'primaryEntity' => $senderPrimaryEntity['entity_label'], 'recipient' => $recipients]);
+
+                    $workflow = [];
+                    foreach ($aArgs['steps'] as $step) {
+                        if ($step['resId'] == $aArgs['resIdMaster'] && $step['mainDocument']) {
+                            $signaturePositions = null;
+                            if (!empty($step['signaturePositions'])) {
+                                if (is_array($step['signaturePositions'])) {
+                                    $valid = true;
+                                    foreach ($step['signaturePositions'] as $keySP => $signaturePosition) {
+                                        if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
+                                            $valid = false;
+                                        }
+                                    }
+                                    if ($valid) {
+                                        $signaturePositions = $step['signaturePositions'];
+                                    }
+                                }
+                            }
+                            $workflow[(int)$step['sequence']] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions];
+                        }
+                    }
 
                     $bodyData = [
                         'title'             => $mainResource[0]['subject'],
