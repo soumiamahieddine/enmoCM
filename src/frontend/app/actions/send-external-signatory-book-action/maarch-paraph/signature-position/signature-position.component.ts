@@ -25,10 +25,22 @@ export class SignaturePositionComponent implements OnInit {
 
     workingAreaWidth: number = 0;
     workingAreaHeight: number = 0;
+    formatList: any[] = [
+        'dd/MM/y',
+        'dd-MM-y',
+        'dd.MM.y',
+        'd MMM y',
+        'd MMMM y',
+    ];
+    sizes = Array.from({ length: 50 }).map((_, i) => i + 1);
     signList: any[] = [];
+    dateList: any[] = [];
 
     pdfContent: any = null;
     imgContent: any = null;
+
+    today: Date = new Date();
+    localDate = this.translate.instant('lang.langISO');
 
     constructor(
         public translate: TranslateService,
@@ -41,10 +53,13 @@ export class SignaturePositionComponent implements OnInit {
     ngOnInit(): void {
         this.currentPage = 1;
         this.getPageAttachment();
+
         if (this.data.resource.signaturePositions !== undefined) {
             this.signList = this.data.resource.signaturePositions;
         }
-        console.log(this.data.workflow);
+        if (this.data.resource.datePositions !== undefined) {
+            this.dateList = this.data.resource.datePositions;
+        }
     }
 
     onSubmit() {
@@ -86,8 +101,20 @@ export class SignaturePositionComponent implements OnInit {
         this.signList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionY = percenty;
     }
 
+    moveDate(event: any) {
+        const percentx = (event.x * 100) / this.workingAreaWidth;
+        const percenty = (event.y * 100) / this.workingAreaHeight;
+        this.dateList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionX = percentx;
+        this.dateList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionY = percenty;
+    }
+
+
     emptySign() {
         return this.signList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage).length === 0;
+    }
+
+    emptyDate() {
+        return this.dateList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage).length === 0;
     }
 
     initSign() {
@@ -95,6 +122,24 @@ export class SignaturePositionComponent implements OnInit {
             {
                 sequence: this.currentUser,
                 page: this.currentPage,
+                position: {
+                    positionX: 0,
+                    positionY: 0
+                }
+            }
+        );
+        document.getElementsByClassName('signatureContainer')[0].scrollTo(0, 0);
+    }
+
+    initDateBlock() {
+        this.dateList.push(
+            {
+                sequence: this.currentUser,
+                page: this.currentPage,
+                color: '#666',
+                font: '',
+                format: 'd MMMM y',
+                size: 14,
                 position: {
                     positionX: 0,
                     positionY: 0
@@ -130,13 +175,37 @@ export class SignaturePositionComponent implements OnInit {
         this.signList.splice(index, 1);
     }
 
+    deleteDate(index: number) {
+        this.dateList.splice(index, 1);
+    }
+
     formatData() {
-        let objToSend: any[] = [];
+        const objToSend: any = {
+            signaturePositions: [],
+            datePositions: []
+        };
         this.data.workflow.forEach((element: any, index: number) => {
             if (this.signList.filter((item: any) => item.sequence === index).length > 0) {
-                objToSend = objToSend.concat(this.signList.filter((item: any) => item.sequence === index));
+                objToSend['signaturePositions'] = objToSend['signaturePositions'].concat(this.signList.filter((item: any) => item.sequence === index));
+            }
+            if (this.dateList.filter((item: any) => item.sequence === index).length > 0) {
+                objToSend['datePositions'] = objToSend['datePositions'].concat(this.dateList.filter((item: any) => item.sequence === index));
             }
         });
         return objToSend;
+    }
+
+    getUserPages() {
+        const allList = this.signList.concat(this.dateList);
+
+        return allList;
+    }
+
+    hasSign(userSequence: number, page: number) {
+        return this.signList.filter((item: any) => item.sequence === userSequence && item.page === page).length > 0;
+    }
+
+    hasDate(userSequence: number, page: number) {
+        return this.dateList.filter((item: any) => item.sequence === userSequence && item.page === page).length > 0;
     }
 }

@@ -63,7 +63,7 @@ export class MaarchParaphComponent implements OnInit {
     }
 
     getDatas() {
-        const formatedData: any = { steps : []};
+        const formatedData: any = { steps: [] };
         const workflow = this.appVisaWorkflow.getWorkflow();
 
         this.resourcesToSign.forEach((resource: any) => {
@@ -73,19 +73,18 @@ export class MaarchParaphComponent implements OnInit {
                         'resId': resource.resId,
                         'mainDocument': resource.mainDocument,
                         'externalId': element.externalId.maarchParapheur,
-                        'sequence' : index,
+                        'sequence': index,
                         'action': element.requested_signature ? 'sign' : 'visa',
                         'signaturePositions': resource.signaturePositions !== undefined ? resource.signaturePositions : [],
+                        'datePositions': resource.datePositions !== undefined ? resource.datePositions : [],
                     }
                 );
             });
         });
-
         return formatedData;
     }
 
     openSignaturePosition(resource: any) {
-        console.log('this.additionalsInfos', this.additionalsInfos);
         const dialogRef = this.dialog.open(SignaturePositionComponent, {
             height: '99vh',
             panelClass: 'maarch-modal',
@@ -98,8 +97,8 @@ export class MaarchParaphComponent implements OnInit {
         dialogRef.afterClosed().pipe(
             filter((res: any) => !this.functions.empty(res)),
             tap((res: any) => {
-                this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'] = res;
-                console.log('result', this.resourcesToSign);
+                this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'] = res.signaturePositions;
+                this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['datePositions'] = res.datePositions;
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -110,10 +109,12 @@ export class MaarchParaphComponent implements OnInit {
     }
 
     hasPositions(resource: any) {
-        if (this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'] === undefined) {
-            return false;
-        } else {
-            return this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'].length > 0;
-        }
+
+        return (
+            this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'] !== undefined &&
+            this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'].length > 0)
+            ||
+            (this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['datePositions'] !== undefined &&
+                this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['datePositions'].length > 0);
     }
 }
