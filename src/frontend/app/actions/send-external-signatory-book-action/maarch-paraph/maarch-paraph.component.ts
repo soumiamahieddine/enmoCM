@@ -63,18 +63,25 @@ export class MaarchParaphComponent implements OnInit {
     }
 
     getDatas() {
+        const formatedData: any = { steps : []};
         const workflow = this.appVisaWorkflow.getWorkflow();
 
-        workflow.forEach((element: any) => {
-            this.externalSignatoryBookDatas.steps.push(
-                {
-                    'externalId': element.externalId.maarchParapheur,
-                    'action': element.requested_signature ? 'sign' : 'visa',
-                }
-            );
+        this.resourcesToSign.forEach((resource: any) => {
+            workflow.forEach((element: any, index: number) => {
+                formatedData['steps'].push(
+                    {
+                        'resId': resource.resId,
+                        'mainDocument': resource.mainDocument,
+                        'externalId': element.externalId.maarchParapheur,
+                        'sequence' : index,
+                        'action': element.requested_signature ? 'sign' : 'visa',
+                        'signaturePositions': resource.signaturePositions !== undefined ? resource.signaturePositions : [],
+                    }
+                );
+            });
         });
 
-        return this.externalSignatoryBookDatas;
+        return formatedData;
     }
 
     openSignaturePosition(resource: any) {
@@ -100,5 +107,13 @@ export class MaarchParaphComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    hasPositions(resource: any) {
+        if (this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'] === undefined) {
+            return false;
+        } else {
+            return this.resourcesToSign.filter((itemToSign: any) => itemToSign.resId === resource.resId && itemToSign.mainDocument === resource.mainDocument)[0]['signaturePositions'].length > 0;
+        }
     }
 }
