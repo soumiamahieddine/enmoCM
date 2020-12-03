@@ -22,6 +22,6 @@
     </METHOD>
     <METHOD>
         <ID>openam</ID>
-        <ENABLED>true</ENABLED>
+        <ENABLED>false</ENABLED>
     </METHOD>
 </ROOT>
