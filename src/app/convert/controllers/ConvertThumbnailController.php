@@ -215,7 +215,7 @@ class ConvertThumbnailController
         $fileNameOnTmp = rand() . $filename;
 
         $convertPage = $args['page'] - 1;
-        $command = "convert -density 500x500 -quality 100 -background white -alpha remove "
+        $command = "convert -density 500x500 -quality 100 -resize 1000x -background white -alpha remove "
             . escapeshellarg($pathToDocument) . "[{$convertPage}] " . escapeshellarg("{$tmpPath}{$fileNameOnTmp}.png");
         exec($command.' 2>&1', $output, $return);
 
