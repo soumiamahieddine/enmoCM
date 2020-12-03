@@ -335,7 +335,21 @@ class MaarchParapheurController
                                     $signaturePositions = $step['signaturePositions'];
                                 }
                             }
-                            $workflow[(int)$step['sequence']] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions];
+                            $datePositions = null;
+                            if (!empty($step['datePositions']) && is_array($step['datePositions'])) {
+                                $valid = true;
+                                foreach ($step['datePositions'] as $keyDP => $datePosition) {
+                                    if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
+                                        $valid = false;
+                                    } elseif (empty($signaturePosition['color']) || empty($signaturePosition['font']) || empty($signaturePosition['format']) || empty($signaturePosition['size'])) {
+                                        $valid = false;
+                                    }
+                                }
+                                if ($valid) {
+                                    $datePositions = $step['datePositions'];
+                                }
+                            }
+                            $workflow[(int)$step['sequence']] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions, 'datePositions' => $datePositions];
                         }
                     }
 
@@ -398,7 +412,21 @@ class MaarchParapheurController
                                     $signaturePositions = $step['signaturePositions'];
                                 }
                             }
-                            $workflow[(int)$step['sequence']] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions];
+                            $datePositions = null;
+                            if (!empty($step['datePositions']) && is_array($step['datePositions'])) {
+                                $valid = true;
+                                foreach ($step['datePositions'] as $keyDP => $datePosition) {
+                                    if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
+                                        $valid = false;
+                                    } elseif (empty($signaturePosition['color']) || empty($signaturePosition['font']) || empty($signaturePosition['format']) || empty($signaturePosition['size'])) {
+                                        $valid = false;
+                                    }
+                                }
+                                if ($valid) {
+                                    $datePositions = $step['datePositions'];
+                                }
+                            }
+                            $workflow[(int)$step['sequence']] = ['userId' => $step['externalId'], 'mode' => $step['action'], 'signaturePositions' => $signaturePositions, 'datePositions' => $datePositions];
                         }
                     }
 
