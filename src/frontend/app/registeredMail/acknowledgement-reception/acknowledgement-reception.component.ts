@@ -93,8 +93,12 @@ export class AcknowledgementReceptionComponent implements OnInit {
             return;
         }
         if (this.type === 'notDistributed') {
-            if (!this.adminFormGroup.get('receivedDate').valid || !this.adminFormGroup.get('returnReason').valid) {
+            if (!this.adminFormGroup.get('receivedDate').valid) {
                 this.notify.error(this.translate.instant('lang.fieldsNotValid'));
+                return;
+            }
+            if (!this.adminFormGroup.get('returnReason').valid) {
+                this.notify.error(this.translate.instant('lang.selectReturnReason'));
                 return;
             }
             if (this.reason === this.translate.instant('lang.others') && this.functions.empty(this.reasonOther)) {
