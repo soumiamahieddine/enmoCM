@@ -485,7 +485,7 @@ class PreProcessActionController
                             if ($attachmentTypes[$value['attachment_type']]) {
                                 $hasSignableAttachment = true;
                             }
-                            $availableResources[] = ['resId' => $resIdAttachment, 'title' => $value['title'], 'chrono' => $value['identifier'], 'mainDocument' => false];
+                            $availableResources[] = ['resId' => $resIdAttachment, 'subject' => $value['title'], 'chrono' => $value['identifier'], 'mainDocument' => false];
                         }
                         if (!empty($integratedResource)) {
                             $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
@@ -503,7 +503,7 @@ class PreProcessActionController
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
                                 break;
                             }
-                            $availableResources[] = ['resId' => $resId, 'title' => $integratedResource['subject'], 'chrono' => $integratedResource['alt_identifier'], 'mainDocument' => true];
+                            $availableResources[] = ['resId' => $resId, 'subject' => $integratedResource['subject'], 'chrono' => $integratedResource['alt_identifier'], 'mainDocument' => true];
                         }
                         if (!$hasSignableAttachment && empty($integratedResource)) {
                             $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noSignableAttachmentInSignatoryBook'];
