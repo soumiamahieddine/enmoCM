@@ -2174,5 +2174,7 @@
     "requiredVisaUser": "{{min}} approvers required",
     "authorizedSignUser": "{{max}} signatories authorized",
     "templateNameMandatory": "Template name mandatory",
-    "attachmentTypeUsed": "This type is used in attachment"
+    "attachmentTypeUsed": "This type is used in attachment",
+    "confirmRescanTitle": "Registered mail not distributed",
+    "confirmRescan": "This registerde mail was already scanned Not distributed. Do you want to rescan it to distributed ?"
 }

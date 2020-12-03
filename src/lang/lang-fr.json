@@ -2184,5 +2184,8 @@
     "attachmentTypeModification": "Modification d'un type de pièce jointe",
     "iconLetter": "Lettre icône",
     "noneAlt": "Aucune",
-    "attachmentTypeUsed": "Ce type est utilisé pour certaines pièces jointes"
+    "attachmentTypeUsed": "Ce type est utilisé pour certaines pièces jointes",
+    "receptionCanceled": "Réception annulée",
+    "confirmRescanTitle": "Recommandé non distribué",
+    "confirmRescan": "Ce recommandé a déjà été scanné Non distribué. Voulez-vous le rescanner en distribué ?"
 }
