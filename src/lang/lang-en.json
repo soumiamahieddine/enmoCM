@@ -2176,6 +2176,7 @@
     "templateNameMandatory": "Template name mandatory",
     "attachmentTypeUsed": "This type is used in attachment",
     "confirmRescanTitle": "Registered mail not distributed",
-    "confirmRescan": "This registerde mail was already scanned Not distributed. Do you want to rescan it to distributed ?",
+    "confirmRescanToDistributed": "This registered mail was already scanned Not distributed. Do you want to rescan it to distributed ?",
+    "confirmRescanToNotDistributed": "This registered mail was already scanned distributed. Do you want to rescan it to not distributed ?",
     "selectReturnReason": "Please select a return reason"
 }
