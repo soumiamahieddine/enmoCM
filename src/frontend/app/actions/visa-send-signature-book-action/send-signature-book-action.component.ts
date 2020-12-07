@@ -4,7 +4,7 @@ import { NotificationService } from '@service/notification/notification.service'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
-import { tap, finalize, catchError } from 'rxjs/operators';
+import {tap, finalize, catchError, exhaustMap} from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FunctionsService } from '@service/functions.service';
 import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
@@ -57,6 +57,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
             } else if (!this.functions.empty(this.data.resource.destination)) {
                 this.noResourceToProcess = false;
                 await this.appVisaWorkflow.loadListModel(this.data.resource.destination);
+                await this.loadMinMaxVisaSignParameters();
             }
             this.loading = false;
         } else if (this.data.resIds.length > 0) {
@@ -208,7 +209,27 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
             });
 
             this.visaNumberCorrect = this.minimumVisaRole === 0 || nbVisaRole >= this.minimumVisaRole;
-            this.signNumberCorrect = this.maximumSignRole === 0 || nbSignRole <= this.maximumSignRole;
+            this.signNumberCorrect = this.maximumSignRole === 0 || nbSignRole <= this.maximumSignRole && nbSignRole >= 1;
         }
+    }
+
+    async loadMinMaxVisaSignParameters() {
+        return new Promise((resolve) => {
+            this.http.get('../rest/parameters/minimumVisaRole').pipe(
+                tap((data: any) => {
+                    this.minimumVisaRole = data.parameter.param_value_int;
+                }),
+                exhaustMap(() => this.http.get('../rest/parameters/maximumSignRole')),
+                tap((data: any) => {
+                    this.maximumSignRole = data.parameter.param_value_int;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 }
