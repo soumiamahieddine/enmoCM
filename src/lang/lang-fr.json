@@ -2187,7 +2187,7 @@
     "attachmentTypeUsed": "Ce type est utilisé pour certaines pièces jointes",
     "receptionCanceled": "Réception annulée",
     "confirmRescanTitle": "Recommandé déjà reçu",
-    "confirmRescanToDistributed": "Ce recommandé a déjà été scanné Non distribué. Voulez-vous le rescanner en distribué ?",
-    "confirmRescanToNotDistributed": "Ce recommandé a déjà été scanné Distribué. Voulez-vous le rescanner en non distribué ?",
+    "confirmRescanToDistributed": "Ce recommandé a déjà été scanné «Non distribué». Voulez-vous le rescanner en «Distribué» ?",
+    "confirmRescanToNotDistributed": "Ce recommandé a déjà été scanné «Distribué». Voulez-vous le rescanner en «Non distribué» ?",
     "selectReturnReason": "Veuillez sélectionner un motif de retour"
 }
