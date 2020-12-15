@@ -342,9 +342,12 @@ class SearchController
             } else {
                 $fields = ['subject', 'replace(alt_identifier, \' \', \'\')', 'barcode'];
 
+                $quick = $body['meta']['values'];
+                $quick = str_replace(' ', '', $quick);
+
                 $fields = AutoCompleteController::getInsensitiveFieldsForRequest(['fields' => $fields]);
                 $requestDataDocument = AutoCompleteController::getDataForRequest([
-                    'search'        => $body['meta']['values'],
+                    'search'        => $quick,
                     'fields'        => $fields,
                     'where'         => [],
                     'data'          => [],
@@ -355,7 +358,7 @@ class SearchController
                 $fields = ['title', 'identifier'];
                 $fields = AutoCompleteController::getInsensitiveFieldsForRequest(['fields' => $fields]);
                 $requestDataAttachment = AutoCompleteController::getDataForRequest([
-                    'search'        => $body['meta']['values'],
+                    'search'        => $quick,
                     'fields'        => $fields,
                     'where'         => [],
                     'data'          => [],
@@ -372,7 +375,7 @@ class SearchController
                     $args['searchData'] = array_merge($args['searchData'], $requestDataAttachment['data']);
                 }
 
-                if (ctype_digit(trim($body['meta']['values']))) {
+                if (ctype_digit(trim($quick))) {
                     $whereClause[] = 'res_id = ?';
                     $args['searchData'][] = trim($body['meta']['values']);
                 }
