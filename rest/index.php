@@ -396,7 +396,7 @@ $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class .
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
 $app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');
 $app->put('/resources/{resId}', \Resource\controllers\ResController::class . ':update');
-$app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
+$app->get('/resources/{resId}/content', \Resource\convtrollers\ResController::class . ':getFileContent');
 $app->get('/resources/{resId}/versionsInformations', \Resource\controllers\ResController::class . ':getVersionsInformations');
 $app->get('/resources/{resId}/content/{version}', \Resource\controllers\ResController::class . ':getVersionFileContent');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
@@ -411,6 +411,7 @@ $app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . 
 $app->get('/resources/{resId}/templates', \Template\controllers\TemplateController::class . ':getByResId');
 $app->get('/resources/{resId}/emailTemplates', \Template\controllers\TemplateController::class . ':getEmailTemplatesByResId');
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
+$app->get('/resources/{resId}/listInstanceHistory', \Entity\controllers\ListInstanceHistoryController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
 $app->get('/resources/{resId}/parallelOpinion', \Entity\controllers\ListInstanceController::class . ':getParallelOpinionByResId');
