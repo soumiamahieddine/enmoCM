@@ -3,7 +3,7 @@
         <mat-list>
             <div class="dateTitle">
                 <div mat-subheader class="primary" [title]="visaWorkflow.creationDate | fullDate">
-                    Actif&nbsp;<b>{{visaWorkflow.creationDate | timeAgo : 'full'}}</b>&nbsp;par&nbsp;<b>{{visaWorkflow.user}}</b>
+                    {{'lang.workflow' | translate}}&nbsp;<b>{{visaWorkflow.creationDate | timeAgo : 'full'}}</b>&nbsp;{{'lang.by' | translate | lowercase}}&nbsp;<b>{{visaWorkflow.user}}</b>
                 </div>
                 <mat-divider></mat-divider>
             </div>

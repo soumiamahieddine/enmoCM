@@ -58,7 +58,7 @@ export class HistoryDiffusionsListComponent implements OnInit {
         this.diffListHistory = [
             {
                 user: 'Bernard BLIER',
-                creationDate: '2020-10-06 17:02:19.558904',
+                creationDate: '2020-12-18 14:02:19.558904',
                 listinstance: {
                     'dest': {
                         'label': 'Attributaire',
