@@ -416,6 +416,7 @@ $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceCont
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
 $app->get('/resources/{resId}/parallelOpinion', \Entity\controllers\ListInstanceController::class . ':getParallelOpinionByResId');
 $app->get('/resources/{resId}/defaultCircuit', \Entity\controllers\ListTemplateController::class . ':getDefaultCircuitByResId');
+$app->get('/resources/{resId}/circuitsHistory', \Entity\controllers\ListInstanceHistoryController::class . ':getCircuitByResId');
 $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');
 $app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':linkResources');
 $app->put('/resources/{resId}/sign', \SignatureBook\controllers\SignatureBookController::class . ':signResource');

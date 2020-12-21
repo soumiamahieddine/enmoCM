@@ -477,6 +477,7 @@ class ListInstanceController
                 }
             }
 
+            $listInstanceHistoryId = ListInstanceHistoryModel::create(['resId' => $resource['resId'], 'userId' => $GLOBALS['id']]);
             foreach ($listInstances as $key => $listInstance) {
                 ListInstanceModel::create([
                     'res_id'                => $resource['resId'],
@@ -490,6 +491,19 @@ class ListInstanceController
                     'process_comment'       => $listInstance['process_comment'],
                     'requested_signature'   => $listInstance['requested_signature'],
                     'delegate'              => $listInstance['delegate']
+                ]);
+                ListInstanceHistoryDetailModel::create([
+                    'listinstance_history_id'   => $listInstanceHistoryId,
+                    'res_id'                    => $resource['resId'],
+                    'sequence'                  => $key,
+                    'item_id'                   => $listInstance['item_id'],
+                    'item_type'                 => $listInstance['item_type'],
+                    'item_mode'                 => $listInstance['item_mode'],
+                    'added_by_user'             => $GLOBALS['id'],
+                    'difflist_type'             => $args['type'] == 'visaCircuit' ? 'VISA_CIRCUIT' : 'AVIS_CIRCUIT',
+                    'process_date'              => $listInstance['process_date'],
+                    'process_comment'           => $listInstance['process_comment'],
+                    'requested_signature'       => $listInstance['requested_signature']
                 ]);
             }
         }

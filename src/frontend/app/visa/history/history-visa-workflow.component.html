@@ -7,16 +7,16 @@
                 </div>
                 <mat-divider></mat-divider>
             </div>
-            <mat-list-item disableRipple *ngFor="let diffusion of visaWorkflow.items;let i=index" class="workflow">
+            <mat-list-item disableRipple *ngFor="let diffusion of visaWorkflow.details;let i=index" class="workflow">
                 <mat-icon class="fa fa-2x fa-user" mat-list-icon color="primary">
                 </mat-icon>
                 <div mat-line class="workflowLine">
                     <div class="workflowLineContainer">
                         <div class="workflowLineLabel">
-                            {{diffusion.labelToDisplay}}
+                            {{diffusion.itemLabel}}
                         </div>
                         <div class="workflowLineSubLabel">
-                            {{diffusion.item_entity}}
+                            {{diffusion.itemSubLabel}}
                         </div>
                     </div>
                     <div>
