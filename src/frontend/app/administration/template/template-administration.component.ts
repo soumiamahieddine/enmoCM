@@ -28,7 +28,6 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
     @ViewChild('maarchTree', { static: true }) maarchTree: MaarchFlatTreeComponent;
 
-    
     loading: boolean = false;
 
     creationMode: boolean;
@@ -87,6 +86,8 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
     dialogRef: MatDialogRef<any>;
     data: any[] = [];
     config: any = {};
+
+    documentImported: boolean = false;
 
 
     constructor(
@@ -285,6 +286,7 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
                     this.template.file.content = this.getBase64Document(value.target.result);
                 }
 
+                this.documentImported = true;
                 this.getViewTemplateFile();
             };
         }
@@ -669,7 +671,7 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
     styleUrls: ['template-administration-checkEntities-modal.scss']
 })
 export class TemplateAdministrationCheckEntitiesModalComponent {
-    
+
 
     constructor(public http: HttpClient, @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<TemplateAdministrationCheckEntitiesModalComponent>) {
     }
