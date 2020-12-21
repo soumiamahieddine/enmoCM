@@ -141,6 +141,7 @@ export class AttachmentPageComponent implements OnInit {
 
                     this.versions = data.versions;
 
+                    this.attachmentsTypes = this.attachmentsTypes.filter((item: any) => item.typeId === data.type || item.visible);
                     this.newVersion = this.attachmentsTypes.filter((item: any) => item.typeId === data.type)[0].newVersionDefault;
 
                     this.attachFormGroup = new FormGroup(this.attachment);
