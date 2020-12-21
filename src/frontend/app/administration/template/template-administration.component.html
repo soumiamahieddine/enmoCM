@@ -32,6 +32,9 @@
                 </div>
                 <mat-card *ngIf="!loading" class="card-app-content" style="display: contents;">
                     <form style="display: contents;" class="form-horizontal" (ngSubmit)="onSubmit()" #templatesFormUp="ngForm">
+                        <div *ngIf="!attachmentTypeIsVisible" class="alert-message alert-message-danger" role="alert">
+                            <p>{{'lang.invisibleAttachmentType' | translate}}</p>
+                        </div>
                         <div class="col-sm-12">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
@@ -79,7 +82,7 @@
                                     <mat-form-field>
                                         <mat-select id="template_attachment_type" name="template_attachment_type"
                                             title="{{'lang.attachmentType' | translate}}" placeholder="{{'lang.attachmentType' | translate}}"
-                                            [(ngModel)]="template.template_attachment_type">
+                                            [(ngModel)]="template.template_attachment_type" (selectionChange)="attachmentTypeUpdated()">
                                             <mat-option value="all">{{'lang.allAttachments' | translate}}</mat-option>
                                             <mat-option *ngFor="let value of attachmentTypesList" [value]="value.id">
                                                 {{value.label}}

@@ -2174,6 +2174,7 @@
     "requiredVisaUser": "{{min}} approvers required",
     "authorizedSignUser": "{{max}} signatories authorized",
     "templateNameMandatory": "Template name mandatory",
+    "invisibleAttachmentType": "This attachment type is not avaible to create/update attachment",
     "attachmentTypeUsed": "This type is used in attachment",
     "confirmRescanTitle": "Registered mail not distributed",
     "confirmRescanToDistributed": "This registered mail was already scanned «Not distributed». Do you want to rescan it to «Distributed» ?",

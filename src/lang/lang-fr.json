@@ -2180,6 +2180,7 @@
     "attachmentTypeAdded": "Type de pièce jointe ajouté",
     "attachmentTypeUpdated": "Type de pièce jointe modifié",
     "attachmentTypeDeleted": "Type de pièce jointe supprimé",
+    "invisibleAttachmentType": "Ce type de pièce jointe n'est actuellement pas utilisable lors de la création/modification d'une pièce jointe",
     "attachmentsTypes": "Type(s) de pièce(s) jointe(s)",
     "attachmentTypeModification": "Modification d'un type de pièce jointe",
     "iconLetter": "Lettre icône",
