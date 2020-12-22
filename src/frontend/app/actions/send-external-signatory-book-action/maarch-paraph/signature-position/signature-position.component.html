@@ -39,7 +39,7 @@
                     [style.width.px]="workingAreaWidth" [style.height.px]="workingAreaHeight">
                     <ng-container *ngFor="let sign of signList;let indexSign=index;">
                         <div *ngIf="sign.page === currentPage" [class.signDisabled]="currentUser!==sign.sequence"
-                            [position]="{x: (sign.position.positionX*workingAreaWidth)/100, y:(sign.position.positionY*workingAreaHeight)/100}"
+                            [position]="{x: (sign.positionX*workingAreaWidth)/100, y:(sign.positionY*workingAreaHeight)/100}"
                             [style.width.%]="25" [ngDraggable]="currentUser===sign.sequence"
                             (endOffset)="moveSign($event);" [preventDefaultEvent]="false" [bounds]="myBounds"
                             [inBounds]="true" class="signature"
@@ -56,7 +56,7 @@
                         <div 
                         *ngIf="date.page === currentPage"
                         [class.signDisabled]="currentUser!==date.sequence"
-                        [position]="{x: (date.position.positionX*workingAreaWidth)/100, y:(date.position.positionY*workingAreaHeight)/100}"
+                        [position]="{x: (date.positionX*workingAreaWidth)/100, y:(date.positionY*workingAreaHeight)/100}"
                         [ngDraggable]="currentUser===date.sequence && !resizing"
                         (endOffset)="moveDate($event, i);"
                         [preventDefaultEvent]="false"

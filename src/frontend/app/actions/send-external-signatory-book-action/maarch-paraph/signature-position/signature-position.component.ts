@@ -109,15 +109,15 @@ export class SignaturePositionComponent implements OnInit {
     moveSign(event: any) {
         const percentx = (event.x * 100) / this.workingAreaWidth;
         const percenty = (event.y * 100) / this.workingAreaHeight;
-        this.signList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionX = percentx;
-        this.signList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionY = percenty;
+        this.signList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].positionX = percentx;
+        this.signList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].positionY = percenty;
     }
 
     moveDate(event: any) {
         const percentx = (event.x * 100) / this.workingAreaWidth;
         const percenty = (event.y * 100) / this.workingAreaHeight;
-        this.dateList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionX = percentx;
-        this.dateList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].position.positionY = percenty;
+        this.dateList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].positionX = percentx;
+        this.dateList.filter((item: any) => item.sequence === this.currentUser && item.page === this.currentPage)[0].positionY = percenty;
     }
 
     onResizeDateStop(event: any, index: number) {
@@ -138,10 +138,8 @@ export class SignaturePositionComponent implements OnInit {
             {
                 sequence: this.currentUser,
                 page: this.currentPage,
-                position: {
-                    positionX: 0,
-                    positionY: 0
-                }
+                positionX: 0,
+                positionY: 0
             }
         );
         document.getElementsByClassName('signatureContainer')[0].scrollTo(0, 0);
@@ -156,10 +154,8 @@ export class SignaturePositionComponent implements OnInit {
                 format: 'd MMMM y',
                 width: (130 * 100) / this.workingAreaWidth,
                 height: (30 * 100) / this.workingAreaHeight,
-                position: {
-                    positionX: 0,
-                    positionY: 0
-                }
+                positionX: 0,
+                positionY: 0
             }
         );
         document.getElementsByClassName('signatureContainer')[0].scrollTo(0, 0);
