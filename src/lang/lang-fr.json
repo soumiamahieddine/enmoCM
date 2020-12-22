@@ -2184,6 +2184,7 @@
     "attachmentsTypes": "Type(s) de pièce(s) jointe(s)",
     "attachmentTypeModification": "Modification d'un type de pièce jointe",
     "iconLetter": "Lettre icône",
+    "iconLetter_attachmentDesc": "Ces lettres apparaîtront dans les onglets du parapheur",
     "noneAlt": "Aucune",
     "attachmentTypeUsed": "Ce type est utilisé pour certaines pièces jointes",
     "receptionCanceled": "Réception annulée",

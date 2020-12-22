@@ -48,7 +48,9 @@
                             </mat-list>
                             <div mat-line>
                                 <mat-form-field style="padding: 0px 16px">
-                                    <span mattPrefix color="primary">{{'lang.iconLetter' | translate}} : </span>
+                                    <span mattPrefix color="primary">{{'lang.iconLetter' | translate}} 
+                                        <i class="fa fa-question-circle" color="primary" style="cursor: help;"
+                                            [title]="'lang.iconLetter_attachmentDesc' | translate"></i> : </span>
                                     <input matInput formControlName="icon" name="icon" type="text" maxlength="2">
                                 </mat-form-field>
                             </div>
