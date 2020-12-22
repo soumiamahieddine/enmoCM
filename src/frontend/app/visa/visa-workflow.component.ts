@@ -39,6 +39,7 @@ export class VisaWorkflowComponent implements OnInit {
     filteredPrivateModels: Observable<string[]>;
 
     loading: boolean = false;
+    hasHistory: boolean = false;
     visaModelListNotLoaded: boolean = true;
     data: any;
 
@@ -298,7 +299,7 @@ export class VisaWorkflowComponent implements OnInit {
                                 difflist_type: 'VISA_CIRCUIT'
                             });
                     });
-                    console.log(this.visaWorkflow);
+                    this.hasHistory = data.hasHistory;
 
                     this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items))
                 }),

@@ -60,8 +60,13 @@ class ListInstanceController
                 $listInstances[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entities.entity_label']])['entity_label'];
             }
         }
+        $hasHistory = ListInstanceHistoryDetailModel::get([
+            'select'    => [1],
+            'where'     => ['difflist_type = ?', 'res_id = ?'],
+            'data'      => ['entity_id', $args['resId']]
+        ]);
 
-        return $response->withJson(['listInstance' => $listInstances]);
+        return $response->withJson(['listInstance' => $listInstances, 'hasHistory' => !empty($hasHistory)]);
     }
 
     public function getVisaCircuitByResId(Request $request, Response $response, array $aArgs)
@@ -90,8 +95,13 @@ class ListInstanceController
                 $listInstances[$key]['hasPrivilege'] = false;
             }
         }
+        $hasHistory = ListInstanceHistoryDetailModel::get([
+            'select'    => [1],
+            'where'     => ['difflist_type = ?', 'res_id = ?'],
+            'data'      => ['VISA_CIRCUIT', $aArgs['resId']]
+        ]);
 
-        return $response->withJson(['circuit' => $listInstances]);
+        return $response->withJson(['circuit' => $listInstances, 'hasHistory' => !empty($hasHistory)]);
     }
 
     public function getOpinionCircuitByResId(Request $request, Response $response, array $aArgs)
