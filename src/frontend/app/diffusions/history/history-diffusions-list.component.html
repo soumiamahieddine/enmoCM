@@ -2,7 +2,7 @@
     <ng-container *ngFor="let diffList of diffListHistory">
         <div class="dateTitle">
             <div mat-subheader color="primary" [title]="diffList.creationDate | fullDate">
-                {{'lang.createdBy' | translate}} &nbsp;<b>{{diffList.user}}</b> &nbsp;<b>{{diffList.creationDate | timeAgo : 'full'}}</b>
+                {{'lang.createdBy' | translate}}&nbsp;<b>{{diffList.user}}</b> &nbsp;<b>{{diffList.creationDate | timeAgo : 'full'}}</b>
             </div>
             <mat-divider></mat-divider>
         </div>
