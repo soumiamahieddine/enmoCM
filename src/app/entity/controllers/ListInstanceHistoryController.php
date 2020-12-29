@@ -134,7 +134,7 @@ class ListInstanceHistoryController
                 ];
             }
         }
-        array_shift($formattedHistory);
+        array_pop($formattedHistory);
         $formattedHistory = array_reverse($formattedHistory);
 
         return $response->withJson(['listInstanceHistory' => $formattedHistory]);
