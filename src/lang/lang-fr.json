@@ -2202,5 +2202,11 @@
     "visaWorkflowHistory": "Historique du circuit de visa",
     "showVisaWorkflowHistory": "Afficher l'historique du circuit de visa",
     "list": "Liste",
-    "workflow": "Circuit"
+    "workflow": "Circuit",
+    "datePosMsg": "La date n'est qu'à titre <b>indicatif</b>, elle sera à jour quand la personne <b>signera</b> le document.",
+    "font": "Police",
+    "manageSignaturesPositions": "Gérer les positions de signatures",
+    "signature": "signature",
+    "addDateBlock": "Ajouter le bloc date",
+    "addSignaturePosition": "Ajouter la position de signature"
 }
