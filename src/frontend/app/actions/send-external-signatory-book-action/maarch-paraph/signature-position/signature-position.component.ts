@@ -88,12 +88,10 @@ export class SignaturePositionComponent implements OnInit {
     }
 
     getPageAttachment() {
-        console.log(this.data.resource);
-
         if (this.data.resource.mainDocument) {
             this.http.get(`../rest/resources/${this.data.resource.resId}/thumbnail/${this.currentPage}`).pipe(
                 tap((data: any) => {
-                    this.pages = Array.from({ length: data.pagesCount }).map((_, i) => i + 1);
+                    this.pages = Array.from({ length: data.pageCount }).map((_, i) => i + 1);
                     this.imgContent = 'data:image/png;base64,' + data.fileContent;
                     this.getImageDimensions(this.imgContent);
                 }),
@@ -105,7 +103,7 @@ export class SignaturePositionComponent implements OnInit {
         } else {
             this.http.get(`../rest/attachments/${this.data.resource.resId}/thumbnail/${this.currentPage}`).pipe(
                 tap((data: any) => {
-                    this.pages = Array.from({ length: data.pagesCount }).map((_, i) => i + 1);
+                    this.pages = Array.from({ length: data.pageCount }).map((_, i) => i + 1);
                     this.imgContent = 'data:image/png;base64,' + data.fileContent;
                     this.getImageDimensions(this.imgContent);
                 }),
@@ -124,6 +122,7 @@ export class SignaturePositionComponent implements OnInit {
             this.workingAreaHeight = data.target.naturalHeight;
         };
         img.src = imgContent;
+        document.getElementsByClassName('signatureContainer')[0].scrollTop = 0;
     }
 
     moveSign(event: any) {
