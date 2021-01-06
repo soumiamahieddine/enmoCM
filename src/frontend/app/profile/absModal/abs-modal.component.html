@@ -5,7 +5,7 @@
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
         <mat-list>
-            <div mat-subheader>Bannettes à rediriger :</div>
+            <div mat-subheader>{{'lang.basketsToRedirect' | translate}} :</div>
             <mat-list-item >
                 <mat-icon mat-list-icon style="display: flex;align-items: center;justify-content: center;">
                     <mat-checkbox color="primary" (change)="toggleAll()" [indeterminate]="oneOrMoreSelected()" [checked]="allSelected()"></mat-checkbox>
