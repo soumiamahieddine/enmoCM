@@ -175,4 +175,26 @@ export class AbsModalComponent implements OnInit {
             ).subscribe();
         });
     }
+
+    toggleAll() {
+        if (this.allSelected()) {
+            this.baskets.forEach(element => {
+                element.selected = false;
+            });
+        } else {
+            this.baskets.forEach(element => {
+                if (!this.isRedirectedBasket(element)) {
+                    element.selected = true;
+                }
+            });
+        }
+    }
+
+    allSelected() {
+        return this.baskets.filter((item: any) => item.selected).length === this.baskets.filter((item: any) => !this.isRedirectedBasket(item)).length;
+    }
+
+    oneOrMoreSelected() {
+        return this.baskets.filter((item: any) => item.selected).length > 0 && !this.allSelected();
+    }
 }

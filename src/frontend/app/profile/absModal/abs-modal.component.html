@@ -6,8 +6,14 @@
         </div>
         <mat-list>
             <div mat-subheader>Bannettes à rediriger :</div>
+            <mat-list-item >
+                <mat-icon mat-list-icon style="display: flex;align-items: center;justify-content: center;">
+                    <mat-checkbox color="primary" (change)="toggleAll()" [indeterminate]="oneOrMoreSelected()" [checked]="allSelected()"></mat-checkbox>
+                </mat-icon>
+                <div mat-line style="cursor:pointer;font-size: 12px;font-style: italic;color:#666" (click)="toggleAll()">{{'lang.selectAll' | translate}}</div>
+            </mat-list-item>
             <ng-container *ngFor="let basket of baskets;let i = index">
-                <mat-list-item >
+                <mat-list-item>
                     <mat-icon mat-list-icon style="display: flex;align-items: center;justify-content: center;">
                         <mat-checkbox color="primary" [(ngModel)]="basket.selected" *ngIf="!isRedirectedBasket(basket)">
                         </mat-checkbox>
@@ -16,7 +22,7 @@
                             <mat-icon color="warn" class="fa fa-times"></mat-icon>
                         </button>
                     </mat-icon>
-                    <div mat-line>{{basket.basket_name}} <span class="label label-primary"
+                    <div mat-line style="cursor: pointer;" (click)="basket.selected=!basket.selected">{{basket.basket_name}} <span class="label label-primary"
                             style="font-weight:normal">{{basket.group_desc}}</span></div>
                     <div mat-line *ngIf="isRedirectedBasket(basket)" color="warn"> 
                         <i class="far fa-paper-plane"></i>&nbsp;{{'lang.redirectedTo' | translate}} {{basket.userToDisplay}}
