@@ -141,9 +141,10 @@ export class AbsModalComponent implements OnInit {
     }
 
     delBasketAssignRedirection(redirectedBasketIds: number[]) {
+        const queryParam = '?redirectedBasketIds[]=' + redirectedBasketIds.join('&redirectedBasketIds[]=');
 
         return new Promise((resolve, reject) => {
-            this.http.delete('../rest/users/' + this.data.user.id + '/redirectedBaskets?redirectedBasketIds[]=' + redirectedBasketIds).pipe(
+            this.http.delete('../rest/users/' + this.data.user.id + '/redirectedBaskets' + queryParam).pipe(
                 tap((data: any) => {
                     resolve(true);
                 }),
