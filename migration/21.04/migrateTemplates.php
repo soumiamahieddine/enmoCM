@@ -1,6 +1,5 @@
 <?php
 
-use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use SrcCore\models\CoreConfigModel;
 use Template\models\TemplateModel;
@@ -9,7 +8,7 @@ require '../../vendor/autoload.php';
 
 include_once('../../vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
 
-const OFFICE_EXTENSIONS = ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf'];
+const OFFICE_EXTENSIONS = ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf', 'doc'];
 
 const DATA_TO_REPLACE = [
     'res_letterbox.admission_date'     => '[res_letterbox.admission_date;frm=dd/mm/yyyy]',
@@ -51,52 +50,17 @@ foreach ($customs as $custom) {
                 $newContent = str_replace('[' . $key . ']', $value, $newContent);
             }
 
-            if ($template['template_target'] == 'doctypes') {
-                $pathFilename = $tmpPath . 'template_migration_' . rand() . '_'. rand() .'.html';
-                file_put_contents($pathFilename, $newContent);
-
-                $resource = file_get_contents($pathFilename);
-                $pathInfo = pathinfo($pathFilename);
-                $storeResult = DocserverController::storeResourceOnDocServer([
-                    'collId'           => 'templates',
-                    'docserverTypeId'  => 'TEMPLATES',
-                    'encodedResource'  => base64_encode($resource),
-                    'format'           => $pathInfo['extension']
-                ]);
-
-                if (!empty($storeResult['errors'])) {
-                    echo $storeResult['errors'];
-                    continue;
-                }
-
+            if ($content != $newContent) {
                 TemplateModel::update([
-                        'set'   => [
-                            'template_content'    => '',
-                            'template_type'       => 'OFFICE',
-                            'template_path'       => $storeResult['destination_dir'],
-                            'template_file_name'  => $storeResult['file_destination_name'],
-                            'template_style'      => '',
-                            'template_datasource' => 'letterbox_attachment',
-                            'template_target'     => 'indexingFile',
-                            'template_attachment_type' => 'all'
-                        ],
-                        'where' => ['template_id = ?'],
-                        'data'  => [$template['template_id']]
-                    ]);
-                unlink($pathFilename);
+                    'set'   => [
+                        'template_content' => $newContent
+                    ],
+                    'where' => ['template_id = ?'],
+                    'data'  => [$template['template_id']]
+                ]);
+                $migrated++;
             } else {
-                if ($content != $newContent) {
-                    TemplateModel::update([
-                        'set'   => [
-                            'template_content' => $newContent
-                        ],
-                        'where' => ['template_id = ?'],
-                        'data'  => [$template['template_id']]
-                    ]);
-                    $migrated++;
-                } else {
-                    $nonMigrated++;
-                }
+                $nonMigrated++;
             }
         }
         if ($template['template_type'] == 'OFFICE' || $template['template_type'] == 'OFFICE_HTML') {
