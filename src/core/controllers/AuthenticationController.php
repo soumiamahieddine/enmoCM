@@ -188,7 +188,7 @@ class AuthenticationController
         if (!in_array($args['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
             $loggingMethod = CoreConfigModel::getLoggingMethod();
 
-            if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'])) {
+            if (in_array($loggingMethod['id'], ['standard'])) {
                 $passwordRules = PasswordModel::getEnabledRules();
                 if (!empty($passwordRules['renewal'])) {
                     $currentDate = new \DateTime();
@@ -379,6 +379,9 @@ class AuthenticationController
             $logoutUrl = $disconnection['logoutUrl'];
         } elseif ($loggingMethod['id'] == 'keycloak') {
             $disconnection = AuthenticationController::keycloakDisconnection();
+            $logoutUrl = $disconnection['logoutUrl'];
+        } elseif ($loggingMethod['id'] == 'azure_saml') {
+            $disconnection = AuthenticationController::azureSamlDisconnection();
             $logoutUrl = $disconnection['logoutUrl'];
         }
 
@@ -665,6 +668,20 @@ class AuthenticationController
         }
 
         return ['login' => $login];
+    }
+
+    private static function azureSamlDisconnection()
+    {
+        $libDir = CoreConfigModel::getLibrariesDirectory();
+        if (!is_file($libDir . 'simplesamlphp/lib/_autoload.php')) {
+            return ['errors' => 'Library simplesamlphp not present'];
+        }
+
+        require_once($libDir . 'simplesamlphp/lib/_autoload.php');
+        $as = new \SimpleSAML\Auth\Simple('default-sp');
+        $url = $as->getLogoutURL();
+
+        return ['logoutUrl' => $url];
     }
 
     public function getRefreshedToken(Request $request, Response $response)
