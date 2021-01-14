@@ -1,0 +1,6 @@
+{
+    "baseUrl": "https://demo.maarchcourrier.com/dist/index.html#/",
+    "integrationFolder" : "test/e2e",
+    "testFiles" : "**/*.spec.ts",
+    "supportFile" : "test/e2e/support"
+}

@@ -47,22 +47,13 @@ job_e2e:
  image: php:7.4-apache
  stage: test
  script:
-   - service apache2 start
-   - touch installed.lck
-   - chown -R www-data. /opt/maarch/
-   - chown -R www-data. /var/www/html/
-   - chmod -R 775 /opt/maarch/
-   - chmod -R 775 /var/www/html/
    - curl -sL https://deb.nodesource.com/setup_14.x | bash - > /dev/null
    - apt-get install -yqq nodejs > /dev/null
    - npm install npm@latest -g 
    - node -v
    - npm set registry https://registry.npmjs.org/ 
    - npm install > /dev/null
-   - npm run build-prod
-   - curl -o /dev/null --silent --head --write-out '%{http_code}\n' http://127.0.0.1/MaarchCourrier
-   - firefox --version
-   - npm run ee-launch
+   - npm run cypress:run
  artifacts:
    paths:
      - queries_error.log
