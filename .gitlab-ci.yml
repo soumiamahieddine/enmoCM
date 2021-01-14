@@ -48,6 +48,7 @@ job_e2e:
  stage: test
  script:
    - curl -sL https://deb.nodesource.com/setup_14.x | bash - > /dev/null
+   - apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
    - apt-get install -yqq nodejs > /dev/null
    - npm install npm@latest -g 
    - node -v
