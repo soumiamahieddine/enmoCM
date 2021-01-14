@@ -58,7 +58,7 @@ job_e2e:
  artifacts:
    paths:
      - queries_error.log
-     - test/e2e/screenshots/
+     - test/e2e/output/
    expire_in: 2 days
    when: always
  only:
