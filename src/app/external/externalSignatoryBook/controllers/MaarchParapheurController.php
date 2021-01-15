@@ -228,6 +228,15 @@ class MaarchParapheurController
                 'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                 'data'      => [$aArgs['resIdMaster'], $excludeAttachmentTypes]
             ]);
+            foreach ($attachments as $keyAttachment => $attachment) {
+                if (strpos($attachment['identifier'], '-') != false) {
+                    $mailingIdentifier = substr($attachment['identifier'], 0, strpos($attachment['identifier'], '-'));
+                    $mailingAttachment = AttachmentModel::get(['select' => ['res_id'], 'where' => ['identifier = ?'], 'data' =>[$mailingIdentifier]]);
+                    if (!empty($mailingAttachment[0])) {
+                        $attachments[$keyAttachment]['mailingResId'] = $mailingAttachment[0]['res_id'];
+                    }
+                }
+            }
 
             $integratedResource = ResModel::get([
                 'select' => ['res_id', 'docserver_id', 'path', 'filename'],
@@ -323,7 +332,7 @@ class MaarchParapheurController
 
                     $workflow = [];
                     foreach ($aArgs['steps'] as $step) {
-                        if ($step['resId'] == $resId && !$step['mainDocument']) {
+                        if (!$step['mainDocument'] && ($step['resId'] == $resId || (!empty($value['mailingResId']) && $step['resId'] == $value['mailingResId']))) {
                             $signaturePositions = null;
                             if (!empty($step['signaturePositions']) && is_array($step['signaturePositions'])) {
                                 $valid = true;
