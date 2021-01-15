@@ -2212,5 +2212,6 @@
     "addSignaturePosition": "Ajouter la position de signature",
     "basketsToRedirect": "Bannettes à rediriger",
     "maileva_digital_registered_mail": "Lettre recommandée en ligne",
-    "clearFilter" : "Effacer le filtre"
+    "clearFilter" : "Effacer le filtre",
+    "arContentIsEmpty": "Le contenu de l'accusé de réception est vide"
 }
