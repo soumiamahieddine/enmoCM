@@ -64,11 +64,10 @@ trait ExternalSignatoryBookTrait
             }
 
             if ($config['id'] == 'ixbus') {
-                $loginIxbus    = $args['data']['ixbus']['login'];
-                $passwordIxbus = $args['data']['ixbus']['password'];
-                $userInfo      = IxbusController::getInfoUtilisateur(['config' => $config, 'login' => $loginIxbus, 'password' => $passwordIxbus]);
-                if (empty($userInfo->Identifiant)) {
-                    return ['errors' => [_BAD_LOGIN_OR_PSW]];
+                $loginIxbus = $args['data']['ixbus']['login'];
+                $userInfo   = IxbusController::getInfoUtilisateur(['config' => $config, 'login' => $loginIxbus, 'natureId' => $args['data']['ixbus']['nature']]);
+                if (empty($userInfo['user'])) {
+                    return ['errors' => [_NOT_ALLOWED_USER_FOR_THIS_NATURE]];
                 }
             }
 
@@ -116,8 +115,7 @@ trait ExternalSignatoryBookTrait
                     'config'        => $config,
                     'resIdMaster'   => $args['resId'],
                     'loginIxbus'    => $loginIxbus,
-                    'passwordIxbus' => $passwordIxbus,
-                    'classeurName'  => $args['data']['ixbus']['nature'],
+                    'natureId'      => $args['data']['ixbus']['nature'],
                     'messageModel'  => $args['data']['ixbus']['messageModel'],
                     'manSignature'  => $args['data']['ixbus']['signatureMode']
                 ]);
