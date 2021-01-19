@@ -225,7 +225,7 @@ class MaarchParapheurController
                     'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                     'validation_date', 'relation', 'origin_id', 'res_id_master'
                 ],
-                'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
+                'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS', 'SIGN')", "in_signature_book = 'true'"],
                 'data'      => [$aArgs['resIdMaster'], $excludeAttachmentTypes]
             ]);
             foreach ($attachments as $keyAttachment => $attachment) {
@@ -243,6 +243,15 @@ class MaarchParapheurController
                 'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
                 'data'   => [$aArgs['resIdMaster']]
             ]);
+            $mainDocumentSigned = AdrModel::getConvertedDocumentById([
+                'select' => [1],
+                'resId'  => $aArgs['resIdMaster'],
+                'collId' => 'letterbox_coll',
+                'type'   => 'SIGN'
+            ]);
+            if (!empty($mainDocumentSigned)) {
+                $integratedResource = false;
+            }
 
             if (empty($attachments) && empty($integratedResource)) {
                 return ['error' => 'No attachment to send'];

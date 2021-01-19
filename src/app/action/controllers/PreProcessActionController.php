@@ -462,6 +462,9 @@ class PreProcessActionController
                         'collId' => 'letterbox_coll',
                         'type'   => 'SIGN'
                     ]);
+                    if (!empty($mainDocumentSigned)) {
+                        $integratedResource = false;
+                    }
 
                     $attachmentTypes = AttachmentTypeModel::get(['select' => ['type_id', 'signable']]);
                     $attachmentTypes = array_column($attachmentTypes, 'signable', 'type_id');
@@ -509,9 +512,6 @@ class PreProcessActionController
                             if (!is_file($filePath)) {
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
                                 break;
-                            }
-                            if (empty($mainDocumentSigned)) {
-                                $availableResources[] = ['resId' => $resId, 'subject' => $integratedResource[0]['subject'], 'chrono' => $integratedResource[0]['alt_identifier'], 'mainDocument' => true];
                             }
                         }
                         if (!$hasSignableAttachment && empty($integratedResource)) {

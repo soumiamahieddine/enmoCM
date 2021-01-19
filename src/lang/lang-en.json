@@ -1038,7 +1038,7 @@
     "noAttachmentClickToAddOne": "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>",
     "noAttachmentContact": "No (external) contact linked to this attachment",
     "noAttachmentConversion": "No PDF conversion for this attachment",
-    "noAttachmentInSignatoryBook": "No available items : not in signature book or frozen",
+    "noAttachmentInSignatoryBook": "No available items : not in signature book, frozen or already signed",
     "noAttachmentToSend": "No attachment to send",
     "noAvailableAction": "<b>No available action</b>, please set an action in <b>Administration > Groups > Mail indexation</b>.",
     "noAvailableActionProcess": "<b>No available action</b>, please set an action in <b>Administration > Baskets > Current basket</b>.",
