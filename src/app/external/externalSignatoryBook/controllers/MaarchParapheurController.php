@@ -286,6 +286,7 @@ class MaarchParapheurController
                         unset($attachments[$key]);
                     }
                 }
+                $mailingIds = [];
                 foreach ($attachments as $value) {
                     $resId  = $value['res_id'];
                     $collId = 'attachments_coll';
@@ -342,6 +343,9 @@ class MaarchParapheurController
                     $workflow = [];
                     foreach ($aArgs['steps'] as $step) {
                         if (!$step['mainDocument'] && ($step['resId'] == $resId || (!empty($value['mailingResId']) && $step['resId'] == $value['mailingResId']))) {
+                            if (!empty($value['mailingResId']) && empty($mailingIds[$value['mailingResId']])) {
+                                $mailingIds[$value['mailingResId']] = CoreConfigModel::uniqueId();
+                            }
                             $signaturePositions = null;
                             if (!empty($step['signaturePositions']) && is_array($step['signaturePositions'])) {
                                 $valid = true;
@@ -380,7 +384,8 @@ class MaarchParapheurController
                         'deadline'          => $processLimitDate,
                         'attachments'       => $attachmentsData,
                         'workflow'          => $workflow,
-                        'metadata'          => $metadata
+                        'metadata'          => $metadata,
+                        'mailingId'         => empty($value['mailingResId']) ? null : $mailingIds[$value['mailingResId']]
                     ];
                     if (!empty($aArgs['note'])) {
                         $noteCreationDate = new \DateTime();
