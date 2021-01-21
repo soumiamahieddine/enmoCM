@@ -175,10 +175,11 @@ trait PreProcessActionSEDATrait
                 'doctype'            => $doctypesData[$typeId]
             ]);
     
-            if (!empty($return['errors'])) {
-                $resourcesInformations['errors'][] = ['alt_identifier' => $resources[$resId]['alt_identifier'], 'res_id' => $resId, 'reason' => $return['errors']];
+            if (!empty($archivalData['errors'])) {
+                $resourcesInformations['errors'][] = ['alt_identifier' => $resources[$resId]['alt_identifier'], 'res_id' => $resId, 'reason' => $archivalData['errors']];
                 continue;
             } else {
+                $archivalData['archivalData']['data']['metadata'] = ['subject' => $resources[$resId]['subject'], 'alt_identifier' => $resources[$resId]['alt_identifier']];
                 $resourcesInformations['success'][$resId] = $archivalData['archivalData'];
             }
     
