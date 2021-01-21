@@ -193,19 +193,19 @@ trait ExportSEDATrait
             unlink($sedaPackage['encodedFilePath']);
             return ['data' => ['encodedFile' => $encodedContent]];
         } else {
-            $elementSend  = ExportSEDATrait::sendSedaPackage([
-                'messageId'       => $messageSaved['messageId'],
-                'config'          => $config,
-                'encodedFilePath' => $sedaPackage['encodedFilePath'],
-                'messageFilename' => $sedaPackage['messageFilename'],
-                'resId'           => $resource['res_id'],
-                'reference'       => $data['messageObject']['messageIdentifier']
-            ]);
-            unlink($sedaPackage['encodedFilePath']);
-            if (!empty($elementSend['errors'])) {
-                return ['errors' => [$elementSend['errors']]];
-            }
-    
+            $resId           = '--resId ' . $resource['res_id'];
+            $userId          = '--userId ' . $GLOBALS['id'];
+            $messageId       = '--messageId ' . $messageSaved['messageId'];
+            $encodedFilePath = '--encodedFilePath ' . $sedaPackage['encodedFilePath'];
+            $messageFileName = '--messageFilename ' . $sedaPackage['messageFilename'];
+            $reference       = '--reference ' . $data['messageObject']['messageIdentifier'];
+            $actionId        = '--actionId ' . $args['actionId'];
+
+            $customId = CoreConfigModel::getCustomId();
+            $customId = empty($customId) ? 'null' : $customId;
+            $customId = '--customId ' . $customId;
+
+            exec("php src/app/external/exportSeda/scripts/ExportSedaScript.php {$customId} {$resId} {$userId} {$messageId} {$encodedFilePath} {$messageFileName} {$reference} {$actionId} > /dev/null &");
             return true;
         }
     }

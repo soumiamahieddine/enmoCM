@@ -13,6 +13,7 @@
 namespace ExportSeda\controllers;
 
 use Action\controllers\PreProcessActionController;
+use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
@@ -47,6 +48,12 @@ trait PreProcessActionSEDATrait
         $body['resources'] = array_slice($body['resources'], 0, 500);
         if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['parameters']]);
+        $actionParams = json_decode($action['parameters'], true);
+        if (empty($actionParams['errorStatus']) || empty($actionParams['successStatus'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'errorStatus or successStatus is not set for this action', 'lang' => 'actionStatusNotSet']);
         }
 
         $resourcesInformations = ['success' => [], 'errors' => []];

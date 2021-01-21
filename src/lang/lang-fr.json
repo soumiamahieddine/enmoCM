@@ -2101,6 +2101,7 @@
     "noProducerService": "L'entité traitante n'a pas d'identifiant de service producteur",
     "differentProducerServices": "Tous les courriers n'ont pas le même service producteur",
     "noSenderOrgRegNumber": "Aucun service versant défini (senderOrgRegNumber dans config.json)",
+    "actionStatusNotSet": "L'action n'a pas de statut d'erreur ou de succès défini",
     "producerServiceDoesNotExists": "Le service producteur n'existe pas dans MaarchRM",
     "nextPage": "Page suivante",
     "prevPage": "Page précédente",
