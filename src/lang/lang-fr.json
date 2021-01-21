@@ -2099,6 +2099,7 @@
     "noTransferCopyNoBindingRecordManagement": "Les documents non engageants ne doivent pas être envoyés au SAE",
     "durationCurrentUseNotExceeded": "La durée de conservation n'est pas dépassée",
     "noProducerService": "L'entité traitante n'a pas d'identifiant de service producteur",
+    "differentProducerServices": "Tous les courriers n'ont pas le même service producteur",
     "noSenderOrgRegNumber": "Aucun service versant défini (senderOrgRegNumber dans config.json)",
     "producerServiceDoesNotExists": "Le service producteur n'existe pas dans MaarchRM",
     "nextPage": "Page suivante",
