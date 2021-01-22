@@ -35,9 +35,13 @@ export class ActionAdministrationComponent implements OnInit {
     selectedFieldsId: Array<any> = [];
     selectedValue: any;
     arMode: any;
+    successStatus: any;
+    errorStatus: any;
 
     selectActionPageId = new FormControl();
     selectStatusId = new FormControl();
+    selectSuccessStatusId = new FormControl();
+    selectErrorStatusId = new FormControl();
 
     constructor(
         public translate: TranslateService,
@@ -84,7 +88,6 @@ export class ActionAdministrationComponent implements OnInit {
                         this.loading = false;
                     });
             } else {
-
                 this.creationMode = false;
 
                 this.http.get('../rest/actions/' + params['id'])
@@ -125,6 +128,9 @@ export class ActionAdministrationComponent implements OnInit {
                             });
                         } else if (this.action.actionPageId === 'create_acknowledgement_receipt') {
                             this.arMode = this.action.parameters.mode;
+                        } else if (this.action.actionPageId === 'sendToRecordManagement') {
+                            this.selectSuccessStatusId.setValue(this.action.parameters.successStatus);
+                            this.selectErrorStatusId.setValue(this.action.parameters.errorStatus);
                         }
                     });
             }
@@ -183,6 +189,8 @@ export class ActionAdministrationComponent implements OnInit {
             this.action.parameters = { requiredFields: this.selectedFieldsId };
         } else if (this.action.actionPageId === 'create_acknowledgement_receipt') {
             this.action.parameters = { mode: this.arMode };
+        } else if (this.action.actionPageId === 'sendToRecordManagement') {
+            this.action.parameters = { successStatus: this.successStatus, errorStatus: this.errorStatus };
         }
         if (this.creationMode) {
             this.http.post('../rest/actions', this.action)
