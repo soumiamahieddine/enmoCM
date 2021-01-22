@@ -1,7 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -25,18 +24,16 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 })
 export class SendToRecordManagementComponent implements OnInit {
 
-    loading: boolean = true;
-    checking: boolean = false;
+    loading: boolean = false;
+    checking: boolean = true;
 
     resources: any[] = [];
     resourcesErrors: any[] = [];
+    critcalError: any = null;
 
     dataSource = new MatTableDataSource<any>(this.resources);
 
-    noResourceToProcess: boolean = null;
-
     senderArchiveEntity: string = '';
-
 
     recipientArchiveEntities = [];
     entityArchiveRecipient: string = null;
@@ -46,10 +43,8 @@ export class SendToRecordManagementComponent implements OnInit {
 
     columnsToDisplay = ['chrono', 'subject', 'slipId', 'archiveId', 'retentionFinalDisposition', 'countArchives'];
 
-    actionFormGroup: FormGroup;
     archives: any[] = [];
     folders: any = [];
-    folder: string = null;
     linkedResources: any = [];
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -59,35 +54,15 @@ export class SendToRecordManagementComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public dialogRef: MatDialogRef<SendToRecordManagementComponent>,
-        private _formBuilder: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService
-    ) {
-        this.actionFormGroup = this._formBuilder.group({
-            folder: [''],
-            packageName: ['', Validators.required],
-            slipId: [{ value: '', disabled: true }, Validators.required],
-            slipDate: [new Date(), Validators.required],
-            archivalAgreement: [{ value: '', disabled: false }, Validators.required],
-            entityArchiveRecipient: [{ value: '', disabled: false }, Validators.required],
-            entityLabelTransferEntity: [{ value: '', disabled: true }, Validators.required],
-            producerTransferEntity: [{ value: '', disabled: true }, Validators.required],
-            senderArchiveEntity: [{ value: '', disabled: true }, Validators.required],
-            archiveId: [{ value: '', disabled: true }, Validators.required],
-            archiveDescriptionLevel: [{ value: 'File', disabled: false }, Validators.required],
-            doctype: [{ value: '', disabled: true }, Validators.required],
-            entityRetentionRule: [{ value: '', disabled: true }, Validators.required],
-            doctypeRetentionFinalDisposition: [{ value: '', disabled: true }, Validators.required]
-        });
-    }
+    ) {  }
 
     ngOnInit(): void {
         this.getData();
     }
 
     getData() {
-        this.checking = false;
-        // this.noResourceToProcess = false;
         this.http.post(`../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkSendToRecordManagement`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
                 this.resourcesErrors = data.errors;
@@ -104,6 +79,8 @@ export class SendToRecordManagementComponent implements OnInit {
                         archiveId: data.success[resId].data.slipInfo.archiveId,
                         retentionFinalDisposition: data.success[resId].data.doctype.retentionFinalDisposition,
                         archives: data.success[resId].archiveUnits,
+                        doctype: data.success[resId].data.doctype.label,
+                        entity: data.success[resId].data.entity.label,
                         folder: data.success[resId].additionalData.folders.length > 0 ? data.success[resId].additionalData.folders[0] : null,
                         countArchives : data.success[resId].archiveUnits.length
                     });
@@ -114,19 +91,16 @@ export class SendToRecordManagementComponent implements OnInit {
 
                 setTimeout(() => {
                     this.dataSource.paginator = this.paginator;
-                    this.loading = false;
+                    this.checking = false;
                 }, 0);
             }),
-            finalize(() => this.checking = false),
             catchError((err: any) => {
-                console.log(err);
-                
                 if (!this.functions.empty(err.error.lang)) {
-                    this.resourcesErrors.push(this.translate.instant('lang.' + err.error.lang));
+                    this.critcalError = this.translate.instant('lang.' + err.error.lang)
                 } else {
-                    this.resourcesErrors.push(err.error.errors);
+                    this.critcalError = err.error.errors;
                 }
-                this.loading = false;
+                this.checking = false;
                 return of(false);
             })
         ).subscribe();
@@ -191,20 +165,6 @@ export class SendToRecordManagementComponent implements OnInit {
             'actionMode' : mode
         };
         return dataToSend;
-    }
-
-    archivalAgreementSelected(ev: any) {
-        const archivalAgreement = this.archivalAgreements.filter((element: any) => element.id === ev.value);
-        this.actionFormGroup.patchValue({ entityArchiveRecipient: archivalAgreement[0].archiveEntityRegNumber });
-    }
-
-    entityArchiveRecipientSelected(ev: any) {
-        if (!this.functions.empty(this.actionFormGroup.get('archivalAgreement').value) && !this.functions.empty(ev.value)) {
-            const archivalAgreement = this.archivalAgreements.filter((element: any) => element.id === this.actionFormGroup.get('archivalAgreement').value && element.archiveEntityRegNumber === ev.value);
-            if (archivalAgreement.length === 0) {
-                this.actionFormGroup.patchValue({ archivalAgreement: null });
-            }
-        }
     }
 
     getFolderLabel(folder: any) {

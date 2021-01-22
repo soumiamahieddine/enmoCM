@@ -2217,5 +2217,7 @@
     "basketsToRedirect": "Bannettes à rediriger",
     "maileva_digital_registered_mail": "Lettre recommandée en ligne",
     "clearFilter" : "Effacer le filtre",
-    "arContentIsEmpty": "Le contenu de l'accusé de réception est vide"
+    "arContentIsEmpty": "Le contenu de l'accusé de réception est vide",
+    "mailsToSendToRecordManagement": "Courrier(s) à exporter au système d'archivage",
+    "associatedArchives": "Archive(s) associée(s) au courrier"
 }
