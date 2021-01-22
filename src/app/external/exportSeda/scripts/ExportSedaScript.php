@@ -16,7 +16,6 @@ namespace ExportSeda\controllers;
 
 require 'vendor/autoload.php';
 
-use Action\models\ActionModel;
 use ExportSeda\controllers\ExportSEDATrait;
 use Resource\models\ResModel;
 use SrcCore\controllers\LogsController;
@@ -28,21 +27,23 @@ use User\models\UserModel;
 // --customId    : instance id;
 // --resId      : res_id of the mail to archive;
 // --userId      : technical identifer user (for saving log);
-// --actionId   : identifier of the action made to archive mail
+// --successStatus   : status of the mail if script end without problem
+// --errorStatus   : status of the mail if script end with failures
 // --messageId : message_id in message_exchange table
 // --encodedFilePath : Path of the encoded archive file
 // --messageFilename : Name of the archive file
 // --reference : reference of the archive
 
-ExportSedaScript::initalize($argv);
+ExportSedaScript::initialize($argv);
 
 class ExportSedaScript
 {
-    public static function initalize($args)
+    public static function initialize($args)
     {
         $customId        = '';
         $resId           = '';
-        $actionId        = '';
+        $successStatus   = '';
+        $errorStatus     = '';
         $messageId       = '';
         $encodedFilePath = '';
         $messageFilename = '';
@@ -63,9 +64,14 @@ class ExportSedaScript
             $userId = $args[$cmd+1];
         }
         
-        if (array_search('--actionId', $args) > 0) {
-            $cmd = array_search('--actionId', $args);
-            $actionId = $args[$cmd+1];
+        if (array_search('--successStatus', $args) > 0) {
+            $cmd = array_search('--successStatus', $args);
+            $successStatus = $args[$cmd+1];
+        }
+
+        if (array_search('--errorStatus', $args) > 0) {
+            $cmd = array_search('--errorStatus', $args);
+            $errorStatus = $args[$cmd+1];
         }
 
         if (array_search('--messageId', $args) > 0) {
@@ -90,7 +96,7 @@ class ExportSedaScript
 
         if (!empty($userId)) {
             ExportSedaScript::send([
-                'customId' => $customId, 'resId' => $resId, 'userId' => $userId, 'actionId' => $actionId,
+                'customId' => $customId, 'resId' => $resId, 'userId' => $userId, 'successStatus' => $successStatus, 'errorStatus' => $errorStatus,
                 'messageId' => $messageId, 'encodedFilePath' => $encodedFilePath, 'messageFilename' => $messageFilename, 'reference' => $reference]);
         }
     }
@@ -99,13 +105,13 @@ class ExportSedaScript
     {
         DatabasePDO::reset();
         new DatabasePDO(['customId' => $args['customId']]);
+        $GLOBALS['customId'] = $args['customId'];
 
         $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
         $GLOBALS['login'] = $currentUser['user_id'];
+        $GLOBALS['id']    = $args['userId'];
 
         $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
-        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['parameters']]);
-        $actionParams = json_decode($action['parameters'], true);
 
         $elementSend  = ExportSEDATrait::sendSedaPackage([
             'messageId'       => $args['messageId'],
@@ -117,7 +123,7 @@ class ExportSedaScript
         ]);
         unlink($args['encodedFilePath']);
         if (!empty($elementSend['errors'])) {
-            ResModel::update(['set' => ['status' => $actionParams['errorStatus']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            ResModel::update(['set' => ['status' => $args['errorStatus']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             LogsController::add([
                 'isTech'    => true,
                 'moduleId'  => 'exportSeda',
@@ -128,7 +134,7 @@ class ExportSedaScript
                 'eventId'   => "resId : {$args['resId']}"
             ]);
         } else {
-            ResModel::update(['set' => ['status' => $actionParams['successStatus']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            ResModel::update(['set' => ['status' => $args['successStatus']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             LogsController::add([
                 'isTech'    => true,
                 'moduleId'  => 'exportSeda',

@@ -444,7 +444,7 @@ class ResourceListController
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
-        $parameters = json_decode($action['parameters'], true);
+        $action['parameters'] = json_decode($action['parameters'], true);
         $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
@@ -507,7 +507,7 @@ class ResourceListController
             }
 
             if (!empty($method)) {
-                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note'], 'parameters' => $parameters, 'massAction' => $massAction]);
+                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note'], 'action' => $action, 'massAction' => $massAction]);
 
                 if (!empty($methodResponse['errors'])) {
                     if (empty($methodResponses['errors'])) {

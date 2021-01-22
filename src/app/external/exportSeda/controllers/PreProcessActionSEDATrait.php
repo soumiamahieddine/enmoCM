@@ -50,12 +50,6 @@ trait PreProcessActionSEDATrait
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['parameters']]);
-        $actionParams = json_decode($action['parameters'], true);
-        if (empty($actionParams['errorStatus']) || empty($actionParams['successStatus'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'errorStatus or successStatus is not set for this action', 'lang' => 'actionStatusNotSet']);
-        }
-
         $resourcesInformations = ['success' => [], 'errors' => []];
         $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
@@ -132,6 +126,13 @@ trait PreProcessActionSEDATrait
         $resourcesInformations['senderArchiveEntity']      = $config['exportSeda']['senderOrgRegNumber'];
 
         $massAction = count($body['resources']) > 1;
+        if ($massAction) {
+            $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['parameters']]);
+            $actionParams = json_decode($action['parameters'], true);
+            if (empty($actionParams['errorStatus']) || empty($actionParams['successStatus'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'errorStatus or successStatus is not set for this action', 'lang' => 'actionStatusNotSet']);
+            }
+        }
         // End of Common Data
 
         foreach ($body['resources'] as $resId) {

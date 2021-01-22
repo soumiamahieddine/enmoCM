@@ -173,13 +173,14 @@ trait ExportSEDATrait
             $encodedFilePath = '--encodedFilePath ' . $sedaPackage['encodedFilePath'];
             $messageFileName = '--messageFilename ' . $sedaPackage['messageFilename'];
             $reference       = '--reference ' . $data['messageObject']['messageIdentifier'];
-            $actionId        = '--actionId ' . $args['actionId'];
+            $successStatus   = '--successStatus ' . $args['action']['parameters']['successStatus'];
+            $errorStatus     = '--errorStatus ' . $args['action']['parameters']['errorStatus'];
 
             $customId = CoreConfigModel::getCustomId();
             $customId = empty($customId) ? 'null' : $customId;
             $customId = '--customId ' . $customId;
 
-            exec("php src/app/external/exportSeda/scripts/ExportSedaScript.php {$customId} {$resId} {$userId} {$messageId} {$encodedFilePath} {$messageFileName} {$reference} {$actionId} > /dev/null &");
+            exec("php src/app/external/exportSeda/scripts/ExportSedaScript.php {$customId} {$resId} {$userId} {$messageId} {$encodedFilePath} {$messageFileName} {$reference} {$successStatus} {$errorStatus} > /dev/null &");
             return true;
         } else {
             $elementSend  = ExportSEDATrait::sendSedaPackage([
@@ -238,13 +239,14 @@ trait ExportSEDATrait
             'format'        => 'xml',
             'status'        => 'TRA'
         ]);
+        if (empty($id) || !empty($id['errors'])) {
+            return ['errors' => ['[storeAttachment] ' . $id['errors']]];
+        }
+
         ConvertPdfController::convert([
             'resId'  => $id,
             'collId' => 'attachments_coll'
         ]);
-        if (empty($id) || !empty($id['errors'])) {
-            return ['errors' => ['[storeAttachment] ' . $id['errors']]];
-        }
 
         return [];
     }

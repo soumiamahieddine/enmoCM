@@ -389,9 +389,8 @@ class SendMessageController
                     $reference->ArchiveUnitRefId = 'letterbox_' . $key;
                     $content->RelatedObjectReference->References[] = $reference;
                 } else {
-                    if (isset($destination)) {
-                        $res = array_key_exists($destination, self::entities);
-                        $reference->RepositoryArchiveUnitPID = 'originator:' . $entity->business_id . ':' . $key;
+                    if (isset($object->originatorAgency)) {
+                        $reference->RepositoryArchiveUnitPID = 'originator:' . $object->originatorAgency->id . ':' . $key;
                         $content->RelatedObjectReference->References[] = $reference;
                     }
                 }
