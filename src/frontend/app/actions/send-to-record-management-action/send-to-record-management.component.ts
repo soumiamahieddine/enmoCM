@@ -41,7 +41,7 @@ export class SendToRecordManagementComponent implements OnInit {
     archivalAgreements = [];
     archivalAgreement: string = null;
 
-    columnsToDisplay = ['chrono', 'subject', 'slipId', 'archiveId', 'retentionFinalDisposition', 'countArchives'];
+    columnsToDisplay = ['chrono', 'subject', 'slipId', 'producerService', 'retentionRule', 'retentionFinalDisposition', 'countArchives'];
 
     archives: any[] = [];
     folders: any = [];
@@ -80,6 +80,8 @@ export class SendToRecordManagementComponent implements OnInit {
                         retentionFinalDisposition: data.success[resId].data.doctype.retentionFinalDisposition,
                         archives: data.success[resId].archiveUnits,
                         doctype: data.success[resId].data.doctype.label,
+                        retentionRule: data.success[resId].data.doctype.retentionRule,
+                        producerService: data.success[resId].data.entity.producerService,
                         entity: data.success[resId].data.entity.label,
                         folder: data.success[resId].additionalData.folders.length > 0 ? data.success[resId].additionalData.folders[0] : null,
                         countArchives : data.success[resId].archiveUnits.length
