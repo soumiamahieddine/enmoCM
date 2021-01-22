@@ -178,7 +178,7 @@ export class SendToRecordManagementComponent implements OnInit {
     }
 
     isValid() {
-        if (this.resources.length === 1) {
+        if (this.resources.length === 1 && this.folders.length > 0) {
             return !this.functions.empty(this.archivalAgreement) && !this.functions.empty(this.entityArchiveRecipient) && !this.functions.empty(this.resources[0].folder);
         } else {
             return !this.functions.empty(this.archivalAgreement) && !this.functions.empty(this.entityArchiveRecipient);
