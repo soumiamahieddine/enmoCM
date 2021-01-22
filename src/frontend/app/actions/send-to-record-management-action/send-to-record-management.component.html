@@ -123,13 +123,16 @@
                                         </span>
                                     </div>
                                     
-                                    <div style="max-height: 150px;overflow: auto;width: 100%;display: grid;grid-template-columns: auto 1fr;grid-gap:10px;font-size: 90%;padding-left: 20px;">
+                                    <div style="max-height: 150px;overflow: auto;width: 100%;display: grid;grid-template-columns: auto 1fr auto;grid-gap:10px;font-size: 90%;padding-left: 20px;">
                                         <ng-container *ngFor="let archive of element.archives;let i=index;">
                                             <div color="primary" style="border-bottom: solid 1px rgba(0,0,0,0.12);">
                                                 {{'lang.' + archive.type | translate}}
                                             </div>
                                             <div style="border-bottom: solid 1px rgba(0,0,0,0.12);" [title]="archive.label">
                                                 {{archive.label | shorten : 50:'...'}}
+                                            </div>
+                                            <div style="border-bottom: solid 1px rgba(0,0,0,0.12);" [title]="archive.otherInfo">
+                                                {{archive.otherInfo}}
                                             </div>
                                         </ng-container>
                                     </div>
