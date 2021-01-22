@@ -90,15 +90,9 @@ trait ExportSEDATrait
             return ['errors' => ['No senderOrgRegNumber found in config.json']];
         }
 
-        foreach (['packageName', 'archivalAgreement', 'slipId', 'entityArchiveRecipient', 'archiveDescriptionLevel'] as $value) {
+        foreach (['archivalAgreement', 'entityArchiveRecipient'] as $value) {
             if (empty($args['data'][$value])) {
                 return ['errors' => [$value . ' is empty']];
-            }
-        }
-
-        foreach ($args['data']['archives'] as $archiveUnit) {
-            if (empty($archiveUnit['id']) or empty($archiveUnit['descriptionLevel'])) {
-                return ['errors' => ['Missing id or descriptionLevel for an archiveUnit']];
             }
         }
 
@@ -116,24 +110,6 @@ trait ExportSEDATrait
             $initData = $initData['archivalData'];
         }
 
-        $archivesAttachment = [];
-        $initialArchiveUnits = $initData['archiveUnits'];
-        foreach ($initialArchiveUnits as $archiveUnit) {
-            $archiveFound = false;
-            foreach ($args['data']['archives'] as $userArchiveUnit) {
-                if ($userArchiveUnit['id'] == $archiveUnit['id']) {
-                    $archiveUnit['descriptionLevel'] = $userArchiveUnit['descriptionLevel'];
-                    $archivesAttachment[]             = $archiveUnit;
-                    $archiveFound                    = true;
-                    break;
-                }
-            }
-            if (!$archiveFound) {
-                $archiveUnit['descriptionLevel'] = 'Item';
-                $archivesAttachment = $archiveUnit;
-            }
-        }
-
         $history = ExportSEDATrait::getHistory(['resId' => $resource['res_id']]);
         $folder  = ExportSEDATrait::getFolderPath(['selectedFolder' => $args['data']['folder'], 'folders' => $initData['additionalData']['folders']]);
 
@@ -144,7 +120,6 @@ trait ExportSEDATrait
                 'id'    => $entity['producer_service'],
                 'label' => $entity['entity_label']
             ],
-            'descriptionLevel'          => $args['data']['archiveDescriptionLevel'],
             'receivedDate'              => $resource['admission_date'],
             'documentDate'              => $resource['doc_date'],
             'creationDate'              => $resource['creation_date'],
@@ -157,7 +132,7 @@ trait ExportSEDATrait
                 'senders'    => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']),
                 'recipients' => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient'])
             ],
-            'attachments'               => $archivesAttachment,
+            'attachments'               => $initData['archivalData']['archiveUnits'],
             'folders'                   => $folder['folderPath'],
             'links'                     => $initData['additionalData']['linkedResources']
         ];
@@ -165,7 +140,6 @@ trait ExportSEDATrait
         $data = [
             'type' => 'ArchiveTransfer',
             'messageObject' => [
-                'messageName '       => $args['data']['packageName'],
                 'messageIdentifier'  => $initData['data']['slipInfo']['slipId'],
                 'archivalAgreement'  => $args['data']['archivalAgreement'],
                 'dataObjectPackage'  => $dataObjectPackage,
@@ -192,7 +166,7 @@ trait ExportSEDATrait
             $encodedContent = base64_encode(file_get_contents($sedaPackage['encodedFilePath']));
             unlink($sedaPackage['encodedFilePath']);
             return ['data' => ['encodedFile' => $encodedContent]];
-        } else {
+        } elseif ($args['massAction']) {
             $resId           = '--resId ' . $resource['res_id'];
             $userId          = '--userId ' . $GLOBALS['id'];
             $messageId       = '--messageId ' . $messageSaved['messageId'];
@@ -207,6 +181,19 @@ trait ExportSEDATrait
 
             exec("php src/app/external/exportSeda/scripts/ExportSedaScript.php {$customId} {$resId} {$userId} {$messageId} {$encodedFilePath} {$messageFileName} {$reference} {$actionId} > /dev/null &");
             return true;
+        } else {
+            $elementSend  = ExportSEDATrait::sendSedaPackage([
+                'messageId'       => $messageSaved['messageId'],
+                'config'          => $config,
+                'encodedFilePath' => $sedaPackage['encodedFilePath'],
+                'messageFilename' => $sedaPackage['messageFilename'],
+                'resId'           => $resource['res_id'],
+                'reference'       => $data['messageObject']['messageIdentifier']
+            ]);
+            unlink($sedaPackage['encodedFilePath']);
+            if (!empty($elementSend['errors'])) {
+                return ['errors' => [$elementSend['errors']]];
+            }
         }
     }
 
@@ -311,6 +298,9 @@ trait ExportSEDATrait
                     break;
                 }
             }
+        } elseif (!empty($args['folders'])) {
+            $folderId   = explode("_", $args['folders'][0]['id'])[1];
+            $folderPath = FolderModel::getFolderPath(['id' => $folderId]);
         }
 
         return ['folderPath' => $folderPath];

@@ -130,6 +130,8 @@ trait PreProcessActionSEDATrait
         $resourcesInformations['archivalAgreements']       = $archivalAgreements['archivalAgreements'];
         $resourcesInformations['recipientArchiveEntities'] = $recipientArchiveEntities['archiveEntities'];
         $resourcesInformations['senderArchiveEntity']      = $config['exportSeda']['senderOrgRegNumber'];
+
+        $massAction = count($body['resources']) > 1;
         // End of Common Data
 
         foreach ($body['resources'] as $resId) {
@@ -179,7 +181,8 @@ trait PreProcessActionSEDATrait
                 'resource'           => $resources[$resId],
                 'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
                 'entity'             => $destinationsData[$destinationId],
-                'doctype'            => $doctypesData[$typeId]
+                'doctype'            => $doctypesData[$typeId],
+                'massAction'         => $massAction
             ]);
     
             if (!empty($archivalData['errors'])) {

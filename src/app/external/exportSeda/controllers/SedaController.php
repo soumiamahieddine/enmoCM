@@ -101,7 +101,7 @@ class SedaController
                 'id'               => 'letterbox_' . $args['resource']['res_id'],
                 'label'            => $args['resource']['subject'],
                 'type'             => 'mainDocument',
-                'descriptionLevel' => 'Item'
+                'descriptionLevel' => 'File'
             ];
 
             if ($args['getFile']) {
@@ -198,10 +198,13 @@ class SedaController
             $entities = [0];
         }
 
+        $folderLimit = $args['massAction'] ? 1 : 0;
         $folders = FolderModel::getWithEntitiesAndResources([
-            'select' => ['DISTINCT(folders.id)', 'folders.label'],
-            'where'  => ['res_id = ?', '(entity_id in (?) OR keyword = ?)', 'folders.public = TRUE'],
-            'data'   => [$args['resource']['res_id'], $entities, 'ALL_ENTITIES']
+            'select'  => ['DISTINCT(folders.id)', 'folders.label'],
+            'where'   => ['res_id = ?', '(entity_id in (?) OR keyword = ?)', 'folders.public = TRUE'],
+            'data'    => [$args['resource']['res_id'], $entities, 'ALL_ENTITIES'],
+            'orderBy' => ['folders.label'],
+            'limit'   => $folderLimit
         ]);
         foreach ($folders as $folder) {
             $return['additionalData']['folders'][] = [
