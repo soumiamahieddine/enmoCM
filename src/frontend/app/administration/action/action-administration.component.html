@@ -61,19 +61,19 @@
                         </div>
                         <div class="form-group" *ngIf="action.actionPageId == 'sendToRecordManagement'">
                             <div class="col-sm-12">
-                                <plugin-select-search [showLabel]="true" [class]="''"
+                                <plugin-select-search [showLabel]="true" [class]="''" [title]="'lang.finalStatusAlt' | translate"
                                                       [label]="'lang.finalStatus' | translate"
-                                                      [placeholderLabel]="'lang.finalStatus' | translate"
+                                                      [placeholderLabel]="'lang.finalStatusAlt' | translate"
                                                       [formControlSelect]="selectSuccessStatusId" [datas]="statuses"
-                                                      (afterSelected)="successStatus = selectSuccessStatusId.value" style="width:100%;">
+                                                      (afterSelected)="successStatus = selectSuccessStatusId.value" style="width:100%;" [required]="true">
                                 </plugin-select-search>
                             </div>
                             <div class="col-sm-12">
-                                <plugin-select-search [showLabel]="true" [class]="''"
+                                <plugin-select-search [showLabel]="true" [class]="''" [title]="'lang.errorStatusAlt' | translate"
                                                       [label]="'lang.errorStatus' | translate"
-                                                      [placeholderLabel]="'lang.errorStatus' | translate"
+                                                      [placeholderLabel]="'lang.errorStatusAlt' | translate"
                                                       [formControlSelect]="selectErrorStatusId" [datas]="statuses"
-                                                      (afterSelected)="errorStatus = selectErrorStatusId.value" style="width:100%;">
+                                                      (afterSelected)="errorStatus = selectErrorStatusId.value" style="width:100%;" [required]="true">
                                 </plugin-select-search>
                             </div>
                         </div>

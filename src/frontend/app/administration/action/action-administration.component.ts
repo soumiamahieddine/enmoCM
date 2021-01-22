@@ -8,7 +8,7 @@ import { HeaderService } from '@service/header.service';
 import { AppService } from '@service/app.service';
 import { tap, catchError } from 'rxjs/operators';
 import { FunctionsService } from '@service/functions.service';
-import { FormControl } from '@angular/forms';
+import {FormControl, Validators} from '@angular/forms';
 import { of } from 'rxjs';
 
 
@@ -145,6 +145,11 @@ export class ActionAdministrationComponent implements OnInit {
             this.action.actionCategories = ['registeredMail'];
         }
 
+        if (this.action.actionPageId == 'sendToRecordManagement') {
+            this.selectSuccessStatusId.setValue('_NOSTATUS_');
+            this.selectErrorStatusId.setValue('_NOSTATUS_');
+        }
+
         return new Promise((resolve, reject) => {
             if (this.action.actionPageId === 'close_mail' && this.functions.empty(this.availableCustomFields)) {
                 this.http.get('../rest/customFields').pipe(
@@ -164,6 +169,7 @@ export class ActionAdministrationComponent implements OnInit {
                 resolve(true);
             }
         });
+
     }
 
     getSelectedFields() {
