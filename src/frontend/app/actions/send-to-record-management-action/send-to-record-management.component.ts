@@ -163,7 +163,7 @@ export class SendToRecordManagementComponent implements OnInit {
         const dataToSend = {
             'archivalAgreement': this.archivalAgreement,
             'entityArchiveRecipient': this.entityArchiveRecipient,
-            'folder': this.resources.length === 1 ? this.resources[0].folder.id : null,
+            'folder': this.resources.length === 1  && this.folders.length > 0 ? this.resources[0].folder.id : null,
             'actionMode' : mode
         };
         return dataToSend;
