@@ -73,6 +73,7 @@ export class SendToRecordManagementComponent implements OnInit {
                         this.folders = data.success[resId].additionalData.folders;
                     }
                     this.resources.push({
+                        resId: resId,
                         chrono: data.success[resId].data.metadata.alt_identifier,
                         subject: data.success[resId].data.metadata.subject,
                         slipId: data.success[resId].data.slipInfo.slipId,
@@ -116,7 +117,7 @@ export class SendToRecordManagementComponent implements OnInit {
     }
 
     executeAction(mode: string) {
-        const realResSelected: number[] = this.data.resIds;
+        const realResSelected: number[] = this.resources.map((item: any) => item.resId);
 
         this.http.put(this.data.processActionRoute, { resources: realResSelected, data: this.formatData(mode) }).pipe(
             tap((data: any) => {
