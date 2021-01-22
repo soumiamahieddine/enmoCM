@@ -2221,5 +2221,13 @@
     "clearFilter" : "Effacer le filtre",
     "arContentIsEmpty": "Le contenu de l'accusé de réception est vide",
     "mailsToSendToRecordManagement": "Courrier(s) à exporter au système d'archivage",
-    "associatedArchives": "Archive(s) associée(s) au courrier"
+    "associatedArchives": "Archive(s) associée(s) au courrier",
+    "rgs_2starsUser": "Clé RGS**",
+    "rgs_2stars_timestampedUser": "Clé RGS** + horodatage",
+    "inca_card": "Carte agent",
+    "inca_card_eidas": "Carte agent + Cachet",
+    "eidas": "Cachet",
+    "rgs_2stars": "Clé RGS**",
+    "rgs_2stars_timestamped": "Clé RGS** + horodatage",
+    "stamp": "Griffe"
 }
