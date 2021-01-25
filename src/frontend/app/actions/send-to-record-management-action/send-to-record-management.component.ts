@@ -29,7 +29,7 @@ export class SendToRecordManagementComponent implements OnInit {
 
     resources: any[] = [];
     resourcesErrors: any[] = [];
-    critcalError: any = null;
+    criticalError: any = null;
 
     dataSource = new MatTableDataSource<any>(this.resources);
 
@@ -99,9 +99,9 @@ export class SendToRecordManagementComponent implements OnInit {
             }),
             catchError((err: any) => {
                 if (!this.functions.empty(err.error.lang)) {
-                    this.critcalError = this.translate.instant('lang.' + err.error.lang)
+                    this.criticalError = this.translate.instant('lang.' + err.error.lang)
                 } else {
-                    this.critcalError = err.error.errors;
+                    this.criticalError = err.error.errors;
                 }
                 this.checking = false;
                 return of(false);
