@@ -150,6 +150,7 @@
     "askRedirectBasketBeforeAbsence": "Voulez-vous rediriger vos bannettes avant de vous mettre en absence ?",
     "assignBy": "Assignée par",
     "associatedStatus": "Statut associé",
+    "intermediateStatus": "Statut intermédiaire",
     "finalStatus": "Statut final",
     "finalStatusAlt": "Statut final si l'envoi est réussi",
     "errorStatus": "Statut d'erreur",

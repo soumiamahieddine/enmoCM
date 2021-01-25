@@ -150,6 +150,7 @@
     "askRedirectBasketBeforeAbsence": "Do you want to redirect your baskets before being absent ?",
     "assignBy": "Assigned by",
     "associatedStatus": "Associated status",
+    "intermediateStatus": "Intermediate status",
     "finalStatus": "Final status",
     "finalStatusAlt": "Final status if success",
     "errorStatus": "Error status",
