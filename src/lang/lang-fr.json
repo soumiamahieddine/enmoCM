@@ -2229,5 +2229,6 @@
     "eidas": "Cachet",
     "rgs_2stars": "Clé RGS**",
     "rgs_2stars_timestamped": "Clé RGS** + horodatage",
-    "stamp": "Griffe"
+    "stamp": "Griffe",
+    "errorUserSignType": "Les signataires sans certificat doivent être présent avant les signataires avec certificat."
 }
