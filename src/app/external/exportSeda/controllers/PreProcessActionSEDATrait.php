@@ -133,6 +133,8 @@ trait PreProcessActionSEDATrait
                 return $response->withStatus(403)->withJson(['errors' => 'errorStatus or successStatus is not set for this action', 'lang' => 'actionStatusNotSet']);
             }
         }
+
+        $selectedResId = [];
         // End of Common Data
 
         foreach ($body['resources'] as $resId) {
@@ -198,9 +200,12 @@ trait PreProcessActionSEDATrait
             if (!empty($unitIdentifier[0]['message_id'])) {
                 MessageExchangeModel::delete(['where' => ['message_id = ?'], 'data' => [$unitIdentifier[0]['message_id']]]);
             }
-            MessageExchangeModel::deleteUnitIdentifier(['where' => ['res_id = ?'], 'data' => [$resId]]);
+            $selectedResId[] = $resId;
         }
 
+        if (!empty($selectedResId)) {
+            MessageExchangeModel::deleteUnitIdentifier(['where' => ['res_id in (?)'], 'data' => [$selectedResId]]);
+        }
 
         return $response->withJson($resourcesInformations);
     }
