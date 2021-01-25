@@ -1783,3 +1783,4 @@ INSERT INTO attachment_types (id, type_id, label, visible, email_link, signable,
 INSERT INTO attachment_types (id, type_id, label, visible, email_link, signable, icon, chrono, version_enabled, new_version_default) VALUES (7, 'summary_sheet', 'Fiche de liaison', false, false, false, '', true, true, true);
 INSERT INTO attachment_types (id, type_id, label, visible, email_link, signable, icon, chrono, version_enabled, new_version_default) VALUES (8, 'acknowledgement_record_management', 'Accusé de réception (Archivage)', false, false, false, '', true, true, true);
 INSERT INTO attachment_types (id, type_id, label, visible, email_link, signable, icon, chrono, version_enabled, new_version_default) VALUES (9, 'reply_record_management', 'Réponse au transfert (Archivage)', false, false, false, '', true, true, true);
+SELECT setval('attachment_types_id_seq', (select max(id)+1 from attachment_types), false);
