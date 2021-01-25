@@ -221,7 +221,7 @@ class SedaController
         return ['archivalData' => $return];
     }
 
-    public function getRecipientArchiveEntities($args = [])
+    public static function getRecipientArchiveEntities($args = [])
     {
         $archiveEntities = [];
         if (strtolower($args['config']['exportSeda']['sae']) == 'maarchrm') {
@@ -270,7 +270,7 @@ class SedaController
         return ['archiveEntities' => $archiveEntities];
     }
 
-    public function getArchivalAgreements($args = [])
+    public static function getArchivalAgreements($args = [])
     {
         $archivalAgreements = [];
         if (strtolower($args['config']['exportSeda']['sae']) == 'maarchrm') {
@@ -325,7 +325,7 @@ class SedaController
         return ['archivalAgreements' => $archivalAgreements];
     }
 
-    public function getProducerServiceInfo($args = [])
+    public static function getProducerServiceInfo($args = [])
     {
         $curlResponse = CurlModel::execSimple([
             'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/organization/organization/Search?term=' . $args['producerServiceName'],
