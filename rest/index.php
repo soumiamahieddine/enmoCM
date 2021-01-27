@@ -246,6 +246,7 @@ $app->put('/entities/{id}', \Entity\controllers\EntityController::class . ':upda
 $app->delete('/entities/{id}', \Entity\controllers\EntityController::class . ':delete');
 $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class . ':getDetailledById');
 $app->get('/entities/{id}/users', \Entity\controllers\EntityController::class . ':getUsersById');
+$app->get('/entities/{id}/parentAddress', \Entity\controllers\EntityController::class . ':getParentAddress');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
 $app->put('/entities/{id}/annuaries', \MessageExchange\controllers\AnnuaryController::class . ':updateEntityToOrganization');
@@ -339,7 +340,6 @@ $app->post('/installer/customization', \SrcCore\controllers\InstallerController:
 $app->put('/installer/administrator', \SrcCore\controllers\InstallerController::class . ':updateAdministrator');
 $app->delete('/installer/lock', \SrcCore\controllers\InstallerController::class . ':terminateInstaller');
 
-//TODO REWORK
 $app->get('/languages', \SrcCore\controllers\CoreController::class . ':getAvailableCoreLanguages');
 $app->put('/languages', \SrcCore\controllers\CoreController::class . ':generateLang');
 

@@ -31,3 +31,15 @@ ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS requested_signatu
 ALTER TABLE listinstance_history_details ADD COLUMN requested_signature boolean default false;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS signatory;
 ALTER TABLE listinstance_history_details ADD COLUMN signatory BOOLEAN DEFAULT FALSE;
+
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'entities' and column_name = 'adrs_1') THEN
+        ALTER TABLE entities RENAME COLUMN adrs_1 TO address_number;
+        ALTER TABLE entities RENAME COLUMN adrs_2 TO address_street;
+        ALTER TABLE entities RENAME COLUMN adrs_3 TO address_additional1;
+        ALTER TABLE entities ADD COLUMN address_additional2 CHARACTER VARYING(256);
+        ALTER TABLE entities RENAME COLUMN zipcode TO address_postcode;
+        ALTER TABLE entities RENAME COLUMN city TO address_town;
+        ALTER TABLE entities RENAME COLUMN country TO address_country;
+    END IF;
+END$$;

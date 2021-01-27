@@ -31,9 +31,10 @@ class EntityControllerTest extends TestCase
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL',
             'entity_type'       => 'Service',
             'email'             => 'paris@isMagic.fr',
-            'adrs_1'            => '1 rue du parc des princes',
-            'zipcode'           => '75016',
-            'city'              => 'PARIS',
+            'address_number'    => '1',
+            'address_street'    => 'rue du parc des princes',
+            'address_postcode'  => '75016',
+            'address_town'      => 'PARIS',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -137,7 +138,10 @@ class EntityControllerTest extends TestCase
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL-UP',
             'entity_type'       => 'Direction',
             'email'             => 'paris@isMagic2.fr',
-            'adrs_2'            => '2 rue des princes',
+            'address_number'    => '2',
+            'address_street'    => 'rue du parc des princes',
+            'address_postcode'  => '75016',
+            'address_town'      => 'PARIS',
             'toto'              => 'toto',
             'parent_entity_id' => 'COU'
         ];
@@ -177,14 +181,10 @@ class EntityControllerTest extends TestCase
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL-UP',
             'entity_type'       => 'Direction',
             'email'             => 'paris@isMagic2.fr',
-            'adrs_2'            => '2 rue des princes',
             'toto'              => 'toto',
             'parent_entity_id'  => null
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $entityController->update($fullRequest, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
-        $this->assertSame(200, $response->getStatusCode());
 
         // Errors
         $response     = $entityController->update($fullRequest, new \Slim\Http\Response(), ['id' => '12345678923456789']);
@@ -224,7 +224,6 @@ class EntityControllerTest extends TestCase
             'short_label'      => 'TEST-ENTITY123-SHORTLABEL-UP',
             'entity_type'      => 'Direction',
             'email'            => 'paris@isMagic2.fr',
-            'adrs_2'           => '2 rue des princes',
             'toto'             => 'toto',
             'parent_entity_id' => 'SP'
         ];
@@ -399,11 +398,10 @@ class EntityControllerTest extends TestCase
         $this->assertSame('Direction', $responseBody['entity']['entity_type']);
         $this->assertSame('Y', $responseBody['entity']['enabled']);
         $this->assertSame('paris@isMagic2.fr', $responseBody['entity']['email']);
-        $this->assertSame('1 rue du parc des princes', $responseBody['entity']['adrs_1']);
-        $this->assertSame('2 rue des princes', $responseBody['entity']['adrs_2']);
-        $this->assertSame(null, $responseBody['entity']['adrs_3']);
-        $this->assertSame('75016', $responseBody['entity']['zipcode']);
-        $this->assertSame('PARIS', $responseBody['entity']['city']);
+        $this->assertSame('2', $responseBody['entity']['address_number']);
+        $this->assertSame('rue des princes', $responseBody['entity']['address_street']);
+        $this->assertSame('75016', $responseBody['entity']['address_postcode']);
+        $this->assertSame('PARIS', $responseBody['entity']['address_town']);
         $this->assertSame(null, $responseBody['entity']['parent_entity_id']);
         $this->assertIsArray($responseBody['entity']['listTemplate']);
         $this->assertNotEmpty($responseBody['entity']['listTemplate']);
@@ -496,7 +494,6 @@ class EntityControllerTest extends TestCase
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL',
             'entity_type'       => 'Service',
             'email'             => 'paris@isMagic.fr',
-            'adrs_1'            => '1 rue du parc des princes',
             'zipcode'           => '75016',
             'city'              => 'PARIS',
         ];
