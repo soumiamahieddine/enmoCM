@@ -862,7 +862,7 @@ export class EntitiesAdministrationComponent implements OnInit {
     copyAddress() {
         this.http.get(`../rest/entities/${this.currentEntity.id}/parentAddress`).pipe(
             tap((data: any) => {
-                if (data.length > 0) {
+                if (data !== null) {
                     this.currentEntity.addressNumber = data.addressNumber;
                     this.currentEntity.addressStreet = data.addressStreet;
                     this.currentEntity.addressPostcode = data.addressPostcode;
