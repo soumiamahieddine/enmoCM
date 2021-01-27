@@ -393,7 +393,9 @@ export class VisaWorkflowComponent implements OnInit {
                         'process_date': this.functions.formatFrenchDateToTechnicalDate(element.processDate),
                         'picture': '',
                         'hasPrivilege': true,
-                        'isValid': true
+                        'isValid': true,
+                        'delegatedBy': null,
+                        'role': element.signatureMode
                     };
                     this.visaWorkflow.items.push(user);
                     this.http.get('../rest/maarchParapheur/user/' + element.userId + '/picture')
