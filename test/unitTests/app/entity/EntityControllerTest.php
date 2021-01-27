@@ -75,7 +75,7 @@ class EntityControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertSame('Bad Request', $responseBody['errors']);
+        $this->assertSame('Body entity_label is empty or not a string', $responseBody['errors']);
 
         unset($aArgs['entity_id']);
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -83,7 +83,7 @@ class EntityControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertSame('Bad Request', $responseBody['errors']);
+        $this->assertSame('Body entity_id is empty, not a string or not valid', $responseBody['errors']);
 
         $GLOBALS['login'] = 'ddur';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
@@ -398,10 +398,10 @@ class EntityControllerTest extends TestCase
         $this->assertSame('Direction', $responseBody['entity']['entity_type']);
         $this->assertSame('Y', $responseBody['entity']['enabled']);
         $this->assertSame('paris@isMagic2.fr', $responseBody['entity']['email']);
-        $this->assertSame('2', $responseBody['entity']['address_number']);
-        $this->assertSame('rue des princes', $responseBody['entity']['address_street']);
-        $this->assertSame('75016', $responseBody['entity']['address_postcode']);
-        $this->assertSame('PARIS', $responseBody['entity']['address_town']);
+        $this->assertSame('2', $responseBody['entity']['addressNumber']);
+        $this->assertSame('rue des princes', $responseBody['entity']['addressStreet']);
+        $this->assertSame('75016', $responseBody['entity']['addressPostcode']);
+        $this->assertSame('PARIS', $responseBody['entity']['addressTown']);
         $this->assertSame(null, $responseBody['entity']['parent_entity_id']);
         $this->assertIsArray($responseBody['entity']['listTemplate']);
         $this->assertNotEmpty($responseBody['entity']['listTemplate']);
