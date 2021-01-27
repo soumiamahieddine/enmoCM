@@ -31,7 +31,7 @@ export class SendToRecordManagementComponent implements OnInit {
     resourcesErrors: any[] = [];
     criticalError: any = null;
 
-    dataSource = new MatTableDataSource<any>(this.resources);
+    dataSource = null;
 
     senderArchiveEntity: string = '';
 
@@ -91,10 +91,10 @@ export class SendToRecordManagementComponent implements OnInit {
                 this.archivalAgreements = data.archivalAgreements;
                 this.recipientArchiveEntities = data.recipientArchiveEntities;
                 this.senderArchiveEntity = data.senderArchiveEntity;
-
+                this.checking = false;
                 setTimeout(() => {
+                    this.dataSource = new MatTableDataSource(this.resources);
                     this.dataSource.paginator = this.paginator;
-                    this.checking = false;
                 }, 0);
             }),
             catchError((err: any) => {
