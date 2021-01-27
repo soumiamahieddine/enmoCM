@@ -858,6 +858,28 @@ export class EntitiesAdministrationComponent implements OnInit {
 
         this.addressBANControl.setValue('');
     }
+
+    copyAddress() {
+        this.http.get(`../rest/entities/${this.currentEntity.id}/parentAddress`).pipe(
+            tap((data: any) => {
+                if (data.length > 0) {
+                    this.currentEntity.addressNumber = data.addressNumber;
+                    this.currentEntity.addressStreet = data.addressStreet;
+                    this.currentEntity.addressPostcode = data.addressPostcode;
+                    this.currentEntity.addressTown = data.addressTown;
+                    this.currentEntity.addressCountry = data.addressCountry;
+                    this.currentEntity.addressAdditional1 = data.addressAdditional1;
+                    this.currentEntity.addressAdditional2 = data.addressAdditional2;
+                } else {
+                    this.notify.error(this.translate.instant('lang.noAddressFound'));
+                }
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
 }
 @Component({
     templateUrl: 'entities-administration-redirect-modal.component.html',

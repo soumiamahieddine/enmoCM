@@ -2233,5 +2233,6 @@
     "rgs_2stars_timestamped": "Clé RGS** + horodatage",
     "stamp": "Griffe",
     "errorUserSignType": "Les signataires sans certificat doivent être présent avant les signataires avec certificat.",
-    "copyRootEntityAddress": "Copier l'adresse existante de l'entité racine"
+    "copyRootEntityAddress": "Copier l'adresse existante de l'entité racine",
+    "noAddressFound": "Aucune adresse trouvée"
 }
