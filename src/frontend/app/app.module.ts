@@ -29,6 +29,13 @@ import { ActionsService } from './actions/actions.service';
 
 import { AppComponent } from './app.component';
 
+import { DashboardComponent } from './home/dashboard/dashboard.component';
+import { TileViewListComponent } from './home/dashboard/tile/view/list/tile-view-list.component';
+import { TileViewResumeComponent } from './home/dashboard/tile/view/resume/tile-view-resume.component';
+import { TileViewChartComponent } from './home/dashboard/tile/view/chart/tile-view-chart.component';
+import { TileLastMailsViewDashboardComponent } from './home/dashboard/tile/lastMailsView/tile-last-mails-view.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 // ACTIONS
 import { ConfirmActionComponent } from './actions/confirm-action/confirm-action.component';
 import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
@@ -153,9 +160,15 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdministrationModule,
         DocumentViewerModule,
         AppListModule,
+        NgxChartsModule
     ],
     declarations: [
         AppComponent,
+        DashboardComponent,
+        TileLastMailsViewDashboardComponent,
+        TileViewListComponent,
+        TileViewResumeComponent,
+        TileViewChartComponent,
         ProcessComponent,
         IndexationComponent,
         LinkResourceModalComponent,
