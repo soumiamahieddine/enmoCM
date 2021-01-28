@@ -8,8 +8,8 @@ export class DashboardService {
     tileTypes: any = {
         myLastResources : {
             menus : [
-                'delete',
-                'view'
+                'view',
+                'delete'
             ],
             views: [
                 {
@@ -28,8 +28,8 @@ export class DashboardService {
         },
         basket : {
             menus : [
-                'delete',
-                'view'
+                'view',
+                'delete'
             ],
             views: [
                 {
@@ -48,8 +48,8 @@ export class DashboardService {
         },
         searchTemplate : {
             menus : [
-                'delete',
-                'view'
+                'view',
+                'delete'
             ],
             views: [
                 {
@@ -68,8 +68,8 @@ export class DashboardService {
         },
         followedMail : {
             menus : [
-                'delete',
-                'view'
+                'view',
+                'delete'
             ],
             views: [
                 {
@@ -88,8 +88,8 @@ export class DashboardService {
         },
         folder : {
             menus : [
-                'delete',
-                'view'
+                'view',
+                'delete'
             ],
             views: [
                 {
@@ -108,8 +108,8 @@ export class DashboardService {
         },
         externalSignatoryBook : {
             menus : [
-                'delete',
-                'view'
+                'view',
+                'delete'
             ],
             views: [
                 {

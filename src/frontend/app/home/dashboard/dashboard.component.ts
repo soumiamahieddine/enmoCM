@@ -6,6 +6,7 @@ import { FunctionsService } from '@service/functions.service';
 import { TileCreateComponent } from './tile/tile-create.component';
 import { exhaustMap, filter, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
+import { ConfirmComponent } from '@plugins/modal/confirm.component';
 
 @Component({
     selector: 'app-dashboard',
@@ -87,6 +88,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     changeView(tile: any, view: string) {
         const indexTile = this.tiles.filter((tileItem: any) => tileItem.id !== null).map((tileItem: any) => tileItem.sequence).indexOf(tile.sequence);
         this.tileComponent.toArray()[indexTile].changeView(view);
+        tile.view = view;
     }
 
     transferDataSuccess() {
@@ -103,6 +105,26 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             filter((data: string) => !this.functionsService.empty(data)),
             tap((data: any) => {
                 tile = {...this.dashboardService.getTile(data.type), ...data};
+            })
+        ).subscribe();
+    }
+
+    launchAction(action: string, tile: any) {
+        this[action](tile);
+    }
+
+    delete(tile: any) {
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction') } });
+
+        // TO DO: SAVE IN BACK
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            tap(() => {
+                this.tiles[tile.sequence] = {
+                    id: null,
+                    sequence: tile.sequence,
+                    editMode: false
+                };
             })
         ).subscribe();
     }

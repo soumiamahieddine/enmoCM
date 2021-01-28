@@ -12,14 +12,16 @@
             </button>
             <mat-menu #toolMenu="matMenu">
                 <ng-container  *ngFor="let menu of tile.menus">
-                    <button *ngIf="menu!=='view'" mat-menu-item>{{menu}}</button>
-                    <button *ngIf="menu==='view'" mat-menu-item [matMenuTriggerFor]="toolMenuView">{{menu}}</button>
+                    <button *ngIf="menu!=='view'" mat-menu-item (click)="launchAction(menu, tile)">{{'lang.'+ menu | translate}}</button>
+                    <button *ngIf="menu==='view'" mat-menu-item [matMenuTriggerFor]="toolMenuView">{{'lang.'+ menu | translate}}</button>
                 </ng-container>
             </mat-menu>
             <mat-menu #toolMenuView="matMenu">
-                <button mat-menu-item *ngFor="let view of tile.views" [disabled]="tile.view === view" (click)="changeView(tile,view.id)">
-                    <mat-icon class="fa fa-list" color="primary" style="height: auto;width: auto;"></mat-icon>
-                    <span>{{view.id}}</span>
+                <button mat-menu-item *ngFor="let view of tile.views" [disabled]="tile.view === view.id" (click)="changeView(tile,view.id)">
+                    <mat-icon *ngIf="view.id==='list'" class="fa fa-list" color="primary" style="height: auto;width: auto;"></mat-icon>
+                    <mat-icon *ngIf="view.id==='resume'" class="fas fa-equals" color="primary" style="height: auto;width: auto;"></mat-icon>
+                    <mat-icon *ngIf="view.id==='chart'" class="fas fa-chart-pie" color="primary" style="height: auto;width: auto;"></mat-icon>
+                    <span>{{'lang.' + view.id | translate}}</span>
                 </button>
             </mat-menu>
         </div>
