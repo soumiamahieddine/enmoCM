@@ -11,16 +11,7 @@ import { AppService } from '@service/app.service';
 export class TileViewChartComponent implements OnInit, AfterViewInit {
 
     @Input() icon: string = '';
-
-    saleData = [
-        { name: 'Litige', value: 24 },
-        { name: 'Convocation', value: 12 },
-        { name: 'Abonnement', value: 53 },
-        { name: 'Réservation', value: 21 },
-        { name: 'Invitation', value: 2 }
-    ];
-
-    testDate = new Date();
+    @Input() resources: any[];
 
     constructor(
         public translate: TranslateService,
@@ -28,7 +19,9 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
         public appService: AppService,
     ) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        console.log(this.resources);
+    }
 
     ngAfterViewInit(): void { }
 }

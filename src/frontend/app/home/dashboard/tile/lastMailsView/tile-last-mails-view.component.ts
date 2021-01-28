@@ -4,6 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '@service/app.service';
 import { Time } from '@angular/common';
 import { TimeAgoPipe } from '@plugins/timeAgo.pipe';
+import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { NotificationService } from '@service/notification/notification.service';
 
 @Component({
     selector: 'app-tile-last-mails-view',
@@ -15,48 +18,146 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
 
     @Input() view: string = 'list';
 
+    loading: boolean = true;
     testDate = new Date();
 
     label: 'Mes derniers courriers consultés';
 
     resources: any[] = [];
+    countResources: number = 0;
 
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
         public appService: AppService,
-        private timeAgoPipe: TimeAgoPipe
+        private notify: NotificationService,
     ) { }
 
     ngOnInit(): void { }
 
-    ngAfterViewInit(): void {
-        this.resources = [
-            {
-                recipient: 'Jan-louis ERCOLANNI (MAARCH)',
-                subject: 'Réservation bal des basketteurs',
-                creationDate: '26-01-2021',
-            },
-            {
-                recipient: 'Jan-louis ERCOLANNI (MAARCH)',
-                subject: 'Réservation bal des basketteurs',
-                creationDate: '26-01-2021',
-            },
-            {
-                recipient: 'Jan-louis ERCOLANNI (MAARCH)',
-                subject: 'Réservation bal des basketteurs',
-                creationDate: '26-01-2021',
-            },
-            {
-                recipient: 'Jan-louis ERCOLANNI (MAARCH)',
-                subject: 'Réservation bal des basketteurs',
-                creationDate: '26-01-2021',
-            },
-            {
-                recipient: 'Jan-louis ERCOLANNI (MAARCH)',
-                subject: 'Réservation bal des basketteurs',
-                creationDate: '26-01-2021',
-            }
-        ];
+    async ngAfterViewInit(): Promise<void> {
+        console.log(this.view);
+        
+        await this['get_' + this.view]();
+        this.loading = false;
+    }
+
+    async changeView(view: string) {
+        console.log(view);
+        this.loading = true;
+        await this['get_' + view]();
+        this.view = view;
+        this.loading = false;
+    }
+
+    get_list() {
+        return new Promise((resolve) => {
+            // FOR TEST
+            setTimeout(() => {
+                this.resources = [
+                    {
+                        recipient: 'Jan-louis ERCOLANNI (MAARCH)',
+                        subject: 'Réservation bal des basketteurs',
+                        creationDate: '26-01-2021',
+                    },
+                    {
+                        recipient: 'Jan-louis ERCOLANNI (MAARCH)',
+                        subject: 'Réservation bal des basketteurs',
+                        creationDate: '26-01-2021',
+                    },
+                    {
+                        recipient: 'Jan-louis ERCOLANNI (MAARCH)',
+                        subject: 'Réservation bal des basketteurs',
+                        creationDate: '26-01-2021',
+                    },
+                    {
+                        recipient: 'Jan-louis ERCOLANNI (MAARCH)',
+                        subject: 'Réservation bal des basketteurs',
+                        creationDate: '26-01-2021',
+                    },
+                    {
+                        recipient: 'Jan-louis ERCOLANNI (MAARCH)',
+                        subject: 'Réservation bal des basketteurs',
+                        creationDate: '26-01-2021',
+                    }
+                ];
+                resolve(true);
+            }, 3000);
+
+            /*this.http.get('../rest/???').pipe(
+                tap((data: any) => {
+                    this.resources = data;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();*/
+        });
+    }
+
+    get_resume() {
+        return new Promise((resolve) => {
+            // FOR TEST
+            setTimeout(() => {
+                this.countResources = 23;
+                resolve(true);
+            }, 3000);
+
+            /*this.http.get('../rest/???').pipe(
+                tap((data: any) => {
+                    this.countResources = data;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();*/
+        });
+    }
+
+    get_chart() {
+        return new Promise((resolve) => {
+            // FOR TEST
+            setTimeout(() => {
+                this.resources = [
+
+                    {
+                        name: 'Litige',
+                        value: 24
+                    },
+                    {
+                        name: 'Convocation',
+                        value: 12
+                    },
+                    {
+                        name: 'Abonnement',
+                        value: 53
+                    },
+                    {
+                        name: 'Réservation',
+                        value: 21
+                    },
+                    {
+                        name: 'Invitation',
+                        value: 2
+                    }
+                ];
+                resolve(true);
+            }, 3000);
+
+            /*this.http.get('../rest/???').pipe(
+                tap((data: any) => {
+                    this.resources = data;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();*/
+        });
     }
 }

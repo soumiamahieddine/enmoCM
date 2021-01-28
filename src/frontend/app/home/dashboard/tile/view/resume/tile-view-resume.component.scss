@@ -17,6 +17,9 @@
     top: 65%;
     transform: translateY(-50%);
     width: 50%;
+    white-space: pre;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .resume-number {
