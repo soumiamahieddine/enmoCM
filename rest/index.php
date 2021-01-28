@@ -525,6 +525,10 @@ $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController
 $app->get('/administration/templates/new', \Template\controllers\TemplateController::class . ':initTemplates');
 $app->post('/templates/{id}/mergeEmail', \Template\controllers\TemplateController::class . ':mergeEmailTemplate');
 
+//Tiles
+$app->get('/tiles', \Home\controllers\TileController::class . ':get');
+$app->post('/tiles', \Home\controllers\TileController::class . ':create');
+
 //Users
 $app->put('/users/export', \User\controllers\UserController::class . ':getExport');
 $app->put('/users/import', \User\controllers\UserController::class . ':setImport');

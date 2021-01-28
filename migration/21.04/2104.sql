@@ -43,3 +43,16 @@ DO $$ BEGIN
         ALTER TABLE entities RENAME COLUMN country TO address_country;
     END IF;
 END$$;
+
+DROP TABLE IF EXISTS tiles;
+CREATE TABLE tiles
+(
+    id SERIAL NOT NULL,
+    user_id INTEGER NOT NULL,
+    type text NOT NULL,
+    view text NOT NULL,
+    position INTEGER NOT NULL,
+    parameters jsonb DEFAULT '{}' NOT NULL,
+    CONSTRAINT tiles_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);

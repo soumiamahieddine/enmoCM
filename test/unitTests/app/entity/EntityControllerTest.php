@@ -402,7 +402,7 @@ class EntityControllerTest extends TestCase
         $this->assertSame('rue du parc des princes', $responseBody['entity']['addressStreet']);
         $this->assertSame('75016', $responseBody['entity']['addressPostcode']);
         $this->assertSame('PARIS', $responseBody['entity']['addressTown']);
-        $this->assertSame(null, $responseBody['entity']['parent_entity_id']);
+        $this->assertSame('COU', $responseBody['entity']['parent_entity_id']);
         $this->assertIsArray($responseBody['entity']['listTemplate']);
         $this->assertNotEmpty($responseBody['entity']['listTemplate']);
 
