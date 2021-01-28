@@ -31,10 +31,10 @@ class EntityControllerTest extends TestCase
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL',
             'entity_type'       => 'Service',
             'email'             => 'paris@isMagic.fr',
-            'address_number'    => '1',
-            'address_street'    => 'rue du parc des princes',
-            'address_postcode'  => '75016',
-            'address_town'      => 'PARIS',
+            'addressNumber'    => '1',
+            'addressStreet'    => 'rue du parc des princes',
+            'addressPostcode'  => '75016',
+            'addressTown'      => 'PARIS',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -138,10 +138,10 @@ class EntityControllerTest extends TestCase
             'short_label'       => 'TEST-ENTITY123-SHORTLABEL-UP',
             'entity_type'       => 'Direction',
             'email'             => 'paris@isMagic2.fr',
-            'address_number'    => '2',
-            'address_street'    => 'rue du parc des princes',
-            'address_postcode'  => '75016',
-            'address_town'      => 'PARIS',
+            'addressNumber'    => '2',
+            'addressStreet'    => 'rue du parc des princes',
+            'addressPostcode'  => '75016',
+            'addressTown'      => 'PARIS',
             'toto'              => 'toto',
             'parent_entity_id' => 'COU'
         ];

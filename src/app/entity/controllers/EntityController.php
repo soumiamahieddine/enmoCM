@@ -629,7 +629,7 @@ class EntityController
             }
         }
 
-        return $response->withJson([]);
+        return $response->withJson(null);
     }
 
     public function export(Request $request, Response $response)
