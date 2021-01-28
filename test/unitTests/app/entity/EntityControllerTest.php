@@ -399,7 +399,7 @@ class EntityControllerTest extends TestCase
         $this->assertSame('Y', $responseBody['entity']['enabled']);
         $this->assertSame('paris@isMagic2.fr', $responseBody['entity']['email']);
         $this->assertSame('2', $responseBody['entity']['addressNumber']);
-        $this->assertSame('rue des princes', $responseBody['entity']['addressStreet']);
+        $this->assertSame('rue du parc des princes', $responseBody['entity']['addressStreet']);
         $this->assertSame('75016', $responseBody['entity']['addressPostcode']);
         $this->assertSame('PARIS', $responseBody['entity']['addressTown']);
         $this->assertSame(null, $responseBody['entity']['parent_entity_id']);
