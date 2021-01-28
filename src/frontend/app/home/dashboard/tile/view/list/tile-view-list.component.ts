@@ -15,6 +15,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
     @Input() resources: any[];
     @Input() icon: string = '';
 
+    thumbnailUrl: string = '';
     testDate = new Date();
 
     constructor(
@@ -26,4 +27,15 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
     ngOnInit(): void { }
 
     ngAfterViewInit(): void { }
+
+    viewThumbnail(ev: any, resource: any) {
+        const timeStamp = +new Date();
+        this.thumbnailUrl = '../rest/resources/' + resource.resId + '/thumbnail?tsp=' + timeStamp;
+        $('#viewThumbnail').show();
+        console.log(ev);
+    }
+
+    closeThumbnail() {
+        $('#viewThumbnail').hide();
+    }
 }

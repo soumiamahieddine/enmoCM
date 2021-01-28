@@ -21,3 +21,10 @@
     background: rgba($primary,0.1);
     transition: all 0.2s;
 }
+
+.view-action:hover {
+    z-index: 3;
+    .view-action-icon {
+        // visibility: hidden;
+    }
+}

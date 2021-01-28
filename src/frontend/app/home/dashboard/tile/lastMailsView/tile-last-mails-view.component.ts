@@ -56,26 +56,31 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
             setTimeout(() => {
                 this.resources = [
                     {
+                        resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
                         creationDate: '26-01-2021',
                     },
                     {
+                        resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
                         creationDate: '26-01-2021',
                     },
                     {
+                        resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
                         creationDate: '26-01-2021',
                     },
                     {
+                        resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
                         creationDate: '26-01-2021',
                     },
                     {
+                        resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
                         creationDate: '26-01-2021',

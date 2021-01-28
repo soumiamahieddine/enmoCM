@@ -1,7 +1,6 @@
 import { Component, OnInit, AfterViewInit, QueryList, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { AppService } from '@service/app.service';
 import { DashboardService } from './dashboard.service';
 import { FunctionsService } from '@service/functions.service';
 
