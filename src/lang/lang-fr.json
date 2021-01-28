@@ -2234,5 +2234,8 @@
     "stamp": "Griffe",
     "errorUserSignType": "Les signataires sans certificat doivent être présent avant les signataires avec certificat.",
     "copyRootEntityAddress": "Copier l'adresse existante de l'entité racine",
-    "noAddressFound": "Aucune adresse trouvée"
+    "noAddressFound": "Aucune adresse trouvée",
+    "searchTemplate": "Modèle de recherche",
+    "chart": "Graphique",
+    "resume": "Synthèse"
 }

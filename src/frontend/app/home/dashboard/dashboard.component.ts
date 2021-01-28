@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { DashboardService } from './dashboard.service';
 import { FunctionsService } from '@service/functions.service';
+import { TileCreateComponent } from './tile/tile-create.component';
+import { exhaustMap, filter, tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-dashboard',
@@ -21,7 +24,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         public translate: TranslateService,
         public http: HttpClient,
         private dashboardService: DashboardService,
-        private functionsService: FunctionsService
+        private functionsService: FunctionsService,
+        public dialog: MatDialog,
     ) { }
 
     ngOnInit(): void {
@@ -47,19 +51,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         const test: any = [
             {
                 id: 1,
-                type: 'lastViewMails',
+                type: 'myLastResources',
                 view: 'resume',
                 sequence: 0
             },
             {
                 id: 1,
-                type: 'lastViewMails',
+                type: 'myLastResources',
                 view: 'list',
                 sequence: 3
             },
             {
                 id: 1,
-                type: 'lastViewMails',
+                type: 'myLastResources',
                 view: 'chart',
                 sequence: 5
             }
@@ -90,5 +94,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             tile.sequence = index;
         });
         // TO DO : SAVE IN BACK
+    }
+
+    addTilePrompt(tile: any) {
+        const dialogRef = this.dialog.open(TileCreateComponent, { panelClass: 'maarch-modal', width: '450px', autoFocus: false, disableClose: true, data: { sequence: tile.sequence} });
+
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => !this.functionsService.empty(data)),
+            tap((data: any) => {
+                tile = {...this.dashboardService.getTile(data.type), ...data};
+            })
+        ).subscribe();
     }
 }

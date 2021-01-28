@@ -9,4 +9,4 @@
         </div>
     </mat-list-item>
 </mat-list>
-<mat-card id="viewThumbnail" style="display:none;top:0px;right:0px;position: fixed;z-index: 2;margin-left: 1px;"><img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" /></mat-card>
+<mat-card id="viewThumbnail" style="display:none;top:0px;right:0px;position: fixed;z-index: 3;margin-left: 1px;"><img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" /></mat-card>

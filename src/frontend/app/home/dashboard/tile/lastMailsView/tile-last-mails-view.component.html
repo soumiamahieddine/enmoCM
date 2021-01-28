@@ -1,5 +1,5 @@
 <div class="tile-title">
-    Mes derniers courriers consultés
+    {{'lang.'+ tile.type | translate}}
 </div>
 <ng-container *ngIf="loading; else elseLoaded">
     <mat-progress-bar color="primary" mode="indeterminate" class="loader">

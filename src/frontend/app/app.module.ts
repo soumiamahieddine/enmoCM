@@ -34,6 +34,7 @@ import { TileViewListComponent } from './home/dashboard/tile/view/list/tile-view
 import { TileViewResumeComponent } from './home/dashboard/tile/view/resume/tile-view-resume.component';
 import { TileViewChartComponent } from './home/dashboard/tile/view/chart/tile-view-chart.component';
 import { TileLastMailsViewDashboardComponent } from './home/dashboard/tile/lastMailsView/tile-last-mails-view.component';
+import { TileCreateComponent } from './home/dashboard/tile/tile-create.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // ACTIONS
@@ -169,6 +170,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         TileViewListComponent,
         TileViewResumeComponent,
         TileViewChartComponent,
+        TileCreateComponent,
         ProcessComponent,
         IndexationComponent,
         LinkResourceModalComponent,
@@ -325,7 +327,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         ViewDocActionComponent,
         ReconcileActionComponent,
         TechnicalInformationComponent,
-        AbsModalComponent
+        AbsModalComponent,
+        TileCreateComponent
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

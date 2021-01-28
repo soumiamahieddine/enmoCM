@@ -6,7 +6,7 @@ import { LatinisePipe } from 'ngx-pipes';
 export class DashboardService {
 
     tileTypes: any = {
-        lastViewMails : {
+        myLastResources : {
             menus : [
                 'delete',
                 'view'
@@ -46,7 +46,7 @@ export class DashboardService {
                 }
             ]
         },
-        savedQuery : {
+        searchTemplate : {
             menus : [
                 'delete',
                 'view'
@@ -66,7 +66,7 @@ export class DashboardService {
                 }
             ]
         },
-        followedMails : {
+        followedMail : {
             menus : [
                 'delete',
                 'view'
@@ -106,7 +106,7 @@ export class DashboardService {
                 }
             ]
         },
-        externalSignatureBook : {
+        externalSignatoryBook : {
             menus : [
                 'delete',
                 'view'
@@ -141,5 +141,13 @@ export class DashboardService {
 
     getTile(id: string) {
         return this.tileTypes[id];
+    }
+
+    getTileTypes() {
+        return Object.keys(this.tileTypes);
+    }
+
+    getViewsByTileType(tileType: string) {
+        return this.tileTypes[tileType].views;
     }
 }
