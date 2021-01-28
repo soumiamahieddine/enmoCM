@@ -8,10 +8,10 @@
 </ng-container>
 <ng-template #elseLoaded>
     <app-tile-view-list *ngIf="view==='list'" [displayColumns]="['recipient','subject','creationDate']"
-        [resources]="resources" [icon]="'fa-history'" style="display: flex;flex: 1;overflow: auto;">
+        [resources]="resources" [icon]="'fa-history'" [route]="route" style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-list>
-    <app-tile-view-resume *ngIf="view==='resume'" [countResources]="countResources" [icon]="'fa-history'"
+    <app-tile-view-resume *ngIf="view==='resume'" [route]="route" [countResources]="countResources" [icon]="'fa-history'"
         [resourceLabel]="'courrier(s)'" style="display: flex;flex: 1;overflow: auto;"></app-tile-view-resume>
-    <app-tile-view-chart *ngIf="view==='chart'" [resources]="resources" [icon]="'fa-history'" style="display: flex;flex: 1;overflow: auto;">
+    <app-tile-view-chart *ngIf="view==='chart'" [route]="route" [resources]="resources" [icon]="'fa-history'" style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-chart>
 </ng-template>

@@ -1,6 +1,6 @@
 <i class="fa {{icon}} tile-icon" color="primary"></i>
 <mat-list role="list" style="width: 100%;overflow: auto;">
-    <mat-list-item class="resource" role="listitem" *ngFor="let resource of resources" (mouseenter)="resource.hovered=true" (mouseleave)="resource.hovered=false">
+    <mat-list-item class="resource" role="listitem" *ngFor="let resource of resources" (mouseenter)="resource.hovered=true" (mouseleave)="resource.hovered=false" (click)="route !== null ? goTo(resource): false">
         <div class="item" *ngFor="let col of displayColumns">
             {{resource[col]}}
         </div>

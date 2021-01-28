@@ -17,13 +17,13 @@
                 </ng-container>
             </mat-menu>
             <mat-menu #toolMenuView="matMenu">
-                <button mat-menu-item *ngFor="let view of tile.views" [disabled]="tile.view === view" (click)="changeView(tile,view)">
+                <button mat-menu-item *ngFor="let view of tile.views" [disabled]="tile.view === view" (click)="changeView(tile,view.id)">
                     <mat-icon class="fa fa-list" color="primary" style="height: auto;width: auto;"></mat-icon>
-                    <span>{{view}}</span>
+                    <span>{{view.id}}</span>
                 </button>
             </mat-menu>
         </div>
-        <app-tile-last-mails-view #tileComponent *ngIf="tile.type === 'lastViewMails'" [view]="tile.view"
+        <app-tile-last-mails-view #tileComponent *ngIf="tile.type === 'lastViewMails'" [tile]="tile" [view]="tile.view"
             style="display: flex;height: 100%;flex-direction: column;width: 100%;">
         </app-tile-last-mails-view>
         <button mat-button color="secondary" mat-icon-button *ngIf="tile.id === null && tile.editMode">

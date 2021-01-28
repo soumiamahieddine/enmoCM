@@ -13,6 +13,7 @@ export class TileViewResumeComponent implements OnInit, AfterViewInit {
     @Input() countResources: any[];
     @Input() icon: string = '';
     @Input() resourceLabel: string = '';
+    @Input() route: string = null;
 
     constructor(
         public translate: TranslateService,

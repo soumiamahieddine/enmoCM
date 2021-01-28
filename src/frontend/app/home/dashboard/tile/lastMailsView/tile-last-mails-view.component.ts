@@ -18,6 +18,8 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
 
     @Input() view: string = 'list';
 
+    @Input() tile: any = null;
+
     loading: boolean = true;
     testDate = new Date();
 
@@ -25,6 +27,7 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
 
     resources: any[] = [];
     countResources: number = 0;
+    route: string = null;
 
     constructor(
         public translate: TranslateService,
@@ -36,17 +39,16 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
     ngOnInit(): void { }
 
     async ngAfterViewInit(): Promise<void> {
-        console.log(this.view);
-        
         await this['get_' + this.view]();
+        this.route = this.tile.views.find((viewItem: any) => viewItem.id === this.view).route;
         this.loading = false;
     }
 
     async changeView(view: string) {
-        console.log(view);
         this.loading = true;
         await this['get_' + view]();
         this.view = view;
+        this.route = this.tile.views.find((viewItem: any) => viewItem.id === this.view).route;
         this.loading = false;
     }
 

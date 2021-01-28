@@ -12,9 +12,18 @@ export class DashboardService {
                 'view'
             ],
             views: [
-                'list',
-                'resume',
-                'chart'
+                {
+                    id: 'list',
+                    route: '/resources/:resId'
+                },
+                {
+                    id: 'resume',
+                    route: null
+                },
+                {
+                    id: 'chart',
+                    route: null
+                }
             ]
         },
         basket : {
@@ -23,9 +32,18 @@ export class DashboardService {
                 'view'
             ],
             views: [
-                'list',
-                'resume',
-                'chart'
+                {
+                    id: 'list',
+                    route: '/process/users/:userId/groups/:groupId/baskets/:basketId/resId/:resId'
+                },
+                {
+                    id: 'resume',
+                    route: '/process/users/:userId/groups/:groupId/baskets/:basketId'
+                },
+                {
+                    id: 'chart',
+                    route: '/process/users/:userId/groups/:groupId/baskets/:basketId'
+                }
             ]
         },
         savedQuery : {
@@ -34,9 +52,18 @@ export class DashboardService {
                 'view'
             ],
             views: [
-                'list',
-                'resume',
-                'chart'
+                {
+                    id: 'list',
+                    route: '/resources/:resId'
+                },
+                {
+                    id: 'resume',
+                    route: '/search'
+                },
+                {
+                    id: 'chart',
+                    route: '/search'
+                }
             ]
         },
         followedMails : {
@@ -45,9 +72,18 @@ export class DashboardService {
                 'view'
             ],
             views: [
-                'list',
-                'resume',
-                'chart'
+                {
+                    id: 'list',
+                    route: '/resources/:resId'
+                },
+                {
+                    id: 'resume',
+                    route: '/followed'
+                },
+                {
+                    id: 'chart',
+                    route: '/followed'
+                }
             ]
         },
         folder : {
@@ -56,9 +92,18 @@ export class DashboardService {
                 'view'
             ],
             views: [
-                'list',
-                'resume',
-                'chart'
+                {
+                    id: 'list',
+                    route: '/resources/:resId'
+                },
+                {
+                    id: 'resume',
+                    route: '/folders/:folderId'
+                },
+                {
+                    id: 'chart',
+                    route: '/folders/:folderId'
+                }
             ]
         },
         externalSignatureBook : {
@@ -67,9 +112,18 @@ export class DashboardService {
                 'view'
             ],
             views: [
-                'list',
-                'resume',
-                'chart'
+                {
+                    id: 'list',
+                    route: ':signatoryBookPathresources/dist/documents/:resId'
+                },
+                {
+                    id: 'resume',
+                    route: ':signatoryBookPathresources/dist/home'
+                },
+                {
+                    id: 'chart',
+                    route: ':signatoryBookPathresources/dist/home'
+                }
             ]
         },
         shortcut : {

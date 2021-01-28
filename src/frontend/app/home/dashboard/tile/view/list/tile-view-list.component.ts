@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '@service/app.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tile-view-list',
@@ -14,6 +15,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
 
     @Input() resources: any[];
     @Input() icon: string = '';
+    @Input() route: string = null;
 
     thumbnailUrl: string = '';
     testDate = new Date();
@@ -22,6 +24,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
         public translate: TranslateService,
         public http: HttpClient,
         public appService: AppService,
+        private router: Router,
     ) { }
 
     ngOnInit(): void { }
@@ -37,5 +40,12 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
 
     closeThumbnail() {
         $('#viewThumbnail').hide();
+    }
+
+    goTo(resource: any) {
+        // TO DO format route
+        const formatedRoute = this.route.replace(':resId', resource.resId);
+        console.log(formatedRoute);
+        // this.router.navigate([formatedRoute]);
     }
 }
