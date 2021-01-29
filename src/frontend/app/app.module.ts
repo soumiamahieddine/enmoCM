@@ -133,6 +133,7 @@ import { ResetPasswordComponent } from './login/resetPassword/reset-password.com
 import { SaveNumericPackageComponent } from './save-numeric-package.component';
 import { SignatureBookComponent } from './signature-book.component';
 import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.component';
+import { ExternalVisaWorkflow } from './visa/externalVisaWorkflow/external-visa-workflow.component';
 
 import { DevToolComponent } from '@service/debug/dev-tool.component';
 import { DevLangComponent } from '@service/debug/dev-lang.component';
@@ -267,7 +268,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         CheckReplyRecordManagementComponent,
         ResetRecordManagementComponent,
         CheckAcknowledgmentRecordManagementComponent,
-        TechnicalInformationComponent
+        TechnicalInformationComponent,
+        ExternalVisaWorkflow
     ],
     exports : [
         SharedModule

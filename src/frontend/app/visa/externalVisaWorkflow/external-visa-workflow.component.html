@@ -1,46 +1,8 @@
 <mat-list *ngIf="!loading">
-    <mat-form-field appearance="outline" *ngIf="adminMode">
-        <input type="text" #searchVisaSignUserInput matInput placeholder="{{'lang.addUsers' | translate}}"
-            id="searchVisaSignUserInput" [formControl]="searchVisaSignUser" [matAutocomplete]="autoGroup">
-        <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addItemToWorkflow($event.option.value)"
-            (opened)="initFilterVisaModelList()">
-            <mat-option disabled *ngIf="visaModelListNotLoaded">
-                <div style="display: flex;justify-content: center;">
-                    <mat-spinner diameter="35"></mat-spinner>
-                </div>
-            </mat-option>
-            <mat-optgroup [label]="'lang.publicModel' | translate" *ngIf="(filteredPublicModels | async)?.length > 0"
-                class="visaSignList">
-                <mat-option *ngFor="let model of filteredPublicModels | async | sortBy : 'label'" [value]="model">
-                    {{model.label}}
-                </mat-option>
-            </mat-optgroup>
-            <mat-optgroup [label]="'lang.privateModel' | translate" *ngIf="(filteredPrivateModels | async)?.length > 0"
-                class="visaSignList">
-                <mat-option *ngFor="let model of filteredPrivateModels | async | sortBy : 'label'" [value]="model">
-                    <div style="display: flex;align-items: center;">
-                        <div style="flex:1">
-                            {{model.label}}
-                        </div>
-                        <button mat-icon-button color="warn"
-                            (click)="$event.stopPropagation();deletePrivateModel(model)">
-                            <mat-icon class="fa fa-trash" style="margin: 0px;"></mat-icon>
-                        </button>
-                    </div>
-                </mat-option>
-            </mat-optgroup>
-            <mat-optgroup [label]="('lang.visaUser' | translate) + ' / ' + ('lang.signUser' | translate)"
-                *ngIf="(filteredSignVisaUsers | async)?.length > 0" class="visaSignList">
-                <mat-option *ngFor="let user of filteredSignVisaUsers | async | sortBy : 'label'" [value]="user">
-                    {{user.label}}&nbsp;<small>({{user.entity}})</small>
-                </mat-option>
-            </mat-optgroup>
-        </mat-autocomplete>
-        <button mat-icon-button matSuffix *ngIf="visaWorkflow.items.length > 0 && showListModels" color="primary"
-            (click)="$event.stopPropagation();openPromptSaveModel()" title="{{'lang.saveAsPrivateModel' | translate}}">
-            <mat-icon class="fa fa-plus"></mat-icon>
-        </button>
-    </mat-form-field>
+    <plugin-autocomplete *ngIf="linkedToMaarchParapheur && adminMode" [labelPlaceholder]="'lang.addPerson' | translate"
+        [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'"
+        [subInfoKey]="'email'" (triggerEvent)="addItemToWorkflow($event, true)" appearance="outline">
+    </plugin-autocomplete>
     <!--<div class="alert alert-danger" *ngIf="visaWorkflow.itemRemovedFromVisaTemplate.length > 0" [innerHTML]="('lang.itemRemovedFromVisaTemplate' | translate) + ' : ' + visaWorkflow.itemRemovedFromVisaTemplate.join(', ')"></div>-->
     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="visaWorkflow.items" class="cdk-list"
         (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!adminMode">
@@ -94,14 +56,6 @@
                         [class.unauthorized]="!diffusion.hasPrivilege || !diffusion.isValid">
                         {{diffusion.item_entity}}
                     </div>
-                    <div class="workflowLineSubLabel"
-                        *ngIf="(showComment && ((adminMode && functions.empty(diffusion.process_date)) || (getCurrentVisaUserIndex() === i && !functions.empty(diffusion.process_comment)))) && diffusion.hasPrivilege && diffusion.isValid">
-                        <mat-form-field>
-                            <input matInput class="comment" maxlength="255"
-                                [disabled]="!adminMode || diffusion.process_date != null || (target === 'signatureBook' && getCurrentVisaUserIndex() === i)"
-                                [placeholder]="'lang.visaNote' | translate" [(ngModel)]="diffusion.process_comment">
-                        </mat-form-field>
-                    </div>
                     <div *ngIf="diffusion.requested_signature && diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) === -1"
                         class="workflowLineProcessDate" title='{{diffusion.process_date | fullDate}}' color="accent">
                         {{((functions.empty(diffusion.process_date) && diffusion.requested_signature) || diffusion.signatory) ? ('lang.signedUserDate' | translate) : ('lang.approvedUserDate' | translate)}} {{diffusion.process_date
@@ -112,11 +66,14 @@
                 </div>
                 <div *ngIf="diffusion.hasPrivilege && diffusion.isValid">
                     <ng-container>
-                        <button class="currentRoleButton"
-                            [color]="((functions.empty(diffusion.process_date) && diffusion.requested_signature) || diffusion.signatory) ? 'primary': '' "
-                            [disabled]="!canManageUser(diffusion, i)" mat-raised-button
-                            title="{{'lang.' + diffusion.currentRole + 'User' | translate}}"
-                            (click)="changeRole(i)">{{((functions.empty(diffusion.process_date) && diffusion.requested_signature) || diffusion.signatory) ? ('lang.signUser' | translate) : ('lang.visaUser' | translate)}}</button>
+                        <button class="currentRoleButton" [color]="diffusion.role === 'visa' ? 'default':'primary'" mat-raised-button
+                            title="{{'lang.' + diffusion.role | translate}}"
+                            [matMenuTriggerFor]="rolesMenu">{{'lang.' + diffusion.role | translate}}</button>
+                        <mat-menu #rolesMenu="matMenu">
+                            <ng-container *ngFor="let role of diffusion.availableRoles">
+                                <button mat-menu-item (click)="diffusion.role=role" [class.selected]="diffusion.role===role" [disabled]="!isValidRole(i,role,diffusion.role)">{{'lang.'+ role | translate}}</button>
+                            </ng-container>
+                        </mat-menu>
                     </ng-container>
                 </div>
                 <div *ngIf="!diffusion.hasPrivilege" class="invalid">
@@ -132,19 +89,3 @@
         </mat-list-item>
     </div>
 </mat-list>
-<div *ngIf="loading" style="display:flex;padding: 10px;">
-    <mat-spinner style="margin:auto;"></mat-spinner>
-</div>
-<ng-container *ngIf="!loading && hasHistory">
-    <mat-divider></mat-divider>
-    <mat-expansion-panel style="box-shadow: none;">
-        <mat-expansion-panel-header>
-            <mat-panel-title color="primary">
-                {{'lang.showVisaWorkflowHistory' | translate}}
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <ng-template matExpansionPanelContent>
-            <app-history-visa-workflow [resId]="resId" style="display: contents;"></app-history-visa-workflow>
-        </ng-template>
-    </mat-expansion-panel>
-</ng-container>
