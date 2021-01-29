@@ -485,7 +485,6 @@ class ResourceListController
 
         $method          = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         $methodResponses = [];
-        $massAction      = count($resourcesForAction) > 1;
         foreach ($resourcesForAction as $key => $resId) {
             if (!empty($actionRequiredFields)) {
                 $requiredFieldsValid = ActionController::checkRequiredFields(['resId' => $resId, 'actionRequiredFields' => $actionRequiredFields]);
@@ -507,7 +506,7 @@ class ResourceListController
             }
 
             if (!empty($method)) {
-                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note'], 'action' => $action, 'massAction' => $massAction]);
+                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note'], 'action' => $action, 'resources' => $resourcesForAction]);
 
                 if (!empty($methodResponse['errors'])) {
                     if (empty($methodResponses['errors'])) {
@@ -527,6 +526,11 @@ class ResourceListController
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
         if (!empty($resourcesForAction)) {
             ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
+        }
+
+        if (!empty($methodResponse['postscript'])) {
+            $base64Args = base64_encode(json_encode($methodResponse['args']));
+            exec("php {$methodResponse['postscript']} --encodedData {$base64Args} > /dev/null &");
         }
 
         if (!empty($methodResponses)) {
