@@ -1,7 +1,7 @@
 @import '../../../../../../css/vars.scss';
 
 .item {
-    font-size: 12px;
+    // font-size: 12px;
 }
 
 .tile-icon {
@@ -14,10 +14,21 @@
 
 .resource{
     background: none;
-    transition: all 0.2s;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    grid-gap: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    align-items: center;
+    height: 60px;
 }
 
-.resource:hover{
+.resource-link {
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.resource-link:hover{
     background: rgba($primary,0.1);
     transition: all 0.2s;
 }
@@ -27,4 +38,8 @@
     .view-action-icon {
         // visibility: hidden;
     }
+}
+
+.date-item {
+    color: #666;
 }

@@ -178,4 +178,11 @@ export class DashboardService {
     getViewsByTileType(tileType: string) {
         return this.tileTypes[tileType].views;
     }
+
+    getChartMode() {
+        return [
+            'type',
+            'status'
+        ];
+    }
 }

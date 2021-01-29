@@ -21,9 +21,10 @@ export class TileCreateComponent implements OnInit {
     tileTypes: any[] = [];
     views: any[] = [];
 
-    sequence: string = null;
+    position: string = null;
     selectedTileType: string = null;
     selectedView: string = null;
+    extraParams: any = {};
 
     constructor(
         public translate: TranslateService,
@@ -37,7 +38,7 @@ export class TileCreateComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.sequence = this.data.sequence;
+        this.position = this.data.position;
         this.getTileTypes();
     }
 
@@ -63,7 +64,7 @@ export class TileCreateComponent implements OnInit {
     }
 
     isValid() {
-        return !this.functionsService.empty(this.sequence) && !this.functionsService.empty(this.selectedTileType) && ((this.views.length > 0 &&  !this.functionsService.empty(this.selectedView)) || this.views.length === 0);
+        return !this.functionsService.empty(this.position) && !this.functionsService.empty(this.selectedTileType) && ((this.views.length > 0 &&  !this.functionsService.empty(this.selectedView)) || this.views.length === 0);
     }
 
     formatData() {
@@ -71,8 +72,19 @@ export class TileCreateComponent implements OnInit {
             type : this.selectedTileType,
             view: this.selectedView,
             userId: this.headerService.user.id,
-            position: this.sequence
+            position: this.position,
+            parameters: this.extraParams
         };
+    }
+
+    resetExtraParams() {
+        this.extraParams = {};
+
+        if (this.selectedView === 'chart') {
+            this.extraParams = {
+                chartMode: 'type'
+            };
+        }
     }
 
     onSubmit() {
@@ -83,7 +95,8 @@ export class TileCreateComponent implements OnInit {
                     id : data.id,
                     type: objToSend.type,
                     view: objToSend.view,
-                    position: this.sequence
+                    position: this.position,
+                    parameters: objToSend.parameters
                 });
             }),
             catchError((err: any) => {

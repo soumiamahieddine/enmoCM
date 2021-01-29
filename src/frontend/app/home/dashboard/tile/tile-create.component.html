@@ -1,11 +1,11 @@
 <div class="mat-dialog-content-container">
-    <h1 mat-dialog-title>Ajouter une tuile</h1>
+    <h1 mat-dialog-title>{{'lang.addTile' | translate}}</h1>
     <div mat-dialog-content>
         <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
         <mat-form-field appearance="outline">
-            <mat-label>Type de tuile</mat-label>
+            <mat-label>{{'lang.tileType' | translate}}</mat-label>
             <mat-select [(ngModel)]="selectedTileType" (selectionChange)="getViews()">
                 <mat-option *ngFor="let tileType of tileTypes | sortBy : 'label'" [value]="tileType.id">
                     {{tileType.label}}
@@ -14,9 +14,17 @@
         </mat-form-field>
         <mat-form-field appearance="outline" *ngIf="views.length > 0">
             <mat-label>Vue</mat-label>
-            <mat-select [(ngModel)]="selectedView">
+            <mat-select [(ngModel)]="selectedView" (selectionChange)="resetExtraParams()">
                 <mat-option *ngFor="let view of views | sortBy : 'label'" [value]="view.id">
                     {{view.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="selectedView === 'chart'" appearance="outline">
+            <mat-label>Mode</mat-label>
+            <mat-select [(ngModel)]="extraParams.chartMode">
+                <mat-option *ngFor="let mode of dashboardService.getChartMode()" [value]="mode">
+                    {{mode}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

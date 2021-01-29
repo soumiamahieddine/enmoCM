@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
-        private dashboardService: DashboardService,
+        public dashboardService: DashboardService,
         private functionsService: FunctionsService,
         public dialog: MatDialog,
     ) { }
@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     } else {
                         this.tiles.push({
                             id: null,
-                            sequence: index,
+                            position: index,
                             editMode: false
                         });
                     }
@@ -75,26 +75,40 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         ).subscribe();
     }
 
-    changeView(tile: any, view: string) {
-        const indexTile = this.tiles.filter((tileItem: any) => tileItem.id !== null).map((tileItem: any) => tileItem.sequence).indexOf(tile.sequence);
-        this.tileComponent.toArray()[indexTile].changeView(view);
+    changeView(tile: any, view: string, extraParams: any = null) {
+        const indexTile = this.tiles.filter((tileItem: any) => tileItem.id !== null).map((tileItem: any) => tileItem.position).indexOf(tile.position);
+        this.tileComponent.toArray()[indexTile].changeView(view, extraParams);
         tile.view = view;
+        if (extraParams !== null) {
+            tile.parameters = extraParams;
+        }
+        this.http.put(`../rest/tiles/${tile.id}`, tile).pipe(
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     transferDataSuccess() {
         this.tiles.forEach((tile: any, index: number) => {
-            tile.sequence = index;
+            tile.position = index;
         });
-        // TO DO : SAVE IN BACK
+        this.http.put('../rest/tilesPositions', {tiles : this.tiles.filter((tile: any) => tile.id !== null)}).pipe(
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     addTilePrompt(tile: any) {
-        const dialogRef = this.dialog.open(TileCreateComponent, { panelClass: 'maarch-modal', width: '450px', autoFocus: false, disableClose: true, data: { sequence: tile.sequence} });
+        const dialogRef = this.dialog.open(TileCreateComponent, { panelClass: 'maarch-modal', width: '450px', autoFocus: false, disableClose: true, data: { position: tile.position} });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => !this.functionsService.empty(data)),
             tap((data: any) => {
-                this.tiles[tile.sequence] = {...this.dashboardService.getTile(data.type), ...data};
+                this.tiles[tile.position] = {...this.dashboardService.getTile(data.type), ...data};
             })
         ).subscribe();
     }
@@ -110,9 +124,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete(`../rest/tiles/${tile.id}`)),
             tap(() => {
-                this.tiles[tile.sequence] = {
+                this.tiles[tile.position] = {
                     id: null,
-                    sequence: tile.sequence,
+                    position: tile.position,
                     editMode: false
                 };
             })

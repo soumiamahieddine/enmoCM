@@ -70,4 +70,12 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
             this.notify.error(errors + ' not found');
         }
     }
+
+    isDate(val: any) {
+        if (!isNaN(Date.parse(val))) {
+            return true;
+        }  else {
+            return false;
+        }
+    }
 }

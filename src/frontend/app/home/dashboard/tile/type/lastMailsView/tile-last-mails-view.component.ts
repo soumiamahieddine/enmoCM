@@ -26,7 +26,6 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
     label: 'Mes derniers courriers consultés';
 
     resources: any[] = [];
-    extraParams: any = {};
     countResources: number = 0;
     route: string = null;
 
@@ -45,15 +44,16 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
         this.loading = false;
     }
 
-    async changeView(view: string) {
+    async changeView(view: string, extraParams: any) {
+        this.view = null;
         this.loading = true;
-        await this['get_' + view]();
+        await this['get_' + view](extraParams);
         this.view = view;
         this.route = this.tile.views.find((viewItem: any) => viewItem.id === this.view).route;
         this.loading = false;
     }
 
-    get_list() {
+    get_list(extraParams: any) {
         return new Promise((resolve) => {
             // FOR TEST
             setTimeout(() => {
@@ -61,32 +61,32 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
                     {
                         resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
-                        subject: 'Réservation bal des basketteurs',
-                        creationDate: '26-01-2021',
+                        subject: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque mattis eros non tellus elementum, a imperdiet lacus ornare. Nunc tincidunt nec massa sed cursus. Vivamus sit amet semper odio. Phasellus sed eleifend purus. Cras arcu ligula, sodales mollis nulla et, mollis sodales risus. Ut id nibh posuere, malesuada leo ac, consectetur neque. Suspendisse fringilla leo eget volutpat malesuada. Ut dictum, lectus in interdum aliquam, tellus ipsum euismod eros, et eleifend enim lorem non orci. Praesent tristique elit ac volutpat condimentum. Nullam pharetra, nunc ut imperdiet posuere, nisi ipsum molestie neque, sed tempus ex mauris sit amet lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec ac dapibus lacus, ac ultricies metus. Morbi tempus facilisis ex, eu malesuada massa laoreet et. Morbi pharetra at arcu nec vestibulum.',
+                        creationDate: '2021-01-29 12:16:53.491567',
                     },
                     {
                         resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
-                        creationDate: '26-01-2021',
+                        creationDate: '2021-01-29 12:16:53.491567',
                     },
                     {
                         resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
-                        creationDate: '26-01-2021',
+                        creationDate: '2021-01-29 12:16:53.491567',
                     },
                     {
                         resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
-                        creationDate: '26-01-2021',
+                        creationDate: '2021-01-29 12:16:53.491567',
                     },
                     {
                         resId: 100,
                         recipient: 'Jan-louis ERCOLANNI (MAARCH)',
                         subject: 'Réservation bal des basketteurs',
-                        creationDate: '26-01-2021',
+                        creationDate: '2021-01-29 12:16:53.491567',
                     }
                 ];
                 resolve(true);
@@ -105,15 +105,11 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
         });
     }
 
-    get_resume() {
+    get_resume(extraParams: any) {
         return new Promise((resolve) => {
             // FOR TEST
             setTimeout(() => {
                 this.countResources = 23;
-                this.extraParams = {
-                    userId: 20,
-                    folderId: 1
-                };
                 resolve(true);
             }, 3000);
 
@@ -130,7 +126,7 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
         });
     }
 
-    get_chart() {
+    get_chart(extraParams: any) {
         return new Promise((resolve) => {
             // FOR TEST
             setTimeout(() => {
@@ -157,10 +153,6 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
                         value: 2
                     }
                 ];
-                this.extraParams = {
-                    userId: 20,
-                    folderId: 1
-                };
                 resolve(true);
             }, 3000);
 

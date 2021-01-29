@@ -18,14 +18,14 @@
         [route]="route" 
         [countResources]="countResources" 
         [icon]="tile.icon"
-        [extraParams]="extraParams" 
+        [extraParams]="tile.parameters" 
         [resourceLabel]="'courrier(s)'"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-resume>
     <app-tile-view-chart *ngIf="view==='chart'" 
         [route]="route"
         [resources]="resources"
-        [extraParams]="extraParams" 
+        [extraParams]="tile.parameters" 
         [icon]="tile.icon"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-chart>

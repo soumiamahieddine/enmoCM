@@ -2237,5 +2237,7 @@
     "noAddressFound": "Aucune adresse trouvée",
     "searchTemplate": "Modèle de recherche",
     "chart": "Graphique",
-    "resume": "Synthèse"
+    "resume": "Synthèse",
+    "addTile": "Ajouter une tuile",
+    "tileType": "Type de tuile"
 }
