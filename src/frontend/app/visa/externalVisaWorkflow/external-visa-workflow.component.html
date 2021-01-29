@@ -15,8 +15,8 @@
         <mat-list-item disableRipple *ngFor="let diffusion of visaWorkflow.items;let i=index" cdkDrag
             class="columns workflow" [cdkDragDisabled]="!canManageUser(diffusion, i)"
             [class.notDraggable]="!canManageUser(diffusion, i)" [class.notEditable]="!adminMode"
-            [class.processed]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) === -1"
-            [class.interrupt]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) > -1">
+            [class.processed]="diffusion.process_date != null && diffusion.status === 'VAL'"
+            [class.interrupt]="diffusion.process_date != null && diffusion.status !== 'VAL'">
             <mat-icon *ngIf="getCurrentVisaUserIndex() === i && (!adminMode || target === 'signatureBook')"
                 class="fa fa-chevron-right fa-2x" mat-list-icon color="accent">
             </mat-icon>
@@ -28,18 +28,16 @@
                 [class.invalid]="!diffusion.hasPrivilege || !diffusion.isValid"
                 [style.background-image]="!functions.empty(diffusion.picture) ? 'url('+diffusion.picture+')' : ''"
                 style="position: relative;">
-                <i *ngIf="!functions.empty(diffusion.process_comment)" class="far fa-comment-dots commentBubble"
-                    [matTooltip]="diffusion.process_comment"></i>
             </mat-icon>
             <ng-container *ngIf="(!adminMode || diffusion.process_date != null) && diffusion.isValid">
                 <mat-icon mat-list-icon class="fa-2x fa"
-                    [title]="diffusion.process_comment !== null ? diffusion.process_comment : ''"
+                    [title]="'lang.' + (diffusion.status | lowercase) + 'Status' | translate"
                     [class.fa-hourglass]="diffusion.process_date == null"
-                    [class.fa-thumbs-up]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) === -1"
-                    [class.fa-hand-paper]="diffusion.process_date != null && diffusion.process_comment === ('lang.hasInterruptedWorkflow' | translate)"
-                    [class.fa-times]="diffusion.process_date != null && diffusion.process_comment === ('lang.visaWorkflowInterrupted' | translate)"
-                    [class.valid]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) === -1"
-                    [class.invalid]="diffusion.process_date != null && ['lang.visaWorkflowInterrupted' | translate, 'lang.hasInterruptedWorkflow' | translate].indexOf(diffusion.process_comment) > -1"
+                    [class.fa-thumbs-up]="diffusion.process_date != null && diffusion.status == 'VAL'"
+                    [class.fa-thumbs-down]="diffusion.process_date != null && diffusion.status === 'REF'"
+                    [class.fa-hand-paper]="diffusion.process_date != null && diffusion.status === 'STOP'"
+                    [class.valid]="diffusion.process_date != null && diffusion.status === 'VAL'"
+                    [class.invalid]="diffusion.process_date != null && diffusion.status !== 'VAL'"
                     style="opacity:0.5;"></mat-icon>
             </ng-container>
             <div mat-line class="workflowLine">

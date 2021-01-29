@@ -192,33 +192,6 @@ export class ExternalVisaWorkflow implements OnInit {
         });
     }
 
-    private _filter(value: string): string[] {
-        if (typeof value === 'string') {
-            const filterValue = this.latinisePipe.transform(value.toLowerCase());
-            return this.signVisaUsers.filter((option: any) => this.latinisePipe.transform(option['title'].toLowerCase()).includes(filterValue));
-        } else {
-            return this.signVisaUsers;
-        }
-    }
-
-    private _filterPrivateModel(value: string): string[] {
-        if (typeof value === 'string') {
-            const filterValue = this.latinisePipe.transform(value.toLowerCase());
-            return this.visaTemplates.private.filter((option: any) => this.latinisePipe.transform(option['title'].toLowerCase()).includes(filterValue));
-        } else {
-            return this.visaTemplates.private;
-        }
-    }
-
-    private _filterPublicModel(value: string): string[] {
-        if (typeof value === 'string') {
-            const filterValue = this.latinisePipe.transform(value.toLowerCase());
-            return this.visaTemplates.public.filter((option: any) => this.latinisePipe.transform(option['title'].toLowerCase()).includes(filterValue));
-        } else {
-            return this.visaTemplates.public;
-        }
-    }
-
     loadWorkflowMaarchParapheur(attachmentId: number, type: string) {
         this.loading = true;
         this.visaWorkflow.items = [];
@@ -235,7 +208,8 @@ export class ExternalVisaWorkflow implements OnInit {
                         'hasPrivilege': true,
                         'isValid': true,
                         'delegatedBy': null,
-                        'role': element.signatureMode
+                        'role': element.signatureMode,
+                        'status': element.status
                     };
                     this.visaWorkflow.items.push(user);
                     this.http.get('../rest/maarchParapheur/user/' + element.userId + '/picture')

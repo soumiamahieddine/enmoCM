@@ -367,38 +367,6 @@ export class VisaWorkflowComponent implements OnInit {
         ).subscribe();
     }
 
-    loadWorkflowMaarchParapheur(attachmentId: number, type: string) {
-        this.loading = true;
-        this.visaWorkflow.items = [];
-        this.http.get(`../rest/documents/${attachmentId}/maarchParapheurWorkflow?type=${type}`)
-            .subscribe((data: any) => {
-                data.workflow.forEach((element: any, key: any) => {
-                    const user = {
-                        'listinstance_id': key,
-                        'id': element.userId,
-                        'labelToDisplay': element.userDisplay,
-                        'requested_signature': element.mode !== 'visa',
-                        'process_date': this.functions.formatFrenchDateToTechnicalDate(element.processDate),
-                        'picture': '',
-                        'hasPrivilege': true,
-                        'isValid': true,
-                        'delegatedBy': null,
-                        'role': element.signatureMode
-                    };
-                    this.visaWorkflow.items.push(user);
-                    this.http.get('../rest/maarchParapheur/user/' + element.userId + '/picture')
-                        .subscribe((data: any) => {
-                            this.visaWorkflow.items.filter((item: any) => item.id === element.userId)[0].picture = data.picture;
-                        }, (err: any) => {
-                            this.notify.handleErrors(err);
-                        });
-                });
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
-    }
-
     deleteItem(index: number) {
         this.visaWorkflow.items.splice(index, 1);
         this.workflowUpdated.emit(this.visaWorkflow.items);
