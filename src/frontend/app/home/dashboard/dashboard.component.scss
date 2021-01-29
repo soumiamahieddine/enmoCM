@@ -48,3 +48,27 @@
     align-items: center;
     justify-content: center;
 }
+
+.empty-dashboard {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    i {
+        opacity: 0.5;
+        font-size: 120px;
+    }
+
+    div {
+        font-size: 30px;
+        font-weight: bold;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        span {
+            opacity: 0.5;
+        }
+    }
+}

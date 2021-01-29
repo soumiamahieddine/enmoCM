@@ -1,4 +1,4 @@
-<div class="dashboard-container" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="tiles">
+<div *ngIf="!emptyDashboard()" class="dashboard-container" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="tiles">
     <div class="tile" [class.empty_tile_edit]="tile.id === null && tile.editMode" [class.empty_tile]="tile.id === null"
         *ngFor="let tile of tiles;let i=index" (mouseenter)="enterTile(tile, i)" (mouseleave)="leaveTile(tile, i)" dnd-sortable [sortableIndex]="i" (onDropSuccess)="transferDataSuccess()">
         <div class="tool-left" *ngIf="tile.id !== null && tile.editMode">
@@ -38,8 +38,14 @@
         <app-tile-last-mails-view #tileComponent *ngIf="tile.type === 'myLastResources'" [tile]="tile" [view]="tile.view"
             style="display: flex;height: 100%;flex-direction: column;width: 100%;">
         </app-tile-last-mails-view>
-        <button mat-button color="secondary" mat-icon-button *ngIf="tile.id === null && tile.editMode" (click)="addTilePrompt(tile)">
+        <button mat-button color="secondary" mat-icon-button [title]="'lang.addTile' | translate" *ngIf="tile.id === null && tile.editMode" (click)="addTilePrompt(tile)">
             <mat-icon color="secondary" class="fa fa-plus"></mat-icon>
         </button>
+    </div>
+</div>
+<div class="empty-dashboard" *ngIf="emptyDashboard()">
+    <i class="fas fa-desktop"></i>
+    <div>
+        <span>{{'lang.dashboardEmpty' | translate}}</span>&nbsp;<button mat-stroked-button color="primary" (click)="addTilePrompt(tiles[0])">{{'lang.addTile' | translate}}</button>
     </div>
 </div>

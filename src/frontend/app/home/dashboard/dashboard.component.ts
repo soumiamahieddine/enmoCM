@@ -132,4 +132,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             })
         ).subscribe();
     }
+
+    emptyDashboard() {
+        return this.tiles.filter((item: any) => item.id !== null).length === 0;
+    }
 }

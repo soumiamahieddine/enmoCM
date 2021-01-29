@@ -2239,5 +2239,6 @@
     "chart": "Graphique",
     "resume": "Synthèse",
     "addTile": "Ajouter une tuile",
-    "tileType": "Type de tuile"
+    "tileType": "Type de tuile",
+    "dashboardEmpty": "Votre tableau de bord est vide"
 }
