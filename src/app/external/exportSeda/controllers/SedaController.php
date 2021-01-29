@@ -52,7 +52,7 @@ class SedaController
                     'retentionFinalDisposition' => $args['doctype']['retention_final_disposition']
                 ],
                 'slipInfo' => [
-                    'slipId'    => $GLOBALS['login'] . '-' . $date->format('Ymd-Hisu'),
+                    'slipId'    => $GLOBALS['login'] . '-' . $date->format('Ymd-Hisu') . '-' . $args['resource']['res_id'],
                     'archiveId' => 'archive_' . $args['resource']['res_id']
                 ]
             ],

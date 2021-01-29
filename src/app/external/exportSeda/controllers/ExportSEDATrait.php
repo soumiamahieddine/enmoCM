@@ -33,7 +33,6 @@ use setasign\Fpdi\Tcpdf\Fpdi;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use SrcCore\models\ValidatorModel;
-use User\models\UserModel;
 
 trait ExportSEDATrait
 {
@@ -177,7 +176,7 @@ trait ExportSEDATrait
                 'senders'    => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']),
                 'recipients' => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient'])
             ],
-            'attachments'               => $initData['archivalData']['archiveUnits'] ?? [],
+            'attachments'               => $initData['archiveUnits'],
             'folders'                   => $folder['folderPath'],
             'links'                     => $initData['additionalData']['linkedResources']
         ];
@@ -208,9 +207,14 @@ trait ExportSEDATrait
         ExportSEDATrait::cleanTmpDocument(['archiveUnits' => $initData['archiveUnits']]);
 
         if ($args['data']['actionMode'] == 'download') {
+            static $downloadFiles;
+            if ($downloadFiles === null) {
+                $downloadFiles = [];
+            }
             $encodedContent = base64_encode(file_get_contents($sedaPackage['encodedFilePath']));
             unlink($sedaPackage['encodedFilePath']);
-            return ['data' => ['encodedFile' => $encodedContent]];
+            $downloadFiles[] = $encodedContent;
+            return ['data' => ['encodedFiles' => $downloadFiles]];
         } elseif (count($args['resources']) > 1) {
             $customId = CoreConfigModel::getCustomId();
             
