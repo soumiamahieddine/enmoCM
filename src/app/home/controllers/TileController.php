@@ -22,7 +22,7 @@ use Slim\Http\Response;
 
 class TileController
 {
-    const TYPES = ['lastViewMails', 'basket', 'savedQuery', 'followedMails', 'folder', 'externalSignatureBook', 'shortcut'];
+    const TYPES = ['myLastResources', 'basket', 'searchTemplate', 'followedMail', 'folder', 'externalSignatoryBook', 'shortcut'];
     const VIEWS = ['list', 'resume', 'chart'];
 
     public function get(Request $request, Response $response)

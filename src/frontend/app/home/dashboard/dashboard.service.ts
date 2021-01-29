@@ -2,11 +2,33 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LatinisePipe } from 'ngx-pipes';
 
+interface Tiles {
+    'myLastResources': Tile;
+    /*'basket': Tile;
+    'searchTemplate': Tile;
+    'followedMail': Tile;
+    'folder': Tile;
+    'externalSignatoryBook': Tile;
+    'shortcut': Tile;*/
+}
+
+interface Tile {
+    'icon': string; // icon of tile
+    'menus': ('delete' | 'view')[]; // action of tile
+    'views': TileView[]; // views tile
+}
+
+interface TileView {
+    'id': 'list' | 'resume' | 'chart'; // identifier
+    'route': string; // router when click on tile
+}
+
 @Injectable()
 export class DashboardService {
 
-    tileTypes: any = {
+    tileTypes: Tiles = {
         myLastResources : {
+            icon: 'fa fa-history',
             menus : [
                 'view',
                 'delete'
@@ -26,7 +48,8 @@ export class DashboardService {
                 }
             ]
         },
-        basket : {
+        /*basket : {
+            icon: 'fa fa-inbox',
             menus : [
                 'view',
                 'delete'
@@ -47,6 +70,7 @@ export class DashboardService {
             ]
         },
         searchTemplate : {
+            icon: 'fa fa-search',
             menus : [
                 'view',
                 'delete'
@@ -67,6 +91,7 @@ export class DashboardService {
             ]
         },
         followedMail : {
+            icon: 'fa fa-star',
             menus : [
                 'view',
                 'delete'
@@ -87,6 +112,7 @@ export class DashboardService {
             ]
         },
         folder : {
+            icon: 'fa fa-folder',
             menus : [
                 'view',
                 'delete'
@@ -107,6 +133,7 @@ export class DashboardService {
             ]
         },
         externalSignatoryBook : {
+            icon: 'fas fa-pen-nib',
             menus : [
                 'view',
                 'delete'
@@ -127,11 +154,12 @@ export class DashboardService {
             ]
         },
         shortcut : {
+            icon: null,
             menus : [
                 'delete'
             ],
             views: []
-        },
+        },*/
     };
 
     constructor(

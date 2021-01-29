@@ -70,7 +70,8 @@ export class TileCreateComponent implements OnInit {
         return {
             type : this.selectedTileType,
             view: this.selectedView,
-            userId: this.headerService.user.id
+            userId: this.headerService.user.id,
+            position: this.sequence
         };
     }
 
@@ -78,11 +79,11 @@ export class TileCreateComponent implements OnInit {
         const objToSend: any = this.formatData();
         this.http.post('../rest/tiles', objToSend).pipe(
             tap((data: any) => {
-                objToSend.id = data;
                 this.dialogRef.close({
-                    id : data,
+                    id : data.id,
                     type: objToSend.type,
                     view: objToSend.view,
+                    position: this.sequence
                 });
             }),
             catchError((err: any) => {

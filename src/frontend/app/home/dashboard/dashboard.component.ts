@@ -4,9 +4,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { DashboardService } from './dashboard.service';
 import { FunctionsService } from '@service/functions.service';
 import { TileCreateComponent } from './tile/tile-create.component';
-import { exhaustMap, filter, tap } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@plugins/modal/confirm.component';
+import { of } from 'rxjs';
+import { NotificationService } from '@service/notification/notification.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -24,6 +26,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
+        private notify: NotificationService,
         private dashboardService: DashboardService,
         private functionsService: FunctionsService,
         public dialog: MatDialog,
@@ -49,40 +52,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
 
     getDashboardConfig() {
-        const test: any = [
-            {
-                id: 1,
-                type: 'myLastResources',
-                view: 'resume',
-                sequence: 0
-            },
-            {
-                id: 1,
-                type: 'myLastResources',
-                view: 'list',
-                sequence: 3
-            },
-            {
-                id: 1,
-                type: 'myLastResources',
-                view: 'chart',
-                sequence: 5
-            }
-        ];
-
-        for (let index = 0; index < 6; index++) {
-            const tmpTile = test.find((tile: any) => tile.sequence === index);
-            if (!this.functionsService.empty(tmpTile)) {
-                const objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
-                this.tiles.push(objTile);
-            } else {
-                this.tiles.push({
-                    id: null,
-                    sequence: index,
-                    editMode: false
-                });
-            }
-        }
+        this.http.get('../rest/tiles').pipe(
+            tap((data: any) => {
+                for (let index = 0; index < 6; index++) {
+                    const tmpTile = data.tiles.find((tile: any) => tile.position === index);
+                    if (!this.functionsService.empty(tmpTile)) {
+                        const objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
+                        this.tiles.push(objTile);
+                    } else {
+                        this.tiles.push({
+                            id: null,
+                            sequence: index,
+                            editMode: false
+                        });
+                    }
+                }
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     changeView(tile: any, view: string) {
@@ -104,7 +94,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         dialogRef.afterClosed().pipe(
             filter((data: string) => !this.functionsService.empty(data)),
             tap((data: any) => {
-                tile = {...this.dashboardService.getTile(data.type), ...data};
+                this.tiles[tile.sequence] = {...this.dashboardService.getTile(data.type), ...data};
             })
         ).subscribe();
     }
@@ -116,9 +106,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     delete(tile: any) {
         const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction') } });
 
-        // TO DO: SAVE IN BACK
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete(`../rest/tiles/${tile.id}`)),
             tap(() => {
                 this.tiles[tile.sequence] = {
                     id: null,

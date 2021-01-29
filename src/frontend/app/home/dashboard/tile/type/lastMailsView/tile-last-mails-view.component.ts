@@ -26,6 +26,7 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
     label: 'Mes derniers courriers consultés';
 
     resources: any[] = [];
+    extraParams: any = {};
     countResources: number = 0;
     route: string = null;
 
@@ -109,6 +110,10 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
             // FOR TEST
             setTimeout(() => {
                 this.countResources = 23;
+                this.extraParams = {
+                    userId: 20,
+                    folderId: 1
+                };
                 resolve(true);
             }, 3000);
 
@@ -152,6 +157,10 @@ export class TileLastMailsViewDashboardComponent implements OnInit, AfterViewIni
                         value: 2
                     }
                 ];
+                this.extraParams = {
+                    userId: 20,
+                    folderId: 1
+                };
                 resolve(true);
             }, 3000);
 
