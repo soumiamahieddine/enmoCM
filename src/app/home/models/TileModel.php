@@ -59,7 +59,7 @@ class TileModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['user_id', 'type', 'view', 'position']);
+        ValidatorModel::notEmpty($args, ['user_id', 'type', 'view']);
         ValidatorModel::stringType($args, ['type', 'view', 'parameters']);
         ValidatorModel::intVal($args, ['user_id', 'position']);
 
