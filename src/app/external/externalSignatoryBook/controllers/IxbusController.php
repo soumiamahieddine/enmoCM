@@ -145,7 +145,7 @@ class IxbusController
 
                 $annexesAttachments[] = [
                     'filePath' => $filePath,
-                    'fileName' => $value['title']
+                    'fileName' => $value['title'] . '.pdf'
                 ];
                 unset($attachments[$key]);
             }
@@ -168,19 +168,20 @@ class IxbusController
         if (!empty($mainDocumentFilePath)) {
             $attachmentsData = [[
                 'filePath' => $mainDocumentFilePath,
-                'fileName' => $mainResource['subject']
+                'fileName' => $mainResource['subject'] . '.pdf'
             ]];
         };
 
         $attachmentsData = array_merge($annexesAttachments, $attachmentsData);
         $userInfo = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'natureId' => $aArgs['natureId']]);
+
+        $signature = $aArgs['manSignature'] == 'manual' ? 1 : 0;
         $bodyData = [
             'nature'     => $aArgs['natureId'],
             'referent'   => $userInfo['user'],
             'circuit'    => $aArgs['messageModel'],
-            'options'    => json_encode(['confidentiel' => false, 'dateLimite' => true, 'documentModifiable' => true, 'annexesSignables' => false, 'autoriserModificationAnnexes' => false]),
+            'options'    => json_encode(['confidentiel' => false, 'dateLimite' => true, 'documentModifiable' => true, 'annexesSignables' => false, 'autoriserModificationAnnexes' => false, 'signature' => $signature]),
             'dateLimite' => $processLimitDate,
-            'signature'  => $aArgs['manSignature'] == 'manual' ? 1 : 0
         ];
 
         foreach ($attachments as $value) {
@@ -209,7 +210,7 @@ class IxbusController
                 'config'   => $aArgs['config'],
                 'folderId' => $folderId,
                 'filePath' => $filePath,
-                'fileName' => $value['title'],
+                'fileName' => $value['title'] . '.pdf',
                 'fileType' => 'principal'
             ]);
             if (!empty($addedFile['error'])) {
@@ -266,7 +267,7 @@ class IxbusController
                 'config'   => $aArgs['config'],
                 'folderId' => $folderId,
                 'filePath' => $filePath,
-                'fileName' => $mainResource['title'],
+                'fileName' => $mainResource['title'] . '.pdf',
                 'fileType' => 'principal'
             ]);
             if (!empty($addedFile['error'])) {
@@ -348,17 +349,15 @@ class IxbusController
         foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
             $folderData = IxbusController::getDossier(['config' => $aArgs['config'], 'folderId' => $value['external_id']]);
 
-            // Refused
             if ($folderData['data']['etat'] == 'Refusé') {
                 $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'refused';
             // $notes = IxbusController::getDossier(['config' => $aArgs['config'], 'folderId' => $value['external_id']]);
                 // $aArgs['idsToRetrieve'][$version][$resId]['notes'][] = ['content' => (string)$notes->MotifRefus];
-            // Validated
             } elseif ($folderData['data']['etat'] == 'Terminé') {
                 $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'validated';
                 $signedDocument = IxbusController::getDocument(['config' => $aArgs['config'], 'documentId' => $folderData['data']['documents']['principal']['identifiant']]);
-                $aArgs['idsToRetrieve'][$version][$resId]['format'] = 'pdf'; // format du fichier récupéré
-                $aArgs['idsToRetrieve'][$version][$resId]['encodedFile'] = (string)$signedDocument->Fichier;
+                $aArgs['idsToRetrieve'][$version][$resId]['format']      = 'pdf';
+                $aArgs['idsToRetrieve'][$version][$resId]['encodedFile'] = $signedDocument['encodedDocument'];
 
             // $notes = IxbusController::getAnnotations(['config' => $aArgs['config'], 'folderId' => $value['external_id']]);
                 // $aArgs['idsToRetrieve'][$version][$resId]['notes'][] = ['content' => (string)$notes->Annotation->Texte];
