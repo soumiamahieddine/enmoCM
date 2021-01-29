@@ -162,15 +162,13 @@ class TileController
         }
 
         foreach ($body['tiles'] as $key => $tile) {
-            if ($key != $tile['position']) {
-                TileModel::update([
-                    'set'   => [
-                        'position' => $key,
-                    ],
-                    'where' => ['id = ?'],
-                    'data'  => [$tile['id']]
-                ]);
-            }
+            TileModel::update([
+                'set'   => [
+                    'position' => $tile['position'],
+                ],
+                'where' => ['id = ?'],
+                'data'  => [$tile['id']]
+            ]);
         }
 
         return $response->withStatus(204);
