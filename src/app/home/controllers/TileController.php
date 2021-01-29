@@ -50,8 +50,8 @@ class TileController
             return $response->withStatus(400)->withJson(['errors' => 'Body type is empty, not a string or not valid']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['view'] ?? null) || !in_array($body['view'], TileController::VIEWS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body view is empty, not a string or not valid']);
-        } elseif (!Validator::intVal()->notEmpty()->validate($body['position'] ?? null)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body position is empty or not an integer']);
+        } elseif (!Validator::intVal()->validate($body['position'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body position is not set or not an integer']);
         }
 
         $tiles = TileModel::get([
@@ -93,15 +93,12 @@ class TileController
 
         if (empty($body)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body is empty']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['type'] ?? null) || !in_array($body['type'], TileController::TYPES)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body type is empty, not a string or not valid']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['view'] ?? null) || !in_array($body['view'], TileController::VIEWS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body view is empty, not a string or not valid']);
         }
 
         TileModel::update([
             'set'   => [
-                'type'          => $body['type'],
                 'view'          => $body['view'],
                 'parameters'    => empty($body['parameters']) ? '{}' : json_encode($body['parameters'])
             ],
