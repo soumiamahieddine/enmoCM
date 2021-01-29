@@ -34,7 +34,7 @@ class TileController
         ]);
 
         foreach ($tiles as $key => $tile) {
-            $tiles['parameters'] = json_decode($tile['parameters'], true);
+            $tiles[$key]['parameters'] = json_decode($tile['parameters'], true);
         }
 
         return $response->withJson(['tiles' => $tiles]);
