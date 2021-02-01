@@ -528,6 +528,7 @@ $app->post('/templates/{id}/mergeEmail', \Template\controllers\TemplateControlle
 //Tiles
 $app->get('/tiles', \Home\controllers\TileController::class . ':get');
 $app->post('/tiles', \Home\controllers\TileController::class . ':create');
+$app->get('/tiles/{id}', \Home\controllers\TileController::class . ':getById');
 $app->put('/tiles/{id}', \Home\controllers\TileController::class . ':update');
 $app->delete('/tiles/{id}', \Home\controllers\TileController::class . ':delete');
 $app->put('/tilesPositions', \Home\controllers\TileController::class . ':updatePositions');
