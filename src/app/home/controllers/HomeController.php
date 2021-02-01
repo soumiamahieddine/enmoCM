@@ -35,7 +35,7 @@ class HomeController
         $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences', 'external_id']]);
 
         $redirectedBaskets = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $GLOBALS['id']]);
-        $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['login']]);
+        $groups = UserModel::getGroupsById(['id' => $GLOBALS['id']]);
 
         $preferences = json_decode($user['preferences'], true);
         if (!empty($preferences['homeGroups'])) {

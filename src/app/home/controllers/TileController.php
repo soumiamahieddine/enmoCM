@@ -14,11 +14,17 @@
 
 namespace Home\controllers;
 
+use Basket\models\BasketModel;
+use Doctype\models\DoctypeModel;
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Home\models\TileModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
+use User\models\UserModel;
 
 class TileController
 {
@@ -38,6 +44,26 @@ class TileController
         }
 
         return $response->withJson(['tiles' => $tiles]);
+    }
+
+    public function getById(Request $request, Response $response, array $args)
+    {
+        $tile = TileModel::getById([
+            'select'    => ['*'],
+            'id'        => [$args['id']]
+        ]);
+        if (empty($tile) || $tile['user_id'] != $GLOBALS['id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Tile out of perimeter']);
+        }
+
+        $tile['parameters'] = json_decode($tile['parameters'], true);
+
+        $control = TileController::getDetails($tile);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
+        return $response->withJson(['tile' => $tile]);
     }
 
     public function create(Request $request, Response $response)
@@ -61,6 +87,10 @@ class TileController
         ]);
         if (count($tiles) >= 6) {
             return $response->withStatus(400)->withJson(['errors' => 'Too many tiles (limited to 6)']);
+        }
+        $control = TileController::controlParameters($body);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
         $id = TileModel::create([
@@ -172,5 +202,59 @@ class TileController
         }
 
         return $response->withStatus(204);
+    }
+
+    private static function controlParameters(array $args)
+    {
+        if ($args['type'] == 'basket') {
+            if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
+                return ['errors' => 'Body parameters is empty or not an array'];
+            } elseif (!Validator::intVal()->validate($args['parameters']['basketId'] ?? null)) {
+                return ['errors' => 'Body[parameters] basketId is empty or not an integer'];
+            } elseif (!Validator::intVal()->validate($args['parameters']['groupId'] ?? null)) {
+                return ['errors' => 'Body[parameters] groupId is empty or not an integer'];
+            }
+            if (!BasketModel::hasGroup(['id' => $args['parameters']['basketId'], 'groupId' => $args['parameters']['groupId']])) {
+                return ['errors' => 'Basket is not linked to this group'];
+            } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $args['parameters']['groupId']])) {
+                return ['errors' => 'User is not linked to this group'];
+            }
+        }
+
+        return true;
+    }
+
+    private static function getDetails(array &$tile)
+    {
+        if ($tile['type'] == 'basket') {
+            if (!BasketModel::hasGroup(['id' => $tile['parameters']['basketId'], 'groupId' => $tile['parameters']['groupId']])) {
+                return ['errors' => 'Basket is not linked to this group'];
+            } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $tile['parameters']['groupId']])) {
+                return ['errors' => 'User is not linked to this group'];
+            }
+
+            $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name'], 'id' => $tile['parameters']['basketId']]);
+            $group = GroupModel::getById(['select' => ['group_desc'], 'id' => $tile['parameters']['groupId']]);
+            $tile['basketName'] = $basket['basket_name'];
+            $tile['groupName'] = $group['group_desc'];
+            if ($tile['view'] == 'resume') {
+                $tile['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']]);
+            } elseif ($tile['view'] == 'list') {
+                //TODO WIP
+            } elseif ($tile['view'] == 'chart') {
+                $resources = ResModel::getOnView([
+                    'select'    => ['COUNT(type_id)'],
+                    'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
+                    'groupBy'   => ['type_id']
+                ]);
+                $tile['resources'] = [];
+                foreach ($resources as $resource) {
+                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+                    $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                }
+            }
+        }
+
+        return true;
     }
 }
