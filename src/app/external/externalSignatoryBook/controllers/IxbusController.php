@@ -44,6 +44,12 @@ class IxbusController
                 return ['error' => $messagesModels['error']];
             }
             $rawResponse['messagesModel'][$nature['identifiant']] = $messagesModels['messageModels'];
+
+            $users = IxbusController::getNatureUsers(['config' => $config, 'natureId' => $nature['identifiant']]);
+            if (!empty($users['error'])) {
+                return ['error' => $users['error']];
+            }
+            $rawResponse['users'][$nature['identifiant']] = $users['users'];
         }
 
         return $rawResponse;
@@ -86,7 +92,7 @@ class IxbusController
         return ['messageModels' => $curlResponse['response']['payload']];
     }
 
-    public static function getInfoUtilisateur($aArgs)
+    public static function getNatureUsers($aArgs)
     {
         $curlResponse = CurlModel::execSimple([
             'url'     => rtrim($aArgs['config']['data']['url'], '/') . '/api/parapheur/v1/nature/' . $aArgs['natureId'] . '/redacteur',
@@ -98,8 +104,7 @@ class IxbusController
             return ['error' => $curlResponse['message']];
         }
 
-        $redactor = array_column($curlResponse['response']['payload'], 'identifiant', 'nomUtilisateur');
-        return ['user' => $redactor[$aArgs['login']]];
+        return ['users' => $curlResponse['response']['payload']];
     }
 
     public static function sendDatas($aArgs)
@@ -169,14 +174,12 @@ class IxbusController
                 'fileName' => $mainResource['subject'] . '.pdf'
             ]];
         };
-
         $attachmentsData = array_merge($annexesAttachments, $attachmentsData);
-        $userInfo = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'natureId' => $aArgs['natureId']]);
 
         $signature = $aArgs['manSignature'] == 'manual' ? 1 : 0;
         $bodyData = [
             'nature'     => $aArgs['natureId'],
-            'referent'   => $userInfo['user'],
+            'referent'   => $aArgs['referent'],
             'circuit'    => $aArgs['messageModel'],
             'options'    => ['confidentiel' => false, 'dateLimite' => true, 'documentModifiable' => true, 'annexesSignables' => false, 'autoriserModificationAnnexes' => false, 'signature' => $signature],
             'dateLimite' => $processLimitDate,

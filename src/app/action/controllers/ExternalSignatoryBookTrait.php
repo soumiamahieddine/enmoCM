@@ -63,14 +63,6 @@ trait ExternalSignatoryBookTrait
                 }
             }
 
-            if ($config['id'] == 'ixbus') {
-                $loginIxbus = $args['data']['ixbus']['login'];
-                $userInfo   = IxbusController::getInfoUtilisateur(['config' => $config, 'login' => $loginIxbus, 'natureId' => $args['data']['ixbus']['nature']]);
-                if (empty($userInfo['user'])) {
-                    return ['errors' => [_NOT_ALLOWED_USER_FOR_THIS_NATURE]];
-                }
-            }
-
             $integratedResource = ResModel::get([
                 'select' => [1],
                 'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
@@ -114,7 +106,7 @@ trait ExternalSignatoryBookTrait
                 $sentInfo = IxbusController::sendDatas([
                     'config'        => $config,
                     'resIdMaster'   => $args['resId'],
-                    'loginIxbus'    => $loginIxbus,
+                    'referent'      => $args['data']['ixbus']['userId'],
                     'natureId'      => $args['data']['ixbus']['nature'],
                     'messageModel'  => $args['data']['ixbus']['messageModel'],
                     'manSignature'  => $args['data']['ixbus']['signatureMode']
