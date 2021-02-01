@@ -349,16 +349,11 @@ class IxbusController
         foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
             $folderData = IxbusController::getDossier(['config' => $aArgs['config'], 'folderId' => $value['external_id']]);
 
-            if ($folderData['data']['etat'] == 'Refusé') {
-                $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'refused';
-            // $notes = IxbusController::getDossier(['config' => $aArgs['config'], 'folderId' => $value['external_id']]);
-                // $aArgs['idsToRetrieve'][$version][$resId]['notes'][] = ['content' => (string)$notes->MotifRefus];
-            } elseif ($folderData['data']['etat'] == 'Terminé') {
-                $aArgs['idsToRetrieve'][$version][$resId]['status'] = 'validated';
+            if (in_array($folderData['data']['etat'], ['Refusé', 'Terminé'])) {
+                $aArgs['idsToRetrieve'][$version][$resId]['status'] = $folderData['data']['etat'] == 'Refusé' ? 'refused' : 'validated';
                 $signedDocument = IxbusController::getDocument(['config' => $aArgs['config'], 'documentId' => $folderData['data']['documents']['principal']['identifiant']]);
                 $aArgs['idsToRetrieve'][$version][$resId]['format']      = 'pdf';
                 $aArgs['idsToRetrieve'][$version][$resId]['encodedFile'] = $signedDocument['encodedDocument'];
-
             // $notes = IxbusController::getAnnotations(['config' => $aArgs['config'], 'folderId' => $value['external_id']]);
                 // $aArgs['idsToRetrieve'][$version][$resId]['notes'][] = ['content' => (string)$notes->Annotation->Texte];
             } else {

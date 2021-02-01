@@ -190,7 +190,7 @@ trait PreProcessActionSEDATrait
     
             $archivalData = SedaController::initArchivalData([
                 'resource'           => $resources[$resId],
-                'attachments'        => $resAttachments[$resId],
+                'attachments'        => $resAttachments[$resId] ?? [],
                 'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
                 'entity'             => $destinationsData[$destinationId],
                 'doctype'            => $doctypesData[$typeId],

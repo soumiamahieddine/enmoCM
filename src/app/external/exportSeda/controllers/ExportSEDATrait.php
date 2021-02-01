@@ -141,7 +141,7 @@ trait ExportSEDATrait
 
         $initData = SedaController::initArchivalData([
             'resource'           => $resource,
-            'attachments'        => $attachmentsData[$args['resId']],
+            'attachments'        => $attachmentsData[$args['resId']] ?? [],
             'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
             'entity'             => $entity,
             'doctype'            => $doctype,
