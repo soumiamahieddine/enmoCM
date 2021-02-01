@@ -24,6 +24,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use Status\models\StatusModel;
 use User\models\UserModel;
 
 class TileController
@@ -214,9 +215,13 @@ class TileController
             } elseif (!Validator::intVal()->validate($args['parameters']['groupId'] ?? null)) {
                 return ['errors' => 'Body[parameters] groupId is empty or not an integer'];
             }
-            if (!BasketModel::hasGroup(['id' => $args['parameters']['basketId'], 'groupId' => $args['parameters']['groupId']])) {
+            $basket = BasketModel::getById(['select' => ['basket_id'], 'id' => $args['parameters']['basketId']]);
+            $group = GroupModel::getById(['select' => ['group_id'], 'id' => $args['parameters']['groupId']]);
+            if (empty($basket) || empty($group)) {
+                return ['errors' => 'Basket or group do not exist'];
+            } elseif (!BasketModel::hasGroup(['id' => $basket['basket_id'], 'groupId' => $group['group_id']])) {
                 return ['errors' => 'Basket is not linked to this group'];
-            } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $args['parameters']['groupId']])) {
+            } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $group['group_id']])) {
                 return ['errors' => 'User is not linked to this group'];
             }
         }
@@ -227,14 +232,14 @@ class TileController
     private static function getDetails(array &$tile)
     {
         if ($tile['type'] == 'basket') {
-            if (!BasketModel::hasGroup(['id' => $tile['parameters']['basketId'], 'groupId' => $tile['parameters']['groupId']])) {
+            $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
+            $group = GroupModel::getById(['select' => ['group_desc', 'group_id'], 'id' => $tile['parameters']['groupId']]);
+            if (!BasketModel::hasGroup(['id' => $basket['basket_id'], 'groupId' => $group['group_id']])) {
                 return ['errors' => 'Basket is not linked to this group'];
-            } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $tile['parameters']['groupId']])) {
+            } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $group['group_id']])) {
                 return ['errors' => 'User is not linked to this group'];
             }
 
-            $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name'], 'id' => $tile['parameters']['basketId']]);
-            $group = GroupModel::getById(['select' => ['group_desc'], 'id' => $tile['parameters']['groupId']]);
             $tile['basketName'] = $basket['basket_name'];
             $tile['groupName'] = $group['group_desc'];
             if ($tile['view'] == 'resume') {
@@ -242,15 +247,28 @@ class TileController
             } elseif ($tile['view'] == 'list') {
                 //TODO WIP
             } elseif ($tile['view'] == 'chart') {
+                if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
+                    $type = 'status';
+                } else {
+                    $type = 'type_id';
+                }
                 $resources = ResModel::getOnView([
-                    'select'    => ['COUNT(type_id)'],
+                    'select'    => ["COUNT({$type}), {$type}"],
                     'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
-                    'groupBy'   => ['type_id']
+                    'groupBy'   => [$type]
                 ]);
                 $tile['resources'] = [];
                 foreach ($resources as $resource) {
-                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
-                    $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                    if ($type == 'status') {
+                        $status['label_status'] = null;
+                        if (!empty($resource['status'])) {
+                            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
+                        }
+                        $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+                    } else {
+                        $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+                        $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                    }
                 }
             }
         }
