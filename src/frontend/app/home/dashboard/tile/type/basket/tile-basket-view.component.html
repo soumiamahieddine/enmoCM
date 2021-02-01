@@ -1,4 +1,4 @@
-<div class="tile-title" style="background: #1A80AB;color: white;">
+<div class="tile-title" [style.background-color]="tile.color" style="color: white;">
     {{'lang.'+ tile.type | translate}}
 </div>
 <ng-container *ngIf="loading; else elseLoaded">

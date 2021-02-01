@@ -8,6 +8,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '@service/notification/notification.service';
 import { HeaderService } from '@service/header.service';
+import { ColorEvent } from 'ngx-color';
 
 @Component({
     templateUrl: 'tile-create.component.html',
@@ -20,11 +21,34 @@ export class TileCreateComponent implements OnInit {
 
     tileTypes: any[] = [];
     views: any[] = [];
+    baskets: any[] = [];
 
     position: string = null;
     selectedTileType: string = null;
     selectedView: string = null;
+    selectedColor: string = '#90caf9';
     extraParams: any = {};
+
+    colors: string[] = [
+        '#ef9a9a',
+        '#f48fb1',
+        '#ce93d8',
+        '#b39ddb',
+        '#9fa8da',
+        '#90caf9',
+        '#81d4fa',
+        '#80deea',
+        '#80cbc4',
+        '#a5d6a7',
+        '#c5e1a5',
+        '#e6ee9c',
+        '#fff59d',
+        '#ffe082',
+        '#ffcc80',
+        '#ffab91',
+        '#bcaaa4',
+        '#b0bec5',
+    ];
 
     constructor(
         public translate: TranslateService,
@@ -34,7 +58,7 @@ export class TileCreateComponent implements OnInit {
         private dashboardService: DashboardService,
         private functionsService: FunctionsService,
         private notify: NotificationService,
-        private headerService: HeaderService
+        public headerService: HeaderService
     ) { }
 
     ngOnInit(): void {
@@ -46,7 +70,7 @@ export class TileCreateComponent implements OnInit {
         const tmpTileTypes = this.dashboardService.getTileTypes();
         this.tileTypes = tmpTileTypes.map((tileType: any) => {
             return {
-                id : tileType,
+                id: tileType,
                 label: this.translate.instant('lang.' + tileType)
             };
         });
@@ -61,15 +85,44 @@ export class TileCreateComponent implements OnInit {
             };
         });
         this.selectedView = this.views.length > 0 ? this.views[0].id : null;
+
+        if (this.selectedTileType === 'basket') {
+            this.getBaskets();
+        }
+    }
+
+    getBaskets() {
+        if (this.baskets.length === 0) {
+            this.http.get('../rest/home').pipe(
+                tap((data: any) => {
+                    this.baskets = data.regroupedBaskets;
+                    console.log(this.baskets[0]);
+                    console.log(this.baskets[0].baskets[0]);
+
+                    this.extraParams = {
+                        groupId: this.baskets[0].groupSerialId,
+                        basketId: this.baskets[0].baskets[0].id
+                    };
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
+
+    compareBaskets(basket1: any, basket2: any) {
+        return (basket1.groupId === basket2.groupId && basket1.basketId === basket2.basketId);
     }
 
     isValid() {
-        return !this.functionsService.empty(this.position) && !this.functionsService.empty(this.selectedTileType) && ((this.views.length > 0 &&  !this.functionsService.empty(this.selectedView)) || this.views.length === 0);
+        return !this.functionsService.empty(this.position) && !this.functionsService.empty(this.selectedTileType) && ((this.views.length > 0 && !this.functionsService.empty(this.selectedView)) || this.views.length === 0);
     }
 
     formatData() {
         return {
-            type : this.selectedTileType,
+            type: this.selectedTileType,
             view: this.selectedView,
             userId: this.headerService.user.id,
             position: this.position,
@@ -78,13 +131,16 @@ export class TileCreateComponent implements OnInit {
     }
 
     resetExtraParams() {
-        this.extraParams = {};
-
         if (this.selectedView === 'chart') {
-            this.extraParams = {
-                chartMode: 'type'
-            };
+            this.extraParams['chartMode'] = 'doctype';
+        } else {
+            delete this.extraParams.chartMode;
         }
+    }
+
+    handleChange($event: ColorEvent) {
+        console.log($event.color);
+        this.selectedColor = $event.color.hex;
     }
 
     onSubmit() {
@@ -92,7 +148,7 @@ export class TileCreateComponent implements OnInit {
         this.http.post('../rest/tiles', objToSend).pipe(
             tap((data: any) => {
                 this.dialogRef.close({
-                    id : data.id,
+                    id: data.id,
                     type: objToSend.type,
                     view: objToSend.view,
                     position: this.position,

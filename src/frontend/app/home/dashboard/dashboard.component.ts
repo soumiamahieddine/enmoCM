@@ -58,6 +58,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     const tmpTile = data.tiles.find((tile: any) => tile.position === index);
                     if (!this.functionsService.empty(tmpTile)) {
                         const objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
+                        objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.id) : objTile.label;
+                        // for test
+                        objTile.color = '#90caf9';
                         this.tiles.push(objTile);
                     } else {
                         this.tiles.push({
@@ -80,7 +83,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.tileComponent.toArray()[indexTile].changeView(view, extraParams);
         tile.view = view;
         if (extraParams !== null) {
-            tile.parameters = extraParams;
+            Object.keys(extraParams).forEach(paramKey => {
+                tile.parameters[paramKey] = extraParams[paramKey];
+            });
         }
         this.http.put(`../rest/tiles/${tile.id}`, tile).pipe(
             catchError((err: any) => {

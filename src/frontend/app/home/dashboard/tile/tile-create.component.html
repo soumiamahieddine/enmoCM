@@ -4,12 +4,29 @@
         <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
-        <mat-form-field appearance="outline">
+        <mat-form-field class="select-tile-type" appearance="outline">
+            <button mat-icon-button matSuffix [title]="'Couleur de la tuilde'" (click)="$event.stopPropagation()" [matMenuTriggerFor]="menuColor">
+                <mat-icon class="fa fa-circle" [style.color]="selectedColor"></mat-icon>
+            </button>
+            <mat-menu #menuColor="matMenu">
+                <color-github color="#ef9a9a" width="100%" [colors]="colors" [triangle]="'hide'" (onChangeComplete)="handleChange($event)"></color-github>
+            </mat-menu>
             <mat-label>{{'lang.tileType' | translate}}</mat-label>
             <mat-select [(ngModel)]="selectedTileType" (selectionChange)="getViews()">
                 <mat-option *ngFor="let tileType of tileTypes | sortBy : 'label'" [value]="tileType.id">
                     {{tileType.label}}
                 </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="selectedTileType === 'basket'" appearance="outline">
+            <mat-label>{{'lang.basket' | translate}}</mat-label>
+            <mat-select [compareWith]="this.compareBaskets" [(ngModel)]="extraParams">
+                <mat-optgroup class="basket-group" *ngFor="let grpBasket of baskets" [label]="grpBasket.groupDesc">
+                    <mat-option *ngFor="let basket of grpBasket.baskets"
+                        [value]="{groupId:grpBasket.groupSerialId,basketId:basket.id}">
+                        {{basket.basket_name}}
+                    </mat-option>
+                </mat-optgroup>
             </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline" *ngIf="views.length > 0">

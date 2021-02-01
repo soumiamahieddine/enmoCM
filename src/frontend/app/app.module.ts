@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { InternationalizationModule } from '@service/translate/internationalization.module';
 import { AngularDraggableModule } from 'angular2-draggable';
+import { ColorGithubModule } from 'ngx-color/github';
 
 import { JoyrideModule } from 'ngx-joyride';
 
@@ -34,6 +35,7 @@ import { TileViewListComponent } from './home/dashboard/tile/view/list/tile-view
 import { TileViewResumeComponent } from './home/dashboard/tile/view/resume/tile-view-resume.component';
 import { TileViewChartComponent } from './home/dashboard/tile/view/chart/tile-view-chart.component';
 import { TileLastMailsViewDashboardComponent } from './home/dashboard/tile/type/lastMailsView/tile-last-mails-view.component';
+import { TileBasketViewDashboardComponent } from './home/dashboard/tile/type/basket/tile-basket-view.component';
 import { TileCreateComponent } from './home/dashboard/tile/tile-create.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
@@ -162,12 +164,14 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdministrationModule,
         DocumentViewerModule,
         AppListModule,
+        ColorGithubModule,
         NgxChartsModule
     ],
     declarations: [
         AppComponent,
         DashboardComponent,
         TileLastMailsViewDashboardComponent,
+        TileBasketViewDashboardComponent,
         TileViewListComponent,
         TileViewResumeComponent,
         TileViewChartComponent,
