@@ -51,7 +51,7 @@ class TileController
     {
         $tile = TileModel::getById([
             'select'    => ['*'],
-            'id'        => [$args['id']]
+            'id'        => $args['id']
         ]);
         if (empty($tile) || $tile['user_id'] != $GLOBALS['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Tile out of perimeter']);
@@ -243,7 +243,7 @@ class TileController
             $tile['basketName'] = $basket['basket_name'];
             $tile['groupName'] = $group['group_desc'];
             if ($tile['view'] == 'resume') {
-                $tile['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']]);
+                $tile['resourcesNumber'] = BasketModel::getResourceNumberByClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']]);
             } elseif ($tile['view'] == 'list') {
                 //TODO WIP
             } elseif ($tile['view'] == 'chart') {
