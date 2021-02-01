@@ -15,6 +15,7 @@
 namespace Home\controllers;
 
 use Basket\models\BasketModel;
+use Contact\controllers\ContactController;
 use Doctype\models\DoctypeModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
@@ -42,6 +43,7 @@ class TileController
 
         foreach ($tiles as $key => $tile) {
             $tiles[$key]['parameters'] = json_decode($tile['parameters'], true);
+            TileController::getShortDetails($tiles[$key]);
         }
 
         return $response->withJson(['tiles' => $tiles]);
@@ -229,23 +231,51 @@ class TileController
         return true;
     }
 
-    private static function getDetails(array &$tile)
+    private static function getShortDetails(array &$tile)
     {
         if ($tile['type'] == 'basket') {
             $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
             $group = GroupModel::getById(['select' => ['group_desc', 'group_id'], 'id' => $tile['parameters']['groupId']]);
+            $tile['basketName'] = $basket['basket_name'];
+            $tile['groupName'] = $group['group_desc'];
+        }
+
+        return true;
+    }
+
+    private static function getDetails(array &$tile)
+    {
+        if ($tile['type'] == 'basket') {
+            $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
+            $group = GroupModel::getById(['select' => ['group_id'], 'id' => $tile['parameters']['groupId']]);
             if (!BasketModel::hasGroup(['id' => $basket['basket_id'], 'groupId' => $group['group_id']])) {
                 return ['errors' => 'Basket is not linked to this group'];
             } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $group['group_id']])) {
                 return ['errors' => 'User is not linked to this group'];
             }
 
-            $tile['basketName'] = $basket['basket_name'];
-            $tile['groupName'] = $group['group_desc'];
             if ($tile['view'] == 'resume') {
                 $tile['resourcesNumber'] = BasketModel::getResourceNumberByClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']]);
             } elseif ($tile['view'] == 'list') {
-                //TODO WIP
+                $resources = ResModel::getOnView([
+                    'select'    => ['subject', 'creation_date', 'res_id'],
+                    'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
+                    'orderBy'   => ['creation_date'],
+                    'limit'     => 10
+                ]);
+                $tile['resources'] = [];
+                foreach ($resources as $resource) {
+                    $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                    $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+
+                    $tile['resources'][] = [
+                        'resId'         => $resource['res_id'],
+                        'subject'       => $resource['subject'],
+                        'creationDate'  => $resource['creation_date'],
+                        'senders'       => $senders ,
+                        'recipients'    => $recipients
+                    ];
+                }
             } elseif ($tile['view'] == 'chart') {
                 if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                     $type = 'status';
@@ -253,7 +283,7 @@ class TileController
                     $type = 'type_id';
                 }
                 $resources = ResModel::getOnView([
-                    'select'    => ["COUNT({$type}), {$type}"],
+                    'select'    => ["COUNT({$type})", $type],
                     'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
                     'groupBy'   => [$type]
                 ]);
