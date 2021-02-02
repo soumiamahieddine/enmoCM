@@ -255,6 +255,11 @@ class TileController
             }
         } elseif ($tile['type'] == 'myLastResources') {
             TileController::getLastResourcesDetails($tile);
+        } elseif ($tile['type'] == 'searchTemplate') {
+        } elseif ($tile['type'] == 'followedMail') {
+        } elseif ($tile['type'] == 'folder') {
+        } elseif ($tile['type'] == 'externalSignatoryBook') {
+        } elseif ($tile['type'] == 'shortcut') {
         }
 
         return true;
