@@ -36,12 +36,9 @@
                     </ng-container>
                 </mat-menu>
             </div>
-            <app-tile-last-mails-view #tileComponent *ngIf="tile.type === 'myLastResources'" [tile]="tile" [view]="tile.view"
+            <app-tile #tileComponent *ngIf="tile.id !== null" [tile]="tile" [view]="tile.view"
                 style="display: flex;height: 100%;flex-direction: column;width: 100%;">
-            </app-tile-last-mails-view>
-            <app-tile-basket-view #tileComponent *ngIf="tile.type === 'basket'" [tile]="tile" [view]="tile.view"
-                style="display: flex;height: 100%;flex-direction: column;width: 100%;">
-            </app-tile-basket-view>
+            </app-tile>
             <button mat-button color="secondary" mat-icon-button [title]="'lang.addTile' | translate" *ngIf="tile.id === null && tile.editMode" (click)="addTilePrompt(tile)">
                 <mat-icon color="secondary" class="fa fa-plus"></mat-icon>
             </button>

@@ -29,10 +29,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
         public functionsService: FunctionsService
     ) { }
 
-    ngOnInit(): void {
-        console.log(this.resources);
-        
-    }
+    ngOnInit(): void { }
 
     ngAfterViewInit(): void { }
 
@@ -40,7 +37,6 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
         const timeStamp = +new Date();
         this.thumbnailUrl = '../rest/resources/' + resource.resId + '/thumbnail?tsp=' + timeStamp;
         $('#viewThumbnail').show();
-        console.log(ev);
     }
 
     closeThumbnail() {

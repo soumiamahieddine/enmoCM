@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     const tmpTile = data.tiles.find((tile: any) => tile.position === index);
                     if (!this.functionsService.empty(tmpTile)) {
                         const objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
-                        objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.id) : objTile.label;
+                        objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.type) : objTile.label;
                         this.tiles.push(objTile);
                     } else {
                         this.tiles.push({

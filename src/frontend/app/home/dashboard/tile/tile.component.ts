@@ -5,11 +5,11 @@ import { AppService } from '@service/app.service';
 import { DashboardService } from '@appRoot/home/dashboard/dashboard.service';
 
 @Component({
-    selector: 'app-tile-basket-view',
-    templateUrl: 'tile-basket-view.component.html',
-    styleUrls: ['tile-basket-view.component.scss']
+    selector: 'app-tile',
+    templateUrl: 'tile.component.html',
+    styleUrls: ['tile.component.scss']
 })
-export class TileBasketViewDashboardComponent implements OnInit, AfterViewInit {
+export class TileDashboardComponent implements OnInit, AfterViewInit {
 
     @Input() view: string = 'list';
 

@@ -24,9 +24,7 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
         private dashboardService: DashboardService,
     ) { }
 
-    ngOnInit(): void {
-        console.log(this.resources);
-    }
+    ngOnInit(): void { }
 
     ngAfterViewInit(): void { }
 

@@ -78,7 +78,7 @@ export class TileCreateComponent implements OnInit {
     }
 
     getViews() {
-        this.translate.instant('lang.' + this.selectedTileType);
+        this.tileLabel = this.translate.instant('lang.' + this.selectedTileType);
         const tmpViews = this.dashboardService.getViewsByTileType(this.selectedTileType);
         this.views = tmpViews.map((view: any) => {
             return {
@@ -98,8 +98,6 @@ export class TileCreateComponent implements OnInit {
             this.http.get('../rest/home').pipe(
                 tap((data: any) => {
                     this.baskets = data.regroupedBaskets;
-                    console.log(this.baskets[0]);
-                    console.log(this.baskets[0].baskets[0]);
                     this.tileLabel = `${this.baskets[0].baskets[0].basket_name} (${this.baskets[0].groupDesc})`;
                     this.extraParams = {
                         groupId: this.baskets[0].groupSerialId,
@@ -142,7 +140,6 @@ export class TileCreateComponent implements OnInit {
     }
 
     handleChange($event: ColorEvent) {
-        console.log($event.color);
         this.selectedColor = $event.color.hex;
     }
 

@@ -8,7 +8,7 @@ import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 interface Tiles {
-    // 'myLastResources': Tile;
+    'myLastResources': Tile;
     'basket': Tile;
     /*'searchTemplate': Tile;
     'followedMail': Tile;
@@ -32,7 +32,7 @@ interface TileView {
 export class DashboardService {
 
     tileTypes: Tiles = {
-        /*myLastResources : {
+        myLastResources : {
             icon: 'fa fa-history',
             menus : [
                 'view',
@@ -52,7 +52,7 @@ export class DashboardService {
                     route: null
                 }
             ]
-        },*/
+        },
         basket: {
             icon: 'fa fa-inbox',
             menus: [

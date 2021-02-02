@@ -34,9 +34,8 @@ import { DashboardComponent } from './home/dashboard/dashboard.component';
 import { TileViewListComponent } from './home/dashboard/tile/view/list/tile-view-list.component';
 import { TileViewResumeComponent } from './home/dashboard/tile/view/resume/tile-view-resume.component';
 import { TileViewChartComponent } from './home/dashboard/tile/view/chart/tile-view-chart.component';
-import { TileLastMailsViewDashboardComponent } from './home/dashboard/tile/type/lastMailsView/tile-last-mails-view.component';
-import { TileBasketViewDashboardComponent } from './home/dashboard/tile/type/basket/tile-basket-view.component';
 import { TileCreateComponent } from './home/dashboard/tile/tile-create.component';
+import { TileDashboardComponent } from './home/dashboard/tile/tile.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 // ACTIONS
@@ -170,12 +169,11 @@ export class MyHammerConfig extends HammerGestureConfig {
     declarations: [
         AppComponent,
         DashboardComponent,
-        TileLastMailsViewDashboardComponent,
-        TileBasketViewDashboardComponent,
         TileViewListComponent,
         TileViewResumeComponent,
         TileViewChartComponent,
         TileCreateComponent,
+        TileDashboardComponent,
         ProcessComponent,
         IndexationComponent,
         LinkResourceModalComponent,
