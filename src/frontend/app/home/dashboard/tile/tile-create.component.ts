@@ -126,6 +126,7 @@ export class TileCreateComponent implements OnInit {
             view: this.selectedView,
             userId: this.headerService.user.id,
             position: this.position,
+            color: this.selectedColor,
             parameters: this.extraParams
         };
     }
@@ -152,6 +153,7 @@ export class TileCreateComponent implements OnInit {
                     type: objToSend.type,
                     view: objToSend.view,
                     position: this.position,
+                    color: objToSend.color,
                     parameters: objToSend.parameters
                 });
             }),
