@@ -10,7 +10,7 @@ interface Tiles {
     'myLastResources': Tile;
     'basket': Tile;
     // 'searchTemplate': Tile;
-    // 'followedMail': Tile;
+    'followedMail': Tile;
     'folder': Tile;
     'externalSignatoryBook': Tile;
     // 'shortcut': Tile;
@@ -93,7 +93,7 @@ export class DashboardService {
                     route: '/search'
                 }
             ]
-        },
+        },*/
         followedMail : {
             icon: 'fa fa-star',
             menus : [
@@ -114,7 +114,7 @@ export class DashboardService {
                     route: '/followed'
                 }
             ]
-        },*/
+        },
         folder : {
             icon: 'fa fa-folder',
             menus : [
