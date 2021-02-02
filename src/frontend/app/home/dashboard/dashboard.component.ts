@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '@plugins/modal/confirm.component';
 import { of } from 'rxjs';
 import { NotificationService } from '@service/notification/notification.service';
+import { PrivilegeService } from '@service/privileges.service';
+import { HeaderService } from '@service/header.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -29,6 +31,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         private notify: NotificationService,
         public dashboardService: DashboardService,
         private functionsService: FunctionsService,
+        private privilegeService: PrivilegeService,
+        private headerService: HeaderService,
         public dialog: MatDialog,
     ) { }
 
@@ -57,7 +61,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 for (let index = 0; index < 6; index++) {
                     const tmpTile = data.tiles.find((tile: any) => tile.position === index);
                     if (!this.functionsService.empty(tmpTile)) {
-                        const objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
+                        let objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
+                        if (tmpTile.type === 'shortcut') {
+                            objTile = {...objTile, ...this.initShortcutTile(tmpTile.parameters.privilegeId)};
+                        }
                         objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.type) : objTile.label;
                         this.tiles.push(objTile);
                     } else {
@@ -67,6 +74,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                             editMode: false
                         });
                     }
+                    console.log(this.tiles);
                 }
             }),
             catchError((err: any) => {
@@ -74,6 +82,15 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    initShortcutTile(privilegeId: string) {
+        const menu = this.privilegeService.getAdminMenu([privilegeId])[0];
+        return {
+            icon : menu.style,
+            privRoute: menu.route,
+            label: this.translate.instant(menu.label)
+        };
     }
 
     changeView(tile: any, view: string, extraParams: any = null) {

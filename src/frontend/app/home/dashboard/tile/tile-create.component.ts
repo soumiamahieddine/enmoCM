@@ -9,11 +9,13 @@ import { of } from 'rxjs';
 import { NotificationService } from '@service/notification/notification.service';
 import { HeaderService } from '@service/header.service';
 import { ColorEvent } from 'ngx-color';
+import { PrivilegeService } from '@service/privileges.service';
+import { SortPipe } from '@plugins/sorting.pipe';
 
 @Component({
     templateUrl: 'tile-create.component.html',
     styleUrls: ['tile-create.component.scss'],
-    providers: [DashboardService]
+    providers: [DashboardService, SortPipe]
 })
 export class TileCreateComponent implements OnInit {
 
@@ -23,6 +25,7 @@ export class TileCreateComponent implements OnInit {
     views: any[] = [];
     baskets: any[] = [];
     folders: any[] = [];
+    menus: any[] = [];
 
     position: string = null;
     tileLabel: string = null;
@@ -60,7 +63,9 @@ export class TileCreateComponent implements OnInit {
         public dashboardService: DashboardService,
         private functionsService: FunctionsService,
         private notify: NotificationService,
-        public headerService: HeaderService
+        public headerService: HeaderService,
+        public privilegeService: PrivilegeService,
+        private sortPipe: SortPipe,
     ) { }
 
     ngOnInit(): void {
@@ -93,6 +98,8 @@ export class TileCreateComponent implements OnInit {
             this.getBaskets();
         } else if (this.selectedTileType === 'folder') {
             this.getFolders();
+        } else if (this.selectedTileType === 'shortcut') {
+            this.getAdminMenu();
         }
     }
 
@@ -133,12 +140,63 @@ export class TileCreateComponent implements OnInit {
         }
     }
 
+    getAdminMenu() {
+        if (this.menus.length === 0) {
+            let arrMenus: any[];
+            let tmpMenus: any;
+            tmpMenus = this.privilegeService.getMenus(this.headerService.user.privileges).map((menu: any) => {
+                return {
+                    ...menu,
+                    label: this.translate.instant(menu.label)
+                };
+            });
+            tmpMenus = this.sortPipe.transform(tmpMenus, 'label');
+
+            if (tmpMenus.length > 0) {
+                this.menus.push({
+                    id: 'opt_menu',
+                    label: '&nbsp;&nbsp;&nbsp;&nbsp;' + this.translate.instant('lang.menu'),
+                    title: this.translate.instant('lang.menu'),
+                    disabled: true,
+                    isTitle: true
+                });
+                arrMenus = this.menus.concat(tmpMenus);
+            }
+
+            tmpMenus = this.privilegeService.getAdministrations(this.headerService.user.privileges).map((menu: any) => {
+                return {
+                    ...menu,
+                    label: this.translate.instant(menu.label)
+                };
+            });
+            tmpMenus = this.sortPipe.transform(tmpMenus, 'label');
+            if (tmpMenus.length > 0) {
+                this.menus.push({
+                    id: 'opt_admin',
+                    label: '&nbsp;&nbsp;&nbsp;&nbsp;' + this.translate.instant('lang.administration'),
+                    title: this.translate.instant('lang.administration'),
+                    disabled: true,
+                    isTitle: true
+                });
+                arrMenus = this.menus.concat(tmpMenus);
+            }
+            this.extraParams = {
+                privilegeId: arrMenus[1].id,
+            };
+            this.menus = arrMenus;
+        }
+    }
+
     compareBaskets(basket1: any, basket2: any) {
         return (basket1.groupId === basket2.groupId && basket1.basketId === basket2.basketId);
     }
 
     compareFolders(folder1: any, folder2: any) {
         return (folder1.folderId === folder2.folderId);
+    }
+
+    compareMenus(menu1: any, menu2: any) {
+        return (menu1.id === menu2.id);
     }
 
     isValid() {

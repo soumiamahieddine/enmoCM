@@ -5,11 +5,13 @@
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
         <mat-form-field class="select-tile-type" appearance="outline">
-            <button mat-icon-button matSuffix [title]="'Couleur de la tuilde'" (click)="$event.stopPropagation()" [matMenuTriggerFor]="menuColor">
+            <button mat-icon-button matSuffix [title]="'Couleur de la tuilde'" (click)="$event.stopPropagation()"
+                [matMenuTriggerFor]="menuColor">
                 <mat-icon class="fa fa-circle" [style.color]="selectedColor"></mat-icon>
             </button>
             <mat-menu #menuColor="matMenu">
-                <color-github color="#ef9a9a" width="100%" [colors]="colors" [triangle]="'hide'" (onChangeComplete)="handleChange($event)"></color-github>
+                <color-github color="#ef9a9a" width="100%" [colors]="colors" [triangle]="'hide'"
+                    (onChangeComplete)="handleChange($event)"></color-github>
             </mat-menu>
             <mat-label>{{'lang.tileType' | translate}}</mat-label>
             <mat-select [(ngModel)]="selectedTileType" (selectionChange)="getViews()">
@@ -37,6 +39,10 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        <plugin-select-search *ngIf="selectedTileType === 'shortcut'" [appearance]="'outline'" [showLabel]="true"
+            [class]="''" [label]="'lang.menu' | translate" [datas]="menus" [currentValue]="extraParams.privilegeId"
+            (afterSelected)="extraParams.privilegeId = $event">
+        </plugin-select-search>
         <mat-form-field appearance="outline" *ngIf="views.length > 0">
             <mat-label>Vue</mat-label>
             <mat-select [(ngModel)]="selectedView" (selectionChange)="resetExtraParams()">

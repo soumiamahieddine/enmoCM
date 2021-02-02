@@ -13,7 +13,7 @@ interface Tiles {
     'followedMail': Tile;
     'folder': Tile;
     'externalSignatoryBook': Tile;
-    // 'shortcut': Tile;
+    'shortcut': Tile;
 }
 
 interface Tile {
@@ -153,13 +153,18 @@ export class DashboardService {
                 }
             ]
         },
-        /*shortcut : {
+        shortcut : {
             icon: null,
             menus : [
                 'delete'
             ],
-            views: []
-        },*/
+            views: [
+                {
+                    id: 'resume',
+                    route: ':privRoute'
+                }
+            ]
+        },
     };
 
     constructor(

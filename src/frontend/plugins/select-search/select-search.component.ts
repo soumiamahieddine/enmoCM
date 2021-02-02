@@ -31,6 +31,9 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
 
     @Input() datas: any = [];
 
+    @Input() currentValue: any = null;
+
+
     @Input() returnValue: 'id' | 'object' = 'id';
 
     @Input() label: string;
@@ -61,6 +64,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     @Input() suffixIcon: any = null;
 
     @Input() class: string = 'input-form';
+    @Input() appearance: string = 'standard';
 
     /**
      * Catch external event after select an element in autocomplete
@@ -192,6 +196,12 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
                 startWith(''),
                 map(value => this._filter(value))
             );
+
+        if (this.ngModel !== null) {
+            setTimeout(() => {
+                this.formControlSelect.setValue(this.currentValue);
+            }, 0);
+        }
         // this.initMultipleHandling();
 
     }

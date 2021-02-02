@@ -20,7 +20,7 @@
         [countResources]="countResources" 
         [icon]="tile.icon"
         [tile]="tile"
-        [resourceLabel]="'courrier(s)'"
+        [resourceLabel]="tile.type==='shortcut' ? tile.label : 'courrier(s)'"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-resume>
     <app-tile-view-chart *ngIf="view==='chart'" 
