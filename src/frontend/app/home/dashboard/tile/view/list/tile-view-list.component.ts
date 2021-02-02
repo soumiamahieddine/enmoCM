@@ -20,6 +20,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
     @Input() route: string = null;
 
     thumbnailUrl: string = '';
+    showThumbnail: boolean = false;
 
     constructor(
         public translate: TranslateService,
@@ -36,11 +37,11 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
     viewThumbnail(ev: any, resource: any) {
         const timeStamp = +new Date();
         this.thumbnailUrl = '../rest/resources/' + resource.resId + '/thumbnail?tsp=' + timeStamp;
-        $('#viewThumbnail').show();
+        this.showThumbnail = true;
     }
 
     closeThumbnail() {
-        $('#viewThumbnail').hide();
+        this.showThumbnail = false;
     }
 
     goTo(resource: any) {

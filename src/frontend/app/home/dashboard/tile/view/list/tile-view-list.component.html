@@ -14,8 +14,8 @@
             <i class="fa fa-eye view-action-icon" color="primary"></i>
         </div>
         <ng-container *ngIf="it===0">
-            <i class="{{icon}} tile-icon" color="primary"></i>
+            <i class="{{icon}} tile-icon" color="primary" (click)="$event.stopPropagation()"></i>
         </ng-container>
     </div>
 </div>
-<mat-card id="viewThumbnail" style="display:none;top:0px;right:0px;position: fixed;margin-left: 1px;z-index: 3;"><img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" /></mat-card>
+<mat-card id="viewThumbnail" *ngIf="showThumbnail" style="top:0px;right:0px;position: fixed;margin-left: 1px;z-index: 3;"><img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" /></mat-card>
