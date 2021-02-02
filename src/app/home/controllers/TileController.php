@@ -547,7 +547,15 @@ class TileController
         if ($tile['view'] == 'resume') {
             $tile['resourcesNumber'] = $curlResponse['response']['count']['visa'] + $curlResponse['response']['count']['sign'] + $curlResponse['response']['count']['note'];
         } elseif ($tile['view'] == 'list') {
-            $tile['resources'] = $curlResponse['response']['documents'];
+            $tile['resources'] = [];
+            foreach ($curlResponse['response']['documents'] as $resource) {
+                $tile['resources'][] = [
+                    'id'            => $resource['id'],
+                    'subject'       => $resource['title'],
+                    'creationDate'  => $resource['creationDate'],
+                    'senders'       => [$resource['sender']]
+                ];
+            }
         }
 
         return true;
