@@ -28,6 +28,8 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
+use SrcCore\models\CurlModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
 
@@ -280,6 +282,10 @@ class TileController
                 return ['errors' => $control['errors']];
             }
         } elseif ($tile['type'] == 'externalSignatoryBook') {
+            $control = TileController::getMaarchParapheurDetails($tile);
+            if (!empty($control['errors'])) {
+                return ['errors' => $control['errors']];
+            }
         } elseif ($tile['type'] == 'shortcut') {
         }
 
@@ -303,7 +309,7 @@ class TileController
                 'select'    => ['subject', 'creation_date', 'res_id'],
                 'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
                 'orderBy'   => ['creation_date'],
-                'limit'     => 10
+                'limit'     => 5
             ]);
             $tile['resources'] = [];
             foreach ($resources as $resource) {
@@ -411,25 +417,20 @@ class TileController
 
     private static function getLastResourcesDetails(array &$tile)
     {
+        $resources = ResModel::getLastResources([
+            'select'    => [
+                'res_letterbox.res_id',
+                'res_letterbox.creation_date',
+                'res_letterbox.subject',
+                'res_letterbox.type_id',
+                'res_letterbox.status'
+            ],
+            'limit'     => 5,
+            'userId'    => $GLOBALS['id']
+        ]);
         if ($tile['view'] == 'resume') {
-            $resources = ResModel::getLastResources([
-                'select'    => ['res_letterbox.res_id'],
-                'limit'     => 5,
-                'userId'    => $GLOBALS['id']
-            ]);
-
             $tile['resourcesNumber'] = count($resources);
         } elseif ($tile['view'] == 'list') {
-            $resources = ResModel::getLastResources([
-                'select'    => [
-                    'res_letterbox.creation_date',
-                    'res_letterbox.res_id',
-                    'res_letterbox.subject'
-                ],
-                'limit'     => 5,
-                'userId'    => $GLOBALS['id']
-            ]);
-
             $tile['resources'] = [];
             foreach ($resources as $resource) {
                 $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
@@ -449,14 +450,6 @@ class TileController
             } else {
                 $type = 'type_id';
             }
-            $resources = ResModel::getLastResources([
-                'select'    => [
-                    'res_letterbox.type_id',
-                    'res_letterbox.status'
-                ],
-                'limit'     => 5,
-                'userId'    => $GLOBALS['id']
-            ]);
             $tile['resources'] = [];
             $chartTypes = [];
             foreach ($resources as $resource) {
@@ -489,6 +482,66 @@ class TileController
                     }
                 }
             }
+        }
+
+        return true;
+    }
+
+    private static function getMaarchParapheurDetails(array &$tile)
+    {
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['external_id']]);
+
+        $externalId = json_decode($user['external_id'], true);
+        if (empty($externalId['maarchParapheur'])) {
+            return ['errors' => 'User is not linked to Maarch Parapheur'];
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        if (empty($loadedXml)) {
+            return ['errors' => 'SignatoryBooks configuration file missing'];
+        }
+
+        $url      = '';
+        $userId   = '';
+        $password = '';
+        foreach ($loadedXml->signatoryBook as $value) {
+            if ($value->id == "maarchParapheur") {
+                $url      = rtrim($value->url, '/');
+                $userId   = $value->userId;
+                $password = $value->password;
+                break;
+            }
+        }
+
+        if (empty($url)) {
+            return ['errors' => 'Maarch Parapheur configuration missing'];
+        }
+
+        $curlResponse = CurlModel::execSimple([
+            'url'           => rtrim($url, '/') . '/rest/documents',
+            'basicAuth'     => ['user' => $userId, 'password' => $password],
+            'headers'       => ['content-type:application/json'],
+            'method'        => 'GET',
+            'queryParams'   => ['userId' => $externalId['maarchParapheur'], 'limit' => 5]
+        ]);
+
+        if ($curlResponse['code'] != '200') {
+            if (!empty($curlResponse['response']['errors'])) {
+                $errors =  $curlResponse['response']['errors'];
+            } else {
+                $errors =  $curlResponse['errors'];
+            }
+            if (empty($errors)) {
+                $errors = 'An error occured. Please check your configuration file.';
+            }
+            return ['errors' => $errors];
+        }
+
+        $tile['maarchParapheurUrl'] = $url;
+        if ($tile['view'] == 'resume') {
+            $tile['resourcesNumber'] = $curlResponse['response']['count']['visa'] + $curlResponse['response']['count']['sign'] + $curlResponse['response']['count']['note'];
+        } elseif ($tile['view'] == 'list') {
+            $tile['resources'] = $curlResponse['response']['documents'];
         }
 
         return true;
