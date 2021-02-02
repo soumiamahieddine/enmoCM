@@ -42,6 +42,8 @@ class TileController
         ]);
 
         foreach ($tiles as $key => $tile) {
+            $tiles[$key]['userId'] = $tile['user_id'];
+            unset($tiles[$key]['user_id']);
             $tiles[$key]['parameters'] = json_decode($tile['parameters'], true);
             TileController::getShortDetails($tiles[$key]);
         }
@@ -238,8 +240,7 @@ class TileController
         if ($tile['type'] == 'basket') {
             $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
             $group = GroupModel::getById(['select' => ['group_desc', 'group_id'], 'id' => $tile['parameters']['groupId']]);
-            $tile['basketName'] = $basket['basket_name'];
-            $tile['groupName'] = $group['group_desc'];
+            $tile['label'] = "{$basket['basket_name']} ({$group['group_desc']})";
         }
 
         return true;
@@ -252,6 +253,8 @@ class TileController
             if (!empty($control['errors'])) {
                 return ['errors' => $control['errors']];
             }
+        } elseif ($tile['type'] == 'myLastResources') {
+            TileController::getLastResourcesDetails($tile);
         }
 
         return true;
@@ -311,6 +314,91 @@ class TileController
                 } else {
                     $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
                     $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static function getLastResourcesDetails(array &$tile)
+    {
+        if ($tile['view'] == 'resume') {
+            $resources = ResModel::getLastResources([
+                'select'    => ['res_letterbox.res_id'],
+                'limit'     => 5,
+                'userId'    => $GLOBALS['id']
+            ]);
+
+            $tile['resourcesNumber'] = count($resources);
+        } elseif ($tile['view'] == 'list') {
+            $resources = ResModel::getLastResources([
+                'select'    => [
+                    'res_letterbox.creation_date',
+                    'res_letterbox.res_id',
+                    'res_letterbox.subject'
+                ],
+                'limit'     => 5,
+                'userId'    => $GLOBALS['id']
+            ]);
+
+            $tile['resources'] = [];
+            foreach ($resources as $resource) {
+                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+
+                $tile['resources'][] = [
+                    'resId'         => $resource['res_id'],
+                    'subject'       => $resource['subject'],
+                    'creationDate'  => $resource['creation_date'],
+                    'senders'       => $senders ,
+                    'recipients'    => $recipients
+                ];
+            }
+        } elseif ($tile['view'] == 'chart') {
+            if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
+                $type = 'status';
+            } else {
+                $type = 'type_id';
+            }
+            $resources = ResModel::getLastResources([
+                'select'    => [
+                    'res_letterbox.type_id',
+                    'res_letterbox.status'
+                ],
+                'limit'     => 5,
+                'userId'    => $GLOBALS['id']
+            ]);
+            $tile['resources'] = [];
+            $chartTypes = [];
+            foreach ($resources as $resource) {
+                if ($type == 'status') {
+                    $status['label_status'] = '';
+                    if (!empty($resource['status'])) {
+                        $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
+                    }
+                    if (!in_array($status['label_status'], $chartTypes)) {
+                        $chartTypes[] = $status['label_status'];
+                        $tile['resources'][] = ['name' => $status['label_status'], 'value' => 1];
+                    } else {
+                        foreach ($tile['resources'] as $key => $tileResource) {
+                            if ($tileResource['name'] == $status['label_status']) {
+                                $tile['resources'][$key]['value']++;
+                            }
+                        }
+                    }
+                } else {
+                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+                    if (!in_array($doctype['description'], $chartTypes)) {
+                        $chartTypes[] = $doctype['description'];
+                        $tile['resources'][] = ['name' => $doctype['description'], 'value' => 1];
+                    } else {
+                        foreach ($tile['resources'] as $key => $tileResource) {
+                            if ($tileResource['name'] == $doctype['description']) {
+                                $tile['resources'][$key]['value']++;
+                            }
+                        }
+                    }
                 }
             }
         }

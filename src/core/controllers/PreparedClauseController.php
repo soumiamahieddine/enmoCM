@@ -290,7 +290,7 @@ class PreparedClauseController
     {
         ValidatorModel::notEmpty($aArgs, ['clause', 'userId']);
         ValidatorModel::stringType($aArgs, ['clause', 'userId']);
-        ValidatorModel::arrayType($aArgs, ['select', 'ohomeconrderBy']);
+        ValidatorModel::arrayType($aArgs, ['select', 'orderBy']);
         ValidatorModel::intType($aArgs, ['limit']);
 
         $user = UserModel::getByLogin(['login' => $aArgs['userId'], 'select' => ['id']]);

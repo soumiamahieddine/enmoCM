@@ -305,7 +305,6 @@ $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
 
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');
-$app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':getLastRessources');
 $app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::class . ':getMaarchParapheurDocuments');
 
 //Indexing
