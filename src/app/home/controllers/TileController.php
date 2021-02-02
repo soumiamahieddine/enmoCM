@@ -17,6 +17,9 @@ namespace Home\controllers;
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
 use Doctype\models\DoctypeModel;
+use Folder\controllers\FolderController;
+use Folder\models\FolderModel;
+use Folder\models\ResourceFolderModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Home\models\TileModel;
@@ -198,7 +201,7 @@ class TileController
             }
         }
 
-        foreach ($body['tiles'] as $key => $tile) {
+        foreach ($body['tiles'] as $tile) {
             TileModel::update([
                 'set'   => [
                     'position' => $tile['position'],
@@ -230,6 +233,17 @@ class TileController
             } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $group['group_id']])) {
                 return ['errors' => 'User is not linked to this group'];
             }
+        } elseif ($args['type'] == 'folder') {
+            if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
+                return ['errors' => 'Body parameters is empty or not an array'];
+            } elseif (!Validator::intVal()->validate($args['parameters']['folderId'] ?? null)) {
+                return ['errors' => 'Body[parameters] folderId is empty or not an integer'];
+            }
+
+            $folder = FolderController::getScopeFolders(['login' => $GLOBALS['login'], 'folderId' => $args['parameters']['folderId']]);
+            if (empty($folder[0])) {
+                return ['errors' => 'Folder not found or out of your perimeter'];
+            }
         }
 
         return true;
@@ -241,6 +255,9 @@ class TileController
             $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
             $group = GroupModel::getById(['select' => ['group_desc', 'group_id'], 'id' => $tile['parameters']['groupId']]);
             $tile['label'] = "{$basket['basket_name']} ({$group['group_desc']})";
+        } elseif ($tile['type'] == 'folder') {
+            $folder = FolderModel::getById(['id' => $tile['parameters']['folderId']]);
+            $tile['label'] = "{$folder['label']}";
         }
 
         return true;
@@ -258,6 +275,10 @@ class TileController
         } elseif ($tile['type'] == 'searchTemplate') {
         } elseif ($tile['type'] == 'followedMail') {
         } elseif ($tile['type'] == 'folder') {
+            $control = TileController::getFolderDetails($tile);
+            if (!empty($control['errors'])) {
+                return ['errors' => $control['errors']];
+            }
         } elseif ($tile['type'] == 'externalSignatoryBook') {
         } elseif ($tile['type'] == 'shortcut') {
         }
@@ -307,6 +328,68 @@ class TileController
                 'select'    => ["COUNT({$type})", $type],
                 'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
                 'groupBy'   => [$type]
+            ]);
+            $tile['resources'] = [];
+            foreach ($resources as $resource) {
+                if ($type == 'status') {
+                    $status['label_status'] = '';
+                    if (!empty($resource['status'])) {
+                        $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
+                    }
+                    $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+                } else {
+                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+                    $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static function getFolderDetails(array &$tile)
+    {
+        if (!FolderController::hasFolders(['folders' => [$tile['parameters']['folderId']], 'userId' => $GLOBALS['id']])) {
+            return ['errors' => 'Folder out of perimeter'];
+        }
+
+        $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$tile['parameters']['folderId']]]);
+        $foldersResources = array_column($foldersResources, 'res_id');
+
+        if ($tile['view'] == 'resume') {
+            $tile['resourcesNumber'] = count($foldersResources);
+        } elseif ($tile['view'] == 'list') {
+            $resources = ResModel::get([
+                'select'  => ['subject', 'creation_date', 'res_id'],
+                'where'   => ['res_id in (?)'],
+                'data'    => [$foldersResources],
+                'orderBy' => ['modification_date'],
+                'limit'   => 5
+            ]);
+            $tile['resources'] = [];
+            foreach ($resources as $resource) {
+                $senders    = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+
+                $tile['resources'][] = [
+                    'resId'        => $resource['res_id'],
+                    'subject'      => $resource['subject'],
+                    'creationDate' => $resource['creation_date'],
+                    'senders'      => $senders ,
+                    'recipients'   => $recipients
+                ];
+            }
+        } elseif ($tile['view'] == 'chart') {
+            if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
+                $type = 'status';
+            } else {
+                $type = 'type_id';
+            }
+            $resources = ResModel::get([
+                'select'  => ["COUNT({$type})", $type],
+                'where'   => ['res_id in (?)'],
+                'data'    => [$foldersResources],
+                'groupBy' => [$type]
             ]);
             $tile['resources'] = [];
             foreach ($resources as $resource) {
