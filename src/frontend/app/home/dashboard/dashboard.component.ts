@@ -87,7 +87,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.http.put(`../rest/tiles/${tile.id}`, tileToSend).pipe(
             tap(() => {
                 const indexTile = this.tiles.filter((tileItem: any) => tileItem.id !== null).map((tileItem: any) => tileItem.position).indexOf(tile.position);
-                this.tiles[indexTile] = tileToSend;
+                this.tiles[tile.position] = tileToSend;
                 this.tileComponent.toArray()[indexTile].changeView(view, extraParams);
             }),
             catchError((err: any) => {
