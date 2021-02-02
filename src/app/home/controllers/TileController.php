@@ -371,49 +371,55 @@ class TileController
         if ($tile['view'] == 'resume') {
             $tile['resourcesNumber'] = count($allResources);
         } elseif ($tile['view'] == 'list') {
-            $resources = ResModel::get([
-                'select'  => ['subject', 'creation_date', 'res_id'],
-                'where'   => ['res_id in (?)'],
-                'data'    => [$allResources],
-                'orderBy' => ['modification_date'],
-                'limit'   => 5
-            ]);
             $tile['resources'] = [];
-            foreach ($resources as $resource) {
-                $senders    = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
-
-                $tile['resources'][] = [
-                    'resId'        => $resource['res_id'],
-                    'subject'      => $resource['subject'],
-                    'creationDate' => $resource['creation_date'],
-                    'senders'      => $senders ,
-                    'recipients'   => $recipients
-                ];
+            if (!empty($allResources)) {
+                $resources = ResModel::get([
+                    'select'  => ['subject', 'creation_date', 'res_id'],
+                    'where'   => ['res_id in (?)'],
+                    'data'    => [$allResources],
+                    'orderBy' => ['modification_date'],
+                    'limit'   => 5
+                ]);
+                
+                foreach ($resources as $resource) {
+                    $senders    = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                    $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+    
+                    $tile['resources'][] = [
+                        'resId'        => $resource['res_id'],
+                        'subject'      => $resource['subject'],
+                        'creationDate' => $resource['creation_date'],
+                        'senders'      => $senders ,
+                        'recipients'   => $recipients
+                    ];
+                }
             }
         } elseif ($tile['view'] == 'chart') {
-            if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
-                $type = 'status';
-            } else {
-                $type = 'type_id';
-            }
-            $resources = ResModel::get([
-                'select'  => ["COUNT({$type})", $type],
-                'where'   => ['res_id in (?)'],
-                'data'    => [$allResources],
-                'groupBy' => [$type]
-            ]);
             $tile['resources'] = [];
-            foreach ($resources as $resource) {
-                if ($type == 'status') {
-                    $status['label_status'] = '';
-                    if (!empty($resource['status'])) {
-                        $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
-                    }
-                    $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+            if (!empty($allResources)) {
+                if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
+                    $type = 'status';
                 } else {
-                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
-                    $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                    $type = 'type_id';
+                }
+                $resources = ResModel::get([
+                    'select'  => ["COUNT({$type})", $type],
+                    'where'   => ['res_id in (?)'],
+                    'data'    => [$allResources],
+                    'groupBy' => [$type]
+                ]);
+                $tile['resources'] = [];
+                foreach ($resources as $resource) {
+                    if ($type == 'status') {
+                        $status['label_status'] = '';
+                        if (!empty($resource['status'])) {
+                            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
+                        }
+                        $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+                    } else {
+                        $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+                        $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                    }
                 }
             }
         }
