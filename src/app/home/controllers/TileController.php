@@ -14,24 +14,40 @@
 
 namespace Home\controllers;
 
+use Action\models\ActionModel;
+use Attachment\models\AttachmentTypeModel;
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
+use CustomField\models\CustomFieldModel;
+use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
+use Entity\models\EntityModel;
+use Entity\models\ListTemplateModel;
 use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Home\models\TileModel;
+use IndexingModel\models\IndexingModelModel;
+use Notification\models\NotificationModel;
+use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
+use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use Status\models\StatusModel;
+use Tag\models\TagModel;
+use Template\models\TemplateModel;
+use User\controllers\UserController;
+use User\models\UserEntityModel;
 use User\models\UserModel;
 
 class TileController
@@ -89,6 +105,10 @@ class TileController
             return $response->withStatus(400)->withJson(['errors' => 'Body view is empty, not a string or not valid']);
         } elseif (!Validator::intVal()->validate($body['position'] ?? null)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body position is not set or not an integer']);
+        }
+
+        if ($body['type'] == 'shortcut' && $body['view'] != 'resume') {
+            return $response->withStatus(400)->withJson(['errors' => 'Shortcut tile must have resume view']);
         }
 
         $tiles = TileModel::get([
@@ -251,6 +271,14 @@ class TileController
             if (empty($folder[0])) {
                 return ['errors' => 'Folder not found or out of your perimeter'];
             }
+        } elseif ($args['type'] == 'shortcut') {
+            if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
+                return ['errors' => 'Body parameters is empty or not an array'];
+            } elseif (!Validator::stringType()->validate($args['parameters']['privilegeId'] ?? null)) {
+                return ['errors' => 'Body[parameters] privilegeId is empty or not a string'];
+            } elseif ($args['view'] != 'resume') {
+                return ['errors' => 'Shortcut tile must have resume view'];
+            }
         }
 
         return true;
@@ -299,6 +327,10 @@ class TileController
                 return ['errors' => $control['errors']];
             }
         } elseif ($tile['type'] == 'shortcut') {
+            $control = TileController::getShortcutDetails($tile);
+            if (!empty($control['errors'])) {
+                return ['errors' => $control['errors']];
+            }
         }
 
         return true;
@@ -565,5 +597,125 @@ class TileController
         }
 
         return true;
+    }
+
+    private public static function getShortcutDetails(array &$tile)
+    {
+        $tile['resourcesNumber'] = null;
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => $tile['parameters']['privilegeId'], 'userId' => $GLOBALS['id']])) {
+            return ['errors' => 'Service forbidden'];
+        }
+        if ($tile['parameters']['privilegeId'] == 'admin_users') {
+            if (UserController::isRoot(['id' => $GLOBALS['id']])) {
+                $users = UserModel::get([
+                    'select'    => [1],
+                    'where'     => ['status != ?'],
+                    'data'      => ['DEL']
+                ]);
+            } else {
+                $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['id']]);
+                $users = [];
+                if (!empty($entities)) {
+                    $users = UserEntityModel::getWithUsers([
+                        'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail'],
+                        'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                        'data'      => [$entities, 'DEL']
+                    ]);
+                }
+                $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail']]);
+                $users = array_merge($users, $usersNoEntities);
+            }
+            $tile['resourcesNumber'] = count($users);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_groups') {
+            $groups = GroupModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($groups);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'manage_entities') {
+            $entities = EntityModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($entities);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_listmodels') {
+            $listTemplates = ListTemplateModel::get(['select' => [1], 'where'  => ['owner is null']]);
+            $tile['resourcesNumber'] = count($listTemplates);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_architecture') {
+            $doctypes = DoctypeModel::get(['select' => [1], 'where' => ['enabled = ?'], 'data' => ['Y']]);
+            $tile['resourcesNumber'] = count($doctypes);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_tag') {
+            $tags = TagModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($tags);
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_baskets') {
+            $baskets = BasketModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($baskets);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_status') {
+            $status = StatusModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($status);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_actions') {
+            $actions = ActionModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($actions);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_contacts') {
+            $contacts = ContactModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($contacts);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_priorities') {
+            $priority = PriorityModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($priority);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_templates') {
+            $templates = TemplateModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($templates);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_indexing_models') {
+            $models = IndexingModelModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($models);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_custom_fields') {
+            $customFields = CustomFieldModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($customFields);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_notif') {
+            $notifications = NotificationModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($notifications);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_docservers') {
+            $docservers = DocserverModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($docservers);
+
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_shippings') {
+            $shippings = ShippingTemplateModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($shippings);
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_alfresco') {
+            $entities = EntityModel::get(['select' => ['external_id', 'short_label'], 'where' => ["external_id->>'alfresco' is not null"]]);
+
+            $accounts = [];
+            $alreadyAdded = [];
+            foreach ($entities as $entity) {
+                $alfresco = json_decode($entity['external_id'], true);
+                if (!in_array($alfresco['alfresco']['id'], $alreadyAdded)) {
+                    $accounts[] = [
+                        'id'            => $alfresco['alfresco']['id'],
+                        'label'         => $alfresco['alfresco']['label'],
+                        'login'         => $alfresco['alfresco']['login'],
+                        'entitiesLabel' => [$entity['short_label']]
+                    ];
+                    $alreadyAdded[] = $alfresco['alfresco']['id'];
+                } else {
+                    foreach ($accounts as $key => $value) {
+                        if ($value['id'] == $alfresco['alfresco']['id']) {
+                            $accounts[$key]['entitiesLabel'][] = $entity['short_label'];
+                        }
+                    }
+                }
+            }
+            $tile['resourcesNumber'] = count($accounts);
+        } elseif ($tile['parameters']['privilegeId'] == 'admin_attachments') {
+            $attachmentsTypes = AttachmentTypeModel::get(['select' => [1]]);
+            $tile['resourcesNumber'] = count($attachmentsTypes);
+        }
     }
 }
