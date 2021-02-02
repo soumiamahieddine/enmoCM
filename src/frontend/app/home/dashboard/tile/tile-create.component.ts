@@ -24,6 +24,7 @@ export class TileCreateComponent implements OnInit {
     baskets: any[] = [];
 
     position: string = null;
+    tileLabel: string = null;
     selectedTileType: string = null;
     selectedView: string = null;
     selectedColor: string = '#90caf9';
@@ -77,6 +78,7 @@ export class TileCreateComponent implements OnInit {
     }
 
     getViews() {
+        this.translate.instant('lang.' + this.selectedTileType);
         const tmpViews = this.dashboardService.getViewsByTileType(this.selectedTileType);
         this.views = tmpViews.map((view: any) => {
             return {
@@ -98,7 +100,7 @@ export class TileCreateComponent implements OnInit {
                     this.baskets = data.regroupedBaskets;
                     console.log(this.baskets[0]);
                     console.log(this.baskets[0].baskets[0]);
-
+                    this.tileLabel = `${this.baskets[0].baskets[0].basket_name} (${this.baskets[0].groupDesc})`;
                     this.extraParams = {
                         groupId: this.baskets[0].groupSerialId,
                         basketId: this.baskets[0].baskets[0].id
@@ -150,6 +152,7 @@ export class TileCreateComponent implements OnInit {
             tap((data: any) => {
                 this.dialogRef.close({
                     id: data.id,
+                    label: this.tileLabel,
                     type: objToSend.type,
                     view: objToSend.view,
                     position: this.position,

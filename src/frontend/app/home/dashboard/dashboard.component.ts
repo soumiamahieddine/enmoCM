@@ -59,8 +59,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     if (!this.functionsService.empty(tmpTile)) {
                         const objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
                         objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.id) : objTile.label;
-                        // for test
-                        objTile.color = '#90caf9';
                         this.tiles.push(objTile);
                     } else {
                         this.tiles.push({
@@ -79,15 +77,19 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
 
     changeView(tile: any, view: string, extraParams: any = null) {
-        const indexTile = this.tiles.filter((tileItem: any) => tileItem.id !== null).map((tileItem: any) => tileItem.position).indexOf(tile.position);
-        this.tileComponent.toArray()[indexTile].changeView(view, extraParams);
-        tile.view = view;
-        if (extraParams !== null) {
-            Object.keys(extraParams).forEach(paramKey => {
-                tile.parameters[paramKey] = extraParams[paramKey];
-            });
-        }
-        this.http.put(`../rest/tiles/${tile.id}`, tile).pipe(
+        const tileToSend = JSON.parse(JSON.stringify(tile));
+        tileToSend.view = view;
+        this.http.put(`../rest/tiles/${tile.id}`, tileToSend).pipe(
+            tap(() => {
+                const indexTile = this.tiles.filter((tileItem: any) => tileItem.id !== null).map((tileItem: any) => tileItem.position).indexOf(tile.position);
+                this.tileComponent.toArray()[indexTile].changeView(view, extraParams);
+                tile.view = view;
+                if (extraParams !== null) {
+                    Object.keys(extraParams).forEach(paramKey => {
+                        tile.parameters[paramKey] = extraParams[paramKey];
+                    });
+                }
+            }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);

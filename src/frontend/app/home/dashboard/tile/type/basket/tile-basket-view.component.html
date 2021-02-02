@@ -1,5 +1,5 @@
 <div class="tile-title" [style.background-color]="tile.color" style="color: white;">
-    {{'lang.'+ tile.type | translate}}
+    {{tile.label}}
 </div>
 <ng-container *ngIf="loading; else elseLoaded">
     <mat-progress-bar color="primary" mode="indeterminate" class="loader">
@@ -8,7 +8,8 @@
 </ng-container>
 <ng-template #elseLoaded>
     <app-tile-view-list *ngIf="view==='list'"
-        [displayColumns]="['recipient','subject','creationDate']"
+        [displayColumns]="['contactLabel','subject','creationDate']"
+        [tile]="tile"
         [resources]="resources" 
         [icon]="tile.icon" 
         [route]="route" 
@@ -18,14 +19,14 @@
         [route]="route" 
         [countResources]="countResources" 
         [icon]="tile.icon"
-        [extraParams]="tile.parameters" 
+        [tile]="tile"
         [resourceLabel]="'courrier(s)'"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-resume>
     <app-tile-view-chart *ngIf="view==='chart'" 
         [route]="route"
         [resources]="resources"
-        [extraParams]="tile.parameters" 
+        [tile]="tile"
         [icon]="tile.icon"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-chart>
