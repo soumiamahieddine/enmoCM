@@ -24,6 +24,7 @@ use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Home\models\TileModel;
 use Resource\models\ResModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -136,6 +137,10 @@ class TileController
             return $response->withStatus(400)->withJson(['errors' => 'Body is empty']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['view'] ?? null) || !in_array($body['view'], TileController::VIEWS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body view is empty, not a string or not valid']);
+        }
+
+        if ($body['view'] != 'chart') {
+            unset($body['parameters']['chartMode']);
         }
 
         TileModel::update([
@@ -276,11 +281,18 @@ class TileController
             TileController::getLastResourcesDetails($tile);
         } elseif ($tile['type'] == 'searchTemplate') {
         } elseif ($tile['type'] == 'followedMail') {
+            $followedResources = UserFollowedResourceModel::get([
+                'select' => ['res_id'],
+                'where'  => ['user_id = ?'],
+                'data'   => [$GLOBALS['id']]
+            ]);
+            TileController::getResourcesDetails($tile, $followedResources);
         } elseif ($tile['type'] == 'folder') {
-            $control = TileController::getFolderDetails($tile);
-            if (!empty($control['errors'])) {
-                return ['errors' => $control['errors']];
+            if (!FolderController::hasFolders(['folders' => [$tile['parameters']['folderId']], 'userId' => $GLOBALS['id']])) {
+                return ['errors' => 'Folder out of perimeter'];
             }
+            $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$tile['parameters']['folderId']]]);
+            TileController::getResourcesDetails($tile, $foldersResources);
         } elseif ($tile['type'] == 'externalSignatoryBook') {
             $control = TileController::getMaarchParapheurDetails($tile);
             if (!empty($control['errors'])) {
@@ -353,22 +365,16 @@ class TileController
         return true;
     }
 
-    private static function getFolderDetails(array &$tile)
+    private static function getResourcesDetails(array &$tile, $allResources)
     {
-        if (!FolderController::hasFolders(['folders' => [$tile['parameters']['folderId']], 'userId' => $GLOBALS['id']])) {
-            return ['errors' => 'Folder out of perimeter'];
-        }
-
-        $foldersResources = ResourceFolderModel::get(['select' => ['res_id'], 'where' => ['folder_id = ?'], 'data' => [$tile['parameters']['folderId']]]);
-        $foldersResources = array_column($foldersResources, 'res_id');
-
+        $allResources = array_column($allResources, 'res_id');
         if ($tile['view'] == 'resume') {
-            $tile['resourcesNumber'] = count($foldersResources);
+            $tile['resourcesNumber'] = count($allResources);
         } elseif ($tile['view'] == 'list') {
             $resources = ResModel::get([
                 'select'  => ['subject', 'creation_date', 'res_id'],
                 'where'   => ['res_id in (?)'],
-                'data'    => [$foldersResources],
+                'data'    => [$allResources],
                 'orderBy' => ['modification_date'],
                 'limit'   => 5
             ]);
@@ -394,7 +400,7 @@ class TileController
             $resources = ResModel::get([
                 'select'  => ["COUNT({$type})", $type],
                 'where'   => ['res_id in (?)'],
-                'data'    => [$foldersResources],
+                'data'    => [$allResources],
                 'groupBy' => [$type]
             ]);
             $tile['resources'] = [];
