@@ -1,6 +1,5 @@
-<div style="width: 100%;overflow: auto;z-index: 2;">
-    <mat-card id="viewThumbnail" style="display:none;top:0px;right:0px;position: fixed;z-index: 3;margin-left: 1px;"><img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" /></mat-card>
-    <div class="resource" [class.resource-link]="route !== null" role="listitem" *ngFor="let resource of resources" (mouseenter)="resource.hovered=true" (mouseleave)="resource.hovered=false" (click)="route !== null ? goTo(resource): false">
+<div style="width: 100%;overflow: auto;">
+    <div class="resource" [class.resource-link]="route !== null" role="listitem" *ngFor="let resource of resources;let it=index" (mouseenter)="resource.hovered=true" (mouseleave)="resource.hovered=false" (click)="route !== null ? goTo(resource): false">
         <ng-container *ngFor="let col of displayColumns;let i=index">
             <div class="item" *ngIf="['contactTitle'].indexOf(col) === -1">
                 <span *ngIf="!isDate(resource[col])" [title]="col !== 'contactLabel' ? resource[col] : resource['contactTitle']">
@@ -11,9 +10,12 @@
                 </span>
             </div>
         </ng-container>
-        <div class="view-action" (mouseenter)="viewThumbnail($event,resource);" (mouseleave)="closeThumbnail();">
+        <div class="view-action" [style.visibility]="resource.hovered ? 'initial': 'hidden'" (mouseenter)="viewThumbnail($event,resource);" (mouseleave)="closeThumbnail();">
             <i class="fa fa-eye view-action-icon" color="primary"></i>
         </div>
+        <ng-container *ngIf="it===0">
+            <i class="{{icon}} tile-icon" color="primary"></i>
+        </ng-container>
     </div>
 </div>
-<i class="{{icon}} tile-icon" color="primary"></i>
+<mat-card id="viewThumbnail" style="display:none;top:0px;right:0px;position: fixed;margin-left: 1px;z-index: 3;"><img style="max-height: 100vh;" *ngIf="thumbnailUrl !== ''" [src]="thumbnailUrl | secureUrl | async" /></mat-card>

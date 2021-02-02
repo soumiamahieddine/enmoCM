@@ -1,7 +1,10 @@
 @import '../../../../../../css/vars.scss';
 
 .item {
-    // font-size: 12px;
+    z-index: 2;
+    height: 100%;
+    align-items: center;
+    display: flex;
 }
 
 .tile-icon {
@@ -36,9 +39,6 @@
 
 .view-action:hover {
     z-index: 4;
-    .view-action-icon {
-        // visibility: hidden;
-    }
 }
 
 .date-item {
