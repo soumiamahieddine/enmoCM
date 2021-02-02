@@ -359,7 +359,6 @@ export class ProcessComponent implements OnInit, OnDestroy {
                         } else {
                             this.currentTool = myData.configuration.listEvent.defaultTab;
                         }
-                        console.log('currentTool 2 = ' + this.currentTool);
                     }),
                     catchError((err: any) => {
                         this.notify.handleErrors(err);

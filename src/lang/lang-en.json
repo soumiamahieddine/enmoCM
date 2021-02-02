@@ -2249,5 +2249,6 @@
     "refStatus": "This document has been refused in the external signature",
     "valStatus": "This document has been validated in the external signature",
     "stopStatus": "This document has been interrupted in the external signature",
-    "nullStatus": "The user has not yet taken any action"
+    "nullStatus": "The user has not yet taken any action",
+    "intermediateStatusMailing": "The final and error statuses are only used when mailing in the action"
 }
