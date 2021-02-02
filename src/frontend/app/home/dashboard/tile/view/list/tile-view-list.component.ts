@@ -45,7 +45,9 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
 
     goTo(resource: any) {
         const data = { ...resource, ...this.tile.parameters, userId: this.tile.userId };
-
+        if (this.tile.maarchParapheurUrl !== undefined) {
+            data['maarchParapheurUrl'] = this.tile.maarchParapheurUrl;
+        }
         this.dashboardService.goTo(this.route, data);
     }
 

@@ -30,7 +30,9 @@ export class TileViewResumeComponent implements OnInit, AfterViewInit {
 
     goTo() {
         const data = { ...this.tile.parameters, userId: this.tile.userId };
-
+        if (this.tile.maarchParapheurUrl !== undefined) {
+            data['maarchParapheurUrl'] = this.tile.maarchParapheurUrl;
+        }
         this.dashboardService.goTo(this.route, data);
     }
 }

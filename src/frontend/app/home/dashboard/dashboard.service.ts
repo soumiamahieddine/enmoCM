@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
-import { LatinisePipe } from 'ngx-pipes';
 import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
@@ -13,7 +12,7 @@ interface Tiles {
     // 'searchTemplate': Tile;
     // 'followedMail': Tile;
     'folder': Tile;
-    // 'externalSignatoryBook': Tile;
+    'externalSignatoryBook': Tile;
     // 'shortcut': Tile;
 }
 
@@ -137,7 +136,7 @@ export class DashboardService {
                 }
             ]
         },
-        /*externalSignatoryBook : {
+        externalSignatoryBook : {
             icon: 'fas fa-pen-nib',
             menus : [
                 'view',
@@ -146,19 +145,15 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: ':signatoryBookPathresources/dist/documents/:resId'
+                    route: ':maarchParapheurUrl/dist/documents/:resId'
                 },
                 {
                     id: 'resume',
-                    route: ':signatoryBookPathresources/dist/home'
-                },
-                {
-                    id: 'chart',
-                    route: ':signatoryBookPathresources/dist/home'
+                    route: ':maarchParapheurUrl/dist/home'
                 }
             ]
         },
-        shortcut : {
+        /*shortcut : {
             icon: null,
             menus : [
                 'delete'
