@@ -10,11 +10,11 @@ import { catchError, tap } from 'rxjs/operators';
 interface Tiles {
     'myLastResources': Tile;
     'basket': Tile;
-    /*'searchTemplate': Tile;
-    'followedMail': Tile;
+    // 'searchTemplate': Tile;
+    // 'followedMail': Tile;
     'folder': Tile;
-    'externalSignatoryBook': Tile;
-    'shortcut': Tile;*/
+    // 'externalSignatoryBook': Tile;
+    // 'shortcut': Tile;
 }
 
 interface Tile {
@@ -115,7 +115,7 @@ export class DashboardService {
                     route: '/followed'
                 }
             ]
-        },
+        },*/
         folder : {
             icon: 'fa fa-folder',
             menus : [
@@ -137,7 +137,7 @@ export class DashboardService {
                 }
             ]
         },
-        externalSignatoryBook : {
+        /*externalSignatoryBook : {
             icon: 'fas fa-pen-nib',
             menus : [
                 'view',

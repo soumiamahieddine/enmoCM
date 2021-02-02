@@ -10,8 +10,8 @@
 .tile-icon {
     z-index: 1;
     position: absolute;
-    bottom: 0px;
-    left: 0px;
+    bottom: 5px;
+    left: 5px;
     font-size: 90px;
     opacity: 0.1;
 }
@@ -19,7 +19,7 @@
 .resource{
     background: none;
     display: grid;
-    grid-template-columns: 1fr 1fr auto auto;
+    grid-template-columns: 1fr 1fr 60px auto;
     grid-gap: 10px;
     padding-left: 10px;
     padding-right: 10px;

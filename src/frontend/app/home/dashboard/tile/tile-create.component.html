@@ -29,6 +29,14 @@
                 </mat-optgroup>
             </mat-select>
         </mat-form-field>
+        <mat-form-field appearance="outline" *ngIf="selectedTileType === 'folder'">
+            <mat-label>{{'lang.folderPinned' | translate}}</mat-label>
+            <mat-select [compareWith]="this.compareFolders" [(ngModel)]="extraParams">
+                <mat-option *ngFor="let folder of folders | sortBy : 'label'" [value]="{folderId:folder.id}">
+                    {{folder.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
         <mat-form-field appearance="outline" *ngIf="views.length > 0">
             <mat-label>Vue</mat-label>
             <mat-select [(ngModel)]="selectedView" (selectionChange)="resetExtraParams()">

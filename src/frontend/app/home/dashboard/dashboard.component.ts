@@ -79,16 +79,16 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     changeView(tile: any, view: string, extraParams: any = null) {
         const tileToSend = JSON.parse(JSON.stringify(tile));
         tileToSend.view = view;
+        if (extraParams !== null) {
+            Object.keys(extraParams).forEach(paramKey => {
+                tileToSend.parameters[paramKey] = extraParams[paramKey];
+            });
+        }
         this.http.put(`../rest/tiles/${tile.id}`, tileToSend).pipe(
             tap(() => {
                 const indexTile = this.tiles.filter((tileItem: any) => tileItem.id !== null).map((tileItem: any) => tileItem.position).indexOf(tile.position);
+                this.tiles[indexTile] = tileToSend;
                 this.tileComponent.toArray()[indexTile].changeView(view, extraParams);
-                tile.view = view;
-                if (extraParams !== null) {
-                    Object.keys(extraParams).forEach(paramKey => {
-                        tile.parameters[paramKey] = extraParams[paramKey];
-                    });
-                }
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

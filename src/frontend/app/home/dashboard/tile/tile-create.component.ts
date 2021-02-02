@@ -22,6 +22,7 @@ export class TileCreateComponent implements OnInit {
     tileTypes: any[] = [];
     views: any[] = [];
     baskets: any[] = [];
+    folders: any[] = [];
 
     position: string = null;
     tileLabel: string = null;
@@ -90,6 +91,8 @@ export class TileCreateComponent implements OnInit {
 
         if (this.selectedTileType === 'basket') {
             this.getBaskets();
+        } else if (this.selectedTileType === 'folder') {
+            this.getFolders();
         }
     }
 
@@ -112,8 +115,30 @@ export class TileCreateComponent implements OnInit {
         }
     }
 
+    getFolders() {
+        if (this.folders.length === 0) {
+            this.http.get('../rest/pinnedFolders').pipe(
+                tap((data: any) => {
+                    this.folders = data.folders;
+                    this.tileLabel = `${this.folders[0].name}`;
+                    this.extraParams = {
+                        folderId: this.folders[0].id,
+                    };
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
+
     compareBaskets(basket1: any, basket2: any) {
         return (basket1.groupId === basket2.groupId && basket1.basketId === basket2.basketId);
+    }
+
+    compareFolders(folder1: any, folder2: any) {
+        return (folder1.folderId === folder2.folderId);
     }
 
     isValid() {
