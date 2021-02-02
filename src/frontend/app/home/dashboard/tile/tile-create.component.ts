@@ -55,7 +55,7 @@ export class TileCreateComponent implements OnInit {
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<TileCreateComponent>,
-        private dashboardService: DashboardService,
+        public dashboardService: DashboardService,
         private functionsService: FunctionsService,
         private notify: NotificationService,
         public headerService: HeaderService
