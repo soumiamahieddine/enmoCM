@@ -50,6 +50,7 @@ trait ExportSEDATrait
         static $nonBindingDocument;
         static $config;
         static $entities;
+        static $zipFilename;
 
         if ($resources === null) {
             $resAcknowledgement = [];
@@ -91,6 +92,11 @@ trait ExportSEDATrait
             $nonBindingDocument = ParameterModel::getById(['select' => ['param_value_string'], 'id' => 'nonBindingDocumentFinalAction']);
 
             $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+
+            if (count($args['resources']) > 1 && $args['data']['actionMode'] == 'download') {
+                $tmpPath     = CoreConfigModel::getTmpPath();
+                $zipFilename = $tmpPath . $GLOBALS['login'] . "_" . rand() . ".zip";
+            }
         }
 
         if (in_array($args['resId'], $resAcknowledgement)) {
@@ -207,15 +213,23 @@ trait ExportSEDATrait
         ExportSEDATrait::cleanTmpDocument(['archiveUnits' => $initData['archiveUnits']]);
 
         if ($args['data']['actionMode'] == 'download') {
-            static $downloadFiles;
-            if ($downloadFiles === null) {
-                $downloadFiles = [];
+            if (count($args['resources']) > 1) {
+                $zip = new \ZipArchive();
+                if ($zip->open($zipFilename, \ZipArchive::CREATE) === true) {
+                    $zip->addFile($sedaPackage['encodedFilePath'], 'sedaPackage' . $resource['res_id'] . '.zip');
+                    $zip->close();
+    
+                    $zipPath = $zipFilename;
+                } else {
+                    return ['errors' => ['Cannot open zip file ' . $zipFilename]];
+                }
+            } else {
+                $zipPath = $sedaPackage['encodedFilePath'];
             }
-            $encodedContent = base64_encode(file_get_contents($sedaPackage['encodedFilePath']));
+            $encodedContent = base64_encode(file_get_contents($zipPath));
             unlink($sedaPackage['encodedFilePath']);
-            $downloadFiles[] = $encodedContent;
-            return ['data' => ['encodedFiles' => $downloadFiles]];
-        } elseif (count($args['resources']) > 1) {
+            return ['data' => ['encodedFile' => $encodedContent]];
+        } else {
             $customId = CoreConfigModel::getCustomId();
             
             static $massData;
@@ -235,19 +249,6 @@ trait ExportSEDATrait
             ];
 
             return ['postscript' => 'src/app/external/exportSeda/scripts/ExportSedaScript.php', 'args' => $massData];
-        } else {
-            $elementSend  = ExportSEDATrait::sendSedaPackage([
-                'messageId'       => $messageSaved['messageId'],
-                'config'          => $config,
-                'encodedFilePath' => $sedaPackage['encodedFilePath'],
-                'messageFilename' => $sedaPackage['messageFilename'],
-                'resId'           => $resource['res_id'],
-                'reference'       => $data['messageObject']['messageIdentifier']
-            ]);
-            unlink($sedaPackage['encodedFilePath']);
-            if (!empty($elementSend['errors'])) {
-                return ['errors' => [$elementSend['errors']]];
-            }
         }
     }
 
