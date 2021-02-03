@@ -37,12 +37,16 @@ use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
+use Search\controllers\SearchController;
+use Search\models\SearchModel;
+use Search\models\SearchTemplateModel;
 use Shipping\models\ShippingTemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
+use SrcCore\models\DatabaseModel;
 use Status\models\StatusModel;
 use Tag\models\TagModel;
 use Template\models\TemplateModel;
@@ -279,6 +283,17 @@ class TileController
             } elseif ($args['view'] != 'resume') {
                 return ['errors' => 'Shortcut tile must have resume view'];
             }
+        } elseif ($args['type'] == 'searchTemplate') {
+            if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
+                return ['errors' => 'Body parameters is empty or not an array'];
+            } elseif (!Validator::intVal()->validate($args['parameters']['searchTemplateId'] ?? null)) {
+                return ['errors' => 'Body[parameters] searchTemplateId is empty or not an integer'];
+            }
+
+            $searchTemplate = SearchTemplateModel::get(['select' => [1], 'where' => ['id = ?', 'user_id = ?'], 'data' => [$args['parameters']['searchTemplateId'], $GLOBALS['id']]]);
+            if (empty($searchTemplate)) {
+                return ['errors' => 'Body[parameters] searchTemplateId is out of perimeter'];
+            }
         }
 
         return true;
@@ -308,6 +323,7 @@ class TileController
         } elseif ($tile['type'] == 'myLastResources') {
             TileController::getLastResourcesDetails($tile);
         } elseif ($tile['type'] == 'searchTemplate') {
+            TileController::getSearchTemplateDetails($tile);
         } elseif ($tile['type'] == 'followedMail') {
             $followedResources = UserFollowedResourceModel::get([
                 'select' => ['res_id'],
@@ -412,11 +428,11 @@ class TileController
                     'orderBy' => ['modification_date'],
                     'limit'   => 5
                 ]);
-                
+
                 foreach ($resources as $resource) {
                     $senders    = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
                     $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
-    
+
                     $tile['resources'][] = [
                         'resId'        => $resource['res_id'],
                         'subject'      => $resource['subject'],
@@ -716,6 +732,142 @@ class TileController
         } elseif ($tile['parameters']['privilegeId'] == 'admin_attachments') {
             $attachmentsTypes = AttachmentTypeModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($attachmentsTypes);
+        }
+
+        return true;
+    }
+
+    private static function getSearchTemplateDetails(array &$tile)
+    {
+        $searchTemplate = SearchTemplateModel::get(['select' => ['query'], 'where' => ['id = ?', 'user_id = ?'], 'data' => [$tile['parameters']['searchTemplateId'], $GLOBALS['id']]]);
+        if (empty($searchTemplate)) {
+            return ['errors' => 'SearchTemplateId is out of perimeter'];
+        }
+        $rawQuery = json_decode($searchTemplate[0]['query'], true);
+        $query = [];
+        foreach ($rawQuery as $value) {
+            $query[$value['identifier']] = ['values' => $value['values']];
+        }
+
+        $userdataClause = SearchController::getUserDataClause(['userId' => $GLOBALS['id'], 'login' => $GLOBALS['login']]);
+        $searchWhere    = $userdataClause['searchWhere'];
+        $searchData     = $userdataClause['searchData'];
+
+        if (!empty($query['meta']['values'])) {
+            $query['meta']['values'] = trim($query['meta']['values']);
+        }
+        $searchClause = SearchController::getQuickFieldClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData  = $searchClause['searchData'];
+
+        $searchClause = SearchController::getMainFieldsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData  = $searchClause['searchData'];
+
+        $searchClause = SearchController::getListFieldsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData  = $searchClause['searchData'];
+
+        $searchClause = SearchController::getCustomFieldsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData  = $searchClause['searchData'];
+
+        $searchClause = SearchController::getRegisteredMailsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData  = $searchClause['searchData'];
+
+        $searchClause = SearchController::getFulltextClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
+        $searchWhere = $searchClause['searchWhere'];
+        $searchData  = $searchClause['searchData'];
+
+        $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['Y']]);
+        if (!empty($nonSearchableStatuses)) {
+            $nonSearchableStatuses = array_column($nonSearchableStatuses, 'id');
+            $searchWhere[] = 'status in (?)';
+            $searchData[]  = $nonSearchableStatuses;
+        }
+
+        DatabaseModel::beginTransaction();
+        SearchModel::createTemporarySearchData(['where' => $searchWhere, 'data' => $searchData]);
+
+        $allResources = SearchModel::getTemporarySearchData([
+            'select'  => ['res_id'],
+            'where'   => [],
+            'data'    => [],
+            'orderBy' => ['creation_date']
+        ]);
+        DatabaseModel::commitTransaction();
+        $allResources = array_column($allResources, 'res_id');
+
+        $limit = 5;
+        $offset = 0;
+
+        $resIds = [];
+        $order  = 'CASE res_id ';
+        for ($i = $offset; $i < ($offset + $limit); $i++) {
+            if (empty($allResources[$i])) {
+                break;
+            }
+            $order .= "WHEN {$allResources[$i]} THEN {$i} ";
+            $resIds[] = $allResources[$i];
+        }
+        $order .= 'END';
+
+        $resources = [];
+
+        if ($tile['view'] == 'resume') {
+            $tile['resourcesNumber'] = count($allResources);
+        } elseif ($tile['view'] == 'list') {
+            $tile['resources'] = [];
+            if (!empty($resIds)) {
+                $resources = ResModel::get([
+                    'select'    => ['subject', 'creation_date', 'res_id'],
+                    'where'     => ['res_id in (?)'],
+                    'data'      => [$resIds],
+                    'orderBy'   => [$order]
+                ]);
+            }
+
+            foreach ($resources as $resource) {
+                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+
+                $tile['resources'][] = [
+                    'resId'         => $resource['res_id'],
+                    'subject'       => $resource['subject'],
+                    'creationDate'  => $resource['creation_date'],
+                    'senders'       => $senders ,
+                    'recipients'    => $recipients
+                ];
+            }
+        } elseif ($tile['view'] == 'chart') {
+            if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
+                $type = 'status';
+            } else {
+                $type = 'type_id';
+            }
+            if (!empty($resIds)) {
+                $resources = ResModel::get([
+                    'select'    => ["COUNT({$type})", $type],
+                    'where'     => ['res_id in (?)'],
+                    'data'      => [$resIds],
+                    'groupBy'   => [$type]
+                ]);
+            }
+
+            $tile['resources'] = [];
+            foreach ($resources as $resource) {
+                if ($type == 'status') {
+                    $status['label_status'] = '';
+                    if (!empty($resource['status'])) {
+                        $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
+                    }
+                    $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+                } else {
+                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+                    $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
+                }
+            }
         }
 
         return true;
