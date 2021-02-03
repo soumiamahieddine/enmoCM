@@ -1,8 +1,11 @@
-<ngx-charts-pie-chart 
-    [class.link]="route !== null"
-    (click)="route !== null ? goTo(): false"
-    [results]="resources"
-    [legend]="false"
-    [labels]="true" >
-</ngx-charts-pie-chart>
-<i class="{{icon}} tile-icon" color="primary"></i>
+<ng-container *ngIf="resources.length > 0; else elseEmpty">
+    <ngx-charts-pie-chart [class.link]="route !== null" (click)="route !== null ? goTo(): false" [results]="resources"
+        [legend]="false" [labels]="true">
+    </ngx-charts-pie-chart>
+    <i class="{{icon}} tile-icon" color="primary"></i>
+</ng-container>
+<ng-template #elseEmpty>
+    <div class="empty-data">
+        {{'lang.noDataAvailable' | translate}}
+    </div>
+</ng-template>
