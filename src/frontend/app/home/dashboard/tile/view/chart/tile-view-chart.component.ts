@@ -30,8 +30,8 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void { }
 
-    goTo(resource: any) {
-        const data = { ...resource, ...this.tile.parameters, ...this.tile };
+    goTo() {
+        const data = { ...this.tile.parameters, ...this.tile };
         delete data.parameters;
         const link = this.dashboardService.getFormatedRoute(this.route, data);
         if (link) {
