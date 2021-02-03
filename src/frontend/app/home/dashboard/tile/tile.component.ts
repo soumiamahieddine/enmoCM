@@ -20,6 +20,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
     resources: any[] = [];
     countResources: number = 0;
     route: string = null;
+    viewDocRoute: string = null;
 
     constructor(
         public translate: TranslateService,
@@ -33,6 +34,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
     async ngAfterViewInit(): Promise<void> {
         await this['get_' + this.view]();
         this.route = this.tile.views.find((viewItem: any) => viewItem.id === this.view).route;
+        this.viewDocRoute = this.tile.views.find((viewItem: any) => viewItem.id === this.view).viewDocRoute;
         this.loading = false;
     }
 

@@ -10,7 +10,7 @@
                 </span>
             </div>
         </ng-container>
-        <div class="view-action" [style.visibility]="resource.hovered ? 'initial': 'hidden'" (mouseenter)="viewThumbnail($event,resource);" (mouseleave)="closeThumbnail();">
+        <div *ngIf="!functionsService.empty(viewDocRoute)" class="view-action" [style.visibility]="resource.hovered ? 'initial': 'hidden'" (mouseenter)="viewThumbnail($event,resource);" (mouseleave)="closeThumbnail();">
             <i class="fa fa-eye view-action-icon" color="primary"></i>
         </div>
         <ng-container *ngIf="it===0">

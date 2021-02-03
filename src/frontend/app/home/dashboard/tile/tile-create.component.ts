@@ -103,6 +103,8 @@ export class TileCreateComponent implements OnInit {
             this.getFolders();
         } else if (this.selectedTileType === 'shortcut') {
             this.getAdminMenu();
+        } else if (this.selectedTileType === 'externalSignatoryBook') {
+            this.getMPInfos();
         }
     }
 
@@ -123,6 +125,21 @@ export class TileCreateComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    getMPInfos() {
+        this.http.get('../rest/home').pipe(
+            tap((data: any) => {
+                if (!data.isLinkedToMaarchParapheur) {
+                    this.notify.error(this.translate.instant('lang.acountNotLinkedTomaarchParapheur'));
+                    this.resetData();
+                }
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     getFolders() {

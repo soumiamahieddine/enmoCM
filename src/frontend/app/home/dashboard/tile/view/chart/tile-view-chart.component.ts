@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '@service/app.service';
 import { DashboardService } from '@appRoot/home/dashboard/dashboard.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tile-view-chart',
@@ -18,6 +19,7 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
 
 
     constructor(
+        private router: Router,
         public translate: TranslateService,
         public http: HttpClient,
         public appService: AppService,
@@ -31,6 +33,9 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
     goTo(resource: any) {
         const data = { ...resource, ...this.tile.parameters, ...this.tile };
         delete data.parameters;
-        this.dashboardService.goTo(this.route, data);
+        const link = this.dashboardService.getFormatedRoute(this.route, data);
+        if (link) {
+            this.router.navigate([link]);
+        }
     }
 }

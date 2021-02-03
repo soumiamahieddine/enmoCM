@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '@service/app.service';
 import { DashboardService } from '@appRoot/home/dashboard/dashboard.service';
 import { FunctionsService } from '@service/functions.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tile-view-list',
@@ -18,6 +19,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
     @Input() tile: any;
     @Input() icon: string = '';
     @Input() route: string = null;
+    @Input() viewDocRoute: string = null;
 
     thumbnailUrl: string = '';
     showThumbnail: boolean = false;
@@ -25,6 +27,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
+        private router: Router,
         public appService: AppService,
         private dashboardService: DashboardService,
         public functionsService: FunctionsService
@@ -36,8 +39,13 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
 
     viewThumbnail(ev: any, resource: any) {
         const timeStamp = +new Date();
-        this.thumbnailUrl = '../rest/resources/' + resource.resId + '/thumbnail?tsp=' + timeStamp;
-        this.showThumbnail = true;
+        const data = { ...resource, ...this.tile.parameters, ...this.tile };
+        delete data.parameters;
+        const link = this.dashboardService.getFormatedRoute(this.viewDocRoute, data);
+        if (link) {
+            this.thumbnailUrl = '../rest' + link + '?tsp=' + timeStamp;
+            this.showThumbnail = true;
+        }
     }
 
     closeThumbnail() {
@@ -47,7 +55,10 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
     goTo(resource: any) {
         const data = { ...resource, ...this.tile.parameters, ...this.tile };
         delete data.parameters;
-        this.dashboardService.goTo(this.route, data);
+        const link = this.dashboardService.getFormatedRoute(this.route, data);
+        if (link) {
+            this.router.navigate([link]);
+        }
     }
 
     isDate(val: any) {

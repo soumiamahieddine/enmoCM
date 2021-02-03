@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
 import { of } from 'rxjs';
@@ -25,6 +24,7 @@ interface Tile {
 interface TileView {
     'id': 'list' | 'resume' | 'chart'; // identifier
     'route': string; // router when click on tile
+    'viewDocRoute'?: string; // router when view a doc (usefull for list view)
 }
 
 @Injectable()
@@ -40,7 +40,8 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: '/resources/:resId'
+                    route: '/resources/:resId',
+                    viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
                     id: 'resume',
@@ -61,7 +62,8 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: '/process/users/:userId/groups/:groupId/baskets/:basketId/resId/:resId'
+                    route: '/process/users/:userId/groups/:groupId/baskets/:basketId/resId/:resId',
+                    viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
                     id: 'resume',
@@ -103,7 +105,8 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: '/resources/:resId'
+                    route: '/resources/:resId',
+                    viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
                     id: 'resume',
@@ -124,7 +127,8 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: '/resources/:resId'
+                    route: '/resources/:resId',
+                    viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
                     id: 'resume',
@@ -145,7 +149,8 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: ':maarchParapheurUrl/dist/documents/:id'
+                    route: ':maarchParapheurUrl/dist/documents/:id',
+                    viewDocRoute: null
                 },
                 {
                     id: 'resume',
@@ -170,7 +175,6 @@ export class DashboardService {
     constructor(
         public http: HttpClient,
         public translate: TranslateService,
-        private router: Router,
         private notify: NotificationService
     ) { }
 
@@ -265,7 +269,7 @@ export class DashboardService {
         });
     }
 
-    goTo(route: string, data: any) {
+    getFormatedRoute(route: string, data: any) {
         const regex = /:\w*/g;
         const res = route.match(regex);
 
@@ -286,9 +290,10 @@ export class DashboardService {
         }
 
         if (errors.length === 0) {
-            this.router.navigate([formatedRoute]);
+            return formatedRoute;
         } else {
             this.notify.error(errors + ' not found');
+            return false;
         }
     }
 }

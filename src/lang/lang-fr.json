@@ -2246,5 +2246,6 @@
     "stopStatus": "Ce document a été interrompu dans la parapheur externe",
     "nullStatus": "L'utilisateur na pas encore effectué d'action",
     "intermediateStatusMailing": "Les statuts final et erreur ne sont utilisés que lors d'un publipostage dans l'action",
-    "navigation": "Navigation"
+    "navigation": "Navigation",
+    "acountNotLinkedTomaarchParapheur": "Votre compte n'est pas lié à Maarch Parapheur."
 }

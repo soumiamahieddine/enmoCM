@@ -74,7 +74,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                             editMode: false
                         });
                     }
-                    console.log(this.tiles);
                 }
             }),
             catchError((err: any) => {
