@@ -129,11 +129,16 @@ export class TileCreateComponent implements OnInit {
         if (this.folders.length === 0) {
             this.http.get('../rest/pinnedFolders').pipe(
                 tap((data: any) => {
-                    this.folders = data.folders;
-                    this.tileLabel = `${this.folders[0].name}`;
-                    this.extraParams = {
-                        folderId: this.folders[0].id,
-                    };
+                    if (data.folders.length > 0) {
+                        this.folders = data.folders;
+                        this.tileLabel = `${this.folders[0].name}`;
+                        this.extraParams = {
+                            folderId: this.folders[0].id,
+                        };
+                    } else {
+                        this.notify.error(this.translate.instant('lang.noPinnedFolder'));
+                        this.resetData();
+                    }
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
@@ -141,6 +146,12 @@ export class TileCreateComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    resetData() {
+        this.selectedTileType = null;
+        this.selectedView = null;
+        this.views = [];
     }
 
     getAdminMenu() {
@@ -185,9 +196,14 @@ export class TileCreateComponent implements OnInit {
                 });
                 arrMenus = arrMenus.concat(tmpMenus);
             }
-            this.menus = arrMenus;
-            this.setMenu(this.menus[1])
-            this.menusControl.setValue(this.menus[1])
+            if (arrMenus.length > 0) {
+                this.menus = arrMenus;
+                this.setMenu(this.menus[1])
+                this.menusControl.setValue(this.menus[1])
+            } else {
+                this.notify.error(this.translate.instant('lang.noData'));
+                this.resetData();
+            }
         }
     }
 
