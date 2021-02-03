@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                             objTile = {...objTile, ...this.initShortcutTile(tmpTile.parameters.privilegeId)};
                         }
                         objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.type) : objTile.label;
+                        objTile.parameters = this.functionsService.empty(objTile.parameters) ? {} : objTile.parameters;
                         this.tiles.push(objTile);
                     } else {
                         this.tiles.push({
