@@ -26,6 +26,9 @@ export class TileCreateComponent implements OnInit {
     views: any[] = [];
     baskets: any[] = [];
     folders: any[] = [];
+    searchTemplates: any[] = [];
+    searchTemplatesControl: FormControl = new FormControl();
+
     menus: any[] = [];
     menusControl: FormControl = new FormControl();
 
@@ -84,6 +87,8 @@ export class TileCreateComponent implements OnInit {
             this.getAdminMenu();
         } else if (this.selectedTileType === 'externalSignatoryBook') {
             this.getMPInfos();
+        } else if (this.selectedTileType === 'searchTemplate') {
+            this.getSearchTemplates();
         }
     }
 
@@ -119,6 +124,34 @@ export class TileCreateComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    getSearchTemplates() {
+        if (this.searchTemplates.length === 0) {
+            this.http.get('../rest/searchTemplates').pipe(
+                tap((data: any) => {
+                    if (data.searchTemplates.length > 0) {
+                        this.searchTemplates = data.searchTemplates;
+                        this.setSearchTemplate(this.searchTemplates[0])
+                        this.searchTemplatesControl.setValue(this.searchTemplates[0])
+                    } else {
+                        this.notify.error(this.translate.instant('lang.nosearchTemplate'));
+                        this.resetData();
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
+
+    setSearchTemplate(searchTemplate: any) {
+        this.extraParams = {
+            searchTemplateId: this.searchTemplates[0].id,
+        };
+        this.tileLabel = searchTemplate.label;
     }
 
     getFolders() {

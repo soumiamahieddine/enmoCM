@@ -2250,5 +2250,6 @@
     "acountNotLinkedTomaarchParapheur": "Votre compte n'est pas lié à Maarch Parapheur.",
     "error": "Erreur",
     "tileLoadError": "Erreur de chargement de la tuile <b>{{0}}</b>",
-    "tileColor": "Couleur de la tuile"
+    "tileColor": "Couleur de la tuile",
+    "model": "Modèle"
 }

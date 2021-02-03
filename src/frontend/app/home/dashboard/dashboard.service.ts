@@ -8,7 +8,7 @@ import { catchError, tap } from 'rxjs/operators';
 interface Tiles {
     'myLastResources': Tile;
     'basket': Tile;
-    // 'searchTemplate': Tile;
+    'searchTemplate': Tile;
     'followedMail': Tile;
     'folder': Tile;
     'externalSignatoryBook': Tile;
@@ -77,7 +77,7 @@ export class DashboardService {
                 }
             ]
         },
-        /*searchTemplate : {
+        searchTemplate : {
             icon: 'fa fa-search',
             menus : [
                 'view',
@@ -97,7 +97,7 @@ export class DashboardService {
                     route: '/search'
                 }
             ]
-        },*/
+        },
         followedMail : {
             icon: 'fa fa-star',
             menus : [
