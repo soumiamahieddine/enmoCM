@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '@service/app.service';
 import { DashboardService } from '@appRoot/home/dashboard/dashboard.service';
+import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { NotificationService } from '@service/notification/notification.service';
 
 @Component({
     selector: 'app-tile',
@@ -25,6 +28,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
+        private notify: NotificationService,
         public appService: AppService,
         public dashboardService: DashboardService,
     ) { }
@@ -48,14 +52,75 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
     }
 
     async get_list(extraParams: any) {
-        this.resources = await this.dashboardService.get_list(this.tile.id, extraParams);
+        return new Promise((resolve) => {
+            this.http.get(`../rest/tiles/${this.tile.id}`).pipe(
+                tap((data: any) => {
+                    const resources = data.tile.resources.map((resource: any) => {
+                        let contactLabel = '';
+                        let contactTitle = '';
+                        if (resource.senders.length > 0) {
+                            if (resource.senders.length === 1) {
+                                contactLabel = resource.senders[0];
+                                contactTitle = this.translate.instant('lang.sender') + ': ' + resource.senders[0];
+                            } else {
+                                contactLabel = resource.senders.length + ' ' + this.translate.instant('lang.senders');
+                                contactTitle = resource.senders;
+                            }
+                        } else if (resource.recipients.length > 0) {
+                            if (resource.recipients.length === 1) {
+                                contactLabel = resource.recipients[0];
+                                contactTitle = this.translate.instant('lang.sender') + ': ' + resource.recipients[0];
+                            } else {
+                                contactLabel = resource.recipients.length + ' ' + this.translate.instant('lang.recipients');
+                                contactTitle = resource.recipients;
+                            }
+                        }
+                        delete resource.recipients;
+                        delete resource.senders;
+                        return {
+                            ...resource,
+                            contactLabel: contactLabel,
+                            contactTitle: contactTitle
+                        };
+                    });
+                    this.resources = resources
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     async get_resume(extraParams: any) {
-        this.countResources = await this.dashboardService.get_resume(this.tile.id, extraParams);
+        return new Promise((resolve) => {
+            this.http.get(`../rest/tiles/${this.tile.id}`).pipe(
+                tap((data: any) => {
+                    this.countResources = data.tile.resourcesNumber;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     async get_chart(extraParams: any) {
-        this.resources = await this.dashboardService.get_chart(this.tile.id, extraParams);
+        return new Promise((resolve) => {
+            this.http.get(`../rest/tiles/${this.tile.id}`).pipe(
+                tap((data: any) => {
+                    this.resources = data.tile.resources;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 }
