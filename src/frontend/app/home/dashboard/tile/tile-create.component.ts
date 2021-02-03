@@ -224,6 +224,14 @@ export class TileCreateComponent implements OnInit {
         }
     }
 
+    setBasket(data: any) {
+        this.tileLabel = `${data.basketName} (${data.groupName})`;
+        this.extraParams = {
+            basketId: data.basketId,
+            groupId: data.groupId
+        }
+    }
+
     setMenu(menu: any) {
         this.extraParams.privilegeId = menu.id;
         this.tileLabel = menu.label;
