@@ -197,7 +197,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
                 map(value => this._filter(value))
             );
 
-        if (this.ngModel !== null) {
+        if (this.currentValue !== null) {
             setTimeout(() => {
                 this.formControlSelect.setValue(this.currentValue);
             }, 0);
