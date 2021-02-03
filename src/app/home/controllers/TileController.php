@@ -599,7 +599,7 @@ class TileController
         return true;
     }
 
-    private public static function getShortcutDetails(array &$tile)
+    private static function getShortcutDetails(array &$tile)
     {
         $tile['resourcesNumber'] = null;
         if (!PrivilegeController::hasPrivilege(['privilegeId' => $tile['parameters']['privilegeId'], 'userId' => $GLOBALS['id']])) {
@@ -717,5 +717,7 @@ class TileController
             $attachmentsTypes = AttachmentTypeModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($attachmentsTypes);
         }
+
+        return true;
     }
 }
