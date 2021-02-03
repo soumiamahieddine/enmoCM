@@ -17,7 +17,7 @@ interface Tiles {
 
 interface Tile {
     'icon': string; // icon of tile
-    'menus': ('delete' | 'view')[]; // action of tile
+    'menus': ('delete' | 'view' | 'color')[]; // action of tile
     'views': TileView[]; // views tile
 }
 
@@ -35,6 +35,7 @@ export class DashboardService {
             icon: 'fa fa-history',
             menus : [
                 'view',
+                'color',
                 'delete'
             ],
             views: [
@@ -57,6 +58,7 @@ export class DashboardService {
             icon: 'fa fa-inbox',
             menus: [
                 'view',
+                'color',
                 'delete'
             ],
             views: [
@@ -100,6 +102,7 @@ export class DashboardService {
             icon: 'fa fa-star',
             menus : [
                 'view',
+                'color',
                 'delete'
             ],
             views: [
@@ -122,6 +125,7 @@ export class DashboardService {
             icon: 'fa fa-folder',
             menus : [
                 'view',
+                'color',
                 'delete'
             ],
             views: [
@@ -144,6 +148,7 @@ export class DashboardService {
             icon: 'fas fa-pen-nib',
             menus : [
                 'view',
+                'color',
                 'delete'
             ],
             views: [
@@ -161,6 +166,7 @@ export class DashboardService {
         shortcut : {
             icon: null,
             menus : [
+                'color',
                 'delete'
             ],
             views: [
@@ -194,6 +200,29 @@ export class DashboardService {
         return [
             'doctype',
             'status'
+        ];
+    }
+
+    getColors() {
+        return [
+            '#ef9a9a',
+            '#f48fb1',
+            '#ce93d8',
+            '#b39ddb',
+            '#9fa8da',
+            '#90caf9',
+            '#81d4fa',
+            '#80deea',
+            '#80cbc4',
+            '#a5d6a7',
+            '#c5e1a5',
+            '#e6ee9c',
+            '#fff59d',
+            '#ffe082',
+            '#ffcc80',
+            '#ffab91',
+            '#bcaaa4',
+            '#b0bec5',
         ];
     }
 

@@ -13,8 +13,10 @@
                 </button>
                 <mat-menu #toolMenu="matMenu">
                     <ng-container  *ngFor="let menu of tile.menus">
-                        <button *ngIf="menu!=='view'" mat-menu-item (click)="launchAction(menu, tile)">{{'lang.'+ menu | translate}}</button>
+                        <mat-divider *ngIf="menu==='delete'"></mat-divider>
+                        <button *ngIf="['view', 'color'].indexOf(menu) === -1" mat-menu-item (click)="launchAction(menu, tile)">{{'lang.'+ menu | translate}}</button>
                         <button *ngIf="menu==='view'" mat-menu-item [matMenuTriggerFor]="toolMenuView">{{'lang.'+ menu | translate}}</button>
+                        <button *ngIf="menu==='color'" mat-menu-item [matMenuTriggerFor]="toolMenuColors">{{'lang.'+ menu | translate}}</button>
                     </ng-container>
                 </mat-menu>
                 <mat-menu #toolMenuView="matMenu">
@@ -34,6 +36,12 @@
                     <ng-container *ngFor="let mode of dashboardService.getChartMode()">
                         <button mat-menu-item [disabled]="tile.parameters.chartMode === mode && tile.view==='chart'" (click)="changeView(tile,'chart',{'chartMode': mode})">{{'lang.'+ mode | translate}}</button>
                     </ng-container>
+                </mat-menu>
+                <mat-menu #toolMenuColors="matMenu">
+                    <div (click)="$event.stopPropagation()">
+                        <color-github color="#ef9a9a" width="100%" [colors]="dashboardService.getColors()" [triangle]="'hide'"
+                        (onChangeComplete)="changeTileColor(tile, $event)"></color-github>
+                    </div>
                 </mat-menu>
             </div>
             <app-tile #tileComponent *ngIf="tile.id !== null" [tile]="tile" [view]="tile.view"
