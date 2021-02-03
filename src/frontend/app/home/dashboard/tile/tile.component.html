@@ -1,12 +1,12 @@
 <div class="tile-title" [title]="'lang.' + tile.type | translate" [style.background-color]="tile.color" style="color: white;">
-    {{tile.label}}
+    {{!onError ? tile.label: ('lang.error' | translate)}}
 </div>
-<ng-container *ngIf="loading; else elseLoaded">
+<ng-container *ngIf="loading">
     <mat-progress-bar color="primary" mode="indeterminate" class="loader">
     </mat-progress-bar>
     <i class="{{tile.icon}} tile-icon" color="primary"></i>
 </ng-container>
-<ng-template #elseLoaded>
+<ng-container *ngIf="!loading && !onError">
     <app-tile-view-list *ngIf="view==='list'"
         [displayColumns]="['contactLabel','subject','creationDate']"
         [tile]="tile"
@@ -31,4 +31,7 @@
         [icon]="tile.icon"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-chart>
-</ng-template>
+</ng-container>
+<ng-container *ngIf="!loading && onError">
+    <i class="far fa-frown tile-icon-error" color="warn"></i>
+</ng-container>

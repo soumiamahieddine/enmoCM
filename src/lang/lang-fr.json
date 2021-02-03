@@ -2247,5 +2247,7 @@
     "nullStatus": "L'utilisateur na pas encore effectué d'action",
     "intermediateStatusMailing": "Les statuts final et erreur ne sont utilisés que lors d'un publipostage dans l'action",
     "navigation": "Navigation",
-    "acountNotLinkedTomaarchParapheur": "Votre compte n'est pas lié à Maarch Parapheur."
+    "acountNotLinkedTomaarchParapheur": "Votre compte n'est pas lié à Maarch Parapheur.",
+    "error": "Erreur",
+    "tileLoadError": "Erreur de chargement de la tuile <b>{{0}}</b>"
 }

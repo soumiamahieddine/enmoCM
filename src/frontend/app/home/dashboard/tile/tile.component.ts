@@ -19,6 +19,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
     @Input() tile: any = null;
 
     loading: boolean = true;
+    onError: boolean = false;
 
     resources: any[] = [];
     countResources: number = 0;
@@ -87,7 +88,9 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                     resolve(true);
                 }),
                 catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
+                    this.notify.error(this.translate.instant('lang.tileLoadError', { 0: (this.tile.position + 1) }));
+                    this.onError = true;
+                    resolve(false);
                     return of(false);
                 })
             ).subscribe();
@@ -102,7 +105,9 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                     resolve(true);
                 }),
                 catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
+                    this.notify.error(this.translate.instant('lang.tileLoadError', { 0: (this.tile.position + 1) }));
+                    this.onError = true;
+                    resolve(false);
                     return of(false);
                 })
             ).subscribe();
@@ -117,7 +122,9 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                     resolve(true);
                 }),
                 catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
+                    this.notify.error(this.translate.instant('lang.tileLoadError', { 0: (this.tile.position + 1) }));
+                    this.onError = true;
+                    resolve(false);
                     return of(false);
                 })
             ).subscribe();
