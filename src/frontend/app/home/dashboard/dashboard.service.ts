@@ -145,7 +145,7 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: ':maarchParapheurUrl/dist/documents/:resId'
+                    route: ':maarchParapheurUrl/dist/documents/:id'
                 },
                 {
                     id: 'resume',

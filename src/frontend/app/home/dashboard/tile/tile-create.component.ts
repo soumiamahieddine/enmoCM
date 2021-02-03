@@ -11,6 +11,7 @@ import { HeaderService } from '@service/header.service';
 import { ColorEvent } from 'ngx-color';
 import { PrivilegeService } from '@service/privileges.service';
 import { SortPipe } from '@plugins/sorting.pipe';
+import { FormControl } from '@angular/forms';
 
 @Component({
     templateUrl: 'tile-create.component.html',
@@ -26,9 +27,11 @@ export class TileCreateComponent implements OnInit {
     baskets: any[] = [];
     folders: any[] = [];
     menus: any[] = [];
+    menusControl: FormControl = new FormControl();
 
     position: string = null;
     tileLabel: string = null;
+    tileOtherInfos: any = {};
     selectedTileType: string = null;
     selectedView: string = null;
     selectedColor: string = '#90caf9';
@@ -142,7 +145,7 @@ export class TileCreateComponent implements OnInit {
 
     getAdminMenu() {
         if (this.menus.length === 0) {
-            let arrMenus: any[];
+            let arrMenus: any[] = [];
             let tmpMenus: any;
             tmpMenus = this.privilegeService.getMenus(this.headerService.user.privileges).map((menu: any) => {
                 return {
@@ -151,16 +154,17 @@ export class TileCreateComponent implements OnInit {
                 };
             });
             tmpMenus = this.sortPipe.transform(tmpMenus, 'label');
-
+            
             if (tmpMenus.length > 0) {
-                this.menus.push({
+                tmpMenus.unshift({
                     id: 'opt_menu',
                     label: '&nbsp;&nbsp;&nbsp;&nbsp;' + this.translate.instant('lang.menu'),
                     title: this.translate.instant('lang.menu'),
+                    color: '#00000',
                     disabled: true,
                     isTitle: true
                 });
-                arrMenus = this.menus.concat(tmpMenus);
+                arrMenus = arrMenus.concat(tmpMenus);
             }
 
             tmpMenus = this.privilegeService.getAdministrations(this.headerService.user.privileges).map((menu: any) => {
@@ -171,19 +175,28 @@ export class TileCreateComponent implements OnInit {
             });
             tmpMenus = this.sortPipe.transform(tmpMenus, 'label');
             if (tmpMenus.length > 0) {
-                this.menus.push({
+                tmpMenus.unshift({
                     id: 'opt_admin',
                     label: '&nbsp;&nbsp;&nbsp;&nbsp;' + this.translate.instant('lang.administration'),
                     title: this.translate.instant('lang.administration'),
+                    color: '#00000',
                     disabled: true,
                     isTitle: true
                 });
-                arrMenus = this.menus.concat(tmpMenus);
+                arrMenus = arrMenus.concat(tmpMenus);
             }
-            this.extraParams = {
-                privilegeId: arrMenus[1].id,
-            };
             this.menus = arrMenus;
+            this.setMenu(this.menus[1])
+            this.menusControl.setValue(this.menus[1])
+        }
+    }
+
+    setMenu(menu: any) {
+        this.extraParams.privilegeId = menu.id;
+        this.tileLabel = menu.label;
+        this.tileOtherInfos = {
+            icon : menu.style,
+            privRoute: menu.route,
         }
     }
 
@@ -227,18 +240,14 @@ export class TileCreateComponent implements OnInit {
     }
 
     onSubmit() {
-        const objToSend: any = this.formatData();
+        let objToSend: any = this.formatData();
         this.http.post('../rest/tiles', objToSend).pipe(
             tap((data: any) => {
-                this.dialogRef.close({
-                    id: data.id,
-                    label: this.tileLabel,
-                    type: objToSend.type,
-                    view: objToSend.view,
-                    position: this.position,
-                    color: objToSend.color,
-                    parameters: objToSend.parameters
-                });
+                objToSend.id = data.id;
+                objToSend.label = this.tileLabel;
+                objToSend.position = this.position;
+                objToSend = {...objToSend,...this.tileOtherInfos};
+                this.dialogRef.close(objToSend);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

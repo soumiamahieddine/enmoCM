@@ -40,8 +40,8 @@
             </mat-select>
         </mat-form-field>
         <plugin-select-search *ngIf="selectedTileType === 'shortcut'" [appearance]="'outline'" [showLabel]="true"
-            [class]="''" [label]="'lang.menu' | translate" [datas]="menus" [currentValue]="extraParams.privilegeId"
-            (afterSelected)="extraParams.privilegeId = $event">
+            [class]="''" [label]="'lang.navigation' | translate" [datas]="menus" [formControlSelect]="menusControl"  [returnValue]="'object'" [dataKey]="'id'"
+            (afterSelected)="setMenu($event)">
         </plugin-select-search>
         <mat-form-field appearance="outline" *ngIf="views.length > 0">
             <mat-label>Vue</mat-label>
