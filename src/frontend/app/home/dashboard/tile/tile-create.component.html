@@ -5,12 +5,12 @@
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
         <mat-form-field class="select-tile-type" appearance="outline">
-            <button mat-icon-button matSuffix [title]="'Couleur de la tuilde'" (click)="$event.stopPropagation()"
+            <button mat-icon-button matSuffix [title]="'lang.tileColor' | translate" (click)="$event.stopPropagation()"
                 [matMenuTriggerFor]="menuColor">
                 <mat-icon class="fa fa-circle" [style.color]="selectedColor"></mat-icon>
             </button>
             <mat-menu #menuColor="matMenu">
-                <color-github color="#ef9a9a" width="100%" [colors]="colors" [triangle]="'hide'"
+                <color-github color="#ef9a9a" width="100%" [colors]="dashboardService.getColors()" [triangle]="'hide'"
                     (onChangeComplete)="handleChange($event)"></color-github>
             </mat-menu>
             <mat-label>{{'lang.tileType' | translate}}</mat-label>
