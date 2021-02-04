@@ -35,7 +35,12 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
         delete data.parameters;
         const link = this.dashboardService.getFormatedRoute(this.route, data);
         if (link) {
-            this.router.navigate([link.route], { queryParams: link.params });
+            const regex = /http[.]*/g;
+            if (link.route.match(regex) === null) {
+                this.router.navigate([link.route], { queryParams: link.params });
+            } else {
+                window.location.href = link.route;
+            }
         }
     }
 }
