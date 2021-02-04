@@ -61,25 +61,13 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                     const resources = data.tile.resources.map((resource: any) => {
                         let contactLabel = '';
                         let contactTitle = '';
-                        if (resource.senders.length > 0) {
-                            if (resource.senders.length === 1) {
-                                contactLabel = resource.senders[0];
-                                contactTitle = this.translate.instant('lang.sender') + ': ' + resource.senders[0];
-                            } else {
-                                contactLabel = resource.senders.length + ' ' + this.translate.instant('lang.senders');
-                                contactTitle = resource.senders;
-                            }
-                        } else if (resource.recipients.length > 0) {
-                            if (resource.recipients.length === 1) {
-                                contactLabel = resource.recipients[0];
-                                contactTitle = this.translate.instant('lang.sender') + ': ' + resource.recipients[0];
-                            } else {
-                                contactLabel = resource.recipients.length + ' ' + this.translate.instant('lang.recipients');
-                                contactTitle = resource.recipients;
-                            }
+                        if (resource.correspondents.length === 1) {
+                            contactLabel = resource.correspondents[0];
+                            contactTitle = this.translate.instant('lang.contact') + ': ' + resource.correspondents[0];
+                        } else if (resource.correspondents.length > 1) {
+                            contactLabel = resource.correspondents.length + ' ' + this.translate.instant('lang.contacts');
+                            contactTitle = resource.correspondents;
                         }
-                        delete resource.recipients;
-                        delete resource.senders;
                         return {
                             ...resource,
                             contactLabel: contactLabel,
