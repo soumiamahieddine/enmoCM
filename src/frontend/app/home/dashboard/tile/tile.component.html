@@ -21,7 +21,7 @@
         [countResources]="countResources" 
         [icon]="tile.icon"
         [tile]="tile"
-        [resourceLabel]="tile.type==='shortcut' ? tile.label : 'courrier(s)'"
+        [resourceLabel]="tile.type==='shortcut' ? tile.label : ('lang.mails' | translate)"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-summary>
     <app-tile-view-chart *ngIf="view==='chart'" 
@@ -29,6 +29,7 @@
         [resources]="resources"
         [tile]="tile"
         [icon]="tile.icon"
+        [resourceLabel]="('lang.mails' | translate)"
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-chart>
 </ng-container>

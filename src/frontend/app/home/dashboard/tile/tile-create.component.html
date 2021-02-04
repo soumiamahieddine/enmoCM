@@ -56,9 +56,17 @@
             </mat-select>
         </mat-form-field>
         <mat-form-field *ngIf="selectedView === 'chart'" appearance="outline">
+            <mat-label>Type</mat-label>
+            <mat-select [(ngModel)]="extraParams.chartType">
+                <mat-option *ngFor="let charType of chartTypes" [value]="charType.type">
+                    {{'lang.' + charType.type | translate}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field *ngIf="!functionsService.empty(extraParams.chartType)" appearance="outline">
             <mat-label>Mode</mat-label>
             <mat-select [(ngModel)]="extraParams.chartMode">
-                <mat-option *ngFor="let mode of dashboardService.getChartMode()" [value]="mode">
+                <mat-option *ngFor="let mode of dashboardService.getChartModes(extraParams.chartType)" [value]="mode">
                     {{'lang.' + mode | translate}}
                 </mat-option>
             </mat-select>

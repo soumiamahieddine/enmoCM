@@ -26,6 +26,7 @@ export class TileCreateComponent implements OnInit {
     views: any[] = [];
     baskets: any[] = [];
     folders: any[] = [];
+    chartTypes: any[] = [];
     searchTemplates: any[] = [];
     searchTemplatesControl: FormControl = new FormControl();
 
@@ -46,7 +47,7 @@ export class TileCreateComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<TileCreateComponent>,
         public dashboardService: DashboardService,
-        private functionsService: FunctionsService,
+        public functionsService: FunctionsService,
         private notify: NotificationService,
         public headerService: HeaderService,
         public privilegeService: PrivilegeService,
@@ -89,6 +90,14 @@ export class TileCreateComponent implements OnInit {
             this.getMPInfos();
         } else if (this.selectedTileType === 'searchTemplate') {
             this.getSearchTemplates();
+        }
+    }
+
+    getChartTypes() {
+        if (this.chartTypes.length === 0) {
+            this.chartTypes = this.dashboardService.getChartTypes();
+            console.log(this.chartTypes);
+
         }
     }
 
@@ -282,6 +291,8 @@ export class TileCreateComponent implements OnInit {
 
     resetExtraParams() {
         if (this.selectedView === 'chart') {
+            this.getChartTypes();
+            this.extraParams['chartType'] = 'pie';
             this.extraParams['chartMode'] = 'doctype';
         } else {
             delete this.extraParams.chartMode;

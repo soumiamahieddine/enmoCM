@@ -66,6 +66,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                         if (tmpTile.type === 'shortcut') {
                             objTile = {...objTile, ...this.initShortcutTile(tmpTile.parameters.privilegeId)};
                         }
+                        objTile.charts = this.dashboardService.getCharts();
                         objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.type) : objTile.label;
                         objTile.parameters = this.functionsService.empty(objTile.parameters) ? {} : objTile.parameters;
                         this.tiles.push(objTile);
@@ -116,7 +117,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     }
 
     changeTileColor(tile: any, $event: ColorEvent) {
-        this.tiles[tile.position].color = $event.color.hex
+        this.tiles[tile.position].color = $event.color.hex;
         this.http.put(`../rest/tiles/${tile.id}`, this.tiles[tile.position]).pipe(
             catchError((err: any) => {
                 this.notify.handleErrors(err);

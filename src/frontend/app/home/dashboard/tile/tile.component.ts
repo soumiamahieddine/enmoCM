@@ -113,7 +113,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                     this.resources = data.tile.resources.map((item: any) => {
                         return {
                             ...item,
-                            label: !this.functionsService.empty(item.label) ? item.label : this.translate.instant('lang.undefined')
+                            name: !this.functionsService.empty(item.name) ? item.name : this.translate.instant('lang.undefined')
                         };
                     });
                     resolve(true);

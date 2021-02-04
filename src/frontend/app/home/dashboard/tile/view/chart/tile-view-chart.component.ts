@@ -16,7 +16,9 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
     @Input() resources: any[];
     @Input() route: string = null;
     @Input() tile: any;
+    @Input() resourceLabel: string = '';
 
+    formatedData: any = null;
 
     constructor(
         private router: Router,
@@ -26,7 +28,23 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
         private dashboardService: DashboardService,
     ) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.formatData();
+    }
+
+    formatData() {
+        if (this.tile.parameters.chartType === 'line') {
+            this.formatedData = [
+                {
+                    'name': this.resourceLabel,
+                    'series': this.resources
+                }
+            ];
+        } else {
+            this.formatedData = this.resources;
+        }
+        console.log(this.formatedData);
+    }
 
     ngAfterViewInit(): void { }
 

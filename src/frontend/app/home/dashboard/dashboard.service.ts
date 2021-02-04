@@ -178,6 +178,31 @@ export class DashboardService {
         },
     };
 
+    charts: any[] =  [
+        {
+            icon: 'fas fa-chart-pie',
+            type: 'pie',
+            modes: [
+                'doctype',
+                'status'
+            ],
+        },
+        {
+            icon: 'far fa-chart-bar',
+            type: 'vertical-bar',
+            modes: [
+                'doctype',
+                'status'
+            ],
+        },
+        {
+            icon: 'fas fa-chart-line',
+            type: 'line',
+            modes: [
+                'creationDate',
+            ],
+        }
+    ];
     constructor(
         public http: HttpClient,
         public translate: TranslateService,
@@ -196,11 +221,21 @@ export class DashboardService {
         return this.tileTypes[tileType].views;
     }
 
-    getChartMode() {
-        return [
-            'doctype',
-            'status'
-        ];
+    getCharts() {
+        return this.charts;
+    }
+
+    getChartTypes() {
+        return this.charts.map((chartType: any) => {
+            return {
+                icon : chartType.icon,
+                type: chartType.type
+            };
+        });
+    }
+
+    getChartModes(charType: string) {
+        return this.charts.filter((chart: any) => chart.type === charType)[0].modes;
     }
 
     getColors() {
