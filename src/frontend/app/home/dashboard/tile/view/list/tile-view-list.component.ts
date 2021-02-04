@@ -57,7 +57,7 @@ export class TileViewListComponent implements OnInit, AfterViewInit {
         delete data.parameters;
         const link = this.dashboardService.getFormatedRoute(this.route, data);
         if (link) {
-            this.router.navigate([link]);
+            this.router.navigate([link.route], { queryParams: link.params });
         }
     }
 

@@ -31,9 +31,9 @@ interface TileView {
 export class DashboardService {
 
     tileTypes: Tiles = {
-        myLastResources : {
+        myLastResources: {
             icon: 'fa fa-history',
-            menus : [
+            menus: [
                 'view',
                 'color',
                 'delete'
@@ -77,9 +77,9 @@ export class DashboardService {
                 }
             ]
         },
-        searchTemplate : {
+        searchTemplate: {
             icon: 'fa fa-search',
-            menus : [
+            menus: [
                 'view',
                 'delete'
             ],
@@ -90,17 +90,17 @@ export class DashboardService {
                 },
                 {
                     id: 'resume',
-                    route: '/search'
+                    route: '/search?searchTemplateId=:searchTemplateId'
                 },
                 {
                     id: 'chart',
-                    route: '/search'
+                    route: '/search?searchTemplateId=:searchTemplateId'
                 }
             ]
         },
-        followedMail : {
+        followedMail: {
             icon: 'fa fa-star',
-            menus : [
+            menus: [
                 'view',
                 'color',
                 'delete'
@@ -121,9 +121,9 @@ export class DashboardService {
                 }
             ]
         },
-        folder : {
+        folder: {
             icon: 'fa fa-folder',
-            menus : [
+            menus: [
                 'view',
                 'color',
                 'delete'
@@ -144,9 +144,9 @@ export class DashboardService {
                 }
             ]
         },
-        externalSignatoryBook : {
+        externalSignatoryBook: {
             icon: 'fas fa-pen-nib',
-            menus : [
+            menus: [
                 'view',
                 'color',
                 'delete'
@@ -163,9 +163,9 @@ export class DashboardService {
                 }
             ]
         },
-        shortcut : {
+        shortcut: {
             icon: null,
-            menus : [
+            menus: [
                 'color',
                 'delete'
             ],
@@ -245,9 +245,19 @@ export class DashboardService {
                 }
             });
         }
-
         if (errors.length === 0) {
-            return formatedRoute;
+            const objParams = {};
+            const splitFormatedRoute = formatedRoute.split('?');
+            if (splitFormatedRoute.length === 2) {
+                const arrUriParams = splitFormatedRoute[1].split('=');
+                for (let index = 0; index < arrUriParams.length; index = index + 2) {
+                    objParams[arrUriParams[index]] = arrUriParams[index + 1];
+                }
+            }
+            return {
+                route: splitFormatedRoute[0],
+                params: objParams
+            };
         } else {
             this.notify.error(errors + ' not found');
             return false;
