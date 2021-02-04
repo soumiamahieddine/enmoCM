@@ -45,8 +45,6 @@ trait ShippingTrait
         $integrations = json_decode($resource['integrations'], true);
 
         $recipientEntity = EntityModel::getByEntityId(['select' => ['id'], 'entityId' => $resource['destination']]);
-        //TODO  get adresse entité + check si l'adresse est bien rempli si c'est un recommandé
-        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $GLOBALS['id'], 'select' => ['entities.entity_label']]);
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
@@ -158,6 +156,37 @@ trait ShippingTrait
             $resourcesList[] = $resource;
         }
 
+        $urlComplement = 'mail';
+        $isRegisteredMail = false;
+        if (strpos($shippingTemplate['options']['sendMode'], 'digital_registered_mail') !== false) {
+            $urlComplement = 'registered_mail';
+            $isRegisteredMail = true;
+            $addressEntity = UserModel::getPrimaryEntityById([
+                'id'        => $GLOBALS['id'],
+                'select'    => [
+                    'entities.entity_id', 'entities.short_label', 'entities.address_number', 'entities.address_street', 'entities.address_additional1', 'entities.address_additional2', 'entities.address_postcode', 'entities.address_town', 'entities.address_country'
+                ]
+            ]);
+            $entityRoot = EntityModel::getEntityRootById(['entityId' => $addressEntity['entity_id']]);
+
+            $addressEntity = ContactController::getContactAfnor([
+                'company'               => $entityRoot['entity_label'],
+                'civility'              => '',
+                'firstname'             => $addressEntity['short_label'],
+                'lastname'              => '',
+                'address_number'        => $addressEntity['address_number'],
+                'address_street'        => $addressEntity['address_street'],
+                'address_additional1'   => $addressEntity['address_additional1'],
+                'address_additional2'   => $addressEntity['address_additional2'],
+                'address_postcode'      => $addressEntity['address_postcode'],
+                'address_town'          => $addressEntity['address_town'],
+                'address_country'       => $addressEntity['address_country']
+            ]);
+            if ((empty($addressEntity[1]) && empty($addressEntity[2])) || empty($addressEntity[6]) || !preg_match("/^\d{5}\s/", $addressEntity[6])) {
+                return ['errors' => ['User primary entity address is not filled enough']];
+            }
+        }
+
         $curlAuth = CurlModel::execSimple([
             'url'           => $mailevaConfig['connectionUri'] . '/authentication/oauth2/token',
             'basicAuth'     => ['user' => $mailevaConfig['clientId'], 'password' => $mailevaConfig['clientSecret']],
@@ -174,13 +203,6 @@ trait ShippingTrait
         }
         $token = $curlAuth['response']['access_token'];
 
-        $urlComplement = 'mail';
-        $isRegisteredMail = false;
-        if (strpos($shippingTemplate['options']['sendMode'], 'digital_registered_mail') !== false) {
-            $urlComplement = 'registered_mail';
-            $isRegisteredMail = true;
-        }
-
         $errors = [];
         foreach ($resourcesList as $key => $resource) {
             $sendingName = CoreConfigModel::uniqueId();
@@ -190,12 +212,12 @@ trait ShippingTrait
                 $body = [
                     'name' => $sendingName,
                     'acknowledgement_of_receipt'    => $shippingTemplate['options']['sendMode'] == 'digital_registered_mail_with_AR',
-                    "sender_address_line_1"         => "Société Durand",
-                    "sender_address_line_2"         => "M. Pierre DUPONT",
-                    "sender_address_line_3"         => "Batiment B",
-                    "sender_address_line_4"         => "10 avenue Charles de Gaulle",
-                    "sender_address_line_5"         => "",
-                    "sender_address_line_6"         => "94673 Charenton-Le-Pont",
+                    "sender_address_line_1"         => $addressEntity[1] ?? null,
+                    "sender_address_line_2"         => $addressEntity[2] ?? null,
+                    "sender_address_line_3"         => $addressEntity[3] ?? null,
+                    "sender_address_line_4"         => $addressEntity[4] ?? null,
+                    "sender_address_line_5"         => $addressEntity[5] ?? null,
+                    "sender_address_line_6"         => $addressEntity[6] ?? null,
                     "sender_country_code"           => "FR"
                 ];
             } else {
