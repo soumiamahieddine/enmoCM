@@ -184,7 +184,8 @@ export class DashboardService {
             type: 'pie',
             modes: [
                 'doctype',
-                'status'
+                'status',
+                'destination'
             ],
         },
         {
@@ -192,7 +193,8 @@ export class DashboardService {
             type: 'vertical-bar',
             modes: [
                 'doctype',
-                'status'
+                'status',
+                'destination'
             ],
         },
         {
