@@ -57,7 +57,7 @@ use User\models\UserModel;
 class TileController
 {
     const TYPES = ['myLastResources', 'basket', 'searchTemplate', 'followedMail', 'folder', 'externalSignatoryBook', 'shortcut'];
-    const VIEWS = ['list', 'resume', 'chart'];
+    const VIEWS = ['list', 'summary', 'chart'];
 
     public function get(Request $request, Response $response)
     {
@@ -109,10 +109,6 @@ class TileController
             return $response->withStatus(400)->withJson(['errors' => 'Body view is empty, not a string or not valid']);
         } elseif (!Validator::intVal()->validate($body['position'] ?? null)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body position is not set or not an integer']);
-        }
-
-        if ($body['type'] == 'shortcut' && $body['view'] != 'resume') {
-            return $response->withStatus(400)->withJson(['errors' => 'Shortcut tile must have resume view']);
         }
 
         $tiles = TileModel::get([
@@ -280,8 +276,8 @@ class TileController
                 return ['errors' => 'Body parameters is empty or not an array'];
             } elseif (!Validator::stringType()->validate($args['parameters']['privilegeId'] ?? null)) {
                 return ['errors' => 'Body[parameters] privilegeId is empty or not a string'];
-            } elseif ($args['view'] != 'resume') {
-                return ['errors' => 'Shortcut tile must have resume view'];
+            } elseif ($args['view'] != 'summary') {
+                return ['errors' => 'Shortcut tile must have summary view'];
             }
         } elseif ($args['type'] == 'searchTemplate') {
             if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
@@ -308,6 +304,17 @@ class TileController
         } elseif ($tile['type'] == 'folder') {
             $folder = FolderModel::getById(['id' => $tile['parameters']['folderId']]);
             $tile['label'] = "{$folder['label']}";
+        } elseif ($tile['type'] == 'externalSignatoryBook') {
+            $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+            $tile['maarchParapheurUrl'] = null;
+            if (!empty($loadedXml)) {
+                foreach ($loadedXml->signatoryBook as $value) {
+                    if ($value->id == "maarchParapheur") {
+                        $tile['maarchParapheurUrl'] = rtrim($value->url, '/');
+                        break;
+                    }
+                }
+            }
         }
 
         return true;
@@ -362,26 +369,28 @@ class TileController
             return ['errors' => 'User is not linked to this group'];
         }
 
-        if ($tile['view'] == 'resume') {
+        if ($tile['view'] == 'summary') {
             $tile['resourcesNumber'] = BasketModel::getResourceNumberByClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']]);
         } elseif ($tile['view'] == 'list') {
             $resources = ResModel::getOnView([
-                'select'    => ['subject', 'creation_date', 'res_id'],
+                'select'    => ['subject', 'creation_date', 'res_id', 'category_id'],
                 'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
                 'orderBy'   => ['creation_date'],
                 'limit'     => 5
             ]);
             $tile['resources'] = [];
             foreach ($resources as $resource) {
-                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                if ($resource['category_id'] == 'outgoing') {
+                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                } else {
+                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                }
 
                 $tile['resources'][] = [
-                    'resId'         => $resource['res_id'],
-                    'subject'       => $resource['subject'],
-                    'creationDate'  => $resource['creation_date'],
-                    'senders'       => $senders ,
-                    'recipients'    => $recipients
+                    'resId'             => $resource['res_id'],
+                    'subject'           => $resource['subject'],
+                    'creationDate'      => $resource['creation_date'],
+                    'correspondents'    => $correspondents
                 ];
             }
         } elseif ($tile['view'] == 'chart') {
@@ -398,11 +407,10 @@ class TileController
             $tile['resources'] = [];
             foreach ($resources as $resource) {
                 if ($type == 'status') {
-                    $status['label_status'] = '';
                     if (!empty($resource['status'])) {
                         $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
                     }
-                    $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+                    $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
                 } else {
                     $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
                     $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
@@ -416,13 +424,13 @@ class TileController
     private static function getResourcesDetails(array &$tile, $allResources)
     {
         $allResources = array_column($allResources, 'res_id');
-        if ($tile['view'] == 'resume') {
+        if ($tile['view'] == 'summary') {
             $tile['resourcesNumber'] = count($allResources);
         } elseif ($tile['view'] == 'list') {
             $tile['resources'] = [];
             if (!empty($allResources)) {
                 $resources = ResModel::get([
-                    'select'  => ['subject', 'creation_date', 'res_id'],
+                    'select'  => ['subject', 'creation_date', 'res_id', 'category_id'],
                     'where'   => ['res_id in (?)'],
                     'data'    => [$allResources],
                     'orderBy' => ['modification_date'],
@@ -430,15 +438,17 @@ class TileController
                 ]);
 
                 foreach ($resources as $resource) {
-                    $senders    = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                    $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                    if ($resource['category_id'] == 'outgoing') {
+                        $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                    } else {
+                        $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                    }
 
                     $tile['resources'][] = [
-                        'resId'        => $resource['res_id'],
-                        'subject'      => $resource['subject'],
-                        'creationDate' => $resource['creation_date'],
-                        'senders'      => $senders ,
-                        'recipients'   => $recipients
+                        'resId'             => $resource['res_id'],
+                        'subject'           => $resource['subject'],
+                        'creationDate'      => $resource['creation_date'],
+                        'correspondents'    => $correspondents
                     ];
                 }
             }
@@ -459,11 +469,10 @@ class TileController
                 $tile['resources'] = [];
                 foreach ($resources as $resource) {
                     if ($type == 'status') {
-                        $status['label_status'] = '';
                         if (!empty($resource['status'])) {
                             $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
                         }
-                        $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+                        $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
                     } else {
                         $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
                         $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
@@ -483,25 +492,28 @@ class TileController
                 'res_letterbox.creation_date',
                 'res_letterbox.subject',
                 'res_letterbox.type_id',
+                'res_letterbox.category_id',
                 'res_letterbox.status'
             ],
             'limit'     => 5,
             'userId'    => $GLOBALS['id']
         ]);
-        if ($tile['view'] == 'resume') {
+        if ($tile['view'] == 'summary') {
             $tile['resourcesNumber'] = count($resources);
         } elseif ($tile['view'] == 'list') {
             $tile['resources'] = [];
             foreach ($resources as $resource) {
-                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                if ($resource['category_id'] == 'outgoing') {
+                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                } else {
+                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                }
 
                 $tile['resources'][] = [
-                    'resId'         => $resource['res_id'],
-                    'subject'       => $resource['subject'],
-                    'creationDate'  => $resource['creation_date'],
-                    'senders'       => $senders ,
-                    'recipients'    => $recipients
+                    'resId'             => $resource['res_id'],
+                    'subject'           => $resource['subject'],
+                    'creationDate'      => $resource['creation_date'],
+                    'correspondents'    => $correspondents
                 ];
             }
         } elseif ($tile['view'] == 'chart') {
@@ -597,17 +609,16 @@ class TileController
             return ['errors' => $errors];
         }
 
-        $tile['maarchParapheurUrl'] = $url;
-        if ($tile['view'] == 'resume') {
+        if ($tile['view'] == 'summary') {
             $tile['resourcesNumber'] = $curlResponse['response']['count']['visa'] + $curlResponse['response']['count']['sign'] + $curlResponse['response']['count']['note'];
         } elseif ($tile['view'] == 'list') {
             $tile['resources'] = [];
             foreach ($curlResponse['response']['documents'] as $resource) {
                 $tile['resources'][] = [
-                    'id'            => $resource['id'],
-                    'subject'       => $resource['title'],
-                    'creationDate'  => $resource['creationDate'],
-                    'senders'       => [$resource['sender']]
+                    'id'                => $resource['id'],
+                    'subject'           => $resource['title'],
+                    'creationDate'      => $resource['creationDate'],
+                    'correspondents'    => [$resource['sender']]
                 ];
             }
         }
@@ -815,13 +826,13 @@ class TileController
 
         $resources = [];
 
-        if ($tile['view'] == 'resume') {
+        if ($tile['view'] == 'summary') {
             $tile['resourcesNumber'] = count($allResources);
         } elseif ($tile['view'] == 'list') {
             $tile['resources'] = [];
             if (!empty($resIds)) {
                 $resources = ResModel::get([
-                    'select'    => ['subject', 'creation_date', 'res_id'],
+                    'select'    => ['subject', 'creation_date', 'res_id', 'category_id'],
                     'where'     => ['res_id in (?)'],
                     'data'      => [$resIds],
                     'orderBy'   => [$order]
@@ -829,15 +840,17 @@ class TileController
             }
 
             foreach ($resources as $resource) {
-                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                if ($resource['category_id'] == 'outgoing') {
+                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
+                } else {
+                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
+                }
 
                 $tile['resources'][] = [
-                    'resId'         => $resource['res_id'],
-                    'subject'       => $resource['subject'],
-                    'creationDate'  => $resource['creation_date'],
-                    'senders'       => $senders ,
-                    'recipients'    => $recipients
+                    'resId'             => $resource['res_id'],
+                    'subject'           => $resource['subject'],
+                    'creationDate'      => $resource['creation_date'],
+                    'correspondents'    => $correspondents
                 ];
             }
         } elseif ($tile['view'] == 'chart') {
@@ -858,11 +871,10 @@ class TileController
             $tile['resources'] = [];
             foreach ($resources as $resource) {
                 if ($type == 'status') {
-                    $status['label_status'] = '';
                     if (!empty($resource['status'])) {
                         $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
                     }
-                    $tile['resources'][] = ['name' => $status['label_status'], 'value' => $resource['count']];
+                    $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
                 } else {
                     $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
                     $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
