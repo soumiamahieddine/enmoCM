@@ -62,7 +62,7 @@ export class SearchComponent implements OnInit {
         if (this.searchTemplateId !== null) {
             const template = templates.find((itemTemplate: any) => itemTemplate.id == this.searchTemplateId);
             if (template !== undefined) {
-                this.appCriteriaTool.selectSearchTemplate(templates[0]);
+                this.appCriteriaTool.selectSearchTemplate(template);
                 this.appCriteriaTool.getCurrentCriteriaValues();
             } else {
                 this.notify.error(this.translate.instant('lang.noTemplateFound'));
