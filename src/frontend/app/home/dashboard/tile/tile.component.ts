@@ -6,6 +6,7 @@ import { DashboardService } from '@appRoot/home/dashboard/dashboard.service';
 import { catchError, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '@service/notification/notification.service';
+import { FunctionsService } from '@service/functions.service';
 
 @Component({
     selector: 'app-tile',
@@ -32,6 +33,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
         private notify: NotificationService,
         public appService: AppService,
         public dashboardService: DashboardService,
+        private functionsService: FunctionsService
     ) { }
 
     ngOnInit(): void { }
@@ -118,7 +120,12 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
         return new Promise((resolve) => {
             this.http.get(`../rest/tiles/${this.tile.id}`).pipe(
                 tap((data: any) => {
-                    this.resources = data.tile.resources;
+                    this.resources = data.tile.resources.map((item: any) => {
+                        return {
+                            ...item,
+                            label: !this.functionsService.empty(item.label) ? item.label : this.translate.instant('lang.undefined')
+                        };
+                    });
                     resolve(true);
                 }),
                 catchError((err: any) => {
