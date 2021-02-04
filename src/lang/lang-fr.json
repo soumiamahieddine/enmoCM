@@ -2253,5 +2253,6 @@
     "tileColor": "Couleur de la tuile",
     "model": "Modèle",
     "refused": "Refusé",
-    "endStatus": "Ce document a été interrompu suite à une action de refus"
+    "endStatus": "Ce document a été interrompu suite à une action de refus",
+    "noTemplateFound": "Modèle de recherche introuvable"
 }
