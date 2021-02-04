@@ -86,10 +86,11 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                             contactTitle: contactTitle
                         };
                     });
-                    this.resources = resources
+                    this.resources = resources;
                     resolve(true);
                 }),
                 catchError((err: any) => {
+                    console.log(err);
                     this.notify.error(this.translate.instant('lang.tileLoadError', { 0: (this.tile.position + 1) }));
                     this.onError = true;
                     resolve(false);
@@ -107,6 +108,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                     resolve(true);
                 }),
                 catchError((err: any) => {
+                    console.log(err);
                     this.notify.error(this.translate.instant('lang.tileLoadError', { 0: (this.tile.position + 1) }));
                     this.onError = true;
                     resolve(false);
@@ -129,6 +131,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
                     resolve(true);
                 }),
                 catchError((err: any) => {
+                    console.log(err);
                     this.notify.error(this.translate.instant('lang.tileLoadError', { 0: (this.tile.position + 1) }));
                     this.onError = true;
                     resolve(false);
