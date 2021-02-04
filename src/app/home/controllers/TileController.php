@@ -409,7 +409,8 @@ class TileController
             $resources = ResModel::getOnView([
                 'select'    => ["COUNT({$type})", $type],
                 'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
-                'groupBy'   => [$type]
+                'groupBy'   => [$type],
+                'orderBy'   => [$type]
             ]);
             $tile['resources'] = [];
             foreach ($resources as $resource) {
@@ -481,10 +482,11 @@ class TileController
                     $type = 'type_id';
                 }
                 $resources = ResModel::get([
-                    'select'  => ["COUNT({$type})", $type],
-                    'where'   => ['res_id in (?)'],
-                    'data'    => [$allResources],
-                    'groupBy' => [$type]
+                    'select'    => ["COUNT({$type})", $type],
+                    'where'     => ['res_id in (?)'],
+                    'data'      => [$allResources],
+                    'groupBy'   => [$type],
+                    'orderBy'   => [$type]
                 ]);
                 $tile['resources'] = [];
                 foreach ($resources as $resource) {
@@ -923,10 +925,11 @@ class TileController
             }
             if (!empty($resIds)) {
                 $resources = ResModel::get([
-                    'select'  => ["COUNT({$type})", $type],
-                    'where'   => ['res_id in (?)'],
-                    'data'    => [$resIds],
-                    'groupBy' => [$type]
+                    'select'    => ["COUNT({$type})", $type],
+                    'where'     => ['res_id in (?)'],
+                    'data'      => [$resIds],
+                    'groupBy'   => [$type],
+                    'orderBy'   => [$type]
                 ]);
             }
 
