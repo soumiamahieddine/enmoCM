@@ -299,7 +299,7 @@ class TileController
     {
         if ($tile['type'] == 'basket') {
             $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
-            $group = GroupModel::getById(['select' => ['group_desc', 'group_id'], 'id' => $tile['parameters']['groupId']]);
+            $group  = GroupModel::getById(['select' => ['group_desc', 'group_id'], 'id' => $tile['parameters']['groupId']]);
             $tile['label'] = "{$basket['basket_name']} ({$group['group_desc']})";
         } elseif ($tile['type'] == 'folder') {
             $folder = FolderModel::getById(['id' => $tile['parameters']['folderId']]);
@@ -315,6 +315,9 @@ class TileController
                     }
                 }
             }
+        } elseif ($tile['type'] == 'searchTemplate') {
+            $searchTemplate = SearchTemplateModel::get(['select' => ['label'], 'where' => ['id = ?', 'user_id = ?'], 'data' => [$tile['parameters']['searchTemplateId'], $GLOBALS['id']]]);
+            $tile['label']  = "{$searchTemplate[0]['label']}";
         }
 
         return true;
@@ -653,66 +656,51 @@ class TileController
                 $users = array_merge($users, $usersNoEntities);
             }
             $tile['resourcesNumber'] = count($users);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_groups') {
             $groups = GroupModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($groups);
-
         } elseif ($tile['parameters']['privilegeId'] == 'manage_entities') {
             $entities = EntityModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($entities);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_listmodels') {
             $listTemplates = ListTemplateModel::get(['select' => [1], 'where'  => ['owner is null']]);
             $tile['resourcesNumber'] = count($listTemplates);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_architecture') {
             $doctypes = DoctypeModel::get(['select' => [1], 'where' => ['enabled = ?'], 'data' => ['Y']]);
             $tile['resourcesNumber'] = count($doctypes);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_tag') {
             $tags = TagModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($tags);
         } elseif ($tile['parameters']['privilegeId'] == 'admin_baskets') {
             $baskets = BasketModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($baskets);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_status') {
             $status = StatusModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($status);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_actions') {
             $actions = ActionModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($actions);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_contacts') {
             $contacts = ContactModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($contacts);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_priorities') {
             $priority = PriorityModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($priority);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_templates') {
             $templates = TemplateModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($templates);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_indexing_models') {
             $models = IndexingModelModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($models);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_custom_fields') {
             $customFields = CustomFieldModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($customFields);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_notif') {
             $notifications = NotificationModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($notifications);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_docservers') {
             $docservers = DocserverModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($docservers);
-
         } elseif ($tile['parameters']['privilegeId'] == 'admin_shippings') {
             $shippings = ShippingTemplateModel::get(['select' => [1]]);
             $tile['resourcesNumber'] = count($shippings);
@@ -757,6 +745,15 @@ class TileController
         $rawQuery = json_decode($searchTemplate[0]['query'], true);
         $query = [];
         foreach ($rawQuery as $value) {
+            if (!empty($value['values'][0]['id']) && !in_array($value['identifier'], ['recipients', 'senders']) && strpos($value['identifier'], 'role_') === false) {
+                $value['values'] = array_column($value['values'], 'id');
+            } elseif (!empty($value['values']['start'])) {
+                $date = new \DateTime($value['values']['start']);
+                $value['values']['start'] = $date->format('Y-m-d');
+            } elseif (!empty($value['values']['end'])) {
+                $date = new \DateTime($value['values']['end']);
+                $value['values']['end'] = $date->format('Y-m-d');
+            }
             $query[$value['identifier']] = ['values' => $value['values']];
         }
 
@@ -768,34 +765,34 @@ class TileController
             $query['meta']['values'] = trim($query['meta']['values']);
         }
         $searchClause = SearchController::getQuickFieldClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
-        $searchWhere = $searchClause['searchWhere'];
-        $searchData  = $searchClause['searchData'];
+        $searchWhere  = $searchClause['searchWhere'];
+        $searchData   = $searchClause['searchData'];
 
         $searchClause = SearchController::getMainFieldsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
-        $searchWhere = $searchClause['searchWhere'];
-        $searchData  = $searchClause['searchData'];
+        $searchWhere  = $searchClause['searchWhere'];
+        $searchData   = $searchClause['searchData'];
 
         $searchClause = SearchController::getListFieldsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
-        $searchWhere = $searchClause['searchWhere'];
-        $searchData  = $searchClause['searchData'];
+        $searchWhere  = $searchClause['searchWhere'];
+        $searchData   = $searchClause['searchData'];
 
         $searchClause = SearchController::getCustomFieldsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
-        $searchWhere = $searchClause['searchWhere'];
-        $searchData  = $searchClause['searchData'];
+        $searchWhere  = $searchClause['searchWhere'];
+        $searchData   = $searchClause['searchData'];
 
         $searchClause = SearchController::getRegisteredMailsClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
-        $searchWhere = $searchClause['searchWhere'];
-        $searchData  = $searchClause['searchData'];
+        $searchWhere  = $searchClause['searchWhere'];
+        $searchData   = $searchClause['searchData'];
 
         $searchClause = SearchController::getFulltextClause(['body' => $query, 'searchWhere' => $searchWhere, 'searchData' => $searchData]);
-        $searchWhere = $searchClause['searchWhere'];
-        $searchData  = $searchClause['searchData'];
+        $searchWhere  = $searchClause['searchWhere'];
+        $searchData   = $searchClause['searchData'];
 
-        $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['Y']]);
-        if (!empty($nonSearchableStatuses)) {
-            $nonSearchableStatuses = array_column($nonSearchableStatuses, 'id');
+        $searchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['Y']]);
+        if (!empty($searchableStatuses)) {
+            $searchableStatuses = array_column($searchableStatuses, 'id');
             $searchWhere[] = 'status in (?)';
-            $searchData[]  = $nonSearchableStatuses;
+            $searchData[]  = $searchableStatuses;
         }
 
         DatabaseModel::beginTransaction();
@@ -810,8 +807,11 @@ class TileController
         DatabaseModel::commitTransaction();
         $allResources = array_column($allResources, 'res_id');
 
-        $limit = 5;
         $offset = 0;
+        $limit  = count($allResources);
+        if ($tile['view'] == 'list') {
+            $limit = 5;
+        }
 
         $resIds = [];
         $order  = 'CASE res_id ';
@@ -832,10 +832,10 @@ class TileController
             $tile['resources'] = [];
             if (!empty($resIds)) {
                 $resources = ResModel::get([
-                    'select'    => ['subject', 'creation_date', 'res_id', 'category_id'],
-                    'where'     => ['res_id in (?)'],
-                    'data'      => [$resIds],
-                    'orderBy'   => [$order]
+                    'select'  => ['subject', 'creation_date', 'res_id', 'category_id'],
+                    'where'   => ['res_id in (?)'],
+                    'data'    => [$resIds],
+                    'orderBy' => [$order]
                 ]);
             }
 
@@ -847,10 +847,10 @@ class TileController
                 }
 
                 $tile['resources'][] = [
-                    'resId'             => $resource['res_id'],
-                    'subject'           => $resource['subject'],
-                    'creationDate'      => $resource['creation_date'],
-                    'correspondents'    => $correspondents
+                    'resId'          => $resource['res_id'],
+                    'subject'        => $resource['subject'],
+                    'creationDate'   => $resource['creation_date'],
+                    'correspondents' => $correspondents
                 ];
             }
         } elseif ($tile['view'] == 'chart') {
@@ -861,10 +861,10 @@ class TileController
             }
             if (!empty($resIds)) {
                 $resources = ResModel::get([
-                    'select'    => ["COUNT({$type})", $type],
-                    'where'     => ['res_id in (?)'],
-                    'data'      => [$resIds],
-                    'groupBy'   => [$type]
+                    'select'  => ["COUNT({$type})", $type],
+                    'where'   => ['res_id in (?)'],
+                    'data'    => [$resIds],
+                    'groupBy' => [$type]
                 ]);
             }
 

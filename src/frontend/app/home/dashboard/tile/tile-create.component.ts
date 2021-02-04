@@ -149,7 +149,7 @@ export class TileCreateComponent implements OnInit {
 
     setSearchTemplate(searchTemplate: any) {
         this.extraParams = {
-            searchTemplateId: this.searchTemplates[0].id,
+            searchTemplateId: searchTemplate.id,
         };
         this.tileLabel = searchTemplate.label;
     }
