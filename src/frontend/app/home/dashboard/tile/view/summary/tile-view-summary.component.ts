@@ -6,11 +6,11 @@ import { DashboardService } from '@appRoot/home/dashboard/dashboard.service';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-tile-view-resume',
-    templateUrl: 'tile-view-resume.component.html',
-    styleUrls: ['tile-view-resume.component.scss'],
+    selector: 'app-tile-view-summary',
+    templateUrl: 'tile-view-summary.component.html',
+    styleUrls: ['tile-view-summary.component.scss'],
 })
-export class TileViewResumeComponent implements OnInit, AfterViewInit {
+export class TileViewSummaryComponent implements OnInit, AfterViewInit {
 
     @Input() countResources: any[];
     @Input() icon: string = '';

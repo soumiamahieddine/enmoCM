@@ -100,7 +100,7 @@ export class TileDashboardComponent implements OnInit, AfterViewInit {
         });
     }
 
-    async get_resume(extraParams: any) {
+    async get_summary(extraParams: any) {
         return new Promise((resolve) => {
             this.http.get(`../rest/tiles/${this.tile.id}`).pipe(
                 tap((data: any) => {

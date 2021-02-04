@@ -22,7 +22,7 @@ interface Tile {
 }
 
 interface TileView {
-    'id': 'list' | 'resume' | 'chart'; // identifier
+    'id': 'list' | 'summary' | 'chart'; // identifier
     'route': string; // router when click on tile
     'viewDocRoute'?: string; // router when view a doc (usefull for list view)
 }
@@ -45,7 +45,7 @@ export class DashboardService {
                     viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
-                    id: 'resume',
+                    id: 'summary',
                     route: null
                 },
                 {
@@ -68,7 +68,7 @@ export class DashboardService {
                     viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
-                    id: 'resume',
+                    id: 'summary',
                     route: '/basketList/users/:userId/groups/:groupId/baskets/:basketId'
                 },
                 {
@@ -89,7 +89,7 @@ export class DashboardService {
                     route: '/resources/:resId'
                 },
                 {
-                    id: 'resume',
+                    id: 'summary',
                     route: '/search?searchTemplateId=:searchTemplateId'
                 },
                 {
@@ -112,7 +112,7 @@ export class DashboardService {
                     viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
-                    id: 'resume',
+                    id: 'summary',
                     route: '/followed'
                 },
                 {
@@ -135,7 +135,7 @@ export class DashboardService {
                     viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
-                    id: 'resume',
+                    id: 'summary',
                     route: '/folders/:folderId'
                 },
                 {
@@ -158,7 +158,7 @@ export class DashboardService {
                     viewDocRoute: null
                 },
                 {
-                    id: 'resume',
+                    id: 'summary',
                     route: ':maarchParapheurUrl/dist/home'
                 }
             ]
@@ -171,7 +171,7 @@ export class DashboardService {
             ],
             views: [
                 {
-                    id: 'resume',
+                    id: 'summary',
                     route: ':privRoute'
                 }
             ]

@@ -16,14 +16,14 @@
         [viewDocRoute]="viewDocRoute" 
         style="display: flex;flex: 1;overflow: auto;">
     </app-tile-view-list>
-    <app-tile-view-resume *ngIf="view==='resume'" 
+    <app-tile-view-summary *ngIf="view==='summary'" 
         [route]="route" 
         [countResources]="countResources" 
         [icon]="tile.icon"
         [tile]="tile"
         [resourceLabel]="tile.type==='shortcut' ? tile.label : 'courrier(s)'"
         style="display: flex;flex: 1;overflow: auto;">
-    </app-tile-view-resume>
+    </app-tile-view-summary>
     <app-tile-view-chart *ngIf="view==='chart'" 
         [route]="route"
         [resources]="resources"

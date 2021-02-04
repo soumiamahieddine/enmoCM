@@ -1,9 +1,9 @@
 <div style="width: 100%;height: 100%;" [class.link]="route !== null" (click)="route !== null ? goTo(): false">
-    <div *ngIf="countResources !== null" color="primary" class="resume-content">
-        <span class="resume-number">
+    <div *ngIf="countResources !== null" color="primary" class="summary-content">
+        <span class="summary-number">
             {{countResources}}
         </span>
-        <span class="resume-label">
+        <span class="summary-label">
             {{resourceLabel}}
         </span>
     </div>
