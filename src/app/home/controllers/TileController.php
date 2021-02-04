@@ -399,6 +399,10 @@ class TileController
         } elseif ($tile['view'] == 'chart') {
             if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                 $type = 'status';
+            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+                $type = 'destination';
+            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                $type = "date_trunc('day', creation_date)";
             } else {
                 $type = 'type_id';
             }
@@ -414,6 +418,15 @@ class TileController
                         $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
                     }
                     $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
+                } elseif ($type == 'destination') {
+                    if (!empty($resource['destination'])) {
+                        $entity = EntityModel::getByEntityId(['select' => ['short_label'], 'entityId' => $resource['destination']]);
+                    }
+                    $tile['resources'][] = ['name' => $entity['short_label'] ?? '', 'value' => $resource['count']];
+                } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                    $date = new \DateTime($resource['date_trunc']);
+                    $date = $date->format('d/m/Y');
+                    $tile['resources'][] = ['name' => $date, 'value' => $resource['count']];
                 } else {
                     $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
                     $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
@@ -460,6 +473,10 @@ class TileController
             if (!empty($allResources)) {
                 if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                     $type = 'status';
+                } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+                    $type = 'destination';
+                } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                    $type = "date_trunc('day', creation_date)";
                 } else {
                     $type = 'type_id';
                 }
@@ -476,6 +493,15 @@ class TileController
                             $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
                         }
                         $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
+                    } elseif ($type == 'destination') {
+                        if (!empty($resource['destination'])) {
+                            $entity = EntityModel::getByEntityId(['select' => ['short_label'], 'entityId' => $resource['destination']]);
+                        }
+                        $tile['resources'][] = ['name' => $entity['short_label'] ?? '', 'value' => $resource['count']];
+                    } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                        $date = new \DateTime($resource['date_trunc']);
+                        $date = $date->format('d/m/Y');
+                        $tile['resources'][] = ['name' => $date, 'value' => $resource['count']];
                     } else {
                         $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
                         $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
@@ -522,6 +548,10 @@ class TileController
         } elseif ($tile['view'] == 'chart') {
             if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                 $type = 'status';
+            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+                $type = 'destination';
+            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                $type = 'creationDate';
             } else {
                 $type = 'type_id';
             }
@@ -539,6 +569,34 @@ class TileController
                     } else {
                         foreach ($tile['resources'] as $key => $tileResource) {
                             if ($tileResource['name'] == $status['label_status']) {
+                                $tile['resources'][$key]['value']++;
+                            }
+                        }
+                    }
+                } elseif ($type == 'destination') {
+                    $entity['short_label'] = '';
+                    if (!empty($resource['destination'])) {
+                        $entity = EntityModel::getByEntityId(['select' => ['short_label'], 'entityId' => $resource['destination']]);
+                    }
+                    if (!in_array($entity['short_label'], $chartTypes)) {
+                        $chartTypes[] = $entity['short_label'];
+                        $tile['resources'][] = ['name' => $entity['short_label'], 'value' => 1];
+                    } else {
+                        foreach ($tile['resources'] as $key => $tileResource) {
+                            if ($tileResource['name'] == $entity['short_label']) {
+                                $tile['resources'][$key]['value']++;
+                            }
+                        }
+                    }
+                } elseif ($type == 'creationDate') {
+                    $date = new \DateTime($resource['date_trunc']);
+                    $date = $date->format('d/m/Y');
+                    if (!in_array($date, $chartTypes)) {
+                        $chartTypes[] = $date;
+                        $tile['resources'][] = ['name' => $date, 'value' => 1];
+                    } else {
+                        foreach ($tile['resources'] as $key => $tileResource) {
+                            if ($tileResource['name'] == $date) {
                                 $tile['resources'][$key]['value']++;
                             }
                         }
@@ -856,6 +914,10 @@ class TileController
         } elseif ($tile['view'] == 'chart') {
             if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                 $type = 'status';
+            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+                $type = 'destination';
+            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                $type = "date_trunc('day', creation_date)";
             } else {
                 $type = 'type_id';
             }
@@ -875,6 +937,15 @@ class TileController
                         $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
                     }
                     $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
+                } elseif ($type == 'destination') {
+                    if (!empty($resource['destination'])) {
+                        $entity = EntityModel::getByEntityId(['select' => ['short_label'], 'entityId' => $resource['destination']]);
+                    }
+                    $tile['resources'][] = ['name' => $entity['short_label'] ?? '', 'value' => $resource['count']];
+                } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                    $date = new \DateTime($resource['date_trunc']);
+                    $date = $date->format('d/m/Y');
+                    $tile['resources'][] = ['name' => $date, 'value' => $resource['count']];
                 } else {
                     $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
                     $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
