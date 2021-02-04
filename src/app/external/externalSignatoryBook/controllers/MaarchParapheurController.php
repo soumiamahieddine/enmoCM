@@ -53,20 +53,19 @@ class MaarchParapheurController
         return $rawResponse;
     }
 
-    public static function getUsers(array $aArgs)
+    public static function getUsers(array $args)
     {
-        $response = CurlModel::exec([
-            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users',
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
+        $response = CurlModel::execSimple([
+            'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/users',
+            'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
+            'method'    => 'GET'
         ]);
 
         if (!empty($response['error'])) {
             return ["error" => $response['error']];
         }
 
-        return $response['users'];
+        return $response['response']['users'];
     }
 
     public static function sendDatas(array $aArgs)
@@ -395,20 +394,24 @@ class MaarchParapheurController
                     }
 
                     $bodyData['linkId'] = $value['res_id_master'];
-        
-                    $response = CurlModel::exec([
-                        'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
-                        'user'     => $aArgs['config']['data']['userId'],
-                        'password' => $aArgs['config']['data']['password'],
-                        'method'   => 'POST',
-                        'bodyData' => $bodyData
+
+                    $response = CurlModel::execSimple([
+                        'url'       => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
+                        'basicAuth' => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
+                        'method'    => 'POST',
+                        'body'      => json_encode($bodyData),
+                        'headers'   => [
+                            'Accept: application/json',
+                            'Content-Type: application/json'
+                        ]
                     ]);
+
 
                     if (!empty($response['errors'])) {
                         return ['error' => 'Error during processing in MaarchParapheur : ' . $response['errors']];
                     }
         
-                    $attachmentToFreeze[$collId][$resId] = $response['id'];
+                    $attachmentToFreeze[$collId][$resId] = $response['response']['id'];
                 }
                 if (!empty($integratedResource)) {
                     $attachmentsData = [];
@@ -473,19 +476,22 @@ class MaarchParapheurController
 
                     $bodyData['linkId'] = $aArgs['resIdMaster'];
         
-                    $response = CurlModel::exec([
-                        'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
-                        'user'     => $aArgs['config']['data']['userId'],
-                        'password' => $aArgs['config']['data']['password'],
-                        'method'   => 'POST',
-                        'bodyData' => $bodyData
+                    $response = CurlModel::execSimple([
+                        'url'       => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
+                        'basicAuth' => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
+                        'method'    => 'POST',
+                        'body'      => json_encode($bodyData),
+                        'headers'   => [
+                            'Accept: application/json',
+                            'Content-Type: application/json'
+                        ]
                     ]);
 
                     if (!empty($response['errors'])) {
                         return ['error' => 'Error during processing in MaarchParapheur : ' . $response['errors']];
                     }
         
-                    $attachmentToFreeze['letterbox_coll'][$integratedResource[0]['res_id']] = $response['id'];
+                    $attachmentToFreeze['letterbox_coll'][$integratedResource[0]['res_id']] = $response['response']['id'];
                 }
             }
         } elseif ($aArgs['objectSent'] == 'mail') {
@@ -507,15 +513,18 @@ class MaarchParapheurController
                 $bodyData['notes'] = ['creator' => trim($sender['firstname'] . ' ' .$sender['lastname']), 'creationDate' => $noteCreationDate, 'value' => $aArgs['note']];
             }
 
-            $response = CurlModel::exec([
-                'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
-                'user'     => $aArgs['config']['data']['userId'],
-                'password' => $aArgs['config']['data']['password'],
-                'method'   => 'POST',
-                'bodyData' => $bodyData
+            $response = CurlModel::execSimple([
+                'url'       => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
+                'basicAuth' => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
+                'method'    => 'POST',
+                'body'      => json_encode($bodyData),
+                'headers'   => [
+                    'Accept: application/json',
+                    'Content-Type: application/json'
+                ]
             ]);
 
-            $attachmentToFreeze['letterbox_coll'][$aArgs['resIdMaster']] = $response['id'];
+            $attachmentToFreeze['letterbox_coll'][$aArgs['resIdMaster']] = $response['response']['id'];
         }
 
         $workflowInfos = [];
@@ -586,16 +595,15 @@ class MaarchParapheurController
         }
     }
 
-    public static function getUserById(array $aArgs)
+    public static function getUserById(array $args)
     {
-        $response = CurlModel::exec([
-            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users/'.$aArgs['id'],
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
+        $response = CurlModel::execSimple([
+            'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/users/' . $args['id'],
+            'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
+            'method'    => 'GET'
         ]);
 
-        return $response['user'];
+        return $response['response']['user'];
     }
 
     public static function retrieveSignedMails(array $aArgs)
@@ -660,28 +668,26 @@ class MaarchParapheurController
         return $aArgs['idsToRetrieve'];
     }
 
-    public static function getDocumentWorkflow(array $aArgs)
+    public static function getDocumentWorkflow(array $args)
     {
-        $response = CurlModel::exec([
-            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/workflow',
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
+        $response = CurlModel::execSimple([
+            'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/documents/' . $args['documentId'] . '/workflow',
+            'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
+            'method'    => 'GET'
         ]);
 
-        return $response['workflow'];
+        return $response['response']['workflow'];
     }
 
-    public static function getDocument(array $aArgs)
+    public static function getDocument(array $args)
     {
-        $response = CurlModel::exec([
-            'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents/'.$aArgs['documentId'].'/content',
-            'user'     => $aArgs['config']['data']['userId'],
-            'password' => $aArgs['config']['data']['password'],
-            'method'   => 'GET'
+        $response = CurlModel::execSimple([
+            'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/documents/' . $args['documentId'] . '/content',
+            'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
+            'method'    => 'GET'
         ]);
 
-        return $response;
+        return $response['response'];
     }
 
     public static function getState($aArgs)
