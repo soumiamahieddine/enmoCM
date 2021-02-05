@@ -100,7 +100,7 @@ export class TileCreateComponent implements OnInit {
             this.chartTypes = this.chartTypes.map((type: any) => {
                 return {
                     ...type,
-                    label : this.translate.instant('lang.chart_' + type.type)
+                    label: this.translate.instant('lang.chart_' + type.type)
                 };
             });
         }
@@ -114,12 +114,17 @@ export class TileCreateComponent implements OnInit {
         if (this.baskets.length === 0) {
             this.http.get('../rest/home').pipe(
                 tap((data: any) => {
-                    this.baskets = data.regroupedBaskets;
-                    this.tileLabel = `${this.baskets[0].baskets[0].basket_name} (${this.baskets[0].groupDesc})`;
-                    this.extraParams = {
-                        groupId: this.baskets[0].groupSerialId,
-                        basketId: this.baskets[0].baskets[0].id
-                    };
+                    if (data.regroupedBaskets.length > 0) {
+                        this.baskets = data.regroupedBaskets;
+                        this.tileLabel = `${this.baskets[0].baskets[0].basket_name} (${this.baskets[0].groupDesc})`;
+                        this.extraParams = {
+                            groupId: this.baskets[0].groupSerialId,
+                            basketId: this.baskets[0].baskets[0].id
+                        };
+                    } else {
+                        this.notify.error(this.translate.instant('lang.noAvailableBasket'));
+                        this.resetData();
+                    }
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
@@ -150,8 +155,8 @@ export class TileCreateComponent implements OnInit {
                 tap((data: any) => {
                     if (data.searchTemplates.length > 0) {
                         this.searchTemplates = data.searchTemplates;
-                        this.setSearchTemplate(this.searchTemplates[0])
-                        this.searchTemplatesControl.setValue(this.searchTemplates[0])
+                        this.setSearchTemplate(this.searchTemplates[0]);
+                        this.searchTemplatesControl.setValue(this.searchTemplates[0]);
                     } else {
                         this.notify.error(this.translate.instant('lang.nosearchTemplate'));
                         this.resetData();
@@ -212,7 +217,7 @@ export class TileCreateComponent implements OnInit {
                 };
             });
             tmpMenus = this.sortPipe.transform(tmpMenus, 'label');
-            
+
             if (tmpMenus.length > 0) {
                 tmpMenus.unshift({
                     id: 'opt_menu',
@@ -245,10 +250,10 @@ export class TileCreateComponent implements OnInit {
             }
             if (arrMenus.length > 0) {
                 this.menus = arrMenus;
-                this.setMenu(this.menus[1])
-                this.menusControl.setValue(this.menus[1])
+                this.setMenu(this.menus[1]);
+                this.menusControl.setValue(this.menus[1]);
             } else {
-                this.notify.error(this.translate.instant('lang.noData'));
+                this.notify.error(this.translate.instant('lang.noDataAvailable'));
                 this.resetData();
             }
         }
@@ -266,7 +271,7 @@ export class TileCreateComponent implements OnInit {
         this.extraParams.privilegeId = menu.id;
         this.tileLabel = menu.label;
         this.tileOtherInfos = {
-            icon : menu.style,
+            icon: menu.style,
             privRoute: menu.route,
         };
     }
@@ -321,7 +326,7 @@ export class TileCreateComponent implements OnInit {
                 objToSend.label = this.tileLabel;
                 objToSend.position = this.position;
                 objToSend.charts = this.dashboardService.getCharts();
-                objToSend = {...objToSend, ...this.tileOtherInfos};
+                objToSend = { ...objToSend, ...this.tileOtherInfos };
                 this.dialogRef.close(objToSend);
             }),
             catchError((err: any) => {
