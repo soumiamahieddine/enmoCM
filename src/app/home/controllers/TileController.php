@@ -399,9 +399,9 @@ class TileController
         } elseif ($tile['view'] == 'chart') {
             if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                 $type = 'status';
-            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
                 $type = 'destination';
-            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
                 $type = "date_trunc('day', creation_date)";
             } else {
                 $type = 'type_id';
@@ -474,9 +474,9 @@ class TileController
             if (!empty($allResources)) {
                 if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                     $type = 'status';
-                } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+                } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
                     $type = 'destination';
-                } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+                } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
                     $type = "date_trunc('day', creation_date)";
                 } else {
                     $type = 'type_id';
@@ -550,9 +550,9 @@ class TileController
         } elseif ($tile['view'] == 'chart') {
             if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                 $type = 'status';
-            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
                 $type = 'destination';
-            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
                 $type = 'creationDate';
             } else {
                 $type = 'type_id';
@@ -678,10 +678,10 @@ class TileController
             $tile['resources'] = [];
             foreach ($curlResponse['response']['documents'] as $resource) {
                 $tile['resources'][] = [
-                    'id'                => $resource['id'],
-                    'subject'           => $resource['title'],
-                    'creationDate'      => $resource['creationDate'],
-                    'correspondents'    => [$resource['sender']]
+                    'resId'          => $resource['id'],
+                    'subject'        => $resource['title'],
+                    'creationDate'   => $resource['creationDate'],
+                    'correspondents' => [$resource['sender']]
                 ];
             }
         }
@@ -916,9 +916,9 @@ class TileController
         } elseif ($tile['view'] == 'chart') {
             if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
                 $type = 'status';
-            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
+            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
                 $type = 'destination';
-            } else if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
+            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
                 $type = "date_trunc('day', creation_date)";
             } else {
                 $type = 'type_id';
