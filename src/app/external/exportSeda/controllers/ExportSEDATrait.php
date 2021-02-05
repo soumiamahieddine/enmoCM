@@ -41,7 +41,6 @@ trait ExportSEDATrait
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        static $resAttachments;
         static $resAcknowledgement;
         static $attachmentsData;
         static $resources;
@@ -59,7 +58,6 @@ trait ExportSEDATrait
                 'where'  => ['res_id_master in (?)', 'status in (?)'],
                 'data'   => [$args['resources'], ['A_TRA', 'TRA']]
             ]);
-            $resAttachments = array_column($attachments, 'res_id_master');
             $attachmentsData = [];
             foreach ($attachments as $attachment) {
                 if (in_array($attachment['attachment_type'], ['acknowledgement_record_management', 'reply_record_management'])) {
@@ -144,75 +142,19 @@ trait ExportSEDATrait
                 return ['errors' => [$value . ' is empty']];
             }
         }
-
-        $initData = SedaController::initArchivalData([
-            'resource'           => $resource,
-            'attachments'        => $attachmentsData[$args['resId']] ?? [],
-            'senderOrgRegNumber' => $config['exportSeda']['senderOrgRegNumber'],
-            'entity'             => $entity,
-            'doctype'            => $doctype,
-            'getFile'            => true
-        ]);
-
-        if (!empty($initData['errors'])) {
-            return ['errors' => $initData['errors']];
-        } else {
-            $initData = $initData['archivalData'];
-        }
-
-        $history = ExportSEDATrait::getHistory(['resId' => $resource['res_id']]);
-        $folder  = ExportSEDATrait::getFolderPath(['selectedFolder' => $args['data']['folder'], 'folders' => $initData['additionalData']['folders']]);
-
-        $dataObjectPackage = [
-            'archiveId'                 => $initData['data']['slipInfo']['archiveId'],
-            'chrono'                    => $resource['alt_identifier'],
-            'originatorAgency'          => [
-                'id'    => $entity['producer_service'],
-                'label' => $entity['entity_label']
-            ],
-            'receivedDate'              => $resource['admission_date'],
-            'documentDate'              => $resource['doc_date'],
-            'creationDate'              => $resource['creation_date'],
-            'modificationDate'          => $resource['modification_date'],
-            'retentionRule'             => $initData['data']['doctype']['retentionRule'],
-            'retentionFinalDisposition' => $initData['data']['doctype']['retentionFinalDisposition'],
-            'accessRuleCode'            => $config['exportSeda']['accessRuleCode'],
-            'history'                   => $history['history'],
-            'contacts'                  => [
-                'senders'    => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']),
-                'recipients' => ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient'])
-            ],
-            'attachments'               => $initData['archiveUnits'],
-            'folders'                   => $folder['folderPath'],
-            'links'                     => $initData['additionalData']['linkedResources']
-        ];
-
-        $data = [
-            'type' => 'ArchiveTransfer',
-            'messageObject' => [
-                'messageIdentifier'  => $initData['data']['slipInfo']['slipId'],
-                'archivalAgreement'  => $args['data']['archivalAgreement'],
-                'dataObjectPackage'  => $dataObjectPackage,
-                'archivalAgency'     => $args['data']['entityArchiveRecipient'],
-                'transferringAgency' => $initData['data']['entity']['senderArchiveEntity']
-            ]
-        ];
-
-        $sedaPackage = ExportSEDATrait::generateSEDAPackage(['data' => $data]);
-        if (!empty($sedaPackage['errors'])) {
-            return ['errors' => [$sedaPackage['errors']]];
-        }
-
-        $messageSaved = ExportSEDATrait::saveMessage(['messageObject' => $sedaPackage['messageObject']]);
-        MessageExchangeModel::insertUnitIdentifier([
-            'messageId' => $messageSaved['messageId'],
-            'tableName' => 'res_letterbox',
-            'resId'     => $resource['res_id']
-        ]);
-
-        ExportSEDATrait::cleanTmpDocument(['archiveUnits' => $initData['archiveUnits']]);
-
+        
         if ($args['data']['actionMode'] == 'download') {
+            $sedaPackage = ExportSedaTrait::makeSedaPackage([
+                'resource'               => $resource,
+                'attachments'            => $attachmentsData[$args['resId']] ?? [],
+                'config'                 => $config,
+                'entity'                 => $entity,
+                'doctype'                => $doctype,
+                'folder'                 => $args['data']['folder'],
+                'archivalAgreement'      => $args['data']['archivalAgreement'],
+                'entityArchiveRecipient' => $args['data']['entityArchiveRecipient']
+            ]);
+
             if (count($args['resources']) > 1) {
                 $zip = new \ZipArchive();
                 if ($zip->open($zipFilename, \ZipArchive::CREATE) === true) {
@@ -235,21 +177,96 @@ trait ExportSEDATrait
             static $massData;
             if ($massData === null) {
                 $massData = [
-                    'resources'     => [],
-                    'successStatus' => $args['action']['parameters']['successStatus'],
-                    'errorStatus'   => $args['action']['parameters']['errorStatus'],
-                    'userId'        => $GLOBALS['id'],
-                    'customId'      => $customId
+                    'resources'              => [],
+                    'successStatus'          => $args['action']['parameters']['successStatus'],
+                    'errorStatus'            => $args['action']['parameters']['errorStatus'],
+                    'userId'                 => $GLOBALS['id'],
+                    'customId'               => $customId,
+                    'archivalAgreement'      => $args['data']['archivalAgreement'],
+                    'entityArchiveRecipient' => $args['data']['entityArchiveRecipient'],
+                    'folder'                 => $args['data']['folder']
                 ];
             }
 
-            $massData['resources'][] = [
-                'resId' => $resource['res_id'], 'messageId' => $messageSaved['messageId'], 'encodedFilePath' => $sedaPackage['encodedFilePath'],
-                'messageFilename' => $sedaPackage['messageFilename'], 'reference' => $data['messageObject']['messageIdentifier']
-            ];
+            $massData['resources'][] = $resource['res_id'];
 
             return ['postscript' => 'src/app/external/exportSeda/scripts/ExportSedaScript.php', 'args' => $massData];
         }
+    }
+
+    public static function makeSedaPackage($args = [])
+    {
+        $initData = SedaController::initArchivalData([
+            'resource'           => $args['resource'],
+            'attachments'        => $args['attachments'],
+            'senderOrgRegNumber' => $args['config']['exportSeda']['senderOrgRegNumber'],
+            'entity'             => $args['entity'],
+            'doctype'            => $args['doctype'],
+            'getFile'            => true
+        ]);
+
+        if (!empty($initData['errors'])) {
+            return ['errors' => $initData['errors']];
+        } else {
+            $initData = $initData['archivalData'];
+        }
+
+        $history = ExportSEDATrait::getHistory(['resId' => $args['resource']['res_id']]);
+        $folder  = ExportSEDATrait::getFolderPath(['selectedFolder' => $args['folder'], 'folders' => $initData['additionalData']['folders']]);
+
+        $dataObjectPackage = [
+            'archiveId'                 => $initData['data']['slipInfo']['archiveId'],
+            'chrono'                    => $args['resource']['alt_identifier'],
+            'originatorAgency'          => [
+                'id'    => $args['entity']['producer_service'],
+                'label' => $args['entity']['entity_label']
+            ],
+            'receivedDate'              => $args['resource']['admission_date'],
+            'documentDate'              => $args['resource']['doc_date'],
+            'creationDate'              => $args['resource']['creation_date'],
+            'modificationDate'          => $args['resource']['modification_date'],
+            'retentionRule'             => $initData['data']['doctype']['retentionRule'],
+            'retentionFinalDisposition' => $initData['data']['doctype']['retentionFinalDisposition'],
+            'accessRuleCode'            => $args['config']['exportSeda']['accessRuleCode'],
+            'history'                   => $history['history'],
+            'contacts'                  => [
+                'senders'    => ContactController::getParsedContacts(['resId' => $args['resource']['res_id'], 'mode' => 'sender']),
+                'recipients' => ContactController::getParsedContacts(['resId' => $args['resource']['res_id'], 'mode' => 'recipient'])
+            ],
+            'attachments'               => $initData['archiveUnits'],
+            'folders'                   => $folder['folderPath'],
+            'links'                     => $initData['additionalData']['linkedResources']
+        ];
+
+        $data = [
+            'type' => 'ArchiveTransfer',
+            'messageObject' => [
+                'messageIdentifier'  => $initData['data']['slipInfo']['slipId'],
+                'archivalAgreement'  => $args['archivalAgreement'],
+                'dataObjectPackage'  => $dataObjectPackage,
+                'archivalAgency'     => $args['entityArchiveRecipient'],
+                'transferringAgency' => $initData['data']['entity']['senderArchiveEntity']
+            ]
+        ];
+
+        $sedaPackage = ExportSEDATrait::generateSEDAPackage(['data' => $data]);
+        if (!empty($sedaPackage['errors'])) {
+            return ['errors' => [$sedaPackage['errors']]];
+        }
+
+        $messageSaved = ExportSEDATrait::saveMessage(['messageObject' => $sedaPackage['messageObject']]);
+        MessageExchangeModel::insertUnitIdentifier([
+            'messageId' => $messageSaved['messageId'],
+            'tableName' => 'res_letterbox',
+            'resId'     => $args['resource']['res_id']
+        ]);
+
+        ExportSEDATrait::cleanTmpDocument(['archiveUnits' => $initData['archiveUnits']]);
+
+        return [
+            'messageId' => $messageSaved['messageId'], 'encodedFilePath' => $sedaPackage['encodedFilePath'],
+            'messageFilename' => $sedaPackage['messageFilename'], 'reference' => $data['messageObject']['messageIdentifier']
+        ];
     }
 
     public static function sendSedaPackage($args = [])
@@ -297,10 +314,7 @@ trait ExportSEDATrait
             return ['errors' => ['[storeAttachment] ' . $id['errors']]];
         }
 
-        ConvertPdfController::convert([
-            'resId'  => $id,
-            'collId' => 'attachments_coll'
-        ]);
+        ConvertPdfController::convert(['resId' => $id, 'collId' => 'attachments_coll']);
 
         return [];
     }
