@@ -243,10 +243,13 @@ class TileController
 
     private static function controlParameters(array $args)
     {
-        if ($args['type'] == 'basket') {
+        if (in_array($args['type'], ['basket', 'folder', 'shortcut', 'searchTemplate'])) {
             if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
                 return ['errors' => 'Body parameters is empty or not an array'];
-            } elseif (!Validator::intVal()->validate($args['parameters']['basketId'] ?? null)) {
+            }
+        }
+        if ($args['type'] == 'basket') {
+            if (!Validator::intVal()->validate($args['parameters']['basketId'] ?? null)) {
                 return ['errors' => 'Body[parameters] basketId is empty or not an integer'];
             } elseif (!Validator::intVal()->validate($args['parameters']['groupId'] ?? null)) {
                 return ['errors' => 'Body[parameters] groupId is empty or not an integer'];
@@ -261,9 +264,7 @@ class TileController
                 return ['errors' => 'User is not linked to this group'];
             }
         } elseif ($args['type'] == 'folder') {
-            if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
-                return ['errors' => 'Body parameters is empty or not an array'];
-            } elseif (!Validator::intVal()->validate($args['parameters']['folderId'] ?? null)) {
+            if (!Validator::intVal()->validate($args['parameters']['folderId'] ?? null)) {
                 return ['errors' => 'Body[parameters] folderId is empty or not an integer'];
             }
 
@@ -272,17 +273,13 @@ class TileController
                 return ['errors' => 'Folder not found or out of your perimeter'];
             }
         } elseif ($args['type'] == 'shortcut') {
-            if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
-                return ['errors' => 'Body parameters is empty or not an array'];
-            } elseif (!Validator::stringType()->validate($args['parameters']['privilegeId'] ?? null)) {
+            if (!Validator::stringType()->validate($args['parameters']['privilegeId'] ?? null)) {
                 return ['errors' => 'Body[parameters] privilegeId is empty or not a string'];
             } elseif ($args['view'] != 'summary') {
                 return ['errors' => 'Shortcut tile must have summary view'];
             }
         } elseif ($args['type'] == 'searchTemplate') {
-            if (!Validator::arrayType()->notEmpty()->validate($args['parameters'] ?? null)) {
-                return ['errors' => 'Body parameters is empty or not an array'];
-            } elseif (!Validator::intVal()->validate($args['parameters']['searchTemplateId'] ?? null)) {
+            if (!Validator::intVal()->validate($args['parameters']['searchTemplateId'] ?? null)) {
                 return ['errors' => 'Body[parameters] searchTemplateId is empty or not an integer'];
             }
 
@@ -298,11 +295,11 @@ class TileController
     private static function getShortDetails(array &$tile)
     {
         if ($tile['type'] == 'basket') {
-            $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_name', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
-            $group  = GroupModel::getById(['select' => ['group_desc', 'group_id'], 'id' => $tile['parameters']['groupId']]);
+            $basket = BasketModel::getById(['select' => ['basket_name'], 'id' => $tile['parameters']['basketId']]);
+            $group  = GroupModel::getById(['select' => ['group_desc'], 'id' => $tile['parameters']['groupId']]);
             $tile['label'] = "{$basket['basket_name']} ({$group['group_desc']})";
         } elseif ($tile['type'] == 'folder') {
-            $folder = FolderModel::getById(['id' => $tile['parameters']['folderId']]);
+            $folder = FolderModel::getById(['select' => ['label'], 'id' => $tile['parameters']['folderId']]);
             $tile['label'] = "{$folder['label']}";
         } elseif ($tile['type'] == 'externalSignatoryBook') {
             $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
@@ -365,80 +362,22 @@ class TileController
     private static function getBasketDetails(array &$tile)
     {
         $basket = BasketModel::getById(['select' => ['basket_clause', 'basket_id'], 'id' => $tile['parameters']['basketId']]);
-        $group = GroupModel::getById(['select' => ['group_id'], 'id' => $tile['parameters']['groupId']]);
+        $group  = GroupModel::getById(['select' => ['group_id'], 'id' => $tile['parameters']['groupId']]);
         if (!BasketModel::hasGroup(['id' => $basket['basket_id'], 'groupId' => $group['group_id']])) {
             return ['errors' => 'Basket is not linked to this group'];
         } elseif (!UserModel::hasGroup(['id' => $GLOBALS['id'], 'groupId' => $group['group_id']])) {
             return ['errors' => 'User is not linked to this group'];
         }
 
-        if ($tile['view'] == 'summary') {
-            $tile['resourcesNumber'] = BasketModel::getResourceNumberByClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']]);
-        } elseif ($tile['view'] == 'list') {
-            $resources = ResModel::getOnView([
-                'select'    => ['subject', 'creation_date', 'res_id', 'category_id'],
-                'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
-                'orderBy'   => ['creation_date'],
-                'limit'     => 5
-            ]);
-            $tile['resources'] = [];
-            foreach ($resources as $resource) {
-                if ($resource['category_id'] == 'outgoing') {
-                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
-                } else {
-                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                }
+        $resources = ResModel::getOnView([
+            'select' => ['res_id'],
+            'where'  => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])]
+        ]);
 
-                $tile['resources'][] = [
-                    'resId'             => $resource['res_id'],
-                    'subject'           => $resource['subject'],
-                    'creationDate'      => $resource['creation_date'],
-                    'correspondents'    => $correspondents
-                ];
-            }
-        } elseif ($tile['view'] == 'chart') {
-            if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
-                $type = 'status';
-            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
-                $type = 'destination';
-            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
-                $type = "date_trunc('day', creation_date)";
-            } else {
-                $type = 'type_id';
-            }
-            $resources = ResModel::getOnView([
-                'select'    => ["COUNT({$type})", $type],
-                'where'     => [PreparedClauseController::getPreparedClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']])],
-                'groupBy'   => [$type],
-                'orderBy'   => [$type]
-            ]);
-            $tile['resources'] = [];
-            foreach ($resources as $resource) {
-                if ($type == 'status') {
-                    if (!empty($resource['status'])) {
-                        $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
-                    }
-                    $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
-                } elseif ($type == 'destination') {
-                    if (!empty($resource['destination'])) {
-                        $entity = EntityModel::getByEntityId(['select' => ['short_label'], 'entityId' => $resource['destination']]);
-                    }
-                    $tile['resources'][] = ['name' => $entity['short_label'] ?? '', 'value' => $resource['count']];
-                } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
-                    $date = new \DateTime($resource['date_trunc']);
-                    $date = $date->format('d/m/Y');
-                    $tile['resources'][] = ['name' => $date, 'value' => $resource['count']];
-                } else {
-                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
-                    $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
-                }
-            }
-        }
-
-        return true;
+        TileController::getResourcesDetails($tile, $resources);
     }
 
-    private static function getResourcesDetails(array &$tile, $allResources)
+    private static function getResourcesDetails(array &$tile, $allResources, $order = '')
     {
         $allResources = array_column($allResources, 'res_id');
         if ($tile['view'] == 'summary') {
@@ -446,11 +385,12 @@ class TileController
         } elseif ($tile['view'] == 'list') {
             $tile['resources'] = [];
             if (!empty($allResources)) {
+                $requestOrder = !empty($order) ? $order : 'modification_date';
                 $resources = ResModel::get([
                     'select'  => ['subject', 'creation_date', 'res_id', 'category_id'],
                     'where'   => ['res_id in (?)'],
                     'data'    => [$allResources],
-                    'orderBy' => ['modification_date'],
+                    'orderBy' => [$requestOrder],
                     'limit'   => 5
                 ]);
 
@@ -462,10 +402,10 @@ class TileController
                     }
 
                     $tile['resources'][] = [
-                        'resId'             => $resource['res_id'],
-                        'subject'           => $resource['subject'],
-                        'creationDate'      => $resource['creation_date'],
-                        'correspondents'    => $correspondents
+                        'resId'          => $resource['res_id'],
+                        'subject'        => $resource['subject'],
+                        'creationDate'   => $resource['creation_date'],
+                        'correspondents' => $correspondents
                     ];
                 }
             }
@@ -482,11 +422,11 @@ class TileController
                     $type = 'type_id';
                 }
                 $resources = ResModel::get([
-                    'select'    => ["COUNT({$type})", $type],
-                    'where'     => ['res_id in (?)'],
-                    'data'      => [$allResources],
-                    'groupBy'   => [$type],
-                    'orderBy'   => [$type]
+                    'select'  => ["COUNT({$type})", $type],
+                    'where'   => ['res_id in (?)'],
+                    'data'    => [$allResources],
+                    'groupBy' => [$type],
+                    'orderBy' => [$type]
                 ]);
                 $tile['resources'] = [];
                 foreach ($resources as $resource) {
@@ -518,108 +458,22 @@ class TileController
     private static function getLastResourcesDetails(array &$tile)
     {
         $resources = ResModel::getLastResources([
-            'select'    => [
-                'res_letterbox.res_id',
-                'res_letterbox.creation_date',
-                'res_letterbox.subject',
-                'res_letterbox.type_id',
-                'res_letterbox.category_id',
-                'res_letterbox.status'
-            ],
-            'limit'     => 5,
-            'userId'    => $GLOBALS['id']
+            'select' => ['res_letterbox.res_id'],
+            'limit'  => 5,
+            'userId' => $GLOBALS['id']
         ]);
-        if ($tile['view'] == 'summary') {
-            $tile['resourcesNumber'] = count($resources);
-        } elseif ($tile['view'] == 'list') {
-            $tile['resources'] = [];
-            foreach ($resources as $resource) {
-                if ($resource['category_id'] == 'outgoing') {
-                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
-                } else {
-                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                }
 
-                $tile['resources'][] = [
-                    'resId'             => $resource['res_id'],
-                    'subject'           => $resource['subject'],
-                    'creationDate'      => $resource['creation_date'],
-                    'correspondents'    => $correspondents
-                ];
+        $allResources = array_column($resources, 'res_id');
+        $order  = 'CASE res_id ';
+        for ($i = 0; $i < 5; $i++) {
+            if (empty($allResources[$i])) {
+                break;
             }
-        } elseif ($tile['view'] == 'chart') {
-            if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
-                $type = 'status';
-            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
-                $type = 'destination';
-            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
-                $type = 'creationDate';
-            } else {
-                $type = 'type_id';
-            }
-            $tile['resources'] = [];
-            $chartTypes = [];
-            foreach ($resources as $resource) {
-                if ($type == 'status') {
-                    $status['label_status'] = '';
-                    if (!empty($resource['status'])) {
-                        $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
-                    }
-                    if (!in_array($status['label_status'], $chartTypes)) {
-                        $chartTypes[] = $status['label_status'];
-                        $tile['resources'][] = ['name' => $status['label_status'], 'value' => 1];
-                    } else {
-                        foreach ($tile['resources'] as $key => $tileResource) {
-                            if ($tileResource['name'] == $status['label_status']) {
-                                $tile['resources'][$key]['value']++;
-                            }
-                        }
-                    }
-                } elseif ($type == 'destination') {
-                    $entity['short_label'] = '';
-                    if (!empty($resource['destination'])) {
-                        $entity = EntityModel::getByEntityId(['select' => ['short_label'], 'entityId' => $resource['destination']]);
-                    }
-                    if (!in_array($entity['short_label'], $chartTypes)) {
-                        $chartTypes[] = $entity['short_label'];
-                        $tile['resources'][] = ['name' => $entity['short_label'], 'value' => 1];
-                    } else {
-                        foreach ($tile['resources'] as $key => $tileResource) {
-                            if ($tileResource['name'] == $entity['short_label']) {
-                                $tile['resources'][$key]['value']++;
-                            }
-                        }
-                    }
-                } elseif ($type == 'creationDate') {
-                    $date = new \DateTime($resource['date_trunc']);
-                    $date = $date->format('d/m/Y');
-                    if (!in_array($date, $chartTypes)) {
-                        $chartTypes[] = $date;
-                        $tile['resources'][] = ['name' => $date, 'value' => 1];
-                    } else {
-                        foreach ($tile['resources'] as $key => $tileResource) {
-                            if ($tileResource['name'] == $date) {
-                                $tile['resources'][$key]['value']++;
-                            }
-                        }
-                    }
-                } else {
-                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
-                    if (!in_array($doctype['description'], $chartTypes)) {
-                        $chartTypes[] = $doctype['description'];
-                        $tile['resources'][] = ['name' => $doctype['description'], 'value' => 1];
-                    } else {
-                        foreach ($tile['resources'] as $key => $tileResource) {
-                            if ($tileResource['name'] == $doctype['description']) {
-                                $tile['resources'][$key]['value']++;
-                            }
-                        }
-                    }
-                }
-            }
+            $order .= "WHEN {$allResources[$i]} THEN {$i} ";
         }
+        $order .= 'END';
 
-        return true;
+        TileController::getResourcesDetails($tile, $resources, $order);
     }
 
     private static function getMaarchParapheurDetails(array &$tile)
@@ -653,11 +507,11 @@ class TileController
         }
 
         $curlResponse = CurlModel::execSimple([
-            'url'           => rtrim($url, '/') . '/rest/documents',
-            'basicAuth'     => ['user' => $userId, 'password' => $password],
-            'headers'       => ['content-type:application/json'],
-            'method'        => 'GET',
-            'queryParams'   => ['userId' => $externalId['maarchParapheur'], 'limit' => 5]
+            'url'         => rtrim($url, '/') . '/rest/documents',
+            'basicAuth'   => ['user' => $userId, 'password' => $password],
+            'headers'     => ['content-type:application/json'],
+            'method'      => 'GET',
+            'queryParams' => ['userId' => $externalId['maarchParapheur'], 'limit' => 5]
         ]);
 
         if ($curlResponse['code'] != '200') {
@@ -698,18 +552,18 @@ class TileController
         if ($tile['parameters']['privilegeId'] == 'admin_users') {
             if (UserController::isRoot(['id' => $GLOBALS['id']])) {
                 $users = UserModel::get([
-                    'select'    => [1],
-                    'where'     => ['status != ?'],
-                    'data'      => ['DEL']
+                    'select' => [1],
+                    'where'  => ['status != ?'],
+                    'data'   => ['DEL']
                 ]);
             } else {
                 $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['id']]);
                 $users = [];
                 if (!empty($entities)) {
                     $users = UserEntityModel::getWithUsers([
-                        'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail'],
-                        'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
-                        'data'      => [$entities, 'DEL']
+                        'select' => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail'],
+                        'where'  => ['users_entities.entity_id in (?)', 'status != ?'],
+                        'data'   => [$entities, 'DEL']
                     ]);
                 }
                 $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail']]);
@@ -880,81 +734,11 @@ class TileController
                 break;
             }
             $order .= "WHEN {$allResources[$i]} THEN {$i} ";
-            $resIds[] = $allResources[$i];
+            $resIds[] = ['res_id' => $allResources[$i]];
         }
         $order .= 'END';
 
-        $resources = [];
-
-        if ($tile['view'] == 'summary') {
-            $tile['resourcesNumber'] = count($allResources);
-        } elseif ($tile['view'] == 'list') {
-            $tile['resources'] = [];
-            if (!empty($resIds)) {
-                $resources = ResModel::get([
-                    'select'  => ['subject', 'creation_date', 'res_id', 'category_id'],
-                    'where'   => ['res_id in (?)'],
-                    'data'    => [$resIds],
-                    'orderBy' => [$order]
-                ]);
-            }
-
-            foreach ($resources as $resource) {
-                if ($resource['category_id'] == 'outgoing') {
-                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
-                } else {
-                    $correspondents = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
-                }
-
-                $tile['resources'][] = [
-                    'resId'          => $resource['res_id'],
-                    'subject'        => $resource['subject'],
-                    'creationDate'   => $resource['creation_date'],
-                    'correspondents' => $correspondents
-                ];
-            }
-        } elseif ($tile['view'] == 'chart') {
-            if (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'status') {
-                $type = 'status';
-            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'destination') {
-                $type = 'destination';
-            } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
-                $type = "date_trunc('day', creation_date)";
-            } else {
-                $type = 'type_id';
-            }
-            if (!empty($resIds)) {
-                $resources = ResModel::get([
-                    'select'    => ["COUNT({$type})", $type],
-                    'where'     => ['res_id in (?)'],
-                    'data'      => [$resIds],
-                    'groupBy'   => [$type],
-                    'orderBy'   => [$type]
-                ]);
-            }
-
-            $tile['resources'] = [];
-            foreach ($resources as $resource) {
-                if ($type == 'status') {
-                    if (!empty($resource['status'])) {
-                        $status = StatusModel::getById(['select' => ['label_status'], 'id' => $resource['status']]);
-                    }
-                    $tile['resources'][] = ['name' => $status['label_status'] ?? '', 'value' => $resource['count']];
-                } elseif ($type == 'destination') {
-                    if (!empty($resource['destination'])) {
-                        $entity = EntityModel::getByEntityId(['select' => ['short_label'], 'entityId' => $resource['destination']]);
-                    }
-                    $tile['resources'][] = ['name' => $entity['short_label'] ?? '', 'value' => $resource['count']];
-                } elseif (!empty($tile['parameters']['chartMode']) && $tile['parameters']['chartMode'] == 'creationDate') {
-                    $date = new \DateTime($resource['date_trunc']);
-                    $date = $date->format('d/m/Y');
-                    $tile['resources'][] = ['name' => $date, 'value' => $resource['count']];
-                } else {
-                    $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
-                    $tile['resources'][] = ['name' => $doctype['description'], 'value' => $resource['count']];
-                }
-            }
-        }
+        TileController::getResourcesDetails($tile, $resIds, $order);
 
         return true;
     }
