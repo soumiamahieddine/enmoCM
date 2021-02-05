@@ -1,11 +1,11 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
--- Model migration script - 20.10 to 21.04                                  --
+-- Model migration script - 20.10 to 21.03                                  --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
-UPDATE parameters SET param_value_string = '21.04.1' WHERE id = 'database_version';
+UPDATE parameters SET param_value_string = '21.03.1' WHERE id = 'database_version';
 
 DROP TABLE IF EXISTS attachment_types;
 CREATE TABLE attachment_types
