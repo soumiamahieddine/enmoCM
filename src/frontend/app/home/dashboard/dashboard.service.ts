@@ -2,8 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
-import { of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
 
 interface Tiles {
     'myLastResources': Tile;
@@ -81,6 +79,7 @@ export class DashboardService {
             icon: 'fa fa-search',
             menus: [
                 'view',
+                'color',
                 'delete'
             ],
             views: [
@@ -237,7 +236,12 @@ export class DashboardService {
     }
 
     getChartModes(charType: string) {
-        return this.charts.filter((chart: any) => chart.type === charType)[0].modes;
+        return this.charts.filter((chart: any) => chart.type === charType)[0].modes.map((chartMode: any) => {
+            return {
+                id: chartMode,
+                label: this.translate.instant('lang.' + chartMode)
+            };
+        });
     }
 
     getColors() {

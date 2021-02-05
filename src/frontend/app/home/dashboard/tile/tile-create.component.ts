@@ -27,6 +27,7 @@ export class TileCreateComponent implements OnInit {
     baskets: any[] = [];
     folders: any[] = [];
     chartTypes: any[] = [];
+    chartModes: any[] = [];
     searchTemplates: any[] = [];
     searchTemplatesControl: FormControl = new FormControl();
 
@@ -96,9 +97,17 @@ export class TileCreateComponent implements OnInit {
     getChartTypes() {
         if (this.chartTypes.length === 0) {
             this.chartTypes = this.dashboardService.getChartTypes();
-            console.log(this.chartTypes);
-
+            this.chartTypes = this.chartTypes.map((type: any) => {
+                return {
+                    ...type,
+                    label : this.translate.instant('lang.chart_' + type.type)
+                };
+            });
         }
+    }
+
+    setChartModes() {
+        this.chartModes = this.dashboardService.getChartModes(this.extraParams.chartType);
     }
 
     getBaskets() {
@@ -250,7 +259,7 @@ export class TileCreateComponent implements OnInit {
         this.extraParams = {
             basketId: data.basketId,
             groupId: data.groupId
-        }
+        };
     }
 
     setMenu(menu: any) {
@@ -259,7 +268,7 @@ export class TileCreateComponent implements OnInit {
         this.tileOtherInfos = {
             icon : menu.style,
             privRoute: menu.route,
-        }
+        };
     }
 
     compareBaskets(basket1: any, basket2: any) {
@@ -294,6 +303,7 @@ export class TileCreateComponent implements OnInit {
             this.getChartTypes();
             this.extraParams['chartType'] = 'pie';
             this.extraParams['chartMode'] = 'doctype';
+            this.setChartModes();
         } else {
             delete this.extraParams.chartMode;
         }
@@ -310,7 +320,8 @@ export class TileCreateComponent implements OnInit {
                 objToSend.id = data.id;
                 objToSend.label = this.tileLabel;
                 objToSend.position = this.position;
-                objToSend = {...objToSend,...this.tileOtherInfos};
+                objToSend.charts = this.dashboardService.getCharts();
+                objToSend = {...objToSend, ...this.tileOtherInfos};
                 this.dialogRef.close(objToSend);
             }),
             catchError((err: any) => {

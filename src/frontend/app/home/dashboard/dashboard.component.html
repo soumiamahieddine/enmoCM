@@ -46,7 +46,7 @@
                 <mat-menu #toolMenuChartTypes="matMenu" [class]="'chartTypeMenu'">
                     <ng-container *ngFor="let chart of tile.charts">
                         <button mat-menu-item [matMenuTriggerFor]="toolMenuChartMode"
-                            [matMenuTriggerData]="{chart: chart}" [title]="'lang.'+ chart.type | translate">
+                            [matMenuTriggerData]="{chart: chart}" [title]="'lang.chart_'+ chart.type | translate">
                             <mat-icon [class]="chart.icon" color="primary"
                                 style="height: auto;width: auto;"></mat-icon>
                         </button>

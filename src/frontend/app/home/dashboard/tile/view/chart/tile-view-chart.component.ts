@@ -43,7 +43,6 @@ export class TileViewChartComponent implements OnInit, AfterViewInit {
         } else {
             this.formatedData = this.resources;
         }
-        console.log(this.formatedData);
     }
 
     ngAfterViewInit(): void { }

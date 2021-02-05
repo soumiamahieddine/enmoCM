@@ -2254,5 +2254,8 @@
     "model": "Modèle",
     "refused": "Refusé",
     "endStatus": "Ce document a été interrompu suite à une action de refus",
-    "noTemplateFound": "Modèle de recherche introuvable"
+    "noTemplateFound": "Modèle de recherche introuvable",
+    "chart_pie": "Diagramme circulaire",
+    "chart_vertical-bar": "Diagramme en bâtons",
+    "chart_line": "Courbe"
 }
