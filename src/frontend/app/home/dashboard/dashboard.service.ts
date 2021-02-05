@@ -85,7 +85,8 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: '/resources/:resId'
+                    route: '/resources/:resId',
+                    viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
                     id: 'summary',
