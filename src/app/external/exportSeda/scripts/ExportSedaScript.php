@@ -101,7 +101,7 @@ class ExportSedaScript
 
             $sedaPackage = ExportSedaTrait::makeSedaPackage([
                 'resource'               => $resourceData,
-                'attachments'            => $attachmentsData[$args['resId']] ?? [],
+                'attachments'            => $attachmentsData[$resId] ?? [],
                 'config'                 => $config,
                 'entity'                 => $entity,
                 'doctype'                => $doctype,
