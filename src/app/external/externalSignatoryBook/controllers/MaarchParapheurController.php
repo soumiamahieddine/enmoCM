@@ -55,7 +55,7 @@ class MaarchParapheurController
 
     public static function getUsers(array $args)
     {
-        $response = CurlModel::execSimple([
+        $response = CurlModel::exec([
             'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/users',
             'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
             'method'    => 'GET'
@@ -395,7 +395,7 @@ class MaarchParapheurController
 
                     $bodyData['linkId'] = $value['res_id_master'];
 
-                    $response = CurlModel::execSimple([
+                    $response = CurlModel::exec([
                         'url'       => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
                         'basicAuth' => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
                         'method'    => 'POST',
@@ -476,7 +476,7 @@ class MaarchParapheurController
 
                     $bodyData['linkId'] = $aArgs['resIdMaster'];
         
-                    $response = CurlModel::execSimple([
+                    $response = CurlModel::exec([
                         'url'       => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
                         'basicAuth' => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
                         'method'    => 'POST',
@@ -513,7 +513,7 @@ class MaarchParapheurController
                 $bodyData['notes'] = ['creator' => trim($sender['firstname'] . ' ' .$sender['lastname']), 'creationDate' => $noteCreationDate, 'value' => $aArgs['note']];
             }
 
-            $response = CurlModel::execSimple([
+            $response = CurlModel::exec([
                 'url'       => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
                 'basicAuth' => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
                 'method'    => 'POST',
@@ -529,7 +529,7 @@ class MaarchParapheurController
 
         $workflowInfos = [];
         foreach ($workflow as $value) {
-            $curlResponse = CurlModel::execSimple([
+            $curlResponse = CurlModel::exec([
                     'url'           => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users/'.$value['userId'],
                     'basicAuth'     => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
                     'headers'       => ['content-type:application/json'],
@@ -597,7 +597,7 @@ class MaarchParapheurController
 
     public static function getUserById(array $args)
     {
-        $response = CurlModel::execSimple([
+        $response = CurlModel::exec([
             'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/users/' . $args['id'],
             'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
             'method'    => 'GET'
@@ -670,7 +670,7 @@ class MaarchParapheurController
 
     public static function getDocumentWorkflow(array $args)
     {
-        $response = CurlModel::execSimple([
+        $response = CurlModel::exec([
             'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/documents/' . $args['documentId'] . '/workflow',
             'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
             'method'    => 'GET'
@@ -681,7 +681,7 @@ class MaarchParapheurController
 
     public static function getDocument(array $args)
     {
-        $response = CurlModel::execSimple([
+        $response = CurlModel::exec([
             'url'       => rtrim($args['config']['data']['url'], '/') . '/rest/documents/' . $args['documentId'] . '/content',
             'basicAuth' => ['user' => $args['config']['data']['userId'], 'password' => $args['config']['data']['password']],
             'method'    => 'GET'
@@ -746,7 +746,7 @@ class MaarchParapheurController
                 }
             }
 
-            $curlResponse = CurlModel::execSimple([
+            $curlResponse = CurlModel::exec([
                 'url'           => rtrim($url, '/') . '/rest/users/'.$aArgs['id'].'/picture',
                 'basicAuth'     => ['user' => $userId, 'password' => $password],
                 'headers'       => ['content-type:application/json'],
@@ -806,7 +806,7 @@ class MaarchParapheurController
                 }
             }
 
-            $curlResponse = CurlModel::execSimple([
+            $curlResponse = CurlModel::exec([
                 'url'           => rtrim($url, '/') . '/rest/users',
                 'basicAuth'     => ['user' => $userId, 'password' => $password],
                 'headers'       => ['content-type:application/json'],
@@ -871,7 +871,7 @@ class MaarchParapheurController
                 }
             }
 
-            $curlResponse = CurlModel::execSimple([
+            $curlResponse = CurlModel::exec([
                 'url'           => rtrim($url, '/') . '/rest/users/'.$body['maarchParapheurUserId'],
                 'basicAuth'     => ['user' => $userId, 'password' => $password],
                 'headers'       => ['content-type:application/json'],
@@ -974,7 +974,7 @@ class MaarchParapheurController
             $userInfo = UserModel::getById(['select' => ['external_id->\'maarchParapheur\' as external_id'], 'id' => $aArgs['id']]);
 
             if (!empty($userInfo['external_id'])) {
-                $curlResponse = CurlModel::execSimple([
+                $curlResponse = CurlModel::exec([
                     'url'           => rtrim($url, '/') . '/rest/users/'.$userInfo['external_id'],
                     'basicAuth'     => ['user' => $userId, 'password' => $password],
                     'headers'       => ['content-type:application/json'],
@@ -1063,7 +1063,7 @@ class MaarchParapheurController
                     }
                 }
 
-                $curlResponse = CurlModel::execSimple([
+                $curlResponse = CurlModel::exec([
                     'url'           => rtrim($url, '/') . '/rest/users/' . $externalId['maarchParapheur'] . '/externalSignatures',
                     'basicAuth'     => ['user' => $userId, 'password' => $password],
                     'headers'       => ['content-type:application/json'],
@@ -1148,7 +1148,7 @@ class MaarchParapheurController
             return $response->withStatus(400)->withJson(['errors' => 'Maarch Parapheur configuration missing']);
         }
 
-        $curlResponse = CurlModel::execSimple([
+        $curlResponse = CurlModel::exec([
             'url'           => rtrim($url, '/') . "/rest/documents/{$externalId['signatureBookId']}/workflow",
             'basicAuth'     => ['user' => $userId, 'password' => $password],
             'headers'       => ['content-type:application/json'],
@@ -1194,7 +1194,7 @@ class MaarchParapheurController
             return false;
         }
 
-        $curlResponse = CurlModel::execSimple([
+        $curlResponse = CurlModel::exec([
             'url'           => rtrim($url, '/') . '/rest/users/' . $args['userId'],
             'basicAuth'     => ['user' => $userId, 'password' => $password],
             'headers'       => ['content-type:application/json'],

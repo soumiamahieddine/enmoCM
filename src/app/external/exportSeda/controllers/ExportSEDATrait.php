@@ -276,7 +276,7 @@ trait ExportSEDATrait
             'filename'    => $args['messageFilename'],
             'schema'      => 'seda2'
         ];
-        $curlResponse = CurlModel::execSimple([
+        $curlResponse = CurlModel::exec([
             'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/archiveTransfer',
             'method'  => 'POST',
             'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
@@ -561,7 +561,7 @@ trait ExportSEDATrait
 
     public static function getAcknowledgement($args = [])
     {
-        $curlResponse = CurlModel::execSimple([
+        $curlResponse = CurlModel::exec([
             'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/message/reference?reference='.urlencode($args['reference']."_Ack"),
             'method'  => 'GET',
             'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),
@@ -580,7 +580,7 @@ trait ExportSEDATrait
 
         $messageId = $curlResponse['response']['messageId'];
 
-        $curlResponse = CurlModel::execSimple([
+        $curlResponse = CurlModel::exec([
             'url'     => rtrim($args['config']['exportSeda']['urlSAEService'], '/') . '/medona/message/'.urlencode($messageId).'/Export',
             'method'  => 'GET',
             'cookie'  => 'LAABS-AUTH=' . urlencode($args['config']['exportSeda']['token']),

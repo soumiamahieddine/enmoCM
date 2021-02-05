@@ -108,7 +108,7 @@ class CurlModel
         return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
     }
 
-    public static function execSimple(array $args)
+    public static function exec(array $args)
     {
         ValidatorModel::notEmpty($args, ['url', 'method']);
         ValidatorModel::stringType($args, ['url', 'method', 'cookie']);
@@ -196,7 +196,7 @@ class CurlModel
                 'moduleId'  => 'curl',
                 'level'     => 'DEBUG',
                 'tableName' => 'curl',
-                'recordId'  => 'execSimple',
+                'recordId'  => 'curl_exec',
                 'eventType' => "Url : {$args['url']} HttpCode : {$code} Errors : {$errors}",
                 'eventId'   => "Response : {$logResponse}"
             ]);

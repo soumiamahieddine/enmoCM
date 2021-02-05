@@ -506,7 +506,7 @@ class TileController
             return ['errors' => 'Maarch Parapheur configuration missing'];
         }
 
-        $curlResponse = CurlModel::execSimple([
+        $curlResponse = CurlModel::exec([
             'url'         => rtrim($url, '/') . '/rest/documents',
             'basicAuth'   => ['user' => $userId, 'password' => $password],
             'headers'     => ['content-type:application/json'],
