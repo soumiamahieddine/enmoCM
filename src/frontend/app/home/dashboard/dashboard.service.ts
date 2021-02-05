@@ -154,7 +154,7 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: ':maarchParapheurUrl/dist/documents/:id',
+                    route: ':maarchParapheurUrl/dist/documents/:resId',
                     viewDocRoute: null
                 },
                 {
