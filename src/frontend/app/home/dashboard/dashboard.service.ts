@@ -224,7 +224,17 @@ export class DashboardService {
     }
 
     getCharts() {
-        return this.charts;
+        return this.charts.map((item: any) => {
+            return {
+                ...item,
+                modes: item.modes.map((chartMode: any) => {
+                    return {
+                        id: chartMode,
+                        label: this.translate.instant('lang.' + chartMode)
+                    };
+                })
+            };
+        });
     }
 
     getChartTypes() {

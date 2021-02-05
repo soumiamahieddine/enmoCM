@@ -2257,5 +2257,6 @@
     "noTemplateFound": "Modèle de recherche introuvable",
     "chart_pie": "Diagramme circulaire",
     "chart_vertical-bar": "Diagramme en bâtons",
-    "chart_line": "Courbe"
+    "chart_line": "Courbe",
+    "chartView": "Vue"
 }

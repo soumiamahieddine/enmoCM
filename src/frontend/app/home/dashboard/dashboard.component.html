@@ -21,7 +21,7 @@
                         <button *ngIf="['view', 'color'].indexOf(menu) === -1" mat-menu-item
                             (click)="launchAction(menu, tile)">{{'lang.'+ menu | translate}}</button>
                         <button *ngIf="menu==='view'" mat-menu-item
-                            [matMenuTriggerFor]="toolMenuView">{{'lang.'+ menu | translate}}</button>
+                            [matMenuTriggerFor]="toolMenuView">{{'lang.chartView' | translate}}</button>
                         <button *ngIf="menu==='color'" mat-menu-item
                             [matMenuTriggerFor]="toolMenuColors">{{'lang.'+ menu | translate}}</button>
                     </ng-container>
@@ -54,9 +54,9 @@
                 </mat-menu>
                 <mat-menu #toolMenuChartMode="matMenu">
                     <ng-template let-chart="chart" matMenuContent>
-                        <button mat-menu-item *ngFor="let mode of chart.modes"
-                            [disabled]="tile.parameters.chartType === chart.type && tile.parameters.chartMode === mode && tile.view==='chart'"
-                            (click)="changeView(tile,'chart',{'chartType': chart.type,'chartMode': mode})">{{'lang.'+ mode | translate}}</button>
+                        <button mat-menu-item *ngFor="let mode of chart.modes | sortBy: 'label'"
+                            [disabled]="tile.parameters.chartType === chart.type && tile.parameters.chartMode === mode.id && tile.view==='chart'"
+                            (click)="changeView(tile,'chart',{'chartType': chart.type,'chartMode': mode.id})">{{mode.label}}</button>
                     </ng-template>
                 </mat-menu>
                 <mat-menu #toolMenuColors="matMenu">
