@@ -57,3 +57,9 @@ CREATE TABLE tiles
     CONSTRAINT tiles_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+INSERT INTO tiles (user_id, type, view, position, color, parameters)
+SELECT id, 'myLastResources', 'list', 1, '#90caf9', '{}' FROM users WHERE status != 'DEL';
+
+INSERT INTO tiles (user_id, type, view, position, color, parameters)
+SELECT id, 'followedMail', 'chart', 0, '#90caf9', '{"chartMode": "status", "chartType": "pie"}' FROM users WHERE status != 'DEL';
