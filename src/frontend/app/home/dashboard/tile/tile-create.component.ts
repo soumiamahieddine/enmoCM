@@ -140,6 +140,10 @@ export class TileCreateComponent implements OnInit {
                 if (!data.isLinkedToMaarchParapheur) {
                     this.notify.error(this.translate.instant('lang.acountNotLinkedTomaarchParapheur'));
                     this.resetData();
+                } else {
+                    this.tileOtherInfos = {
+                        maarchParapheurUrl: data.maarchParapheurUrl
+                    };
                 }
             }),
             catchError((err: any) => {
