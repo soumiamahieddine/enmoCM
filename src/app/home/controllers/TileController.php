@@ -375,6 +375,8 @@ class TileController
         ]);
 
         TileController::getResourcesDetails($tile, $resources);
+
+        return true;
     }
 
     private static function getResourcesDetails(array &$tile, $allResources, $order = '')
