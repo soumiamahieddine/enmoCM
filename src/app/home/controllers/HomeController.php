@@ -112,7 +112,7 @@ class HomeController
                 if ($value->id == "maarchParapheur") {
                     if (!empty($value->url) && !empty($value->userId) && !empty($value->password) && !empty($externalId['maarchParapheur'])) {
                         $isMaarchParapheurConnected = true;
-                        $maarchParapheurUrl = (string)$value->url;
+                        $maarchParapheurUrl = rtrim((string)$value->url, "/");
                     }
                     break;
                 }
