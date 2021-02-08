@@ -158,7 +158,7 @@ export class TileCreateComponent implements OnInit {
                         this.setSearchTemplate(this.searchTemplates[0]);
                         this.searchTemplatesControl.setValue(this.searchTemplates[0]);
                     } else {
-                        this.notify.error(this.translate.instant('lang.nosearchTemplate'));
+                        this.notify.error(this.translate.instant('lang.noSearchTemplate'));
                         this.resetData();
                     }
                 }),

@@ -2258,5 +2258,6 @@
     "chart_pie": "Diagramme circulaire",
     "chart_vertical-bar": "Diagramme en bâtons",
     "chart_line": "Courbe",
-    "chartView": "Vue"
+    "chartView": "Vue",
+    "noSearchTemplate": "Aucun modèle de recherche disponible"
 }
