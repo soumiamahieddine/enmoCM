@@ -658,6 +658,8 @@ class TileController
         if (empty($searchTemplate)) {
             return ['errors' => 'SearchTemplateId is out of perimeter'];
         }
+        ini_set('memory_limit', -1);
+
         $rawQuery = json_decode($searchTemplate[0]['query'], true);
         $query = [];
         foreach ($rawQuery as $value) {
