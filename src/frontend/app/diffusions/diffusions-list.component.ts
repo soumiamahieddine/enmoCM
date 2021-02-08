@@ -554,7 +554,6 @@ export class DiffusionsListComponent implements OnInit {
 
     changeRole(user: any, oldRole: any, newRole: any) {
         if (newRole.id === 'dest') {
-            console.log('dessst');
             this.switchUserWithOldDest(user, oldRole);
         } else {
             this.changeUserRole(user, oldRole, newRole);
@@ -575,7 +574,6 @@ export class DiffusionsListComponent implements OnInit {
     switchUserWithOldDest(user: any, oldRole: any) {
         this.http.get("../rest/users/" + user.itemSerialId + "/entities").pipe(
             map((data: any) => {
-                // data.entities = data.entities.filter((item: any) => item.primary_entity === 'Y').map((entity: any) => entity.id);
                 data.entities = data.entities.map((entity: any) => entity.id);
                 return data;
             }),
@@ -584,7 +582,6 @@ export class DiffusionsListComponent implements OnInit {
                 let isAllowed: boolean = false;
                 let allowedEntitiesIds: number[] = [];
 
-                console.log(data.entities);
                 this.allowedEntities.forEach(allowedEntity => {
                     if (data.entities.indexOf(allowedEntity) > -1) {
                         isAllowed = true;
