@@ -24,14 +24,14 @@ class TileControllerTest extends TestCase
 
     public function testCreate()
     {
-        $GLOBALS['login'] = 'bbain';
+        $GLOBALS['login'] = 'jjane';
         $userInfo         = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id']    = $userInfo['id'];
 
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'tiles',
             'where' => ['user_id = ?'],
-            'data'  => [19]
+            'data'  => [6]
         ]);
 
         $tileController = new \Home\controllers\TileController();
@@ -70,7 +70,7 @@ class TileControllerTest extends TestCase
 
         // Basket
         $aArgs = [
-            'parameters' => ['basketId' => 4, 'groupId' => 2],
+            'parameters' => ['basketId' => 4, 'groupId' => 4],
             'color'     => '#90caf9',
             'position'  => 0,
             'type'      => 'basket',
@@ -176,7 +176,7 @@ class TileControllerTest extends TestCase
 
     public function testGet()
     {
-        $GLOBALS['login'] = 'bbain';
+        $GLOBALS['login'] = 'jjane';
         $userInfo         = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id']    = $userInfo['id'];
 
@@ -210,7 +210,7 @@ class TileControllerTest extends TestCase
 
     public function testGetById()
     {
-        $GLOBALS['login'] = 'bbain';
+        $GLOBALS['login'] = 'jjane';
         $userInfo         = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id']    = $userInfo['id'];
 
@@ -231,9 +231,9 @@ class TileControllerTest extends TestCase
         $this->assertSame('basket', $responseBody['tile']['type']);
         $this->assertSame('list', $responseBody['tile']['view']);
         $this->assertSame(0, $responseBody['tile']['position']);
-        $this->assertSame(19, $responseBody['tile']['user_id']);
+        $this->assertSame(6, $responseBody['tile']['user_id']);
         $this->assertIsArray($responseBody['tile']['parameters']);
-        $this->assertSame(2, $responseBody['tile']['parameters']['groupId']);
+        $this->assertSame(4, $responseBody['tile']['parameters']['groupId']);
         $this->assertSame(4, $responseBody['tile']['parameters']['basketId']);
 
         // Folder
@@ -247,7 +247,7 @@ class TileControllerTest extends TestCase
         $this->assertSame('folder', $responseBody['tile']['type']);
         $this->assertSame('summary', $responseBody['tile']['view']);
         $this->assertSame(1, $responseBody['tile']['position']);
-        $this->assertSame(19, $responseBody['tile']['user_id']);
+        $this->assertSame(6, $responseBody['tile']['user_id']);
         $this->assertIsArray($responseBody['tile']['parameters']);
         $this->assertSame(5, $responseBody['tile']['parameters']['folderId']);
 
@@ -262,7 +262,7 @@ class TileControllerTest extends TestCase
         $this->assertSame('shortcut', $responseBody['tile']['type']);
         $this->assertSame('summary', $responseBody['tile']['view']);
         $this->assertSame(2, $responseBody['tile']['position']);
-        $this->assertSame(19, $responseBody['tile']['user_id']);
+        $this->assertSame(6, $responseBody['tile']['user_id']);
         $this->assertIsArray($responseBody['tile']['parameters']);
         $this->assertSame('adv_search_mlb', $responseBody['tile']['parameters']['privilegeId']);
 
@@ -277,7 +277,7 @@ class TileControllerTest extends TestCase
         $this->assertSame('followedMail', $responseBody['tile']['type']);
         $this->assertSame('chart', $responseBody['tile']['view']);
         $this->assertSame(3, $responseBody['tile']['position']);
-        $this->assertSame(19, $responseBody['tile']['user_id']);
+        $this->assertSame(6, $responseBody['tile']['user_id']);
         $this->assertIsArray($responseBody['tile']['parameters']);
         $this->assertSame('vertical-bar', $responseBody['tile']['parameters']['chartType']);
         $this->assertSame('status', $responseBody['tile']['parameters']['chartMode']);
@@ -293,7 +293,7 @@ class TileControllerTest extends TestCase
         $this->assertSame('myLastResources', $responseBody['tile']['type']);
         $this->assertSame('chart', $responseBody['tile']['view']);
         $this->assertSame(4, $responseBody['tile']['position']);
-        $this->assertSame(19, $responseBody['tile']['user_id']);
+        $this->assertSame(6, $responseBody['tile']['user_id']);
         $this->assertIsArray($responseBody['tile']['parameters']);
         $this->assertSame('pie', $responseBody['tile']['parameters']['chartType']);
         $this->assertSame('destination', $responseBody['tile']['parameters']['chartMode']);
@@ -305,7 +305,7 @@ class TileControllerTest extends TestCase
 
     public function testUpdatePosition()
     {
-        $GLOBALS['login'] = 'bbain';
+        $GLOBALS['login'] = 'jjane';
         $userInfo         = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id']    = $userInfo['id'];
 
@@ -337,7 +337,7 @@ class TileControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $GLOBALS['login'] = 'bbain';
+        $GLOBALS['login'] = 'jjane';
         $userInfo         = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id']    = $userInfo['id'];
 
@@ -367,7 +367,7 @@ class TileControllerTest extends TestCase
         $this->assertSame('externalSignatoryBook', $responseBody['tile']['type']);
         $this->assertSame('list', $responseBody['tile']['view']);
         $this->assertSame(0, $responseBody['tile']['position']);
-        $this->assertSame(19, $responseBody['tile']['user_id']);
+        $this->assertSame(6, $responseBody['tile']['user_id']);
         $this->assertIsArray($responseBody['tile']['parameters']);
 
         $GLOBALS['login'] = 'superadmin';
@@ -377,7 +377,7 @@ class TileControllerTest extends TestCase
 
     public function testDelete()
     {
-        $GLOBALS['login'] = 'bbain';
+        $GLOBALS['login'] = 'jjane';
         $userInfo         = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id']    = $userInfo['id'];
 
