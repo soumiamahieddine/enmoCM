@@ -2259,5 +2259,6 @@
     "chart_vertical-bar": "Diagramme en bâtons",
     "chart_line": "Courbe",
     "chartView": "Vue",
-    "noSearchTemplate": "Aucun modèle de recherche disponible"
+    "noSearchTemplate": "Aucun modèle de recherche disponible",
+    "group": "Groupe"
 }

@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
                     if (!this.functionsService.empty(tmpTile)) {
                         let objTile = {...this.dashboardService.getTile(tmpTile.type), ...tmpTile};
                         if (tmpTile.type === 'shortcut') {
-                            objTile = {...objTile, ...this.initShortcutTile(tmpTile.parameters.privilegeId)};
+                            objTile = {...objTile, ...this.initShortcutTile(tmpTile.parameters)};
                         }
                         objTile.charts = this.dashboardService.getCharts();
                         objTile.label = this.functionsService.empty(objTile.label) ? this.translate.instant('lang.' + objTile.type) : objTile.label;
@@ -86,12 +86,21 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         ).subscribe();
     }
 
-    initShortcutTile(privilegeId: string) {
-        const menu = this.privilegeService.getAdminMenu([privilegeId])[0];
+    initShortcutTile(param: any) {
+        const menu = this.privilegeService.getCurrentUserMenus([param.privilegeId])[0];
+        let route = menu.route;
+        let label = this.translate.instant(menu.label);
+
+        if (param.privilegeId === 'indexing') {
+            const group = menu.groups.find((group: any) => group.id === param.groupId);
+            route = `/indexing/${group.id}`;
+            label = `${label} (${group.label})`;
+        }
+
         return {
             icon : menu.style,
-            privRoute: menu.route,
-            label: this.translate.instant(menu.label)
+            privRoute: route,
+            label: label
         };
     }
 
