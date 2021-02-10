@@ -16,7 +16,7 @@ foreach ($customs as $custom) {
 
     $migrated = 0;
 
-    $actionsToMigrate = ['sendToRecordManagementAction', 'sendExternalSignatoryBookAction', 'sendSignatureBookAction', 'continueVisaCircuitAction'];
+    $actionsToMigrate = ['sendExternalSignatoryBookAction', 'sendSignatureBookAction', 'continueVisaCircuitAction'];
 
     $actions = \Action\models\ActionModel::get([
         'select' => ['id', 'parameters', 'id_status'],
