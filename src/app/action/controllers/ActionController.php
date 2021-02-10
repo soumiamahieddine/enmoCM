@@ -74,14 +74,7 @@ class ActionController
 
         $action['statuses'] = StatusModel::get();
         array_unshift($action['statuses'], ['id' => '_NOSTATUS_', 'label_status' => _UNCHANGED]);
-        $action['actionPages'] = ActionModel::getActionPages();
         $action['keywordsList'] = ActionModel::getKeywords();
-
-        foreach ($action['actionPages'] as $actionPage) {
-            if ($actionPage['component'] == $action['action']['component']) {
-                $action['action']['actionPageId'] = $actionPage['id'];
-            }
-        }
 
         $action['action']['parameters'] = json_decode($action['action']['parameters'], true);
 
@@ -102,13 +95,6 @@ class ActionController
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
-        $actionPages = ActionModel::getActionPages();
-        foreach ($actionPages as $actionPage) {
-            if ($actionPage['id'] == $body['actionPageId']) {
-                $body['action_page'] = $actionPage['id'];
-                $body['component'] = $actionPage['component'];
-            }
-        }
         if (empty($body['action_page'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
         }
@@ -189,13 +175,6 @@ class ActionController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        $actionPages = ActionModel::getActionPages();
-        foreach ($actionPages as $actionPage) {
-            if ($actionPage['id'] == $body['actionPageId']) {
-                $body['action_page'] = $actionPage['id'];
-                $body['component'] = $actionPage['component'];
-            }
-        }
         if (empty($body['action_page'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
         }
@@ -352,7 +331,6 @@ class ActionController
 
         $obj['statuses'] = StatusModel::get();
         array_unshift($obj['statuses'], ['id'=>'_NOSTATUS_','label_status'=> _UNCHANGED]);
-        $obj['actionPages'] = ActionModel::getActionPages();
         $obj['keywordsList'] = ActionModel::getKeywords();
         
         return $response->withJson($obj);

@@ -26,6 +26,7 @@ import { FiltersListService } from '@service/filtersList.service';
 import { CriteriaSearchService } from '@service/criteriaSearch.service';
 import { FoldersService } from './folder/folders.service';
 import { PrivilegeService } from '@service/privileges.service';
+import { ActionPagesService } from '@service/actionPages.service';
 import { ActionsService } from './actions/actions.service';
 
 import { AppComponent } from './app.component';
@@ -342,6 +343,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         FoldersService,
         ActionsService,
         PrivilegeService,
+        ActionPagesService,
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: MyHammerConfig

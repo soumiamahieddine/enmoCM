@@ -172,7 +172,6 @@ class ActionsControllerTest extends TestCase
         $this->assertNotNull($responseBody->action);
         $this->assertNotNull($responseBody->categoriesList);
         $this->assertNotNull($responseBody->statuses);
-        $this->assertNotNull($responseBody->actionPages);
         $this->assertNotNull($responseBody->keywordsList);
     }
 }
