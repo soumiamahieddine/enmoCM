@@ -556,7 +556,10 @@ class TileController
     private static function getShortcutDetails(array &$tile)
     {
         $tile['resourcesNumber'] = null;
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => $tile['parameters']['privilegeId'], 'userId' => $GLOBALS['id']])) {
+
+        if (($tile['parameters']['privilegeId'] == 'indexing' && !PrivilegeController::canIndex(['userId' => $GLOBALS['id']])) ||
+            ($tile['parameters']['privilegeId'] != 'indexing' && !PrivilegeController::hasPrivilege(['privilegeId' => $tile['parameters']['privilegeId'], 'userId' => $GLOBALS['id']]))
+        ) {
             return ['errors' => 'Service forbidden'];
         }
         if ($tile['parameters']['privilegeId'] == 'admin_users') {
