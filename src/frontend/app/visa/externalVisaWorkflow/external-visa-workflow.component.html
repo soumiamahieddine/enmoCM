@@ -12,11 +12,11 @@
             {{'lang.cannotAddVisaCircuit' | translate}}
         </div>
         <mat-list-item disableRipple *ngFor="let diffusion of visaWorkflow.items;let i=index" cdkDrag
-            class="columns workflow" [cdkDragDisabled]="!canManageUser(diffusion, i)"
-            [class.notDraggable]="!canManageUser(diffusion, i)" [class.notEditable]="!adminMode"
+            class="columns workflow" [cdkDragDisabled]="!canManageUser()"
+            [class.notDraggable]="!canManageUser()" [class.notEditable]="!adminMode"
             [class.processed]="diffusion.process_date != null && diffusion.status === 'VAL'"
             [class.interrupt]="(diffusion.process_date != null && diffusion.status !== 'VAL') || diffusion.status === 'END'">
-            <mat-icon *ngIf="(getCurrentVisaUserIndex() === i && !adminMode || target === 'signatureBook') && diffusion.status !== 'END'"
+            <mat-icon *ngIf="(getCurrentVisaUserIndex() === i && !adminMode) && diffusion.status !== 'END'"
                 class="fa fa-chevron-right fa-2x" mat-list-icon color="accent">
             </mat-icon>
             <mat-icon class="fa fa-2x" [class.avatar]="!functions.empty(diffusion.picture)"
