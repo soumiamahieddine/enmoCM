@@ -95,10 +95,6 @@ class ActionController
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
-        if (empty($body['action_page'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
-        }
-
         $requiredFields = [];
         $parameters = [];
         if (!empty($body['parameters'])) {
@@ -166,21 +162,17 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $body = $request->getParsedBody();
+        $body       = $request->getParsedBody();
         $body['id'] = $args['id'];
 
-        $body    = $this->manageValue($body);
+        $body   = $this->manageValue($body);
         $errors = $this->control($body, 'update');
         if (!empty($errors)) {
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        if (empty($body['action_page'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
-        }
-
         $requiredFields = [];
-        $parameters = [];
+        $parameters     = [];
         if (!empty($body['parameters'])) {
             $parameters = $body['parameters'];
 
@@ -304,7 +296,7 @@ class ActionController
             !Validator::length(1, 255)->validate($aArgs['label_action'])) {
             $errors[] = 'Invalid label action';
         }
-        if (!Validator::stringType()->notEmpty()->validate($aArgs['actionPageId'])) {
+        if (!Validator::stringType()->notEmpty()->validate($aArgs['action_page'])) {
             $errors[] = 'Invalid page action';
         }
 
