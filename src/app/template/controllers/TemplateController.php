@@ -204,6 +204,7 @@ class TemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $body['template_id'] = $aArgs['id'];
         if ($template['template_target'] == 'acknowledgementReceipt' && !empty($body['entities'])) {
             $checkEntities = TemplateModel::checkEntities(['data' => $body]);
             if (!empty($checkEntities)) {
