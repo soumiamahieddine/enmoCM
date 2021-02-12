@@ -48,9 +48,11 @@ class ContactGroupController
         }
         $contactsGroups = ContactGroupModel::get(['where' => $where, 'data' => $data]);
         foreach ($contactsGroups as $key => $contactsGroup) {
+            $correspondents = ContactGroupListModel::get(['select' => ['COUNT(1)'], 'where' => ['contacts_groups_id = ?'], 'data' => [$contactsGroup['id']]]);
+
             $contactsGroups[$key]['labelledOwner']      = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-            $contactsGroups[$key]['nbCorrespondents']   = ContactGroupModel::getListById(['id' => $contactsGroup['id'], 'select' => ['COUNT(1)']])[0]['count'];
             $contactsGroups[$key]['entities']           = json_decode($contactsGroup['entities']);
+            $contactsGroups[$key]['nbCorrespondents']   = $correspondents[0]['count'];
         }
         
         return $response->withJson(['contactsGroups' => $contactsGroups]);
@@ -65,7 +67,8 @@ class ContactGroupController
         $contactsGroup = ContactGroupModel::getById(['id' => $args['id']]);
 
         $contactsGroup['labelledOwner']     = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        $contactsGroup['correspondents']    = ContactGroupController::getFormattedListById(['id' => $args['id']])['list'];
+        //TODO
+//        $contactsGroup['correspondents']    = ContactGroupController::getFormattedListById(['id' => $args['id']])['list'];
         $contactsGroup['nbCorrespondents']  = count($contactsGroup['contacts']);
         $contactsGroup['entities']          = json_decode($contactsGroup['entities'], true);
 
@@ -202,7 +205,7 @@ class ContactGroupController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id'], 'canUpdate' => true])) {
             return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
@@ -217,74 +220,98 @@ class ContactGroupController
             'moduleId'  => 'contact',
             'eventId'   => 'contactsGroupSuppression',
         ]);
-        
+
         return $response->withStatus(204);
     }
 
-    public function addContacts(Request $request, Response $response, array $aArgs)
+    public function addCorrespondents(Request $request, Response $response, array $args)
     {
-        $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
-        if (empty($contactsGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
-        if ($contactsGroup['owner'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        //TODO check privilege update contacts dans un groupement
 
-        $data = $request->getParams();
-        $check = Validator::arrayType()->notEmpty()->validate($data['contacts']);
-        if (!$check) {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['correspondents'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $rawList = ContactGroupModel::getListById(['select' => ['contact_id'], 'id' => $aArgs['id']]);
-        $list = array_column($rawList, 'contact_id');
+        $rawList = ContactGroupListModel::get(['select' => ['correspondent_id', 'correspondent_type'], 'where' => ['contacts_groups_id = ?'], 'data' => [$args['id']]]);
+        $correspondents = [
+            'contacts'  => [],
+            'users'     => [],
+            'entities'  => []
+        ];
+        foreach ($rawList as $value) {
+            $correspondents["{$value['correspondent_type']}s"][] = $value['correspondent_id'];
+        }
 
-        foreach ($data['contacts'] as $contactId) {
-            if (!in_array($contactId, $list)) {
-                ContactGroupModel::addContact(['id' => $aArgs['id'], 'contactId' => $contactId]);
+        foreach ($body['correspondents'] as $correspondent) {
+            if ($correspondent['type'] == 'contact' && !in_array($correspondent['id'], $correspondents['contacts'])) {
+                ContactGroupListModel::create([
+                    'contacts_groups_id'    => $args['id'],
+                    'correspondent_id'      => $correspondent['id'],
+                    'correspondent_type'    => 'contact'
+                ]);
+            } elseif ($correspondent['type'] == 'user' && !in_array($correspondent['id'], $correspondents['users'])) {
+                ContactGroupListModel::create([
+                    'contacts_groups_id'    => $args['id'],
+                    'correspondent_id'      => $correspondent['id'],
+                    'correspondent_type'    => 'user'
+                ]);
+            } elseif ($correspondent['type'] == 'entity' && !in_array($correspondent['id'], $correspondents['entities'])) {
+                ContactGroupListModel::create([
+                    'contacts_groups_id'    => $args['id'],
+                    'correspondent_id'      => $correspondent['id'],
+                    'correspondent_type'    => 'entity'
+                ]);
             }
         }
 
         HistoryController::add([
             'tableName' => 'contacts_groups_lists',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'ADD',
-            'info'      => _CONTACTS_GROUP_LIST_ADDED . " : {$contactsGroup['label']}",
+            'info'      => _CONTACTS_GROUP_LIST_ADDED ,
             'moduleId'  => 'contact',
             'eventId'   => 'contactsGroupListCreation',
         ]);
 
-        $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
+        //TODO
+//        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
 
-        return $response->withJson(['contactsGroup' => $contactsGroup]);
+        return $response->withJson(['contactsGroup' => []]);
     }
 
-    public function deleteContact(Request $request, Response $response, array $aArgs)
+    public function deleteCorrespondent(Request $request, Response $response, array $args)
     {
-        $contactsGroup = ContactGroupModel::getById(['select' => ['owner', 'label'], 'id' => $aArgs['id']]);
-        if (empty($contactsGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
-        if ($contactsGroup['owner'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        //TODO check privilege update contacts dans un groupement
+        $body = $request->getParsedBody();
+
+        if (!Validator::intVal()->notEmpty()->validate($body['correspondentId'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body correspondentId is empty or not an integer']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['correspondentType'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body correspondentType is empty or not a string']);
         }
 
-        ContactGroupModel::deleteContact(['id' => $aArgs['id'], 'contactId' => $aArgs['contactId']]);
+        ContactGroupListModel::delete(['where' => ['contacts_groups_id = ?', 'correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], $body['correspondentId'], $body['correspondentType']]]);
 
         HistoryController::add([
             'tableName' => 'contacts_groups_lists',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'DEL',
-            'info'      => _CONTACTS_GROUP_LIST_DELETED . " : {$contactsGroup['label']}",
+            'info'      => _CONTACTS_GROUP_LIST_DELETED,
             'moduleId'  => 'contact',
             'eventId'   => 'contactsGroupListSuppression',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withStatus(204);
     }
 
     public static function getFormattedListById(array $aArgs)

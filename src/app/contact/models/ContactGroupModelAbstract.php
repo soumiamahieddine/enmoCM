@@ -116,36 +116,6 @@ abstract class ContactGroupModelAbstract
         return $aList;
     }
 
-    public static function addContact(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'contactId']);
-        ValidatorModel::intVal($aArgs, ['id', 'contactId']);
-
-        DatabaseModel::insert([
-            'table'         => 'contacts_groups_lists',
-            'columnsValues' => [
-                'contacts_groups_id' => $aArgs['id'],
-                'contact_id'         => $aArgs['contactId']
-            ]
-        ]);
-
-        return true;
-    }
-
-    public static function deleteContact(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'contactId']);
-        ValidatorModel::intVal($aArgs, ['id', 'contactId']);
-
-        DatabaseModel::delete([
-            'table' => 'contacts_groups_lists',
-            'where' => ['contacts_groups_id = ?', 'contact_id = ?'],
-            'data'  => [$aArgs['id'], $aArgs['contactId']]
-        ]);
-
-        return true;
-    }
-
     public static function deleteByContactId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contactId']);

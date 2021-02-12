@@ -309,8 +309,8 @@ class AutoCompleteController
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $queryParams['search'],
                 'fields'        => $fields,
-                'where'         => ['(public = ? OR owner = ?)'],
-                'data'          => [true, $GLOBALS['id']],
+                'where'         => ['owner = ?'],
+                'data'          => [$GLOBALS['id']],
                 'fieldsNumber'  => 1,
             ]);
 
