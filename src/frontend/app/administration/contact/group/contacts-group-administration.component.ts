@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
 import { HeaderService } from '@service/header.service';
 import { FormControl } from '@angular/forms';
-import { debounceTime, switchMap, distinctUntilChanged, filter, tap, map, catchError } from 'rxjs/operators';
+import { debounceTime, switchMap, distinctUntilChanged, filter, tap, map, catchError, takeUntil, startWith } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
@@ -14,15 +14,15 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { AppService } from '@service/app.service';
 import { MaarchFlatTreeComponent } from '@plugins/tree/maarch-flat-tree.component';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { of } from 'rxjs';
-
-declare var $: any;
+import { merge, Observable, of, Subject } from 'rxjs';
+import { ContactService } from '@service/contact.service';
 
 @Component({
     templateUrl: 'contacts-group-administration.component.html',
     styleUrls: [
         'contacts-group-administration.component.scss'
-    ]
+    ],
+    providers: [ContactService]
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
 
@@ -63,44 +63,35 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     ];
 
     creationMode: boolean;
-    contactsGroup: any = {};
-    nbCorrespondents: number;
+    contactsGroup: any = {
+        entities: []
+    };
+    nbLinkedCorrespondents: number;
+    nbFilteredLinkedCorrespondents: number;
 
     loading: boolean = false;
+
+    relatedCorrespondents: any = [];
+    loadingCorrespondents: boolean = false;
+    loadingLinkedCorrespondents: boolean = false;
+    savingCorrespondents: boolean = false;
     initAutoCompleteContact = true;
 
-    searchTerm: FormControl = new FormControl();
     searchResult: any = [];
 
-    displayedColumns = ['select', 'type', 'contact', 'address'];
+    displayedColumns = ['type', 'name', 'address'];
     displayedColumnsAdded = ['type', 'contact', 'address', 'actions'];
     dataSource: any;
-    dataSourceLinkedCorrespondents: any;
+    // dataSourceLinkedCorrespondents: any;
+    dataSourceLinkedCorrespondents: CorrespondentListHttpDao | null;
     selection = new SelectionModel<Element>(true, []);
+    private destroy$ = new Subject<boolean>();
+    filtersChange = new EventEmitter();
+    filterInputControl = new FormControl();
 
-    @ViewChild('paginatorContactList', { static: true }) paginator: MatPaginator;
     @ViewChild('paginatorLinkedCorrespondents', { static: false }) paginatorLinkedCorrespondents: MatPaginator;
     @ViewChild('sortLinkedCorrespondents', { static: false }) sortLinkedCorrespondents: MatSort;
     @ViewChild('maarchTree', { static: true }) maarchTree: MaarchFlatTreeComponent;
-
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    toggleAll() {
-        this.dataSource.data.forEach((row: any) => {
-            if (!$('#check_' + row.id + '-input').is(':disabled')) {
-                this.selection.select(row.id);
-            }
-        });
-        if (this.selection.selected.length > 0) {
-            this.saveContactsList();
-        }
-    }
-
-    applyFilter(filterValue: string) {
-        this.dataSource = null;
-        filterValue = filterValue.trim();
-        filterValue = filterValue.toLowerCase();
-        this.dataSourceLinkedCorrespondents.filter = filterValue;
-    }
 
     constructor(
         public translate: TranslateService,
@@ -110,52 +101,45 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
-        private viewContainerRef: ViewContainerRef
-    ) {
-        this.searchTerm.valueChanges.pipe(
-            debounceTime(500),
-            filter(value => value.length > 2),
-            distinctUntilChanged(),
-            switchMap(data => this.http.get('../rest/autocomplete/contacts', { params: { 'search': data } }))
-        ).subscribe((response: any) => {
-            this.searchResult = response;
-            this.dataSource = new MatTableDataSource(this.searchResult);
-            this.dataSource.paginator = this.paginator;
-            // this.dataSource.sort      = this.sortContactList;
-        });
-    }
+        public contactService: ContactService,
+        private viewContainerRef: ViewContainerRef,
+    ) { }
 
     ngOnInit(): void {
         this.loading = true;
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
         this.route.params.subscribe(params => {
-
             if (typeof params['id'] === 'undefined') {
+                this.initTree();
                 this.headerService.setHeader(this.translate.instant('lang.contactGroupCreation'));
-
                 this.creationMode = true;
-                this.contactsGroup.public = false;
                 this.loading = false;
             } else {
-
+                this.headerService.setHeader(this.translate.instant('lang.contactsGroupModification'));
                 this.creationMode = false;
-
-                this.http.get('../rest/contactsGroups/' + params['id'])
-                    .subscribe((data: any) => {
-                        this.contactsGroup = data.contactsGroup;
-                        this.headerService.setHeader(this.translate.instant('lang.contactsGroupModification'), this.contactsGroup.label);
-                        this.nbCorrespondents = this.contactsGroup.nbCorrespondentss;
-                        this.dataSourceLinkedCorrespondents = new MatTableDataSource(this.contactsGroup.contacts);
-                        this.loading = false;
-                        setTimeout(() => {
-                            this.dataSourceLinkedCorrespondents.paginator = this.paginatorLinkedCorrespondents;
-                            this.dataSourceLinkedCorrespondents.sort = this.sortLinkedCorrespondents;
-                        }, 0);
-                    });
-                this.initTree();
+                this.getContactGroup(params['id']);
             }
         });
+    }
+
+    getContactGroup(contactGroupId: number) {
+        this.http.get('../rest/contactsGroups/' + contactGroupId).pipe(
+            tap((data: any) => {
+                this.contactsGroup = data.contactsGroup;
+                this.maarchTree.initData(data.entities);
+                this.headerService.setHeader(this.translate.instant('lang.contactsGroupModification'), this.contactsGroup.label);
+                this.loading = false;
+                setTimeout(() => {
+                    this.initRelatedCorrespondentList();
+                    this.initAutocompleteContacts();
+                }, 0);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     initTree() {
@@ -192,39 +176,121 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         ).subscribe();
     }
 
+    initRelatedCorrespondentList() {
+        this.dataSourceLinkedCorrespondents = new CorrespondentListHttpDao(this.http);
+        this.sortLinkedCorrespondents.sortChange.subscribe(() => this.paginatorLinkedCorrespondents.pageIndex = 0);
 
-    searchContact(search: string) {
-        this.http.get('../rest/autocomplete/contacts', { params: { 'search': search } }).pipe(
+        // When list is refresh (sort, page, filters)
+        merge(this.sortLinkedCorrespondents.sortChange, this.paginatorLinkedCorrespondents.page, this.filtersChange)
+            .pipe(
+                takeUntil(this.destroy$),
+                startWith({}),
+                switchMap(() => {
+                    this.loadingLinkedCorrespondents = true;
+                    return this.dataSourceLinkedCorrespondents!.getRepoIssues(
+                        this.sortLinkedCorrespondents.active, this.sortLinkedCorrespondents.direction, this.paginatorLinkedCorrespondents.pageIndex, '../rest/contactsGroups/' + this.contactsGroup.id + '/correspondents', this.filterInputControl.value);
+                }),
+                map(data => {
+                    this.loadingLinkedCorrespondents = false;
+                    // data = this.processPostData(data);
+                    this.nbLinkedCorrespondents = data.countAll;
+                    this.nbFilteredLinkedCorrespondents = data.count;
+                    return data.correspondents;
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    this.loadingLinkedCorrespondents = false;
+                    return of(false);
+                })
+            ).subscribe(data => this.relatedCorrespondents = data);
+            // ).subscribe(data => this.relatedCorrespondents = []);
+
+    }
+
+    initAutocompleteContacts() {
+        this.filterInputControl = new FormControl();
+        this.filterInputControl.valueChanges
+            .pipe(
+                tap((value) => {
+                    this.dataSource = null;
+                    if (value.length === 0) {
+                        this.paginatorLinkedCorrespondents.pageIndex = 0;
+                        this.refreshDao();
+                    }
+                }),
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                tap((data) => {
+                    this.paginatorLinkedCorrespondents.pageIndex = 0;
+                    this.refreshDao();
+                }),
+            ).subscribe();
+    }
+
+    refreshDao() {
+        this.filtersChange.emit();
+    }
+
+    searchContact(search: string, event: Event, trigger: MatAutocompleteTrigger) {
+        this.loadingCorrespondents = true;
+        this.http.get('../rest/autocomplete/correspondents', { params: { 'limit': '1000', 'search': search } }).pipe(
             tap((data: any) => {
-                this.searchResult = data;
+                this.searchResult = data.map((contact: any) => {
+                    return {
+                        id: contact.id,
+                        type: contact.type,
+                        name: this.contactService.formatContact(contact),
+                        address: this.contactService.formatContactAddress(contact),
+                    };
+                });
                 this.dataSource = new MatTableDataSource(this.searchResult);
-                this.dataSource.paginator = this.paginator;
+                this.loadingCorrespondents = false;
+                setTimeout(() => {
+                    trigger.openPanel();
+                }, 100);
             })
         ).subscribe();
     }
 
+    selectEntities(entities: any[]) {
+        const formatedEntities = entities.map((entity: any) => entity.id);
+        this.contactsGroup.entities = [...this.contactsGroup.entities, ...formatedEntities];
+        this.contactsGroup.entities = this.contactsGroup.entities.filter((entity: any, index: number) => this.contactsGroup.entities.indexOf(entity) === index);
+    }
+
+    deselectEntities(entities: any[]) {
+        const formatedEntities = entities.map((entity: any) => entity.id);
+        this.contactsGroup.entities = this.contactsGroup.entities.filter((entity: any) => formatedEntities.indexOf(entity) === -1);
+    }
+
     saveContactsList(): void {
-        this.http.post('../rest/contactsGroups/' + this.contactsGroup.id + '/contacts', { 'contacts': this.selection.selected })
+        this.savingCorrespondents = true;
+        this.http.post('../rest/contactsGroups/' + this.contactsGroup.id + '/correspondents', { 'correspondents': this.formatCorrespondents() })
             .subscribe((data: any) => {
                 this.notify.success(this.translate.instant('lang.contactAdded'));
-                this.nbCorrespondents = this.nbCorrespondents + this.selection.selected.length;
                 this.selection.clear();
-                this.contactsGroup = data.contactsGroup;
-                setTimeout(() => {
-                    this.dataSourceLinkedCorrespondents = new MatTableDataSource(this.contactsGroup.contacts);
-                    this.dataSourceLinkedCorrespondents.paginator = this.paginatorLinkedCorrespondents;
-                    this.dataSourceLinkedCorrespondents.sort = this.sortLinkedCorrespondents;
-                }, 0);
+                this.savingCorrespondents = false;
+                this.refreshDao();
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    formatCorrespondents() {
+        return this.selection.selected.map((correspondent: any) => {
+            return {
+                type: correspondent.type,
+                id: correspondent.id
+            };
+        });
     }
 
     onSubmit() {
         if (this.creationMode) {
             this.http.post('../rest/contactsGroups', this.contactsGroup)
                 .subscribe((data: any) => {
-                    this.router.navigate(['/administration/contacts/contacts-groups/' + data.contactsGroup]);
+                    this.router.navigate(['/administration/contacts/contacts-groups/' + data.id]);
                     this.notify.success(this.translate.instant('lang.contactsGroupAdded'));
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -245,37 +311,23 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         const r = confirm(this.translate.instant('lang.reallyWantToDeleteContactFromGroup'));
 
         if (r) {
-            this.removeContact(this.contactsGroup.contacts[row], row);
+            this.removeContact(this.relatedCorrespondents[row], row);
         }
     }
 
     removeContact(contact: any, row: any) {
         this.http.delete('../rest/contactsGroups/' + this.contactsGroup.id + '/contacts/' + contact['id'])
             .subscribe(() => {
-                const lastElement = this.contactsGroup.contacts.length - 1;
-                this.contactsGroup.contacts[row] = this.contactsGroup.contacts[lastElement];
-                this.contactsGroup.contacts[row].position = row;
-                this.contactsGroup.contacts.splice(lastElement, 1);
-                this.nbCorrespondents = this.nbCorrespondents - 1;
-                this.dataSourceLinkedCorrespondents = new MatTableDataSource(this.contactsGroup.contacts);
-                this.dataSourceLinkedCorrespondents.paginator = this.paginatorLinkedCorrespondents;
-                this.dataSourceLinkedCorrespondents.sort = this.sortLinkedCorrespondents;
                 this.notify.success(this.translate.instant('lang.contactDeletedFromGroup'));
+                this.refreshDao();
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
     }
 
-    launchLoading() {
-        if (this.searchTerm.value.length > 2) {
-            this.dataSource = null;
-            this.initAutoCompleteContact = false;
-        }
-    }
-
     isInGrp(contact: any): boolean {
         let isInGrp = false;
-        this.contactsGroup.contacts.forEach((row: any) => {
+        this.relatedCorrespondents.forEach((row: any) => {
             if (row.id == contact.id) {
                 isInGrp = true;
             }
@@ -283,9 +335,20 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         return isInGrp;
     }
 
+    toggleAll() {
+        this.dataSource.data.forEach((row: any) => {
+            if (!this.isInGrp(row)) {
+                this.selection.select(row);
+            }
+        });
+        if (this.selection.selected.length > 0) {
+            this.saveContactsList();
+        }
+    }
+
     toggleCorrespondent(element: any) {
-        if (!$('#check_' + element.id + '-input').is(':disabled')) {
-            this.selection.toggle(element.id);
+        if (!this.isInGrp(element)) {
+            this.selection.toggle(element);
             this.saveContactsList();
         }
     }
@@ -295,5 +358,22 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         setTimeout(() => {
             trigger.openPanel();
         }, 100);
+    }
+}
+export interface CorrespondentList {
+    correspondents: any[];
+    count: number;
+    countAll: number;
+}
+export class CorrespondentListHttpDao {
+
+    constructor(private http: HttpClient) { }
+
+    getRepoIssues(sort: string, order: string, page: number, href: string, search: string): Observable<CorrespondentList> {
+
+        let offset = page * 10;
+        const requestUrl = `${href}?limit=10&offset=${offset}&order=${order}&orderBy=${sort}&search=${search}`;
+
+        return this.http.get<CorrespondentList>(requestUrl);
     }
 }

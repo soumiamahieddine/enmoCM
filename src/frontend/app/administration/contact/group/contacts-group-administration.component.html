@@ -29,24 +29,22 @@
                 </div>
                 <mat-card *ngIf="!loading" class="card-app-content">
                     <form class="form-horizontal" (ngSubmit)="onSubmit()" #contactsGroupFormUp="ngForm">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <mat-form-field>
-                                    <input matInput [(ngModel)]="contactsGroup.label" required name="label" id="label"
-                                        title="{{'lang.label' | translate}}" type="text"
-                                        placeholder="{{'lang.label' | translate}}" maxlength="32">
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <mat-form-field>
-                                    <input matInput [(ngModel)]="contactsGroup.description" required name="description"
-                                        id="description" title="{{'lang.description' | translate}}" type="text"
-                                        placeholder="{{'lang.description' | translate}}" maxlength="255">
-                                </mat-form-field>
-                            </div>
-                        </div>
+                        <mat-form-field *ngIf="!creationMode">
+                            <input matInput [(ngModel)]="contactsGroup.labelledOwner" name="labelledOwner" id="labelledOwner"
+                                placeholder="{{'lang.owner' | translate}}"
+                                title="{{'lang.owner' | translate}}" type="text" required disabled>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="contactsGroup.label" required name="label" id="label"
+                                title="{{'lang.label' | translate}}" type="text"
+                                placeholder="{{'lang.label' | translate}}" maxlength="32">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput [(ngModel)]="contactsGroup.description" required name="description"
+                                id="description" title="{{'lang.description' | translate}}" type="text"
+                                placeholder="{{'lang.description' | translate}}" maxlength="255">
+                        </mat-form-field>
+
                         <!--<div class="form-group">
                             <div class="col-sm-6" style="text-align:center;">
                                 <mat-slide-toggle name="public" title="{{'lang.contactsGroupDesc' | translate}}" id="public"
@@ -54,36 +52,40 @@
                                     [checked]="contactsGroup.public">{{'lang.public' | translate}}</mat-slide-toggle>
                             </div>
                         </div>-->
-                        <div class="form-group">
-                            <div class="col-sm-12" style="text-align:center;">
-                                <button mat-raised-button color="primary" type="submit"
-                                    [disabled]="!contactsGroupFormUp.form.valid">{{'lang.save' | translate}}</button>
-                            </div>
+                        <div style="text-align:center;">
+                            <button mat-raised-button color="primary" type="submit"
+                                [disabled]="!contactsGroupFormUp.form.valid">{{'lang.save' | translate}}</button>
                         </div>
                     </form>
-                    <div class="formType">
+                    <div class="formType" *ngIf="!creationMode">
                         <div class="formType-title">
-                            {{nbCorrespondents}} {{'lang.relatedCorrespondents' | translate}}&nbsp;<span *ngIf="dataSourceLinkedCorrespondents.filteredData.length !== dataSourceLinkedCorrespondents.data.length" style="font-weight: normal;font-style: italic;color:#666;">{{dataSourceLinkedCorrespondents.filteredData.length}} affiché(s)</span> : 
+                            {{nbLinkedCorrespondents}} {{'lang.relatedCorrespondents' | translate}}&nbsp;<span
+                                *ngIf="nbLinkedCorrespondents !== nbFilteredLinkedCorrespondents"
+                                style="font-weight: normal;font-style: italic;color:#666;">{{nbFilteredLinkedCorrespondents}}
+                                affiché(s)</span> :
                         </div>
                         <div style="width: 100%;">
                             <div class="row" style="margin:0px;">
                                 <div class="col-md-6 col-xs-6">
                                     <mat-form-field>
                                         <input matInput #filterUser #trigger="matAutocompleteTrigger"
-                                            (keyup)="applyFilter($event.target.value)"
+                                            [formControl]="filterInputControl"
                                             placeholder="{{'lang.filterBy' | translate}} / {{'lang.linkContact' | translate}}"
                                             [matAutocomplete]="auto">
                                         <button mat-button *ngIf="filterUser.value" matSuffix mat-icon-button
-                                            aria-label="Clear" (click)="applyFilter(''); filterUser.value = ''"
+                                            aria-label="Clear" (click)="filterInputControl.reset('')"
                                             [title]="'lang.clearFilter' | translate">
                                             <mat-icon class="fas fa-times" style="color:#B3B3B3"></mat-icon>
                                         </button>
-                                        <mat-autocomplete #auto="matAutocomplete" class="test"
+                                        <mat-autocomplete #auto="matAutocomplete" class="addCorrespondentAC"
                                             [panelWidth]="(dataSource && dataSource.data.length > 0) ? '900px' : undefined">
                                             <mat-option *ngIf="filterUser.value !== '' && !dataSource"
-                                                (click)="searchContact(filterUser.value);open($event,trigger)"
+                                                (click)="searchContact(filterUser.value,$event,trigger);open($event,trigger)"
                                                 [value]="filterUser.value" style="color:#666">
                                                 Cliquez ici pour rechercher <b>{{filterUser.value}}</b> à associer.
+                                                <mat-progress-bar *ngIf="loadingCorrespondents" mode="indeterminate"
+                                                    style="position: absolute;bottom: 0px;left: 0px;height: 7px;">
+                                                </mat-progress-bar>
                                             </mat-option>
                                             <mat-option disabled *ngIf="dataSource && dataSource.data.length === 0">
                                                 Aucun résultat</mat-option>
@@ -95,12 +97,53 @@
                                                     <span style="color: #666;flex:1;">
                                                         Recherche associé à <b>{{filterUser.value}}</b> :
                                                     </span>
-                                                    <span>
-                                                        <a color="primary" (click)="toggleAll()"
+                                                    <span style="color:#666">
+                                                        <a color="primary"
+                                                            (click)="!savingCorrespondents ? toggleAll() : false"
+                                                            [style.opacity]="savingCorrespondents ? '0.5' : '1'"
                                                             style="cursor: pointer;">tout sélectionner</a>
+                                                        ({{dataSource.data.length}} résultat(s))
                                                     </span>
                                                 </div>
-                                                <mat-table #tableContactList [dataSource]="dataSource">
+                                                <cdk-virtual-scroll-viewport itemSize="48" class="example-viewport"
+                                                    style="height: 300px;">
+
+                                                    <mat-selection-list
+                                                        (selectionChange)="toggleCorrespondent($event.option.value)">
+                                                        <ng-container
+                                                            *cdkVirtualFor="let element of dataSource.data;let i=index">
+
+                                                            <mat-list-option checkboxPosition="before"
+                                                                class="correspondent-list-item" color="primary"
+                                                                [disabled]="selection.isSelected(element) || isInGrp(element)"
+                                                                [selected]="selection.isSelected(element) || isInGrp(element)"
+                                                                [value]="element">
+                                                                <p mat-line
+                                                                    class="contact-list-container-{{displayedColumns.length}}"
+                                                                    style="display: grid;grid-gap: 10px;grid-template-columns: 30px 1fr 1fr;align-items: center;">
+                                                                    <span *ngFor="let item of displayedColumns"
+                                                                        style="overflow: hidden;text-overflow: ellipsis;font-size: 12px;">
+                                                                        <ng-container
+                                                                            *ngIf="item==='type'; else elseData">
+                                                                            <mat-icon color="primary"
+                                                                                [title]="'lang.' + element.type | translate"
+                                                                                class="fa"
+                                                                                [class.fa-address-card]="element.type === 'contact'"
+                                                                                [class.fa-user]="element.type === 'user'"
+                                                                                [class.fa-sitemap]="element.type === 'entity'"
+                                                                                style="align-items: center;justify-content: center;display: flex;">
+                                                                            </mat-icon>
+                                                                        </ng-container>
+                                                                        <ng-template #elseData>
+                                                                            <span [title]="element[item]">{{element[item]}}</span>
+                                                                        </ng-template>
+                                                                    </span>
+                                                                </p>
+                                                            </mat-list-option>
+                                                        </ng-container>
+                                                    </mat-selection-list>
+                                                </cdk-virtual-scroll-viewport>
+                                                <!--<mat-table #tableContactList [dataSource]="dataSource">
                                                     <ng-container matColumnDef="select">
                                                         <mat-cell *matCellDef="let element"
                                                             style="width:50px;flex: initial;align-items: center;display: flex;">
@@ -142,29 +185,29 @@
                                                         [ngStyle]="{'opacity': !isInGrp(element) ? '' : '0.5'}"
                                                         style="cursor: pointer;">
                                                     </mat-row>
-                                                </mat-table>
+                                                </mat-table>-->
                                             </div>
                                         </mat-autocomplete>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-6 col-xs-6">
-                                    <mat-paginator #paginatorLinkedCorrespondents [length]="0" [hidePageSize]="true"
+                                    <mat-paginator #paginatorLinkedCorrespondents [length]="nbFilteredLinkedCorrespondents" [hidePageSize]="true"
                                         [pageSize]="10">
                                     </mat-paginator>
                                 </div>
                             </div>
                             <mat-table *ngIf="!loading" #sortLinkedCorrespondents="matSort"
-                                [dataSource]="dataSourceLinkedCorrespondents" matSort matSortActive="contact"
+                                [dataSource]="relatedCorrespondents" matSort matSortActive="contact"
                                 matSortDirection="asc">
                                 <ng-container matColumnDef="type">
-                                    <mat-header-cell *matHeaderCellDef mat-sort-header style="width:70px;flex: initial;padding-left: 5px;padding-right: 5px;">
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header
+                                        style="width:70px;flex: initial;padding-left: 5px;padding-right: 5px;">
                                         {{'lang.type' | translate}}
                                     </mat-header-cell>
-                                    <mat-cell *matCellDef="let element" style="width:70px;flex: initial;padding-left: 5px;padding-right: 5px;">
-                                        <mat-icon color="primary"
-                                            [title]="'lang.' + element.type | translate"
-                                            class="fa"
-                                            [class.fa-address-card]="element.type === 'contact'"
+                                    <mat-cell *matCellDef="let element"
+                                        style="width:70px;flex: initial;padding-left: 5px;padding-right: 5px;">
+                                        <mat-icon color="primary" [title]="'lang.' + element.type | translate"
+                                            class="fa" [class.fa-address-card]="element.type === 'contact'"
                                             [class.fa-user]="element.type === 'user'"
                                             [class.fa-sitemap]="element.type === 'entity'"
                                             style="align-items: center;justify-content: center;display: flex;">
@@ -195,6 +238,9 @@
                                 <mat-header-row *matHeaderRowDef="displayedColumnsAdded"></mat-header-row>
                                 <mat-row *matRowDef="let element; columns: displayedColumnsAdded;"></mat-row>
                             </mat-table>
+                            <div class="example-loading-shade" *ngIf="loadingLinkedCorrespondents">
+                                <mat-spinner></mat-spinner>
+                            </div>
                         </div>
 
 
@@ -277,7 +323,8 @@
         <mat-list>
             <h3 mat-subheader>{{'lang.shareWith' | translate}} :</h3>
             <div style="padding:10px;">
-                <app-maarch-flat-tree #maarchTree></app-maarch-flat-tree>
+                <app-maarch-flat-tree #maarchTree (afterSelectNode)="selectEntities($event)"
+                    (afterDeselectNode)="deselectEntities($event)"></app-maarch-flat-tree>
             </div>
         </mat-list>
     </mat-sidenav>

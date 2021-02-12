@@ -32,3 +32,21 @@
         color: #135f7f;
     }
 }
+
+.mat-list-item-disabled {
+    background: initial;
+    opacity: 0.5;
+}
+
+::ng-deep.addCorrespondentAC {
+    max-height: 100% !important;
+}
+
+::ng-deep .correspondent-list-item {
+    .mat-list-text {
+        padding-left: 0px !important;
+    }
+    .mat-pseudo-checkbox {
+        display: none;
+    }
+}
