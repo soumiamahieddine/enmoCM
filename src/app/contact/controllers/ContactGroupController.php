@@ -69,7 +69,7 @@ class ContactGroupController
         $contactsGroup['labelledOwner']     = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         //TODO
 //        $contactsGroup['correspondents']    = ContactGroupController::getFormattedListById(['id' => $args['id']])['list'];
-        $contactsGroup['nbCorrespondents']  = count($contactsGroup['contacts']);
+//        $contactsGroup['nbCorrespondents']  = count($contactsGroup['contacts']);
         $contactsGroup['entities']          = json_decode($contactsGroup['entities'], true);
 
         $hasPrivilege = false;
@@ -136,7 +136,7 @@ class ContactGroupController
             }
         }
 
-        $body['entities']   = !empty($body['entities']) ? json_decode($body['entities']) : '{}';
+        $body['entities']   = !empty($body['entities']) ? json_encode($body['entities']) : '{}';
         $body['owner']      = $GLOBALS['id'];
 
         $id = ContactGroupModel::create($body);
@@ -179,7 +179,7 @@ class ContactGroupController
             }
         }
 
-        $body['entities'] = !empty($body['entities']) ? json_decode($body['entities']) : '{}';
+        $body['entities'] = !empty($body['entities']) ? json_encode($body['entities']) : '{}';
 
         ContactGroupModel::update([
             'set'   => [
@@ -314,13 +314,14 @@ class ContactGroupController
         return $response->withStatus(204);
     }
 
-    public static function getFormattedListById(array $aArgs)
+    public static function getFormattedListById(array $args)
     {
-        $list = ContactGroupModel::getListById(['select' => ['contact_id'], 'id' => $aArgs['id']]);
+        $correspondents = ContactGroupListModel::get(['select' => ['correspondent_id', 'correspondent_type'], 'where' => ['contacts_groups_id = ?'], 'data' => [$args['id']]]);
+
 
         $contacts = [];
         $position = 0;
-        foreach ($list as $listItem) {
+        foreach ($correspondents as $listItem) {
             $contact = ContactModel::getById([
                 'select'    => ['id', 'firstname', 'lastname', 'email', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode', 'enabled'],
                 'id'        => $listItem['contact_id']
