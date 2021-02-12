@@ -29,7 +29,8 @@ class ContactGroupListModel
             'where'     => empty($args['where']) ? [] : $args['where'],
             'data'      => empty($args['data']) ? [] : $args['data'],
             'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
-            'limit'     => empty($args['limit']) ? 0 : $args['limit']
+            'limit'     => empty($args['limit']) ? 0 : $args['limit'],
+            'offset'    => empty($args['offset']) ? 0 : $args['offset']
         ]);
 
         return $lists;

@@ -67,9 +67,6 @@ class ContactGroupController
         $contactsGroup = ContactGroupModel::getById(['id' => $args['id']]);
 
         $contactsGroup['labelledOwner']     = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        //TODO
-//        $contactsGroup['correspondents']    = ContactGroupController::getFormattedListById(['id' => $args['id']])['list'];
-//        $contactsGroup['nbCorrespondents']  = count($contactsGroup['contacts']);
         $contactsGroup['entities']          = json_decode($contactsGroup['entities'], true);
 
         $hasPrivilege = false;
@@ -224,13 +221,64 @@ class ContactGroupController
         return $response->withStatus(204);
     }
 
-    public function addCorrespondents(Request $request, Response $response, array $args)
+    public function getCorrespondents(Request $request, Response $response, array $args)
     {
         if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
-        //TODO check privilege update contacts dans un groupement
+        $queryParams = $request->getQueryParams();
+
+        $queryParams['offset'] = (empty($queryParams['offset']) || !is_numeric($queryParams['offset']) ? 0 : (int)$queryParams['offset']);
+        $queryParams['limit'] = (empty($queryParams['limit']) || !is_numeric($queryParams['limit']) ? 25 : (int)$queryParams['limit']);
+
+        $rawCorrespondents = ContactGroupListModel::get([
+            'select'    => ['correspondent_id', 'correspondent_type'],
+            'where'     => ['contacts_groups_id = ?'],
+            'data'      => [$args['id']],
+            'offset'    => $queryParams['offset'],
+            'limit'     => $queryParams['limit']
+        ]);
+
+        $correspondents = [];
+        foreach ($rawCorrespondents as $correspondent) {
+            if ($correspondent['correspondent_type'] == 'contact') {
+                $contact = ContactModel::getById([
+                    'select'    => ['id', 'firstname', 'lastname', 'email', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode', 'enabled'],
+                    'id'        => $correspondent['correspondent_id']
+                ]);
+                $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contact]);
+                $contactToDisplay['contact']['id'] = $correspondent['correspondent_id'];
+                $contactToDisplay['contact']['type'] = $correspondent['correspondent_type'];
+                $correspondents[] = $contactToDisplay['contact'];
+            } elseif ($correspondent['correspondent_type'] == 'user') {
+                $correspondents[] = [
+                    'id'    => $correspondent['correspondent_id'],
+                    'type'  => $correspondent['correspondent_type'],
+                    'label' => UserModel::getLabelledUserById(['id' => $correspondent['correspondent_id']])
+                ];
+            } elseif ($correspondent['correspondent_type'] == 'entity') {
+                $entity = EntityModel::getById(['id' => $correspondent['correspondent_id'], 'select' => ['entity_label']]);
+                $correspondents[] = [
+                    'id'    => $correspondent['correspondent_id'],
+                    'type'  => $correspondent['correspondent_type'],
+                    'label' => $entity['entity_label']
+                ];
+            }
+        }
+
+        return $response->withJson(['correspondents' => $correspondents]);
+    }
+
+    public function addCorrespondents(Request $request, Response $response, array $args)
+    {
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id'], 'canUpdate' => true])) {
+            //TODO rename privilege
+            if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']]) || !PrivilegeController::hasPrivilege(['privilegeId' => 'can_update_correspondents_contacts_groups', 'userId' => $args['userId']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
+            }
+        }
+
 
         $body = $request->getParsedBody();
 
@@ -279,19 +327,18 @@ class ContactGroupController
             'eventId'   => 'contactsGroupListCreation',
         ]);
 
-        //TODO
-//        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
-
-        return $response->withJson(['contactsGroup' => []]);
+        return $response->withStatus(204);
     }
 
     public function deleteCorrespondent(Request $request, Response $response, array $args)
     {
-        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id'], 'canUpdate' => true])) {
+            //TODO rename privilege
+            if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']]) || !PrivilegeController::hasPrivilege(['privilegeId' => 'can_update_correspondents_contacts_groups', 'userId' => $args['userId']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
+            }
         }
 
-        //TODO check privilege update contacts dans un groupement
         $body = $request->getParsedBody();
 
         if (!Validator::intVal()->notEmpty()->validate($body['correspondentId'] ?? null)) {
@@ -312,32 +359,6 @@ class ContactGroupController
         ]);
 
         return $response->withStatus(204);
-    }
-
-    public static function getFormattedListById(array $args)
-    {
-        $correspondents = ContactGroupListModel::get(['select' => ['correspondent_id', 'correspondent_type'], 'where' => ['contacts_groups_id = ?'], 'data' => [$args['id']]]);
-
-
-        $contacts = [];
-        $position = 0;
-        foreach ($correspondents as $listItem) {
-            $contact = ContactModel::getById([
-                'select'    => ['id', 'firstname', 'lastname', 'email', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode', 'enabled'],
-                'id'        => $listItem['contact_id']
-            ]);
-
-            if (!empty($contact) && $contact['enabled']) {
-                $email = $contact['email'];
-                $contact = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'position' => $position, 'color' => true])['contact'];
-                $contact['email'] = $email;
-                $contact['position'] = !empty($position) ? $position : 0;
-                $contacts[] = $contact;
-                ++$position;
-            }
-        }
-
-        return ['list' => $contacts];
     }
 
     public function init(Request $request, Response $response)

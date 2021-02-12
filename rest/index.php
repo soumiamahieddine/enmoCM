@@ -168,6 +168,7 @@ $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class
 $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':getById');
 $app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':update');
 $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
+$app->get('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':getCorrespondents');
 $app->post('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':addCorrespondents');
 $app->delete('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':deleteCorrespondent');
 
