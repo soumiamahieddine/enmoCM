@@ -51,61 +51,50 @@ abstract class ContactGroupModelAbstract
         return $aContactGroup[0];
     }
 
-    public static function create(array $aArgs)
+    public static function create(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['label', 'description', 'public', 'owner']);
-        ValidatorModel::stringType($aArgs, ['label', 'description', 'public']);
-        ValidatorModel::intVal($aArgs, ['owner']);
+        ValidatorModel::notEmpty($args, ['label', 'description', 'owner']);
+        ValidatorModel::stringType($args, ['label', 'description', 'entities']);
+        ValidatorModel::intVal($args, ['owner']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contacts_groups_id_seq']);
         DatabaseModel::insert([
             'table'         => 'contacts_groups',
             'columnsValues' => [
                 'id'            => $nextSequenceId,
-                'label'         => $aArgs['label'],
-                'description'   => $aArgs['description'],
-                'public'        => $aArgs['public'],
-                'owner'         => $aArgs['owner']
+                'label'         => $args['label'],
+                'description'   => $args['description'],
+                'entities'      => $args['entities'],
+                'owner'         => $args['owner']
             ]
         ]);
 
         return $nextSequenceId;
     }
 
-    public static function update(array $aArgs)
+    public static function update(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'description', 'public']);
-        ValidatorModel::stringType($aArgs, ['label', 'description', 'public']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($args, ['set']);
+        ValidatorModel::arrayType($args, ['set']);
 
         DatabaseModel::update([
             'table'     => 'contacts_groups',
-            'set'       => [
-                'label'         => $aArgs['label'],
-                'description'   => $aArgs['description'],
-                'public'        => $aArgs['public']
-            ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'set'       => $args['set'],
+            'where'     => $args['where'],
+            'data'      => $args['data']
         ]);
 
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'contacts_groups',
-            'where' => ['id = ?'],
-            'data'  => [$aArgs['id']]
-        ]);
-        DatabaseModel::delete([
-            'table' => 'contacts_groups_lists',
-            'where' => ['contacts_groups_id = ?'],
-            'data'  => [$aArgs['id']]
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;

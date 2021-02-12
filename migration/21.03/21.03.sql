@@ -63,3 +63,19 @@ SELECT id, 'myLastResources', 'list', 1, '#90caf9', '{}' FROM users WHERE status
 
 INSERT INTO tiles (user_id, type, view, position, color, parameters)
 SELECT id, 'followedMail', 'chart', 0, '#90caf9', '{"chartMode": "status", "chartType": "pie"}' FROM users WHERE status != 'DEL';
+
+
+ALTER TABLE contacts_groups DROP COLUMN IF EXISTS entities;
+ALTER TABLE contacts_groups ADD COLUMN entities jsonb NOT NULL DEFAULT '{}';
+//TODO migration
+-- ALTER TABLE contacts_groups DROP COLUMN IF EXISTS public;
+
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'contacts_groups_lists' and column_name = 'contact_id') THEN
+        ALTER TABLE contacts_groups_lists RENAME COLUMN contact_id TO correspondent_id;
+        ALTER TABLE contacts_groups_lists ADD COLUMN correspondent_type CHARACTER VARYING(256);
+        ALTER TABLE contacts_groups_lists DROP CONSTRAINT IF EXISTS contacts_groups_lists_key;
+        UPDATE contacts_groups_lists SET correspondent_type = 'contact';
+        ALTER TABLE contacts_groups_lists ALTER COLUMN correspondent_type set not null;
+    END IF;
+END$$;

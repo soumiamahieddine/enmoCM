@@ -14,8 +14,10 @@
 
 namespace Contact\controllers;
 
+use Contact\models\ContactGroupListModel;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
+use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
@@ -29,137 +31,194 @@ class ContactGroupController
     {
         $hasService = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]);
 
-        $contactsGroups = ContactGroupModel::get();
-        foreach ($contactsGroups as $key => $contactsGroup) {
-            if (!$contactsGroup['public'] && $GLOBALS['id'] != $contactsGroup['owner'] && !$hasService) {
-                unset($contactsGroups[$key]);
-                continue;
+        $where = [];
+        $data = [];
+        if ($hasService) {
+            $where[] = '1=1';
+        } else {
+            $userEntities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
+
+            $entitiesId = [];
+            foreach ($userEntities as $userEntity) {
+                $entitiesId[] = (string)$userEntity['id'];
             }
-            $contactsGroups[$key]['position']      = $key;
-            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-            $contactsGroups[$key]['nbContacts']    = ContactGroupModel::getListById(['id' => $contactsGroup['id'], 'select' => ['COUNT(1)']])[0]['count'];
+            $where[] = 'owner = ? OR entities @> ?';
+            $data[] = $GLOBALS['id'];
+            $data[] = json_encode($entitiesId);
+        }
+        $contactsGroups = ContactGroupModel::get(['where' => $where, 'data' => $data]);
+        foreach ($contactsGroups as $key => $contactsGroup) {
+            $contactsGroups[$key]['labelledOwner']      = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
+            $contactsGroups[$key]['nbCorrespondents']   = ContactGroupModel::getListById(['id' => $contactsGroup['id'], 'select' => ['COUNT(1)']])[0]['count'];
+            $contactsGroups[$key]['entities']           = json_decode($contactsGroup['entities']);
         }
         
-        return $response->withJson(['contactsGroups' => array_values($contactsGroups)]);
+        return $response->withJson(['contactsGroups' => $contactsGroups]);
     }
 
-    public function getById(Request $request, Response $response, array $aArgs)
+    public function getById(Request $request, Response $response, array $args)
     {
-        $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
-        if (empty($contactsGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Contacts group not found']);
-        } elseif (!$contactsGroup['public'] && $contactsGroup['owner'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
-        $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        $contactsGroup['contacts']      = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
-        $contactsGroup['nbContacts']    = count($contactsGroup['contacts']);
+        $contactsGroup = ContactGroupModel::getById(['id' => $args['id']]);
 
-        return $response->withJson(['contactsGroup' => $contactsGroup]);
+        $contactsGroup['labelledOwner']     = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
+        $contactsGroup['correspondents']    = ContactGroupController::getFormattedListById(['id' => $args['id']])['list'];
+        $contactsGroup['nbCorrespondents']  = count($contactsGroup['contacts']);
+        $contactsGroup['entities']          = json_decode($contactsGroup['entities'], true);
+
+        $hasPrivilege = false;
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            $hasPrivilege = true;
+        }
+
+        $userEntities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
+        $userEntities = array_column($userEntities, 'id');
+
+        $allEntities = EntityModel::get([
+            'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
+            'table'     => ['entities e1', 'entities e2'],
+            'left_join' => ['e1.parent_entity_id = e2.entity_id'],
+            'where'     => ['e1.enabled = ?'],
+            'data'      => ['Y']
+        ]);
+
+        foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['id'] = (string)$value['id'];
+            if (empty($value['parent_id'])) {
+                $allEntities[$key]['parent'] = '#';
+                $allEntities[$key]['icon']   = "fa fa-building";
+            } else {
+                $allEntities[$key]['parent'] = (string)$value['parent_id'];
+                $allEntities[$key]['icon']   = "fa fa-sitemap";
+            }
+
+            $allEntities[$key]['allowed']           = true;
+            $allEntities[$key]['state']['opened']   = false;
+            if (!$hasPrivilege && !in_array($value['id'], $userEntities)) {
+                $allEntities[$key]['allowed']           = false;
+            } elseif (in_array($value['id'], $contactsGroup['entities'])) {
+                $allEntities[$key]['state']['opened']   = true;
+                $allEntities[$key]['state']['selected'] = true;
+            }
+
+            $allEntities[$key]['text'] = $value['entity_label'];
+        }
+
+        return $response->withJson(['contactsGroup' => $contactsGroup, 'entities' => $allEntities]);
     }
 
     public function create(Request $request, Response $response)
     {
-        $data = $request->getParams();
-        $check = Validator::stringType()->notEmpty()->validate($data['label']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
-        $check = $check && Validator::boolType()->validate($data['public']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['label'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['description'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body description is empty or not a string']);
         }
 
-        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?'], 'data' => [$data['label'], $GLOBALS['id']]]);
+        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?'], 'data' => [$body['label'], $GLOBALS['id']]]);
         if (!empty($existingGroup)) {
             return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
 
-        $data['public']       = $data['public'] ? 'true' : 'false';
-        $data['owner']        = $GLOBALS['id'];
+        if (!empty($body['entities']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            $userEntities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
+            $userEntities = array_column($userEntities, 'id');
+            if (!empty(array_diff($body['entities'], $userEntities))) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities has entities out of perimeter']);
+            }
+        }
 
-        $id = ContactGroupModel::create($data);
+        $body['entities']   = !empty($body['entities']) ? json_decode($body['entities']) : '{}';
+        $body['owner']      = $GLOBALS['id'];
+
+        $id = ContactGroupModel::create($body);
 
         HistoryController::add([
             'tableName' => 'contacts_groups',
             'recordId'  => $id,
             'eventType' => 'ADD',
-            'info'      => _CONTACTS_GROUP_ADDED . " : {$data['label']}",
+            'info'      => _CONTACTS_GROUP_ADDED . " : {$body['label']}",
             'moduleId'  => 'contact',
             'eventId'   => 'contactsGroupCreation',
         ]);
 
-        return $response->withJson(['contactsGroup' => $id]);
+        return $response->withJson(['id' => $id]);
     }
 
-    public function update(Request $request, Response $response, array $aArgs)
+    public function update(Request $request, Response $response, array $args)
     {
-        $contactsGroup = ContactGroupModel::getById(['select' => ['owner'], 'id' => $aArgs['id']]);
-        if (empty($contactsGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id'], 'canUpdate' => true])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
-        if ($contactsGroup['owner'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        $body = $request->getParsedBody();
+        if (!Validator::stringType()->notEmpty()->validate($body['label'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['description'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body description is empty or not a string']);
         }
 
-        $data = $request->getParams();
-        $check = Validator::stringType()->notEmpty()->validate($data['label']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['description']);
-        $check = $check && Validator::boolType()->validate($data['public']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?', 'id != ?'], 'data' => [$data['label'], $GLOBALS['id'], $aArgs['id']]]);
+        $existingGroup = ContactGroupModel::get(['select' => [1], 'where' => ['label = ?', 'owner = ?', 'id != ?'], 'data' => [$body['label'], $GLOBALS['id'], $args['id']]]);
         if (!empty($existingGroup)) {
             return $response->withStatus(400)->withJson(['errors' => _CONTACTS_GROUP_LABEL_ALREADY_EXISTS]);
         }
 
-        $data['id'] = $aArgs['id'];
-        $data['public'] = $data['public'] ? 'true' : 'false';
+        if (!empty($body['entities']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            $userEntities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
+            $userEntities = array_column($userEntities, 'id');
+            if (!empty(array_diff($body['entities'], $userEntities))) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities has entities out of perimeter']);
+            }
+        }
 
-        ContactGroupModel::update($data);
+        $body['entities'] = !empty($body['entities']) ? json_decode($body['entities']) : '{}';
+
+        ContactGroupModel::update([
+            'set'   => [
+                'label'         => $body['label'],
+                'description'   => $body['description'],
+                'entities'      => $body['entities']
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
 
         HistoryController::add([
             'tableName' => 'contacts_groups',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'UP',
-            'info'      => _CONTACTS_GROUP_UPDATED . " : {$data['label']}",
+            'info'      => _CONTACTS_GROUP_UPDATED . " : {$body['label']}",
             'moduleId'  => 'contact',
             'eventId'   => 'contactsGroupModification',
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withStatus(204);
     }
 
-    public function delete(Request $request, Response $response, array $aArgs)
+    public function delete(Request $request, Response $response, array $args)
     {
-        $contactsGroup = ContactGroupModel::getById(['select' => ['owner'], 'id' => $aArgs['id']]);
-        if (empty($contactsGroup)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
         }
 
-        if ($contactsGroup['owner'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        ContactGroupModel::delete(['id' => $aArgs['id']]);
+        ContactGroupModel::delete(['where' => ['id = ?'], 'data' => [$args['id']]]);
+        ContactGroupListModel::delete(['where' => ['contacts_groups_id = ?'], 'data' => [$args['id']]]);
 
         HistoryController::add([
             'tableName' => 'contacts_groups',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'DEL',
-            'info'      => _CONTACTS_GROUP_DELETED . " : {$aArgs['id']}",
+            'info'      => _CONTACTS_GROUP_DELETED . " : {$args['id']}",
             'moduleId'  => 'contact',
             'eventId'   => 'contactsGroupSuppression',
         ]);
-
-        $contactsGroups = ContactGroupModel::get();
-        foreach ($contactsGroups as $key => $contactsGroup) {
-            $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        }
-
-        return $response->withJson(['success' => 'success']);
+        
+        return $response->withStatus(204);
     }
 
     public function addContacts(Request $request, Response $response, array $aArgs)
@@ -251,5 +310,73 @@ class ContactGroupController
         }
 
         return ['list' => $contacts];
+    }
+
+    public function init(Request $request, Response $response)
+    {
+        $hasPrivilege = false;
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            $hasPrivilege = true;
+        }
+
+        $userEntities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
+        $userEntities = array_column($userEntities, 'id');
+
+        $allEntities = EntityModel::get([
+            'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
+            'table'     => ['entities e1', 'entities e2'],
+            'left_join' => ['e1.parent_entity_id = e2.entity_id'],
+            'where'     => ['e1.enabled = ?'],
+            'data'      => ['Y']
+        ]);
+
+        foreach ($allEntities as $key => $value) {
+            $allEntities[$key]['id'] = (string)$value['id'];
+            if (empty($value['parent_id'])) {
+                $allEntities[$key]['parent'] = '#';
+                $allEntities[$key]['icon']   = "fa fa-building";
+            } else {
+                $allEntities[$key]['parent'] = (string)$value['parent_id'];
+                $allEntities[$key]['icon']   = "fa fa-sitemap";
+            }
+
+            $allEntities[$key]['allowed']           = true;
+            $allEntities[$key]['state']['opened']   = true;
+            if (!$hasPrivilege && !in_array($value['id'], $userEntities)) {
+                $allEntities[$key]['allowed']           = false;
+                $allEntities[$key]['state']['opened']   = false;
+            }
+
+            $allEntities[$key]['text'] = $value['entity_label'];
+        }
+
+        return $response->withJson(['entities' => $allEntities]);
+    }
+
+    private static function hasRightById(array $args)
+    {
+        $contactsGroup = ContactGroupModel::getById(['id' => $args['id'], 'select' => ['owner', 'entities']]);
+        if (empty($contactsGroup)) {
+            return false;
+        }
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $args['userId']])) {
+            return true;
+        } elseif ($contactsGroup['owner'] == $args['userId']) {
+            return true;
+        }
+
+        if (!empty($args['canUpdate'])) {
+            return false;
+        }
+        $groupEntities = json_decode($contactsGroup['entities'], true);
+        $userEntities = UserModel::getEntitiesById(['id' => $args['userId'], 'select' => ['entities.id']]);
+        foreach ($userEntities as $userEntity) {
+            if (in_array($userEntity['id'], $groupEntities)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
