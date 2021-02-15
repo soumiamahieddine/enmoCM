@@ -2263,5 +2263,6 @@
     "refused": "Refused",
     "endStatus": "This document was interrupted following a refusal action",
     "summary": "Synthesis",
-    "noTemplateFound": "Search template not found"
+    "noTemplateFound": "Search template not found",
+    "mandatoryFile": "Mandatory file"
 }

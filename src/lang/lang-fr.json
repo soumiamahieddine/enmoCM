@@ -2318,6 +2318,8 @@
     "proceedWorkflowAvisSimpleDesc": "Met à jour la date d'émission d'avis de l'utilisateur présent en avis dans la liste de diffusion du courrier ('process_date' de la table listinstance)",
     "noConfirmDesc": "Effectue l'action sans confirmation",
     "reconcileResourceDesc": "Ajoute le fichier principal du courrier à un autre courrier",
+    "mandatoryFile": "Fichier obligatoire",
+    "mandatoryFileForIndexingModel": "Vous devez obligatoirement ajouter un fichier pour utiliser ce modèle d'enregistrement",
     "group": "Groupe",
     "chooseEntityAssociationContactGroup": "Associer des entité au groupement de contact",
     "relatedCorrespondents": "Correspondant(s) associé(s)",
