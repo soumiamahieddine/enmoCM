@@ -483,14 +483,14 @@ class AutoCompleteController
         }
 
         $requestData['where'] = [
-            'usergroups.group_id = usergroups_services.group_id',
+            '(users.mode = ? or (usergroups.group_id = usergroups_services.group_id',
             'usergroups.id = usergroup_content.group_id',
             'usergroup_content.user_id = users.id',
-            '(usergroups_services.service_id in (?) or users.mode = ?)',
+            'usergroups_services.service_id in (?)))',
             'users.mode not in (?)',
             'users.status not in (?)'
         ];
-        $requestData['data'] = [$services, 'root_visible', ['root_invisible', 'rest'], ['DEL', 'SPD']];
+        $requestData['data'] = ['root_visible', $services, ['root_invisible', 'rest'], ['DEL', 'SPD']];
 
         if (!empty($queryParams['search'])) {
             $fields = ['users.firstname', 'users.lastname'];
