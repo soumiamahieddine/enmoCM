@@ -68,6 +68,7 @@ import { AvisWorkflowComponent } from './avis/avis-workflow.component';
 import { ContactResourceComponent } from './contact/contact-resource/contact-resource.component';
 import { ContactDetailComponent } from './contact/contact-detail/contact-detail.component';
 import { ContactsGroupFormComponent } from './administration/contact/group/form/contacts-group-form.component';
+import { ContactsGroupsListComponent } from './administration/contact/group/list/contacts-groups-list.component';
 
 import { AttachmentsListComponent } from './attachments/attachments-list.component';
 
@@ -123,6 +124,7 @@ import { CriteriaToolComponent } from '@appRoot/search/criteria-tool/criteria-to
         DragDropDirective,
         ContactAutocompleteComponent,
         ContactsFormComponent,
+        ContactsGroupsListComponent,
         HistoryComponent,
         AddressBanAutocompleteComponent,
         VisaWorkflowComponent,
@@ -171,6 +173,7 @@ import { CriteriaToolComponent } from '@appRoot/search/criteria-tool/criteria-to
         ContactAutocompleteComponent,
         ContactsFormComponent,
         ContactsGroupFormComponent,
+        ContactsGroupsListComponent,
         HistoryComponent,
         AddressBanAutocompleteComponent,
         VisaWorkflowComponent,

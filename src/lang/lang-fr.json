@@ -2322,5 +2322,7 @@
     "chooseEntityAssociationContactGroup": "Associer des entité au groupement de contact",
     "relatedCorrespondents": "Correspondant(s) associé(s)",
     "correspondent": "Correspondant",
-    "shareWith": "Partager avec"
+    "shareWith": "Partager avec",
+    "shared": "Partagé",
+    "mergeConfirm": "Voulez-vous fusionner {{0}} ?"
 }
