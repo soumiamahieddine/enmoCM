@@ -25,8 +25,7 @@ class ContactGroupControllerTest extends TestCase
 
         $body = [
             'label'             => 'Groupe petition',
-            'description'       => 'Groupe de petition',
-            'public'            => false
+            'description'       => 'Groupe de petition'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -34,8 +33,8 @@ class ContactGroupControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertIsInt($responseBody['contactsGroup']);
-        self::$id = $responseBody['contactsGroup'];
+        $this->assertIsInt($responseBody['id']);
+        self::$id = $responseBody['id'];
 
         $GLOBALS['login'] = 'bbain';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
@@ -43,8 +42,7 @@ class ContactGroupControllerTest extends TestCase
 
         $body = [
             'label'             => 'Groupe petition 2',
-            'description'       => 'Groupe de petition',
-            'public'            => false
+            'description'       => 'Groupe de petition'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -52,8 +50,8 @@ class ContactGroupControllerTest extends TestCase
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertIsInt($responseBody['contactsGroup']);
-        self::$id2 = $responseBody['contactsGroup'];
+        $this->assertIsInt($responseBody['id']);
+        self::$id2 = $responseBody['id'];
 
 
         //  READ
@@ -86,7 +84,6 @@ class ContactGroupControllerTest extends TestCase
 
         $body = [
             'label'             => 'Groupe petition',
-            'public'            => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -97,8 +94,7 @@ class ContactGroupControllerTest extends TestCase
 
         $body = [
             'label'             => 'Groupe petition',
-            'description'       => 'Groupe de petition',
-            'public'            => true
+            'description'       => 'Groupe de petition'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -170,7 +166,6 @@ class ContactGroupControllerTest extends TestCase
         $body = [
             'label'             => 'Groupe petition updated',
             'description'       => 'Groupe de petition updated',
-            'public'            => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -193,8 +188,7 @@ class ContactGroupControllerTest extends TestCase
         $GLOBALS['id'] = $userInfo['id'];
 
         $body = [
-            'label'             => 'Groupe petition updated',
-            'public'            => true
+            'label'             => 'Groupe petition updated'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
@@ -205,8 +199,7 @@ class ContactGroupControllerTest extends TestCase
 
         $body = [
             'label'             => 'Groupe petition updated',
-            'description'       => 'Groupe de petition 2 updated',
-            'public'            => true
+            'description'       => 'Groupe de petition 2 updated'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 

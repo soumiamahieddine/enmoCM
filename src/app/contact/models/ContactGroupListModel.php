@@ -66,4 +66,27 @@ class ContactGroupListModel
 
         return true;
     }
+
+    public static function getWithCorrespondents(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['limit']);
+
+        $lists = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['contacts_groups_lists', 'contacts', 'entities', 'users'],
+            'left_join' => [
+                "contacts_groups_lists.correspondent_id = contacts.id AND contacts_groups_lists.correspondent_type = 'contact'",
+                "contacts_groups_lists.correspondent_id = entities.id AND contacts_groups_lists.correspondent_type = 'entity'",
+                "contacts_groups_lists.correspondent_id = users.id AND contacts_groups_lists.correspondent_type = 'user'"
+            ],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit'],
+            'offset'    => empty($args['offset']) ? 0 : $args['offset']
+        ]);
+
+        return $lists;
+    }
 }
