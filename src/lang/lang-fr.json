@@ -2326,5 +2326,9 @@
     "correspondent": "Correspondant",
     "shareWith": "Partager avec",
     "shared": "Partagé",
-    "mergeConfirm": "Voulez-vous fusionner {{0}} ?"
+    "mergeConfirm": "Voulez-vous fusionner {{0}} ?",
+    "lastNotSignatory": "Le dernier utilisateur du circuit n'est pas un signataire",
+    "minimumVisaUser": "Nombre minimum de Viseur",
+    "maximumSignUser": "Nombre maximum de Signataire",
+    "workflowEndBySignatory": "Le circuit doit se terminer par un Signataire"
 }

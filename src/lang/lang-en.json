@@ -2264,5 +2264,9 @@
     "endStatus": "This document was interrupted following a refusal action",
     "summary": "Synthesis",
     "noTemplateFound": "Search template not found",
-    "mandatoryFile": "Mandatory file"
+    "mandatoryFile": "Mandatory file",
+    "lastNotSignatory": "The last user in the workflow is not a signatory",
+    "minimumVisaUser": "Minimum number of Approver",
+    "maximumSignUser": "Maximum number of Signatory",
+    "workflowEndBySignatory": "Workflow has to end with a Signatory"
 }
