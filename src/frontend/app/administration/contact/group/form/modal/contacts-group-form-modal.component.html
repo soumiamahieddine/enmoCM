@@ -1,0 +1,22 @@
+<div class="mat-dialog-content-container">
+    <h1 mat-dialog-title>
+        <span style="flex: 1;">
+            Test
+        </span>
+        <button [title]="'lang.close' | translate" mat-icon-button (click)="dialogRef.close();">
+            <mat-icon class="fa fa-times"></mat-icon>
+        </button></h1>
+    <mat-dialog-content class="modal-container">
+        <div style="overflow: auto;">
+            <app-contacts-group-form #appContactsGroupForm [contactGroupId]="contactGroupId" [hideSaveButton]="true"></app-contacts-group-form>
+        </div>
+        <div style="overflow: auto;overflow-x: hidden;">
+            <div id="contactsGroupTree" style="display: contents;"></div>
+        </div>
+    </mat-dialog-content>
+    <span class="divider-modal"></span>
+    <div mat-dialog-actions class="actions">
+        <button mat-raised-button color="primary" (click)="appContactsGroupForm.onSubmit()" [disabled]="!appContactsGroupForm.isValid()">{{'lang.validate' | translate}}</button>
+        <button mat-raised-button color="default" (click)="dialogRef.close()">{{'lang.close' | translate}}</button>
+    </div>
+</div>

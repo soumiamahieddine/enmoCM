@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
@@ -13,6 +13,8 @@ import { catchError, exhaustMap, filter, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '@plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ContactsGroupFormModalComponent } from '../form/modal/contacts-group-form-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-contacts-groups-list',
@@ -22,9 +24,14 @@ import { MatDialog } from '@angular/material/dialog';
 
 export class ContactsGroupsListComponent implements OnInit {
 
+    @Input() allPerimeters: boolean = false;
+    @Input() contactGroupFormMode: 'route' | 'modal' = 'route';
+    @Input() showAddButton: boolean = false;
+
     search: string = null;
 
     contactsGroups: any[] = [];
+    userEntitiesIds : number[] = [];
     titles: any[] = [];
 
     loading: boolean = false;
@@ -46,14 +53,21 @@ export class ContactsGroupsListComponent implements OnInit {
         public appService: AppService,
         public functions: FunctionsService,
         public adminService: AdministrationService,
+        private router: Router
     ) { }
 
     ngOnInit(): void {
+        this.userEntitiesIds = this.headerService.user.entities.map((entity: any) => entity.id);
         this.loading = true;
 
         this.http.get('../rest/contactsGroups')
             .subscribe((data) => {
-                this.contactsGroups = data['contactsGroups'];
+                this.contactsGroups = data['contactsGroups'].map((contactGroup: any) => {
+                    return {
+                        ...contactGroup,
+                        allowed : !this.isLocked(contactGroup)
+                    }
+                });
                 this.loading = false;
                 setTimeout(() => {
                     this.adminService.setDataSource('admin_contacts_groups', this.contactsGroups, this.sort, this.paginator, this.filterColumns);
@@ -107,12 +121,47 @@ export class ContactsGroupsListComponent implements OnInit {
 
     isAllSelected() {
         const numSelected = this.selection.selected.length;
-        const numRows = this.contactsGroups.length;
+        const numRows = this.contactsGroups.filter(element => element.allowed).length;
         return numSelected === numRows;
     }
 
     toggleAllContactsGroups() {
-        this.isAllSelected() ? this.selection.clear() : this.contactsGroups.forEach(element => this.selection.select(element.id));
+        this.isAllSelected() ? this.selection.clear() : this.contactsGroups.filter(element => element.allowed).forEach(element => this.selection.select(element.id));
     }
 
+    isLocked(element: any) {
+        if (this.allPerimeters) {
+            return false;
+        } else {
+            return !(element.entities.filter((entity: any) => this.userEntitiesIds.indexOf(entity) > -1).length > 0 || element.owner === this.headerService.user.id);
+
+        }
+    }
+
+    goTo(element: any) {
+        if (this.contactGroupFormMode === 'modal') {
+            this.openContactsGroupModal(element);
+        } else {
+            this.router.navigate([`/administration/contacts/contacts-groups/${element.id}`]);
+        }
+    }
+
+    openContactsGroupModal(element: any = null) {
+        const dialogRef = this.dialog.open(ContactsGroupFormModalComponent, {
+            panelClass: 'maarch-modal',
+            disableClose: true,
+            width: '99%',
+            data: {
+                contactGroupId : element !== null ? element.id : null
+            }
+        });
+        dialogRef.afterClosed().pipe(
+            tap((resIds: any) => {
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
 }

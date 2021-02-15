@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
 import { HeaderService } from '@service/header.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { debounceTime, switchMap, distinctUntilChanged, filter, tap, map, catchError, takeUntil, startWith } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -15,6 +15,7 @@ import { MaarchFlatTreeComponent } from '@plugins/tree/maarch-flat-tree.componen
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { ContactService } from '@service/contact.service';
+import { FunctionsService } from '@service/functions.service';
 
 @Component({
     selector: 'app-contacts-group-form',
@@ -25,6 +26,7 @@ import { ContactService } from '@service/contact.service';
 export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
 
     @Input() contactGroupId: number = null;
+    @Input() hideSaveButton: boolean = false;
 
     creationMode: boolean = true;
 
@@ -52,12 +54,13 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     selection = new SelectionModel<Element>(true, []);
     private destroy$ = new Subject<boolean>();
     filtersChange = new EventEmitter();
-    filterInputControl = new FormControl();
+    filterInputControl = new FormControl('');
 
     @ViewChild('contactsGroupTreeTemplate', { static: true }) contactsGroupTreeTemplate: TemplateRef<any>;
     @ViewChild('paginatorLinkedCorrespondents', { static: false }) paginatorLinkedCorrespondents: MatPaginator;
     @ViewChild('sortLinkedCorrespondents', { static: false }) sortLinkedCorrespondents: MatSort;
     @ViewChild('maarchTree', { static: false }) maarchTree: MaarchFlatTreeComponent;
+    @ViewChild('contactsGroupFormUp', { static: false }) contactsGroupFormUp: NgForm;
 
     constructor(
         public translate: TranslateService,
@@ -69,6 +72,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         public appService: AppService,
         public contactService: ContactService,
         private viewContainerRef: ViewContainerRef,
+        private functionsService: FunctionsService,
     ) { }
 
     ngOnInit(): void {
@@ -154,8 +158,10 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 }),
                 map(data => {
                     this.loadingLinkedCorrespondents = false;
-                    // data = this.processPostData(data);
-                    this.nbLinkedCorrespondents = data.countAll;
+                    data = this.processPostData(data);
+                    if (this.filterInputControl.value === '') {
+                        this.nbLinkedCorrespondents = data.count;
+                    }
                     this.nbFilteredLinkedCorrespondents = data.count;
                     return data.correspondents;
                 }),
@@ -166,11 +172,21 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 })
             ).subscribe(data => this.relatedCorrespondents = data);
             // ).subscribe(data => this.relatedCorrespondents = []);
+    }
 
+    processPostData(data: any) {
+        data.correspondents =  data.correspondents.map((item: any) => {
+            return {
+                ...item,
+                address: !this.functionsService.empty(item.address) ? item.address : this.translate.instant('lang.unavailable')
+            };
+        });
+
+        return data;
     }
 
     initAutocompleteContacts() {
-        this.filterInputControl = new FormControl();
+        this.filterInputControl = new FormControl('');
         this.filterInputControl.valueChanges
             .pipe(
                 tap((value) => {
@@ -199,11 +215,12 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         this.http.get('../rest/autocomplete/correspondents', { params: { 'limit': '1000', 'search': search } }).pipe(
             tap((data: any) => {
                 this.searchResult = data.map((contact: any) => {
+                    const formatedContact = this.contactService.formatContactAddress(contact);
                     return {
                         id: contact.id,
                         type: contact.type,
                         name: this.contactService.formatContact(contact),
-                        address: this.contactService.formatContactAddress(contact),
+                        address: !this.functionsService.empty(formatedContact) ? formatedContact : this.translate.instant('lang.unavailable')
                     };
                 });
                 this.dataSource = new MatTableDataSource(this.searchResult);
@@ -246,6 +263,10 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 id: correspondent.id
             };
         });
+    }
+
+    isValid() {
+        return this.contactsGroupFormUp !== undefined && this.contactsGroupFormUp.form.valid;
     }
 
     onSubmit() {

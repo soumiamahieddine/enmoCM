@@ -69,6 +69,7 @@ import { ContactResourceComponent } from './contact/contact-resource/contact-res
 import { ContactDetailComponent } from './contact/contact-detail/contact-detail.component';
 import { ContactsGroupFormComponent } from './administration/contact/group/form/contacts-group-form.component';
 import { ContactsGroupsListComponent } from './administration/contact/group/list/contacts-groups-list.component';
+import { ContactsGroupFormModalComponent } from './administration/contact/group/form/modal/contacts-group-form-modal.component';
 
 import { AttachmentsListComponent } from './attachments/attachments-list.component';
 
@@ -142,7 +143,8 @@ import { CriteriaToolComponent } from '@appRoot/search/criteria-tool/criteria-to
         LinkedResourceListComponent,
         NotesListComponent,
         NoteEditorComponent,
-        CriteriaToolComponent
+        CriteriaToolComponent,
+        ContactsGroupFormModalComponent
 
     ],
     exports: [
@@ -195,14 +197,15 @@ import { CriteriaToolComponent } from '@appRoot/search/criteria-tool/criteria-to
         FolderInputComponent,
         IssuingSiteInputComponent,
         RegisteredMailRecipientInputComponent,
-        CriteriaToolComponent
+        CriteriaToolComponent,
     ],
     providers: [],
     entryComponents: [
         IndexingGroupModalComponent,
         RegisteredMailImportComponent,
         AlertComponent,
-        ConfirmComponent
+        ConfirmComponent,
+        ContactsGroupFormModalComponent
     ],
 })
 export class SharedModule {

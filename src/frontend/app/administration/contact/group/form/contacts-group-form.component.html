@@ -23,9 +23,9 @@
                     [checked]="contactsGroup.public">{{'lang.public' | translate}}</mat-slide-toggle>
             </div>
         </div>-->
-        <div style="text-align:center;">
+        <div style="text-align:center;" *ngIf="!hideSaveButton">
             <button mat-raised-button color="primary" type="submit"
-                [disabled]="!contactsGroupFormUp.form.valid">{{'lang.save' | translate}}</button>
+                [disabled]="!isValid()">{{'lang.save' | translate}}</button>
         </div>
     </form>
     <div class="formType" *ngIf="!creationMode">
@@ -106,7 +106,7 @@
                                                             </mat-icon>
                                                         </ng-container>
                                                         <ng-template #elseData>
-                                                            <span [title]="element[item]">{{element[item]}}</span>
+                                                            <span [title]="element[item]" [class.empty]="element[item]===('lang.unavailable' | translate)">{{element[item]}}</span>
                                                         </ng-template>
                                                     </span>
                                                 </p>
@@ -114,49 +114,6 @@
                                         </ng-container>
                                     </mat-selection-list>
                                 </cdk-virtual-scroll-viewport>
-                                <!--<mat-table #tableContactList [dataSource]="dataSource">
-                                    <ng-container matColumnDef="select">
-                                        <mat-cell *matCellDef="let element"
-                                            style="width:50px;flex: initial;align-items: center;display: flex;">
-                                            <mat-checkbox id="check_{{element.id}}" color="primary"
-                                                (click)="$event.stopPropagation()"
-                                                (change)="$event ? toggleCorrespondent(element) : null"
-                                                [disabled]="isInGrp(element)"
-                                                [checked]="selection.isSelected(element.id) || isInGrp(element)">
-                                            </mat-checkbox>
-                                        </mat-cell>
-                                    </ng-container>
-                                    <ng-container matColumnDef="type">
-                                        <mat-cell *matCellDef="let element"
-                                            style="width:50px;flex: initial;align-items: center;justify-content: center;display: flex;">
-                                            <mat-icon color="primary"
-                                                [title]="'lang.' + element.type | translate"
-                                                class="fa"
-                                                [class.fa-address-card]="element.type === 'contact'"
-                                                [class.fa-user]="element.type === 'user'"
-                                                [class.fa-sitemap]="element.type === 'entity'"
-                                                style="align-items: center;justify-content: center;display: flex;">
-                                            </mat-icon>
-                                        </mat-cell>
-                                    </ng-container>
-                                    <ng-container matColumnDef="contact">
-                                        <mat-cell *matCellDef="let element"
-                                            style="flex:3;padding-left: 5px;padding-right: 5px;font-size: 12px;">
-                                            {{element.contact}}
-                                        </mat-cell>
-                                    </ng-container>
-                                    <ng-container matColumnDef="address">
-                                        <mat-cell *matCellDef="let element"
-                                            style="flex:3;padding-left: 5px;padding-right: 5px;font-size: 12px">
-                                            {{element.address}}
-                                        </mat-cell>
-                                    </ng-container>
-                                    <mat-row *matRowDef="let element; columns: displayedColumns;"
-                                        (click)="toggleCorrespondent(element);"
-                                        [ngStyle]="{'opacity': !isInGrp(element) ? '' : '0.5'}"
-                                        style="cursor: pointer;">
-                                    </mat-row>
-                                </mat-table>-->
                             </div>
                         </mat-autocomplete>
                     </mat-form-field>
@@ -189,13 +146,15 @@
                     <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:3;">
                         {{'lang.correspondent' | translate}}
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let element" style="flex:3;"> {{element.contact}} </mat-cell>
+                    <mat-cell *matCellDef="let element" style="flex:3;"> {{element.name}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="address">
                     <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:3;">
                         {{'lang.address' | translate}}
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let element" style="flex:3;"> {{element.address}} </mat-cell>
+                    <mat-cell *matCellDef="let element" style="flex:3;" [class.empty]="element.address===('lang.unavailable' | translate)">
+                        {{element.address}}
+                    </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="actions">
                     <mat-header-cell *matHeaderCellDef style="flex:1;"></mat-header-cell>

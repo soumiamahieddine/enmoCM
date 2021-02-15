@@ -39,7 +39,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
             icon: 'fa fa-users',
             route: '/administration/contacts/contacts-groups',
             label: this.translate.instant('lang.contactsGroups'),
-            current: false
+            current: true
         },
         {
             icon: 'fas fa-magic',
