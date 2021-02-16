@@ -330,7 +330,7 @@ class ContactGroupController
         $body = $request->getParsedBody();
 
         if (!Validator::arrayType()->notEmpty()->validate($body['correspondents'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body correspondents is empty or not an array']);
         }
 
         $rawList = ContactGroupListModel::get(['select' => ['correspondent_id', 'correspondent_type'], 'where' => ['contacts_groups_id = ?'], 'data' => [$args['id']]]);
@@ -387,13 +387,15 @@ class ContactGroupController
 
         $body = $request->getParsedBody();
 
-        if (!Validator::intVal()->notEmpty()->validate($body['correspondentId'] ?? null)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body correspondentId is empty or not an integer']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['correspondentType'] ?? null)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body correspondentType is empty or not a string']);
+        if (!Validator::arrayType()->notEmpty()->validate($body['correspondents'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body correspondents is empty or not an array']);
         }
 
-        ContactGroupListModel::delete(['where' => ['contacts_groups_id = ?', 'correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], $body['correspondentId'], $body['correspondentType']]]);
+        foreach ($body['correspondents'] as $correspondent) {
+            if (!empty($correspondent['id']) && !empty($correspondent['type'])) {
+                ContactGroupListModel::delete(['where' => ['contacts_groups_id = ?', 'correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], $correspondent['id'], $correspondent['type']]]);
+            }
+        }
 
         HistoryController::add([
             'tableName' => 'contacts_groups_lists',
