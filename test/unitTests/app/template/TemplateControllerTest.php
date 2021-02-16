@@ -769,7 +769,7 @@ class TemplateControllerTest extends TestCase
         $responseBody   = json_decode((string)$response->getBody(), true);
         $this->assertSame('Body param resId is missing', $responseBody['errors']);
 
-        $response       = $templates->mergeEmailTemplate($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $response       = $templates->mergeEmailTemplate($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
         $responseBody   = json_decode((string)$response->getBody(), true);
         $this->assertSame(400, $response->getStatusCode());
 
