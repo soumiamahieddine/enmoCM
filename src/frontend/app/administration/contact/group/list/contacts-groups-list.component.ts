@@ -87,23 +87,20 @@ export class ContactsGroupsListComponent implements OnInit {
         });
     }
 
-    deleteContactsGroup(row: any) {
-        const contactsGroup = this.contactsGroups[row];
-        const r = confirm(this.translate.instant('lang.confirmAction') + ' ' + this.translate.instant('lang.delete') + ' « ' + contactsGroup.label + ' »');
-
-        if (r) {
-            this.http.delete('../rest/contactsGroups/' + contactsGroup.id)
-                .subscribe(() => {
-                    const lastElement = this.contactsGroups.length - 1;
-                    this.contactsGroups[row] = this.contactsGroups[lastElement];
-                    this.contactsGroups[row].position = row;
-                    this.contactsGroups.splice(lastElement, 1);
-                    this.adminService.setDataSource('admin_contacts_groups', this.contactsGroups, this.sort, this.paginator, this.filterColumns);
-                    this.notify.success(this.translate.instant('lang.contactsGroupDeleted'));
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        }
+    deleteContactsGroup(element: any) {
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction') } });
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete(`../rest/contactsGroups/${element.id}`)),
+            tap(() => {
+                this.notify.success(this.translate.instant('lang.contactsGroupDeleted'));
+                this.getContactsGroups();
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     mergeContactsGroups() {
@@ -117,6 +114,22 @@ export class ContactsGroupsListComponent implements OnInit {
             // exhaustMap(() => this.http.post(`../rest/contactsGroups/merge`, data)),
             tap(() => {
                 this.notify.success(this.translate.instant('lang.attachmentMerged'));
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    copyContactsGroup(element: any) {
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.duplicate'), msg: this.translate.instant('lang.confirmAction') } });
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.post(`../rest/contactsGroups/${element.id}/duplicate`, {})),
+            tap(() => {
+                this.notify.success(this.translate.instant('lang.contactsGroupDuplicated'));
+                this.getContactsGroups();
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

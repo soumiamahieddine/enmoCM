@@ -102,7 +102,9 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     }
 
     getContactGroup(contactGroupId: number) {
-        this.http.get('../rest/contactsGroups/' + contactGroupId).pipe(
+        const param = !this.allPerimeters ? '?profile=true' : '';
+
+        this.http.get('../rest/contactsGroups/' + contactGroupId + param).pipe(
             tap((data: any) => {
                 this.contactsGroup = data.contactsGroup;
                 data.entities = data.entities.map((entity: any) => {

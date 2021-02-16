@@ -91,11 +91,11 @@
             <mat-header-cell *matHeaderCellDef></mat-header-cell>
             <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
                 <button mat-icon-button color="primary" [title]="'lang.duplicate' | translate"
-                    (click)="$event.stopPropagation();copyContactsGroup(element.position)">
+                    (click)="$event.stopPropagation();copyContactsGroup(element)">
                     <mat-icon class="fas fa-copy fa-2x" aria-hidden="true"></mat-icon>
                 </button>
                 <button mat-icon-button color="warn" [title]="'lang.delete' | translate" [disabled]="!element.allowed"
-                    (click)="$event.stopPropagation();deleteContactsGroup(element.position)">
+                    (click)="$event.stopPropagation();deleteContactsGroup(element)">
                     <mat-icon class="fa fa-trash-alt fa-2x" aria-hidden="true"></mat-icon>
                 </button>
             </mat-cell>
