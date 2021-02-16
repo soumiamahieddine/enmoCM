@@ -27,11 +27,6 @@ WITH (OIDS=FALSE);
 
 UPDATE history_batch SET total_errors = 0 WHERE total_errors IS NULL;
 
-ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS requested_signature;
-ALTER TABLE listinstance_history_details ADD COLUMN requested_signature boolean default false;
-ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS signatory;
-ALTER TABLE listinstance_history_details ADD COLUMN signatory BOOLEAN DEFAULT FALSE;
-
 DO $$ BEGIN
     IF (SELECT count(column_name) from information_schema.columns where table_name = 'entities' and column_name = 'adrs_1') THEN
         ALTER TABLE entities RENAME COLUMN adrs_1 TO address_number;
