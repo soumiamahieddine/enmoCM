@@ -2331,5 +2331,6 @@
     "minimumVisaUser": "Nombre minimum de Viseur",
     "maximumSignUser": "Nombre maximum de Signataire",
     "workflowEndBySignatory": "Le circuit doit se terminer par un Signataire",
-    "unavailable": "Non disponible"
+    "unavailable": "Non disponible",
+    "addCorrespondentInSharedGroupsOnProfile": "Ajouter des correspondants dans les groupements partagés depuis le profile"
 }

@@ -15,6 +15,7 @@ import { ConfirmComponent } from '@plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsGroupFormModalComponent } from '../form/modal/contacts-group-form-modal.component';
 import { Router } from '@angular/router';
+import { PrivilegeService } from '@service/privileges.service';
 
 @Component({
     selector: 'app-contacts-groups-list',
@@ -31,7 +32,7 @@ export class ContactsGroupsListComponent implements OnInit {
     search: string = null;
 
     contactsGroups: any[] = [];
-    userEntitiesIds : number[] = [];
+    userEntitiesIds: number[] = [];
     titles: any[] = [];
 
     loading: boolean = false;
@@ -53,28 +54,37 @@ export class ContactsGroupsListComponent implements OnInit {
         public appService: AppService,
         public functions: FunctionsService,
         public adminService: AdministrationService,
+        public privilegeService: PrivilegeService,
         private router: Router
     ) { }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.userEntitiesIds = this.headerService.user.entities.map((entity: any) => entity.id);
         this.loading = true;
+        await this.getContactsGroups();
+        this.loading = false;
+    }
 
-        this.http.get('../rest/contactsGroups')
-            .subscribe((data) => {
-                this.contactsGroups = data['contactsGroups'].map((contactGroup: any) => {
-                    return {
-                        ...contactGroup,
-                        allowed : !this.isLocked(contactGroup)
-                    }
+    getContactsGroups() {
+        return new Promise((resolve) => {
+            const param = !this.allPerimeters ? '?profile=true' : '';
+
+            this.http.get('../rest/contactsGroups' + param)
+                .subscribe((data) => {
+                    this.contactsGroups = data['contactsGroups'].map((contactGroup: any) => {
+                        return {
+                            ...contactGroup,
+                            allowed: !this.isLocked(contactGroup)
+                        };
+                    });
+                    setTimeout(() => {
+                        this.adminService.setDataSource('admin_contacts_groups', this.contactsGroups, this.sort, this.paginator, this.filterColumns);
+                    }, 0);
+                    resolve(true);
+                }, (err) => {
+                    this.notify.handleErrors(err);
                 });
-                this.loading = false;
-                setTimeout(() => {
-                    this.adminService.setDataSource('admin_contacts_groups', this.contactsGroups, this.sort, this.paginator, this.filterColumns);
-                }, 0);
-            }, (err) => {
-                this.notify.handleErrors(err);
-            });
+        });
     }
 
     deleteContactsGroup(row: any) {
@@ -97,10 +107,10 @@ export class ContactsGroupsListComponent implements OnInit {
     }
 
     mergeContactsGroups() {
-        let selectedcontactsGroupsLabels: any =  this.contactsGroups.filter((contactGroup: any) => this.selection.selected.indexOf(contactGroup.id) > -1).map((contactGroup: any) => contactGroup.label);
+        let selectedcontactsGroupsLabels: any = this.contactsGroups.filter((contactGroup: any) => this.selection.selected.indexOf(contactGroup.id) > -1).map((contactGroup: any) => contactGroup.label);
         selectedcontactsGroupsLabels = selectedcontactsGroupsLabels.join(', ');
         console.log(selectedcontactsGroupsLabels);
-        const msg = this.translate.instant('lang.mergeConfirm', { 0 : selectedcontactsGroupsLabels});
+        const msg = this.translate.instant('lang.mergeConfirm', { 0: selectedcontactsGroupsLabels });
         const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: `${this.translate.instant('lang.merge')}`, msg: msg } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -151,12 +161,22 @@ export class ContactsGroupsListComponent implements OnInit {
             panelClass: 'maarch-modal',
             disableClose: true,
             width: '99%',
+            height: '99%',
             data: {
-                contactGroupId : element !== null ? element.id : null
+                modalTitle: element !== null ? element.label : null,
+                contactGroupId: element !== null ? element.id : null,
+                canAddCorrespondents: (element !== null && element.owner === this.headerService.user.id) || this.privilegeService.hasCurrentUserPrivilege('add_correspondent_in_shared_groups_on_profile'),
+                canModifyGroupInfo: (element !== null && element.owner === this.headerService.user.id),
+                allPerimeters: this.allPerimeters
             }
         });
         dialogRef.afterClosed().pipe(
-            tap((resIds: any) => {
+            tap(async (res: any) => {
+                await this.getContactsGroups();
+                if (!this.functions.empty(res) && res.state === 'create') {
+                    const newGrp = this.contactsGroups.find((grp: any) => grp.id === res.id);
+                    this.openContactsGroupModal(newGrp);
+                }
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

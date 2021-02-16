@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef, EventEmitter, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef, EventEmitter, Input, AfterViewInit, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
 import { HeaderService } from '@service/header.service';
 import { FormControl, NgForm } from '@angular/forms';
-import { debounceTime, switchMap, distinctUntilChanged, filter, tap, map, catchError, takeUntil, startWith } from 'rxjs/operators';
+import { debounceTime, switchMap, distinctUntilChanged, filter, tap, map, catchError, takeUntil, startWith, exhaustMap } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,6 +16,8 @@ import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { merge, Observable, of, Subject } from 'rxjs';
 import { ContactService } from '@service/contact.service';
 import { FunctionsService } from '@service/functions.service';
+import { ConfirmComponent } from '@plugins/modal/confirm.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
     selector: 'app-contacts-group-form',
@@ -27,6 +29,11 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
 
     @Input() contactGroupId: number = null;
     @Input() hideSaveButton: boolean = false;
+    @Input() canAddCorrespondents: boolean = true;
+    @Input() canModifyGroupInfo: boolean = true;
+    @Input() allPerimeters: boolean = true;
+
+    @Output() afterUpdate = new EventEmitter<any>();
 
     creationMode: boolean = true;
 
@@ -38,7 +45,10 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
 
     loading: boolean = false;
 
+    allRelatedCorrespondents: any = [];
     relatedCorrespondents: any = [];
+    relatedCorrespondentsSelected = new SelectionModel<Element>(true, []);
+
     loadingCorrespondents: boolean = false;
     loadingLinkedCorrespondents: boolean = false;
     savingCorrespondents: boolean = false;
@@ -47,7 +57,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     searchResult: any = [];
 
     displayedColumns = ['type', 'name', 'address'];
-    displayedColumnsAdded = ['type', 'contact', 'address', 'actions'];
+    displayedColumnsAdded = ['select', 'type', 'contact', 'address', 'actions'];
     dataSource: any;
     // dataSourceLinkedCorrespondents: any;
     dataSourceLinkedCorrespondents: CorrespondentListHttpDao | null;
@@ -67,6 +77,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         public http: HttpClient,
         private route: ActivatedRoute,
         private router: Router,
+        public dialog: MatDialog,
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
@@ -83,6 +94,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         if (this.contactGroupId === null) {
             this.creationMode = true;
             this.initTree();
+            this.canModifyGroupInfo = true;
         } else {
             this.creationMode = false;
             this.getContactGroup(this.contactGroupId);
@@ -93,6 +105,20 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         this.http.get('../rest/contactsGroups/' + contactGroupId).pipe(
             tap((data: any) => {
                 this.contactsGroup = data.contactsGroup;
+                data.entities = data.entities.map((entity: any) => {
+                    return {
+                        ...entity,
+                        id : parseInt(entity.id)
+                    };
+                });
+                if (!this.canModifyGroupInfo) {
+                    data.entities.forEach((entity: any) => {
+                        entity.state.disabled = true;
+                    });
+                }
+                if (!this.canAddCorrespondents) {
+                    this.displayedColumnsAdded = this.displayedColumnsAdded.filter((col: any) => ['select', 'actions'].indexOf(col) === -1);
+                }
                 this.maarchTree.initData(data.entities);
                 this.headerService.setHeader(this.translate.instant('lang.contactsGroupModification'), this.contactsGroup.label);
                 this.loading = false;
@@ -109,30 +135,18 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     }
 
     initTree() {
-        // FOR TEST
-        this.http.get('../rest/entities').pipe(
+        const param = !this.allPerimeters ? '?profile=true' : '';
+        this.http.get('../rest/contactsGroupsEntities' + param).pipe(
             map((data: any) => {
                 data.entities = data.entities.map((entity: any) => {
                     return {
-                        text: entity.entity_label,
-                        icon: entity.icon,
-                        parent_id: entity.parentSerialId,
-                        id: entity.serialId,
-                        state: {
-                            opened: true
-                        }
+                        ...entity,
+                        id : parseInt(entity.id)
                     };
                 });
                 return data.entities;
             }),
             tap((entities: any) => {
-                /*entities.forEach(element => {
-                    if (this.availableEntities.indexOf(+element.id) > -1) {
-                        element.state.disabled = false;
-                    } else {
-                        element.state.disabled = true;
-                    }
-                });*/
                 this.maarchTree.initData(entities);
             }),
             catchError((err: any) => {
@@ -171,11 +185,11 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                     return of(false);
                 })
             ).subscribe(data => this.relatedCorrespondents = data);
-            // ).subscribe(data => this.relatedCorrespondents = []);
+        // ).subscribe(data => this.relatedCorrespondents = []);
     }
 
     processPostData(data: any) {
-        data.correspondents =  data.correspondents.map((item: any) => {
+        data.correspondents = data.correspondents.map((item: any) => {
             return {
                 ...item,
                 address: !this.functionsService.empty(item.address) ? item.address : this.translate.instant('lang.unavailable')
@@ -207,6 +221,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     }
 
     refreshDao() {
+        this.relatedCorrespondentsSelected.clear();
         this.filtersChange.emit();
     }
 
@@ -273,39 +288,45 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         if (this.creationMode) {
             this.http.post('../rest/contactsGroups', this.contactsGroup)
                 .subscribe((data: any) => {
-                    this.router.navigate(['/administration/contacts/contacts-groups/' + data.id]);
+                    if (!this.hideSaveButton) {
+                        this.router.navigate(['/administration/contacts/contacts-groups/' + data.id]);
+                    }
                     this.notify.success(this.translate.instant('lang.contactsGroupAdded'));
+                    this.afterUpdate.emit(data.id);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put('../rest/contactsGroups/' + this.contactsGroup.id, this.contactsGroup)
                 .subscribe(() => {
-                    this.router.navigate(['/administration/contacts-groups']);
+                    if (!this.hideSaveButton) {
+                        this.router.navigate(['/administration/contacts-groups']);
+                    }
                     this.notify.success(this.translate.instant('lang.contactsGroupUpdated'));
-
+                    this.afterUpdate.emit(this.contactsGroup.id);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         }
     }
 
-    preDelete(row: any) {
-        const r = confirm(this.translate.instant('lang.reallyWantToDeleteContactFromGroup'));
+    removeContact(contact: any = null) {
+        const objTosend = contact === null ? this.formatRelatedCorrespondentsSelected() : [{ type: contact.type, id: contact.id }];
 
-        if (r) {
-            this.removeContact(this.relatedCorrespondents[row], row);
-        }
-    }
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.translate.instant('lang.delete'), msg: this.translate.instant('lang.confirmAction') } });
 
-    removeContact(contact: any, row: any) {
-        this.http.delete('../rest/contactsGroups/' + this.contactsGroup.id + '/contacts/' + contact['id'])
-            .subscribe(() => {
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', `../rest/contactsGroups/${this.contactsGroup.id}/correspondents`, { body: { correspondents: objTosend } })),
+            tap(() => {
                 this.notify.success(this.translate.instant('lang.contactDeletedFromGroup'));
                 this.refreshDao();
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     isInGrp(contact: any): boolean {
@@ -335,6 +356,32 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
             this.saveContactsList();
         }
     }
+
+    toggleRelatedCorrespondent(element: any) {
+        this.relatedCorrespondentsSelected.toggle(element);
+    }
+
+    toggleAllRelatedCorrespondents() {
+        this.allRelatedCorrespondents.forEach((row: any) => {
+            this.relatedCorrespondentsSelected.select(row);
+        });
+    }
+
+    isAllRelatedCorrespondentsSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.allRelatedCorrespondents.length;
+        return numSelected === numRows;
+    }
+
+    formatRelatedCorrespondentsSelected() {
+        return this.relatedCorrespondentsSelected.selected.map((correspondent: any) => {
+            return {
+                type: correspondent.type,
+                id: correspondent.id
+            };
+        });
+    }
+
 
     open(event: Event, trigger: MatAutocompleteTrigger) {
         event.stopPropagation();
