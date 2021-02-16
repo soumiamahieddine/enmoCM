@@ -75,7 +75,6 @@ class ContactGroupControllerTest extends TestCase
         $this->assertSame('Groupe de petition', $responseBody->contactsGroup->description);
         $this->assertSame($user['id'], $responseBody->contactsGroup->owner);
         $this->assertIsString($responseBody->contactsGroup->labelledOwner);
-        $this->assertIsArray($responseBody->contactsGroup->contacts);
 
         // Fail
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
@@ -164,7 +163,7 @@ class ContactGroupControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
         $response     = $contactGroupController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
-        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame(403, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Contacts group out of perimeter', $responseBody['errors']);
 
@@ -189,7 +188,7 @@ class ContactGroupControllerTest extends TestCase
         $response     = $contactGroupController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Bad Request', $responseBody['errors']);
+        $this->assertSame('Body description is empty or not a string', $responseBody['errors']);
 
         $body = [
             'label'             => 'Groupe petition updated',
@@ -274,7 +273,7 @@ class ContactGroupControllerTest extends TestCase
             ];
             $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
-            $response     = $contactGroupController->deleteCorrespondent($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+            $response     = $contactGroupController->deleteCorrespondents($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
             $this->assertSame(204, $response->getStatusCode());
         }
 
@@ -292,7 +291,7 @@ class ContactGroupControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $contactGroupController->deleteCorrespondent($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
+        $response     = $contactGroupController->deleteCorrespondents($request, new \Slim\Http\Response(), ['id' => self::$id * 1000]);
         $this->assertSame(403, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Contacts group out of perimeter', $responseBody['errors']);
@@ -301,7 +300,7 @@ class ContactGroupControllerTest extends TestCase
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['login'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
-        $response     = $contactGroupController->deleteContact($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $contactGroupController->deleteCorrespondents($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(403, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
         $this->assertSame('Contacts group out of perimeter', $responseBody['errors']);

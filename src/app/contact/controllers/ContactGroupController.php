@@ -225,6 +225,53 @@ class ContactGroupController
         return $response->withStatus(204);
     }
 
+    public function duplicate(Request $request, Response $response, array $args)
+    {
+        if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
+        }
+
+        $contactGroup = ContactGroupModel::getById(['select' => ['*'], 'id' => $args['id']]);
+
+        $label = $contactGroup['label'];
+        $existingCopy = ContactGroupModel::get(['select' => ['label'], 'where' => ['label like ?'], 'data' => ["{$contactGroup['label']} copy(%"], 'orderBy' => ['id DESC'], 'limit' => 1]);
+        if (!empty($existingCopy[0])) {
+            $pos = strpos($existingCopy[0]['label'], 'copy(');
+            $number = (int)$existingCopy[0]['label'][$pos + 5];
+            ++$number;
+            $label .= " copy({$number})";
+        } else {
+            $label .= ' copy(1)';
+        }
+
+        $id = ContactGroupModel::create([
+            'label'         => $label,
+            'description'   => $contactGroup['description'],
+            'entities'      => $contactGroup['entities'],
+            'owner'         => $GLOBALS['id']
+        ]);
+
+        $correspondents = ContactGroupListModel::get(['select' => ['*'], 'where' => ['contacts_groups_id = ?'], 'data' => [$args['id']]]);
+        foreach ($correspondents as $correspondent) {
+            ContactGroupListModel::create([
+                'contacts_groups_id'    => $id,
+                'correspondent_id'      => $correspondent['correspondent_id'],
+                'correspondent_type'    => $correspondent['correspondent_type']
+            ]);
+        }
+
+        HistoryController::add([
+            'tableName' => 'contacts_groups',
+            'recordId'  => $id,
+            'eventType' => 'ADD',
+            'info'      => _CONTACTS_GROUP_ADDED . " : {$label}",
+            'moduleId'  => 'contact',
+            'eventId'   => 'contactsGroupCreation',
+        ]);
+
+        return $response->withJson(['id' => $id]);
+    }
+
     public function getCorrespondents(Request $request, Response $response, array $args)
     {
         if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
@@ -377,7 +424,7 @@ class ContactGroupController
         return $response->withStatus(204);
     }
 
-    public function deleteCorrespondent(Request $request, Response $response, array $args)
+    public function deleteCorrespondents(Request $request, Response $response, array $args)
     {
         if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id'], 'canUpdate' => true])) {
             if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']]) || !PrivilegeController::hasPrivilege(['privilegeId' => 'add_correspondent_in_shared_groups_on_profile', 'userId' => $args['userId']])) {
