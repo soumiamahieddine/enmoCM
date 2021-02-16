@@ -99,12 +99,11 @@ class ContactGroupController
                 $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
 
-            $allEntities[$key]['allowed']           = true;
             $allEntities[$key]['state']['opened']   = true;
+            $allEntities[$key]['state']['disabled'] = false;
             if (!$hasPrivilege && !in_array($value['id'], $userEntities)) {
-                $allEntities[$key]['allowed'] = false;
+                $allEntities[$key]['state']['disabled'] = true;
             } elseif (in_array($value['id'], $contactsGroup['entities'])) {
-                $allEntities[$key]['state']['opened']   = true;
                 $allEntities[$key]['state']['selected'] = true;
             }
 
@@ -486,11 +485,10 @@ class ContactGroupController
                 $allEntities[$key]['icon']   = "fa fa-sitemap";
             }
 
-            $allEntities[$key]['allowed']           = true;
+            $allEntities[$key]['state']['disabled'] = false;
             $allEntities[$key]['state']['opened']   = true;
             if (!$hasPrivilege && !in_array($value['id'], $userEntities)) {
-                $allEntities[$key]['allowed']           = false;
-                $allEntities[$key]['state']['opened']   = false;
+                $allEntities[$key]['state']['disabled'] = true;
             }
 
             $allEntities[$key]['text'] = $value['entity_label'];

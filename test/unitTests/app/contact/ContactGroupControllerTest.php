@@ -88,7 +88,7 @@ class ContactGroupControllerTest extends TestCase
         $response     = $contactGroupController->create($fullRequest, new \Slim\Http\Response());
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Bad Request', $responseBody['errors']);
+        $this->assertSame('Body description is empty or not a string', $responseBody['errors']);
 
         $body = [
             'label'             => 'Groupe petition',
