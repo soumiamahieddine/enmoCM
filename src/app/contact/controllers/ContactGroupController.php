@@ -73,8 +73,10 @@ class ContactGroupController
         $correspondents = ContactGroupListModel::get(['select' => ['COUNT(1)'], 'where' => ['contacts_groups_id = ?'], 'data' => [$args['id']]]);
         $contactsGroup['nbCorrespondents']  = $correspondents[0]['count'];
 
+        $queryParams = $request->getQueryParams();
+
         $hasPrivilege = false;
-        if (PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if (empty($queryParams['profile']) && PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             $hasPrivilege = true;
         }
 
