@@ -30,11 +30,11 @@ class ContactGroupController
 {
     public function get(Request $request, Response $response)
     {
-        $hasService = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]);
+        $queryParams = $request->getQueryParams();
 
         $where = [];
         $data = [];
-        if ($hasService) {
+        if (empty($queryParams['profile']) && PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             $where[] = '1=1';
         } else {
             $userEntities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
@@ -102,7 +102,7 @@ class ContactGroupController
             $allEntities[$key]['allowed']           = true;
             $allEntities[$key]['state']['opened']   = true;
             if (!$hasPrivilege && !in_array($value['id'], $userEntities)) {
-                $allEntities[$key]['allowed']           = false;
+                $allEntities[$key]['allowed'] = false;
             } elseif (in_array($value['id'], $contactsGroup['entities'])) {
                 $allEntities[$key]['state']['opened']   = true;
                 $allEntities[$key]['state']['selected'] = true;
@@ -244,6 +244,10 @@ class ContactGroupController
             $data[] = $queryParams['types'];
         }
 
+        $order   = !in_array($queryParams['order'], ['ASC', 'DESC']) ? '' : $queryParams['order'];
+        $orderBy = !in_array($queryParams['orderBy'], ['type', 'name']) ? ['name'] : [$queryParams['orderBy']];
+        $orderBy = str_replace(['type', 'name'], ["correspondent_type {$order}", "contacts.lastname {$order}, users.lastname {$order}, entities.entity_label {$order}"], $orderBy);
+
         if (!empty($queryParams['search'])) {
             $fields = [
                 'contacts.firstname', 'contacts.lastname', 'users.firstname', 'users.lastname', 'entities.entity_label',
@@ -265,7 +269,8 @@ class ContactGroupController
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data'],
                 'offset'    => $queryParams['offset'],
-                'limit'     => $queryParams['limit']
+                'limit'     => $queryParams['limit'],
+                'orderBy'   => $orderBy
             ]);
 
         } else {
@@ -274,7 +279,8 @@ class ContactGroupController
                 'where'     => $where,
                 'data'      => $data,
                 'offset'    => $queryParams['offset'],
-                'limit'     => $queryParams['limit']
+                'limit'     => $queryParams['limit'],
+                'orderBy'   => $orderBy
             ]);
         }
 
@@ -316,8 +322,7 @@ class ContactGroupController
     public function addCorrespondents(Request $request, Response $response, array $args)
     {
         if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id'], 'canUpdate' => true])) {
-            //TODO rename privilege
-            if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']]) || !PrivilegeController::hasPrivilege(['privilegeId' => 'can_update_correspondents_contacts_groups', 'userId' => $args['userId']])) {
+            if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']]) || !PrivilegeController::hasPrivilege(['privilegeId' => 'add_correspondent_in_shared_groups_on_profile', 'userId' => $args['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
             }
         }
@@ -375,8 +380,7 @@ class ContactGroupController
     public function deleteCorrespondent(Request $request, Response $response, array $args)
     {
         if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id'], 'canUpdate' => true])) {
-            //TODO rename privilege
-            if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']]) || !PrivilegeController::hasPrivilege(['privilegeId' => 'can_update_correspondents_contacts_groups', 'userId' => $args['userId']])) {
+            if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']]) || !PrivilegeController::hasPrivilege(['privilegeId' => 'add_correspondent_in_shared_groups_on_profile', 'userId' => $args['userId']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
             }
         }
@@ -403,10 +407,12 @@ class ContactGroupController
         return $response->withStatus(204);
     }
 
-    public function init(Request $request, Response $response)
+    public function getAllowedEntities(Request $request, Response $response)
     {
+        $queryParams = $request->getQueryParams();
+
         $hasPrivilege = false;
-        if (PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if (empty($queryParams['profile']) && PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             $hasPrivilege = true;
         }
 

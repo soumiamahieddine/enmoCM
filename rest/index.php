@@ -171,6 +171,7 @@ $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController
 $app->get('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':getCorrespondents');
 $app->post('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':addCorrespondents');
 $app->delete('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':deleteCorrespondent');
+$app->get('/contactsGroupsEntities', \Contact\controllers\ContactGroupController::class . ':getAllowedEntities');
 
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
