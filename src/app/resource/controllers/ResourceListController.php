@@ -445,7 +445,7 @@ class ResourceListController
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
         $action['parameters'] = json_decode($action['parameters'], true);
-        $actionRequiredFields = $parameters['requiredFields'] ?? [];
+        $actionRequiredFields = $action['parameters']['requiredFields'] ?? [];
 
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'userId' => $aArgs['userId']]);
         $resources = ResModel::getOnView([
