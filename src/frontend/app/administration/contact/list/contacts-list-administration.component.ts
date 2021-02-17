@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Inject, TemplateRef, ViewContainerRef, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
@@ -16,6 +16,9 @@ import { FunctionsService } from '@service/functions.service';
 import { ContactExportComponent } from './export/contact-export.component';
 import { AdministrationService } from '../../../../app/administration/administration.service';
 import { ContactImportComponent } from './import/contact-import.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { ContactsGroupFormModalComponent } from '../group/form/modal/contacts-group-form-modal.component';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: 'contact-list',
@@ -27,7 +30,6 @@ export class ContactsListAdministrationComponent implements OnInit {
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
-    
     loading: boolean = false;
 
     filtersChange = new EventEmitter();
@@ -37,9 +39,11 @@ export class ContactsListAdministrationComponent implements OnInit {
     displayedColumnsContact: string[] = ['filling', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
 
     isLoadingResults = true;
+    allContacts: any = [];
     routeUrl: string = '../rest/contacts';
     resultListDatabase: ContactListHttpDao | null;
     resultsLength = 0;
+    selection = new SelectionModel<Element>(true, []);
 
     searchContact = new FormControl();
     search: string = '';
@@ -49,6 +53,8 @@ export class ContactsListAdministrationComponent implements OnInit {
     @ViewChild('tableContactListSort', { static: true }) sort: MatSort;
 
     private destroy$ = new Subject<boolean>();
+
+    contextMenuPosition = { x: '0px', y: '0px' };
 
     subMenus: any[] = [
         {
@@ -82,6 +88,10 @@ export class ContactsListAdministrationComponent implements OnInit {
             current: false
         },
     ];
+
+    @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
+    @ViewChildren(MatMenuTrigger) contextMenus: any;
+
 
     constructor(
         public translate: TranslateService,
@@ -161,9 +171,9 @@ export class ContactsListAdministrationComponent implements OnInit {
         });
 
         if (!this.functions.empty(data.contacts[0]) && !this.functions.empty(data.contacts[0].filling)) {
-            this.displayedColumnsContact = ['filling', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
+            this.displayedColumnsContact = ['select', 'filling', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
         } else {
-            this.displayedColumnsContact = ['firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
+            this.displayedColumnsContact = ['select', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
         }
         return data;
     }
@@ -295,6 +305,59 @@ export class ContactsListAdministrationComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    selectContact(contactId: any) {
+        this.selection.toggle(contactId);
+    }
+
+    isAllSelected() {
+        const numSelected = this.selection.selected.length;
+        const numRows = this.allContacts.length;
+        return numSelected === numRows;
+    }
+
+    selectAllContacts() {
+        this.isAllSelected() ? this.selection.clear() : this.allContacts.forEach(contactId => this.selection.select(contactId));
+    }
+
+    openContactsGroupModal() {
+        const dialogRef = this.dialog.open(ContactsGroupFormModalComponent, {
+            panelClass: 'maarch-modal',
+            disableClose: true,
+            width: '99%',
+            height: '99%',
+            data: {
+                contactIds: this.selection.selected,
+                allPerimeters: true
+            }
+        });
+        dialogRef.afterClosed().pipe(
+            filter((data: any) => !this.functions.empty(data)),
+            tap(async (res: any) => {
+                this.refreshDao();
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    open({ x, y }: MouseEvent, element: any) {
+        if (!this.selection.isSelected(element.id)) {
+            this.selection.clear();
+            this.selection.select(element.id);
+        }
+        // Adjust the menu anchor position
+        this.contextMenuPosition.x = x + 'px';
+        this.contextMenuPosition.y = y + 'px';
+
+        // Opens the menu
+        this.contextMenus.toArray()[this.contextMenus.toArray().length - 1].openMenu();
+
+        // prevents default
+        return false;
     }
 }
 

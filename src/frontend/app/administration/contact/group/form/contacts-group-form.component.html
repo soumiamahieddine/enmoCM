@@ -20,7 +20,7 @@
                 [disabled]="!isValid()">{{'lang.save' | translate}}</button>
         </div>
     </form>
-    <div class="formType" *ngIf="!creationMode">
+    <div class="formType">
         <div class="formType-title">
             {{nbLinkedCorrespondents}} {{'lang.relatedCorrespondents' | translate}}&nbsp;<span
                 *ngIf="nbLinkedCorrespondents !== nbFilteredLinkedCorrespondents"
@@ -36,7 +36,7 @@
                     </button>
                 </div>
                 <div>
-                    <mat-form-field *ngIf="!canAddCorrespondents">
+                    <mat-form-field *ngIf="!canAddCorrespondents && !creationMode">
                         <input matInput #filterUser [formControl]="filterInputControl"
                             [placeholder]="'lang.filterBy' | translate">
                         <button mat-button *ngIf="filterUser.value" matSuffix mat-icon-button aria-label="Clear"
@@ -44,7 +44,7 @@
                             <mat-icon class="fas fa-times" style="color:#B3B3B3"></mat-icon>
                         </button>
                     </mat-form-field>
-                    <mat-form-field *ngIf="canAddCorrespondents">
+                    <mat-form-field *ngIf="canAddCorrespondents && !creationMode">
                         <input matInput #filterUser #trigger="matAutocompleteTrigger" [formControl]="filterInputControl"
                             placeholder="{{'lang.filterBy' | translate}} / {{'lang.linkContact' | translate}}"
                             [matAutocomplete]="auto">

@@ -32,6 +32,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     @Input() canAddCorrespondents: boolean = true;
     @Input() canModifyGroupInfo: boolean = true;
     @Input() allPerimeters: boolean = true;
+    @Input() contactIds: number[] = [];
 
     @Output() afterUpdate = new EventEmitter<any>();
 
@@ -95,11 +96,51 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         if (this.contactGroupId === null) {
             this.creationMode = true;
             this.initTree();
+            this.canAddCorrespondents = false;
             this.canModifyGroupInfo = true;
+            console.log(this.contactIds);
+            if (this.contactIds.length > 0) {
+                this.initContacts();
+            }
         } else {
             this.creationMode = false;
             this.getContactGroup(this.contactGroupId);
         }
+    }
+
+    async initContacts() {
+        this.displayedColumnsAdded = this.displayedColumnsAdded.filter((col: any) => ['select', 'actions'].indexOf(col) === -1);
+        this.nbLinkedCorrespondents = this.contactIds.length;
+        this.nbFilteredLinkedCorrespondents = this.contactIds.length;
+        const arrContact = [];
+        for (let index = 0; index < this.contactIds.length; index++) {
+            const contact = await this.getContact(this.contactIds[index]);
+            arrContact.push(contact);
+        }
+        this.relatedCorrespondents = new MatTableDataSource(arrContact);
+        this.relatedCorrespondents.paginator = this.paginatorLinkedCorrespondents;
+
+    }
+
+    getContact(contactId: number) {
+        return new Promise((resolve) => {
+            this.http.get('../rest/contacts/' + contactId).pipe(
+                tap((data: any) => {
+                    const formatedContact = this.contactService.formatContactAddress(data);
+                    data = {
+                        id: data.id,
+                        type: 'contact',
+                        name: this.contactService.formatContact(data),
+                        address: !this.functionsService.empty(formatedContact) ? formatedContact : this.translate.instant('lang.unavailable')
+                    };
+                    resolve(data);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     getContactGroup(contactGroupId: number) {
@@ -111,7 +152,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 data.entities = data.entities.map((entity: any) => {
                     return {
                         ...entity,
-                        id : parseInt(entity.id)
+                        id: parseInt(entity.id)
                     };
                 });
                 if (!this.canModifyGroupInfo) {
@@ -144,7 +185,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 data.entities = data.entities.map((entity: any) => {
                     return {
                         ...entity,
-                        id : parseInt(entity.id)
+                        id: parseInt(entity.id)
                     };
                 });
                 return data.entities;
@@ -305,7 +346,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
             this.http.put('../rest/contactsGroups/' + this.contactsGroup.id, this.contactsGroup)
                 .subscribe(() => {
                     if (!this.hideSaveButton) {
-                        this.router.navigate(['/administration/contacts-groups']);
+                        this.router.navigate(['/administration/contacts/contacts-groups']);
                     }
                     this.notify.success(this.translate.instant('lang.contactsGroupUpdated'));
                     this.afterUpdate.emit(this.contactsGroup.id);
