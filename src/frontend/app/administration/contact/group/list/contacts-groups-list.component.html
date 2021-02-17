@@ -43,7 +43,7 @@
                 style="width:60px;flex: initial;align-items: center;display: flex;">
                 <mat-checkbox color="primary" (click)="$event.stopPropagation()"
                     (change)="$event ? toggleContactGroup(element) : null"
-                    [checked]="selection.isSelected(element.id)"
+                    [checked]="selection.isSelected(element)"
                     [disabled]="!element.allowed">
                 </mat-checkbox>
             </mat-cell>

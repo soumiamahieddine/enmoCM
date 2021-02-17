@@ -132,7 +132,7 @@
                 </div>
             </div>
             <mat-table *ngIf="!loading" #sortLinkedCorrespondents="matSort" [dataSource]="relatedCorrespondents" matSort
-                matSortActive="contact" matSortDirection="asc">
+                matSortActive="name" matSortDirection="asc">
                 <ng-container matColumnDef="select">
                     <mat-header-cell *matHeaderCellDef
                         style="width:60px;flex: initial;align-items: center;display: flex;">
@@ -151,7 +151,7 @@
                     </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="type">
-                    <mat-header-cell *matHeaderCellDef matSortDisableClear disabled mat-sort-header
+                    <mat-header-cell *matHeaderCellDef matSortDisableClear mat-sort-header
                         style="width:70px;flex: initial;padding-left: 5px;padding-right: 5px;">
                         {{'lang.type' | translate}}
                     </mat-header-cell>
@@ -164,8 +164,8 @@
                         </mat-icon>
                     </mat-cell>
                 </ng-container>
-                <ng-container matColumnDef="contact">
-                    <mat-header-cell *matHeaderCellDef disabled matSortDisableClear mat-sort-header style="flex:3;">
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef matSortDisableClear mat-sort-header style="flex:3;">
                         {{'lang.correspondent' | translate}}
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element" style="flex:3;"> {{element.name}} </mat-cell>

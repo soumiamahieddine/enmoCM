@@ -57,7 +57,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     searchResult: any = [];
 
     displayedColumns = ['type', 'name', 'address'];
-    displayedColumnsAdded = ['select', 'type', 'contact', 'address', 'actions'];
+    displayedColumnsAdded = ['select', 'type', 'name', 'address', 'actions'];
     dataSource: any;
     // dataSourceLinkedCorrespondents: any;
     dataSourceLinkedCorrespondents: CorrespondentListHttpDao | null;

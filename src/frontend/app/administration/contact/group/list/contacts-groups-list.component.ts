@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ContactsGroupFormModalComponent } from '../form/modal/contacts-group-form-modal.component';
 import { Router } from '@angular/router';
 import { PrivilegeService } from '@service/privileges.service';
+import { ContactsGroupMergeModalComponent } from './merge-modal/contacts-group-merge-modal.component';
 
 @Component({
     selector: 'app-contacts-groups-list',
@@ -66,6 +67,7 @@ export class ContactsGroupsListComponent implements OnInit {
     }
 
     getContactsGroups() {
+        this.selection.clear();
         return new Promise((resolve) => {
             const param = !this.allPerimeters ? '?profile=true' : '';
 
@@ -104,16 +106,13 @@ export class ContactsGroupsListComponent implements OnInit {
     }
 
     mergeContactsGroups() {
-        let selectedcontactsGroupsLabels: any = this.contactsGroups.filter((contactGroup: any) => this.selection.selected.indexOf(contactGroup.id) > -1).map((contactGroup: any) => contactGroup.label);
-        selectedcontactsGroupsLabels = selectedcontactsGroupsLabels.join(', ');
-        console.log(selectedcontactsGroupsLabels);
-        const msg = this.translate.instant('lang.mergeConfirm', { 0: selectedcontactsGroupsLabels });
-        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: `${this.translate.instant('lang.merge')}`, msg: msg } });
+        console.log(this.selection.selected);
+        
+        const dialogRef = this.dialog.open(ContactsGroupMergeModalComponent, { panelClass: 'maarch-modal', autoFocus: false, data: { itemsToMerge: this.selection.selected } });
         dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            // exhaustMap(() => this.http.post(`../rest/contactsGroups/merge`, data)),
+            filter((data: string) => data === 'success'),
             tap(() => {
-                this.notify.success(this.translate.instant('lang.attachmentMerged'));
+                this.getContactsGroups();
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -139,7 +138,7 @@ export class ContactsGroupsListComponent implements OnInit {
     }
 
     toggleContactGroup(element: any) {
-        this.selection.toggle(element.id);
+        this.selection.toggle(element);
     }
 
     isAllSelected() {
@@ -149,7 +148,7 @@ export class ContactsGroupsListComponent implements OnInit {
     }
 
     toggleAllContactsGroups() {
-        this.isAllSelected() ? this.selection.clear() : this.contactsGroups.filter(element => element.allowed).forEach(element => this.selection.select(element.id));
+        this.isAllSelected() ? this.selection.clear() : this.contactsGroups.filter(element => element.allowed).forEach(element => this.selection.select(element));
     }
 
     isLocked(element: any) {
