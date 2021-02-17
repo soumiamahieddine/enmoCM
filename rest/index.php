@@ -165,6 +165,7 @@ $app->delete('/contactsCustomFields/{id}', \Contact\controllers\ContactCustomFie
 //ContactsGroups
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
 $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');
+$app->put('/contactsGroups/merge', \Contact\controllers\ContactGroupController::class . ':merge');
 $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':getById');
 $app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':update');
 $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
