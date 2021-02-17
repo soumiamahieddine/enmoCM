@@ -15,14 +15,6 @@
                 title="{{'lang.description' | translate}}" type="text" placeholder="{{'lang.description' | translate}}"
                 maxlength="255" [disabled]="!canModifyGroupInfo">
         </mat-form-field>
-
-        <!--<div class="form-group">
-            <div class="col-sm-6" style="text-align:center;">
-                <mat-slide-toggle name="public" title="{{'lang.contactsGroupDesc' | translate}}" id="public"
-                    color="primary" [(ngModel)]="contactsGroup.public"
-                    [checked]="contactsGroup.public">{{'lang.public' | translate}}</mat-slide-toggle>
-            </div>
-        </div>-->
         <div style="text-align:center;" *ngIf="!hideSaveButton">
             <button mat-raised-button color="primary" type="submit"
                 [disabled]="!isValid()">{{'lang.save' | translate}}</button>
@@ -87,7 +79,7 @@
                                         ({{dataSource.data.length}} résultat(s))
                                     </span>
                                 </div>
-                                <cdk-virtual-scroll-viewport itemSize="48" class="example-viewport"
+                                <cdk-virtual-scroll-viewport *ngIf="!displayCorrespondents" itemSize="48" class="example-viewport"
                                     style="height: 300px;">
 
                                     <mat-selection-list (selectionChange)="toggleCorrespondent($event.option.value)">
@@ -131,7 +123,7 @@
                     </mat-paginator>
                 </div>
             </div>
-            <mat-table *ngIf="!loading" #sortLinkedCorrespondents="matSort" [dataSource]="relatedCorrespondents" matSort
+            <mat-table *ngIf="!loading" #sortLinkedCorrespondents="matSort" [dataSource]="relatedCorrespondents" matSort matSortDisableClear
                 matSortActive="name" matSortDirection="asc">
                 <ng-container matColumnDef="select">
                     <mat-header-cell *matHeaderCellDef
@@ -151,7 +143,7 @@
                     </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="type">
-                    <mat-header-cell *matHeaderCellDef matSortDisableClear mat-sort-header
+                    <mat-header-cell *matHeaderCellDef mat-sort-header
                         style="width:70px;flex: initial;padding-left: 5px;padding-right: 5px;">
                         {{'lang.type' | translate}}
                     </mat-header-cell>
@@ -165,13 +157,13 @@
                     </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="name">
-                    <mat-header-cell *matHeaderCellDef matSortDisableClear mat-sort-header style="flex:3;">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:3;">
                         {{'lang.correspondent' | translate}}
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element" style="flex:3;"> {{element.name}} </mat-cell>
                 </ng-container>
                 <ng-container matColumnDef="address">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header matSortDisableClear disabled style="flex:3;">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header disabled style="flex:3;">
                         {{'lang.address' | translate}}
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element" style="flex:3;"

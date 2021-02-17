@@ -4,7 +4,7 @@
 <mat-card *ngIf="!loading" class="card-app-content">
     <div class="table-tools">
         <div>
-            <button *ngIf="showAddButton" mat-flat-button color="primary" (click)="openContactsGroupModal(null)" style="margin-left: 5px;margin-right: 5px;">
+            <button *ngIf="showAddButton" mat-flat-button color="primary" [title]="'lang.addNewCorrespondentsGroup' | translate" (click)="openContactsGroupModal(null)" style="margin-left: 5px;margin-right: 5px;">
                 <mat-icon class="fa fa-plus" style="width: auto;height: auto;"></mat-icon>
                 {{'lang.add' | translate}}
             </button>
@@ -77,8 +77,8 @@
             </mat-header-cell>
             <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"
                 style="flex:1;">
-                <span *ngIf="element.entities.length === 0"> {{'lang.no' | translate}} </span>
-                <span *ngIf="element.entities.length > 0"> {{'lang.yes' | translate}} </span>
+                <span *ngIf="element.entities?.length === 0"> {{'lang.no' | translate}} </span>
+                <span *ngIf="element.entities?.length > 0"> {{'lang.yes' | translate}} </span>
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="owner">

@@ -36,6 +36,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     @Output() afterUpdate = new EventEmitter<any>();
 
     creationMode: boolean = true;
+    displayCorrespondents: boolean = true; // fix issue virtual scroll
 
     contactsGroup: any = {
         entities: []
@@ -229,6 +230,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
 
     searchContact(search: string, event: Event, trigger: MatAutocompleteTrigger) {
         this.loadingCorrespondents = true;
+        this.displayCorrespondents = true;
         this.http.get('../rest/autocomplete/correspondents', { params: { 'limit': '1000', 'search': search } }).pipe(
             tap((data: any) => {
                 this.searchResult = data.map((contact: any) => {
@@ -244,6 +246,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 this.loadingCorrespondents = false;
                 setTimeout(() => {
                     trigger.openPanel();
+                    this.displayCorrespondents = false;
                 }, 100);
             })
         ).subscribe();

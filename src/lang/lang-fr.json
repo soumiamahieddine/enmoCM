@@ -2336,6 +2336,6 @@
     "correspondents": "correspondant(s)",
     "mergeCorrespondentsGroupInfo": "Les groupements de correspondants suivants seront fusionnés",
     "newLabel": "Nouveau label",
-    "newDescription": "Nouvelle description"
-
+    "newDescription": "Nouvelle description",
+    "addNewCorrespondentsGroup": "Ajouter un nouveau groupement de correspondants"
 }
