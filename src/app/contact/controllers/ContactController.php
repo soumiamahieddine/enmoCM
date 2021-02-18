@@ -271,7 +271,6 @@ class ContactController
         $filling = ContactController::getFillingRate(['contactId' => $rawContact['id']]);
         $contact['fillingRate'] = empty($filling) ? null : $filling;
 
-        $queryParams = $request->getQueryParams();
         if (!empty($queryParams['resourcesCount'])) {
             $inResources = ResourceContactModel::get([
                 'select' => ['item_id'],
