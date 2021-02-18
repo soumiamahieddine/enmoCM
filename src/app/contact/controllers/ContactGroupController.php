@@ -32,9 +32,12 @@ class ContactGroupController
     {
         $queryParams = $request->getQueryParams();
 
+        $hasAdmin = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]);
+        $hasPrivilege = PrivilegeController::hasPrivilege(['privilegeId' => 'add_correspondent_in_shared_groups_on_profile', 'userId' => $GLOBALS['id']]);
+
         $where = [];
         $data = [];
-        if (empty($queryParams['profile']) && PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if (empty($queryParams['profile']) && $hasAdmin) {
             $where[] = '1=1';
         } else {
             $wherePerimeter = 'owner = ?';
@@ -55,6 +58,11 @@ class ContactGroupController
             $contactsGroups[$key]['labelledOwner']      = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
             $contactsGroups[$key]['entities']           = (array)json_decode($contactsGroup['entities'], true);
             $contactsGroups[$key]['nbCorrespondents']   = $correspondents[0]['count'];
+
+            $contactsGroups[$key]['canUpdateCorrespondents'] = false;
+            if ($hasAdmin || $hasPrivilege || $contactsGroup['owner'] == $GLOBALS['id']) {
+                $contactsGroups[$key]['canUpdateCorrespondents'] = true;
+            }
         }
         
         return $response->withJson(['contactsGroups' => $contactsGroups]);
@@ -398,7 +406,6 @@ class ContactGroupController
                 'limit'     => $queryParams['limit'],
                 'orderBy'   => $orderBy
             ]);
-
         } else {
             $rawCorrespondents = ContactGroupListModel::getWithCorrespondents([
                 'select'    => ['correspondent_id', 'correspondent_type', 'count(1) OVER()'],
@@ -446,7 +453,20 @@ class ContactGroupController
             }
         }
 
-        return $response->withJson(['correspondents' => $correspondents, 'count' => $rawCorrespondents[0]['count'] ?? 0]);
+        $rawAllCorrespondents = ContactGroupListModel::get([
+            'select'    => ['correspondent_id', 'correspondent_type'],
+            'where'     => ['contacts_groups_id = ?'],
+            'data'      => [$args['id']]
+        ]);
+        $allCorrespondents = [];
+        foreach ($rawAllCorrespondents as $rawAllCorrespondent) {
+            $allCorrespondents[] = [
+                'id'    => $rawAllCorrespondent['correspondent_id'],
+                'type'  => $rawAllCorrespondent['correspondent_type']
+            ];
+        }
+
+        return $response->withJson(['correspondents' => $correspondents, 'count' => $rawCorrespondents[0]['count'] ?? 0, 'allCorrespondents' => $allCorrespondents]);
     }
 
     public function addCorrespondents(Request $request, Response $response, array $args)
