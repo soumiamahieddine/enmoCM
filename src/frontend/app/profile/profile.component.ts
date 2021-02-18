@@ -84,18 +84,6 @@ export class ProfileComponent implements OnInit {
     myBasketExpansionPanel: boolean = false;
     @ViewChildren(MatExpansionPanel) viewPanels: QueryList<MatExpansionPanel>;
 
-    // History
-    displayedColumns = ['event_date', 'record_id', 'info'];
-    dataSource: any;
-    @ViewChild('paginatorHistory', { static: false }) paginatorHistory: MatPaginator;
-    @ViewChild('tableHistorySort', { static: false }) sortHistory: MatSort;
-    applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
-    }
-
-
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
@@ -120,20 +108,6 @@ export class ProfileComponent implements OnInit {
             if (!this.appService.getViewMode()) {
                 this.sidenavRight.open();
             }
-
-            this.http.get('../rest/history/users/' + this.user.id)
-                .subscribe((data: any) => {
-                    this.histories = data.histories;
-                    setTimeout(() => {
-                        this.dataSource = new MatTableDataSource(this.histories);
-                        this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
-                        this.dataSource.paginator = this.paginatorHistory;
-                        this.dataSource.sort = this.sortHistory;                        
-                    }, 0);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-
         } else if (event.index == 1) {
             this.sidenavRight.close();
         } else if (!this.appService.getViewMode()) {

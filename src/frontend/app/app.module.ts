@@ -143,6 +143,7 @@ import { BasketColorComponent } from './profile/parameters/basketsColor/basket-c
 import { MyBasketsComponent } from './profile/parameters/baskets/baskets.component';
 import { MySignatureMailComponent } from './profile/parameters/signatureMail/signature-mail.component';
 import { MySignatureBookComponent } from './profile/parameters/signatureBook/signature-book.component';
+import { ProfileHistoryComponent } from './profile/history/history.component';
 
 import { DevToolComponent } from '@service/debug/dev-tool.component';
 import { DevLangComponent } from '@service/debug/dev-lang.component';
@@ -285,7 +286,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         BasketColorComponent,
         MyBasketsComponent,
         MySignatureMailComponent,
-        MySignatureBookComponent
+        MySignatureBookComponent,
+        ProfileHistoryComponent
     ],
     exports : [
         SharedModule
