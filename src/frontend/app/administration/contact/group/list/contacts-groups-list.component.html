@@ -77,8 +77,8 @@
             </mat-header-cell>
             <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"
                 style="flex:1;">
-                <span *ngIf="element.entities?.length === 0"> {{'lang.no' | translate}} </span>
-                <span *ngIf="element.entities?.length > 0"> {{'lang.yes' | translate}} </span>
+                <span *ngIf="!element.shared"> {{'lang.no' | translate}} </span>
+                <span *ngIf="element.shared"> {{'lang.yes' | translate}} </span>
             </mat-cell>
         </ng-container>
         <ng-container matColumnDef="owner">

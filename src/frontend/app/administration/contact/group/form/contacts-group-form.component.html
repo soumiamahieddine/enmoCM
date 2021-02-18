@@ -20,7 +20,7 @@
                 [disabled]="!isValid()">{{'lang.save' | translate}}</button>
         </div>
     </form>
-    <div class="formType">
+    <div class="formType" *ngIf="!creationMode || (creationMode && contactIds.length > 0)">
         <div class="formType-title">
             {{nbLinkedCorrespondents}} {{'lang.relatedCorrespondents' | translate}}&nbsp;<span
                 *ngIf="nbLinkedCorrespondents !== nbFilteredLinkedCorrespondents"

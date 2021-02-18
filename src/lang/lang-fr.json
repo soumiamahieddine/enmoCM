@@ -2336,5 +2336,9 @@
     "mergeCorrespondentsGroupInfo": "Les groupements de correspondants suivants seront fusionnés",
     "newLabel": "Nouveau label",
     "newDescription": "Nouvelle description",
-    "addNewCorrespondentsGroup": "Ajouter un nouveau groupement de correspondants"
+    "addNewCorrespondentsGroup": "Ajouter un nouveau groupement de correspondants",
+    "selectedContacts": "contact(s) sélectionné(s)",
+    "newCorrespondentsGroup": "Nouveau groupement",
+    "associateToCorrespondentsGroup": "Associer à un groupement",
+    "correspondentsGroups": "Groupement(s) de correspondants"
 }

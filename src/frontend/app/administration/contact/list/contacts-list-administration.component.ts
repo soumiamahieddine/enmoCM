@@ -19,6 +19,7 @@ import { ContactImportComponent } from './import/contact-import.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ContactsGroupFormModalComponent } from '../group/form/modal/contacts-group-form-modal.component';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { LatinisePipe } from 'ngx-pipes';
 
 @Component({
     selector: 'contact-list',
@@ -43,11 +44,15 @@ export class ContactsListAdministrationComponent implements OnInit {
     routeUrl: string = '../rest/contacts';
     resultListDatabase: ContactListHttpDao | null;
     resultsLength = 0;
+    correspondentsGroups: any = [];
     selection = new SelectionModel<Element>(true, []);
 
     searchContact = new FormControl();
     search: string = '';
     dialogRef: MatDialogRef<any>;
+    filterCorrespondentsGroups = new FormControl();
+    filteredCorrespondentsGroups: Observable<string[]>;
+
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableContactListSort', { static: true }) sort: MatSort;
@@ -101,6 +106,7 @@ export class ContactsListAdministrationComponent implements OnInit {
         public appService: AppService,
         public dialog: MatDialog,
         public functions: FunctionsService,
+        private latinisePipe: LatinisePipe,
         public adminService: AdministrationService,
         private viewContainerRef: ViewContainerRef) { }
 
@@ -157,6 +163,45 @@ export class ContactsListAdministrationComponent implements OnInit {
                     return observableOf([]);
                 })
             ).subscribe(data => this.data = data);
+    }
+
+    getCorrespondentsGroups() {
+        this.filterCorrespondentsGroups.reset();
+        this.http.get('../rest/contactsGroups').pipe(
+            tap((data: any) => {
+                // TO DO : filter readonly contact
+                this.correspondentsGroups = data['contactsGroups'];
+                this.filteredCorrespondentsGroups = this.filterCorrespondentsGroups.valueChanges
+                    .pipe(
+                        startWith(''),
+                        map(state => state ? this._filter(state) : this.correspondentsGroups.slice())
+                    );
+            })
+        ).subscribe();
+    }
+
+    addContactsToCorrespondentsGroup(groupId: number) {
+        const objTosend = this.selection.selected.map((contactId: any) => {
+            return {
+                id: contactId,
+                type: 'contact'
+            };
+        });
+        this.http.post('../rest/contactsGroups/' + groupId + '/correspondents', { correspondents: objTosend }).pipe(
+            tap(() => {
+                this.selection.clear();
+                this.notify.success('Contact(s) associé(s)');
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    private _filter(value: string): string[] {
+        const filterValue = this.latinisePipe.transform(value.toLowerCase());
+        return this.correspondentsGroups.filter((option: any) => this.latinisePipe.transform(this.translate.instant(option['label']).toLowerCase()).includes(filterValue));
     }
 
     processPostData(data: any) {
@@ -261,6 +306,7 @@ export class ContactsListAdministrationComponent implements OnInit {
     }
 
     refreshDao() {
+        this.selection.clear();
         this.filtersChange.emit();
     }
 
@@ -354,7 +400,7 @@ export class ContactsListAdministrationComponent implements OnInit {
         this.contextMenuPosition.y = y + 'px';
 
         // Opens the menu
-        this.contextMenus.toArray()[this.contextMenus.toArray().length - 1].openMenu();
+        this.contextMenus.toArray()[this.contextMenus.toArray().map((item: any) => item._element.nativeElement.id).indexOf('menuButtonContext')].openMenu();
 
         // prevents default
         return false;
@@ -382,7 +428,7 @@ export class ContactListHttpDao {
     styleUrls: [],
 })
 export class ContactsListAdministrationRedirectModalComponent {
-    
+
     modalTitle: string = this.translate.instant('lang.confirmAction');
     redirectContact: number;
     processMode: string = 'delete';

@@ -304,9 +304,9 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         this.contactsGroup.entities = this.contactsGroup.entities.filter((entity: any) => formatedEntities.indexOf(entity) === -1);
     }
 
-    saveContactsList(): void {
+    saveContactsList(cGroupId: number = this.contactsGroup.id): void {
         this.savingCorrespondents = true;
-        this.http.post('../rest/contactsGroups/' + this.contactsGroup.id + '/correspondents', { 'correspondents': this.formatCorrespondents() })
+        this.http.post('../rest/contactsGroups/' + cGroupId + '/correspondents', { 'correspondents': this.formatCorrespondents() })
             .subscribe((data: any) => {
                 this.notify.success(this.translate.instant('lang.contactAdded'));
                 this.selection.clear();
@@ -334,6 +334,16 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         if (this.creationMode) {
             this.http.post('../rest/contactsGroups', this.contactsGroup)
                 .subscribe((data: any) => {
+                    if (this.contactIds.length > 0) {
+                        this.contactIds.forEach((contactId) => {
+                            const objContact: any = {
+                                id: contactId,
+                                type: 'contact'
+                            };
+                            this.selection.select(objContact);
+                        });
+                        this.saveContactsList(data.id);
+                    }
                     if (!this.hideSaveButton) {
                         this.router.navigate(['/administration/contacts/contacts-groups/' + data.id]);
                     }

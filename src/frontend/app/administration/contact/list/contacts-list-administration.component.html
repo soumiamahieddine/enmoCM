@@ -49,30 +49,49 @@
                 <div class="example-loading-shade" *ngIf="isLoadingResults">
                     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
                 </div>
-                <div style="display: grid;grid-template-columns: 60px 1fr 1fr;grid-gap: 10px;align-items: center;">
-                    <div style="text-align: center;">
-                        <button mat-icon-button *ngIf="selection.hasValue()" color="primary"
+                <div style="display: grid;grid-template-columns: auto 1fr 1fr;grid-gap: 10px;align-items: center;">
+                    <div style="text-align: center;padding-left:5px;padding-right:5px;">
+                        <button id="menuButton" mat-stroked-button [disabled]="!selection.hasValue()" color="primary" style="border-radius: 20px;"
                             [matMenuTriggerFor]="menuContact">
-                            <mat-icon class="fa fa-users" aria-hidden="true">
-                                <!--<i class="fa fa-chevron-down" style="font-size: 8px;position: absolute;top: 10px;right: 2px;"></i>-->
+                            {{'lang.actions' | translate}}
+                            <mat-icon class="fa fa-chevron-down" aria-hidden="true" style="color:#d9d9d9;width: auto;height:auto;">
                             </mat-icon>
                         </button>
-                        <span [matMenuTriggerFor]="menuContactContext" #contextMenuContact style="position: fixed;" [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"></span>
+                        <span id="menuButtonContext" [matMenuTriggerFor]="menuContactContext" #contextMenuContact style="position: fixed;"
+                            [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"></span>
                         <mat-menu #menuContact="matMenu">
                             <div
                                 style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
-                                {{selection.selected.length}} contact(s) sélectionné(s)
+                                {{selection.selected.length}} {{'lang.selectedContacts' | translate}}
                             </div>
-                            <button mat-menu-item (click)="openContactsGroupModal()">Nouveau groupement</button>
-                            <button mat-menu-item>Associer à un groupement</button>
+                            <button mat-menu-item (click)="openContactsGroupModal()">{{'lang.newCorrespondentsGroup' | translate}}</button>
+                            <button mat-menu-item [matMenuTriggerFor]="correspondentsGroupMenu" (menuOpened)="getCorrespondentsGroups()">{{'lang.associateToCorrespondentsGroup' | translate}}</button>
                         </mat-menu>
                         <mat-menu #menuContactContext="matMenu">
                             <div
                                 style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
-                                {{selection.selected.length}} contact(s) sélectionné(s)
+                                {{selection.selected.length}} {{'lang.selectedContacts' | translate}}
                             </div>
-                            <button mat-menu-item (click)="openContactsGroupModal()">Nouveau groupement</button>
-                            <button mat-menu-item>Associer à un groupement</button>
+                            <button mat-menu-item (click)="openContactsGroupModal()">{{'lang.newCorrespondentsGroup' | translate}}</button>
+                            <button mat-menu-item [matMenuTriggerFor]="correspondentsGroupMenu" (menuOpened)="getCorrespondentsGroups()">{{'lang.associateToCorrespondentsGroup' | translate}}</button>
+                        </mat-menu>
+                        <mat-menu #correspondentsGroupMenu="matMenu" [class]="'correspondentsGroupMenuMenu'">
+                            <div (click)="$event.stopPropagation();"
+                                style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;position: sticky;top: 0px;z-index: 1;">
+                                {{'lang.correspondentsGroups' | translate}}
+                            </div>
+                            <mat-form-field (click)="$event.stopPropagation();" class="smallInput" appearance="outline" floatLabel="never">
+                                <mat-icon color="primary" class="fa fa-search" matPrefix></mat-icon>
+                                <input type="text" [formControl]="filterCorrespondentsGroups" [placeholder]="'Filtrer'"
+                                    matInput>
+                            </mat-form-field>
+                            <ng-container *ngFor="let group of filteredCorrespondentsGroups | async | sortBy : 'label'">
+                                <button mat-menu-item (click)="addContactsToCorrespondentsGroup(group.id)">{{group.label}}
+                                </button>
+                            </ng-container>
+                            <div *ngIf="correspondentsGroups.length == 0">
+                                {{'lang.noData' | translate}}
+                            </div>
                         </mat-menu>
                     </div>
                     <div>
@@ -169,8 +188,9 @@
                             </mat-cell>
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="displayedColumnsContact"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumnsContact;" (contextmenu)="open($event, row);"
-                            routerLink="/administration/contacts/list/{{row.id}}" [class.selected]="selection.isSelected(row.id)" style="cursor: pointer;">
+                        <mat-row *matRowDef="let row; columns: displayedColumnsContact;"
+                            (contextmenu)="open($event, row);" routerLink="/administration/contacts/list/{{row.id}}"
+                            [class.selected]="selection.isSelected(row.id)" style="cursor: pointer;">
                         </mat-row>
                     </mat-table>
                     <div class="mat-paginator"
