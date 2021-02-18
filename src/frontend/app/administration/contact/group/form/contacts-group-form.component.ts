@@ -221,6 +221,9 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                         this.nbLinkedCorrespondents = data.count;
                     }
                     this.nbFilteredLinkedCorrespondents = data.count;
+                    if (this.allRelatedCorrespondents.length === 0) {
+                        this.allRelatedCorrespondents = data.allCorrespondents;
+                    }
                     return data.correspondents;
                 }),
                 catchError((err: any) => {
@@ -414,17 +417,21 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     }
 
     toggleRelatedCorrespondent(element: any) {
-        this.relatedCorrespondentsSelected.toggle(element);
+        this.relatedCorrespondentsSelected.toggle(this.allRelatedCorrespondents.find((item: any) => item.id === element.id && item.type === element.type));
     }
 
     toggleAllRelatedCorrespondents() {
         this.allRelatedCorrespondents.forEach((row: any) => {
-            this.relatedCorrespondentsSelected.select(row);
+            this.relatedCorrespondentsSelected.toggle(row);
         });
     }
 
+    isRelatedCorrespondentsSelected(element: any) {
+        return this.relatedCorrespondentsSelected.isSelected(this.allRelatedCorrespondents.find((item: any) => item.id === element.id && item.type === element.type));
+    }
+
     isAllRelatedCorrespondentsSelected() {
-        const numSelected = this.selection.selected.length;
+        const numSelected = this.relatedCorrespondentsSelected.selected.length;
         const numRows = this.allRelatedCorrespondents.length;
         return numSelected === numRows;
     }
@@ -449,7 +456,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
 export interface CorrespondentList {
     correspondents: any[];
     count: number;
-    countAll: number;
+    allCorrespondents: any[];
 }
 export class CorrespondentListHttpDao {
 

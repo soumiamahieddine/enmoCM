@@ -138,7 +138,7 @@
                         style="width:60px;flex: initial;align-items: center;display: flex;">
                         <mat-checkbox color="primary" (click)="$event.stopPropagation()"
                             (change)="$event ? toggleRelatedCorrespondent(element) : null"
-                            [checked]="relatedCorrespondentsSelected.isSelected(element.id)">
+                            [checked]="isRelatedCorrespondentsSelected(element)">
                         </mat-checkbox>
                     </mat-cell>
                 </ng-container>
