@@ -51,10 +51,9 @@ class ContactGroupController
         $contactsGroups = ContactGroupModel::get(['where' => $where, 'data' => $data]);
         foreach ($contactsGroups as $key => $contactsGroup) {
             $correspondents = ContactGroupListModel::get(['select' => ['COUNT(1)'], 'where' => ['contacts_groups_id = ?'], 'data' => [$contactsGroup['id']]]);
-            $entities = json_decode($contactsGroup['entities'], true);
 
             $contactsGroups[$key]['labelledOwner']      = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-            $contactsGroups[$key]['shared']             = !empty($entities);
+            $contactsGroups[$key]['entities']           = (array)json_decode($contactsGroup['entities'], true);
             $contactsGroups[$key]['nbCorrespondents']   = $correspondents[0]['count'];
         }
         
@@ -237,14 +236,14 @@ class ContactGroupController
         $contactGroup = ContactGroupModel::getById(['select' => ['*'], 'id' => $args['id']]);
 
         $label = $contactGroup['label'];
-        $existingCopy = ContactGroupModel::get(['select' => ['label'], 'where' => ['label like ?'], 'data' => ["{$contactGroup['label']} copy(%"], 'orderBy' => ['id DESC'], 'limit' => 1]);
+        $existingCopy = ContactGroupModel::get(['select' => ['label'], 'where' => ['label like ?'], 'data' => ["{$contactGroup['label']} (%)"], 'orderBy' => ['id DESC'], 'limit' => 1]);
         if (!empty($existingCopy[0])) {
-            $pos = strpos($existingCopy[0]['label'], 'copy(');
-            $number = (int)$existingCopy[0]['label'][$pos + 5];
+            $pos = strrpos($existingCopy[0]['label'], '(');
+            $number = (int)$existingCopy[0]['label'][$pos + 1];
             ++$number;
-            $label .= " copy({$number})";
+            $label .= " ({$number})";
         } else {
-            $label .= ' copy(1)';
+            $label .= ' (1)';
         }
 
         $id = ContactGroupModel::create([
@@ -377,7 +376,7 @@ class ContactGroupController
 
         if (!empty($queryParams['search'])) {
             $fields = [
-                'contacts.firstname', 'contacts.lastname', 'users.firstname', 'users.lastname', 'entities.entity_label',
+                'contacts.firstname', 'contacts.lastname', 'contacts.company', 'users.firstname', 'users.lastname', 'entities.entity_label',
                 'contacts.address_number', 'contacts.address_street', 'contacts.address_town', 'contacts.address_postcode',
                 'entities.address_number', 'entities.address_street', 'entities.address_town', 'entities.address_postcode'
             ];
@@ -388,7 +387,7 @@ class ContactGroupController
                 'fields'        => $fields,
                 'where'         => $where,
                 'data'          => $data,
-                'fieldsNumber'  => 13,
+                'fieldsNumber'  => 14,
             ]);
 
             $rawCorrespondents = ContactGroupListModel::getWithCorrespondents([
@@ -484,13 +483,15 @@ class ContactGroupController
             }
         }
 
+        $contactsGroup = ContactGroupModel::getById(['id' => $args['id'], 'select' => ['label']]);
+
         HistoryController::add([
             'tableName' => 'contacts_groups_lists',
             'recordId'  => $args['id'],
             'eventType' => 'ADD',
-            'info'      => _CONTACTS_GROUP_LIST_ADDED ,
+            'info'      => _CONTACTS_GROUP_LIST_ADDED . " : {$contactsGroup['label']}",
             'moduleId'  => 'contact',
-            'eventId'   => 'contactsGroupListCreation',
+            'eventId'   => 'contactsGroupListCreation'
         ]);
 
         return $response->withStatus(204);
@@ -516,13 +517,15 @@ class ContactGroupController
             }
         }
 
+        $contactsGroup = ContactGroupModel::getById(['id' => $args['id'], 'select' => ['label']]);
+
         HistoryController::add([
             'tableName' => 'contacts_groups_lists',
             'recordId'  => $args['id'],
             'eventType' => 'DEL',
-            'info'      => _CONTACTS_GROUP_LIST_DELETED,
+            'info'      => _CONTACTS_GROUP_LIST_DELETED. " : {$contactsGroup['label']}",
             'moduleId'  => 'contact',
-            'eventId'   => 'contactsGroupListSuppression',
+            'eventId'   => 'contactsGroupListSuppression'
         ]);
 
         return $response->withStatus(204);
