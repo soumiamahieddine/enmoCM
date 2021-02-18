@@ -18,6 +18,7 @@ use Attachment\models\AttachmentModel;
 use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactGroupListModel;
+use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
 use Entity\models\EntityModel;
@@ -224,6 +225,8 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
+        $queryParams = $request->getQueryParams();
+
         $contact = [
             'id'                    => $rawContact['id'],
             'civility'              => null,
@@ -289,6 +292,17 @@ class ContactController
             ]);
 
             $contact['resourcesCount'] = count($inResources) + count($inAcknowledgementReceipts) + count($inAttachments);
+        }
+
+        if (!empty($queryParams['contactsGroups'])) {
+            $contactsgroupsWhereContactIs = ContactGroupModel::getWithList(['select' => ['contacts_groups.id', 'contacts_groups.label'], 'where' => ['correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], 'contact']]);
+            $contact['contactsGroups'] = [];
+            foreach ($contactsgroupsWhereContactIs as $value) {
+                $contact['contactsGroups'][] = [
+                    'id'    => $value['id'],
+                    'label' => $value['label']
+                ];
+            }
         }
 
         return $response->withJson($contact);
