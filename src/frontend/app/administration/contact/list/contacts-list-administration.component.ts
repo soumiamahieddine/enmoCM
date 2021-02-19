@@ -20,11 +20,13 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { ContactsGroupFormModalComponent } from '../group/form/modal/contacts-group-form-modal.component';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { LatinisePipe } from 'ngx-pipes';
+import { ContactService } from '@service/contact.service';
 
 @Component({
     selector: 'contact-list',
     templateUrl: 'contacts-list-administration.component.html',
-    styleUrls: ['contacts-list-administration.component.scss']
+    styleUrls: ['contacts-list-administration.component.scss'],
+    providers: [ContactService]
 })
 export class ContactsListAdministrationComponent implements OnInit {
 
@@ -61,39 +63,6 @@ export class ContactsListAdministrationComponent implements OnInit {
 
     contextMenuPosition = { x: '0px', y: '0px' };
 
-    subMenus: any[] = [
-        {
-            icon: 'fa fa-book',
-            route: '/administration/contacts',
-            label: this.translate.instant('lang.contactsList'),
-            current: true
-        },
-        {
-            icon: 'fa fa-code',
-            route: '/administration/contacts/contactsCustomFields',
-            label: this.translate.instant('lang.customFieldsAdmin'),
-            current: false
-        },
-        {
-            icon: 'fa fa-cog',
-            route: '/administration/contacts/contacts-parameters',
-            label: this.translate.instant('lang.contactsParameters'),
-            current: false
-        },
-        {
-            icon: 'fa fa-users',
-            route: '/administration/contacts/contacts-groups',
-            label: this.translate.instant('lang.contactsGroups'),
-            current: false
-        },
-        {
-            icon: 'fas fa-magic',
-            route: '/administration/contacts/duplicates',
-            label: this.translate.instant('lang.duplicatesContactsAdmin'),
-            current: false
-        },
-    ];
-
     @ViewChild(MatMenuTrigger, { static: false }) contextMenu: MatMenuTrigger;
     @ViewChildren(MatMenuTrigger) contextMenus: any;
 
@@ -108,6 +77,7 @@ export class ContactsListAdministrationComponent implements OnInit {
         public functions: FunctionsService,
         private latinisePipe: LatinisePipe,
         public adminService: AdministrationService,
+        public contactService: ContactService,
         private viewContainerRef: ViewContainerRef) { }
 
 

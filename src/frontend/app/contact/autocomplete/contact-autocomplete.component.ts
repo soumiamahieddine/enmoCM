@@ -239,7 +239,7 @@ export class ContactAutocompleteComponent implements OnInit {
 
     setFormValue(item: any) {
         if (item.type === 'contactGroup') {
-            this.http.get('../rest/contactsGroups/' + item.id + '/correspondents').pipe(
+            this.http.get('../rest/contactsGroups/' + item.id + '/correspondents?limit=none').pipe(
                 map((data: any) => {
                     const contacts = data.correspondents.map((correspondent: any) => {
                         return {
