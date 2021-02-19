@@ -293,17 +293,6 @@ class ContactController
             $contact['resourcesCount'] = count($inResources) + count($inAcknowledgementReceipts) + count($inAttachments);
         }
 
-        if (!empty($queryParams['contactsGroups'])) {
-            $contactsgroupsWhereContactIs = ContactGroupModel::getWithList(['select' => ['contacts_groups.id', 'contacts_groups.label'], 'where' => ['correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], 'contact']]);
-            $contact['contactsGroups'] = [];
-            foreach ($contactsgroupsWhereContactIs as $value) {
-                $contact['contactsGroups'][] = [
-                    'id'    => $value['id'],
-                    'label' => $value['label']
-                ];
-            }
-        }
-
         return $response->withJson($contact);
     }
 

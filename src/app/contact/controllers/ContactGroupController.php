@@ -360,7 +360,7 @@ class ContactGroupController
         return $response->withJson(['id' => $id]);
     }
 
-    public function getCorrespondents(Request $request, Response $response, array $args)
+    public function getCorrespondentsById(Request $request, Response $response, array $args)
     {
         if (!ContactGroupController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Contacts group out of perimeter']);
@@ -496,6 +496,9 @@ class ContactGroupController
         }
 
         foreach ($body['correspondents'] as $correspondent) {
+            if (!Validator::intVal()->notEmpty()->validate($correspondent['id'] ?? null) || !Validator::stringType()->notEmpty()->validate($correspondent['type'] ?? null)) {
+                continue;
+            }
             if (!in_array($correspondent['id'], $correspondents[$correspondent['type']]) && in_array($correspondent['type'], ['contact', 'user', 'entity'])) {
                 ContactGroupListModel::create([
                     'contacts_groups_id'    => $args['id'],
@@ -593,6 +596,55 @@ class ContactGroupController
         }
 
         return $response->withJson(['entities' => $allEntities]);
+    }
+
+    public function getCorrespondents(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::intVal()->notEmpty()->validate($queryParams['correspondentId'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams correspondentId is empty or not an integer']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($queryParams['correspondentType'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'QueryParams correspondentType is empty or not a string']);
+        }
+
+        $hasAdmin = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]);
+        $hasPrivilege = PrivilegeController::hasPrivilege(['privilegeId' => 'add_correspondent_in_shared_groups_on_profile', 'userId' => $GLOBALS['id']]);
+
+        $where = [];
+        $data = [];
+        if (empty($queryParams['profile']) && $hasAdmin) {
+            $where[] = '1=1';
+        } else {
+            $wherePerimeter = 'owner = ?';
+            $data[] = $GLOBALS['id'];
+            if ($hasPrivilege) {
+                $userEntities = UserModel::getEntitiesById(['id' => $GLOBALS['id'], 'select' => ['entities.id']]);
+
+                foreach ($userEntities as $userEntity) {
+                    $wherePerimeter .= ' OR entities @> ?';
+                    $data[] = json_encode($userEntity['id']);
+                }
+            }
+
+            $where[] = "({$wherePerimeter})";
+        }
+
+
+        $where[] = 'correspondent_id = ?';
+        $where[] = 'correspondent_type = ?';
+        $data[] = $queryParams['correspondentId'];
+        $data[] = $queryParams['correspondentType'];
+        $contactsgroupsWhereContactIs = ContactGroupModel::getWithList(['select' => ['contacts_groups.id', 'contacts_groups.label'], 'where' => $where, 'data' => $data]);
+        $contactsGroups = [];
+        foreach ($contactsgroupsWhereContactIs as $value) {
+            $contactsGroups[] = [
+                'id'    => $value['id'],
+                'label' => $value['label']
+            ];
+        }
+
+        return $response->withJson(['contactsGroups' => $contactsGroups]);
     }
 
     private static function hasRightById(array $args)

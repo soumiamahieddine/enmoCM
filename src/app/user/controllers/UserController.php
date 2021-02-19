@@ -124,8 +124,6 @@ class UserController
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
 
-        $queryParams = $request->getQueryParams();
-
         $user = UserModel::getById(['id' => $args['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'phone', 'mail', 'initials', 'mode', 'authorized_api', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
         $user['authorizedApi']      = json_decode($user['authorized_api'], true);
@@ -163,17 +161,6 @@ class UserController
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['mode'] != 'rest' && empty($user['external_id']['maarchParapheur'])) {
             $user['canCreateMaarchParapheurUser'] = true;
-        }
-
-        if (!empty($queryParams['contactsGroups'])) {
-            $contactsgroupsWhereUserIs = ContactGroupModel::getWithList(['select' => ['contacts_groups.id', 'contacts_groups.label'], 'where' => ['correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], 'user']]);
-            $user['contactsGroups'] = [];
-            foreach ($contactsgroupsWhereUserIs as $value) {
-                $user['contactsGroups'][] = [
-                    'id'    => $value['id'],
-                    'label' => $value['label']
-                ];
-            }
         }
 
         return $response->withJson($user);

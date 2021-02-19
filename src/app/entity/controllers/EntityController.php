@@ -83,8 +83,6 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
-        $queryParams = $request->getQueryParams();
-
         $entity = [
             'id'                    => $entity['id'],
             'entity_label'          => $entity['entity_label'],
@@ -190,17 +188,6 @@ class EntityController
         $entity['canAdminTemplates'] = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']]);
         $siret = ParameterModel::getById(['id' => 'siret', 'select' => ['param_value_string']]);
         $entity['canSynchronizeSiret'] = !empty($siret['param_value_string']);
-
-        if (!empty($queryParams['contactsGroups'])) {
-            $contactsgroupsWhereEntityIs = ContactGroupModel::getWithList(['select' => ['contacts_groups.id', 'contacts_groups.label'], 'where' => ['correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$entity['id'], 'entity']]);
-            $entity['contactsGroups'] = [];
-            foreach ($contactsgroupsWhereEntityIs as $value) {
-                $entity['contactsGroups'][] = [
-                    'id'    => $value['id'],
-                    'label' => $value['label']
-                ];
-            }
-        }
 
         return $response->withJson(['entity' => $entity]);
     }

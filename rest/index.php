@@ -170,10 +170,11 @@ $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::c
 $app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':update');
 $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
 $app->post('/contactsGroups/{id}/duplicate', \Contact\controllers\ContactGroupController::class . ':duplicate');
-$app->get('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':getCorrespondents');
+$app->get('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':getCorrespondentsById');
 $app->post('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':addCorrespondents');
 $app->delete('/contactsGroups/{id}/correspondents', \Contact\controllers\ContactGroupController::class . ':deleteCorrespondents');
 $app->get('/contactsGroupsEntities', \Contact\controllers\ContactGroupController::class . ':getAllowedEntities');
+$app->get('/contactsGroupsCorrespondents', \Contact\controllers\ContactGroupController::class . ':getCorrespondents');
 
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
