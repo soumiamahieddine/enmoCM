@@ -49,7 +49,7 @@
                         <input matInput #filterUser #trigger="matAutocompleteTrigger" [formControl]="filterInputControl"
                             placeholder="{{'lang.filterBy' | translate}} / {{'lang.linkContact' | translate}}"
                             [matAutocomplete]="auto">
-                        <button mat-stroked-button color="primary" *ngIf="filterUser.value !== '' && !dataSource" matSuffix style="font-size: 12px;line-height: 20px;"
+                        <button mat-stroked-button color="primary" *ngIf="filterUser.value !== '' && !dataSource" [title]="'lang.searchForCorrespondentsGroupAssociation' | translate" matSuffix style="font-size: 12px;line-height: 20px;"
                             (click)="searchContact(filterUser.value,$event,trigger);open($event,trigger)">
                         {{'lang.associate' | translate}}...
                         </button>

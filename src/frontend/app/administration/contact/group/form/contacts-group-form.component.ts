@@ -421,9 +421,13 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     }
 
     toggleAllRelatedCorrespondents() {
-        this.allRelatedCorrespondents.forEach((row: any) => {
-            this.relatedCorrespondentsSelected.toggle(row);
-        });
+        if (this.isAllRelatedCorrespondentsSelected()) {
+            this.relatedCorrespondentsSelected.clear();
+        } else {
+            this.allRelatedCorrespondents.forEach((row: any) => {
+                this.relatedCorrespondentsSelected.select(row);
+            });
+        }
     }
 
     isRelatedCorrespondentsSelected(element: any) {

@@ -51,7 +51,7 @@
                 </div>
                 <div style="display: grid;grid-template-columns: auto 1fr 1fr;grid-gap: 10px;align-items: center;">
                     <div style="text-align: center;padding-left:5px;padding-right:5px;">
-                        <button id="menuButton" mat-stroked-button [disabled]="!selection.hasValue()" color="primary" style="border-radius: 20px;"
+                        <button id="menuButton" class="action-button" mat-stroked-button [disabled]="!selection.hasValue()" color="primary"
                             [matMenuTriggerFor]="menuContact">
                             {{'lang.actions' | translate}}
                             <mat-icon class="fa fa-chevron-down" aria-hidden="true" style="color:#d9d9d9;width: auto;height:auto;">

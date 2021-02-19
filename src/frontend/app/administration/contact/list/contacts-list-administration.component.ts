@@ -139,7 +139,6 @@ export class ContactsListAdministrationComponent implements OnInit {
         this.filterCorrespondentsGroups.reset();
         this.http.get('../rest/contactsGroups').pipe(
             tap((data: any) => {
-                // TO DO : filter readonly contact
                 this.correspondentsGroups = data['contactsGroups'];
                 this.filteredCorrespondentsGroups = this.filterCorrespondentsGroups.valueChanges
                     .pipe(
