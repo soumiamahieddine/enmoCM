@@ -60,12 +60,14 @@
                         <mat-autocomplete #auto="matAutocomplete" class="addCorrespondentAC"
                             [panelWidth]="(dataSource && dataSource.data.length > 0) ? '900px' : undefined">
                             <mat-option disabled *ngIf="dataSource && dataSource.data.length === 0">
-                                {{'lang.noResult' | translate}}</mat-option>
+                                {{'lang.noResult' | translate}}, <a (click)="openContactForm()" style="cursor: pointer;">{{'lang.createContact' | translate}} ?</a></mat-option>
                             <mat-option disabled *ngIf="dataSource && dataSource.data.length > 0"
                                 style="display: none;"></mat-option>
                             <div *ngIf="dataSource && dataSource.data.length > 0">
                                 <div class="title-search-result">
-                                    <span style="color: #666;flex:1;" [innerHTML]="'lang.linkedSearchTo' | translate:{value: filterUser.value}">
+                                    <span style="color: #666;flex:1;">
+                                        <span [innerHTML]="'lang.linkedSearchTo' | translate:{value: filterUser.value}"></span>,
+                                        <a (click)="openContactForm()" style="cursor: pointer;">{{'lang.createContact' | translate  | lowercase}} ?</a>
                                     </span>
                                     <span style="color:#666">
                                         <a color="primary" (click)="!savingCorrespondents ? toggleAll() : false"

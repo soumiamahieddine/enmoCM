@@ -18,6 +18,7 @@ import { ContactService } from '@service/contact.service';
 import { FunctionsService } from '@service/functions.service';
 import { ConfirmComponent } from '@plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
+import { ContactsFormModalComponent } from '../../page/form/modal/contacts-form-modal.component';
 
 @Component({
     selector: 'app-contacts-group-form',
@@ -455,6 +456,31 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
             trigger.openPanel();
         }, 100);
+    }
+
+    openContactForm() {
+        const dialogRef = this.dialog.open(ContactsFormModalComponent, {
+            panelClass: 'maarch-modal',
+            disableClose: true,
+            width: '99%',
+            height: '99%',
+            data: { defaultName: this.filterInputControl.value }
+        });
+        dialogRef.afterClosed().pipe(
+            filter((data: any) => !this.functionsService.empty(data)),
+            tap((data: any) => {
+                const objContact: any = {
+                    id: data.id,
+                    type: 'contact'
+                };
+                this.selection.select(objContact);
+                this.saveContactsList();
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }
 export interface CorrespondentList {

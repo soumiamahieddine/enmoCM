@@ -51,6 +51,8 @@ export class ContactsFormComponent implements OnInit {
 
     @Input() creationMode: boolean = true;
     @Input() contactId: number = null;
+    @Input() actionButton: boolean = true;
+    @Input() defaultName: string = '';
 
     @Output() onSubmitEvent = new EventEmitter<number>();
 
@@ -324,6 +326,8 @@ export class ContactsFormComponent implements OnInit {
 
     ngOnInit(): void {
 
+        console.log('init');
+        
         this.loading = true;
 
         this.initBanSearch();
@@ -336,6 +340,9 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
+                    if (!this.functions.empty(this.defaultName)) {
+                        this.contactForm.find(contact => contact.id === 'company').control.setValue(this.defaultName);
+                    }
                     this.annuaryEnabled = data.annuaryEnabled;
                 }),
                 exhaustMap(() => this.http.get('../rest/civilities')),
