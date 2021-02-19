@@ -275,7 +275,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     searchContact(search: string, event: Event, trigger: MatAutocompleteTrigger) {
         this.loadingCorrespondents = true;
         this.displayCorrespondents = true;
-        this.http.get('../rest/autocomplete/correspondents', { params: { 'limit': '1000', 'search': search } }).pipe(
+        this.http.get('../rest/autocomplete/correspondents', { params: { 'noContactsGroups': 'true', 'limit': '1000', 'search': search } }).pipe(
             tap((data: any) => {
                 this.searchResult = data.map((contact: any) => {
                     const formatedContact = this.contactService.formatContactAddress(contact);

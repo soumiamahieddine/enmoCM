@@ -2340,5 +2340,7 @@
     "selectedContacts": "contact(s) sélectionné(s)",
     "newCorrespondentsGroup": "Nouveau groupement",
     "associateToCorrespondentsGroup": "Associer à un groupement",
-    "correspondentsGroups": "Groupement(s) de correspondants"
+    "correspondentsGroups": "Groupement(s) de correspondants",
+    "linkedSearchTo": "Recherche associées à <b>{{value}}</b>",
+    "associate": "associer"
 }

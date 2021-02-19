@@ -102,7 +102,7 @@
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor:pointer;"
-            [title]="'lang.view' | translate" (click)="goTo(row)"></mat-row>
+            [class.selected]="selection.isSelected(row)" [title]="'lang.view' | translate" (click)="goTo(row)"></mat-row>
     </mat-table>
     <div class="mat-paginator"
         style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">
