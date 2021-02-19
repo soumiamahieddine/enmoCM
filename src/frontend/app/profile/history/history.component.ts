@@ -43,9 +43,7 @@ export class ProfileHistoryComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(this.histories);
                     this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
                     this.dataSource.paginator = this.paginatorHistory;
-                    this.dataSource.sort = this.sortHistory;    
-                    console.log(this.dataSource);
-                    
+                    this.dataSource.sort = this.sortHistory;                        
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
