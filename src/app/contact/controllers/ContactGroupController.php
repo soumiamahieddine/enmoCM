@@ -303,6 +303,7 @@ class ContactGroupController
             $entities = array_merge($entities, json_decode($contactsGroup['entities'], true));
         }
         $entities = array_unique($entities);
+        $entities = array_values($entities);
 
         $id = ContactGroupModel::create([
             'label'         => $body['label'],
