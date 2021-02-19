@@ -426,12 +426,13 @@ class ContactGroupController
                     'id'        => $correspondent['correspondent_id']
                 ]);
                 if (!empty($contact)) {
-                    $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contact]);
+                    $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'color' => true]);
                     $correspondents[] = [
-                        'id'        => $correspondent['correspondent_id'],
-                        'type'      => $correspondent['correspondent_type'],
-                        'name'      => $contactToDisplay['contact']['contact'],
-                        'address'   => $contactToDisplay['contact']['address']
+                        'id'                => $correspondent['correspondent_id'],
+                        'type'              => $correspondent['correspondent_type'],
+                        'name'              => $contactToDisplay['contact']['contact'],
+                        'address'           => $contactToDisplay['contact']['address'],
+                        'thresholdLevel'    => $contactToDisplay['contact']['thresholdLevel']
                     ];
                 }
             } elseif ($correspondent['correspondent_type'] == 'user') {
