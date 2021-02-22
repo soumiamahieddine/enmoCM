@@ -1,0 +1,12 @@
+@import '../../../../../../../src/frontend/css/vars.scss';
+
+.correspondentGroups {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+
+  mat-chip{
+    height: 5px !important;
+  }
+}
