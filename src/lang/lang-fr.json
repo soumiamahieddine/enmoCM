@@ -2344,5 +2344,7 @@
     "linkedSearchTo": "Recherche associée à <b>{{value}}</b>",
     "associate": "associer",
     "searchForCorrespondentsGroupAssociation": "Rechercher ce terme dans les correspondants disponibles",
-    "associateCorrespondentsGroup": "Associer un groupement de contact"
+    "associateCorrespondentsGroup": "Associer un groupement de contact",
+    "contactsGroupDuplicated": "Groupements de correspondants dupliqués",
+    "contactsGroupMerged": "Groupements de correspondants fusionnés"
 }
