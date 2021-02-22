@@ -15,6 +15,7 @@
 namespace Entity\controllers;
 
 use Basket\models\GroupBasketRedirectModel;
+use Contact\models\ContactGroupListModel;
 use Contact\models\ContactGroupModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -410,6 +411,7 @@ class EntityController
             }
         }
 
+        ContactGroupListModel::delete(['where' => ['correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$entity['id'], 'entity']]);
         GroupModel::update([
             'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{entities}', (indexation_parameters->'entities') - '{$entity['id']}')"],
             'where'     => ["indexation_parameters->'entities' @> ?"],
