@@ -7,7 +7,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { Observable, of } from 'rxjs';
-import { catchError, exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { catchError, filter, map, tap } from 'rxjs/operators';
 import { NotificationService } from '@service/notification/notification.service';
 import { ConfirmComponent } from '@plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -45,16 +45,15 @@ export class InputCorrespondentGroupComponent implements OnInit, AfterViewInit {
             map((item: any | null) => item ? this._filter(item) : this.allCorrespondentGroups));
     }
     async ngOnInit(): Promise<void> {
-        console.log(this.id, this.type);
-
         await this.getAllCorrespondentsGroup();
         this.getCorrespondentsGroup();
     }
 
     ngAfterViewInit(): void {
-        console.log('setvalue');
-
-        this.correspondentGroupsForm.setValue('');
+        this.correspondentGroupsForm.setValue(' ');
+        setTimeout(() => {
+            this.correspondentGroupsForm.setValue('');
+        }, 0);
     }
 
     getAllCorrespondentsGroup() {
@@ -150,6 +149,6 @@ export class InputCorrespondentGroupComponent implements OnInit, AfterViewInit {
     }
 
     private _filter(value: any): string[] {
-        return this.allCorrespondentGroups.filter((item: any) => item.label.toLowerCase().indexOf(value) === 0);
+        return this.allCorrespondentGroups.filter((item: any) => item.label.toLowerCase().indexOf(value) > -1);
     }
 }

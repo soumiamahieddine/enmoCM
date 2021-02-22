@@ -1,4 +1,4 @@
-<mat-form-field class="correspondentGroups" style="width: 100%;" floatLabel="never">
+<mat-form-field class="correspondentGroups" style="width: 100%;">
     <mat-chip-list #chipList aria-label="correspondentGroups">
     <mat-chip *ngFor="let item of correspondentGroups" color="primary"
         [selectable]="true"
@@ -8,7 +8,7 @@
     </mat-chip>
       <input
         #correspondentGroupsInput
-        [placeholder]="'lang.associateCorrespondentsGroup' | translate"
+        [placeholder]="'lang.correspondentsGroups' | translate"
         [formControl]="correspondentGroupsForm"
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
