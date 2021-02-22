@@ -2341,7 +2341,7 @@
     "newCorrespondentsGroup": "Nouveau groupement",
     "associateToCorrespondentsGroup": "Associer à un groupement",
     "correspondentsGroups": "Groupement(s) de correspondants",
-    "linkedSearchTo": "Recherche associées à <b>{{value}}</b>",
+    "linkedSearchTo": "Recherche associée à <b>{{value}}</b>",
     "associate": "associer",
     "searchForCorrespondentsGroupAssociation": "Rechercher ce terme dans les correspondants disponibles"
 }

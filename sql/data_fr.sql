@@ -1027,7 +1027,8 @@ INSERT INTO parameters (id, param_value_string) VALUES ('bindingDocumentFinalAct
 INSERT INTO parameters (id, param_value_string) VALUES ('nonBindingDocumentFinalAction', 'delete');
 INSERT INTO parameters (id, param_value_int) VALUES ('minimumVisaRole', 0);
 INSERT INTO parameters (id, param_value_int) VALUES ('maximumSignRole', 0);
-INSERT INTO parameters (id, description, param_value_int) VALUES ('workflowEndBySignatory', 0);
+INSERT INTO parameters (id, description, param_value_int) VALUES ('workflowEndBySignatory', 'Si activé (1), le dernier utilisateur du circuit de visa doit être Signataire (0 pour désactiver)', 0);
+
 
 ------------
 --DIFFLIST_TYPES
