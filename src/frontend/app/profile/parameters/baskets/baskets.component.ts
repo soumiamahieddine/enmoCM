@@ -93,6 +93,36 @@ export class MyBasketsComponent implements OnInit {
         }
     }
 
+    delBasketAssignRedirection(basket: any, i: number) {
+        let r = confirm(this.translate.instant('lang.confirmAction'));
+
+        if (r) {
+            this.http.delete('../rest/users/' + this.headerService.user.id + '/redirectedBaskets?redirectedBasketIds[]=' + basket.id)
+                .subscribe((data: any) => {
+                    this.headerService.user.baskets = data['baskets'].filter((basketItem: any) => !basketItem.basketSearch);
+                    this.assignedBaskets.splice(i, 1);
+                    this.notify.success(this.translate.instant('lang.basketUpdated'));
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
+    delBasketRedirection(basket: any, i: number) {
+        let r = confirm(this.translate.instant('lang.confirmAction'));
+
+        if (r) {
+            this.http.delete('../rest/users/' + this.headerService.user.id + '/redirectedBaskets?redirectedBasketIds[]=' + basket.id)
+                .subscribe((data: any) => {
+                    this.userBaskets = data['baskets'].filter((basketItem: any) => !basketItem.basketSearch);
+                    this.redirectedBaskets.splice(i, 1);
+                    this.notify.success(this.translate.instant('lang.basketUpdated'));
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
     showActions(basket: any) {
         $('#' + basket.basket_id + '_' + basket.group_id).show();
     }

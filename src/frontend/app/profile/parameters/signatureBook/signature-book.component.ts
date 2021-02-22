@@ -18,6 +18,8 @@ export class MySignatureBookComponent implements OnInit {
     @Input() externalIdMaarchParapheur: any;
     @Input() loadingSign: boolean;
 
+    highlightMe: boolean = false;
+
     constructor(
         public translate: TranslateService,
         public http: HttpClient,

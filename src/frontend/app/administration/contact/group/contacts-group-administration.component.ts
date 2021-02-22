@@ -19,6 +19,8 @@ export class ContactsGroupAdministrationComponent implements OnInit {
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     contactGroupId: number = null;
+    loading: boolean = false;
+
 
     constructor(
         public translate: TranslateService,
