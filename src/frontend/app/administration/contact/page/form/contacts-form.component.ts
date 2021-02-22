@@ -326,8 +326,6 @@ export class ContactsFormComponent implements OnInit {
 
     ngOnInit(): void {
 
-        console.log('init');
-        
         this.loading = true;
 
         this.initBanSearch();

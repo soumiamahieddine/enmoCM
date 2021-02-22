@@ -1,14 +1,14 @@
-<mat-form-field class="correspondentGroups" style="width: 100%;">
+<mat-form-field class="correspondentGroups" style="width: 100%;" floatLabel="never">
     <mat-chip-list #chipList aria-label="correspondentGroups">
-    <mat-chip *ngFor="let item of correspondentGroups"
+    <mat-chip *ngFor="let item of correspondentGroups" color="primary"
         [selectable]="true"
         [removable]="true" (removed)="remove(item)">
-        {{ item.label }}
+        <i class="correspondent-type-icon fas fa-atlas"></i>&nbsp;&nbsp;{{ item.label }}
         <mat-icon matChipRemove class="fa fa-times-circle"></mat-icon>
     </mat-chip>
       <input
-        placeholder="Associer à un groupement de contacts"
         #correspondentGroupsInput
+        [placeholder]="'lang.associateCorrespondentsGroup' | translate"
         [formControl]="correspondentGroupsForm"
         [matAutocomplete]="auto"
         [matChipInputFor]="chipList"
