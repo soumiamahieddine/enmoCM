@@ -271,7 +271,13 @@ export class SentResourceListComponent implements OnInit {
         if (row.canManage || row.id === null) {
             const dialogRef = this.dialog.open(SentResourcePageComponent, {
                 panelClass: 'maarch-modal', width: '60vw', disableClose: true, data: {
-                    title: title, resId: this.resId, emailId: row.id, emailType: row.type, currentUserId: this.currentUserId, currentGroupId: this.currentGroupId, currentBasketId: this.currentBasketId
+                    title: title, 
+                    resId: this.resId, 
+                    emailId: row.id, emailType: row.type, 
+                    currentUserId: this.currentUserId, 
+                    currentGroupId: this.currentGroupId, 
+                    currentBasketId: this.currentBasketId,
+                    status: row.status
                 }
             });
 

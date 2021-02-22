@@ -13,20 +13,20 @@
         <mat-form-field>
             <span matPrefix class="attachLabel">{{'lang.senderShort' | translate}}&nbsp;:&nbsp;</span>
             <input *ngIf="!canManageMail()" matInput [value]="currentSender.email" readonly>
-            <mat-select *ngIf="canManageMail()" [compareWith]="this.compareSenders" [(ngModel)]="currentSender">
+            <mat-select [disabled]="data.status === 'WAITING'" *ngIf="canManageMail()" [compareWith]="this.compareSenders" [(ngModel)]="currentSender">
                 <mat-option *ngFor="let email of availableSenders | sortBy: 'label'" [value]="email">
                     {{email.label}} ({{email.email}})
                 </mat-option>
             </mat-select>
-            <button mat-button color="primary" matSuffix [disabled]="!canManageMail()" [class.activeButton]="showCopies"
+            <button mat-button color="primary" matSuffix [disabled]="!canManageMail() || data.status === 'WAITING'" [class.activeButton]="showCopies"
                 (click)="$event.stopPropagation();showCopies = !showCopies">{{'lang.copieShort' | translate}}</button>
-            <button mat-button color="primary" matSuffix [disabled]="!canManageMail()"
+            <button mat-button color="primary" matSuffix [disabled]="!canManageMail() || data.status === 'WAITING'"
                 [class.activeButton]="showInvisibleCopies"
                 (click)="$event.stopPropagation();showInvisibleCopies = !showInvisibleCopies">{{'lang.invisibleCopyShort' | translate}}</button>
         </mat-form-field>
         <mat-form-field>
             <span matPrefix class="attachLabel">{{'lang.recipientShort' | translate}}&nbsp;:&nbsp;</span>
-            <mat-chip-list id="recipients-list" #recipientsList cdkDropList
+            <mat-chip-list id="recipients-list" #recipientsList cdkDropList [disabled]="data.status === 'WAITING'"
                 [cdkDropListConnectedTo]="['copies-list','invcopies-list']" [cdkDropListData]="recipients"
                 (cdkDropListDropped)="drop($event)">
                 <mat-chip cdkDrag [cdkDragDisabled]="emailStatus == 'SENT' || emailStatus == 'ERROR'" class="recipients"
@@ -51,7 +51,7 @@
         </mat-form-field>
         <mat-form-field *ngIf="showCopies">
             <span matPrefix class="attachLabel">{{'lang.copieShort' | translate}}&nbsp;:&nbsp;</span>
-            <mat-chip-list id="copies-list" #copiesList cdkDropList
+            <mat-chip-list id="copies-list" #copiesList cdkDropList [disabled]="data.status === 'WAITING'"
                 [cdkDropListConnectedTo]="['recipients-list','invcopies-list']" [cdkDropListData]="copies"
                 (cdkDropListDropped)="drop($event)">
                 <mat-chip cdkDrag [cdkDragDisabled]="emailStatus == 'SENT' || emailStatus == 'ERROR'" class="copy"
@@ -75,7 +75,7 @@
         </mat-form-field>
         <mat-form-field *ngIf="showInvisibleCopies">
             <span matPrefix class="attachLabel">{{'lang.invisibleCopyShort' | translate}}&nbsp;:&nbsp;</span>
-            <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList
+            <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList [disabled]="data.status === 'WAITING'"
                 [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies"
                 (cdkDropListDropped)="drop($event)">
                 <mat-chip cdkDrag [cdkDragDisabled]="emailStatus == 'SENT' || emailStatus == 'ERROR'" class="copy"
@@ -99,7 +99,7 @@
             </mat-autocomplete>
         </mat-form-field>
         <mat-form-field floatLabel="never">
-            <input matInput [placeholder]="'lang.object' | translate" [readonly]="!canManageMail()" [(ngModel)]="emailsubject"
+            <input [disabled]="data.status === 'WAITING'" matInput [placeholder]="'lang.object' | translate" [readonly]="!canManageMail()" [(ngModel)]="emailsubject"
                 maxlength="255">
             <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue"
                 [disabled]="!canManageMail() ||(keyVal.key !== 'summarySheet' && (emailAttachTool[keyVal.key].list.length === 0) || (keyVal.key === 'summarySheet' && !functions.empty(emailAttach['summarySheet'])))"
@@ -116,7 +116,7 @@
                         <ng-container *ngFor="let attach of emailAttachTool[keyVal.key].list">
                             <button mat-menu-item class="attachListButton"
                                 style="line-height: normal;height: auto;padding: 10px;" disableRipple
-                                [disabled]="isSelectedAttachMail(attach,keyVal.key)"
+                                [disabled]="isSelectedAttachMail(attach,keyVal.key) || data.status === 'WAITING'"
                                 (click)="$event.stopPropagation();">
                                 <div class="attachListContainer">
                                     <div>
@@ -153,6 +153,7 @@
         </mat-form-field>
         <mat-chip-list>
             <mat-chip class="copy" *ngIf="emailAttach.document.isLinked"
+                [disabled]="data.status === 'WAITING'"
                 [removable]="canManageMail()" (removed)="removeAttachMail(0, 'document')"
                 [title]="emailAttach.document.chrono + ' - ' + emailAttach.document.label">
                 <i
@@ -163,6 +164,7 @@
             <ng-container *ngFor="let keyVal of emailAttach | keyvalue">
                 <ng-container *ngIf="keyVal.key !== 'document'">
                     <mat-chip class="copy" *ngFor="let item of emailAttach[keyVal.key]; let i=index;"
+                        [disabled]="data.status === 'WAITING'"
                         [removable]="canManageMail()"
                         (removed)="removeAttachMail(i, keyVal.key)" [title]="item.label">
                         <i
@@ -173,7 +175,7 @@
                 </ng-container>
             </ng-container>
         </mat-chip-list>
-        <div class="models" *ngIf="canManageMail()">
+        <div class="models" *ngIf="canManageMail() && data.status !== 'WAITING'">
             <plugin-select-search *ngIf="availableEmailModels.length > 0" [label]="'lang.emailModel' | translate"
                 [placeholderLabel]="'lang.emailModel' | translate" [datas]="availableEmailModels"
                 [formControlSelect]="templateEmailListForm" (afterSelected)="mergeEmailTemplate($event)">
@@ -204,18 +206,18 @@
             <mat-icon style="height:auto;" class="fas fa-ellipsis-v"></mat-icon>
         </button>
         <mat-menu #emailActionMenu="matMenu" [class]="'attachListMenu'">
-            <button mat-menu-item (click)="switchEditionMode()" *ngIf="htmlMode">
+            <button mat-menu-item [disabled]="data.status === 'WAITING'" (click)="switchEditionMode()" *ngIf="htmlMode">
                 {{'lang.switchInPlainText' | translate}}
             </button>
-            <button mat-menu-item (click)="switchEditionMode()" *ngIf="!htmlMode">
+            <button mat-menu-item [disabled]="data.status === 'WAITING'" (click)="switchEditionMode()" *ngIf="!htmlMode">
                 {{'lang.switchInHtml' | translate}}
             </button>
         </mat-menu>
         <button mat-raised-button color="primary"
             *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')" (click)="onSubmit()"
-            [disabled]="recipients.length === 0 || emailsubject.length > 256">{{'lang.send' | translate}}</button>
+            [disabled]="recipients.length === 0 || emailsubject.length > 256 || data.status === 'WAITING'">{{'lang.send' | translate}}</button>
         <button mat-raised-button color="warn" (click)="deleteEmail()"
             *ngIf="data.emailId && data.emailType === 'email'"
-            [disabled]="headerService.user.id !== emailCreatorId">{{'lang.delete' | translate}}</button>
+            [disabled]="headerService.user.id !== emailCreatorId || data.status === 'WAITING'">{{'lang.delete' | translate}}</button>
     </div>
 </div>
