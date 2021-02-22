@@ -24,7 +24,7 @@
         </div>
         <div class="container" [class.fullContainer]="appService.getViewMode()">
             <div class="container-content">
-                <app-input-correspondent-group [id]="this.contactId" [type]="'contact'" style="padding-top:10px;padding-left: 10px;padding-right:10px;display: block;"></app-input-correspondent-group>
+                <app-input-correspondent-group *ngIf="!functionsService.empty(contactId)" [id]="contactId" [type]="'contact'" style="padding-top:10px;padding-left: 10px;padding-right:10px;display: block;"></app-input-correspondent-group>
                 <app-contact-form *ngIf="!loading" [creationMode]="creationMode" [contactId]="contactId" (onSubmitEvent)="goToList()"></app-contact-form>
             </div>
         </div>
