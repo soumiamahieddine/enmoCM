@@ -315,6 +315,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 this.notify.success(this.translate.instant('lang.contactAdded'));
                 this.selection.clear();
                 this.savingCorrespondents = false;
+                this.allRelatedCorrespondents = [];
                 this.refreshDao();
             }, (err) => {
                 this.notify.error(err.error.errors);
