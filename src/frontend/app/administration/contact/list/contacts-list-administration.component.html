@@ -90,7 +90,7 @@
                                 </button>
                             </ng-container>
                             <div *ngIf="correspondentsGroups.length == 0">
-                                {{'lang.noData' | translate}}
+                                <span [title]="'lang.noData' | translate" class="noData">{{'lang.noData' | translate}}</span>
                             </div>
                         </mat-menu>
                     </div>

@@ -312,7 +312,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         this.savingCorrespondents = true;
         this.http.post('../rest/contactsGroups/' + cGroupId + '/correspondents', { 'correspondents': this.formatCorrespondents() })
             .subscribe((data: any) => {
-                this.notify.success(this.translate.instant('lang.contactAdded'));
+                this.notify.success(this.translate.instant('lang.correspondentAdded'));
                 this.selection.clear();
                 this.savingCorrespondents = false;
                 this.allRelatedCorrespondents = [];

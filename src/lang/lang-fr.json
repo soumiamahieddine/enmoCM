@@ -2346,5 +2346,8 @@
     "searchForCorrespondentsGroupAssociation": "Rechercher ce terme dans les correspondants disponibles",
     "associateCorrespondentsGroup": "Associer un groupement de contact",
     "contactsGroupDuplicated": "Groupements de correspondants dupliqués",
-    "contactsGroupMerged": "Groupements de correspondants fusionnés"
+    "contactsGroupMerged": "Groupements de correspondants fusionnés",
+    "infoVisaParameters": "Ces paramètres concernent le circuit de visa dans le <b>prapheur interne</b>",
+    "noData": "Pas de groupements disponibles",
+    "correspondentAdded": "Correspondent(s) ajouté(s)"
 }

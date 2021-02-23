@@ -120,7 +120,7 @@ export class InputCorrespondentGroupComponent implements OnInit, AfterViewInit {
     linkGrp(groupId: number) {
         this.http.post('../rest/contactsGroups/' + groupId + '/correspondents', { 'correspondents': this.formatCorrespondents() })
             .subscribe((data: any) => {
-                this.notify.success(this.translate.instant('lang.contactAdded'));
+                this.notify.success(this.translate.instant('lang.correspondentAdded'));
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
