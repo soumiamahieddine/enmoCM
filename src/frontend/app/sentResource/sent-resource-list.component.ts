@@ -277,7 +277,6 @@ export class SentResourceListComponent implements OnInit {
                     currentUserId: this.currentUserId, 
                     currentGroupId: this.currentGroupId, 
                     currentBasketId: this.currentBasketId,
-                    status: row.status
                 }
             });
 
