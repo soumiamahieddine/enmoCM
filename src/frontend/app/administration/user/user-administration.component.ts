@@ -17,6 +17,7 @@ import { PrivilegeService } from '@service/privileges.service';
 import { MaarchFlatTreeComponent } from '../../../plugins/tree/maarch-flat-tree.component';
 import { environment } from '../../../environments/environment';
 import { InputCorrespondentGroupComponent } from '../contact/group/inputCorrespondent/input-correspondent-group.component';
+import { AuthService } from '@service/auth.service';
 
 declare var $: any;
 
@@ -151,6 +152,7 @@ export class UserAdministrationComponent implements OnInit {
         public headerService: HeaderService,
         private _formBuilder: FormBuilder,
         public appService: AppService,
+        public authService: AuthService,
         private privilegeService: PrivilegeService,
         private viewContainerRef: ViewContainerRef
     ) {

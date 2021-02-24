@@ -2350,5 +2350,7 @@
     "infoVisaParameters": "Ces paramètres concernent le circuit de visa dans le <b>parapheur interne</b>",
     "noData": "Pas de groupements disponibles",
     "correspondentAdded": "Correspondant(s) ajouté(s)",
-    "displayed": "affiché(s)"
+    "displayed": "affiché(s)",
+    "mailServerOfflineMsg": "Le serveur de mail doit être <b>testé</b> et <b>opérationnel</b> pour : <b>{{action}}</b>",
+    "mailServerOffline": "Le serveur de mail est indisponible pour le moment, veuillez ré-essayer ultérieurement"
 }

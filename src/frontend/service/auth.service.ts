@@ -21,6 +21,7 @@ export class AuthService {
     loginMessage: string = '';
     authMode: string = 'standard';
     authUri: string = '';
+    mailServerOnline = false;
     changeKey: boolean = null;
     user: any = {};
     noInstall: boolean = false;
@@ -245,7 +246,8 @@ export class AuthService {
 
                         this.localStorage.save('lang', data.lang);
                         this.translate.use(data.lang);
-
+                        // TODO : uncomment after back
+                        // this.mailServerOnline = data.mailServerOnline;
                         this.changeKey = data.changeKey;
                         this.applicationName = data.applicationName;
                         this.loginMessage = data.loginMessage;
