@@ -154,15 +154,19 @@ export class ContactsGroupsListComponent implements OnInit {
         if (this.allPerimeters) {
             return false;
         } else {
-            return !(element.owner === this.headerService.user.id);
+            return !((element.entities.filter((entity: any) => this.userEntitiesIds.indexOf(entity) > -1).length > 0 && this.privilegeService.hasCurrentUserPrivilege('add_correspondent_in_shared_groups_on_profile')) || element.owner === this.headerService.user.id);
         }
     }
 
-    goTo(element: any) {
-        if (this.contactGroupFormMode === 'modal') {
-            this.openContactsGroupModal(element);
+    goTo(element: any = null) {
+        if (element === null) {
+            this.router.navigate([`/administration/contacts/contacts-groups/new`]);
         } else {
-            this.router.navigate([`/administration/contacts/contacts-groups/${element.id}`]);
+            if (this.contactGroupFormMode === 'modal') {
+                this.openContactsGroupModal(element);
+            } else {
+                this.router.navigate([`/administration/contacts/contacts-groups/${element.id}`]);
+            }
         }
     }
 
