@@ -227,7 +227,7 @@
                                             </mat-panel-title>
                                         </mat-expansion-panel-header>
                                         <div>
-                                            <app-input-correspondent-group [id]="serialId" [type]="'user'" style="display: block;"></app-input-correspondent-group>
+                                            <app-input-correspondent-group #appInputCorrespondentGroup [id]="serialId" [type]="'user'" style="display: block;"></app-input-correspondent-group>
                                             <mat-form-field>
                                                 <mat-label>{{'lang.accountType' | translate}}</mat-label>
                                                 <mat-select [(ngModel)]="user.mode" id="accountType" name="accountType"
