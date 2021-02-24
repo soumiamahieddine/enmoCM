@@ -2355,5 +2355,9 @@
     "searchForCorrespondentsGroupAssociation": "Search for this term in the available correspondents",
     "associateCorrespondentsGroup": "Associate a correspondents group",
     "contactsGroupDuplicated": "Groups of correspondents duplicated",
-    "contactsGroupMerged": "Groups of correspondents merged"
+    "contactsGroupMerged": "Groups of correspondents merged",
+    "infoVisaParameters": "These parameters concern the visa workflow in the <b> internal signature </b>",
+    "noData": "No available groupement ",
+    "correspondentAdded": "Correspondent(s) added",
+    "displayed": "displayed"
 }

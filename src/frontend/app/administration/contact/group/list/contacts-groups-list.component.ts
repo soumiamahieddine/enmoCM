@@ -28,7 +28,7 @@ export class ContactsGroupsListComponent implements OnInit {
 
     @Input() allPerimeters: boolean = false;
     @Input() contactGroupFormMode: 'route' | 'modal' = 'route';
-    @Input() showAddButton: boolean = false;
+    @Input() showAddButton: boolean = true;
 
     search: string = null;
 

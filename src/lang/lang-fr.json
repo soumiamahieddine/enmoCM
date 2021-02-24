@@ -2244,7 +2244,7 @@
     "refStatus": "Ce document a été refusé dans le parapheur externe",
     "valStatus": "Ce document a été validé dans le parapheur externe",
     "stopStatus": "Ce document a été interrompu dans la parapheur externe",
-    "nullStatus": "L'utilisateur na pas encore effectué d'action",
+    "nullStatus": "L'utilisateur n'a pas encore effectué d'action",
     "intermediateStatusMailing": "Les statuts finaux et d'erreurs ne sont utilisés que lors d'un publipostage dans l'action",
     "navigation": "Navigation",
     "acountNotLinkedTomaarchParapheur": "Votre compte n'est pas lié à Maarch Parapheur.",
@@ -2347,7 +2347,8 @@
     "associateCorrespondentsGroup": "Associer un groupement de contact",
     "contactsGroupDuplicated": "Groupements de correspondants dupliqués",
     "contactsGroupMerged": "Groupements de correspondants fusionnés",
-    "infoVisaParameters": "Ces paramètres concernent le circuit de visa dans le <b>prapheur interne</b>",
+    "infoVisaParameters": "Ces paramètres concernent le circuit de visa dans le <b>parapheur interne</b>",
     "noData": "Pas de groupements disponibles",
-    "correspondentAdded": "Correspondent(s) ajouté(s)"
+    "correspondentAdded": "Correspondent(s) ajouté(s)",
+    "displayed": "affiché(s)"
 }
