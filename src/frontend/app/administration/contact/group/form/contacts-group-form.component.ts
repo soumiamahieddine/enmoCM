@@ -92,7 +92,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
     ) { }
 
     ngOnInit(): void {
-        this.headerService.injectInSideBarLeft(this.contactsGroupTreeTemplate, this.viewContainerRef, 'contactsGroupTree');
+        this.headerService.initTemplate(this.contactsGroupTreeTemplate, this.viewContainerRef, 'contactsGroupTree');
     }
 
     ngAfterViewInit(): void {
@@ -101,7 +101,6 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
             this.initTree();
             this.canAddCorrespondents = false;
             this.canModifyGroupInfo = true;
-            console.log(this.contactIds);
             if (this.contactIds.length > 0) {
                 this.initContacts();
             }
@@ -351,7 +350,11 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                         this.saveContactsList(data.id);
                     }
                     if (!this.hideSaveButton) {
-                        this.router.navigate(['/administration/contacts/contacts-groups/' + data.id]);
+                        // WORKAROUND ISSUE TREE DOESNT LOAD
+                        this.router.navigate(['/administration/contacts/contacts-groups']);
+                        setTimeout(() => {
+                            this.router.navigate(['/administration/contacts/contacts-groups/' + data.id]);
+                        }, 100);
                     }
                     this.notify.success(this.translate.instant('lang.contactsGroupAdded'));
                     this.afterUpdate.emit(data.id);
