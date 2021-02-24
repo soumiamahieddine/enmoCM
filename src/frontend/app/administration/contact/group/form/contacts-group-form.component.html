@@ -67,7 +67,7 @@
                                 <div class="title-search-result">
                                     <span style="color: #666;flex:1;">
                                         <span [innerHTML]="'lang.linkedSearchTo' | translate:{value: filterUser.value}"></span>,
-                                        <a (click)="openContactForm()" style="cursor: pointer;">{{'lang.createContact' | translate  | lowercase}} ?</a>
+                                        <a *ngIf="privilegeService.hasCurrentUserPrivilege('add_correspondent_in_shared_groups_on_profile')" (click)="openContactForm()" style="cursor: pointer;">{{'lang.createContact' | translate  | lowercase}} ?</a>
                                     </span>
                                     <span style="color:#666">
                                         <a color="primary" (click)="!savingCorrespondents ? toggleAll() : false"

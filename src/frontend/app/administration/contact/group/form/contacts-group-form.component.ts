@@ -19,6 +19,7 @@ import { FunctionsService } from '@service/functions.service';
 import { ConfirmComponent } from '@plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ContactsFormModalComponent } from '../../page/form/modal/contacts-form-modal.component';
+import { PrivilegeService } from '@service/privileges.service';
 
 @Component({
     selector: 'app-contacts-group-form',
@@ -87,6 +88,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
         public contactService: ContactService,
         private viewContainerRef: ViewContainerRef,
         private functionsService: FunctionsService,
+        public privilegeService: PrivilegeService,
     ) { }
 
     ngOnInit(): void {
