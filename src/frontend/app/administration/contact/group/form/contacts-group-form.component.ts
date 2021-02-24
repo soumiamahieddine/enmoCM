@@ -218,7 +218,7 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                 map(data => {
                     this.loadingLinkedCorrespondents = false;
                     data = this.processPostData(data);
-                    if (this.filterInputControl.value === '') {
+                    if (this.filterInputControl.value === '' || this.nbLinkedCorrespondents === 0) {
                         this.nbLinkedCorrespondents = data.count;
                     }
                     this.nbFilteredLinkedCorrespondents = data.count;
@@ -233,7 +233,6 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
                     return of(false);
                 })
             ).subscribe(data => this.relatedCorrespondents = data);
-        // ).subscribe(data => this.relatedCorrespondents = []);
     }
 
     processPostData(data: any) {
@@ -381,6 +380,8 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
             exhaustMap(() => this.http.request('DELETE', `../rest/contactsGroups/${this.contactsGroup.id}/correspondents`, { body: { correspondents: objTosend } })),
             tap(() => {
                 this.notify.success(this.translate.instant('lang.contactDeletedFromGroup'));
+                this.selection.clear();
+                this.allRelatedCorrespondents = [];
                 this.refreshDao();
             }),
             catchError((err: any) => {
@@ -392,8 +393,8 @@ export class ContactsGroupFormComponent implements OnInit, AfterViewInit {
 
     isInGrp(contact: any): boolean {
         let isInGrp = false;
-        this.relatedCorrespondents.forEach((row: any) => {
-            if (row.id == contact.id) {
+        this.allRelatedCorrespondents.forEach((row: any) => {
+            if (row.id === contact.id && row.type === contact.type) {
                 isInGrp = true;
             }
         });
