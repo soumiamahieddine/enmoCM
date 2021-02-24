@@ -154,8 +154,7 @@ export class ContactsGroupsListComponent implements OnInit {
         if (this.allPerimeters) {
             return false;
         } else {
-            return !((element.entities.filter((entity: any) => this.userEntitiesIds.indexOf(entity) > -1).length > 0 && this.privilegeService.hasCurrentUserPrivilege('add_correspondent_in_shared_groups_on_profile')) || element.owner === this.headerService.user.id);
-
+            return !(element.owner === this.headerService.user.id);
         }
     }
 

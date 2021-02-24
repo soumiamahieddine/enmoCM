@@ -89,7 +89,7 @@
         <ng-container matColumnDef="actions">
             <mat-header-cell *matHeaderCellDef></mat-header-cell>
             <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
-                <button mat-icon-button color="primary" [title]="'lang.duplicate' | translate" [disabled]="!element.allowed"
+                <button mat-icon-button color="primary" [title]="'lang.duplicate' | translate" [disabled]="!privilegeService.hasCurrentUserPrivilege('add_correspondent_in_shared_groups_on_profile')"
                     (click)="$event.stopPropagation();copyContactsGroup(element)">
                     <mat-icon class="fas fa-copy fa-2x" aria-hidden="true"></mat-icon>
                 </button>
