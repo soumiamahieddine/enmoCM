@@ -251,8 +251,6 @@ export class ContactAutocompleteComponent implements OnInit {
                             } : ''
                         };
                     });
-                    console.log('iiiin');
-                    console.log(contacts);
                     return contacts;
                 }),
                 tap((contacts: any) => {

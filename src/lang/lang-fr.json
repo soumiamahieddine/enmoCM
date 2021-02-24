@@ -2342,13 +2342,13 @@
     "associateToCorrespondentsGroup": "Associer à un groupement",
     "correspondentsGroups": "Groupement(s) de correspondants",
     "linkedSearchTo": "Recherche associée à <b>{{value}}</b>",
-    "associate": "associer",
+    "associate": "Associer",
     "searchForCorrespondentsGroupAssociation": "Rechercher ce terme dans les correspondants disponibles",
     "associateCorrespondentsGroup": "Associer un groupement de contact",
-    "contactsGroupDuplicated": "Groupements de correspondants dupliqués",
+    "contactsGroupDuplicated": "Groupement de correspondants dupliqué",
     "contactsGroupMerged": "Groupements de correspondants fusionnés",
     "infoVisaParameters": "Ces paramètres concernent le circuit de visa dans le <b>parapheur interne</b>",
     "noData": "Pas de groupements disponibles",
-    "correspondentAdded": "Correspondent(s) ajouté(s)",
+    "correspondentAdded": "Correspondant(s) ajouté(s)",
     "displayed": "affiché(s)"
 }

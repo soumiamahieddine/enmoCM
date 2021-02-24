@@ -2351,7 +2351,7 @@
     "associateToCorrespondentsGroup": "Associate to corresponds group",
     "correspondentsGroups": "Group(s) of correspondents",
     "linkedSearchTo": "Search associated with <b> {{value}} </b>",
-    "associate": "associate",
+    "associate": "Associate",
     "searchForCorrespondentsGroupAssociation": "Search for this term in the available correspondents",
     "associateCorrespondentsGroup": "Associate a correspondents group",
     "contactsGroupDuplicated": "Groups of correspondents duplicated",
