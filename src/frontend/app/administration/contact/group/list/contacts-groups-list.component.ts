@@ -76,6 +76,7 @@ export class ContactsGroupsListComponent implements OnInit {
                     this.contactsGroups = data['contactsGroups'].map((contactGroup: any) => {
                         return {
                             ...contactGroup,
+                            shared : contactGroup.entities.length > 0,
                             allowed: !this.isLocked(contactGroup)
                         };
                     });
