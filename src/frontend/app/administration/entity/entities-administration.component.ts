@@ -257,7 +257,7 @@ export class EntitiesAdministrationComponent implements OnInit {
         this.http.get('../rest/entities/' + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
-
+                this.appInputCorrespondentGroup.ngOnInit();
                 this.appDiffusionsList.loadListModel(this.currentEntity.id);
                 this.appVisaWorkflow.loadListModel(this.currentEntity.id);
                 this.appAvisWorkflow.loadListModel(this.currentEntity.id);

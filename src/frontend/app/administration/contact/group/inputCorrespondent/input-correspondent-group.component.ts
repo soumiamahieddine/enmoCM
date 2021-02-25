@@ -77,13 +77,13 @@ export class InputCorrespondentGroupComponent implements OnInit, AfterViewInit {
     }
 
     getCorrespondentsGroup() {
+        this.correspondentGroups = [];
         this.http.get('../rest/contactsGroupsCorrespondents', { params: { 'correspondentId': this.id, 'correspondentType': this.type } }).pipe(
             tap((data: any) => {
                 data.contactsGroups.forEach((grp: any) => {
                     this.correspondentGroups.push(grp);
                     this.sortPipe.transform(this.correspondentGroups, 'label');
                     const index = this.allCorrespondentGroups.map(cor => cor.id).indexOf(grp.id);
-                    console.log(index);
                     if (index > -1) {
                         this.allCorrespondentGroups.splice(index, 1);
                     }
