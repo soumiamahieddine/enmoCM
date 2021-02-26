@@ -153,8 +153,9 @@ class DatasourceController
                     'left_join' => ['mlb.res_id = li.res_id', 'notes.identifier = li.res_id', 'users.id = notes.user_id'],
                     'where'     => ['li.item_id = ?', 'li.item_mode = \'dest\'', 'li.item_type = \'user_id\'', 'li.res_id = ?'],
                     'data'      => [$aArgs['params']['recipient']['id'], $event['record_id']],
-                ])[0];
-                $resId = $note['identifier'];
+                ]);
+                $note = !empty($note[0]) ? $note[0] : [];
+                $resId = $note['identifier'] ?? null;
             } else {
                 $note         = NoteModel::getById(['id' => $event['record_id']]);
                 $resId        = $note['identifier'];
@@ -168,14 +169,16 @@ class DatasourceController
             if (!empty($resId) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($aArgs['params']['recipient']['id'])) {
                 $note['linktoprocess'] = trim($aArgs['params']['maarchUrl'], '/') . '/dist/index.html#/process/users/'.$aArgs['params']['recipient']['id'].'/groups/'.$preferenceBasket[0]['group_serial_id'].'/baskets/'.$basket['id'].'/resId/'.$resId;
             }
-        
-            $resourceContacts = ResourceContactModel::get([
-                'where' => ['res_id = ?', "type = 'contact'", "mode = 'sender'"],
-                'data'  => [$resId],
-                'limit' => 1
-            ]);
-            $resourceContacts = $resourceContacts[0];
-        
+
+            if (!empty($resId)) {
+                $resourceContacts = ResourceContactModel::get([
+                    'where' => ['res_id = ?', "type = 'contact'", "mode = 'sender'"],
+                    'data'  => [$resId],
+                    'limit' => 1
+                ]);
+                $resourceContacts = $resourceContacts[0];
+            }
+
             if ($event['table_name'] == 'notes') {
                 $datasources['res_letterbox'][0]['linktodoc']     = $note['linktodoc'];
                 $datasources['res_letterbox'][0]['linktodetail']  = $note['linktodetail'];
