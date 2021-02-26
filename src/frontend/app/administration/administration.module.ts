@@ -52,6 +52,7 @@ import { PrioritiesAdministrationComponent } from './priority/priorities-adminis
 import { PriorityAdministrationComponent } from './priority/priority-administration.component';
 import { SecuritiesAdministrationComponent } from './security/securities-administration.component';
 import { SendmailAdministrationComponent } from './sendmail/sendmail-administration.component';
+import { CheckMailServerModalComponent } from './sendmail/checkMailServer/check-mail-server-modal.component';
 import { ShippingAdministrationComponent } from './shipping/shipping-administration.component';
 import { ShippingsAdministrationComponent } from './shipping/shippings-administration.component';
 import { StatusAdministrationComponent } from './status/status-administration.component';
@@ -139,6 +140,7 @@ import { VisaParametersComponent } from '@appRoot/administration/parameter/visa/
         PriorityAdministrationComponent,
         SecuritiesAdministrationComponent,
         SendmailAdministrationComponent,
+        CheckMailServerModalComponent,
         ShippingAdministrationComponent,
         ShippingsAdministrationComponent,
         StatusAdministrationComponent,
@@ -187,7 +189,8 @@ import { VisaParametersComponent } from '@appRoot/administration/parameter/visa/
         UsersAdministrationRedirectModalComponent,
         UsersImportComponent,
         UsersExportComponent,
-        EntitiesExportComponent
+        EntitiesExportComponent,
+        CheckMailServerModalComponent
     ],
     providers: [
         AdministrationService
