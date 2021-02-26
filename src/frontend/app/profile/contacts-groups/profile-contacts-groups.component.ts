@@ -9,6 +9,8 @@ import { FunctionsService } from '@service/functions.service';
 })
 export class ProfileContactsGroupsComponent implements OnInit {
 
+    inProfile: boolean = true;
+
     constructor(
         public translate: TranslateService,
         public functions: FunctionsService
