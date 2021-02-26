@@ -39,7 +39,7 @@ export class ContactsGroupsListComponent implements OnInit {
     loading: boolean = false;
 
 
-    displayedColumns = ['select', 'label', 'description', 'nbCorrespondents', 'shared', 'owner', 'actions'];
+    displayedColumns = ['select', 'label', 'description', 'nbCorrespondents', 'shared', 'labelledOwner', 'actions'];
     filterColumns = ['label', 'description'];
     selection = new SelectionModel<Element>(true, []);
 
