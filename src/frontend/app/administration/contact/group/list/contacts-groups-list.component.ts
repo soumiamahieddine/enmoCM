@@ -50,7 +50,7 @@ export class ContactsGroupsListComponent implements OnInit {
         public translate: TranslateService,
         public http: HttpClient,
         private notify: NotificationService,
-        private headerService: HeaderService,
+        public headerService: HeaderService,
         public dialog: MatDialog,
         public appService: AppService,
         public functions: FunctionsService,
