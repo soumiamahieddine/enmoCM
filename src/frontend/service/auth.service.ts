@@ -21,7 +21,7 @@ export class AuthService {
     loginMessage: string = '';
     authMode: string = 'standard';
     authUri: string = '';
-    mailServerOnline = false;
+    mailServerOnline = true;
     changeKey: boolean = null;
     user: any = {};
     noInstall: boolean = false;
