@@ -136,25 +136,23 @@ class DatasourceController
     public static function noteEvents(array $aArgs)
     {
         $datasources['recipient'][0] = $aArgs['params']['recipient'];
-        $datasources['notes']        = array();
+        $datasources['notes']        = [];
         
         $basket = BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
         $preferenceBasket = UserBasketPreferenceModel::get([
             'select'  => ['group_serial_id'],
             'where'   => ['user_serial_id = ?', 'basket_id = ?'],
-            'data'    => [$aArgs['params']['recipient']['user_id'], 'MyBasket']
+            'data'    => [$aArgs['params']['recipient']['id'], 'MyBasket']
         ]);
         
         foreach ($aArgs['params']['events'] as $event) {
-            $note = [];
-            
             if ($event['table_name'] != 'notes') {
                 $note = DatabaseModel::select([
                     'select'    => ['mlb.*', 'notes.*', 'users.*'],
                     'table'     => ['listinstance li', $aArgs['params']['res_view'] . ' mlb', 'notes', 'users'],
                     'left_join' => ['mlb.res_id = li.res_id', 'notes.identifier = li.res_id', 'users.id = notes.user_id'],
                     'where'     => ['li.item_id = ?', 'li.item_mode = \'dest\'', 'li.item_type = \'user_id\'', 'li.res_id = ?'],
-                    'data'      => [$aArgs['params']['recipient']['user_id'], $event['record_id']],
+                    'data'      => [$aArgs['params']['recipient']['id'], $event['record_id']],
                 ])[0];
                 $resId = $note['identifier'];
             } else {
