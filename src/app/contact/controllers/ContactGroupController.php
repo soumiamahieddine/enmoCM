@@ -248,6 +248,7 @@ class ContactGroupController
         $id = ContactGroupModel::create([
             'label'         => $label,
             'description'   => $contactGroup['description'],
+            'entities'      => '{}',
             'owner'         => $GLOBALS['id']
         ]);
 
