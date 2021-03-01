@@ -1,0 +1,11 @@
+
+<div [ngClass]="{ uiVerse:1 }">
+
+  <app-dropdown (doctypeEvent)="receiveDoctype($event)">
+  </app-dropdown>
+
+  <button [ngClass]="{ btn12:1, notReady:loaded!=true }" (click)="register_courrier()">
+    Verser Courrier
+  </button>
+
+</div>

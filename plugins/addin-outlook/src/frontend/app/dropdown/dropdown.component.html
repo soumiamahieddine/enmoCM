@@ -1,0 +1,13 @@
+
+<hr>
+<p>
+  Types de document :
+</p>
+
+<ng-select [items]="doctypes"
+           (change)="sendDoctype($event)"
+           bindLabel="description"
+           bindValue="type_id"
+           [(ngModel)]="selectedDoctypeId"
+           [ngClass]="{ selectDoc:1 }">
+</ng-select>
