@@ -11,21 +11,22 @@
         }
       },
       "root": "",
-      "sourceRoot": "src",
+      "sourceRoot": "src/frontend",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/addin-outlook",
+            "outputPath": "dist",
             "index": "src/frontend/index.html",
             "main": "src/frontend/main.ts",
             "polyfills": "src/frontend/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/frontend/favicon.ico",
+              "src/frontend/assets",
+              { "glob": "**/*", "input": "node_modules/@microsoft/office-js/dist/", "output": "assets/office-js/" }
             ],
             "styles": [
               "src/frontend/app/styles.scss"

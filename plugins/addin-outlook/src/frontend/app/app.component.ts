@@ -1,11 +1,7 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-  selector: "app-home",
+  selector: 'app-root',
   templateUrl: './app.component.html',
 })
-export default class AppComponent {
-  welcomeMessage = "Welcome";
-
-  async run() {}
-}
+export default class AppComponent { }
