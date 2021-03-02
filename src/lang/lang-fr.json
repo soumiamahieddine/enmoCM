@@ -2354,6 +2354,6 @@
     "mailServerOfflineMsg": "Le serveur de mail doit être <b>testé</b> et <b>opérationnel</b> pour : <b>{{action}}</b>",
     "mailServerOffline": "Le serveur de mail est indisponible pour le moment, veuillez ré-essayer ultérieurement",
     "testAndValidate": "Tester et valider",
-    "mailServerTest": "Test du serveur  de courriel",
-    "recipientServerTestMsg": "sera utilisée pour <b>tester</b> le serveur de courriel."
+    "mailServerTest": "Test du serveur de mail",
+    "recipientServerTestMsg": "sera utilisée pour <b>tester</b> le serveur de mail."
 }
