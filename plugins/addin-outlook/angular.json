@@ -26,6 +26,7 @@
             "assets": [
               "src/frontend/favicon.ico",
               "src/frontend/assets",
+              { "glob": "manifest.xml", "input": "src/frontend/config/", "output": "/" },
               { "glob": "**/*", "input": "node_modules/@microsoft/office-js/dist/", "output": "assets/office-js/" }
             ],
             "styles": [
