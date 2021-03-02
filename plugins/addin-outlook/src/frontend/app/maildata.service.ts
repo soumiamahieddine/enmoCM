@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Contact, Item } from './getItem';
 
+declare const Office: any;
+
 @Injectable({
   providedIn: 'root'
 })
