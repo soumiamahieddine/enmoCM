@@ -1433,6 +1433,7 @@
     "shippingUnavailable": "<b>Warning </b> Shipping is not activated. Check the configuration file mailevaConfig.xml",
     "shippingUpdated": "Maileva shipping updated",
     "shippings": "Maileva shipping templates",
+    "shippingDepositProofInformations": "Deposit proofs will be available in your Maileva account",
     "shortLabel": "Short label",
     "shortcut": "Shortcut",
     "showFoldersTree": "Show tree",
