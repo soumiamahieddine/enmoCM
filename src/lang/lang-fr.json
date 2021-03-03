@@ -2331,7 +2331,7 @@
     "minimumVisaUser": "Nombre minimum de Viseur",
     "maximumSignUser": "Nombre maximum de Signataire",
     "workflowEndBySignatory": "Le circuit doit se terminer par un Signataire",
-    "unavailable": "Non disponible",
+    "addressNotSet": "Adresse non définie",
     "addCorrespondentInSharedGroupsOnProfile": "Ajouter/supprimer des correspondants dans les groupements partagés depuis le profil",
     "correspondents": "correspondant(s)",
     "mergeCorrespondentsGroupInfo": "Les groupements de correspondants suivants seront fusionnés",
