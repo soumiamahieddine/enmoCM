@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from '@service/auth.service';
 import { FunctionsService } from '@service/functions.service';
 import { of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
@@ -25,7 +26,8 @@ export class CheckMailServerModalComponent implements OnInit {
         public translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<CheckMailServerModalComponent>,
-        private functionsService: FunctionsService
+        private functionsService: FunctionsService,
+        private authService: AuthService
     ) { }
 
     ngOnInit(): void {
@@ -49,6 +51,7 @@ export class CheckMailServerModalComponent implements OnInit {
         this.http.post('../rest/emails', email).pipe(
             tap((data: any) => {
                 this.statusMsg = this.translate.instant('lang.emailSendSuccess', {0: this.recipient});
+                this.authService.mailServerOnline = true;
                 setTimeout(() => {
                     this.dialogRef.close('success');
                 }, 1000);
