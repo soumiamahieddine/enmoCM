@@ -102,26 +102,26 @@
         }
       },
       "root": "",
-      "sourceRoot": "plugins/addin-outlook/src/frontend",
+      "sourceRoot": "plugins/addin-outlook/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist-addin",
-            "index": "plugins/addin-outlook/src/frontend/index.html",
-            "main": "plugins/addin-outlook/src/frontend/main.ts",
-            "polyfills": "plugins/addin-outlook/src/frontend/polyfills.ts",
+            "index": "plugins/addin-outlook/src/index.html",
+            "main": "plugins/addin-outlook/src/main.ts",
+            "polyfills": "plugins/addin-outlook/src/polyfills.ts",
             "tsConfig": "plugins/addin-outlook/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "plugins/addin-outlook/src/frontend/favicon.ico",
-              "plugins/addin-outlook/src/frontend/assets",
-              { "glob": "manifest.xml", "input": "plugins/addin-outlook/src/frontend/config/", "output": "/" },
+              "plugins/addin-outlook/src/favicon.ico",
+              "plugins/addin-outlook/src/assets",
+              { "glob": "manifest.xml", "input": "plugins/addin-outlook/src/config/", "output": "/" },
               { "glob": "**/*", "input": "plugins/addin-outlook/node_modules/@microsoft/office-js/dist/", "output": "assets/office-js/" }
             ],
             "styles": [
-              "plugins/addin-outlook/src/frontend/app/styles.scss"
+              "plugins/addin-outlook/src/app/styles.scss"
             ],
             "scripts": []
           },
@@ -129,8 +129,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "plugins/addin-outlook/src/frontend/environments/environment.ts",
-                  "with": "plugins/addin-outlook/src/frontend/environments/environment.prod.ts"
+                  "replace": "plugins/addin-outlook/src/environments/environment.ts",
+                  "with": "plugins/addin-outlook/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -176,7 +176,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "plugins/addin-outlook/src/test.ts",
-            "polyfills": "plugins/addin-outlook/src/frontend/polyfills.ts",
+            "polyfills": "plugins/addin-outlook/src/polyfills.ts",
             "tsConfig": "plugins/addin-outlook/tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
@@ -184,7 +184,7 @@
               "plugins/addin-outlook/src/assets"
             ],
             "styles": [
-              "plugins/addin-outlook/src/frontend/app/styles.scss"
+              "plugins/addin-outlook/src/app/styles.scss"
             ],
             "scripts": []
           }

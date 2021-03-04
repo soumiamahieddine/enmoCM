@@ -11,26 +11,26 @@
         }
       },
       "root": "",
-      "sourceRoot": "src/frontend",
+      "sourceRoot": "src/",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist",
-            "index": "src/frontend/index.html",
-            "main": "src/frontend/main.ts",
-            "polyfills": "src/frontend/polyfills.ts",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/frontend/favicon.ico",
-              "src/frontend/assets",
-              { "glob": "manifest.xml", "input": "src/frontend/config/", "output": "/" },
+              "src/assets/favicon.ico",
+              "src/assets",
+              { "glob": "manifest.xml", "input": "src/config/", "output": "/" },
               { "glob": "**/*", "input": "node_modules/@microsoft/office-js/dist/", "output": "assets/office-js/" }
             ],
             "styles": [
-              "src/frontend/app/styles.scss"
+              "src/app/styles.scss"
             ],
             "scripts": []
           },
@@ -38,8 +38,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/frontend/environments/environment.ts",
-                  "with": "src/frontend/environments/environment.prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -85,15 +85,15 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
-            "polyfills": "src/frontend/polyfills.ts",
+            "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/favicon.ico",
+              "src/assets/favicon.ico",
               "src/assets"
             ],
             "styles": [
-              "src/frontend/app/styles.scss"
+              "src/app/styles.scss"
             ],
             "scripts": []
           }
