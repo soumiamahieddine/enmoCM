@@ -4,6 +4,9 @@ import { of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 declare const Office: any;
+const headers = new HttpHeaders({
+    'Authorization': 'Basic ' + btoa('ppetit:maarch')
+});
 @Component({
     selector: 'app-test',
     templateUrl: './test.component.html',
@@ -33,18 +36,20 @@ export class TestComponent implements OnInit {
         "tags" : []
     }
 
+    docFromMail: any = {};
+    userInfos : any;
+    mailBody: any
+
     constructor(
         public http: HttpClient,
     ) { }
 
     ngOnInit(): void {
-        console.log('Mail infos', Office.context.mailbox.item);
-        const headers = new HttpHeaders({
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2MTQ4NTgxODcsInVzZXIiOnsiaWQiOjEwLCJmaXJzdG5hbWUiOiJQYXRyaWNpYSIsImxhc3RuYW1lIjoiUEVUSVQiLCJzdGF0dXMiOiJPSyIsImxvZ2luIjoicHBldGl0In19.cjPuHtO8I7jmN0yomXV-Z6X4LknaJ28P5TSZ0gP2FjA'
-        });
-
+        console.log(Office.context.mailbox.userProfile.emailAddress);        
+             
         this.http.get('../rest/currentUser/profile', { headers: headers }).pipe(
             tap((data: any) => {
+                this.userInfos = data;
                 console.log(data);
             }),
             catchError((err: any) => {
@@ -53,12 +58,11 @@ export class TestComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+
+        this.getMailBody();
     }
 
     createDoc() {
-        const headers = new HttpHeaders({
-            'Authorization': 'Basic ' + btoa('ppetit:maarch')
-        });
         return new Promise((resolve) => {
             this.http.post('../rest/resources', this.myDoc, { headers: headers }).pipe(
                 tap((data: any) => {
@@ -67,10 +71,54 @@ export class TestComponent implements OnInit {
                 }),
                 catchError((err: any) => {
                     console.log(err);
-    
                     return of(false);
                 })
             ).subscribe();
         })
+    }
+
+    createDocFromMail() {
+        this.docFromMail = {
+            "modelId" : 1,
+            "doctype" : 102,
+            "subject" : Office.context.mailbox.item.subject,
+            "chrono" : true,
+            "typist" : this.userInfos.id,
+            "status" : "NEW",
+            "destination" : 21,
+            "initiator" : null,
+            "priority" : "poiuytre1357nbvc",
+            "documentDate" : Office.context.mailbox.item.dateTimeCreated,
+            "arrivalDate": Office.context.mailbox.item.dateTimeCreated,
+            "format" : "TXT",
+            "encodedFile": btoa(unescape(encodeURIComponent(this.mailBody))),
+            "externalId" : {"emailId" : Office.context.mailbox.item.itemId},
+            "customFields" : {"2" : "ma valeur custom"},
+            "senders" : [{"id" : 10, "type" : "contact"}],
+            "recipients" : [],
+            "folders" : [],
+            "tags" : []
+        };
+        return new Promise((resolve) => {
+            return new Promise((resolve) => {
+                this.http.post('../rest/resources', this.docFromMail, { headers: headers }).pipe(
+                    tap((data: any) => {
+                        console.log(data);
+                        resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        console.log(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            })
+        })
+    }
+
+    getMailBody() {
+        Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, ((res: { value: any; }) => {
+            this.mailBody = res.value;
+            console.log(this.mailBody);
+        }));  
     }
 }
