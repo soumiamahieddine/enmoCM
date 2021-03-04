@@ -74,6 +74,9 @@ class AuthenticationController
             $authUri        = $configuration['connectionUrl'] ?? null;
         }
 
+        $emailConfiguration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_email_server', 'select' => ['value']]);
+        $emailConfiguration = !empty($emailConfiguration['value']) ? json_decode($emailConfiguration['value'], true) : null;
+
         $return = [
             'instanceId'        => $hashedPath,
             'applicationName'   => $appName,
@@ -81,7 +84,8 @@ class AuthenticationController
             'changeKey'         => $encryptKey == 'Security Key Maarch Courrier #2008',
             'authMode'          => $loggingMethod['id'],
             'authUri'           => $authUri,
-            'lang'              => CoreConfigModel::getLanguage()
+            'lang'              => CoreConfigModel::getLanguage(),
+            'mailServerOnline'  => $emailConfiguration['online']
         ];
 
         if (!empty($keycloakState)) {

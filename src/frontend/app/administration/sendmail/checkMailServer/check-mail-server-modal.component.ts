@@ -3,7 +3,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '@service/auth.service';
-import { FunctionsService } from '@service/functions.service';
 import { of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 
@@ -26,7 +25,6 @@ export class CheckMailServerModalComponent implements OnInit {
         public translate: TranslateService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<CheckMailServerModalComponent>,
-        private functionsService: FunctionsService,
         private authService: AuthService
     ) { }
 
@@ -36,7 +34,6 @@ export class CheckMailServerModalComponent implements OnInit {
         this.statusMsg = this.translate.instant('lang.emailSendInProgress', {0: this.recipient});
         this.testEmailServer();
     }
-
 
     testEmailServer() {
         const email = {
@@ -54,10 +51,11 @@ export class CheckMailServerModalComponent implements OnInit {
                 this.authService.mailServerOnline = true;
                 setTimeout(() => {
                     this.dialogRef.close('success');
-                }, 1000);
+                }, 2000);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
+                this.authService.mailServerOnline = false;
                 this.statusMsg = this.translate.instant('lang.emailSendFailed', {sender: this.serverConf.from, recipient: this.recipient});
                 this.error = err.error.errors;
                 return of(false);

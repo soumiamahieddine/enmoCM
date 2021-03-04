@@ -59,6 +59,7 @@ SELECT id, 'myLastResources', 'list', 1, '#90caf9', '{}' FROM users WHERE status
 INSERT INTO tiles (user_id, type, view, position, color, parameters)
 SELECT id, 'followedMail', 'chart', 0, '#90caf9', '{"chartMode": "status", "chartType": "pie"}' FROM users WHERE status != 'DEL';
 
+UPDATE configurations SET value = jsonb_set(value, '{online}', 'true') where privilege = 'admin_email_server';
 
 DO $$ BEGIN
     IF (SELECT count(column_name) from information_schema.columns where table_name = 'contacts_groups' and column_name = 'public') THEN

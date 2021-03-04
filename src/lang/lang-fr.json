@@ -1397,6 +1397,7 @@
     "selectedValue": "Valeur sélectionnée",
     "send": "Envoyer",
     "sendActivationNotification": "Renvoyer le courriel d'activation",
+    "receiveActivationNotification": "Recevoir le courriel d'activation",
     "sendElement": "Envoyer un élément",
     "sendError": "Erreur d'envoi",
     "sendMode": "Mode d'envoi",
