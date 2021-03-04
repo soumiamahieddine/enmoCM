@@ -1,0 +1,9 @@
+@import '../../../../css/vars.scss';
+
+
+.editor-config {
+    ::ng-deep.mat-tab-disabled {
+        opacity: 1 !important;
+        color: initial !important;
+    }
+}

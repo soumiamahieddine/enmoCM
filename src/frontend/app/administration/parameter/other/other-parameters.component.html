@@ -1,0 +1,39 @@
+<mat-accordion class="editor-config" style="margin: 10px;">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Editeurs de document
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-tab-group>
+            <mat-tab *ngFor="let editor of editorsEnabled; let i=index" [label]="editor">
+                <ng-container *ngFor="let info of editorsConf[editor] | keyvalue: originalOrder">
+                    <mat-form-field *ngIf="info.key !== 'server_ssl'" appearance="outline">
+                        <mat-label>{{info.key}}</mat-label>
+                        <input matInput [type]="getInputType(info.value) === 'number' ? 'number' : 'text'"
+                            [formControl]="editorsConf[editor][info.key]">
+                    </mat-form-field>
+                    <mat-slide-toggle  style="height:40px;" *ngIf="info.key === 'server_ssl'"
+                        color="primary" [formControl]="editorsConf[editor][info.key]">{{info.key}}</mat-slide-toggle>
+                </ng-container>
+                <div style="display: flex;justify-content: center;">
+                    <button mat-button color="warn" mat-raised-button (click)="removeEditor(i)">
+                        Désactiver l'editeur
+                    </button>
+                </div>
+            </mat-tab>
+            <mat-tab disabled>
+                <ng-template mat-tab-label>
+                    <button mat-button (click)="$event.stopPropagation()" color="primary" [matMenuTriggerFor]="menu" [disabled]="allEditorsEnabled()">
+                        <i class="fa fa-plus"></i>
+                        Configurer un
+                        nouvel editeur</button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item *ngFor="let editor of getAvailableEditors()"
+                            (click)="addEditor(editor)">{{editor}}</button>
+                    </mat-menu>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-expansion-panel>
+</mat-accordion>
