@@ -14,6 +14,7 @@
 namespace Contact\controllers;
 
 use Contact\models\ContactCivilityModel;
+use Contact\models\ContactModel;
 use Group\controllers\PrivilegeController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -111,6 +112,11 @@ class ContactCivilityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        ContactModel::update([
+            'set'   => ['civility' => null],
+            'where' => ['civility = ?'],
+            'data'  => [$args['id']]
+        ]);
         ContactCivilityModel::delete([
             'where' => ['id = ?'],
             'data'  => [$args['id']]
