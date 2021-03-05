@@ -53,6 +53,8 @@ export class TestComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         console.log(Office.context.mailbox.item);
+        
+        this.getToken();
 
         await this.createContact();
 
@@ -137,5 +139,28 @@ export class TestComponent implements OnInit {
                 })
             ).subscribe();
         });
+    }
+
+    getToken() {
+        Office.context.mailbox.getCallbackTokenAsync(this.attachmentTokenCallback);
+    }
+
+    attachmentTokenCallback(asyncResult: any) {
+        let serviceRequest : any = {
+            attachmentToken: '',
+            ewsUrl : Office.context.mailbox.ewsUrl,
+            restUrl: Office.context.mailbox.restUrl,
+            attachments: []
+        };
+        if (asyncResult.status == "succeeded") {
+            serviceRequest.attachmentToken = asyncResult.value;
+            for (var i = 0; i < Office.context.mailbox.item.attachments.length; i++) {
+                serviceRequest.attachments.push(Office.context.mailbox.item.attachments[i])
+            }
+            console.log(serviceRequest);
+        }
+        else {
+            console.log(asyncResult.error.message);
+        }
     }
 }
