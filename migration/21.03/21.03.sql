@@ -81,3 +81,16 @@ DO $$ BEGIN
         ALTER TABLE contacts_groups_lists ALTER COLUMN correspondent_type set not null;
     END IF;
 END$$;
+
+DROP TABLE IF EXISTS contacts_civilities;
+CREATE TABLE contacts_civilities
+(
+    id SERIAL NOT NULL,
+    label text NOT NULL,
+    abbreviation CHARACTER VARYING(16) NOT NULL,
+    CONSTRAINT contacts_civilities_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE contacts DROP COLUMN IF EXISTS civility_tmp;
+ALTER TABLE contacts ADD COLUMN civility_tmp INTEGER;

@@ -477,16 +477,7 @@ export class ContactsFormComponent implements OnInit {
     }
 
     initCivilities(civilities: any) {
-        const formatedCivilities: any[] = [];
-
-        Object.keys(civilities).forEach(element => {
-            formatedCivilities.push({
-                id: element,
-                label: civilities[element].label
-            });
-        });
-
-        this.contactForm.filter(contact => contact.id === 'civility')[0].values = formatedCivilities;
+        this.contactForm.filter(contact => contact.id === 'civility')[0].values = civilities;
     }
 
     getCountries() {

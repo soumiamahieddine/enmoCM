@@ -94,15 +94,7 @@ export class ContactsParametersAdministrationComponent implements OnInit {
     getCivilities() {
         this.http.get('../rest/civilities').pipe(
             tap((data: any) => {
-                Object.keys(data.civilities).forEach(idCiv => {
-                    this.civilities.push(
-                        {
-                            id: idCiv,
-                            label: data.civilities[idCiv].label,
-                            abbreviation: data.civilities[idCiv].abbreviation
-                        }
-                    );
-                });
+                this.civilities = data.civilities;
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

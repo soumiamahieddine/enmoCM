@@ -802,6 +802,15 @@ CREATE TABLE contacts_groups_lists
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE contacts_civilities
+(
+    id SERIAL NOT NULL,
+    label text NOT NULL,
+    abbreviation CHARACTER VARYING(16) NOT NULL,
+    CONSTRAINT contacts_civilities_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 CREATE TABLE search_templates (
   id serial,
   user_id integer NOT NULL,
