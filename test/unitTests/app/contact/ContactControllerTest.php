@@ -927,7 +927,7 @@ class ContactControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response = $contactCivilityController->getCivilities($request, new \Slim\Http\Response());
+        $response = $contactCivilityController->get($request, new \Slim\Http\Response());
         $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
 

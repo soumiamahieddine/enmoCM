@@ -791,7 +791,7 @@ class ContactController
         $civilities = ContactCivilityModel::get(['select' => ['*']]);
         $civilities = array_column($civilities, null, 'id');
 
-        if (strlen($args['civility'].' '.$args['fullName']) > $args['strMaxLength']) {
+        if (strlen($civilities[$args['civility']]['label'].' '.$args['fullName']) > $args['strMaxLength']) {
             $args['civility'] = $civilities[$args['civility']]['abbreviation'];
         } else {
             $args['civility'] = $civilities[$args['civility']]['label'];
