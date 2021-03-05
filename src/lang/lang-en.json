@@ -2360,5 +2360,7 @@
     "infoVisaParameters": "These parameters concern the visa workflow in the <b> internal signature </b>",
     "noData": "No available groupement ",
     "correspondentAdded": "Correspondent(s) added",
-    "displayed": "displayed"
+    "displayed": "displayed",
+    "maarchUrl": "Application URL",
+    "maarchUrlHelp": "URL used in notifications and in documents synchronization with an external signature book"
 }

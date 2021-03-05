@@ -48,6 +48,9 @@ class AuthenticationController
         $hashedPath = md5($path);
 
         $appName   = CoreConfigModel::getApplicationName();
+        $configFile = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+        $maarchUrl = $configFile['config']['maarchUrl'] ?? '';
+
         $parameter = ParameterModel::getById(['id' => 'loginpage_message', 'select' => ['param_value_string']]);
 
         $encryptKey = CoreConfigModel::getEncryptKey();
@@ -85,7 +88,8 @@ class AuthenticationController
             'authMode'          => $loggingMethod['id'],
             'authUri'           => $authUri,
             'lang'              => CoreConfigModel::getLanguage(),
-            'mailServerOnline'  => $emailConfiguration['online']
+            'mailServerOnline'  => $emailConfiguration['online'],
+            'maarchUrl'         => $maarchUrl
         ];
 
         if (!empty($keycloakState)) {
