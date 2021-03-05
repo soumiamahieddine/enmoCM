@@ -2372,10 +2372,13 @@
     "disableEditor": "Désactiver l'éditeur",
     "documentsEditors": "Éditeurs de documents",
     "uri": "URI serveur",
+    "authUri": "URI d'authentification serveur",
     "ssl": "Mode de connexion sécurisée (https)",
-    "token": "Token d'accès",
+    "token": "Jeton d'accès",
     "lang": "language",
     "javaDesc": "Editeur par défaut, nécessite l'installation de <a href=\"https://www.java.com/fr/download/manual.jsp\" target=\"_blank\">java</a> sur votre poste.",
-    "onlyofficeDesc": "<a href=\"https://www.onlyoffice.com\" target=\"_blank\">ONLYOFFICE</a> fournit une suite bureautique en ligne sécurisée, hautement copatible avec les formats <b>MS Office</b>.",
-    "collaboraonlineDesc" : "<a href=\"https://www.collaboraoffice.com\" target=\"_blank\">COLLABORA ONLINE</a> est une suite bureautique en ligne open source développée par Collabora Productivity. Il est basé sur <b>LibreOffice Online</b>. "
+    "onlyofficeDesc": "<a href=\"https://www.onlyoffice.com\" target=\"_blank\">ONLYOFFICE</a> fournit une suite bureautique en ligne sécurisée, hautement compatible avec les formats <b>MS Office</b>.",
+    "collaboraonlineDesc" : "<a href=\"https://www.collaboraoffice.com\" target=\"_blank\">COLLABORA ONLINE</a> est une suite bureautique en ligne open source développée par Collabora Productivity. Il est basé sur <b>LibreOffice Online</b>.",
+    "shippingAuthUriDesc": "Url de récupération du jeton du compte utilisé afin d'utiliser les ressources de l'API",
+    "shippingUriDesc": "Url des ressources l'API"
 }
