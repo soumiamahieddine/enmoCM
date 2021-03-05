@@ -12,7 +12,7 @@ declare const Office: any;
 export class TestComponent implements OnInit {
     loading: boolean = false;
     headers = new HttpHeaders({
-        Authorization: 'Basic ' + btoa('cchaplin:maarch')
+        Authorization: 'Basic ' + btoa('ddaull:maarch')
     });
 
     applicationName: string = 'Maarch Courrier';
@@ -40,20 +40,22 @@ export class TestComponent implements OnInit {
     };
 
     docFromMail: any = {};
+    contactInfos: any = {};
     userInfos: any;
     mailBody: any;
+    contactId: number;
 
     constructor(
         public http: HttpClient,
     ) { }
 
-    ngOnInit(): void {
-        // console.log(Office.context.mailbox.userProfile.emailAddress);
+    async ngOnInit(): Promise<void> {
+        await this.createContact();
 
         this.http.get('../rest/authenticationInformations')
             .pipe(
                 tap((data: any) => {
-                    console.log(data);
+                    // console.log(data);
                     this.applicationName = data.applicationName;
                 }),
                 catchError((err: any) => {
@@ -61,7 +63,7 @@ export class TestComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
-
+            
         this.getMailBody();
     }
 
@@ -71,21 +73,22 @@ export class TestComponent implements OnInit {
             modelId: 1,
             doctype: 102,
             subject: Office.context.mailbox.item.subject,
+            destination: 21,
             chrono: true,
-            // typist : this.userInfos.id,
+            typist : 10,
             status: 'NEW',
             documentDate: Office.context.mailbox.item.dateTimeCreated,
             arrivalDate: Office.context.mailbox.item.dateTimeCreated,
             format: 'TXT',
             encodedFile: btoa(unescape(encodeURIComponent(this.mailBody))),
             externalId: { emailId: Office.context.mailbox.item.itemId },
-            // senders: [{ id: 10, type: 'contact' }]
+            senders: [{ id: this.contactId, type: 'contact' }]
         };
         return new Promise((resolve) => {
             return new Promise((resolve) => {
                 this.http.post('../rest/resources', this.docFromMail, { headers: this.headers }).pipe(
                     tap((data: any) => {
-                        console.log(data);
+                        // console.log(data);
                         resolve(true);
                     }),
                     finalize(() => this.loading = false),
@@ -103,5 +106,28 @@ export class TestComponent implements OnInit {
             this.mailBody = res.value;
             // console.log(this.mailBody);
         }));
+    }
+
+    createContact() {
+        let userName: string = Office.context.mailbox.userProfile.displayName;
+        let index = userName.lastIndexOf(' ');
+        this.contactInfos = {
+            firstname: userName.substring(0, index),
+            lastname: userName.substring(index + 1),
+            email: Office.context.mailbox.userProfile.emailAddress,
+        }
+        return new Promise((resolve) => {
+            this.http.post('../rest/contacts', this.contactInfos, { headers: this.headers }).pipe(
+                tap((data: any) => {
+                    // console.log(data.id);
+                    this.contactId = data.id;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    console.log(err);
+                    return of(false);
+                })
+            ).subscribe();
+        })
     }
 }
