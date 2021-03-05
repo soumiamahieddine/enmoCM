@@ -11,8 +11,10 @@ declare const Office: any;
 })
 export class TestComponent implements OnInit {
     loading: boolean = false;
+
+    // must be REST USER (with create_contact privilege)
     headers = new HttpHeaders({
-        Authorization: 'Basic ' + btoa('ddaull:maarch')
+        Authorization: 'Basic ' + btoa('cchaplin:maarch')
     });
 
     applicationName: string = 'Maarch Courrier';
@@ -50,6 +52,8 @@ export class TestComponent implements OnInit {
     ) { }
 
     async ngOnInit(): Promise<void> {
+        console.log(Office.context.mailbox.item);
+
         await this.createContact();
 
         this.http.get('../rest/authenticationInformations')
@@ -67,15 +71,19 @@ export class TestComponent implements OnInit {
         this.getMailBody();
     }
 
-    createDocFromMail() {
+    async sendToMaarch() {
         this.loading = true;
+        await this.createContact();
+        this.createDocFromMail();
+    }
+
+    createDocFromMail() {
         this.docFromMail = {
             modelId: 1,
             doctype: 102,
             subject: Office.context.mailbox.item.subject,
-            destination: 21,
             chrono: true,
-            typist : 10,
+            // typist : 10,
             status: 'NEW',
             documentDate: Office.context.mailbox.item.dateTimeCreated,
             arrivalDate: Office.context.mailbox.item.dateTimeCreated,
@@ -109,13 +117,13 @@ export class TestComponent implements OnInit {
     }
 
     createContact() {
-        let userName: string = Office.context.mailbox.userProfile.displayName;
-        let index = userName.lastIndexOf(' ');
+        const userName: string = Office.context.mailbox.item.from.displayName;
+        const index = userName.lastIndexOf(' ');
         this.contactInfos = {
             firstname: userName.substring(0, index),
             lastname: userName.substring(index + 1),
-            email: Office.context.mailbox.userProfile.emailAddress,
-        }
+            email: Office.context.mailbox.item.from.emailAddress,
+        };
         return new Promise((resolve) => {
             this.http.post('../rest/contacts', this.contactInfos, { headers: this.headers }).pipe(
                 tap((data: any) => {
@@ -128,6 +136,6 @@ export class TestComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
-        })
+        });
     }
 }
