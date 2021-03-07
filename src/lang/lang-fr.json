@@ -2382,5 +2382,6 @@
     "shippingAuthUriDesc": "Url de récupération du jeton du compte utilisé afin d'utiliser les ressources de l'API",
     "shippingUriDesc": "Url des ressources l'API",
     "maarchUrl": "URL de l'application",
-    "maarchUrlHelp": "URL utilisé dans les notifications et lors de la synchronisation de documents avec un parapheur externe"
+    "maarchUrlHelp": "URL utilisé dans les notifications et lors de la synchronisation de documents avec un parapheur externe",
+    "adminCivilities": "Paramétrage des civilités"
 }

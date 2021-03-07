@@ -104,29 +104,29 @@ export class ContactsParametersAdministrationComponent implements OnInit {
     }
 
     updateCivility(civility: any) {
-        console.log('update!');
-        /*this.http.put(`../rest/civilities/${civility.id}`, civility).pipe(
+        this.http.put(`../rest/civilities/${civility.id}`, civility).pipe(
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
-            })*/
+            })
+        ).subscribe();
     }
 
     addCivility() {
-        const newCivility = {
-            id: `title${this.civilities.length + 1}`,
+        const newCivility: any = {
             label: 'label',
             abbreviation: 'abbreviation'
         };
-        this.civilities.push(newCivility);
-        /*this.http.post(`../rest/civilities`, newCivility).pipe(
+        this.http.post(`../rest/civilities`, newCivility).pipe(
             tap((data: any) => {
+                newCivility.id = data.id;
                 this.civilities.push(newCivility);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
-            })*/
+            })
+        ).subscribe();
     }
 
 
@@ -135,7 +135,7 @@ export class ContactsParametersAdministrationComponent implements OnInit {
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            // exhaustMap(() => this.http.delete(`../rest/civilities/${civility.id}`)),
+            exhaustMap(() => this.http.delete(`../rest/civilities/${civility.id}`)),
             tap(() => {
                 this.civilities.splice(index, 1);
             }),
