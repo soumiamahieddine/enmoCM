@@ -145,7 +145,7 @@ export class ContactsParametersAdministrationComponent implements OnInit {
         };
         this.http.post(`../rest/civilities`, newCivility).pipe(
             tap((data: any) => {
-                newCivility.id = 38;
+                newCivility.id = data.id;
                 Object.keys(newCivility).forEach((elementId: any) => {
                     newCivility[elementId] = new FormControl(newCivility[elementId]);
                     if (elementId === 'id') {
