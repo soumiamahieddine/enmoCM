@@ -2373,7 +2373,7 @@
     "documentsEditors": "Éditeurs de documents",
     "uri": "URI serveur",
     "authUri": "URI d'authentification serveur",
-    "ssl": "Mode de connexion sécurisée (https)",
+    "ssl": "Mode de connexion sécurisé (https)",
     "token": "Jeton d'accès",
     "lang": "language",
     "javaDesc": "Editeur par défaut, nécessite l'installation de <a href=\"https://www.java.com/fr/download/manual.jsp\" target=\"_blank\">java</a> sur votre poste.",
