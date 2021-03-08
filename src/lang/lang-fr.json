@@ -2380,8 +2380,9 @@
     "onlyofficeDesc": "<a href=\"https://www.onlyoffice.com\" target=\"_blank\">ONLYOFFICE</a> fournit une suite bureautique en ligne sécurisée, hautement compatible avec les formats <b>MS Office</b>.",
     "collaboraonlineDesc" : "<a href=\"https://www.collaboraoffice.com\" target=\"_blank\">COLLABORA ONLINE</a> est une suite bureautique en ligne open source développée par Collabora Productivity. Il est basé sur <b>LibreOffice Online</b>.",
     "shippingAuthUriDesc": "Url de récupération du jeton du compte utilisé afin d'utiliser les ressources de l'API",
-    "shippingUriDesc": "Url des ressources l'API",
+    "shippingUriDesc": "Url des ressources de l'API",
     "maarchUrl": "URL de l'application",
     "maarchUrlHelp": "URL utilisé dans les notifications et lors de la synchronisation de documents avec un parapheur externe",
-    "adminCivilities": "Paramétrage des civilités"
+    "adminCivilities": "Paramétrage des civilités",
+    "abbreviation": "Abréviation"
 }
