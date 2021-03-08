@@ -1619,7 +1619,7 @@ class ContactController
 
         if (empty($body)) {
             return ['errors' => 'Body is not set or empty'];
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname'] ?? null) && !Validator::stringType()->notEmpty()->validate($body['company'] ?? null)) {
             return ['errors' => 'Body lastname or company is mandatory'];
         } elseif (!empty($body['email']) && !filter_var($body['email'], FILTER_VALIDATE_EMAIL)) {
             return ['errors' => 'Body email is not valid'];
