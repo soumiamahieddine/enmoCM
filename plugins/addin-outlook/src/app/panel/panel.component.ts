@@ -6,9 +6,9 @@ import { NotificationService } from '../service/notification/notification.servic
 
 declare const Office: any;
 @Component({
-    selector: 'app-test',
-    templateUrl: './test.component.html',
-    styleUrls: ['./test.component.scss']
+    selector: 'app-panel',
+    templateUrl: './panel.component.html',
+    styleUrls: ['./panel.component.scss']
 })
 export class PanelComponent implements OnInit {
     loading: boolean = true;
