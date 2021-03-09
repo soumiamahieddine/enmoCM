@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
+import { NotificationService } from '../service/notification/notification.service';
 
 declare const Office: any;
 @Component({
@@ -9,38 +10,18 @@ declare const Office: any;
     templateUrl: './test.component.html',
     styleUrls: ['./test.component.scss']
 })
-export class TestComponent implements OnInit {
-    loading: boolean = false;
+export class PanelComponent implements OnInit {
+    loading: boolean = true;
 
     // must be REST USER (with create_contact privilege)
     headers = new HttpHeaders({
         Authorization: 'Basic ' + btoa('cchaplin:maarch')
     });
 
+    inApp: boolean = false;
     applicationName: string = 'Maarch Courrier';
 
-    myDoc: any = {
-        modelId: 1,
-        doctype: 102,
-        subject: 'Maarch Office 365',
-        chrono: true,
-        typist: 19,
-        status: 'COU',
-        destination: 21,
-        initiator: null,
-        priority: 'poiuytre1357nbvc',
-        documentDate: '2020-01-01 17:18:47',
-        arrivalDate: '2020-01-01 18:18:40',
-        format: 'PDF',
-        encodedFile: 'JVBERi0xLjQgLi4u',
-        externalId: { companyId: '123456789' },
-        customFields: { 2: 'ma valeur custom' },
-        senders: [{ id: 10, type: 'contact' }],
-        recipients: [],
-        folders: [],
-        tags: []
-    };
-
+    displayMailInfo: any = {};
     docFromMail: any = {};
     contactInfos: any = {};
     userInfos: any;
@@ -49,37 +30,64 @@ export class TestComponent implements OnInit {
 
     constructor(
         public http: HttpClient,
+        private notificationService: NotificationService
     ) { }
 
     async ngOnInit(): Promise<void> {
-        console.log(Office.context.mailbox.item);
-        
-        this.getToken();
-
-        await this.createContact();
-
         this.http.get('../rest/authenticationInformations')
-            .pipe(
-                tap((data: any) => {
-                    // console.log(data);
-                    this.applicationName = data.applicationName;
-                }),
-                catchError((err: any) => {
-                    console.log(err);
-                    return of(false);
-                })
-            ).subscribe();
-            
-        this.getMailBody();
+        .pipe(
+            tap((data: any) => {
+                this.applicationName = data.applicationName;
+            }),
+            catchError((err: any) => {
+                console.log(err);
+                return of(false);
+            })
+        ).subscribe();
+
+        console.log(Office.context);
+
+        this.inApp = await this.checkMailInApp();
+
+        if (!this.inApp) {
+            // console.log(Office.context.mailbox.item);
+            // this.getToken();
+            this.initMailInfo();
+        }
+        this.loading = false;
     }
 
     async sendToMaarch() {
         this.loading = true;
+        await this.getMailBody();
         await this.createContact();
         this.createDocFromMail();
+        // this.getAttachments();
+    }
+
+    checkMailInApp(): Promise<boolean> {
+        return new Promise((resolve) => {
+            resolve(false);
+            // TO DO route check resource
+        });
+    }
+
+    initMailInfo() {
+        this.displayMailInfo = {
+            modelId: 1,
+            doctype: 'Courriel',
+            subject: Office.context.mailbox.item.subject,
+            typist: Office.context.mailbox.item.to.displayName,
+            status: 'NEW',
+            documentDate: Office.context.mailbox.item.dateTimeCreated,
+            arrivalDate: Office.context.mailbox.item.dateTimeCreated,
+            emailId: Office.context.mailbox.item.itemId,
+            sender: Office.context.mailbox.item.from.displayName
+        };
     }
 
     createDocFromMail() {
+        // TO DO get id user
         this.docFromMail = {
             modelId: 1,
             doctype: 102,
@@ -99,6 +107,8 @@ export class TestComponent implements OnInit {
                 this.http.post('../rest/resources', this.docFromMail, { headers: this.headers }).pipe(
                     tap((data: any) => {
                         // console.log(data);
+                        this.notificationService.success('Courriel envoyé');
+                        this.inApp = true;
                         resolve(true);
                     }),
                     finalize(() => this.loading = false),
@@ -112,10 +122,13 @@ export class TestComponent implements OnInit {
     }
 
     getMailBody() {
-        Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, ((res: { value: any; }) => {
-            this.mailBody = res.value;
-            // console.log(this.mailBody);
-        }));
+        return new Promise((resolve) => {
+            Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, ((res: { value: any; }) => {
+                this.mailBody = res.value;
+                resolve(true);
+            }));
+        });
+        
     }
 
     createContact() {
@@ -141,7 +154,7 @@ export class TestComponent implements OnInit {
         });
     }
 
-    getToken() {
+    /*getToken() {
         Office.context.mailbox.getCallbackTokenAsync(this.attachmentTokenCallback);
     }
 
@@ -162,5 +175,40 @@ export class TestComponent implements OnInit {
         else {
             console.log(asyncResult.error.message);
         }
+    }*/
+
+    getAttachments() {
+        if (Office.context.requirements.isSetSupported('Mailbox', '1.8')) {
+            if (Office.context.mailbox.item.attachments.length > 0) {
+                for (let i = 0 ; i < Office.context.mailbox.item.attachments.length ; i++) {
+                    Office.context.mailbox.item.getAttachmentContentAsync(Office.context.mailbox.item.attachments[i].id, this.handleAttachmentsCallback);
+                }
+            }
+          } else {
+            console.log('Impossible de récupérer les pj : version minimum Office server 1.8');
+          }
+    }
+    
+    handleAttachmentsCallback(result) {
+        console.log(result);
+        
+        // Parse string to be a url, an .eml file, a base64-encoded string, or an .icalendar file.
+        /*switch (result.value.format) {
+            case Office.MailboxEnums.AttachmentContentFormat.Base64:
+                console.log(result);
+                // Handle file attachment.
+                break;
+            case Office.MailboxEnums.AttachmentContentFormat.Eml:
+                // Handle email item attachment.
+                break;
+            case Office.MailboxEnums.AttachmentContentFormat.ICalendar:
+                // Handle .icalender attachment.
+                break;
+            case Office.MailboxEnums.AttachmentContentFormat.Url:
+                // Handle cloud attachment.
+                break;
+            default:
+                // Handle attachment formats that are not supported.
+        }*/
     }
 }

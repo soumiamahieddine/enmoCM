@@ -121,6 +121,12 @@
               { "glob": "**/*", "input": "plugins/addin-outlook/node_modules/@microsoft/office-js/dist/", "output": "assets/office-js/" }
             ],
             "styles": [
+              {
+                "input": "./src/frontend/css/vars.scss",
+                "inject": true
+              },
+              "./node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "./src/frontend/css/maarch-material.scss",
               "plugins/addin-outlook/src/app/styles.scss"
             ],
             "scripts": []

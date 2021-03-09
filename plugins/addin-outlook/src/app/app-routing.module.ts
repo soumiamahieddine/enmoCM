@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TestComponent } from './test/test.component';
+import { PanelComponent } from './panel/panel.component';
 
 const routes: Routes = [
   {
     path: 'taskpane',
-    component: TestComponent
+    component: PanelComponent
   },
   {
     path: '**',

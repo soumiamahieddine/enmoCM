@@ -12,3 +12,14 @@ Office.initialize = function(){
   platformBrowserDynamic().bootstrapModule(AppModule)
     .catch(err => console.error(err));
 };
+
+Office.onReady((info) => {
+  if (info.host === Office.HostType.Excel) {
+      // Do Excel-specific initialization (for example, make add-in task pane's
+      // appearance compatible with Excel "green").
+  }
+  if (info.platform === Office.PlatformType.PC) {
+      // Make minor layout changes in the task pane.
+  }
+  console.log(`Office.js is now ready in ${info.host} on ${info.platform}`);
+});
