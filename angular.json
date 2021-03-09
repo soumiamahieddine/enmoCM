@@ -17,6 +17,10 @@
             "main": "src/frontend/main.ts",
             "tsConfig": "src/frontend/tsconfig.app.json",
             "styles": [
+              {
+                "input": "./src/frontend/css/vars.scss",
+                "inject": true
+              },
               "./node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "./src/frontend/css/font-awesome-maarch/css/font-maarch.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -126,8 +130,7 @@
                 "inject": true
               },
               "./node_modules/@fortawesome/fontawesome-free/css/all.min.css",
-              "./src/frontend/css/maarch-material.scss",
-              "plugins/addin-outlook/src/app/styles.scss"
+              "./src/frontend/css/maarch-material.scss"
             ],
             "scripts": []
           },
