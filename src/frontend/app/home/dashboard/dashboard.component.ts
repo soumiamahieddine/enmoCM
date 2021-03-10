@@ -92,6 +92,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         };
         let route = '';
         let label = '';
+
         if (param.privilegeId === 'indexing') {
             const priv = this.privilegeService.getCurrentUserMenus([param.privilegeId])[0];
             if (priv !== undefined && priv.groups.find((groupItem: any) => groupItem.id === param.groupId) !== undefined) {
@@ -103,13 +104,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             }
 
         } else {
-            const priv = this.privilegeService.getCurrentUserMenus([param.privilegeId])[0];
+            const priv = this.privilegeService.getAdminMenu([param.privilegeId])[0];
             if (priv !== undefined) {
                 menu = priv;
                 route = menu.route;
                 label = this.translate.instant(menu.label);
             }
-
         }
 
         return {
