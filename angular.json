@@ -129,6 +129,7 @@
                 "input": "./src/frontend/css/vars.scss",
                 "inject": true
               },
+              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "./src/frontend/css/maarch-material.scss"
             ],

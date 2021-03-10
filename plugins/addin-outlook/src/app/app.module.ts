@@ -8,11 +8,13 @@ import { CustomSnackbarComponent } from './service/notification/notification.ser
 import AppComponent from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
+import { MessageBoxComponent } from './plugins/messageBox/message-box.component';
 import { PanelComponent } from './panel/panel.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    MessageBoxComponent,
     CustomSnackbarComponent,
     PanelComponent,
   ],
