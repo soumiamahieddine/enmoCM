@@ -94,7 +94,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         let label = '';
         if (param.privilegeId === 'indexing') {
             const priv = this.privilegeService.getCurrentUserMenus([param.privilegeId])[0];
-            if (priv !== undefined) {
+            if (priv !== undefined && priv.groups.find((groupItem: any) => groupItem.id === param.groupId) !== undefined) {
                 menu = priv;
                 label = this.translate.instant(menu.label);
                 const group = menu.groups.find((groupItem: any) => groupItem.id === param.groupId);
