@@ -1,0 +1,48 @@
+<div class="formType" style="margin-top: 20px;">
+    <div class="formType-title">
+        Menu : «Enregistrer un pli numérique»
+    </div>
+    <div style="width: 100%;">
+        <mat-form-field>
+            <mat-label>Rediriger sur la bannette après enrgistrement</mat-label>
+            <input matInput [formControl]="basketToRedirect">
+        </mat-form-field>
+    </div>
+</div>
+<div class="formType" style="margin-top: 20px;">
+    <div class="formType-title">
+        Réception d'un pli numérique via une application maarch <b>externe</b>
+    </div>
+    <div style="width: 100%;">
+        <app-maarch-message [content]="'Paraméter ici les métas-données par défaut des courriers reçus.'">
+        </app-maarch-message>
+        <mat-form-field *ngFor="let data of metadata | keyvalue">
+            <mat-label>{{'lang.' + data.key | translate}}</mat-label>
+            <input matInput [formControl]="data.value">
+        </mat-form-field>
+    </div>
+</div>
+<mat-slide-toggle style="height:40px;" color="primary" [formControl]="annuaryConf.enabled">Utiliser des
+    annuaires de contacts</mat-slide-toggle>
+<ng-container *ngIf="annuaryConf.enabled.value">
+    <button mat-button color="primary" (click)="addAnnuary()">
+        <i class="fa fa-plus"></i>
+        {{'lang.add' | translate}}</button>
+        <div class="annuaries-list">
+            <div *ngFor="let annuary of annuaryConf.annuaries;let i=index;" class="formType" style="margin-top: 20px;">
+                <div class="formType-title">
+                    Annuaire {{i+1}}
+                </div>
+                <div style="width: 100%;">
+                    <mat-form-field *ngFor="let data of annuary | keyvalue">
+                        <mat-label>{{'lang.' + data.key | translate}}</mat-label>
+                        <input matInput [formControl]="data.value">
+                    </mat-form-field>
+                    <div style="text-align: center;">
+                        <button mat-raised-button color="warn" (click)="deleteAnnuary(i)">
+                            {{'lang.delete' | translate}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</ng-container>
