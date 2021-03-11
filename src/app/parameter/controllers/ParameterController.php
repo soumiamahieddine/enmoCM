@@ -17,13 +17,20 @@
 
 namespace Parameter\controllers;
 
+use Attachment\models\AttachmentTypeModel;
+use Basket\models\BasketModel;
+use Doctype\models\DoctypeModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
+use IndexingModel\models\IndexingModelModel;
+use MessageExchange\controllers\ReceiveMessageExchangeController;
 use Parameter\models\ParameterModel;
+use Priority\models\PriorityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
+use Status\models\StatusModel;
 
 class ParameterController
 {
@@ -260,5 +267,155 @@ class ParameterController
         }
 
         return $response->withJson(['parameters' => $parameters]);
+    }
+
+    public function getM2MConfiguration(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $xmlConfig = ReceiveMessageExchangeController::readXmlConfig();
+
+        $attachmentType = AttachmentTypeModel::getByTypeId(['select' => ['id'], 'typeId' => $xmlConfig['res_attachments']['attachment_type']]);
+        $status         = StatusModel::getById(['select' => ['identifier'], 'id' => $xmlConfig['res_letterbox']['status']]);
+
+        $config = [
+            "metadata" => [
+                'typeId'           => $xmlConfig['res_letterbox']['type_id'],
+                'statusId'         => $status['identifier'],
+                'priorityId'       => $xmlConfig['res_letterbox']['priority'],
+                'indexingModelId'  => $xmlConfig['res_letterbox']['indexingModelId'],
+                'attachmentTypeId' => $attachmentType['id']
+            ],
+            'basketToRedirect' => $xmlConfig['basketRedirection_afterUpload'][0],
+            'communications' => [
+                'email' => $xmlConfig['m2m_communication_type']['email'],
+                'uri'   => $xmlConfig['m2m_communication_type']['url']
+            ],
+            'annuary' => $xmlConfig['annuaries']
+        ];
+
+        if (isset($config['annuary']['annuary'])) {
+            $config['annuary']['annuaries'] = $config['annuary']['annuary'];
+            unset($config['annuary']['annuary']);
+            if (!is_array($config['annuary']['annuaries'])) {
+                $config['annuary']['annuaries'] = [$config['annuary']['annuaries']];
+            }
+        }
+
+        return $response->withJson(['configuration' => $config]);
+    }
+
+    public function setM2MConfiguration(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $body = $request->getParsedBody();
+        $body = $body['configuration'];
+        
+        if (empty($body)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body is empty']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['basketToRedirect'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body basketToRedirect is empty, not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['metadata']['priorityId'] ?? null)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body[metadata] priorityId is empty or not a string']);
+        }
+
+        foreach (['attachmentTypeId', 'indexingModelId', 'statusId', 'typeId'] as $value) {
+            if (!Validator::intVal()->notEmpty()->validate($body['metadata'][$value] ?? null)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body[metadata] ' . $value . ' is empty, not a string']);
+            }
+        }
+
+        $basket = BasketModel::getByBasketId(['select' => [1], 'basketId' => $body['basketToRedirect']]);
+        if (empty($basket)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Basket not found', 'lang' => 'basketDoesNotExist']);
+        }
+
+        $priority = PriorityModel::getById(['select' => [1], 'id' => $body['metadata']['priorityId']]);
+        if (empty($priority)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Priority not found', 'lang' => 'priorityDoesNotExist']);
+        }
+
+        $attachmentType = AttachmentTypeModel::getById(['select' => ['type_id'], 'id' => $body['metadata']['attachmentTypeId']]);
+        if (empty($attachmentType)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Basket not found', 'lang' => 'attachmentTypeDoesNotExist']);
+        }
+
+        $indexingModel = IndexingModelModel::getById(['select' => [1], 'id' => $body['metadata']['indexingModelId']]);
+        if (empty($indexingModel)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Basket not found', 'lang' => 'indexingModelDoesNotExist']);
+        }
+
+        $status = StatusModel::getByIdentifier(['select' => ['id'], 'identifier' => $body['metadata']['statusId']]);
+        if (empty($status)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Basket not found', 'lang' => 'statusDoesNotExist']);
+        }
+
+        $doctype = DoctypeModel::getById(['select' => [1], 'id' => $body['metadata']['typeId']]);
+        if (empty($doctype)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Basket not found', 'lang' => 'typeIdDoesNotExist']);
+        }
+
+        $customId = CoreConfigModel::getCustomId();
+        $path = "custom/{$customId}/apps/maarch_entreprise/xml/m2m_config.xml";
+        if (!file_exists($path)) {
+            copy("apps/maarch_entreprise/xml/m2m_config.xml", $path);
+        }
+
+        $communication = [];
+        foreach ($body['communications'] as $value) {
+            if (!empty($value)) {
+                $communication[] = $value;
+            }
+        }
+
+        $config = [
+            'res_letterbox' => [
+                'type_id'         => $body['metadata']['typeId'],
+                'status'          => $status[0]['id'],
+                'priority'        => $body['metadata']['priorityId'],
+                'indexingModelId' => $body['metadata']['indexingModelId']
+            ],
+            'res_attachments' => [
+                'attachment_type' => $attachmentType['type_id']
+            ],
+            'basketRedirection_afterUpload' => $body['basketToRedirect'],
+            'm2m_communication'             => implode(',', $communication),
+            'annuaries'                     => $body['annuary']
+        ];
+
+        if (isset($config['annuaries']['annuaries'])) {
+            $config['annuaries']['annuary'] = $config['annuaries']['annuaries'];
+            unset($config['annuaries']['annuaries']);
+        }
+
+        $xml = ParameterController::arrayToXml($config);
+
+        return $response->withStatus(204);
+    }
+
+    public static function arrayToXml($array, $rootElement = null, $xml = null)
+    {
+        $outputXml = $xml;
+          
+        if ($outputXml === null) {
+            $outputXml = new \SimpleXMLElement($rootElement !== null ? $rootElement : '<ROOT/>');
+            $outputXml->preserveWhiteSpace = false;
+            $outputXml->formatOutput = true;
+        }
+          
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                ParameterController::arrayToXml($value, $key, $outputXml->addChild($key));
+            } else {
+                $outputXml->addChild($key, $value);
+            }
+        }
+          
+        return $outputXml->asXML();
     }
 }

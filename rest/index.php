@@ -389,6 +389,8 @@ $app->post('/parameters', \Parameter\controllers\ParameterController::class . ':
 $app->get('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':getById');
 $app->put('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':update');
 $app->delete('/parameters/{id}', \Parameter\controllers\ParameterController::class . ':delete');
+$app->get('/m2mConfiguration', \Parameter\controllers\ParameterController::class . ':getM2MConfiguration');
+$app->put('/m2mConfiguration', \Parameter\controllers\ParameterController::class . ':setM2MConfiguration');
 
 //PasswordRules
 $app->get('/passwordRules', \SrcCore\controllers\PasswordController::class . ':getRules');
