@@ -32,7 +32,7 @@
                 </div>
                 <mat-card *ngIf="!loading" class="card-app-content" style="display: contents;">
                     <form style="display: contents;" class="form-horizontal" (ngSubmit)="onSubmit()" #templatesFormUp="ngForm">
-                        <app-maarch-message *ngIf="template.target === 'attachments' && !isVisibleAttachment(template.template_attachment_type.id) && template.template_attachment_type !== 'all'" mode="danger" [content]="'lang.invisibleAttachmentType' | translate"></app-maarch-message>
+                        <app-maarch-message *ngIf="template.target === 'attachments' && !isVisibleAttachment(template.template_attachment_type) && template.template_attachment_type !== 'all'" mode="danger" [content]="'lang.invisibleAttachmentType' | translate"></app-maarch-message>
                         <div class="col-sm-12">
                             <div class="form-group" *ngIf="!creationMode">
                                 <div class="col-sm-12">
