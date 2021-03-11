@@ -2398,7 +2398,7 @@
     "indexingModelId": "Modèle d'enregistrement",
     "communicationMeans": "Moyens de communication",
     "m2mSection1": "Menu : «Enregistrer un pli numérique»",
-    "m2mUriDesc": "Utilisé dans le cadre d'une <b>connexion directe</b> entre les applications (même reseau)",
+    "m2mUriDesc": "Utilisé dans le cadre d'une <b>connexion directe</b> entre les applications (même réseau)",
     "m2mEmailDesc": "Utilisé dans le cadre d'une <b>connexion indirecte</b> entre les applications (utilisation des envois de mail pour le pli numérique)",
     "redirectToBasketAfterIndexing": "Rediriger sur la bannette après enregistrement",
     "m2mSection2": "Réception d'un pli numérique via une application maarch externe",
@@ -2406,6 +2406,6 @@
     "useContactsAnnuaries": "Utiliser des annuaires de contacts",
     "annuary": "Annuaire",
     "maarch2Maarch": "Maarch2Maarch",
-    "basketId": "Identifiant de la banette ex: NumericBasket",
-    "maarch2maarchDesc": "La fonctionnalité M2M, permet d'envoyer un courrier et des pièces jointes entre <b>deux instances</b> de Maarch Courrier, ou entre Maarch Courrier et une autre GEC.<br/>Les données sont transmises dans une <b>archive ZIP</b> soit par l'envoi de mail (et Maarch Capture), soit pas web service REST, soit manuellement (<a href=\"{{url}}\">plus d'informations</a>)."
+    "basketId": "Identifiant de la bannette ex: NumericBasket",
+    "maarch2maarchDesc": "La fonctionnalité M2M, permet d'envoyer un courrier et des pièces jointes entre <b>deux instances</b> de Maarch Courrier, ou entre Maarch Courrier et une autre GEC.<br/>Les données sont transmises dans une <b>archive ZIP</b> soit par l'envoi de mail (et Maarch Capture), soit par web service REST, soit manuellement (<a href=\"{{url}}\">plus d'informations</a>)."
 }
