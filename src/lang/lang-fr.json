@@ -2402,7 +2402,7 @@
     "m2mEmailDesc": "Utilisé dans le cadre d'une <b>connexion indirecte</b> entre les applications (utilisation des envois de mail pour le pli numérique)",
     "redirectToBasketAfterIndexing": "Rediriger sur la bannette après enregistrement",
     "m2mSection2": "Réception d'un pli numérique via une application maarch externe",
-    "setDefaultMetadata": "Paraméter ici les métas-données par défaut des courriers reçus.",
+    "setDefaultMetadata": "Paramétrer ici les métadonnées par défaut des courriers reçus.",
     "useContactsAnnuaries": "Utiliser des annuaires de contacts",
     "annuary": "Annuaire",
     "maarch2Maarch": "Maarch2Maarch",

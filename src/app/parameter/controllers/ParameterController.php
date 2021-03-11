@@ -292,22 +292,26 @@ class ParameterController
             'communications' => [
                 'email' => $xmlConfig['m2m_communication_type']['email'],
                 'uri'   => $xmlConfig['m2m_communication_type']['url']
-            ],
-            'annuary' => $xmlConfig['annuaries']
+            ]
         ];
 
-        if (isset($config['annuary']['annuary'])) {
-            $config['annuary']['annuaries'] = $config['annuary']['annuary'];
-            unset($config['annuary']['annuary']);
-            if (!is_array($config['annuary']['annuaries'])) {
-                $config['annuary']['annuaries'] = [$config['annuary']['annuaries']];
-            }
-        }
 
-        if (empty($config['annuary'])) {
-            $config['annuary']['enabled']      = false;
-            $config['annuary']['organization'] = null;
-            $config['annuary']['annuaries']    = [];
+        $config['annuary']['enabled']      = $xmlConfig['annuaries']['enabled'] == "true" ? true : false;
+        $config['annuary']['organization'] = $xmlConfig['annuaries']['organization'] ?? null;
+
+        $i;
+        if (!is_array($xmlConfig['annuaries']['annuary'])) {
+            $xmlConfig['annuaries']['annuary'] = [$xmlConfig['annuaries']['annuary']];
+        }
+        foreach ($xmlConfig['annuaries']['annuary'] as $value) {
+            $config['annuary']['annuaries'][] = [
+                'uri'      => (string)$value->uri,
+                'baseDN'   => (string)$value->baseDN,
+                'login'    => (string)$value->login,
+                'password' => (string)$value->password,
+                'ssl'      => (string)$value->ssl == "true" ? true : false
+            ];
+            $i++;
         }
 
         return $response->withJson(['configuration' => $config]);
@@ -389,17 +393,17 @@ class ParameterController
         $loadedXml->m2m_communication                = implode(',', $communication);
 
         unset($loadedXml->annuaries);
-        $loadedXml->annuaries->enabled      = $body['annuary']['enabled'] ?? 'false';
+        $loadedXml->annuaries->enabled      = $body['annuary']['enabled'] ? 'true' : 'false';
         $loadedXml->annuaries->organization = $body['annuary']['organization'] ?? '';
 
-        if (!empty($body['annuary']['annuaries'])) {
+        if ($body['annuary']['enabled'] && !empty($body['annuary']['annuaries'])) {
             foreach ($body['annuary']['annuaries'] as $value) {
                 $annuary = $loadedXml->annuaries->addChild('annuary');
                 $annuary->addChild('uri', $value['uri']);
                 $annuary->addChild('baseDN', $value['baseDN']);
                 $annuary->addChild('login', $value['login']);
                 $annuary->addChild('password', $value['password']);
-                $annuary->addChild('ssl', $value['ssl']);
+                $annuary->addChild('ssl', $value['ssl'] ? 'true' : 'false');
             }
         }
 
