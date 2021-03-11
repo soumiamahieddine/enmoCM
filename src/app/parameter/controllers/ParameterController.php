@@ -282,11 +282,11 @@ class ParameterController
 
         $config = [
             "metadata" => [
-                'typeId'           => $xmlConfig['res_letterbox']['type_id'],
-                'statusId'         => $status['identifier'],
+                'typeId'           => (int)$xmlConfig['res_letterbox']['type_id'],
+                'statusId'         => (int)$status['identifier'],
                 'priorityId'       => $xmlConfig['res_letterbox']['priority'],
-                'indexingModelId'  => $xmlConfig['res_letterbox']['indexingModelId'],
-                'attachmentTypeId' => $attachmentType['id']
+                'indexingModelId'  => (int)$xmlConfig['res_letterbox']['indexingModelId'],
+                'attachmentTypeId' => (int)$attachmentType['id']
             ],
             'basketToRedirect' => $xmlConfig['basketRedirection_afterUpload'][0],
             'communications' => [
@@ -302,6 +302,12 @@ class ParameterController
             if (!is_array($config['annuary']['annuaries'])) {
                 $config['annuary']['annuaries'] = [$config['annuary']['annuaries']];
             }
+        }
+
+        if (empty($config['annuary'])) {
+            $config['annuary']['enabled']      = false;
+            $config['annuary']['organization'] = null;
+            $config['annuary']['annuaries']    = [];
         }
 
         return $response->withJson(['configuration' => $config]);
@@ -373,49 +379,46 @@ class ParameterController
             }
         }
 
-        $config = [
-            'res_letterbox' => [
-                'type_id'         => $body['metadata']['typeId'],
-                'status'          => $status[0]['id'],
-                'priority'        => $body['metadata']['priorityId'],
-                'indexingModelId' => $body['metadata']['indexingModelId']
-            ],
-            'res_attachments' => [
-                'attachment_type' => $attachmentType['type_id']
-            ],
-            'basketRedirection_afterUpload' => $body['basketToRedirect'],
-            'm2m_communication'             => implode(',', $communication),
-            'annuaries'                     => $body['annuary']
-        ];
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => $path]);
+        $loadedXml->res_letterbox->type_id           = $body['metadata']['typeId'];
+        $loadedXml->res_letterbox->status            = $status[0]['id'];
+        $loadedXml->res_letterbox->priority          = $body['metadata']['priorityId'];
+        $loadedXml->res_letterbox->indexingModelId   = $body['metadata']['indexingModelId'];
+        $loadedXml->res_attachments->attachment_type = $attachmentType['type_id'];
+        $loadedXml->basketRedirection_afterUpload    = $body['basketToRedirect'];
+        $loadedXml->m2m_communication                = implode(',', $communication);
 
-        if (isset($config['annuaries']['annuaries'])) {
-            $config['annuaries']['annuary'] = $config['annuaries']['annuaries'];
-            unset($config['annuaries']['annuaries']);
+        unset($loadedXml->annuaries);
+        $loadedXml->annuaries->enabled      = $body['annuary']['enabled'] ?? 'false';
+        $loadedXml->annuaries->organization = $body['annuary']['organization'] ?? '';
+
+        if (!empty($body['annuary']['annuaries'])) {
+            foreach ($body['annuary']['annuaries'] as $value) {
+                $annuary = $loadedXml->annuaries->addChild('annuary');
+                $annuary->addChild('uri', $value['uri']);
+                $annuary->addChild('baseDN', $value['baseDN']);
+                $annuary->addChild('login', $value['login']);
+                $annuary->addChild('password', $value['password']);
+                $annuary->addChild('ssl', $value['ssl']);
+            }
         }
 
-        $xml = ParameterController::arrayToXml($config);
+        $res = ParameterController::formatXml($loadedXml);
+        $fp = fopen($path, "w+");
+        if ($fp) {
+            fwrite($fp, $res);
+        }
 
         return $response->withStatus(204);
     }
 
-    public static function arrayToXml($array, $rootElement = null, $xml = null)
+    public static function formatXml($simpleXMLElement)
     {
-        $outputXml = $xml;
-          
-        if ($outputXml === null) {
-            $outputXml = new \SimpleXMLElement($rootElement !== null ? $rootElement : '<ROOT/>');
-            $outputXml->preserveWhiteSpace = false;
-            $outputXml->formatOutput = true;
-        }
-          
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                ParameterController::arrayToXml($value, $key, $outputXml->addChild($key));
-            } else {
-                $outputXml->addChild($key, $value);
-            }
-        }
-          
-        return $outputXml->asXML();
+        $xmlDocument = new \DOMDocument('1.0');
+        $xmlDocument->preserveWhiteSpace = false;
+        $xmlDocument->formatOutput = true;
+        $xmlDocument->loadXML($simpleXMLElement->asXML());
+
+        return $xmlDocument->saveXML();
     }
 }
