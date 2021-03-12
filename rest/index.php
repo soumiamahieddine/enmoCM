@@ -407,6 +407,7 @@ $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class .
 
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
+$app->get('/resources/external', \Resource\controllers\ResController::class . ':getByExternalId');
 $app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');
 $app->put('/resources/{resId}', \Resource\controllers\ResController::class . ':update');
 $app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
