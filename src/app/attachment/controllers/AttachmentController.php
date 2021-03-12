@@ -27,6 +27,7 @@ use Email\models\EmailModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
+use Resource\controllers\ResourceControlController;
 use Resource\controllers\StoreController;
 use Resource\controllers\WatermarkController;
 use Resource\models\ResModel;
@@ -183,7 +184,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Body type does not exist']);
         }
 
-        $control = AttachmentController::controlFileData(['body' => $body]);
+        $control = ResourceControlController::controlFileData(['body' => $body]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
@@ -272,7 +273,9 @@ class AttachmentController
             $emails[$key]['document'] = json_decode($email['document'], true);
         }
 
-        $emails = array_filter($emails, function($email) { return !empty($email['document']['attachments']); });
+        $emails = array_filter($emails, function ($email) {
+            return !empty($email['document']['attachments']);
+        });
         $emails = array_filter($emails, function ($email) use ($idToDelete) {
             $attachmentFound = false;
             foreach ($email['document']['attachments'] as $attachment) {
@@ -284,7 +287,7 @@ class AttachmentController
         });
 
         foreach ($emails as $key => $email) {
-            $emails[$key]['document']['attachments'] = array_filter($emails[$key]['document']['attachments'], function ($attachment) use ($idToDelete){
+            $emails[$key]['document']['attachments'] = array_filter($emails[$key]['document']['attachments'], function ($attachment) use ($idToDelete) {
                 return $attachment['id'] != $idToDelete;
             });
             $emails[$key]['document']['attachments'] = array_values($emails[$key]['document']['attachments']);
@@ -593,7 +596,7 @@ class AttachmentController
 
         $libDir = CoreConfigModel::getLibrariesDirectory();
         if (!empty($libDir) && is_file($libDir . 'SetaPDF-FormFiller-Full/library/SetaPDF/Autoload.php')) {
-            require_once ($libDir . 'SetaPDF-FormFiller-Full/library/SetaPDF/Autoload.php');
+            require_once($libDir . 'SetaPDF-FormFiller-Full/library/SetaPDF/Autoload.php');
 
             $document = \SetaPDF_Core_Document::loadByFilename($pathToPdf);
             $pages = $document->getCatalog()->getPages();
@@ -1041,7 +1044,7 @@ class AttachmentController
             return ['errors' => 'Body type does not exist'];
         }
 
-        $control = AttachmentController::controlFileData(['body' => $body]);
+        $control = ResourceControlController::controlFileData(['body' => $body]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
@@ -1059,31 +1062,6 @@ class AttachmentController
         $control = AttachmentController::controlDates(['body' => $body]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
-        }
-
-        return true;
-    }
-
-    private static function controlFileData(array $args)
-    {
-        $body = $args['body'];
-
-        if (!empty($body['encodedFile'])) {
-            if (!Validator::stringType()->notEmpty()->validate($body['format'])) {
-                return ['errors' => 'Body format is empty or not a string'];
-            }
-
-            $file     = base64_decode($body['encodedFile']);
-            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-            $mimeType = $finfo->buffer($file);
-            if (!StoreController::isFileAllowed(['extension' => $body['format'], 'type' => $mimeType])) {
-                return ['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"];
-            }
-
-            $maximumSize = CoreController::getMaximumAllowedSizeFromPhpIni();
-            if ($maximumSize > 0 && strlen($file) > $maximumSize) {
-                return ['errors' => "Body encodedFile size is over limit"];
-            }
         }
 
         return true;

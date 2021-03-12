@@ -299,7 +299,6 @@ class ParameterController
         $config['annuary']['enabled']      = $xmlConfig['annuaries']['enabled'] == "true" ? true : false;
         $config['annuary']['organization'] = $xmlConfig['annuaries']['organization'] ?? null;
 
-        $i;
         if (!is_array($xmlConfig['annuaries']['annuary'])) {
             $xmlConfig['annuaries']['annuary'] = [$xmlConfig['annuaries']['annuary']];
         }
@@ -311,7 +310,6 @@ class ParameterController
                 'password' => (string)$value->password,
                 'ssl'      => (string)$value->ssl == "true" ? true : false
             ];
-            $i++;
         }
 
         return $response->withJson(['configuration' => $config]);

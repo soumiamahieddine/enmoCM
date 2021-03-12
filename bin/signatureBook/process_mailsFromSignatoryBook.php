@@ -67,7 +67,13 @@ $file = file_get_contents($GLOBALS['configFile']);
 $file = json_decode($file, true);
 
 if (empty($file)) {
-    print("Error on loading config file:" . $GLOBALS['configFile'] . "\n");
+    print("Error on loading config file: " . $GLOBALS['configFile'] . "\n");
+    exit(103);
+} elseif (empty($file['config'])) {
+    print("config part is missing in config file: " . $GLOBALS['configFile'] . "\n");
+    exit(103);
+} elseif (empty($file['signatureBook'])) {
+    print("signatureBook part is missing in config file: " . $GLOBALS['configFile'] . "\n");
     exit(103);
 }
 

@@ -233,7 +233,7 @@ class ResourceControlController
         return true;
     }
 
-    private static function controlFileData(array $args)
+    public static function controlFileData(array $args)
     {
         $body = $args['body'];
 
@@ -242,6 +242,7 @@ class ResourceControlController
                 return ['errors' => 'Body format is empty or not a string'];
             }
 
+            file_put_contents('toto.txt', $body['encodedFile']);
             $file     = base64_decode($body['encodedFile']);
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($file);
