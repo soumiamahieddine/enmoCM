@@ -45,12 +45,17 @@ export class PanelComponent implements OnInit {
                     this.initMailInfo();
                     this.status = 'end';
                 } 
+            } else if (result === 'not connected') {
+                this.status = 'end';
             }
         });
     }
 
     ngOnInit() {
-        this.authService.tryConnection();
+        const res = this.authService.getConnection();
+        if (!res) {
+            this.authService.tryConnection();
+        }
     }
 
     async sendToMaarch() {

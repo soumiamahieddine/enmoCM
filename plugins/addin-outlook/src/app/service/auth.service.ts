@@ -34,6 +34,19 @@ export class AuthService {
         return this.eventAction.next(content);
     }
 
+    getConnection() {
+        return new Promise(async (resolve) => {
+            const res = await this.getAppInfo();
+            if (res) {
+                this.setEvent('connected');
+                resolve(true);
+            } else {
+                this.setEvent('not connected'); 
+                resolve(false);
+            }
+        });
+    }
+
     tryConnection() {
         this.connectionTry = setInterval(async () => {
             const res = await this.getAppInfo();
@@ -41,6 +54,8 @@ export class AuthService {
                 clearInterval(this.connectionTry);
                 this.connectionTry = null;
                 this.setEvent('connected');
+            } else {
+                this.setEvent('not connected'); 
             }
         }, 2000);
     }
