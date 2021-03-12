@@ -368,10 +368,15 @@ class ParameterController
             return $response->withStatus(400)->withJson(['errors' => 'Basket not found', 'lang' => 'typeIdDoesNotExist']);
         }
 
-        $customId = CoreConfigModel::getCustomId();
-        $path = "custom/{$customId}/apps/maarch_entreprise/xml/m2m_config.xml";
-        if (!file_exists($path)) {
-            copy("apps/maarch_entreprise/xml/m2m_config.xml", $path);
+        $customId    = CoreConfigModel::getCustomId();
+        $defaultPath = "apps/maarch_entreprise/xml/m2m_config.xml";
+        if (!empty($customId)) {
+            $path = "custom/{$customId}/{$defaultPath}";
+            if (!file_exists($path)) {
+                copy($defaultPath, $path);
+            }
+        } else {
+            $path = $defaultPath;
         }
 
         $communication = [];
