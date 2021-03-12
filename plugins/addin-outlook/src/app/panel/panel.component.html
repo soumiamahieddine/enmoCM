@@ -21,7 +21,7 @@
             <ng-template #elseInApp>
                 <div class="in-app-content">
                     <i class="fas fa-check green" style="font-size: 70px;"></i>
-                    <div class="in-app-text primary">Courriel déjà présent dans {{applicationName}}</div>
+                    <div class="in-app-text primary">Courriel déjà présent dans {{authService.applicationName}}</div>
                 </div>
             </ng-template>
         </ng-container>
@@ -31,5 +31,5 @@
             </div>
         </ng-template>
     </div>
-    <div style="padding: 10px;text-align: right;font-size: 10px; opacity: 0.5;">{{applicationName}}</div>
+    <div style="padding: 10px;text-align: right;font-size: 10px; opacity: 0.5;">{{authService.applicationName}}</div>
 </div>

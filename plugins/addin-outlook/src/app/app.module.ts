@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { AuthInterceptor } from './service/auth-interceptor.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppMaterialModule } from './app-material.module';
 import { CustomSnackbarComponent } from './service/notification/notification.service';
 import AppComponent from './app.component';
@@ -30,6 +31,9 @@ import { PanelComponent } from './panel/panel.component';
   entryComponents: [
     CustomSnackbarComponent,
   ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

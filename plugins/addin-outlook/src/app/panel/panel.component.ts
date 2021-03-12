@@ -4,6 +4,7 @@ import { of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { NotificationService } from '../service/notification/notification.service';
 import { ExchangeService, ExchangeVersion, WebCredentials, BodyType, Uri, BasePropertySet, PropertySet } from 'ews-js-api-browser';
+import { AuthService } from '../service/auth.service';
 
 declare const Office: any;
 @Component({
@@ -15,12 +16,11 @@ export class PanelComponent implements OnInit {
     loading: boolean = true;
 
     // must be REST USER (with create_contact privilege)
-    headers = new HttpHeaders({
+    /*headers = new HttpHeaders({
         Authorization: 'Basic ' + btoa('cchaplin:maarch')
-    });
+    });*/
 
     inApp: boolean = false;
-    applicationName: string = 'Maarch Courrier';
 
     displayMailInfo: any = {};
     docFromMail: any = {};
@@ -31,21 +31,16 @@ export class PanelComponent implements OnInit {
 
     constructor(
         public http: HttpClient,
-        private notificationService: NotificationService
+        private notificationService: NotificationService,
+        public authService: AuthService
     ) { }
 
     async ngOnInit(): Promise<void> {
-        this.http.get('../rest/authenticationInformations')
-        .pipe(
-            tap((data: any) => {
-                this.applicationName = data.applicationName;
-            }),
-            catchError((err: any) => {
-                console.log(err);
-                return of(false);
-            })
-        ).subscribe();
+        await this.authService.getAppInfo();
 
+        /*var exch = new ExchangeService(ExchangeVersion.Exchange2013);
+
+        console.log(exch);*/
         console.log(Office.context);
 
         this.inApp = await this.checkMailInApp();
@@ -75,10 +70,10 @@ export class PanelComponent implements OnInit {
 
     initMailInfo() {
         this.displayMailInfo = {
-            modelId: 1,
+            modelId: 5,
             doctype: 'Courriel',
             subject: Office.context.mailbox.item.subject,
-            typist: Office.context.mailbox.item.to.displayName,
+            typist: `${this.authService.user.firstname} ${this.authService.user.lastname}`,
             status: 'NEW',
             documentDate: Office.context.mailbox.item.dateTimeCreated,
             arrivalDate: Office.context.mailbox.item.dateTimeCreated,
@@ -90,11 +85,11 @@ export class PanelComponent implements OnInit {
     createDocFromMail() {
         // TO DO get id user
         this.docFromMail = {
-            modelId: 1,
+            modelId: 5,
             doctype: 102,
             subject: Office.context.mailbox.item.subject,
             chrono: true,
-            // typist : 10,
+            typist : this.authService.user.id,
             status: 'NEW',
             documentDate: Office.context.mailbox.item.dateTimeCreated,
             arrivalDate: Office.context.mailbox.item.dateTimeCreated,
@@ -105,7 +100,7 @@ export class PanelComponent implements OnInit {
         };
         return new Promise((resolve) => {
             return new Promise((resolve) => {
-                this.http.post('../rest/resources', this.docFromMail, { headers: this.headers }).pipe(
+                this.http.post('../rest/resources', this.docFromMail).pipe(
                     tap((data: any) => {
                         // console.log(data);
                         this.notificationService.success('Courriel envoyé');
@@ -141,7 +136,7 @@ export class PanelComponent implements OnInit {
             email: Office.context.mailbox.item.from.emailAddress,
         };
         return new Promise((resolve) => {
-            this.http.post('../rest/contacts', this.contactInfos, { headers: this.headers }).pipe(
+            this.http.post('../rest/contacts', this.contactInfos).pipe(
                 tap((data: any) => {
                     // console.log(data.id);
                     this.contactId = data.id;
