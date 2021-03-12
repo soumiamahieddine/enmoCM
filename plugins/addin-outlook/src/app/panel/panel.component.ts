@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { of } from 'rxjs';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { NotificationService } from '../service/notification/notification.service';
+import { ExchangeService, ExchangeVersion, WebCredentials, BodyType, Uri, BasePropertySet, PropertySet } from 'ews-js-api-browser';
 
 declare const Office: any;
 @Component({
@@ -51,7 +52,6 @@ export class PanelComponent implements OnInit {
 
         if (!this.inApp) {
             // console.log(Office.context.mailbox.item);
-            // this.getToken();
             this.initMailInfo();
         }
         this.loading = false;
@@ -62,7 +62,8 @@ export class PanelComponent implements OnInit {
         await this.getMailBody();
         await this.createContact();
         this.createDocFromMail();
-        // this.getAttachments();
+        this.getAttachments();
+        this.getToken();
     }
 
     checkMailInApp(): Promise<boolean> {
@@ -154,7 +155,7 @@ export class PanelComponent implements OnInit {
         });
     }
 
-    /*getToken() {
+    getToken() {
         Office.context.mailbox.getCallbackTokenAsync(this.attachmentTokenCallback);
     }
 
@@ -165,17 +166,39 @@ export class PanelComponent implements OnInit {
             restUrl: Office.context.mailbox.restUrl,
             attachments: []
         };
+        let ewsId = Office.context.mailbox.item.itemId;
+        let restId = Office.context.mailbox.convertToRestId(ewsId, Office.MailboxEnums.RestVersion.v2_0);
+        let getMessageUrl = serviceRequest.restUrl + '/v2.0/me/messages/' + restId + '/attachments'; 
         if (asyncResult.status == "succeeded") {
             serviceRequest.attachmentToken = asyncResult.value;
             for (var i = 0; i < Office.context.mailbox.item.attachments.length; i++) {
-                serviceRequest.attachments.push(Office.context.mailbox.item.attachments[i])
-            }
+                serviceRequest.attachments.push(Office.context.mailbox.item.attachments[i].id);
+            } 
             console.log(serviceRequest);
+
+            // Access-Control-Allow-Origin not allowed
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', getMessageUrl);
+            xhr.setRequestHeader("Authorization", "Bearer " + serviceRequest.attachmentToken);
+            xhr.onload = ((res) => {
+                console.log(res);
+            });
+            xhr.send();
+
+            // Test with EWS GetAttachment function
+            let ews = new ExchangeService();
+            ews.Credentials = new WebCredentials('userName', 'pwd'); // required to make conn
+            ews.Url = new Uri(serviceRequest.ewsUrl);
+            let getAttachmentsResponse: any = ews.GetAttachments(serviceRequest.attachments, BodyType.Text,  null);
+            if (getAttachmentsResponse.OverallResult == asyncResult.status){
+                console.log(getAttachmentsResponse);
+                return ews;
+            }
         }
         else {
             console.log(asyncResult.error.message);
         }
-    }*/
+    }
 
     getAttachments() {
         if (Office.context.requirements.isSetSupported('Mailbox', '1.8')) {
@@ -184,9 +207,9 @@ export class PanelComponent implements OnInit {
                     Office.context.mailbox.item.getAttachmentContentAsync(Office.context.mailbox.item.attachments[i].id, this.handleAttachmentsCallback);
                 }
             }
-          } else {
+        } else {
             console.log('Impossible de récupérer les pj : version minimum Office server 1.8');
-          }
+        }
     }
     
     handleAttachmentsCallback(result) {
