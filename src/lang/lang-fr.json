@@ -1443,7 +1443,7 @@
     "shippingReadyToSend": "document(s) prêt(s) à l'envoi",
     "shippingUnavailable": "<b>Attention !</b> Maileva n'est pas activé. Veuillez vérifier le fichier de configuration mailevaConfig.xml",
     "shippingDepositProofInformations": "Les preuves de dépôts seront disponibles dans l'espace client Maileva",
-    "shippingInvalidEntityAddress": "L'adresse de votre entité primaire est imcomplète pour un envoi \"recommandé\"",
+    "shippingInvalidEntityAddress": "L'adresse de votre entité primaire est incomplète pour un envoi \"recommandé\"",
     "shippingUpdated": "Modèle d'envoi Maileva modifié",
     "shippings": "Modèle(s) d'envoi Maileva",
     "shortLabel": "Libellé court",

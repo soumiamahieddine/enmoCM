@@ -422,4 +422,4 @@ Bt_writeLog(['level' => 'INFO', 'message' => $nbMailsRetrieved.' document(s) ret
 Bt_logInDataBase($nbMailsRetrieved, 0, $nbMailsRetrieved.' mail(s) retrieved from signatory book');
 Bt_updateWorkBatch();
 
-exit($GLOBALS['exitCode']);
+exit(0);
