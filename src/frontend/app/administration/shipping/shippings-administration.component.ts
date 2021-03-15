@@ -74,7 +74,9 @@ export class ShippingsAdministrationComponent implements OnInit {
             map((data: any) => data.configuration.value),
             tap((data: any) => {
                 Object.keys(this.shippingConf).forEach(elemId => {
-                    this.shippingConf[elemId].setValue(data[elemId]);
+                    if (!this.functions.empty(data)) {
+                        this.shippingConf[elemId].setValue(data[elemId]);
+                    }
                     this.shippingConf[elemId].valueChanges
                         .pipe(
                             debounceTime(1000),

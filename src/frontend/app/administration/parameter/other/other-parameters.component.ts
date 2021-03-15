@@ -67,7 +67,7 @@ export class OtherParametersComponent implements OnInit {
         color: new FormControl([20, 192, 30]),
     };
 
-    editorsEnabled = ['java', 'onlyoffice'];
+    editorsEnabled = [];
 
     colors: string[] = [
         red['900'],
@@ -223,8 +223,8 @@ export class OtherParametersComponent implements OnInit {
             this.http.get(`../rest/configurations/admin_document_editors`).pipe(
                 map((data: any) => data.configuration.value),
                 tap((data: any) => {
-                    this.editorsConf = {};
                     Object.keys(data).forEach(confId => {
+                        this.editorsEnabled.push(confId);
                         this.editorsConf[confId] = {};
                         Object.keys(data[confId]).forEach(itemId => {
                             this.editorsConf[confId][itemId] = new FormControl(data[confId][itemId]);
