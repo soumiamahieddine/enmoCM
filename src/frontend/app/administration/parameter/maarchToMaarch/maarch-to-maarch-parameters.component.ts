@@ -176,7 +176,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
 
     getConfiguration() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/m2mConfiguration`).pipe(
+            this.http.get(`../rest/m2m/configuration`).pipe(
                 map((data: any) => {
                     return data.configuration;
                 }),
@@ -336,7 +336,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
     }
 
     saveConfiguration() {
-        this.http.put(`../rest/m2mConfiguration`, { configuration: this.formatConfiguration() }).pipe(
+        this.http.put(`../rest/m2m/configuration`, { configuration: this.formatConfiguration() }).pipe(
             tap(() => {
                 this.notify.success(this.translate.instant('lang.dataUpdated'));
             }),

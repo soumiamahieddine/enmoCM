@@ -168,12 +168,13 @@ export class OtherParametersComponent implements OnInit {
         private notify: NotificationService,
     ) { }
 
-    ngOnInit() {
+    async ngOnInit() {
+        await this.getWatermarkConfiguration();
         Object.keys(this.editorsConf).forEach(editorId => {
             Object.keys(this.editorsConf[editorId]).forEach((elementId: any) => {
                 this.editorsConf[editorId][elementId].valueChanges
                     .pipe(
-                        debounceTime(300),
+                        debounceTime(1000),
                         tap((value: any) => {
                             this.saveConfEditor();
                         }),
@@ -183,11 +184,32 @@ export class OtherParametersComponent implements OnInit {
         Object.keys(this.watermark).forEach(elemId => {
             this.watermark[elemId].valueChanges
                 .pipe(
-                    debounceTime(300),
+                    debounceTime(1000),
                     tap((value: any) => {
                         this.saveWatermarkConf();
                     }),
                 ).subscribe();
+        });
+    }
+
+    getWatermarkConfiguration() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/watermark/configuration`).pipe(
+                tap((data: any) => {
+                    this.watermark = {
+                        enabled: new FormControl(data.configuration.enabled),
+                        text: new FormControl(data.configuration.text),
+                        posX: new FormControl(data.configuration.posX),
+                        posY: new FormControl(data.configuration.posY),
+                        angle: new FormControl(data.configuration.angle),
+                        opacity: new FormControl(data.configuration.opacity),
+                        font: new FormControl(data.configuration.font),
+                        size: new FormControl(data.configuration.size),
+                        color: new FormControl(data.configuration.color),
+                    };
+                    resolve(true);
+                })
+            ).subscribe();
         });
     }
 
@@ -232,13 +254,12 @@ export class OtherParametersComponent implements OnInit {
     }
 
     saveWatermarkConf() {
-        console.log(this.formatWatermarkConfig());
-
-        /*this.http.put(`../rest/configurations/documentEditor`, this.formatEditorsConfig()).pipe(
+        this.http.put(`../rest/watermark/configuration`, this.formatWatermarkConfig()).pipe(
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
-            })*/
+            })
+        ).subscribe();
     }
 
     saveConfEditor() {
