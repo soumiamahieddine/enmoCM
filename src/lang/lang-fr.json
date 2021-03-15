@@ -2408,5 +2408,8 @@
     "maarch2Maarch": "Maarch2Maarch",
     "basketId": "Identifiant de la bannette ex: NumericBasket",
     "maarch2maarchDesc": "La fonctionnalité M2M, permet d'envoyer un courrier et des pièces jointes entre <b>deux instances</b> de Maarch Courrier, ou entre Maarch Courrier et une autre GEC.<br/>Les données sont transmises dans une <b>archive ZIP</b> soit par l'envoi de mail (et Maarch Capture), soit par web service REST, soit manuellement (<a href=\"{{url}}\">plus d'informations</a>).",
-    "authorizationHeader": "En-tête d'autorisation"
+    "authorizationHeader": "En-tête d'autorisation",
+    "civilityDeleted": "Civilité supprimée",
+    "civilityUpdated": "Civilité mise à jour",
+    "civilityAdded": "Civilité ajouté"
 }
