@@ -1665,6 +1665,7 @@ INSERT INTO configurations (privilege, value) VALUES ('admin_search', '{"listEve
 INSERT INTO configurations (privilege, value) VALUES ('admin_sso', '{"url":"","mapping":[{"ssoId":"","maarchId":"login"}]}');
 INSERT INTO configurations (privilege, value) VALUES ('admin_document_editors', '{"java":{}, "onlyoffice":{"uri":"onlyoffice.maarchcourrier.com", "port" : 443, "ssl" : true, "authorizationHeader" : "Authorization"}}');
 INSERT INTO configurations (privilege, value) VALUES ('admin_parameters_watermark', '{"font": "helvetica", "posX": 30, "posY": 35, "size": 10, "text": "Copie conforme de [alt_identifier] le [date_now] [hour_now]", "angle": 0, "color": [20,192,30], "enabled": true, "opacity": 0.5}');
+INSERT INTO configurations (privilege, value) VALUES ('admin_shippings', '{"enabled":false, "authUri":"", "uri" : ""}');
 
 /* Modèle d’envois postaux */
 TRUNCATE TABLE shipping_templates;

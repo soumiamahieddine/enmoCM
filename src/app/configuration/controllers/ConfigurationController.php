@@ -16,7 +16,6 @@ namespace Configuration\controllers;
 
 use Attachment\models\AttachmentTypeModel;
 use Basket\models\BasketModel;
-use Configuration\controllers\ConfigurationController;
 use Configuration\models\ConfigurationModel;
 use Doctype\models\DoctypeModel;
 use Group\controllers\PrivilegeController;
@@ -40,8 +39,10 @@ class ConfigurationController
             if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_connections', 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
-        } elseif ($args['privilege'] == 'admin_document_editors' && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        } elseif ($args['privilege'] == 'admin_document_editors') {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
         } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => $args['privilege'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
@@ -66,14 +67,12 @@ class ConfigurationController
             if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_connections', 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
-        } elseif ($args['privilege'] == 'admin_document_editors' && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        } elseif ($args['privilege'] == 'admin_document_editors') {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
         } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => $args['privilege'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        if (empty(ConfigurationModel::getByPrivilege(['privilege' => $args['privilege'], 'select' => [1]]))) {
-            return $response->withStatus(400)->withJson(['errors' => 'Privilege configuration does not exist']);
         }
 
         $data = $request->getParsedBody();
@@ -159,10 +158,24 @@ class ConfigurationController
                     }
                 }
             }
+        } elseif ($args['privilege'] == 'admin_shippings') {
+            if (!Validator::notEmpty()->arrayType()->validate($data)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body is empty or not an array']);
+            } elseif (!Validator::notEmpty()->stringType()->validate($data['uri'] ?? null)) {
+                return $response->withStatus(400)->withJson(['errors' => "Body uri is empty or not a string"]);
+            } elseif (!Validator::notEmpty()->stringType()->validate($editor['authUri'] ?? null)) {
+                return $response->withStatus(400)->withJson(['errors' => "Body authUri is empty or not a string"]);
+            } elseif (!Validator::boolType()->validate($editor['enabled'] ?? null)) {
+                return $response->withStatus(400)->withJson(['errors' => "Body enabled is not set or not a boolean"]);
+            }
         }
 
         $data = json_encode($data, JSON_UNESCAPED_SLASHES);
-        ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['privilege = ?'], 'data' => [$args['privilege']]]);
+        if (empty(ConfigurationModel::getByPrivilege(['privilege' => $args['privilege'], 'select' => [1]]))) {
+            ConfigurationModel::create(['value' => $data, 'privilege' => $args['privilege']]);
+        } else {
+            ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['privilege = ?'], 'data' => [$args['privilege']]]);
+        }
 
         HistoryController::add([
             'tableName' => 'configurations',
