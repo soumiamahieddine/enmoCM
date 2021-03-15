@@ -10,6 +10,7 @@ import { of } from 'rxjs';
 import { KeyValue } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { FunctionsService } from '@service/functions.service';
+import { PrivilegeService } from '@service/privileges.service';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
 
     loading: boolean = true;
     doctypes: any = [];
+    baskets: any = [];
     statuses: any = [];
     priorities: any = [];
     indexingModels: any = [];
@@ -59,18 +61,20 @@ export class MaarchToMaarchParametersComponent implements OnInit {
         public http: HttpClient,
         private dialog: MatDialog,
         private notify: NotificationService,
-        public functionsService: FunctionsService
+        public functionsService: FunctionsService,
+        public privilegeService: PrivilegeService
     ) { }
 
     async ngOnInit() {
+        if (this.privilegeService.hasCurrentUserPrivilege('admin_baskets')) {
+            await this.getBaskets();
+        }
         await this.getDoctypes();
         await this.getStatuses();
         await this.getPriorities();
         await this.getIndexingModels();
         await this.getAttachmentTypes();
         await this.getConfiguration();
-        console.log('after getConfiguration');
-
         if (this.initialDataModified) {
             this.saveConfiguration();
         }
@@ -114,6 +118,22 @@ export class MaarchToMaarchParametersComponent implements OnInit {
                         }
                     });
                     this.doctypes = arrValues;
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    getBaskets() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/baskets`).pipe(
+                tap((data: any) => {
+                    this.baskets = data.baskets.map((basket: any) => {
+                        return {
+                            id: basket.basket_id,
+                            label: basket.basket_name
+                        };
+                    });
                     resolve(true);
                 })
             ).subscribe();
@@ -232,7 +252,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
                             });
                         }
                     });
-                    this.basketToRedirect.setValue(data.basketToRedirect);
+                    this.setDefaultValue('basketToRedirect', data.basketToRedirect);
                     this.basketToRedirect.valueChanges
                         .pipe(
                             debounceTime(300),
@@ -253,7 +273,18 @@ export class MaarchToMaarchParametersComponent implements OnInit {
     }
 
     setDefaultValue(id: string, value: string) {
-        if (id === 'typeId') {
+        if (id === 'basketToRedirect') {
+            if (this.privilegeService.hasCurrentUserPrivilege('admin_baskets')) {
+                if (this.baskets.filter((item: any) => item.id === value).length > 0) {
+                    this.basketToRedirect.setValue(value);
+                } else {
+                    this.basketToRedirect.setValue(this.baskets[0].id);
+                    this.initialDataModified = true;
+                }
+            } else {
+                this.basketToRedirect.setValue(value);
+            }
+        } else if (id === 'typeId') {
             if (this.doctypes.filter((item: any) => item.id === value).length > 0) {
                 this.metadata[id].setValue(value);
             } else {
@@ -263,18 +294,17 @@ export class MaarchToMaarchParametersComponent implements OnInit {
         } else if (id === 'statusId') {
             if (this.statuses.filter((item: any) => item.id === value).length > 0) {
                 this.metadata[id].setValue(value);
-            } else {                
+            } else {
                 this.metadata[id].setValue(this.statuses[0].id);
                 this.initialDataModified = true;
             }
-        } else if (id === 'priorityId') {            
+        } else if (id === 'priorityId') {
             if (this.priorities.filter((item: any) => item.id === value).length > 0) {
                 this.metadata[id].setValue(value);
             } else {
                 this.metadata[id].setValue(this.priorities[0].id);
                 this.initialDataModified = true;
             }
-
         } else if (id === 'indexingModelId') {
             if (this.indexingModels.filter((item: any) => item.id === value).length > 0) {
                 this.metadata[id].setValue(value);
@@ -282,7 +312,6 @@ export class MaarchToMaarchParametersComponent implements OnInit {
                 this.metadata[id].setValue(this.indexingModels[0].id);
                 this.initialDataModified = true;
             }
-
         } else if (id === 'attachmentTypeId') {
             if (this.attachmentsTypes.filter((item: any) => item.id === value).length > 0) {
                 this.metadata[id].setValue(value);
