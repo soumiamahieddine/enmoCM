@@ -30,6 +30,8 @@ class ConfigurationController
             if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_connections', 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
+        } elseif ($args['privilege'] == 'admin_document_editors' && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => $args['privilege'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
@@ -54,6 +56,8 @@ class ConfigurationController
             if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_connections', 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
+        } elseif ($args['privilege'] == 'admin_document_editors' && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => $args['privilege'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
@@ -62,7 +66,7 @@ class ConfigurationController
             return $response->withStatus(400)->withJson(['errors' => 'Privilege configuration does not exist']);
         }
 
-        $data = $request->getParams();
+        $data = $request->getParsedBody();
 
         if ($args['privilege'] == 'admin_email_server') {
             if ($data['auth'] && empty($data['password'])) {
@@ -116,6 +120,33 @@ class ConfigurationController
                 }
                 if (!Validator::notEmpty()->stringType()->validate($mapping['maarchId'])) {
                     return $response->withStatus(400)->withJson(['errors' => "Body mapping[$key]['maarchId'] is empty or not a string"]);
+                }
+            }
+        } elseif ($args['privilege'] == 'admin_document_editors') {
+            if (!Validator::notEmpty()->arrayType()->validate($data)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body is empty or not an array']);
+            }
+            foreach ($data as $key => $editor) {
+                if ($key == 'java') {
+                    $data[$key] = [];
+                } elseif ($key == 'onlyoffice') {
+                    if (!Validator::notEmpty()->stringType()->validate($editor['uri'] ?? null)) {
+                        return $response->withStatus(400)->withJson(['errors' => "Body onlyoffice['uri'] is empty or not a string"]);
+                    } elseif (!Validator::notEmpty()->intVal()->validate($editor['port'] ?? null)) {
+                        return $response->withStatus(400)->withJson(['errors' => "Body onlyoffice['port'] is empty or not numeric"]);
+                    } elseif (!Validator::boolType()->validate($editor['ssl'] ?? null)) {
+                        return $response->withStatus(400)->withJson(['errors' => "Body onlyoffice['ssl'] is empty or not a boolean"]);
+                    } elseif (!Validator::notEmpty()->stringType()->validate($editor['authorizationHeader'] ?? null)) {
+                        return $response->withStatus(400)->withJson(['errors' => "Body onlyoffice['authorizationHeader'] is empty or not a string"]);
+                    }
+                } elseif ($key == 'collaboraonline') {
+                    if (!Validator::notEmpty()->stringType()->validate($editor['uri'] ?? null)) {
+                        return $response->withStatus(400)->withJson(['errors' => "Body collaboraonline['uri'] is empty or not a string"]);
+                    } elseif (!Validator::notEmpty()->intVal()->validate($editor['port'] ?? null)) {
+                        return $response->withStatus(400)->withJson(['errors' => "Body collaboraonline['port'] is empty or not numeric"]);
+                    } elseif (!Validator::boolType()->validate($editor['ssl'] ?? null)) {
+                        return $response->withStatus(400)->withJson(['errors' => "Body collaboraonline['ssl'] is not set or not a boolean"]);
+                    }
                 }
             }
         }
