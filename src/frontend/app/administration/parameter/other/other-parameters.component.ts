@@ -244,7 +244,6 @@ export class OtherParametersComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
-        
     }
 
     getAvailableEditors() {
@@ -259,6 +258,9 @@ export class OtherParametersComponent implements OnInit {
 
     saveWatermarkConf() {
         this.http.put(`../rest/watermark/configuration`, this.formatWatermarkConfig()).pipe(
+            tap(() => {
+                this.notify.success(this.translate.instant('lang.dataUpdated'));
+            }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
@@ -267,13 +269,15 @@ export class OtherParametersComponent implements OnInit {
     }
 
     saveConfEditor() {
-        console.log(this.formatEditorsConfig());
-
-        /*this.http.put(`../rest/configurations/documentEditor`, this.formatEditorsConfig()).pipe(
+        this.http.put(`../rest/configurations/admin_document_editors`, this.formatEditorsConfig()).pipe(
+            tap(() => {
+                this.notify.success(this.translate.instant('lang.dataUpdated'));
+            }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
-            })*/
+            })
+        ).subscribe();
     }
 
     formatWatermarkConfig() {

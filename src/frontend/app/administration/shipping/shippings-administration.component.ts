@@ -20,7 +20,7 @@ export class ShippingsAdministrationComponent implements OnInit {
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     shippingConf: any = {
-        enabled: new FormControl(true),
+        enabled: new FormControl(false),
         authUri: new FormControl('https://connect.maileva.com'),
         uri: new FormControl('https://api.maileva.com'),
     };
