@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { KeyValue } from '@angular/common';
 import { FormControl } from '@angular/forms';
-import { catchError, debounceTime, filter, tap } from 'rxjs/operators';
+import { catchError, debounceTime, filter, map, tap } from 'rxjs/operators';
 import { ColorEvent } from 'ngx-color';
 import { FunctionsService } from '@service/functions.service';
 import {
@@ -172,6 +172,7 @@ export class OtherParametersComponent implements OnInit {
 
     async ngOnInit() {
         await this.getWatermarkConfiguration();
+        await this.getEditorsConfiguration();
         Object.keys(this.editorsConf).forEach(editorId => {
             Object.keys(this.editorsConf[editorId]).forEach((elementId: any) => {
                 this.editorsConf[editorId][elementId].valueChanges
@@ -211,6 +212,24 @@ export class OtherParametersComponent implements OnInit {
                             color: new FormControl(data.configuration.color),
                         };
                     }
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    getEditorsConfiguration() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/configurations/admin_document_editors`).pipe(
+                map((data: any) => data.configuration.value),
+                tap((data: any) => {
+                    this.editorsConf = {};
+                    Object.keys(data).forEach(confId => {
+                        this.editorsConf[confId] = {};
+                        Object.keys(data[confId]).forEach(itemId => {
+                            this.editorsConf[confId][itemId] = new FormControl(data[confId][itemId]);
+                        });
+                    });
                     resolve(true);
                 })
             ).subscribe();
