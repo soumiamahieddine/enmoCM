@@ -9,7 +9,7 @@ import { NotificationService } from '@service/notification/notification.service'
 import { of } from 'rxjs';
 import { KeyValue } from '@angular/common';
 import { environment } from '../../../../environments/environment';
-
+import { FunctionsService } from '@service/functions.service';
 
 
 @Component({
@@ -25,6 +25,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
     priorities: any = [];
     indexingModels: any = [];
     attachmentsTypes: any = [];
+    initialDataModified: boolean = false;
 
     basketToRedirect = new FormControl('NumericBasket');
     metadata: any = {
@@ -57,16 +58,22 @@ export class MaarchToMaarchParametersComponent implements OnInit {
         public translate: TranslateService,
         public http: HttpClient,
         private dialog: MatDialog,
-        private notify: NotificationService
+        private notify: NotificationService,
+        public functionsService: FunctionsService
     ) { }
 
     async ngOnInit() {
-        this.getDoctypes();
-        this.getStatuses();
-        this.getPriorities();
-        this.getIndexingModels();
-        this.getAttachmentTypes();
+        await this.getDoctypes();
+        await this.getStatuses();
+        await this.getPriorities();
+        await this.getIndexingModels();
+        await this.getAttachmentTypes();
         await this.getConfiguration();
+        console.log('after getConfiguration');
+
+        if (this.initialDataModified) {
+            this.saveConfiguration();
+        }
         this.loading = false;
     }
 
@@ -178,14 +185,14 @@ export class MaarchToMaarchParametersComponent implements OnInit {
                         this.communications[elemId].setValue(data.communications[elemId]);
                         this.communications[elemId].valueChanges
                             .pipe(
-                                debounceTime(300),
+                                debounceTime(1000),
                                 tap((value: any) => {
                                     this.saveConfiguration();
                                 }),
                             ).subscribe();
                     });
                     Object.keys(this.metadata).forEach(elemId => {
-                        this.metadata[elemId].setValue(data.metadata[elemId]);
+                        this.setDefaultValue(elemId, data.metadata[elemId]);
                         this.metadata[elemId].valueChanges
                             .pipe(
                                 debounceTime(300),
@@ -199,7 +206,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
                             this.annuary[elemId].setValue(data.annuary[elemId]);
                             this.annuary[elemId].valueChanges
                                 .pipe(
-                                    debounceTime(300),
+                                    debounceTime(1000),
                                     tap((value: any) => {
                                         if (elemId === 'enabled' && value === true && this.annuary.annuaries.length === 0) {
                                             this.addAnnuary();
@@ -216,7 +223,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
                                     this.annuary[elemId][index][annuaryItem] = new FormControl(data.annuary[elemId][index][annuaryItem]);
                                     this.annuary[elemId][index][annuaryItem].valueChanges
                                         .pipe(
-                                            debounceTime(300),
+                                            debounceTime(1000),
                                             tap((value: any) => {
                                                 this.saveConfiguration();
                                             }),
@@ -234,13 +241,56 @@ export class MaarchToMaarchParametersComponent implements OnInit {
                             }),
                         ).subscribe();
                 }),
-                finalize(() => this.loading = false),
+                finalize(() => {
+                    resolve(true);
+                }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
                 })
             ).subscribe();
         });
+    }
+
+    setDefaultValue(id: string, value: string) {
+        if (id === 'typeId') {
+            if (this.doctypes.filter((item: any) => item.id === value).length > 0) {
+                this.metadata[id].setValue(value);
+            } else {
+                this.metadata[id].setValue(this.doctypes.filter((item: any) => !item.disabled)[0].id);
+                this.initialDataModified = true;
+            }
+        } else if (id === 'statusId') {
+            if (this.statuses.filter((item: any) => item.id === value).length > 0) {
+                this.metadata[id].setValue(value);
+            } else {                
+                this.metadata[id].setValue(this.statuses[0].id);
+                this.initialDataModified = true;
+            }
+        } else if (id === 'priorityId') {            
+            if (this.priorities.filter((item: any) => item.id === value).length > 0) {
+                this.metadata[id].setValue(value);
+            } else {
+                this.metadata[id].setValue(this.priorities[0].id);
+                this.initialDataModified = true;
+            }
+
+        } else if (id === 'indexingModelId') {
+            if (this.indexingModels.filter((item: any) => item.id === value).length > 0) {
+                this.metadata[id].setValue(value);
+            } else {
+                this.metadata[id].setValue(this.indexingModels[0].id);
+                this.initialDataModified = true;
+            }
+
+        } else if (id === 'attachmentTypeId') {
+            if (this.attachmentsTypes.filter((item: any) => item.id === value).length > 0) {
+                this.metadata[id].setValue(value);
+            } else {
+                this.metadata[id].setValue(this.attachmentsTypes[0].id);
+                this.initialDataModified = true;
+            }
+        }
     }
 
     addAnnuary() {
@@ -254,7 +304,7 @@ export class MaarchToMaarchParametersComponent implements OnInit {
         Object.keys(newAnnuary).forEach(annuaryItem => {
             newAnnuary[annuaryItem].valueChanges
                 .pipe(
-                    debounceTime(300),
+                    debounceTime(1000),
                     tap((value: any) => {
                         this.saveConfiguration();
                     }),
@@ -287,6 +337,9 @@ export class MaarchToMaarchParametersComponent implements OnInit {
 
     saveConfiguration() {
         this.http.put(`../rest/m2mConfiguration`, { configuration: this.formatConfiguration() }).pipe(
+            tap(() => {
+                this.notify.success(this.translate.instant('lang.dataUpdated'));
+            }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
