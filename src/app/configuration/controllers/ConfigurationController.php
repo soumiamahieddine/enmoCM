@@ -381,8 +381,8 @@ class ConfigurationController
             return $response->withStatus(400)->withJson(['errors' => 'Body text is empty, not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['font'] ?? null)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body font is empty, not a string']);
-        } elseif (!Validator::arrayType()->notEmpty()->validate($body['color'] ?? null)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body color is empty or not an array']);
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['color'] ?? null) || count($body['color']) != 3) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body color is empty or is not an array or does not have values']);
         }
 
         foreach (['posX', 'posY', 'angle', 'opacity', 'size'] as $value) {
