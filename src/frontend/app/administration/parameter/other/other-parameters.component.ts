@@ -5,6 +5,7 @@ import { KeyValue } from '@angular/common';
 import { FormControl } from '@angular/forms';
 import { catchError, debounceTime, filter, tap } from 'rxjs/operators';
 import { ColorEvent } from 'ngx-color';
+import { FunctionsService } from '@service/functions.service';
 import {
     amber,
     blue,
@@ -166,6 +167,7 @@ export class OtherParametersComponent implements OnInit {
         public http: HttpClient,
         private dialog: MatDialog,
         private notify: NotificationService,
+        public functions: FunctionsService,
     ) { }
 
     async ngOnInit() {
@@ -196,17 +198,19 @@ export class OtherParametersComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get(`../rest/watermark/configuration`).pipe(
                 tap((data: any) => {
-                    this.watermark = {
-                        enabled: new FormControl(data.configuration.enabled),
-                        text: new FormControl(data.configuration.text),
-                        posX: new FormControl(data.configuration.posX),
-                        posY: new FormControl(data.configuration.posY),
-                        angle: new FormControl(data.configuration.angle),
-                        opacity: new FormControl(data.configuration.opacity),
-                        font: new FormControl(data.configuration.font),
-                        size: new FormControl(data.configuration.size),
-                        color: new FormControl(data.configuration.color),
-                    };
+                    if (!this.functions.empty(data.configuration)) {
+                        this.watermark = {
+                            enabled: new FormControl(data.configuration.enabled),
+                            text: new FormControl(data.configuration.text),
+                            posX: new FormControl(data.configuration.posX),
+                            posY: new FormControl(data.configuration.posY),
+                            angle: new FormControl(data.configuration.angle),
+                            opacity: new FormControl(data.configuration.opacity),
+                            font: new FormControl(data.configuration.font),
+                            size: new FormControl(data.configuration.size),
+                            color: new FormControl(data.configuration.color),
+                        };
+                    }
                     resolve(true);
                 })
             ).subscribe();
