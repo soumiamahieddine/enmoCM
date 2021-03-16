@@ -2411,5 +2411,10 @@
     "authorizationHeader": "En-tête d'autorisation",
     "civilityDeleted": "Civilité supprimée",
     "civilityUpdated": "Civilité mise à jour",
-    "civilityAdded": "Civilité ajouté"
+    "civilityAdded": "Civilité ajouté",
+    "otherPlugins": "Autres plugins",
+    "otherPluginsDesc": "Gérer les autres plugins",
+    "downloadManifest": "Télécharger le manifeste",
+    "infoOutlookPlugin": "Vous permet via votre boite mail de convertir directement un mail en courrier dans l'application. (comment le paramétrer ?)",
+    "outlookSendingModule": "Module d'envoi via outlook"
 }

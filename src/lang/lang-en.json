@@ -2420,5 +2420,10 @@
     "authorizationHeader": "Authorization header",
     "civilityDeleted": "Civility deleted",
     "civilityUpdated": "Updated civility",
-    "civilityAdded": "Civility added"
+    "civilityAdded": "Civility added",
+    "otherPlugins": "Other plugins",
+    "otherPluginsDesc": "Manage other plugins",
+    "downloadManifest": "Download the manifest",
+    "infoOutlookPlugin": "Allows you via your mailbox to directly convert an email into mail in the application. (how to configure it?)",
+    "outlookSendingModule": "Outlook sending module"
 }
