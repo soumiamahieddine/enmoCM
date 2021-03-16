@@ -145,9 +145,9 @@ class ConfigurationController
                         return $response->withStatus(400)->withJson(['errors' => "Body onlyoffice['port'] is empty or not numeric"]);
                     } elseif (!Validator::boolType()->validate($editor['ssl'] ?? null)) {
                         return $response->withStatus(400)->withJson(['errors' => "Body onlyoffice['ssl'] is empty or not a boolean"]);
-                    } elseif (!Validator::notEmpty()->stringType()->validate($editor['authorizationHeader'] ?? null)) {
-                        return $response->withStatus(400)->withJson(['errors' => "Body onlyoffice['authorizationHeader'] is empty or not a string"]);
                     }
+                    $data[$key]['authorizationHeader'] = $editor['authorizationHeader'] ?? '';
+                    $data[$key]['token'] = $editor['token'] ?? '';
                 } elseif ($key == 'collaboraonline') {
                     if (!Validator::notEmpty()->stringType()->validate($editor['uri'] ?? null)) {
                         return $response->withStatus(400)->withJson(['errors' => "Body collaboraonline['uri'] is empty or not a string"]);
