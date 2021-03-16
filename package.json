@@ -9,6 +9,7 @@
     "check-update": "ncu",
     "dep-list": "npm list --depth=0",
     "upgrade": "ncu -u",
+    "reload-packages": "rm -Rf node_modules && rm package-lock.json && npm cache clean --force && npm i",
     "create-component": "echo Component name ? && read varname && ng g c $varname --module app --style=scss",
     "create-component-admin": "echo Component name ? && read varname && ng g c administration/$varname --module administration --style=scss",
     "cypress:open": "cypress open --config-file test/e2e/cypress-config.json",
