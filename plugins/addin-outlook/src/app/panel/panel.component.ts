@@ -73,13 +73,16 @@ export class PanelComponent implements OnInit {
             this.http.get('../rest/resources/external', {params: {type: 'emailId', value: emailId}}).pipe(
                 tap((data: any) => {
                     this.status = 'end';
-                    resolve(true);
-                    return data.resId !== undefined ? true : false;
+                    const result =  data.resId !== undefined ? true : false;
+                    resolve(result);
                 }),
                 catchError((err: any) => {
-                    this.status = 'end';
-                    this.initMailInfo();
-                    console.log(err);
+                    if (err.error.errors === 'Document not found') {
+                        this.status = 'end';
+                        this.initMailInfo();
+                    } else {
+                        this.notificationService.handleErrors(err.error.errors);
+                    }
                     return of(false);
                 })
             ).subscribe();
@@ -194,23 +197,25 @@ export class PanelComponent implements OnInit {
             console.log(serviceRequest);
 
             // Access-Control-Allow-Origin not allowed
-            let xhr = new XMLHttpRequest();
+            /*let xhr = new XMLHttpRequest();
             xhr.open('GET', getMessageUrl);
-            xhr.setRequestHeader("Authorization", "Bearer " + serviceRequest.attachmentToken);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + serviceRequest.attachmentToken);
+            xhr.setRequestHeader('Content-Type', 'application/json')
             xhr.onload = ((res) => {
                 console.log(res);
-            });
-            xhr.send();
+            });            
+            xhr.send();*/
 
             // Test with EWS GetAttachment function
-            let ews = new ExchangeService();
+            /*let ews = new ExchangeService();
             ews.Credentials = new WebCredentials('userName', 'pwd'); // required to make conn
             ews.Url = new Uri(serviceRequest.ewsUrl);
             let getAttachmentsResponse: any = ews.GetAttachments(serviceRequest.attachments, BodyType.Text, null);
             if (getAttachmentsResponse.OverallResult == asyncResult.status) {
                 console.log(getAttachmentsResponse);
                 return ews;
-            }
+            }*/
+            
         }
         else {
             console.log(asyncResult.error.message);
