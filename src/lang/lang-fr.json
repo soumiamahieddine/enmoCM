@@ -2412,13 +2412,13 @@
     "authorizationHeader": "En-tête d'autorisation",
     "civilityDeleted": "Civilité supprimée",
     "civilityUpdated": "Civilité mise à jour",
-    "civilityAdded": "Civilité ajouté",
+    "civilityAdded": "Civilité ajoutée",
     "otherPlugins": "Autres plugins",
     "otherPluginsDesc": "Gérer les autres plugins",
     "downloadManifest": "Télécharger le manifeste",
     "infoOutlookPlugin": "Vous permet via votre boite mail de convertir directement un mail en courrier dans l'application. (comment le paramétrer ?)",
     "outlookSendingModule": "Module d'envoi via outlook",
     "chrono_attachment": "Générer un numéro chrono",
-    "chrono_attachmentDesc": "Permet de générer une chaine de caratère paramétrable via le fichier chrono.xml",
+    "chrono_attachmentDesc": "Permet de générer une chaine de caractère paramétrable via le fichier chrono.xml",
     "maxValueVisaWorklow": "La valeur maximale pour ce champ est : "
 }
