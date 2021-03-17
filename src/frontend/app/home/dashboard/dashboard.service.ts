@@ -62,7 +62,7 @@ export class DashboardService {
             views: [
                 {
                     id: 'list',
-                    route: '/process/users/:userId/groups/:groupId/baskets/:basketId/resId/:resId',
+                    route: ':basketRoute',
                     viewDocRoute: '/resources/:resId/thumbnail'
                 },
                 {
