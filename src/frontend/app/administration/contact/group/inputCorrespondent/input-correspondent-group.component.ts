@@ -89,6 +89,7 @@ export class InputCorrespondentGroupComponent implements OnInit, AfterViewInit {
                     if (index > -1) {
                         this.allCorrespondentGroups.splice(index, 1);
                     }
+                    this.allCorrespondentGroups = this.allCorrespondentGroups.filter((item: any) => item.canUpdateCorrespondents);
                 });
                 this.afterCorrespondentsGroupsLoaded.emit(this.correspondentGroups);
             }),
