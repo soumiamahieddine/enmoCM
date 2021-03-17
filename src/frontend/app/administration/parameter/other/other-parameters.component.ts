@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { KeyValue } from '@angular/common';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { catchError, debounceTime, filter, map, tap } from 'rxjs/operators';
 import { ColorEvent } from 'ngx-color';
 import { FunctionsService } from '@service/functions.service';
@@ -42,15 +42,15 @@ export class OtherParametersComponent implements OnInit {
         java: {},
         onlyoffice: {
             ssl: new FormControl(false),
-            uri: new FormControl('192.168.0.11'),
-            port: new FormControl(8765),
+            uri: new FormControl('192.168.0.11', [Validators.required]),
+            port: new FormControl(8765, [Validators.required]),
             token: new FormControl(''),
             authorizationHeader: new FormControl('Authorization')
         },
         collaboraonline: {
             ssl: new FormControl(false),
-            uri: new FormControl('192.168.0.11'),
-            port: new FormControl(9980),
+            uri: new FormControl('192.168.0.11', [Validators.required]),
+            port: new FormControl(9980, [Validators.required]),
             lang: new FormControl('fr-FR')
         }
     };
@@ -178,7 +178,8 @@ export class OtherParametersComponent implements OnInit {
                 this.editorsConf[editorId][elementId].valueChanges
                     .pipe(
                         debounceTime(1000),
-                        tap((value: any) => {
+                        filter(() => this.editorsConf[editorId][elementId].valid),
+                        tap(() => {
                             this.saveConfEditor();
                         }),
                     ).subscribe();
@@ -225,9 +226,8 @@ export class OtherParametersComponent implements OnInit {
                 tap((data: any) => {
                     Object.keys(data).forEach(confId => {
                         this.editorsEnabled.push(confId);
-                        this.editorsConf[confId] = {};
                         Object.keys(data[confId]).forEach(itemId => {
-                            this.editorsConf[confId][itemId] = new FormControl(data[confId][itemId]);
+                            this.editorsConf[confId][itemId].setValue(data[confId][itemId]);
                         });
                     });
                     resolve(true);
@@ -310,7 +310,7 @@ export class OtherParametersComponent implements OnInit {
 
     formatEditorsConfig() {
         const obj: any = {};
-        Object.keys(this.editorsConf).forEach(id => {
+        this.editorsEnabled.forEach(id => {
             if (this.editorsEnabled.indexOf(id) > -1) {
                 obj[id] = {};
                 Object.keys(this.editorsConf[id]).forEach(elemId => {
