@@ -51,7 +51,6 @@ export class OtherParametersComponent implements OnInit {
             ssl: new FormControl(false),
             uri: new FormControl('192.168.0.11', [Validators.required]),
             port: new FormControl(9980, [Validators.required]),
-            lang: new FormControl('fr-FR')
         }
     };
 
