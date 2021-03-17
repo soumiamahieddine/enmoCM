@@ -679,12 +679,15 @@ class TileController
         foreach ($rawQuery as $value) {
             if (!empty($value['values'][0]['id']) && !in_array($value['identifier'], ['recipients', 'senders']) && strpos($value['identifier'], 'role_') === false) {
                 $value['values'] = array_column($value['values'], 'id');
-            } elseif (!empty($value['values']['start'])) {
-                $date = new \DateTime($value['values']['start']);
-                $value['values']['start'] = $date->format('Y-m-d');
-            } elseif (!empty($value['values']['end'])) {
-                $date = new \DateTime($value['values']['end']);
-                $value['values']['end'] = $date->format('Y-m-d');
+            } else {
+                if (!empty($value['values']['start'])) {
+                    $date = new \DateTime($value['values']['start']);
+                    $value['values']['start'] = $date->format('Y-m-d');
+                }
+                if (!empty($value['values']['end'])) {
+                    $date = new \DateTime($value['values']['end']);
+                    $value['values']['end'] = $date->format('Y-m-d');
+                }
             }
             $query[$value['identifier']] = ['values' => $value['values']];
         }
