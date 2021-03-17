@@ -330,7 +330,10 @@ class TileController
         } elseif ($tile['type'] == 'myLastResources') {
             TileController::getLastResourcesDetails($tile);
         } elseif ($tile['type'] == 'searchTemplate') {
-            TileController::getSearchTemplateDetails($tile);
+            $control = TileController::getSearchTemplateDetails($tile);
+            if (!empty($control['errors'])) {
+                return ['errors' => $control['errors']];
+            }
         } elseif ($tile['type'] == 'followedMail') {
             $followedResources = UserFollowedResourceModel::get([
                 'select' => ['res_id'],
