@@ -67,7 +67,7 @@ export class InputCorrespondentGroupComponent implements OnInit, AfterViewInit {
         return new Promise((resolve, reject) => {
             this.http.get('../rest/contactsGroups').pipe(
                 tap((data: any) => {
-                    this.allCorrespondentGroups = data.contactsGroups.map((grp: any) => ({ id: grp.id, label: grp.label }));
+                    this.allCorrespondentGroups = data.contactsGroups.map((grp: any) => ({ id: grp.id, label: grp.label, canUpdateCorrespondents: grp.canUpdateCorrespondents }));
                     resolve(true);
                 }),
                 catchError((err: any) => {
