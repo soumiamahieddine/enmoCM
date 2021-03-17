@@ -22,7 +22,6 @@ use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelModel;
 use MessageExchange\controllers\ReceiveMessageExchangeController;
-use Parameter\controllers\ParameterController;
 use Priority\models\PriorityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -355,13 +354,23 @@ class ConfigurationController
             }
         }
 
-        $res = ParameterController::formatXml($loadedXml);
+        $res = ConfigurationController::formatXml($loadedXml);
         $fp = fopen($path, "w+");
         if ($fp) {
             fwrite($fp, $res);
         }
 
         return $response->withStatus(204);
+    }
+
+    public static function formatXml($simpleXMLElement)
+    {
+        $xmlDocument = new \DOMDocument('1.0');
+        $xmlDocument->preserveWhiteSpace = false;
+        $xmlDocument->formatOutput = true;
+        $xmlDocument->loadXML($simpleXMLElement->asXML());
+
+        return $xmlDocument->saveXML();
     }
 
     public function getWatermarkConfiguration(Request $request, Response $response)

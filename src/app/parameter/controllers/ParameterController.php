@@ -261,14 +261,4 @@ class ParameterController
 
         return $response->withJson(['parameters' => $parameters]);
     }
-
-    public static function formatXml($simpleXMLElement)
-    {
-        $xmlDocument = new \DOMDocument('1.0');
-        $xmlDocument->preserveWhiteSpace = false;
-        $xmlDocument->formatOutput = true;
-        $xmlDocument->loadXML($simpleXMLElement->asXML());
-
-        return $xmlDocument->saveXML();
-    }
 }
