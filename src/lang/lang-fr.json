@@ -2375,7 +2375,7 @@
     "documentsWatermark": "Filigrane des documents",
     "style": "Style",
     "position": "Position",
-    "watermarkContentDesc": "Les colonnes de <b>res_letterbox</b> peuvent être utilisé. ex: [alt_identifier] ainsi que les <b>variables de temps</b>. ex : [date_now] ou [hour_now]",
+    "watermarkContentDesc": "Les colonnes de <b>res_letterbox</b> peuvent être utilisées. ex: [alt_identifier] ainsi que les <b>variables de temps</b>. ex : [date_now] ou [hour_now]",
     "configureNewEditor": "Configurer un nouvel éditeur",
     "disableEditor": "Désactiver l'éditeur",
     "documentsEditors": "Éditeurs de documents",
