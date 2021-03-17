@@ -603,6 +603,7 @@
     "emailDeleted": "Email deleted",
     "emailModel": "Email model",
     "emailSendFailed": "Failed to send email to <b>{{recipient}}</b> from <b>{{sender}}</b>",
+    "emailSendInProgressShort": "Sending email...",
     "emailSendInProgress": "Sending email to <b>{{0}}</b>...",
     "emailSendSuccess": "Email sent to <b>{{0}}</b>",
     "emailSendTest": "Email send test",

@@ -612,6 +612,7 @@
     "emailDeleted": "Courriel supprimé",
     "emailModel": "Modèle de courriel",
     "emailSendFailed": "Échec d'envoi à <b>{{recipient}}</b> depuis l'adresse <b>{{sender}}</b>",
+    "emailSendInProgressShort": "En cours d'envoi...",
     "emailSendInProgress": "En cours d'envoi à <b>{{0}}</b>...",
     "emailSendSuccess": "Envoi réussi à <b>{{0}}</b>",
     "emailSendTest": "Test d'envoi",
