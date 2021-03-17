@@ -69,6 +69,65 @@ export class OtherParametersComponent implements OnInit {
 
     editorsEnabled = [];
 
+    fonts = [
+        {
+            id: 'courier',
+            label: 'courier'
+        },
+        {
+            id: 'courierB',
+            label: 'courierB'
+        },
+        {
+            id: 'courierI',
+            label: 'courierI'
+        },
+        {
+            id: 'courierBI',
+            label: 'courierBI'
+        },
+        {
+            id: 'helvetica',
+            label: 'helvetica'
+        },
+        {
+            id: 'helveticaB',
+            label: 'helveticaB'
+        },
+        {
+            id: 'helveticaI',
+            label: 'helveticaI'
+        },
+        {
+            id: 'helveticaBI',
+            label: 'helveticaBI'
+        },
+        {
+            id: 'times',
+            label: 'times'
+        },
+        {
+            id: 'timesB',
+            label: 'timesB'
+        },
+        {
+            id: 'timesI',
+            label: 'timesI'
+        },
+        {
+            id: 'timesBI',
+            label: 'timesBI'
+        },
+        {
+            id: 'symbol',
+            label: 'symbol'
+        },
+        {
+            id: 'zapfdingbats',
+            label: 'zapfdingbats'
+        }
+    ];
+
     colors: string[] = [
         red['900'],
         red['700'],
