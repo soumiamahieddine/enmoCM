@@ -202,6 +202,11 @@ class ParameterController
                 'id'                 => $args['id']
             ]);
         } else {
+            if (in_array($args['id'], ['minimumVisaRole', 'maximumSignRole'])) {
+                if (!Validator::intVal()->validate($body['param_value_int']) || $body['param_value_int'] < 0) {
+                    return $response->withStatus(400)->withJson(['errors' => $args['id'] . ' must be a positive numeric']);
+                }
+            }
             $parameter = ParameterModel::getById(['id' => $args['id']]);
             if (empty($parameter)) {
                 if (!in_array($args['id'], ['loginpage_message', 'homepage_message'])) {
