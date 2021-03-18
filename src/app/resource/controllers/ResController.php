@@ -1426,19 +1426,19 @@ class ResController extends ResourceControlController
 
     public function getByExternalId(Request $request, Response $response, array $args)
     {
-        $queryParams = $request->getQueryParams();
+        $body = $request->getParsedBody();
 
-        if (!Validator::notEmpty()->validate($queryParams['type'])) {
+        if (!Validator::notEmpty()->validate($body['type'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Missing externalId type']);
-        } elseif (!Validator::notEmpty()->validate($queryParams['value'])) {
+        } elseif (!Validator::notEmpty()->validate($body['value'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Missing externalId value']);
         }
 
         try {
             $document = ResModel::get([
                 'select' => ['res_id'],
-                'where'  => ["external_id->'" . $queryParams['type'] . "' = ?"],
-                'data'   => [$queryParams['value']]
+                'where'  => ["external_id->'" . $body['type'] . "' = ?"],
+                'data'   => [$body['value']]
             ]);
         } catch (\Exception $exception) {
             return $response->withStatus(400)->withJson(['errors' => 'externalId type or value has wrong format']);

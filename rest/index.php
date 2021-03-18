@@ -694,4 +694,6 @@ $app->put('/registeredMails/acknowledgement/rollback', \RegisteredMail\controlle
 $app->put('/registeredMails/import', \RegisteredMail\controllers\RegisteredMailController::class . ':setImport');
 $app->put('/registeredMails/{resId}', \RegisteredMail\controllers\RegisteredMailController::class . ':update');
 
+$app->get('/plugins/outlook/manifest', \SrcCore\controllers\CoreController::class . ':generateOutlookManifest');
+
 $app->run();

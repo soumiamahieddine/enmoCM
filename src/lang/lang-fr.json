@@ -2423,5 +2423,7 @@
     "maxValueVisaWorklow": "La valeur maximale pour ce champ est : ",
     "invalidDurationCurrentUse": "Durée de conservation (en jours) invalide",
     "signDurationCurrentUse": "La durée de conservation (en jours) ne peut pas être négative",
-    "linkCorrespondents": "Associer des correspondants"
+    "linkCorrespondents": "Associer des correspondants",
+    "addinOutlookDesc": "Envoyer en 1 click vos courriel à votre GEC.",
+    "addinOutlookSendDesc": "Ouvre le panneau afin d'effectuer des actions pour Maarch Courrier."
 }

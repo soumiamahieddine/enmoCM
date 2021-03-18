@@ -187,7 +187,7 @@ class CoreController
         }
     }
 
-    public static function getAvailableCoreLanguages(Request $request, Response $response)
+    public function getAvailableCoreLanguages(Request $request, Response $response)
     {
         $files = array_diff(scandir('src/lang'), ['..', '.']);
         $arrLanguages = [];
@@ -200,5 +200,48 @@ class CoreController
             $arrLanguages[$langName] = $fileContent;
         }
         return $response->withJson(['langs' => $arrLanguages]);
+    }
+
+    public function generateOutlookManifest(Request $request, Response $response)
+    {
+        $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
+        $appName = $config['config']['applicationName'];
+        $maarchUrl = $config['config']['maarchUrl'];
+
+        if (strpos($maarchUrl, 'https://') === false) {
+            return $response->withStatus(400)->withJson(['errors' => 'You cannot use the Outlook plugin because maarchUrl is using https']);
+        }
+
+        $path = CoreConfigModel::getConfigPath();
+        $hashedPath = md5($path);
+
+        $uuid = substr_replace($hashedPath, '-', 8, 0);
+        $uuid = substr_replace($uuid, '-', 13, 0);
+        $uuid = substr_replace($uuid, '-', 18, 0);
+        $uuid = substr_replace($uuid, '-', 23, 0);
+
+        $appDomain = str_replace(CoreConfigModel::getCustomId(), '', $maarchUrl);
+
+        $data = [
+            'config.applicationName' => $appName,
+            'config.instanceUrl'     => $maarchUrl,
+            'config.applicationUrl'  => $appDomain,
+            'config.applicationUuid' => $uuid
+        ];
+
+        $language = LanguageController::getLanguage(['language' => $config['config']['lang']]);
+        foreach ($language['lang'] as $key => $lang) {
+            $data['lang.' . $key] = $lang;
+        }
+
+        $manifestTemplate = file_get_contents('plugins/addin-outlook/src/config/manifest.xml.default');
+
+        $newContent = $manifestTemplate;
+        foreach ($data as $key => $value) {
+            $newContent = str_replace('{' . $key . '}', $value, $newContent);
+        }
+
+        $response->write($newContent);
+        return $response->withHeader('Content-Type', 'application/xml');
     }
 }
