@@ -2422,5 +2422,6 @@
     "chrono_attachmentDesc": "Permet de générer une chaine de caractère paramétrable via le fichier chrono.xml",
     "maxValueVisaWorklow": "La valeur maximale pour ce champ est : ",
     "invalidDurationCurrentUse": "Durée de conservation (en jours) invalide",
-    "signDurationCurrentUse": "La durée de conservation (en jours) ne peut pas être négative"
+    "signDurationCurrentUse": "La durée de conservation (en jours) ne peut pas être négative",
+    "linkCorrespondents": "Associer des correspondants"
 }
