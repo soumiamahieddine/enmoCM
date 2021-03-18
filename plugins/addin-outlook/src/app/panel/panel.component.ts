@@ -69,12 +69,12 @@ export class PanelComponent implements OnInit {
 
     checkMailInApp(): Promise<boolean> {
         let emailId: string = "\"" + Office.context.mailbox.item.itemId + "\"";
-        let infoEMail: any = {
+        let infoEmail: any = {
             type: 'emailId',
             value: emailId
         }
         return new Promise((resolve) => {
-            this.http.put('../rest/resources/external', infoEMail).pipe(
+            this.http.put('../rest/resources/external', infoEmail).pipe(
                 tap((data: any) => {
                     this.status = 'end';
                     const result =  data.resId !== undefined ? true : false;
