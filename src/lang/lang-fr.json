@@ -2426,6 +2426,7 @@
     "linkCorrespondents": "Associer des correspondants",
     "addinOutlookDesc": "Envoyer en 1 click vos courriel à votre GEC.",
     "addinOutlookSendDesc": "Ouvre le panneau afin d'effectuer des actions pour Maarch Courrier.",
+    "addinOutlookUnavailable": "Vous ne pouvez pas utiliser le plugin Outlook parce que votre application Maarch Courrier n'utilise pas https",
     "configuration": "Configuration",
     "addingOutlookMsg": "Nous allons vous guider pour la paramétrage de l'extension.<br/>Veuillez choisir votre environnement",
     "addingOutlookWebMsg1": "Depuis votre interface outlook, cliquez sur «<b>gérer les compléments</b>» : ",

@@ -207,9 +207,10 @@ class CoreController
         $config = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
         $appName = $config['config']['applicationName'];
         $maarchUrl = $config['config']['maarchUrl'];
+        $maarchUrl = str_replace('//', '/', $maarchUrl);
 
         if (strpos($maarchUrl, 'https://') === false) {
-            return $response->withStatus(400)->withJson(['errors' => 'You cannot use the Outlook plugin because maarchUrl is using https']);
+            return $response->withStatus(400)->withJson(['errors' => 'You cannot use the Outlook plugin because maarchUrl is not using https', 'lang' => 'addinOutlookUnavailable']);
         }
 
         $path = CoreConfigModel::getConfigPath();
