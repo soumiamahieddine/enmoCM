@@ -802,7 +802,7 @@ class AuthenticationController
                 'sender'     => ['email' => $sender],
                 'recipients' => [$args['userEmail']],
                 'object'     => _NOTIFICATIONS_USER_CREATION_SUBJECT,
-                'body'       => _NOTIFICATIONS_USER_CREATION_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a><br/><br/>' . _YOUR_ID . ' ' . $user['user_id'] . _NOTIFICATIONS_USER_CREATION_FOOTER,
+                'body'       => _NOTIFICATIONS_USER_CREATION_BODY . '<a href="' . $url . '">'.$url.'</a><br/><br/>' . _YOUR_ID . ' ' . $user['user_id'] . _NOTIFICATIONS_USER_CREATION_FOOTER,
                 'isHtml'     => true,
                 'status'     => 'WAITING'
             ]
