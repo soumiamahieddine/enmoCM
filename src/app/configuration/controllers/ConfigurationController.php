@@ -160,9 +160,9 @@ class ConfigurationController
         } elseif ($args['privilege'] == 'admin_shippings') {
             if (!Validator::notEmpty()->arrayType()->validate($data)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body is empty or not an array']);
-            } elseif (!Validator::notEmpty()->stringType()->validate($data['uri'] ?? null)) {
+            } elseif (!Validator::stringType()->validate($data['uri'] ?? null)) {
                 return $response->withStatus(400)->withJson(['errors' => "Body uri is empty or not a string"]);
-            } elseif (!Validator::notEmpty()->stringType()->validate($data['authUri'] ?? null)) {
+            } elseif (!Validator::stringType()->validate($data['authUri'] ?? null)) {
                 return $response->withStatus(400)->withJson(['errors' => "Body authUri is empty or not a string"]);
             } elseif (!Validator::boolType()->validate($data['enabled'] ?? null)) {
                 return $response->withStatus(400)->withJson(['errors' => "Body enabled is not set or not a boolean"]);
