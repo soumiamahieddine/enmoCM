@@ -85,7 +85,7 @@ export class PanelComponent implements OnInit {
                         this.status = 'end';
                         this.initMailInfo();
                     } else {
-                        this.notificationService.handleErrors(err.error.errors);
+                        this.notificationService.handleErrors(err);
                     }
                     return of(false);
                 })
@@ -138,7 +138,7 @@ export class PanelComponent implements OnInit {
                     }),
                     finalize(() => this.status = 'end'),
                     catchError((err: any) => {
-                        console.log(err);
+                        this.notificationService.handleErrors(err);
                         return of(false);
                     })
                 ).subscribe();
@@ -172,7 +172,7 @@ export class PanelComponent implements OnInit {
                     resolve(true);
                 }),
                 catchError((err: any) => {
-                    console.log(err);
+                    this.notificationService.handleErrors(err);
                     return of(false);
                 })
             ).subscribe();
