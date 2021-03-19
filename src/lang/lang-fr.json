@@ -2435,5 +2435,6 @@
     "addingOutlookWebMsg4": "Choisissez votre fichier <b>manifest.xml</b> précédemment téléchargé : ",
     "addingOutlookWebMsg5": "Enfin, cliquez sur «<b>Installer</b>» : ",
     "addingOutlookWebMsg6": "Assurez-vous que le plugin soit bien activé (☑) : ",
-    "addingOutlookWebMsg7": "Voila, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses."
+    "addingOutlookWebMsg7": "Voila, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses.",
+    "webInterface": "Interface web"
 }

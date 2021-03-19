@@ -3,7 +3,7 @@
     <div mat-dialog-content>
         <app-maarch-message [content]="'lang.addingOutlookMsg' | translate"></app-maarch-message>
         <mat-tab-group mat-align-tabs="center" class="helper-addin-outlook">
-            <mat-tab label="Interface web">
+            <mat-tab [label]="'lang.webInterface' | translate">
                 <ng-template matTabContent>
                     <div style="padding-left: 100px;padding-right: 100px;">
                         <app-maarch-message [content]="'lang.addingOutlookWebMsg1' | translate"></app-maarch-message>
@@ -38,12 +38,12 @@
                     </div>
                 </ng-template>
             </mat-tab>
-            <mat-tab label="Interface application"> 
+            <!--<mat-tab label="Interface application"> 
                 <ng-template matTabContent>
                     <div style="padding-left: 100px;padding-right: 100px;">
                     </div>
                 </ng-template>
-            </mat-tab>
+            </mat-tab>-->
           </mat-tab-group>
     </div>
     <span class="divider-modal"></span>
