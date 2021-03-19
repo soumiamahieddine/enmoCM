@@ -2416,7 +2416,7 @@
     "otherPlugins": "Autres plugins",
     "otherPluginsDesc": "Gérer les autres plugins",
     "downloadManifest": "Télécharger le manifeste",
-    "infoOutlookPlugin": "Vous permet via votre boite mail de convertir directement un mail en courrier dans l'application. (comment le paramétrer ?)",
+    "infoOutlookPlugin": "Vous permet via votre boite mail de convertir directement un mail en courrier dans l'application.",
     "outlookSendingModule": "Module d'envoi via outlook",
     "chrono_attachment": "Générer un numéro chrono",
     "chrono_attachmentDesc": "Permet de générer une chaine de caractère paramétrable via le fichier chrono.xml",
@@ -2425,5 +2425,14 @@
     "signDurationCurrentUse": "La durée de conservation (en jours) ne peut pas être négative",
     "linkCorrespondents": "Associer des correspondants",
     "addinOutlookDesc": "Envoyer en 1 click vos courriel à votre GEC.",
-    "addinOutlookSendDesc": "Ouvre le panneau afin d'effectuer des actions pour Maarch Courrier."
+    "addinOutlookSendDesc": "Ouvre le panneau afin d'effectuer des actions pour Maarch Courrier.",
+    "configuration": "Configuration",
+    "addingOutlookMsg": "Nous allons vous guider pour la paramétrage de l'extension.<br/>Veuillez choisir votre environnement",
+    "addingOutlookWebMsg1": "Depuis votre interface outlook, cliquez sur «<b>gérer les compléments</b>» : ",
+    "addingOutlookWebMsg2": "Ensuite, cliquez sur «<b>+</b>» 🠖 «<b>Ajouter à partir d'un fichier</b>» : ",
+    "addingOutlookWebMsg3": "Puis, cliquez sur «<b>Parcourir</b>» : ",
+    "addingOutlookWebMsg4": "Choisissez votre fichier <b>manifest.xml</b> précédemment téléchargé : ",
+    "addingOutlookWebMsg5": "Enfin, cliquez sur «<b>Installer</b>» : ",
+    "addingOutlookWebMsg6": "Assurez-vous que le plugin soit bien activé (☑) : ",
+    "addingOutlookWebMsg7": "Voila, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses."
 }

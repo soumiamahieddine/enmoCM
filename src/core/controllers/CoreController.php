@@ -242,6 +242,7 @@ class CoreController
         }
 
         $response->write($newContent);
+        $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename="manifest.xml"');
         return $response->withHeader('Content-Type', 'application/xml');
     }
 }
