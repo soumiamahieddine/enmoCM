@@ -308,6 +308,10 @@ export class AttachmentCreateComponent implements OnInit {
 
     saveAttachment(attachment: any) {
         attachment.status = this.sendMassMode ? 'SEND_MASS' : 'A_TRA';
+        if (this.sendMassMode) {
+            attachment.recipientId = null;
+            attachment.recipientType = null;
+        }
 
         return new Promise((resolve, reject) => {
             this.http.post(`../rest/attachments`, attachment).pipe(
