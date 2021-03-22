@@ -2252,7 +2252,7 @@
     "valStatus": "This document has been validated in the external signature",
     "stopStatus": "This document has been interrupted in the external signature",
     "nullStatus": "The user has not yet taken any action",
-    "intermediateStatusMailing": "The final and error statuses are only used when mailing in the action",
+    "intermediateStatusMailing": "The intermediate and error statuses are only used when mailing in the action",
     "addTile": "Add a tile",
     "tileType": "Tile type",
     "dashboardEmpty": "Your dashboard is empty",
