@@ -39,6 +39,7 @@ return array(
     'Priority\\' => array($baseDir . '/src/app/priority'),
     'Parameter\\' => array($baseDir . '/src/app/parameter'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
+    'Outlook\\' => array($baseDir . '/src/app/external/outlook'),
     'Noxxie\\PdfParser\\' => array($vendorDir . '/noxxie/pdfparser/src/Smalot/PdfParser'),
     'Notification\\' => array($baseDir . '/src/app/notification'),
     'Note\\' => array($baseDir . '/src/app/note'),

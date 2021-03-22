@@ -41,6 +41,7 @@
             "ExportSeda\\"              : "src/app/external/exportSeda/",
             "ExternalSignatoryBook\\"   : "src/app/external/externalSignatoryBook/",
             "ExternalSummary\\"         : "src/app/external/summary/",
+            "Outlook\\"                 : "src/app/external/outlook/",
             "Sendmail\\"                : "modules/sendmail/",
             "Noxxie\\PdfParser\\"       : "vendor/noxxie/pdfparser/src/Smalot/PdfParser/"
     	}

@@ -87,6 +87,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
             'Parameter\\' => 10,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
+        'O' => 
+        array (
+            'Outlook\\' => 8,
+        ),
         'N' => 
         array (
             'Noxxie\\PdfParser\\' => 17,
@@ -306,6 +310,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'Outlook\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/external/outlook',
         ),
         'Noxxie\\PdfParser\\' => 
         array (
