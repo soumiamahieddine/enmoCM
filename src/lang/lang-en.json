@@ -920,7 +920,7 @@
     "maileva_registered_mail_ar": "Registered mail AR",
     "mailing": "Mailing",
     "mailingActionInformations": "Following mails contain mailing attachments, mailing will be done after action validation :",
-    "mailingMsg": "Mailing enbled<br><br>In this mode, an attachment will be generated for each contacts of the mail. <br><br>To create them immediately, click on <b>\"Mailing\"</b><br><br> Click on <b>\"Validate\"</b> if you want them to be generated when transferred to the first signatory of the visa workflow",
+    "mailingMsg": "Mailing enabled<br><br>In this mode, an attachment will be generated for each contacts of the mail. <br><br>To create them immediately, click on <b>\"Mailing\"</b> ({{nbContacts}} attachments will be created)<br><br> Click on <b>\"Validate\"</b> if you want them to be generated when transferred to the first signatory of the visa workflow",
     "mails": "mails",
     "mailsInFolder": "mail(s) in folder",
     "mailsSent": "Resource(s) sent",

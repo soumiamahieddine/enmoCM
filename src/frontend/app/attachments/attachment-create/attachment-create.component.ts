@@ -90,7 +90,6 @@ export class AttachmentCreateComponent implements OnInit {
                 this.appDocumentViewer.toArray()[0].setDatas({inMailing: false});
             }
         }, 0);
-        
     }
 
     loadAttachmentTypes() {
@@ -154,15 +153,10 @@ export class AttachmentCreateComponent implements OnInit {
 
                     this.attachFormGroup.push(new FormGroup(this.attachments[0]));
 
-                    if (data.categoryId === 'outgoing') {
-                        if (!this.functions.empty(data.recipients) && data.recipients.length > 1) {
-                            this.toggleSendMass();
-                        }
-                    } else {
-                        if (!this.functions.empty(data.senders) && data.senders.length > 1) {
-                            this.toggleSendMass();
-                        }
+                    if (this.canSendMass()) {
+                        this.toggleSendMass();
                     }
+
                     resolve(true);
                 }),
                 catchError((err: any) => {
@@ -502,9 +496,16 @@ export class AttachmentCreateComponent implements OnInit {
                     this.appDocumentViewer?.toArray()[0]?.cleanFile(false);
                 }
             } else {
-                this.notify.error('Veuillez supprimer les <b>autres onglets PJ</b> avant de passer en <b>publipostage</b>.');
+                this.notify.error(this.translate.instant('lang.mustDeleteOtherTabsBeforeSendMassMode'));
             }
-
         }
+    }
+
+    canSendMass() {
+        return this.resourceContacts.filter((contact: any) => contact.type === 'contact').length > 1;
+    }
+
+    getNbContacts() {
+        return this.resourceContacts.filter((contact: any) => contact.type === 'contact').length;
     }
 }

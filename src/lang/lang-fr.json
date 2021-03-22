@@ -930,7 +930,7 @@
     "maileva_registered_mail_ar": "Recommandé AR",
     "mailing": "Publiposter",
     "mailingActionInformations": "Les courriers suivants contiennent des pièces jointes pour publipostage, celui-ci s'effectuera dès la validation de cette action :",
-    "mailingMsg": "Publipostage activé<br><br>Dans ce mode, une pièce jointe sera générée pour chaque contact associé au courrier. <br><br>Pour les créer immédiatement, cliquer sur <b>\"Publiposter\"</b> <br><br>Cliquer sur <b>\"Valider\"</b> si vous souhaitez qu'elles ne soient créées qu'au moment de la transmission au premier signataire du circuit de visa.",
+    "mailingMsg": "Publipostage activé<br><br>Dans ce mode, une pièce jointe sera générée pour chaque contact associé au courrier. <br><br>Pour les créer immédiatement, cliquer sur <b>\"Publiposter\"</b> ({{nbContacts}} pièces jointes seront créées)<br><br>Cliquer sur <b>\"Valider\"</b> si vous souhaitez qu'elles ne soient créées qu'au moment de la transmission au premier signataire du circuit de visa.",
     "mails": "courriers",
     "mailsInFolder": "élément(s) du dossier",
     "mailsSent": "Élément(s) envoyé(s)",
@@ -2436,5 +2436,6 @@
     "addingOutlookWebMsg5": "Enfin, cliquez sur «<b>Installer</b>» : ",
     "addingOutlookWebMsg6": "Assurez-vous que le plugin soit bien activé (☑) : ",
     "addingOutlookWebMsg7": "Voila, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses.",
-    "webInterface": "Interface web"
+    "webInterface": "Interface web",
+    "mustDeleteOtherTabsBeforeSendMassMode": "Veuillez supprimer les <b>autres onglets PJ</b> avant de passer en <b>publipostage</b>."
 }
