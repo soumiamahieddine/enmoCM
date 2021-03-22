@@ -809,7 +809,7 @@ class ResController extends ResourceControlController
 
         $libDir = CoreConfigModel::getLibrariesDirectory();
         if (!empty($libDir) && is_file($libDir . 'SetaPDF-FormFiller-Full/library/SetaPDF/Autoload.php')) {
-            require_once ($libDir . 'SetaPDF-FormFiller-Full/library/SetaPDF/Autoload.php');
+            require_once($libDir . 'SetaPDF-FormFiller-Full/library/SetaPDF/Autoload.php');
 
             $document = \SetaPDF_Core_Document::loadByFilename($pathToPdf);
             $pages = $document->getCatalog()->getPages();
@@ -1424,7 +1424,7 @@ class ResController extends ResourceControlController
         return $response->withJson(['information' => $resource]);
     }
 
-    public function getByExternalId(Request $request, Response $response, array $args)
+    public function getByExternalId(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 

@@ -348,7 +348,7 @@ class MaarchParapheurController
                             $signaturePositions = null;
                             if (!empty($step['signaturePositions']) && is_array($step['signaturePositions'])) {
                                 $valid = true;
-                                foreach ($step['signaturePositions'] as $keySP => $signaturePosition) {
+                                foreach ($step['signaturePositions'] as $signaturePosition) {
                                     if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
                                         $valid = false;
                                     }
@@ -360,7 +360,7 @@ class MaarchParapheurController
                             $datePositions = null;
                             if (!empty($step['datePositions']) && is_array($step['datePositions'])) {
                                 $valid = true;
-                                foreach ($step['datePositions'] as $keyDP => $datePosition) {
+                                foreach ($step['datePositions'] as $datePosition) {
                                     if (empty($datePosition['positionX']) || empty($datePosition['positionY']) || empty($datePosition['page'])) {
                                         $valid = false;
                                     } elseif (empty($datePosition['color']) || empty($datePosition['font']) || empty($datePosition['format']) || empty($datePosition['width'])) {
@@ -431,7 +431,7 @@ class MaarchParapheurController
                             $signaturePositions = null;
                             if (!empty($step['signaturePositions']) && is_array($step['signaturePositions'])) {
                                 $valid = true;
-                                foreach ($step['signaturePositions'] as $keySP => $signaturePosition) {
+                                foreach ($step['signaturePositions'] as $signaturePosition) {
                                     if (empty($signaturePosition['positionX']) || empty($signaturePosition['positionY']) || empty($signaturePosition['page'])) {
                                         $valid = false;
                                     }
@@ -443,7 +443,7 @@ class MaarchParapheurController
                             $datePositions = null;
                             if (!empty($step['datePositions']) && is_array($step['datePositions'])) {
                                 $valid = true;
-                                foreach ($step['datePositions'] as $keyDP => $datePosition) {
+                                foreach ($step['datePositions'] as $datePosition) {
                                     if (empty($datePosition['positionX']) || empty($datePosition['positionY']) || empty($datePosition['page'])) {
                                         $valid = false;
                                     } elseif (empty($datePosition['color']) || empty($datePosition['font']) || empty($datePosition['format']) || empty($datePosition['width'])) {

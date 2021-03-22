@@ -222,19 +222,11 @@ class XParaphController
                 $pathInfo = pathinfo($filePath);
                 $extension = $pathInfo['extension'];
             } else {
-                $tbs->Source = $args['content'];
                 $extension = 'unknow';
-                $args['path'] = null;
             }
 
             if (!empty($filePath)) {
-                if ($extension == 'odt') {
-                    $tbs->LoadTemplate($filePath, OPENTBS_ALREADY_UTF8);
-                } elseif ($extension == 'docx') {
-                    $tbs->LoadTemplate($filePath, OPENTBS_ALREADY_UTF8);
-                } else {
-                    $tbs->LoadTemplate($filePath, OPENTBS_ALREADY_UTF8);
-                }
+                $tbs->LoadTemplate($filePath, OPENTBS_ALREADY_UTF8);
             }
 
             $tbs->MergeField('xParaphSignature', ' ');
@@ -295,7 +287,7 @@ class XParaphController
         return false;
     }
 
-    public static function getWorkflow(Request $request, Response $response, array $aArgs)
+    public static function getWorkflow(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
         foreach (['login', 'siret'] as $value) {

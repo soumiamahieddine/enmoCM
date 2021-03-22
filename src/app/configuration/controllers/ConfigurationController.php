@@ -74,6 +74,10 @@ class ConfigurationController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        if (!in_array($args['privilege'], ['admin_email_server', 'admin_search', 'admin_sso', 'admin_document_editors', 'admin_parameters_watermark', 'admin_shippings'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Unknown privilege']);
+        }
+
         $data = $request->getParsedBody();
 
         if ($args['privilege'] == 'admin_email_server') {

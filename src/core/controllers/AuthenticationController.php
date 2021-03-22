@@ -107,7 +107,7 @@ class AuthenticationController
 
         $jsonFile = file_get_contents('custom/custom.json');
         $jsonFile = json_decode($jsonFile, true);
-        if (count($jsonFile) == 0) {
+        if (empty($jsonFile)) {
             return $response->withJson(['message' => 'No custom', 'lang' => 'noConfiguration']);
         } elseif (count($jsonFile) > 1) {
             return $response->withJson(['message' => 'There is more than 1 custom', 'lang' => 'moreOneCustom']);
