@@ -54,6 +54,11 @@ export class OtherParametersComponent implements OnInit {
         }
     };
 
+    addinOutlookConf = {
+        indexingModelId: new FormControl(1, [Validators.required]),
+        typeId: new FormControl(200, [Validators.required]),
+    }
+
     watermark = {
         enabled: new FormControl(true),
         text: new FormControl('Copie conforme de [alt_identifier] le [date_now] [hour_now]'),
@@ -220,6 +225,9 @@ export class OtherParametersComponent implements OnInit {
         blueGrey['100'],
     ];
 
+    indexingModels: any = [];
+    doctypes: any = [];
+
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
@@ -229,7 +237,10 @@ export class OtherParametersComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
+        this.getDoctypes();
+        this.getIndexingModels();
         await this.getWatermarkConfiguration();
+        await this.getEditorsConfiguration();
         await this.getEditorsConfiguration();
         Object.keys(this.editorsConf).forEach(editorId => {
             Object.keys(this.editorsConf[editorId]).forEach((elementId: any) => {
@@ -252,6 +263,16 @@ export class OtherParametersComponent implements OnInit {
                     }),
                 ).subscribe();
         });
+
+        Object.keys(this.addinOutlookConf).forEach(elemId => {
+            this.addinOutlookConf[elemId].valueChanges
+                .pipe(
+                    debounceTime(1000),
+                    tap((value: any) => {
+                        this.saveAddinOutlookConf();
+                    }),
+                ).subscribe();
+        });
     }
 
     getWatermarkConfiguration() {
@@ -269,6 +290,23 @@ export class OtherParametersComponent implements OnInit {
                             font: new FormControl(data.configuration.font),
                             size: new FormControl(data.configuration.size),
                             color: new FormControl(data.configuration.color),
+                        };
+                    }
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    getAddinOutlookConfConfiguration() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/configurations/admin_addin_outlook`).pipe(
+                map((data: any) => data.configuration.value),
+                tap((data: any) => {
+                    if (!this.functions.empty(data.configuration)) {
+                        this.addinOutlookConf = {
+                            indexingModelId: new FormControl(data.indexingModelId),
+                            typeId: new FormControl(data.typeId),
                         };
                     }
                     resolve(true);
@@ -345,6 +383,18 @@ export class OtherParametersComponent implements OnInit {
         ).subscribe();
     }
 
+    saveAddinOutlookConf() {
+        this.http.put(`../rest/configurations/admin_addin_outlook`, this.formatAddinOutlookConfig()).pipe(
+            tap(() => {
+                this.notify.success(this.translate.instant('lang.dataUpdated'));
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     saveConfEditor() {
         this.http.put(`../rest/configurations/admin_document_editors`, this.formatEditorsConfig()).pipe(
             tap(() => {
@@ -355,6 +405,15 @@ export class OtherParametersComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    formatAddinOutlookConfig() {
+        const obj: any = {};
+        Object.keys(this.addinOutlookConf).forEach(elemId => {
+            obj[elemId] = this.addinOutlookConf[elemId].value;
+
+        });
+        return obj;
     }
 
     formatWatermarkConfig() {
@@ -381,5 +440,59 @@ export class OtherParametersComponent implements OnInit {
 
     handleChange($event: ColorEvent) {
         this.watermark.color.setValue([$event.color.rgb.r, $event.color.rgb.g, $event.color.rgb.b]);
+    }
+
+    getDoctypes() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/doctypes`).pipe(
+                tap((data: any) => {
+                    let arrValues: any[] = [];
+                    data.structure.forEach((doctype: any) => {
+                        if (doctype['doctypes_second_level_id'] === undefined) {
+                            arrValues.push({
+                                id: doctype.doctypes_first_level_id,
+                                label: doctype.doctypes_first_level_label,
+                                title: doctype.doctypes_first_level_label,
+                                disabled: true,
+                                isTitle: true,
+                                color: doctype.css_style
+                            });
+                            data.structure.filter((info: any) => info.doctypes_first_level_id === doctype.doctypes_first_level_id && info.doctypes_second_level_id !== undefined && info.description === undefined).forEach((secondDoctype: any) => {
+                                arrValues.push({
+                                    id: secondDoctype.doctypes_second_level_id,
+                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;' + secondDoctype.doctypes_second_level_label,
+                                    title: secondDoctype.doctypes_second_level_label,
+                                    disabled: true,
+                                    isTitle: true,
+                                    color: secondDoctype.css_style
+                                });
+                                arrValues = arrValues.concat(data.structure.filter((infoDoctype: any) => infoDoctype.doctypes_second_level_id === secondDoctype.doctypes_second_level_id && infoDoctype.description !== undefined).map((infoType: any) => {
+                                    return {
+                                        id: infoType.type_id,
+                                        label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + infoType.description,
+                                        title: infoType.description,
+                                        disabled: false,
+                                        isTitle: false,
+                                    };
+                                }));
+                            });
+                        }
+                    });
+                    this.doctypes = arrValues;
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    getIndexingModels() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/indexingModels`).pipe(
+                tap((data: any) => {
+                    this.indexingModels = data.indexingModels.filter((info: any) => info.private === false);
+                    resolve(true);
+                })
+            ).subscribe();
+        });
     }
 }

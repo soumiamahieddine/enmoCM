@@ -2437,5 +2437,6 @@
     "addingOutlookWebMsg6": "Assurez-vous que le plugin soit bien activé (☑) : ",
     "addingOutlookWebMsg7": "Voilà, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses.",
     "webInterface": "Interface web",
-    "mustDeleteOtherTabsBeforeSendMassMode": "Veuillez supprimer les <b>autres onglets PJ</b> avant de passer en <b>publipostage</b>."
+    "mustDeleteOtherTabsBeforeSendMassMode": "Veuillez supprimer les <b>autres onglets PJ</b> avant de passer en <b>publipostage</b>.",
+    "outlookSendingModuleDesc": "Paramétrez le <b>modèle d'enregistrement</b> et le <b>type de document</b> utilisé lors de la conversion de courriels en courriers"
 }
