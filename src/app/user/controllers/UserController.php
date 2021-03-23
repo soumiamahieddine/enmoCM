@@ -19,6 +19,7 @@ use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Configuration\models\ConfigurationModel;
 use Contact\models\ContactGroupListModel;
+use Contact\models\ContactGroupModel;
 use ContentManagement\controllers\DocumentEditorController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
@@ -472,6 +473,13 @@ class UserController
             'data'  => [$args['id'], 'user']
         ]);
         ListTemplateModel::deleteNoItemsOnes();
+
+        $contactGroupsToDelete = ContactGroupModel::get(['select' => ['id'], 'where' => ['owner = ?', 'entities = ?'], 'data' => [$args['id'], '{}']]);
+        if (!empty($contactGroupsToDelete)) {
+            $contactGroupsToDelete = array_column($contactGroupsToDelete, 'id');
+            ContactGroupModel::delete(['where' => ['id in (?)'], 'data' => [$contactGroupsToDelete]]);
+            ContactGroupListModel::delete(['where' => ['contacts_groups_id in (?)'], 'data' => [$contactGroupsToDelete]]);
+        }
         ContactGroupListModel::delete(['where' => ['correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], 'user']]);
 
         UserModel::update([
@@ -528,7 +536,15 @@ class UserController
             'data'  => [$args['id'], 'user']
         ]);
         ListTemplateModel::deleteNoItemsOnes();
+
+        $contactGroupsToDelete = ContactGroupModel::get(['select' => ['id'], 'where' => ['owner = ?', 'entities = ?'], 'data' => [$args['id'], '{}']]);
+        if (!empty($contactGroupsToDelete)) {
+            $contactGroupsToDelete = array_column($contactGroupsToDelete, 'id');
+            ContactGroupModel::delete(['where' => ['id in (?)'], 'data' => [$contactGroupsToDelete]]);
+            ContactGroupListModel::delete(['where' => ['contacts_groups_id in (?)'], 'data' => [$contactGroupsToDelete]]);
+        }
         ContactGroupListModel::delete(['where' => ['correspondent_id = ?', 'correspondent_type = ?'], 'data' => [$args['id'], 'user']]);
+
         RedirectBasketModel::delete([
             'where' => ['owner_user_id = ? OR actual_user_id = ?'],
             'data'  => [$args['id'], $args['id']]
