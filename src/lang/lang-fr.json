@@ -2424,7 +2424,7 @@
     "invalidDurationCurrentUse": "Durée de conservation (en jours) invalide",
     "signDurationCurrentUse": "La durée de conservation (en jours) ne peut pas être négative",
     "linkCorrespondents": "Associer des correspondants",
-    "addinOutlookDesc": "Envoyer en 1 click vos courriel à votre GEC.",
+    "addinOutlookDesc": "Envoyer vos courriels en 1 clic dans votre GEC.",
     "addinOutlookSendDesc": "Ouvre le panneau afin d'effectuer des actions pour Maarch Courrier.",
     "addinOutlookUnavailable": "Vous ne pouvez pas utiliser le plugin Outlook parce que votre application Maarch Courrier n'utilise pas https",
     "configuration": "Configuration",
@@ -2435,7 +2435,7 @@
     "addingOutlookWebMsg4": "Choisissez votre fichier <b>manifest.xml</b> précédemment téléchargé : ",
     "addingOutlookWebMsg5": "Enfin, cliquez sur «<b>Installer</b>» : ",
     "addingOutlookWebMsg6": "Assurez-vous que le plugin soit bien activé (☑) : ",
-    "addingOutlookWebMsg7": "Voila, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses.",
+    "addingOutlookWebMsg7": "Voilà, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses.",
     "webInterface": "Interface web",
     "mustDeleteOtherTabsBeforeSendMassMode": "Veuillez supprimer les <b>autres onglets PJ</b> avant de passer en <b>publipostage</b>."
 }
