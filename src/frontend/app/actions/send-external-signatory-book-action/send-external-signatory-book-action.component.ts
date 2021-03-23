@@ -97,11 +97,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
                     this.additionalsInfos = data.additionalsInfos;
                     if (this.additionalsInfos.attachments.length > 0) {
                         this.signatoryBookEnabled = data.signatureBookEnabled;
-                        data.additionalsInfos.attachments.forEach((value: any) => {
-                            if (value.mailing) {
-                                this.resourcesMailing.push(value);
-                            }
-                        });
+                        this.resourcesMailing = data.additionalsInfos.attachments.filter((element: any) => element.mailing);
                         data.availableResources.filter((element: any) => !element.mainDocument).forEach((element: any) => {
                             this.toggleDocToSign(true, element, false);
                         });
