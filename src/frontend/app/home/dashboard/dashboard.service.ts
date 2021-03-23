@@ -308,15 +308,9 @@ export class DashboardService {
             }
 
             res = splitFormatedRoute[0].match(regex);
-            let isArray: boolean = Array.isArray(res);
-
-            if(isArray && res[0] !== ':') {
+            if (res !== null && res[0] !== ':') {
                 return this.getFormatedRoute(splitFormatedRoute[0], data);
-            }
-            
-            if (!isArray && res) {
-                return this.getFormatedRoute(splitFormatedRoute[0], data);
-            } else {
+            }  else {                
                 return {
                     route: splitFormatedRoute[0],
                     params: objParams
