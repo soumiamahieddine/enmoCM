@@ -5,6 +5,7 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 import { NotificationService } from '../service/notification/notification.service';
 import { ExchangeService, ExchangeVersion, WebCredentials, BodyType, Uri, BasePropertySet, PropertySet } from 'ews-js-api-browser';
 import { AuthService } from '../service/auth.service';
+import { TranslateService } from '@ngx-translate/core';
 
 declare const Office: any;
 @Component({
@@ -34,7 +35,8 @@ export class PanelComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notificationService: NotificationService,
-        public authService: AuthService
+        public authService: AuthService,
+        public translate: TranslateService
     ) {
         this.authService.catchEvent().subscribe(async (result: any) => {
             if (result === 'connected') {
@@ -134,7 +136,7 @@ export class PanelComponent implements OnInit {
                 this.http.post('../rest/resources', this.docFromMail).pipe(
                     tap((data: any) => {
                         // console.log(data);
-                        this.notificationService.success('Courriel envoyé');
+                        this.notificationService.success(this.translate.instant('lang.emailSent'));
                         this.inApp = true;
                         resolve(true);
                     }),

@@ -8,6 +8,7 @@ import { AppMaterialModule } from './app-material.module';
 import { CustomSnackbarComponent } from './service/notification/notification.service';
 import AppComponent from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { InternationalizationModule } from './service/translate/internationalization.module';
 
 import { MessageBoxComponent } from './plugins/messageBox/message-box.component';
 import { PanelComponent } from './panel/panel.component';
@@ -27,6 +28,7 @@ import { PanelComponent } from './panel/panel.component';
     AppRoutingModule,
     ReactiveFormsModule,
     AppMaterialModule,
+    InternationalizationModule
   ],
   entryComponents: [
     CustomSnackbarComponent,

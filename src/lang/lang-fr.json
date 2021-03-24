@@ -2439,5 +2439,11 @@
     "addingOutlookWebMsg7": "Voilà, votre extension est opérationnel !<br/>Lorsque vous consulterez un courrier, vous aurez une nouvelle icone à coté des actions de réponses.",
     "webInterface": "Interface web",
     "mustDeleteOtherTabsBeforeSendMassMode": "Veuillez supprimer les <b>autres onglets PJ</b> avant de passer en <b>publipostage</b>.",
-    "outlookSendingModuleDesc": "Paramétrez le <b>modèle d'enregistrement</b> et le <b>type de document</b> utilisé lors de la conversion de courriels en courriers"
+    "outlookSendingModuleDesc": "Paramétrez le <b>modèle d'enregistrement</b> et le <b>type de document</b> utilisé lors de la conversion de courriels en courriers",
+    "alreadyPresent": "Courriel déjà présent dans",
+    "documentDate": "Date de document",
+    "modelId": "Identifiant du modèle d'indexation",
+    "loginTo": "Veuilez vous connecter sur",
+    "emailId": "Identifiant du courrier",
+    "infosWillBeSent": "Les informations ci-dessous seront envoyées :"
 }
