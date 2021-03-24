@@ -10,6 +10,11 @@
                 </div>
                 <mat-card>
                     <mat-card-content>
+                        <div style="padding-bottom: 10px;">
+                            <button *ngFor="let attachment of attachments" [class.not-selected]="!attachment.selected" mat-stroked-button style="width:100%;overflow: hidden;text-overflow: ellipsis;" [title]="attachment.name" (click)="attachment.selected=!attachment.selected">
+                                <mat-icon class="fa fa-paperclip" [class.secondary]="attachment.selected"></mat-icon>&nbsp;<span [class.primary]="attachment.selected" >{{attachment.name}}</span>
+                            </button>
+                        </div>
                         <mat-form-field appearance="fill" *ngFor="let mail of displayMailInfo | keyvalue"
                             style="font-size:12px;width: 100%;pointer-events: none;">
                             <mat-label>{{ 'lang.' + mail.key | translate }}</mat-label>
