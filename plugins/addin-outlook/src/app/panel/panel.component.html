@@ -4,7 +4,7 @@
             <ng-container *ngIf="!inApp; else elseInApp">
                 <div style="display: grid;grid-template-columns: 1fr auto;grid-gap:10px;padding-top: 5px;padding-bottom: 15px;align-items: center;">
                     <app-maarch-message style="font-size:12px;" [content]="'lang.infosWillBeSent' | translate"></app-maarch-message>
-                    <button mat-fab color="primary" [title]="'lang.sendTo' + authService.applicationName" (click)="sendToMaarch()">
+                    <button mat-fab color="primary" [title]="('lang.sendTo' | translate) + ' ' + authService.applicationName" (click)="sendToMaarch()">
                         <mat-icon class="far fa-paper-plane fa-2x"></mat-icon>
                     </button>
                 </div>
