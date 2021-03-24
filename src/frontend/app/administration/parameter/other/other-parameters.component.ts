@@ -57,7 +57,7 @@ export class OtherParametersComponent implements OnInit {
     addinOutlookConf = {
         indexingModelId: new FormControl(1, [Validators.required]),
         typeId: new FormControl(200, [Validators.required]),
-    }
+    };
 
     watermark = {
         enabled: new FormControl(true),
@@ -241,7 +241,7 @@ export class OtherParametersComponent implements OnInit {
         this.getIndexingModels();
         await this.getWatermarkConfiguration();
         await this.getEditorsConfiguration();
-        await this.getEditorsConfiguration();
+        await this.getAddinOutlookConfConfiguration();
         Object.keys(this.editorsConf).forEach(editorId => {
             Object.keys(this.editorsConf[editorId]).forEach((elementId: any) => {
                 this.editorsConf[editorId][elementId].valueChanges
@@ -300,13 +300,12 @@ export class OtherParametersComponent implements OnInit {
 
     getAddinOutlookConfConfiguration() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/configurations/admin_addin_outlook`).pipe(
-                map((data: any) => data.configuration.value),
+            this.http.get(`../rest/plugins/outlook/configuration`).pipe(
                 tap((data: any) => {
                     if (!this.functions.empty(data.configuration)) {
                         this.addinOutlookConf = {
-                            indexingModelId: new FormControl(data.indexingModelId),
-                            typeId: new FormControl(data.typeId),
+                            indexingModelId: new FormControl(data.configuration.indexingModelId),
+                            typeId: new FormControl(data.configuration.typeId),
                         };
                     }
                     resolve(true);
@@ -384,7 +383,7 @@ export class OtherParametersComponent implements OnInit {
     }
 
     saveAddinOutlookConf() {
-        this.http.put(`../rest/configurations/admin_addin_outlook`, this.formatAddinOutlookConfig()).pipe(
+        this.http.put(`../rest/plugins/outlook/configuration`, this.formatAddinOutlookConfig()).pipe(
             tap(() => {
                 this.notify.success(this.translate.instant('lang.dataUpdated'));
             }),

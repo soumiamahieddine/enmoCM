@@ -14,6 +14,11 @@
 
 namespace Outlook\controllers;
 
+use Configuration\models\ConfigurationModel;
+use Doctype\models\DoctypeModel;
+use Group\controllers\PrivilegeController;
+use IndexingModel\models\IndexingModelModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\LanguageController;
@@ -68,5 +73,50 @@ class OutlookController
         $response->write($newContent);
         $response = $response->withAddedHeader('Content-Disposition', 'attachment; filename="manifest.xml"');
         return $response->withHeader('Content-Type', 'application/xml');
+    }
+
+    public function getConfiguration(Request $request, Response $response)
+    {
+        $configuration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_addin_outlook']);
+
+        $configuration['value'] = json_decode($configuration['value']);
+        return $response->withJson(['configuration' => $configuration['value']]);
+    }
+
+    public function saveConfiguration(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::notEmpty()->intVal()->validate($body['indexingModelId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body indexingModelId is empty or not an integer']);
+        } elseif (!Validator::notEmpty()->intVal()->validate($body['typeId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body typeId is empty or not an integer']);
+        }
+
+        $model = IndexingModelModel::getById(['id' => $body['indexingModelId'], 'select' => ['master']]);
+        if (empty($model)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Indexing model does not exist']);
+        } elseif (!empty($model['master'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Indexing model is not a public model']);
+        }
+
+        $type = DoctypeModel::getById(['id' => $body['typeId'], 'select' => [1]]);
+        if (empty($type)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document type does not exist']);
+        }
+
+        $data = ['indexingModelId' => $body['indexingModelId'], 'typeId' => $body['typeId']];
+        $data = json_encode($data, JSON_UNESCAPED_SLASHES);
+        if (empty(ConfigurationModel::getByPrivilege(['privilege' => 'admin_addin_outlook', 'select' => [1]]))) {
+            ConfigurationModel::create(['value' => $data, 'privilege' => 'admin_addin_outlook']);
+        } else {
+            ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['privilege = ?'], 'data' => ['admin_addin_outlook']]);
+        }
+
+        return $response->withStatus(204);
     }
 }
