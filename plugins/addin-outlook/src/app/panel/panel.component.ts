@@ -35,7 +35,7 @@ export class PanelComponent implements OnInit {
         public http: HttpClient,
         private notificationService: NotificationService,
         public authService: AuthService
-    ) { 
+    ) {
         this.authService.catchEvent().subscribe(async (result: any) => {
             if (result === 'connected') {
                 this.inApp = await this.checkMailInApp();
@@ -44,7 +44,7 @@ export class PanelComponent implements OnInit {
                     // console.log(Office.context.mailbox.item);
                     this.initMailInfo();
                     this.status = 'end';
-                } 
+                }
             } else if (result === 'not connected') {
                 this.status = 'end';
             }
@@ -68,16 +68,16 @@ export class PanelComponent implements OnInit {
     }
 
     checkMailInApp(): Promise<boolean> {
-        let emailId: string = "\"" + Office.context.mailbox.item.itemId + "\"";
+        let emailId: string = '"' + Office.context.mailbox.item.itemId + '"';
         let infoEmail: any = {
             type: 'emailId',
             value: emailId
-        }
+        };
         return new Promise((resolve) => {
             this.http.put('../rest/resources/external', infoEmail).pipe(
                 tap((data: any) => {
                     this.status = 'end';
-                    const result =  data.resId !== undefined ? true : false;
+                    const result = data.resId !== undefined ? true : false;
                     resolve(result);
                 }),
                 catchError((err: any) => {
@@ -87,6 +87,7 @@ export class PanelComponent implements OnInit {
                     } else {
                         this.notificationService.handleErrors(err);
                     }
+                    resolve(false);
                     return of(false);
                 })
             ).subscribe();
@@ -94,6 +95,7 @@ export class PanelComponent implements OnInit {
     }
 
     initMailInfo() {
+        // await this.getConfiguration();
         this.displayMailInfo = {
             modelId: 5,
             doctype: 'Courriel',
@@ -122,7 +124,7 @@ export class PanelComponent implements OnInit {
             status: 'NEW',
             documentDate: Office.context.mailbox.item.dateTimeCreated,
             arrivalDate: Office.context.mailbox.item.dateTimeCreated,
-            format: 'TXT',
+            format: 'html',
             encodedFile: btoa(unescape(encodeURIComponent(this.mailBody))),
             externalId: { emailId: Office.context.mailbox.item.itemId },
             senders: [{ id: this.contactId, type: 'contact' }]
@@ -148,7 +150,7 @@ export class PanelComponent implements OnInit {
 
     getMailBody() {
         return new Promise((resolve) => {
-            Office.context.mailbox.item.body.getAsync(Office.CoercionType.Text, ((res: { value: any; }) => {
+            Office.context.mailbox.item.body.getAsync(Office.CoercionType.Html, ((res: { value: any; }) => {
                 this.mailBody = res.value;
                 resolve(true);
             }));
@@ -219,7 +221,7 @@ export class PanelComponent implements OnInit {
                 console.log(getAttachmentsResponse);
                 return ews;
             }*/
-            
+
         }
         else {
             console.log(asyncResult.error.message);
