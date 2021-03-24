@@ -123,5 +123,9 @@
             [placeholderLabel]="'lang.chooseValue' | translate" [formControlSelect]="addinOutlookConf.typeId"
             [datas]="doctypes" [showLabel]="true" style="width:100%;">
         </plugin-select-search>
+        <plugin-select-search [id]="'statusId'" [label]="'lang.status' | translate" [class]="''"
+            [placeholderLabel]="'lang.chooseValue' | translate" [formControlSelect]="addinOutlookConf.statusId"
+            [datas]="statuses" [showLabel]="true" style="width:100%;">
+        </plugin-select-search>
     </mat-expansion-panel>
 </mat-accordion>

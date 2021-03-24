@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
-import { catchError, finalize, tap } from 'rxjs/operators';
+import { catchError, filter, finalize, map, tap } from 'rxjs/operators';
 import { NotificationService } from '../service/notification/notification.service';
 import { AuthService } from '../service/auth.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -102,11 +102,11 @@ export class PanelComponent implements OnInit {
     async initMailInfo() {
         await this.getConfiguration();
         this.displayMailInfo = {
-            modelId: this.addinConfig.modelId,
-            doctype: 'Courriel',
+            modelId: this.addinConfig.indexingModel.label,
+            doctype: this.addinConfig.doctype.label,
             subject: Office.context.mailbox.item.subject,
             typist: `${this.authService.user.firstname} ${this.authService.user.lastname}`,
-            status: 'NEW',
+            status: this.addinConfig.status.label,
             documentDate: this.functions.formatObjectToDateFullFormat(Office.context.mailbox.item.dateTimeCreated),
             arrivalDate: this.functions.formatObjectToDateFullFormat(Office.context.mailbox.item.dateTimeCreated),
             emailId: Office.context.mailbox.item.itemId,
@@ -123,13 +123,10 @@ export class PanelComponent implements OnInit {
     getConfiguration() {
         return new Promise((resolve) => {
             this.http.get(`../rest/plugins/outlook/configuration`).pipe(
+                filter((data: any) => !this.functions.empty(data.configuration)),
+                map((data: any) => data.configuration),
                 tap((data: any) => {
-                    if (!this.functions.empty(data.configuration)) {
-                        this.addinConfig = {
-                            modelId: data.configuration.indexingModelId,
-                            doctype: data.configuration.typeId,
-                        };
-                    }
+                    this.addinConfig = data;
                     resolve(true);
                 })
             ).subscribe();
@@ -138,12 +135,12 @@ export class PanelComponent implements OnInit {
 
     createDocFromMail() {
         this.docFromMail = {
-            modelId: this.addinConfig.modelId,
-            doctype: this.addinConfig.doctype,
+            modelId: this.addinConfig.indexingModel.id,
+            doctype: this.addinConfig.doctype.id,
             subject: Office.context.mailbox.item.subject,
             chrono: true,
             typist: this.authService.user.id,
-            status: 'NEW',
+            status: this.addinConfig.status.id,
             documentDate: Office.context.mailbox.item.dateTimeCreated,
             arrivalDate: Office.context.mailbox.item.dateTimeCreated,
             format: 'html',

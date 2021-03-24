@@ -57,6 +57,7 @@ export class OtherParametersComponent implements OnInit {
     addinOutlookConf = {
         indexingModelId: new FormControl(1, [Validators.required]),
         typeId: new FormControl(200, [Validators.required]),
+        statusId: new FormControl(1, [Validators.required]),
     };
 
     watermark = {
@@ -227,6 +228,7 @@ export class OtherParametersComponent implements OnInit {
 
     indexingModels: any = [];
     doctypes: any = [];
+    statuses: any = [];
 
     constructor(
         public translate: TranslateService,
@@ -237,6 +239,7 @@ export class OtherParametersComponent implements OnInit {
     ) { }
 
     async ngOnInit() {
+        this.getStatuses();
         this.getDoctypes();
         this.getIndexingModels();
         await this.getWatermarkConfiguration();
@@ -306,6 +309,7 @@ export class OtherParametersComponent implements OnInit {
                         this.addinOutlookConf = {
                             indexingModelId: new FormControl(data.configuration.indexingModelId),
                             typeId: new FormControl(data.configuration.typeId),
+                            statusId: new FormControl(data.configuration.statusId),
                         };
                     }
                     resolve(true);
@@ -322,6 +326,8 @@ export class OtherParametersComponent implements OnInit {
                     Object.keys(data).forEach(confId => {
                         this.editorsEnabled.push(confId);
                         Object.keys(data[confId]).forEach(itemId => {
+                            console.log(confId,itemId);
+                            
                             this.editorsConf[confId][itemId].setValue(data[confId][itemId]);
                         });
                     });
@@ -489,6 +495,22 @@ export class OtherParametersComponent implements OnInit {
             this.http.get(`../rest/indexingModels`).pipe(
                 tap((data: any) => {
                     this.indexingModels = data.indexingModels.filter((info: any) => info.private === false);
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    getStatuses() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/statuses`).pipe(
+                tap((data: any) => {
+                    this.statuses = data.statuses.map((status: any) => {
+                        return {
+                            id: status.identifier,
+                            label: status.label_status
+                        };
+                    });
                     resolve(true);
                 })
             ).subscribe();
