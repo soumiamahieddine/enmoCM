@@ -129,9 +129,6 @@ export class PanelComponent implements OnInit {
                             modelId: data.configuration.indexingModelId,
                             doctype: data.configuration.typeId,
                         };
-
-                        console.log(this.addinConfig);
-                        
                     }
                     resolve(true);
                 })
