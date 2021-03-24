@@ -6,6 +6,7 @@ import { NotificationService } from '../service/notification/notification.servic
 import { AuthService } from '../service/auth.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FunctionsService } from '../service/functions.service';
+import { KeyValue } from '@angular/common';
 
 declare const Office: any;
 @Component({
@@ -19,6 +20,7 @@ export class PanelComponent implements OnInit {
     inApp: boolean = false;
     resId: number = null;
 
+    displayResInfo: any = {};
     displayMailInfo: any = {};
     docFromMail: any = {};
     contactInfos: any = {};
@@ -101,16 +103,17 @@ export class PanelComponent implements OnInit {
 
     async initMailInfo() {
         await this.getConfiguration();
-        this.displayMailInfo = {
-            modelId: this.addinConfig.indexingModel.label,
-            doctype: this.addinConfig.doctype.label,
-            subject: Office.context.mailbox.item.subject,
+        this.displayResInfo = {
             typist: `${this.authService.user.firstname} ${this.authService.user.lastname}`,
-            status: this.addinConfig.status.label,
+            indexingModel: this.addinConfig.indexingModel?.label,
+            doctype: this.addinConfig.doctype?.label,
+            status: this.addinConfig.status?.label,
+        }
+        this.displayMailInfo = {
+            sender: Office.context.mailbox.item.from.displayName,
+            subject: Office.context.mailbox.item.subject,
             documentDate: this.functions.formatObjectToDateFullFormat(Office.context.mailbox.item.dateTimeCreated),
-            arrivalDate: this.functions.formatObjectToDateFullFormat(Office.context.mailbox.item.dateTimeCreated),
-            emailId: Office.context.mailbox.item.itemId,
-            sender: Office.context.mailbox.item.from.displayName
+            emailId: Office.context.mailbox.item.itemId, 
         };
         this.attachments = Office.context.mailbox.item.attachments.filter((attachment: any) => !attachment.isInline).map((attachment: any) => {
             return {
@@ -218,5 +221,9 @@ export class PanelComponent implements OnInit {
                 })
             ).subscribe();*/
         });
+    }
+
+    originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
+        return 0;
     }
 }
