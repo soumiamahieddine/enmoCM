@@ -2429,7 +2429,6 @@
     "addinOutlookSendDesc": "Ouvre le panneau afin d'effectuer des actions pour Maarch Courrier.",
     "addinOutlookUnavailable": "Vous ne pouvez pas utiliser le plugin Outlook parce que votre application Maarch Courrier n'utilise pas https",
     "configuration": "Configuration",
-    "addingOutlookMsg": "Nous allons vous guider pour le paramétrage de l'extension.<br/>Veuillez choisir votre environnement",
     "addingOutlookWebMsg1": "Depuis votre interface outlook, cliquez sur «<b>gérer les compléments</b>» : ",
     "addingOutlookWebMsg2": "Ensuite, cliquez sur «<b>+</b>» 🠖 «<b>Ajouter à partir d'un fichier</b>» : ",
     "addingOutlookWebMsg3": "Puis, cliquez sur «<b>Parcourir</b>» : ",
@@ -2445,5 +2444,11 @@
     "modelId": "Identifiant du modèle d'indexation",
     "loginTo": "Veuillez vous connecter sur",
     "emailId": "Identifiant du courriel",
-    "infosWillBeSent": "Les informations ci-dessous seront envoyées :"
+    "infosWillBeSent": "Les informations ci-dessous seront envoyées :",
+    "configurePlugin": "Configurer le module",
+    "addingOutlookPasswordMsg": "Nous devons stocker votre <b>mot de passe</b>* de votre compte <b>outlook</b> afin de récupérer les <b>pièces jointes</b> associées aux courriels que vous injecterez dans l'application.<br/><i>(Vous pouvez passer cette étape si vous n'avez pas besoin de récupérer les pièces jointes aux courriels)</i>",
+    "addingOutlookPasswordMsg2": "* Le mot de passe sera utilisé UNIQUEMENT par cette application et ne transitera pas sur le réseau",
+    "outlookAccount": "Compte outlook",
+    "outlookPassword": "Mot de passe outlook",
+    "downloadManifestMsg": "Ce fichier vous permet de faire le lien entre votre application <b>outlook</b> et votre application <b>maarch</b>"
 }

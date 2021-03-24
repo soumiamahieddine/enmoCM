@@ -12,6 +12,8 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class AddinOutlookConfigurationModalComponent implements OnInit {
 
+    outlookPassword: string = '';
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -19,11 +21,7 @@ export class AddinOutlookConfigurationModalComponent implements OnInit {
         public dialogRef: MatDialogRef<AddinOutlookConfigurationModalComponent>,
     ) { }
 
-    ngOnInit(): void {
-        setTimeout(() => {
-            this.getManifest();
-        }, 1000);
-    }
+    ngOnInit(): void { }
 
     getManifest() {
         this.http.get('../rest/plugins/outlook/manifest', { responseType: 'blob' }).pipe(
@@ -40,5 +38,17 @@ export class AddinOutlookConfigurationModalComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    savePassword() {
+        /*this.http.put('../rest/plugins/outlook/password', this.outlookPassword).pipe(
+            tap((data: any) => {
+               this.notify.success(this.translate.instant('lang.dataUpdated'));
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();*/
     }
 }
