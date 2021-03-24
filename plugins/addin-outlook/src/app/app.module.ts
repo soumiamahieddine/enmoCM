@@ -12,6 +12,7 @@ import { InternationalizationModule } from './service/translate/internationaliza
 
 import { MessageBoxComponent } from './plugins/messageBox/message-box.component';
 import { PanelComponent } from './panel/panel.component';
+import { LatinisePipe } from 'ngx-pipes';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { PanelComponent } from './panel/panel.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    LatinisePipe
 ],
   bootstrap: [AppComponent]
 })

@@ -5,6 +5,7 @@ import { catchError, finalize, tap } from 'rxjs/operators';
 import { NotificationService } from '../service/notification/notification.service';
 import { AuthService } from '../service/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+import { FunctionsService } from '../service/functions.service';
 
 declare const Office: any;
 @Component({
@@ -26,6 +27,8 @@ export class PanelComponent implements OnInit {
     attachments: any = [];
     contactId: number;
 
+    addinConfig: any = {}
+
     connectionTry: any = null;
 
     serviceRequest: any = {};
@@ -34,7 +37,8 @@ export class PanelComponent implements OnInit {
         public http: HttpClient,
         private notificationService: NotificationService,
         public authService: AuthService,
-        public translate: TranslateService
+        public translate: TranslateService,
+        public functions: FunctionsService
     ) {
         this.authService.catchEvent().subscribe(async (result: any) => {
             if (result === 'connected') {
@@ -95,16 +99,16 @@ export class PanelComponent implements OnInit {
         });
     }
 
-    initMailInfo() {
-        // await this.getConfiguration();
+    async initMailInfo() {
+        await this.getConfiguration();
         this.displayMailInfo = {
-            modelId: 5,
+            modelId: this.addinConfig.modelId,
             doctype: 'Courriel',
             subject: Office.context.mailbox.item.subject,
             typist: `${this.authService.user.firstname} ${this.authService.user.lastname}`,
             status: 'NEW',
-            documentDate: Office.context.mailbox.item.dateTimeCreated,
-            arrivalDate: Office.context.mailbox.item.dateTimeCreated,
+            documentDate: this.functions.formatObjectToDateFullFormat(Office.context.mailbox.item.dateTimeCreated),
+            arrivalDate: this.functions.formatObjectToDateFullFormat(Office.context.mailbox.item.dateTimeCreated),
             emailId: Office.context.mailbox.item.itemId,
             sender: Office.context.mailbox.item.from.displayName
         };
@@ -117,13 +121,28 @@ export class PanelComponent implements OnInit {
     }
 
     getConfiguration() {
-        // TO DO get info addin conf (modelId, doctype, etc)
+        return new Promise((resolve) => {
+            this.http.get(`../rest/plugins/outlook/configuration`).pipe(
+                tap((data: any) => {
+                    if (!this.functions.empty(data.configuration)) {
+                        this.addinConfig = {
+                            modelId: data.configuration.indexingModelId,
+                            doctype: data.configuration.typeId,
+                        };
+
+                        console.log(this.addinConfig);
+                        
+                    }
+                    resolve(true);
+                })
+            ).subscribe();
+        });
     }
 
     createDocFromMail() {
         this.docFromMail = {
-            modelId: 5,
-            doctype: 102,
+            modelId: this.addinConfig.modelId,
+            doctype: this.addinConfig.doctype,
             subject: Office.context.mailbox.item.subject,
             chrono: true,
             typist: this.authService.user.id,
