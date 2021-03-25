@@ -1084,7 +1084,7 @@
     "noFileMsg": "<b>Attention</b>, aucun fichier téléversé.<br/><br/>Voulez-vous continuer ?",
     "noFirstLevelSelected": "Aucune sous-chemise sélectionnée",
     "noFranceContact": "L'adresse du contact n'est pas Française",
-    "noMailContact": "Aucun contact (externe) attaché pour ce courrier",
+    "noMailContact": "Aucun contact (externe) attaché en destinataire pour ce courrier",
     "noMailConversion": "Le courrier n'a pas de conversion PDF",
     "noMove": "Cette entité / utilisateur ne peut pas être déplacé",
     "noNote": "Aucune note",

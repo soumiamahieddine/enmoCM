@@ -1074,7 +1074,7 @@
     "noFileMsg": "<b>Warning</b>, no file uploaded.<br/><br/>Do you want to continue ?",
     "noFirstLevelSelected": "No sub-folder selected",
     "noFranceContact": "Address is not in France for this contact",
-    "noMailContact": "No (external) contact linked to this mail",
+    "noMailContact": "No (external) recipient linked to this mail",
     "noMailConversion": "Mail does not have PDF conversion",
     "noMove": "This entity / user cannot be moved",
     "noNote": "No note",
