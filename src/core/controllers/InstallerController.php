@@ -33,7 +33,7 @@ class InstallerController
         }
 
         $phpVersion = phpversion();
-        $phpVersionValid = (version_compare(PHP_VERSION, '7.2') >= 0);
+        $phpVersionValid = (version_compare(PHP_VERSION, '7.3') >= 0);
 
         exec('whereis unoconv', $output, $return);
         $output = explode(':', $output[0]);

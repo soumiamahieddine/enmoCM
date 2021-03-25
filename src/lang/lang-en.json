@@ -1804,7 +1804,7 @@
     "stepDatabase_desc": "Maarch Courrier requires a connection to a database in order to store the metadata of the stored documents as well as the configuration of the application.",
     "adminAlfrescoDesc": "Manage alfresco accounts linked to entities",
     "stepPrerequisite_desc": "Installing Maarch Courrier requires a number of prerequisites for installing PHP. For more information",
-    "install_phpVersionValid": "Minimum version of PHP (> = 7.2)",
+    "install_phpVersionValid": "Minimum version of PHP (> = 7.3)",
     "install_unoconv_desc": "Office soffice / unoconv document conversion tools installed",
     "install_pgsql_desc": "PostgreSQL database",
     "install_zip": "zip",

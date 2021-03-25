@@ -1750,7 +1750,7 @@
     "adminAlfrescoDesc": "Administrer les comptes alfresco liés aux entités__TO_TRANSLATE",
     "prerequisite": "Pré-requis__TO_TRANSLATE",
     "stepPrerequisite_desc": "L'installation de Maarch Courrier nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Pour plus d'informations__TO_TRANSLATE",
-    "install_phpVersionValid": "Version minimum de PHP (>= 7.2)__TO_TRANSLATE",
+    "install_phpVersionValid": "Version minimum de PHP (>= 7.3)__TO_TRANSLATE",
     "install_unoconv": "unoconv__TO_TRANSLATE",
     "install_unoconv_desc": "Outils de conversion de documents bureautiques soffice/unoconv installés__TO_TRANSLATE",
     "install_pdoPgsql": "pdo_pgsql__TO_TRANSLATE",
