@@ -23,7 +23,9 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\LanguageController;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\PasswordModel;
 use Status\models\StatusModel;
+use User\models\UserModel;
 
 class OutlookController
 {
@@ -140,6 +142,24 @@ class OutlookController
         } else {
             ConfigurationModel::update(['set' => ['value' => $data], 'where' => ['privilege = ?'], 'data' => ['admin_addin_outlook']]);
         }
+
+        return $response->withStatus(204);
+    }
+
+    public function saveOutlookPassword(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::notEmpty()->stringType()->validate($body['outlookPassword'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body outlookPassword is empty or not an integer']);
+        }
+
+        $preferences = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences']]);
+        $preferences = json_decode($preferences, true);
+
+        $preferences['outlookPassword'] = PasswordModel::encrypt(['password' => $body['outlookPassword']]);
+
+        UserModel::update(['set' => ['preferences' => json_encode($preferences)], 'where' => ['id = ?'], 'data' => [$GLOBALS['id']]]);
 
         return $response->withStatus(204);
     }
