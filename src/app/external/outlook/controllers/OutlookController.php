@@ -23,6 +23,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\LanguageController;
 use SrcCore\models\CoreConfigModel;
+use Status\models\StatusModel;
 
 class OutlookController
 {
@@ -79,7 +80,23 @@ class OutlookController
     {
         $configuration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_addin_outlook']);
 
-        $configuration['value'] = json_decode($configuration['value']);
+        $configuration['value'] = json_decode($configuration['value'], true);
+
+        $model = IndexingModelModel::getById(['id' => $configuration['value']['indexingModelId'], 'select' => ['label']]);
+        if (!empty($model)) {
+            $configuration['value']['indexingModelLabel'] = $model['label'];
+        }
+
+        $type = DoctypeModel::getById(['id' => $configuration['value']['typeId'], 'select' => ['description']]);
+        if (!empty($type)) {
+            $configuration['value']['typeLabel'] = $type['description'];
+        }
+
+        $status = StatusModel::getByIdentifier(['identifier' => $configuration['value']['statusId'], 'select' => ['label_status']]);
+        if (!empty($status)) {
+            $configuration['value']['statusLabel'] = $status['label_status'];
+        }
+
         return $response->withJson(['configuration' => $configuration['value']]);
     }
 
@@ -95,6 +112,8 @@ class OutlookController
             return $response->withStatus(400)->withJson(['errors' => 'Body indexingModelId is empty or not an integer']);
         } elseif (!Validator::notEmpty()->intVal()->validate($body['typeId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body typeId is empty or not an integer']);
+        } elseif (!Validator::notEmpty()->intVal()->validate($body['statusId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body statusId is empty or not an integer']);
         }
 
         $model = IndexingModelModel::getById(['id' => $body['indexingModelId'], 'select' => ['master']]);
@@ -109,7 +128,12 @@ class OutlookController
             return $response->withStatus(400)->withJson(['errors' => 'Document type does not exist']);
         }
 
-        $data = ['indexingModelId' => $body['indexingModelId'], 'typeId' => $body['typeId']];
+        $status = StatusModel::getByIdentifier(['identifier' => $body['statusId'], 'select' => [1]]);
+        if (empty($status)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Status does not exist']);
+        }
+
+        $data = ['indexingModelId' => $body['indexingModelId'], 'typeId' => $body['typeId'], 'statusId' => $body['statusId']];
         $data = json_encode($data, JSON_UNESCAPED_SLASHES);
         if (empty(ConfigurationModel::getByPrivilege(['privilege' => 'admin_addin_outlook', 'select' => [1]]))) {
             ConfigurationModel::create(['value' => $data, 'privilege' => 'admin_addin_outlook']);
