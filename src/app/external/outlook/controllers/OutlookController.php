@@ -84,19 +84,25 @@ class OutlookController
 
         $configuration['value'] = json_decode($configuration['value'], true);
 
-        $model = IndexingModelModel::getById(['id' => $configuration['value']['indexingModelId'], 'select' => ['label']]);
-        if (!empty($model)) {
-            $configuration['value']['indexingModelLabel'] = $model['label'];
+        if (!empty($configuration['value']['indexingModelId'])) {
+            $model = IndexingModelModel::getById(['id' => $configuration['value']['indexingModelId'], 'select' => ['label']]);
+            if (!empty($model)) {
+                $configuration['value']['indexingModelLabel'] = $model['label'];
+            }
         }
 
-        $type = DoctypeModel::getById(['id' => $configuration['value']['typeId'], 'select' => ['description']]);
-        if (!empty($type)) {
-            $configuration['value']['typeLabel'] = $type['description'];
+        if (!empty($configuration['value']['typeId'])) {
+            $type = DoctypeModel::getById(['id' => $configuration['value']['typeId'], 'select' => ['description']]);
+            if (!empty($type)) {
+                $configuration['value']['typeLabel'] = $type['description'];
+            }
         }
 
-        $status = StatusModel::getByIdentifier(['identifier' => $configuration['value']['statusId'], 'select' => ['label_status']]);
-        if (!empty($status)) {
-            $configuration['value']['statusLabel'] = $status['label_status'];
+        if (!empty($configuration['value']['statusId'])) {
+            $status = StatusModel::getByIdentifier(['identifier' => $configuration['value']['statusId'], 'select' => ['label_status']]);
+            if (!empty($status)) {
+                $configuration['value']['statusLabel'] = $status[0]['label_status'];
+            }
         }
 
         return $response->withJson(['configuration' => $configuration['value']]);
