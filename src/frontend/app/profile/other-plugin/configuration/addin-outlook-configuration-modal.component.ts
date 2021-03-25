@@ -41,7 +41,7 @@ export class AddinOutlookConfigurationModalComponent implements OnInit {
     }
 
     savePassword() {
-        /*this.http.put('../rest/plugins/outlook/password', this.outlookPassword).pipe(
+        /* this.http.put('../rest/plugins/outlook/password', this.outlookPassword).pipe(
             tap((data: any) => {
                this.notify.success(this.translate.instant('lang.dataUpdated'));
             }),

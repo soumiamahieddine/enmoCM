@@ -224,35 +224,27 @@ export class DashboardService {
     }
 
     getCharts() {
-        return this.charts.map((item: any) => {
-            return {
-                ...item,
-                modes: item.modes.map((chartMode: any) => {
-                    return {
-                        id: chartMode,
-                        label: this.translate.instant('lang.' + chartMode)
-                    };
-                })
-            };
-        });
+        return this.charts.map((item: any) => ({
+            ...item,
+            modes: item.modes.map((chartMode: any) => ({
+                id: chartMode,
+                label: this.translate.instant('lang.' + chartMode)
+            }))
+        }));
     }
 
     getChartTypes() {
-        return this.charts.map((chartType: any) => {
-            return {
-                icon : chartType.icon,
-                type: chartType.type
-            };
-        });
+        return this.charts.map((chartType: any) => ({
+            icon : chartType.icon,
+            type: chartType.type
+        }));
     }
 
     getChartModes(charType: string) {
-        return this.charts.filter((chart: any) => chart.type === charType)[0].modes.map((chartMode: any) => {
-            return {
-                id: chartMode,
-                label: this.translate.instant('lang.' + chartMode)
-            };
-        });
+        return this.charts.filter((chart: any) => chart.type === charType)[0].modes.map((chartMode: any) => ({
+            id: chartMode,
+            label: this.translate.instant('lang.' + chartMode)
+        }));
     }
 
     getColors() {
@@ -310,7 +302,7 @@ export class DashboardService {
             res = splitFormatedRoute[0].match(regex);
             if (res !== null && res[0] !== ':') {
                 return this.getFormatedRoute(splitFormatedRoute[0], data);
-            }  else {                
+            }  else {
                 return {
                     route: splitFormatedRoute[0],
                     params: objParams

@@ -13,7 +13,7 @@ import { of } from 'rxjs';
 import { DatabaseComponent } from '../database/database.component';
 import { WelcomeComponent } from '../welcome/welcome.component';
 
-declare var tinymce: any;
+declare let tinymce: any;
 
 @Component({
     selector: 'app-customization',
@@ -51,12 +51,10 @@ export class CustomizationComponent implements OnInit {
             bodyLoginBackground: ['assets/bodylogin.jpg'],
             uploadedLogo: ['../rest/images?image=logo'],
         });
-        this.backgroundList = Array.from({ length: 16 }).map((_, i) => {
-            return {
-                filename: `${i + 1}.jpg`,
-                url: `assets/${i + 1}.jpg`,
-            };
-        });
+        this.backgroundList = Array.from({ length: 16 }).map((_, i) => ({
+            filename: `${i + 1}.jpg`,
+            url: `assets/${i + 1}.jpg`,
+        }));
     }
 
     ngOnInit(): void {

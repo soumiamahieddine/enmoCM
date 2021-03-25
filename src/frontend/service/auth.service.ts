@@ -67,7 +67,7 @@ export class AuthService {
     }
 
     cleanCachedUrl() {
-        return this.localStorage.remove(`MaarchCourrierCachedUrl`);
+        return this.localStorage.remove('MaarchCourrierCachedUrl');
     }
 
     getUrl(id: number) {
@@ -105,7 +105,7 @@ export class AuthService {
 
     refreshToken() {
         return this.http
-            .get<any>(`../rest/authenticate/token`, { params: { refreshToken: this.getRefreshToken() } })
+            .get<any>('../rest/authenticate/token', { params: { refreshToken: this.getRefreshToken() } })
             .pipe(
                 tap((data) => {
                     // Update stored token

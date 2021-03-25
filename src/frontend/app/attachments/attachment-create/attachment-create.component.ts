@@ -250,7 +250,7 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     formatAttachments() {
-        let formattedAttachments: any[] = [];
+        const formattedAttachments: any[] = [];
         this.attachments.forEach((element, index: number) => {
             formattedAttachments.push({
                 resIdMaster: this.data.resIdMaster,
@@ -308,7 +308,7 @@ export class AttachmentCreateComponent implements OnInit {
         }
 
         return new Promise((resolve, reject) => {
-            this.http.post(`../rest/attachments`, attachment).pipe(
+            this.http.post('../rest/attachments', attachment).pipe(
                 tap((data: any) => {
                     resolve(data.id);
                 }),
@@ -379,7 +379,7 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     setDatasViewer(ev: any, i: number) {
-        let datas: any = {};
+        const datas: any = {};
         Object.keys(this.attachments[i]).forEach(element => {
             if (['title', 'validationDate', 'recipient'].indexOf(element) > -1) {
                 if (element === 'recipient' && this.attachments[i][element].value.length > 0) {

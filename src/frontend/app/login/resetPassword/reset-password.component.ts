@@ -12,7 +12,7 @@ import { HeaderService } from '@service/header.service';
 })
 export class ResetPasswordComponent implements OnInit, AfterViewInit {
 
-    
+
     loadingForm: boolean = false;
     loading: boolean = false;
 

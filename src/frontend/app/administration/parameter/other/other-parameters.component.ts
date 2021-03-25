@@ -280,7 +280,7 @@ export class OtherParametersComponent implements OnInit {
 
     getWatermarkConfiguration() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/watermark/configuration`).pipe(
+            this.http.get('../rest/watermark/configuration').pipe(
                 tap((data: any) => {
                     if (!this.functions.empty(data.configuration)) {
                         this.watermark = {
@@ -303,7 +303,7 @@ export class OtherParametersComponent implements OnInit {
 
     getAddinOutlookConfConfiguration() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/plugins/outlook/configuration`).pipe(
+            this.http.get('../rest/plugins/outlook/configuration').pipe(
                 tap((data: any) => {
                     if (!this.functions.empty(data.configuration)) {
                         this.addinOutlookConf = {
@@ -320,14 +320,14 @@ export class OtherParametersComponent implements OnInit {
 
     getEditorsConfiguration() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/configurations/admin_document_editors`).pipe(
+            this.http.get('../rest/configurations/admin_document_editors').pipe(
                 map((data: any) => data.configuration.value),
                 tap((data: any) => {
                     Object.keys(data).forEach(confId => {
                         this.editorsEnabled.push(confId);
                         Object.keys(data[confId]).forEach(itemId => {
-                            console.log(confId,itemId);
-                            
+                            console.log(confId, itemId);
+
                             this.editorsConf[confId][itemId].setValue(data[confId][itemId]);
                         });
                     });
@@ -341,9 +341,7 @@ export class OtherParametersComponent implements OnInit {
         return typeof value;
     }
 
-    originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
-        return 0;
-    }
+    originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => 0;
 
     addEditor(id: string) {
         this.editorsEnabled.push(id);
@@ -377,7 +375,7 @@ export class OtherParametersComponent implements OnInit {
     }
 
     saveWatermarkConf() {
-        this.http.put(`../rest/watermark/configuration`, this.formatWatermarkConfig()).pipe(
+        this.http.put('../rest/watermark/configuration', this.formatWatermarkConfig()).pipe(
             tap(() => {
                 this.notify.success(this.translate.instant('lang.dataUpdated'));
             }),
@@ -389,7 +387,7 @@ export class OtherParametersComponent implements OnInit {
     }
 
     saveAddinOutlookConf() {
-        this.http.put(`../rest/plugins/outlook/configuration`, this.formatAddinOutlookConfig()).pipe(
+        this.http.put('../rest/plugins/outlook/configuration', this.formatAddinOutlookConfig()).pipe(
             tap(() => {
                 this.notify.success(this.translate.instant('lang.dataUpdated'));
             }),
@@ -401,7 +399,7 @@ export class OtherParametersComponent implements OnInit {
     }
 
     saveConfEditor() {
-        this.http.put(`../rest/configurations/admin_document_editors`, this.formatEditorsConfig()).pipe(
+        this.http.put('../rest/configurations/admin_document_editors', this.formatEditorsConfig()).pipe(
             tap(() => {
                 this.notify.success(this.translate.instant('lang.dataUpdated'));
             }),
@@ -449,7 +447,7 @@ export class OtherParametersComponent implements OnInit {
 
     getDoctypes() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/doctypes`).pipe(
+            this.http.get('../rest/doctypes').pipe(
                 tap((data: any) => {
                     let arrValues: any[] = [];
                     data.structure.forEach((doctype: any) => {
@@ -471,15 +469,13 @@ export class OtherParametersComponent implements OnInit {
                                     isTitle: true,
                                     color: secondDoctype.css_style
                                 });
-                                arrValues = arrValues.concat(data.structure.filter((infoDoctype: any) => infoDoctype.doctypes_second_level_id === secondDoctype.doctypes_second_level_id && infoDoctype.description !== undefined).map((infoType: any) => {
-                                    return {
-                                        id: infoType.type_id,
-                                        label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + infoType.description,
-                                        title: infoType.description,
-                                        disabled: false,
-                                        isTitle: false,
-                                    };
-                                }));
+                                arrValues = arrValues.concat(data.structure.filter((infoDoctype: any) => infoDoctype.doctypes_second_level_id === secondDoctype.doctypes_second_level_id && infoDoctype.description !== undefined).map((infoType: any) => ({
+                                    id: infoType.type_id,
+                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + infoType.description,
+                                    title: infoType.description,
+                                    disabled: false,
+                                    isTitle: false,
+                                })));
                             });
                         }
                     });
@@ -492,7 +488,7 @@ export class OtherParametersComponent implements OnInit {
 
     getIndexingModels() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/indexingModels`).pipe(
+            this.http.get('../rest/indexingModels').pipe(
                 tap((data: any) => {
                     this.indexingModels = data.indexingModels.filter((info: any) => info.private === false);
                     resolve(true);
@@ -503,14 +499,12 @@ export class OtherParametersComponent implements OnInit {
 
     getStatuses() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../rest/statuses`).pipe(
+            this.http.get('../rest/statuses').pipe(
                 tap((data: any) => {
-                    this.statuses = data.statuses.map((status: any) => {
-                        return {
-                            id: status.identifier,
-                            label: status.label_status
-                        };
-                    });
+                    this.statuses = data.statuses.map((status: any) => ({
+                        id: status.identifier,
+                        label: status.label_status
+                    }));
                     resolve(true);
                 })
             ).subscribe();
