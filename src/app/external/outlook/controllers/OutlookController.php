@@ -99,9 +99,10 @@ class OutlookController
         }
 
         if (!empty($configuration['value']['statusId'])) {
-            $status = StatusModel::getByIdentifier(['identifier' => $configuration['value']['statusId'], 'select' => ['label_status']]);
+            $status = StatusModel::getByIdentifier(['identifier' => $configuration['value']['statusId'], 'select' => ['label_status', 'id']]);
             if (!empty($status)) {
                 $configuration['value']['statusLabel'] = $status[0]['label_status'];
+                $configuration['value']['status'] = $status[0]['id'];
             }
         }
 
