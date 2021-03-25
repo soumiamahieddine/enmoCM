@@ -105,9 +105,9 @@ export class PanelComponent implements OnInit {
         await this.getConfiguration();
         this.displayResInfo = {
             typist: `${this.authService.user.firstname} ${this.authService.user.lastname}`,
-            indexingModel: this.addinConfig.indexingModel?.label,
-            doctype: this.addinConfig.doctype?.label,
-            status: this.addinConfig.status?.label,
+            indexingModel: this.addinConfig?.indexingModelLabel,
+            doctype: this.addinConfig?.typeLabel,
+            status: this.addinConfig?.statusLabel,
         }
         this.displayMailInfo = {
             sender: Office.context.mailbox.item.from.displayName,
@@ -138,12 +138,12 @@ export class PanelComponent implements OnInit {
 
     createDocFromMail() {
         this.docFromMail = {
-            modelId: this.addinConfig.indexingModel.id,
-            doctype: this.addinConfig.doctype.id,
+            modelId: this.addinConfig.indexingModelId,
+            doctype: this.addinConfig.typeId,
             subject: Office.context.mailbox.item.subject,
             chrono: true,
             typist: this.authService.user.id,
-            status: this.addinConfig.status.id,
+            status: this.addinConfig.status,
             documentDate: Office.context.mailbox.item.dateTimeCreated,
             arrivalDate: Office.context.mailbox.item.dateTimeCreated,
             format: 'html',
