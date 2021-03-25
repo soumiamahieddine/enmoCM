@@ -24,6 +24,7 @@ export class AuthService {
     mailServerOnline = false;
     changeKey: boolean = null;
     user: any = {};
+    maarchUrl: string = '';
     noInstall: boolean = false;
     private eventAction = new Subject<any>();
 
@@ -253,6 +254,7 @@ export class AuthService {
                         this.setEvent('authenticationInformations');
                         this.authMode = data.authMode;
                         this.authUri = data.authUri;
+                        this.maarchUrl = data.maarchUrl;
 
                         if (this.authMode === 'keycloak') {
                             const keycloakState = this.localStorage.get('keycloakState');
