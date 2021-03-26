@@ -531,7 +531,8 @@ export class OtherParametersComponent implements OnInit {
                             label: data.attachmentsTypes[templateType].label
                         });
                     });
-                    resolve(true);
+                    const defAttachment: any = Object.values(data.attachmentsTypes)[0];
+                    resolve(defAttachment.id);
                 })
             ).subscribe();
         });
@@ -540,6 +541,8 @@ export class OtherParametersComponent implements OnInit {
     setDefaultValues() {
         return new Promise((resolve, reject) => {
             Promise.all([this.getIndexingModels(), this.getDoctypes(), this.getStatuses(), this.getAttachmentTypes()]).then((data: any) => {
+                console.log(data);
+                
                 this.addinOutlookConf.indexingModelId.setValue(data[0]);
                 this.addinOutlookConf.typeId.setValue(data[1]);
                 this.addinOutlookConf.statusId.setValue(data[2]);
