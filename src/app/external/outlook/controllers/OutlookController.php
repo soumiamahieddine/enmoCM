@@ -113,7 +113,10 @@ class OutlookController
             }
         }
 
-        return $response->withJson(['configuration' => $configuration['value']]);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences']]);
+        $user['preferences'] = json_decode($user['preferences'], true);
+
+        return $response->withJson(['configuration' => $configuration['value'], 'outlookPasswordSaved' => !empty($user['preferences']['outlookPassword'])]);
     }
 
     public function saveConfiguration(Request $request, Response $response)
@@ -211,6 +214,9 @@ class OutlookController
         $configuration = ConfigurationModel::getByPrivilege(['privilege' => 'admin_addin_outlook']);
         $configuration['value'] = json_decode($configuration['value'], true);
 
+        if (empty($configuration['value']['attachmentTypeId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment type configuration is missing']);
+        }
         $attachmentType = AttachmentTypeModel::getById(['id' => $configuration['value']['attachmentTypeId'], 'select' => ['type_id']]);
         if (empty($attachmentType)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type does not exist']);
