@@ -487,7 +487,7 @@ export class OtherParametersComponent implements OnInit {
                         }
                     });
                     this.doctypes = arrValues;
-                    const defaultDoctype = data.structure[13].id;
+                    const defaultDoctype = arrValues.filter((struct: any) => !struct.disabled)[0].id;                    
                     resolve(defaultDoctype);
                 })
             ).subscribe();
