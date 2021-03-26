@@ -115,8 +115,9 @@ class OutlookController
 
         $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences']]);
         $user['preferences'] = json_decode($user['preferences'], true);
+        $configuration['value']['outlookPasswordSaved'] = !empty($user['preferences']['outlookPassword']);
 
-        return $response->withJson(['configuration' => $configuration['value'], 'outlookPasswordSaved' => !empty($user['preferences']['outlookPassword'])]);
+        return $response->withJson(['configuration' => $configuration['value']]);
     }
 
     public function saveConfiguration(Request $request, Response $response)
