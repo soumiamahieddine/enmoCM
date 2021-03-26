@@ -308,7 +308,7 @@ export class OtherParametersComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get('../rest/plugins/outlook/configuration').pipe(
                 tap(async (data: any) => {
-                    if (!this.functions.empty(data.configuration)) {
+                    if (!this.functions.empty(data.configuration) && Object.keys(data.configuration).length > 1) {
                         this.addinOutlookConf = {
                             indexingModelId: new FormControl(data.configuration.indexingModelId),
                             typeId: new FormControl(data.configuration.typeId),
@@ -541,8 +541,6 @@ export class OtherParametersComponent implements OnInit {
     setDefaultValues() {
         return new Promise((resolve, reject) => {
             Promise.all([this.getIndexingModels(), this.getDoctypes(), this.getStatuses(), this.getAttachmentTypes()]).then((data: any) => {
-                console.log(data);
-                
                 this.addinOutlookConf.indexingModelId.setValue(data[0]);
                 this.addinOutlookConf.typeId.setValue(data[1]);
                 this.addinOutlookConf.statusId.setValue(data[2]);
