@@ -201,6 +201,8 @@ class OutlookController
             return $response->withStatus(400)->withJson(['errors' => 'Body ewsUrl is empty or no a string']);
         } elseif (!Validator::notEmpty()->stringType()->validate($body['ewsVersion'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body ewsVersion is empty or no a string']);
+        } elseif (!Validator::notEmpty()->stringType()->validate($body['userId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body userId is empty or no a string']);
         } elseif (!Validator::notEmpty()->intVal()->validate($body['resId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body resId is empty or not an integer']);
         }
@@ -225,8 +227,8 @@ class OutlookController
 
         $config = [
             'url'            => $body['ewsUrl'],
-            'mail'           => $user['mail'],
-            'password'       => PasswordModel::decrypt(['cryptedPassword' => $user['preferences']['outlookPassword']]),
+            'mail'           => $body['userId'],
+            'password'       => 'toto',
             'version'        => $body['ewsVersion'],
             'attachmentType' => $attachmentType['type_id']
         ];

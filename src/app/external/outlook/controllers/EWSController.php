@@ -45,7 +45,11 @@ class EWSController {
         $item->Id = $args['emailId'];
         $request->ItemIds->ItemId[] = $item;
 
-        $response = $client->GetItem($request);
+        try {
+            $response = $client->GetItem($request);
+        } catch (\Exception $e) {
+            return ['Error when getting attachments'];
+        }
         // Iterate over the results, printing any error messages or receiving attachments.
         $responseMessages = $response->ResponseMessages->GetItemResponseMessage;
 
