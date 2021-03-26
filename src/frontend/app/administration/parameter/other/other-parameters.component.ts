@@ -55,9 +55,9 @@ export class OtherParametersComponent implements OnInit {
     };
 
     addinOutlookConf = {
-        indexingModelId: new FormControl(1, [Validators.required]),
-        typeId: new FormControl(200, [Validators.required]),
-        statusId: new FormControl(1, [Validators.required]),
+        indexingModelId: new FormControl(null, [Validators.required]),
+        typeId: new FormControl(null, [Validators.required]),
+        statusId: new FormControl(null, [Validators.required]),
     };
 
     watermark = {
@@ -242,6 +242,7 @@ export class OtherParametersComponent implements OnInit {
         this.getStatuses();
         this.getDoctypes();
         this.getIndexingModels();
+        this.setDefaultValues();
         await this.getWatermarkConfiguration();
         await this.getEditorsConfiguration();
         await this.getAddinOutlookConfConfiguration();
@@ -480,7 +481,8 @@ export class OtherParametersComponent implements OnInit {
                         }
                     });
                     this.doctypes = arrValues;
-                    resolve(true);
+                    const defaultDoctype = data.structure[13].id;
+                    resolve(defaultDoctype);
                 })
             ).subscribe();
         });
@@ -491,7 +493,8 @@ export class OtherParametersComponent implements OnInit {
             this.http.get('../rest/indexingModels').pipe(
                 tap((data: any) => {
                     this.indexingModels = data.indexingModels.filter((info: any) => info.private === false);
-                    resolve(true);
+                    const defaultIndexingModel = data.indexingModels[0].id;
+                    resolve(defaultIndexingModel);
                 })
             ).subscribe();
         });
@@ -505,9 +508,18 @@ export class OtherParametersComponent implements OnInit {
                         id: status.identifier,
                         label: status.label_status
                     }));
-                    resolve(true);
+                    const defaultStatus = data.statuses[0].identifier;
+                    resolve(defaultStatus);
                 })
             ).subscribe();
         });
+    }
+
+    setDefaultValues() {
+        Promise.all([this.getIndexingModels(), this.getDoctypes(), this.getStatuses()]).then((data: any) => {
+            this.addinOutlookConf.indexingModelId.setValue(data[0]);
+            this.addinOutlookConf.typeId.setValue(data[1]);
+            this.addinOutlookConf.statusId.setValue(data[2]);
+        })
     }
 }
