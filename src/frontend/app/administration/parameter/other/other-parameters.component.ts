@@ -520,6 +520,14 @@ export class OtherParametersComponent implements OnInit {
             this.addinOutlookConf.indexingModelId.setValue(data[0]);
             this.addinOutlookConf.typeId.setValue(data[1]);
             this.addinOutlookConf.statusId.setValue(data[2]);
+            this.http.put('../rest/plugins/outlook/configuration', this.formatAddinOutlookConfig())
+            .pipe(
+                tap(() => {}),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         })
     }
 }
