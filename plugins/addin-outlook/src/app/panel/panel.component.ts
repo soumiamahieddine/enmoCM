@@ -206,6 +206,7 @@ export class PanelComponent implements OnInit {
             ewsUrl: Office.context.mailbox.ewsUrl,
             emailId: Office.context.mailbox.item.itemId,
             userId: Office.context.mailbox.userProfile.emailAddress,
+            attachmentType: this.addinConfig.attachmentTypeId,
             attachments: this.attachments.map((attachment: any) => attachment.id)
         };
         return new Promise((resolve) => {
