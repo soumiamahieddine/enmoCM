@@ -228,7 +228,7 @@ class OutlookController
         $config = [
             'url'            => $body['ewsUrl'],
             'mail'           => $body['userId'],
-            'password'       => 'toto',
+            'password'       => PasswordModel::decrypt(['cryptedPassword' => $user['preferences']['outlookPassword']]),
             'version'        => $body['ewsVersion'],
             'attachmentType' => $attachmentType['type_id']
         ];
