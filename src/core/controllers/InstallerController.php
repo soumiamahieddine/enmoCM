@@ -505,13 +505,13 @@ class InstallerController
             return $response->withJson(['success' => "Docservers created but templates folder creation failed"]);
         }
 
-        $templatesToCopy =  scandir('install/templates/0000');
+        $templatesToCopy =  scandir('install/samples/templates/2021/03/0001');
         foreach ($templatesToCopy as $templateToCopy) {
             if ($templateToCopy == '.' || $templateToCopy == '..') {
                 continue;
             }
 
-            copy("install/templates/0000/{$templateToCopy}", "{$templatesPath}/{$templateToCopy}");
+            copy("install/samples/templates/2021/03/0001/{$templateToCopy}", "{$templatesPath}/{$templateToCopy}");
         }
 
         DatabasePDO::reset();
