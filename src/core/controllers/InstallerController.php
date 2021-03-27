@@ -496,7 +496,7 @@ class InstallerController
             }
         }
 
-        $templatesPath = "{$body['path']}/{$body['customId']}/templates/0000";
+        $templatesPath = "{$body['path']}/{$body['customId']}/templates/2021/03/0001";
         if (is_dir($templatesPath)) {
             if (!is_readable($templatesPath) || !is_writable($templatesPath)) {
                 return $response->withStatus(400)->withJson(['errors' => "Docserver {$templatesPath} is not readable or writable"]);
