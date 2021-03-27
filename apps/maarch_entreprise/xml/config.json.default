@@ -1,7 +1,7 @@
 {
     "config": {
         "lang": "fr",
-        "applicationName": "MAARCH DEV",
+        "applicationName": "Maarch Courrier 21.03",
         "cookieTime": 10080,
         "timezone": "Europe/Paris",
         "maarchDirectory" : "/var/www/html/MaarchCourrier/",
