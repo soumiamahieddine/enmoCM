@@ -26,6 +26,8 @@ import { FunctionsService } from '@service/functions.service';
 
 export class AttachmentPageComponent implements OnInit {
 
+    @ViewChild('appAttachmentViewer', { static: false }) appAttachmentViewer: DocumentViewerComponent;
+
     loading: boolean = true;
     sendMassMode: boolean = false;
     sendingData: boolean = false;
@@ -43,7 +45,7 @@ export class AttachmentPageComponent implements OnInit {
 
     now: Date = new Date();
 
-    @ViewChild('appAttachmentViewer', { static: false }) appAttachmentViewer: DocumentViewerComponent;
+    resourceContacts: any = [];
 
     constructor(
         public translate: TranslateService,
@@ -64,6 +66,10 @@ export class AttachmentPageComponent implements OnInit {
 
         await this.loadAttachmentTypes();
         await this.loadAttachment();
+
+        if (this.sendMassMode) {
+            await this.getContacts();
+        }
 
         this.loading = false;
     }
@@ -145,6 +151,30 @@ export class AttachmentPageComponent implements OnInit {
                     this.newVersion = this.attachmentsTypes.filter((item: any) => item.typeId === data.type)[0].newVersionDefault;
 
                     this.attachFormGroup = new FormGroup(this.attachment);
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    this.dialogRef.close('');
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getContacts() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../rest/resources/${this.attachment.resIdMaster.value}?light=true`).pipe(
+                tap(async (data: any) => {
+                    if (data.categoryId === 'outgoing') {
+                        if (!this.functions.empty(data.recipients) && data.recipients.length > 0) {
+                            this.resourceContacts = data.recipients;
+                        }
+                    } else {
+                        if (!this.functions.empty(data.senders) && data.senders.length > 0) {
+                            this.resourceContacts = data.senders;
+                        }
+                    }
                     resolve(true);
                 }),
                 catchError((err: any) => {
@@ -398,5 +428,9 @@ export class AttachmentPageComponent implements OnInit {
         } else {
             this.dialogRef.close();
         }
+    }
+
+    getNbContacts() {
+        return this.resourceContacts.filter((contact: any) => contact.type === 'contact').length;
     }
 }
