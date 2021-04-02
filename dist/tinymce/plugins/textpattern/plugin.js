@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -270,11 +270,8 @@
       copy.sort(comparator);
       return copy;
     };
-    var get = function (xs, i) {
-      return i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
-    };
     var head = function (xs) {
-      return get(xs, 0);
+      return xs.length === 0 ? Optional.none() : Optional.some(xs[0]);
     };
 
     var keys = Object.keys;
@@ -656,7 +653,7 @@
       };
     };
 
-    var get$1 = function (patternsState) {
+    var get = function (patternsState) {
       var setPatterns = function (newPatterns) {
         var normalized = partition(map(newPatterns, normalizePattern));
         if (normalized.errors.length > 0) {
@@ -1381,7 +1378,7 @@
       global.add('textpattern', function (editor) {
         var patternsState = Cell(getPatternSet(editor));
         setup(editor, patternsState);
-        return get$1(patternsState);
+        return get(patternsState);
       });
     }
 

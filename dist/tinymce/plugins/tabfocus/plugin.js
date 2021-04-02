@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -38,12 +38,12 @@
     };
     var setup = function (editor) {
       function tabHandler(e) {
-        var x, i;
+        var x, el, i;
         if (e.keyCode !== global$6.TAB || e.ctrlKey || e.altKey || e.metaKey || e.isDefaultPrevented()) {
           return;
         }
         function find(direction) {
-          var el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
+          el = DOM.select(':input:enabled,*[tabindex]:not(iframe)');
           function canSelectRecursive(e) {
             return e.nodeName === 'BODY' || e.type !== 'hidden' && e.style.display !== 'none' && e.style.visibility !== 'hidden' && canSelectRecursive(e.parentNode);
           }
@@ -76,7 +76,6 @@
           v[1] = v[0];
           v[0] = ':prev';
         }
-        var el;
         if (e.shiftKey) {
           if (v[0] === ':prev') {
             el = find(-1);

@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -164,24 +164,9 @@
         return typeof value === type;
       };
     };
-    var isNullable = function (a) {
-      return a === null || a === undefined;
-    };
-    var isNonNullable = function (a) {
-      return !isNullable(a);
-    };
     var isFunction = isSimpleType('function');
 
     var nativeSlice = Array.prototype.slice;
-    var exists = function (xs, pred) {
-      for (var i = 0, len = xs.length; i < len; i++) {
-        var x = xs[i];
-        if (pred(x, i)) {
-          return true;
-        }
-      }
-      return false;
-    };
     var map = function (xs, f) {
       var len = xs.length;
       var r = new Array(len);
@@ -239,19 +224,6 @@
       };
     };
 
-    var checkRange = function (str, substr, start) {
-      return substr === '' || str.length >= substr.length && str.substr(start, start + substr.length) === substr;
-    };
-    var startsWith = function (str, prefix) {
-      return checkRange(str, prefix, 0);
-    };
-    var endsWith = function (str, suffix) {
-      return checkRange(str, suffix, str.length - suffix.length);
-    };
-    var repeat = function (s, count) {
-      return count <= 0 ? '' : new Array(count + 1).join(s);
-    };
-
     var global$1 = tinymce.util.Tools.resolve('tinymce.Env');
 
     var global$2 = tinymce.util.Tools.resolve('tinymce.util.Delay');
@@ -280,8 +252,6 @@
     var firePaste = function (editor, ieFake) {
       return editor.fire('paste', { ieFake: ieFake });
     };
-
-    var global$5 = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
     var shouldBlockDrop = function (editor) {
       return editor.getParam('paste_block_drop', false);
@@ -350,10 +320,6 @@
     var getTabSpaces = function (editor) {
       return editor.getParam('paste_tab_spaces', 4, 'number');
     };
-    var getAllowedImageFileTypes = function (editor) {
-      var defaultImageFileTypes = 'jpeg,jpg,jpe,jfi,jif,jfif,png,gif,bmp,webp';
-      return global$5.explode(editor.getParam('images_file_types', defaultImageFileTypes, 'string'));
-    };
 
     var internalMimeType = 'x-tinymce/html';
     var internalMark = '<!-- ' + internalMimeType + ' -->';
@@ -370,7 +336,9 @@
       return internalMimeType;
     };
 
-    var global$6 = tinymce.util.Tools.resolve('tinymce.html.Entities');
+    var global$5 = tinymce.util.Tools.resolve('tinymce.html.Entities');
+
+    var global$6 = tinymce.util.Tools.resolve('tinymce.util.Tools');
 
     var isPlainText = function (text) {
       return !/<(?:\/?(?!(?:div|p|br|span)>)\w+|(?:(?!(?:span style="white-space:\s?pre;?">)|br\s?\/>))\w+\s[^>]+)>/i.test(text);
@@ -385,7 +353,7 @@
       if (typeof rootAttrs === 'object') {
         for (key in rootAttrs) {
           if (rootAttrs.hasOwnProperty(key)) {
-            attrs.push(key + '="' + global$6.encodeAllRaw(rootAttrs[key]) + '"');
+            attrs.push(key + '="' + global$5.encodeAllRaw(rootAttrs[key]) + '"');
           }
         }
         if (attrs.length) {
@@ -398,13 +366,13 @@
       var blocks = text.split(/\n\n/);
       var tagOpen = openContainer(rootTag, rootAttrs);
       var tagClose = '</' + rootTag + '>';
-      var paragraphs = global$5.map(blocks, function (p) {
+      var paragraphs = global$6.map(blocks, function (p) {
         return p.split(/\n/).join('<br />');
       });
       var stitch = function (p) {
         return tagOpen + p + tagClose;
       };
-      return paragraphs.length === 1 ? paragraphs[0] : global$5.map(paragraphs, stitch).join('');
+      return paragraphs.length === 1 ? paragraphs[0] : global$6.map(paragraphs, stitch).join('');
     };
     var convert = function (text, rootTag, rootAttrs) {
       return rootTag ? toBlockElements(text, rootTag === true ? 'p' : rootTag, rootAttrs) : toBRs(text);
@@ -421,7 +389,7 @@
     var global$a = tinymce.util.Tools.resolve('tinymce.html.Schema');
 
     function filter$1(content, items) {
-      global$5.each(items, function (v) {
+      global$6.each(items, function (v) {
         if (v.constructor === RegExp) {
           content = content.replace(v, '');
         } else {
@@ -435,7 +403,7 @@
       var domParser = global$7({}, schema);
       var text = '';
       var shortEndedElements = schema.getShortEndedElements();
-      var ignoreElements = global$5.makeMap('script noscript style textarea video audio iframe object', ' ');
+      var ignoreElements = global$6.makeMap('script noscript style textarea video audio iframe object', ' ');
       var blockElements = schema.getBlockElements();
       function walk(node) {
         var name = node.name, currentNode = node;
@@ -499,19 +467,6 @@
         return prefix + count++;
       };
     }
-    var getImageMimeType = function (ext) {
-      var mimeOverrides = {
-        jpg: 'jpeg',
-        jpe: 'jpeg',
-        jfi: 'jpeg',
-        jif: 'jpeg',
-        jfif: 'jpeg',
-        pjpeg: 'jpeg',
-        pjp: 'jpeg',
-        svg: 'svg+xml'
-      };
-      return global$5.hasOwn(mimeOverrides, ext) ? 'image/' + mimeOverrides[ext] : 'image/' + ext;
-    };
 
     function isWordContent(content) {
       return /<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^']*\bmso-|w:WordDocument/i.test(content) || /class="OutlineElement/.test(content) || /id="?docs\-internal\-guid\-/.test(content);
@@ -528,7 +483,7 @@
         /^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/
       ];
       text = text.replace(/^[\u00a0 ]+/, '');
-      global$5.each(patterns, function (pattern) {
+      global$6.each(patterns, function (pattern) {
         if (pattern.test(text)) {
           found = true;
           return false;
@@ -654,7 +609,7 @@
     function filterStyles(editor, validStyles, node, styleValue) {
       var outputStyles = {}, matches;
       var styles = editor.dom.parseStyle(styleValue);
-      global$5.each(styles, function (value, name) {
+      global$6.each(styles, function (value, name) {
         switch (name) {
         case 'mso-list':
           matches = /\w+ \w+([0-9]+)/i.exec(styleValue);
@@ -722,7 +677,7 @@
       var validStyles;
       var retainStyleProperties = getRetainStyleProps(editor);
       if (retainStyleProperties) {
-        validStyles = global$5.makeMap(retainStyleProperties.split(/[, ]/));
+        validStyles = global$6.makeMap(retainStyleProperties.split(/[, ]/));
       }
       content = filter$1(content, [
         /<br class="?Apple-interchange-newline"?>/gi,
@@ -749,7 +704,7 @@
         valid_elements: validElements,
         valid_children: '-li[p]'
       });
-      global$5.each(schema.elements, function (rule) {
+      global$6.each(schema.elements, function (rule) {
         if (!rule.attributes.class) {
           rule.attributes.class = {};
           rule.attributesOrder.push('class');
@@ -831,8 +786,8 @@
     var preProcess$1 = function (editor, html) {
       var parser = global$7({}, editor.schema);
       parser.addNodeFilter('meta', function (nodes) {
-        global$5.each(nodes, function (node) {
-          node.remove();
+        global$6.each(nodes, function (node) {
+          return node.remove();
         });
       });
       var fragment = parser.parse(html, {
@@ -877,10 +832,8 @@
     var isAbsoluteUrl = function (url) {
       return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
     };
-    var isImageUrl = function (editor, url) {
-      return isAbsoluteUrl(url) && exists(getAllowedImageFileTypes(editor), function (type) {
-        return endsWith(url, '.' + type);
-      });
+    var isImageUrl = function (url) {
+      return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
     };
     var createImage = function (editor, url, pasteHtmlFn) {
       editor.undoManager.extra(function () {
@@ -902,10 +855,10 @@
       return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtmlFn) : false;
     };
     var insertImage = function (editor, html, pasteHtmlFn) {
-      return isImageUrl(editor, html) ? createImage(editor, html, pasteHtmlFn) : false;
+      return isImageUrl(html) ? createImage(editor, html, pasteHtmlFn) : false;
     };
     var smartInsertContent = function (editor, html) {
-      global$5.each([
+      global$6.each([
         linkSelection,
         insertImage,
         pasteHtml
@@ -919,6 +872,10 @@
       } else {
         smartInsertContent(editor, html);
       }
+    };
+
+    var repeat = function (s, count) {
+      return count <= 0 ? '' : new Array(count + 1).join(s);
     };
 
     var isCollapsibleWhitespace = function (c) {
@@ -1028,14 +985,14 @@
       return filter ? filter(imgElm) : true;
     };
     var extractFilename = function (editor, str) {
-      var m = str.match(/([\s\S]+?)(?:\.[a-z0-9.]+)$/i);
-      return isNonNullable(m) ? editor.dom.encode(m[1]) : null;
+      var m = str.match(/([\s\S]+?)\.(?:jpeg|jpg|png|gif)$/i);
+      return m ? editor.dom.encode(m[1]) : null;
     };
     var uniqueId = createIdGenerator('mceclip');
     var pasteImage = function (editor, imageItem) {
       var _a = parseDataUri(imageItem.uri), base64 = _a.data, type = _a.type;
       var id = uniqueId();
-      var file = imageItem.blob;
+      var name = getImagesReuseFilename(editor) && imageItem.blob.name ? extractFilename(editor, imageItem.blob.name) : id;
       var img = new Image();
       img.src = imageItem.uri;
       if (isValidDataUriImage(editor, img)) {
@@ -1043,10 +1000,7 @@
         var blobInfo = void 0;
         var existingBlobInfo = blobCache.getByData(base64, type);
         if (!existingBlobInfo) {
-          var useFileName = getImagesReuseFilename(editor) && isNonNullable(file.name);
-          var name_1 = useFileName ? extractFilename(editor, file.name) : id;
-          var filename = useFileName ? file.name : undefined;
-          blobInfo = blobCache.create(id, file, base64, name_1, filename);
+          blobInfo = blobCache.create(id, imageItem.blob, base64, name);
           blobCache.add(blobInfo);
         } else {
           blobInfo = existingBlobInfo;
@@ -1059,13 +1013,10 @@
     var isClipboardEvent = function (event) {
       return event.type === 'paste';
     };
-    var isDataTransferItem = function (item) {
-      return isNonNullable(item.getAsFile);
-    };
-    var readFilesAsDataUris = function (items) {
+    var readBlobsAsDataUris = function (items) {
       return global$3.all(map(items, function (item) {
         return new global$3(function (resolve) {
-          var blob = isDataTransferItem(item) ? item.getAsFile() : item;
+          var blob = item.getAsFile ? item.getAsFile() : item;
           var reader = new window.FileReader();
           reader.onload = function () {
             resolve({
@@ -1077,32 +1028,27 @@
         });
       }));
     };
-    var isImage = function (editor) {
-      var allowedExtensions = getAllowedImageFileTypes(editor);
-      return function (file) {
-        return startsWith(file.type, 'image/') && exists(allowedExtensions, function (extension) {
-          return getImageMimeType(extension) === file.type;
-        });
-      };
-    };
-    var getImagesFromDataTransfer = function (editor, dataTransfer) {
+    var getImagesFromDataTransfer = function (dataTransfer) {
       var items = dataTransfer.items ? map(from$1(dataTransfer.items), function (item) {
         return item.getAsFile();
       }) : [];
       var files = dataTransfer.files ? from$1(dataTransfer.files) : [];
-      return filter(items.length > 0 ? items : files, isImage(editor));
+      var images = filter(items.length > 0 ? items : files, function (file) {
+        return /^image\/(jpeg|png|gif|bmp)$/.test(file.type);
+      });
+      return images;
     };
     var pasteImageData = function (editor, e, rng) {
       var dataTransfer = isClipboardEvent(e) ? e.clipboardData : e.dataTransfer;
       if (getPasteDataImages(editor) && dataTransfer) {
-        var images = getImagesFromDataTransfer(editor, dataTransfer);
+        var images = getImagesFromDataTransfer(dataTransfer);
         if (images.length > 0) {
           e.preventDefault();
-          readFilesAsDataUris(images).then(function (fileResults) {
+          readBlobsAsDataUris(images).then(function (blobResults) {
             if (rng) {
               editor.selection.setRng(rng);
             }
-            each(fileResults, function (result) {
+            each(blobResults, function (result) {
               pasteImage(editor, result);
             });
           });
@@ -1120,15 +1066,13 @@
     };
     var registerEventHandlers = function (editor, pasteBin, pasteFormat) {
       var keyboardPasteEvent = value();
-      var keyboardPastePressed = value();
       var keyboardPastePlainTextState;
-      editor.on('keyup', keyboardPastePressed.clear);
       editor.on('keydown', function (e) {
-        var removePasteBinOnKeyUp = function (e) {
+        function removePasteBinOnKeyUp(e) {
           if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
             pasteBin.remove();
           }
-        };
+        }
         if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
           keyboardPastePlainTextState = e.shiftKey && e.keyCode === 86;
           if (keyboardPastePlainTextState && global$1.webkit && navigator.userAgent.indexOf('Version/') !== -1) {
@@ -1136,7 +1080,9 @@
           }
           e.stopImmediatePropagation();
           keyboardPasteEvent.set(e);
-          keyboardPastePressed.set(true);
+          window.setTimeout(function () {
+            keyboardPasteEvent.clear();
+          }, 100);
           if (global$1.ie && keyboardPastePlainTextState) {
             e.preventDefault();
             firePaste(editor, true);
@@ -1150,7 +1096,7 @@
           });
         }
       });
-      function insertClipboardContent(editor, clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
+      function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal) {
         var content;
         if (hasContentType(clipboardContent, 'text/html')) {
           content = clipboardContent['text/html'];
@@ -1164,7 +1110,7 @@
         content = trimHtml(content);
         pasteBin.remove();
         var isPlainTextHtml = internal === false && isPlainText(content);
-        var isImage = isImageUrl(editor, content);
+        var isImage = isImageUrl(content);
         if (!content.length || isPlainTextHtml && !isImage) {
           plainTextMode = true;
         }
@@ -1191,10 +1137,7 @@
         return pasteBin.getLastRng() || editor.selection.getRng();
       };
       editor.on('paste', function (e) {
-        var isKeyboardPaste = keyboardPasteEvent.isSet() || keyboardPastePressed.isSet();
-        if (isKeyboardPaste) {
-          keyboardPasteEvent.clear();
-        }
+        var isKeyBoardPaste = keyboardPasteEvent.isSet();
         var clipboardContent = getClipboardContent(editor, e);
         var plainTextMode = pasteFormat.get() === 'text' || keyboardPastePlainTextState;
         var internal = hasContentType(clipboardContent, internalHtmlMime());
@@ -1207,10 +1150,10 @@
           pasteBin.remove();
           return;
         }
-        if (!isKeyboardPaste) {
+        if (!isKeyBoardPaste) {
           e.preventDefault();
         }
-        if (global$1.ie && (!isKeyboardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
+        if (global$1.ie && (!isKeyBoardPaste || e.ieFake) && !hasContentType(clipboardContent, 'text/html')) {
           pasteBin.create();
           editor.dom.bind(pasteBin.getEl(), 'paste', function (e) {
             e.stopPropagation();
@@ -1223,10 +1166,10 @@
           if (!internal) {
             internal = isMarked(clipboardContent['text/html']);
           }
-          insertClipboardContent(editor, clipboardContent, isKeyboardPaste, plainTextMode, internal);
+          insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal);
         } else {
           global$2.setEditorTimeout(editor, function () {
-            insertClipboardContent(editor, clipboardContent, isKeyboardPaste, plainTextMode, internal);
+            insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode, internal);
           }, 0);
         }
       });
@@ -1323,11 +1266,11 @@
         toElm.appendChild(fromElm);
         editor.dom.remove(fromElm, true);
       };
-      var pasteBinClones = global$5.grep(getPasteBinParent(editor).childNodes, function (elm) {
+      var pasteBinClones = global$6.grep(getPasteBinParent(editor).childNodes, function (elm) {
         return elm.id === 'mcepastebin';
       });
       var pasteBinElm = pasteBinClones.shift();
-      global$5.each(pasteBinClones, function (pasteBinClone) {
+      global$6.each(pasteBinClones, function (pasteBinClone) {
         copyAndRemove(pasteBinElm, pasteBinClone);
       });
       var dirtyWrappers = editor.dom.select('div[id=mcepastebin]', pasteBinElm);
@@ -1497,7 +1440,7 @@
       return function (evt) {
         if (hasSelectedContent(editor)) {
           setClipboardData(evt, getData(editor), fallback(editor), function () {
-            if (global$1.browser.isChrome() || global$1.browser.isFirefox()) {
+            if (global$1.browser.isChrome()) {
               var rng_1 = editor.selection.getRng();
               global$2.setEditorTimeout(editor, function () {
                 editor.selection.setRng(rng_1);
@@ -1627,7 +1570,7 @@
         return html;
       }
       var blockElements = [];
-      global$5.each(editor.schema.getBlockElements(), function (block, blockName) {
+      global$6.each(editor.schema.getBlockElements(), function (block, blockName) {
         blockElements.push(blockName);
       });
       var explorerBlocksRegExp = new RegExp('(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*', 'g');

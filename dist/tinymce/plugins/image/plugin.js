@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -185,11 +185,8 @@
       }
       return r;
     };
-    var get = function (xs, i) {
-      return i >= 0 && i < xs.length ? Optional.some(xs[i]) : Optional.none();
-    };
     var head = function (xs) {
-      return get(xs, 0);
+      return xs.length === 0 ? Optional.none() : Optional.some(xs[0]);
     };
     var findMap = function (arr, f) {
       for (var i = 0; i < arr.length; i++) {
@@ -813,19 +810,10 @@
     var getValue = function (item) {
       return isString(item.value) ? item.value : '';
     };
-    var getText = function (item) {
-      if (isString(item.text)) {
-        return item.text;
-      } else if (isString(item.title)) {
-        return item.title;
-      } else {
-        return '';
-      }
-    };
     var sanitizeList = function (list, extractValue) {
       var out = [];
       global$4.each(list, function (item) {
-        var text = getText(item);
+        var text = isString(item.text) ? item.text : isString(item.title) ? item.title : '';
         if (item.menu !== undefined) {
           var items = sanitizeList(item.menu, extractValue);
           out.push({
@@ -1548,7 +1536,6 @@
           blob: file,
           blobUri: blobUri,
           name: file.name ? file.name.replace(/\.[^\.]+$/, '') : null,
-          filename: file.name,
           base64: dataUrl.split(',')[1]
         });
       };

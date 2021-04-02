@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.6.2 (2020-12-08)
+ * Version: 5.5.0 (2020-09-29)
  */
 (function () {
     'use strict';
@@ -38,7 +38,7 @@
     };
 
     var tocId = create('mcetoc_');
-    var generateSelector = function (depth) {
+    var generateSelector = function generateSelector(depth) {
       var i;
       var selector = [];
       for (i = 1; i <= depth; i++) {
@@ -60,9 +60,8 @@
         });
       }
       return global$3.map(headers, function (h) {
-        var id = h.id;
         return {
-          id: id ? id : tocId(),
+          id: h.id ? h.id : tocId(),
           level: parseInt(h.nodeName.replace(/^H/i, ''), 10),
           title: editor.$.text(h),
           element: h
