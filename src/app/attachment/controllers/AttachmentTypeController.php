@@ -85,6 +85,11 @@ class AttachmentTypeController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
 
+        $type = AttachmentTypeModel::getByTypeId(['typeId' => $body['typeId'], 'select' => [1]]);
+        if (!empty($type)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body typeId is already used by another type', 'lang' => 'attachmentTypeIdAlreadyUsed']);
+        }
+
         $id = AttachmentTypeModel::create([
             'type_id'               => $body['typeId'],
             'label'                 => $body['label'],
