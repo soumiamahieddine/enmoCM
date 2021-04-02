@@ -2453,5 +2453,6 @@
     "downloadManifestMsg": "Ce fichier vous permet de faire le lien entre votre application <b>outlook</b> et votre application <b>maarch</b>",
     "mustSecureMaarchUrl": "L'url définie dans «<b>Administration</b>» 🠖 «<b>Paramètres</b>» 🠖 «<b>Personnalisation</b>» 🠖 «<b>URL de l'application</b>» n'est pas sécurisé (<b>https</b>)",
     "attachmentTypeOutlook": "Type de pièce jointe associé au courriel",
-    "attachmentTypeIdAlreadyUsed": "Cet identifiant est utilisé par un type existant"
+    "attachmentTypeIdAlreadyUsed": "Cet identifiant est utilisé par un type existant",
+    "signInsteadOf": "Vous visez / signez à la place de"
 }
