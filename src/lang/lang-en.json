@@ -92,7 +92,7 @@
     "addOpinion": "Give your opinion",
     "addOpinionReason": "Please fill the opinion reason",
     "addPerson": "Add a person",
-    "addPrivateIndexingModelMsg": "This model will be <b>private</b> and will be a copy of the model",
+    "addPrivateIndexingModelMsg": "This model will be <b>{{perimeter}}</b> and will be a copy of the model",
     "addPrivateIndexingModelMsg2": "with the values <b>currently filled</b>.",
     "addRootFolder": "New root folder",
     "addSecondLevel": "Add second level",
@@ -2466,5 +2466,6 @@
     "attachmentTypeOutlook": "Attachment type associated with the email",
     "attachmentTypeIdAlreadyUsed": "This id is already used",
     "signInsteadOf": "You act as",
-    "depositList": "Deposit list"
+    "depositList": "Deposit list",
+    "createPublicIndexingModels": "Create public indexing models in the indexing page"
 }

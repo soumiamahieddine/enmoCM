@@ -527,6 +527,12 @@ export class PrivilegeService {
             'comment': 'lang.addCorrespondentInSharedGroupsOnProfile',
             'unit': 'application'
         },
+        {
+            'id': 'create_public_indexing_models',
+            'label': 'lang.createPublicIndexingModels',
+            'comment': 'lang.createPublicIndexingModels',
+            'unit': 'application'
+        },
     ];
 
     private menus: menu[] = [

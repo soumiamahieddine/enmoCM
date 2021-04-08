@@ -95,7 +95,7 @@
     "addOpinion": "Donner votre avis",
     "addOpinionReason": "Veuillez renseigner le motif de l'avis",
     "addPerson": "Ajouter une personne",
-    "addPrivateIndexingModelMsg": "Ce modèle sera <b>privé</b> et prendra comme base le modèle",
+    "addPrivateIndexingModelMsg": "Ce modèle sera <b>{{perimeter}}</b> et prendra comme base le modèle",
     "addPrivateIndexingModelMsg2": "avec les valeurs renseignées <b>actuellement</b>.",
     "addRootFolder": "Nouveau dossier racine",
     "addSecondLevel": "Ajouter une sous-chemise",
@@ -2456,5 +2456,6 @@
     "mustSecureMaarchUrl": "L'url définie dans «<b>Administration</b>» 🠖 «<b>Paramètres</b>» 🠖 «<b>Personnalisation</b>» 🠖 «<b>URL de l'application</b>» n'est pas sécurisé (<b>https</b>)",
     "attachmentTypeOutlook": "Type de pièce jointe associé au courriel",
     "attachmentTypeIdAlreadyUsed": "Cet identifiant est déjà utilisé",
-    "signInsteadOf": "Vous agissez en tant que"
+    "signInsteadOf": "Vous agissez en tant que",
+    "createPublicIndexingModels": "Créer des modèles d'enregistrement public depuis la page d'enregistrement"
 }
