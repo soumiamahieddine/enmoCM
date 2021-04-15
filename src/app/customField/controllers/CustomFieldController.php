@@ -182,7 +182,7 @@ class CustomFieldController
 
         $values = json_decode($field['values'], true);
 
-        if (count($body['values']) < count($values)) {
+        if (count($body['values']) < count($values) && $body['SQLMode'] == !empty($values['table'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Not enough values sent']);
         }
 
