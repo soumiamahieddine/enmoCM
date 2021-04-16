@@ -2457,5 +2457,6 @@
     "attachmentTypeOutlook": "Type de pièce jointe associé au courriel",
     "attachmentTypeIdAlreadyUsed": "Cet identifiant est déjà utilisé",
     "signInsteadOf": "Vous agissez en tant que",
+    "infoResId": "Vous pouvez remplir automatiquement ce champ en utilisant le mot-clé <b>@resId</b> pour cibler une ressource du document en cours de traitement",
     "createPublicIndexingModels": "Créer des modèles d'enregistrement public depuis la page d'enregistrement"
 }
