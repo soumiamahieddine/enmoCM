@@ -187,7 +187,7 @@ class ResourceControlController
         if (empty($body['modelId'])) {
             $body['modelId'] = $resource['model_id'];
         }
-        $control = ResourceControlController::controlIndexingModelFields(['body' => $body, 'isUpdating' => true]);
+        $control = ResourceControlController::controlIndexingModelFields(['body' => $body, 'isUpdating' => true, 'resId' => $args['resId']]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }

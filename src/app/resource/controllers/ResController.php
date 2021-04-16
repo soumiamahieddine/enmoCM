@@ -22,6 +22,7 @@ use Basket\models\GroupBasketModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
+use CustomField\models\CustomFieldModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
@@ -1186,6 +1187,23 @@ class ResController extends ResourceControlController
             foreach ($body['recipients'] as $recipient) {
                 ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $recipient['id'], 'type' => $recipient['type'], 'mode' => 'recipient']);
             }
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['custom_fields']]);
+        $customFields = json_decode($resource['custom_fields'], true);
+
+        $immutableTechnicalCustoms = CustomFieldModel::get(['select' => ['id', 'values'], 'where' => ['mode = ?'], 'data' => ['technical']]);
+        foreach ($immutableTechnicalCustoms as $immutableTechnicalCustom) {
+            $immutableTechnicalCustom['values'] = json_decode($immutableTechnicalCustom['values'], true);
+
+            if (!empty($immutableTechnicalCustom['values']['table'])) {
+                $immutableTechnicalCustom['values']['resId'] = $args['resId'];
+                $values = CustomFieldModel::getValuesSQL($immutableTechnicalCustom['values']);
+                $customFields[$immutableTechnicalCustom['id']] = $values[0]['key'] ?? null;
+            }
+        }
+        if (!empty($customFields)) {
+            ResModel::update(['set' => ['custom_fields' => json_encode($customFields)], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         }
 
         return true;
