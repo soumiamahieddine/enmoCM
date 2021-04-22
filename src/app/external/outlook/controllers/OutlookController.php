@@ -241,7 +241,11 @@ class OutlookController
         ]);
 
         if (!empty($errors)) {
-            return $response->withStatus(400)->withJson(['errors' => $errors]);
+            if (!empty($errors['lang'])) {
+                return $response->withStatus(400)->withJson(['errors' => $errors['errors'], 'lang' => $errors['lang']]);
+            } else {
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
+            }
         }
 
         return $response->withStatus(204);

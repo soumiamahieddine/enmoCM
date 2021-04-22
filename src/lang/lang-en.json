@@ -2467,5 +2467,8 @@
     "attachmentTypeIdAlreadyUsed": "This id is already used",
     "signInsteadOf": "You act as",
     "depositList": "Deposit list",
-    "createPublicIndexingModels": "Create public indexing models in the indexing page"
+    "createPublicIndexingModels": "Create public indexing models in the indexing page",
+    "outlookPasswordRequired": "Outlook password not configured",
+    "outlookPasswordWrong": "Wrong outlook password",
+    "outlookGetAttachmentsImpossible": "Impossible de get the attachments"
 }
