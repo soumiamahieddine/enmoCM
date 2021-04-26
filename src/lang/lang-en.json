@@ -2470,5 +2470,6 @@
     "createPublicIndexingModels": "Create public indexing models in the indexing page",
     "outlookPasswordRequired": "Outlook password not configured",
     "outlookPasswordWrong": "Wrong outlook password",
-    "outlookGetAttachmentsImpossible": "Impossible de get the attachments"
+    "outlookGetAttachmentsImpossible": "Impossible de get the attachments",
+    "saeError": "Impossible de récupérer les règles de conservation"
 }

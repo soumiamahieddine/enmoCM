@@ -19,6 +19,8 @@ export class DoctypesAdministrationComponent implements OnInit {
 
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
     @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
+    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     dialogRef: MatDialogRef<any>;
     config: any = {};
@@ -41,10 +43,10 @@ export class DoctypesAdministrationComponent implements OnInit {
     emptyField: boolean = true;
 
     conservationRules: any = [];
+    hasError: boolean = false;
+    archivalError: string = '';
 
     displayedColumns = ['label', 'use', 'mandatory', 'column'];
-    @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-    @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     constructor(
         public translate: TranslateService,
@@ -154,7 +156,7 @@ export class DoctypesAdministrationComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get('../rest/archival/retentionRules').pipe(
                 tap((data: any) => {
-                    if (data.retentionRules.length != 0) {
+                    if (data.retentionRules.length !== 0) {
                         this.conservationRules = data.retentionRules;
                     } else {
                         this.conservationRules = [];
@@ -162,7 +164,10 @@ export class DoctypesAdministrationComponent implements OnInit {
                     resolve(true);
                 }),
                 catchError((err: any) => {
-                    this.notify.handleErrors(err);
+                    this.hasError = true;
+                    this.archivalError = err.error.errors;
+                    const index: number = this.archivalError.indexOf(':');
+                    this.archivalError = `(${this.archivalError.slice(index + 1, this.archivalError.length).replace(/^[\s]/, '')})`;
                     return of(false);
                 })
             ).subscribe();
