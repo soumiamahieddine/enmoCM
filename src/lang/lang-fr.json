@@ -2462,5 +2462,5 @@
     "outlookPasswordRequired": "Mot de passe outlook non configuré",
     "outlookPasswordWrong": "Mauvais mot de passe outlook",
     "outlookGetAttachmentsImpossible": "Impossible de récupérer les pièces jointes",
-    "saeError": "Unable to retrieve retention rules"
+    "saeError": "Impossible de récupérer les règles de conservation"
 }

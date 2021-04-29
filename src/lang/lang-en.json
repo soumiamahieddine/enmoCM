@@ -2471,5 +2471,5 @@
     "outlookPasswordRequired": "Outlook password not configured",
     "outlookPasswordWrong": "Wrong outlook password",
     "outlookGetAttachmentsImpossible": "Impossible de get the attachments",
-    "saeError": "Impossible de récupérer les règles de conservation"
+    "saeError": "Unable to retrieve retention rules"
 }
