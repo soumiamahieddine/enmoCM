@@ -633,6 +633,9 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
             this.template.type = 'TXT';
             this.availableTypes = ['TXT'];
         } else if (this.template.target === 'acknowledgementReceipt') {
+            this.options = {
+                acknowledgementReceiptFrom : 'destination'
+            };
             this.template.file = {
                 electronic: {
                     name: '',

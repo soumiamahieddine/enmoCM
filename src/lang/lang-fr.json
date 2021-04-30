@@ -2462,5 +2462,9 @@
     "outlookPasswordRequired": "Mot de passe outlook non configuré",
     "outlookPasswordWrong": "Mauvais mot de passe outlook",
     "outlookGetAttachmentsImpossible": "Impossible de récupérer les pièces jointes",
-    "saeError": "Impossible de récupérer les règles de conservation"
+    "saeError": "Impossible de récupérer les règles de conservation",
+    "expAddress": "Adresse expéditrice",
+    "manual": "Manuelle",
+    "mailServer": "Serveur de messagerie",
+    "canAddCopies": "Pouvoir ajouter des personnes en copie (CC / CCI)"
 }
