@@ -89,6 +89,27 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
 
     documentImported: boolean = false;
 
+    acknowledgementReceiptFrom = [
+        {
+            id: 'manual',
+            label : this.translate.instant('lang.manual')
+        },
+        {
+            id: 'destination',
+            label : this.translate.instant('lang.destination')
+        },
+        {
+            id: 'mailServer',
+            label : this.translate.instant('lang.mailServer')
+        },
+        {
+            id: 'user',
+            label : this.translate.instant('lang.user')
+        }
+    ];
+
+    options: any = {};
+
     constructor(
         public http: HttpClient,
         private sanitizer: DomSanitizer,
@@ -669,11 +690,22 @@ export class TemplateAdministrationComponent implements OnInit, OnDestroy {
         }
     }
 
+    setOption(id: string, value: string, reset: boolean = false) {
+        if (reset) {
+            this.options = {};
+        }
+        this.options[id] = value;
+    }
+
     ngOnDestroy() {
         tinymce.remove('textarea');
         if (this.intervalLockFile) {
             clearInterval(this.intervalLockFile);
         }
+    }
+
+    emptyOptions() {
+        return Object.keys(this.options).length === 0;
     }
 }
 @Component({

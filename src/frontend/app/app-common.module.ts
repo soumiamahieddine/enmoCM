@@ -90,6 +90,7 @@ import { RegisteredMailImportComponent } from '@appRoot/registeredMail/import/re
 import { CriteriaToolComponent } from '@appRoot/search/criteria-tool/criteria-tool.component';
 import { ColorGithubModule } from 'ngx-color/github';
 import { SelectPageComponent } from '@plugins/list/select-page/select-page.component';
+import { MailEditorComponent } from '@plugins/mail-editor/mail-editor.component';
 import { SelectWithFilterComponent } from '@plugins/select-with-filter/select-with-filter.component';
 import { FilterComponent } from '@plugins/select-with-filter/filter/filter.component';
 
@@ -160,6 +161,7 @@ import { FilterComponent } from '@plugins/select-with-filter/filter/filter.compo
         ContactsFormModalComponent,
         InputCorrespondentGroupComponent,
         SelectPageComponent,
+        MailEditorComponent,
         SelectWithFilterComponent,
         FilterComponent
     ],
@@ -218,6 +220,7 @@ import { FilterComponent } from '@plugins/select-with-filter/filter/filter.compo
         MessageBoxComponent,
         ColorGithubModule,
         SelectPageComponent,
+        MailEditorComponent,
         SelectWithFilterComponent,
         FilterComponent
     ],
