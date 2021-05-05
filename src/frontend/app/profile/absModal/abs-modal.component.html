@@ -1,10 +1,10 @@
 <div class="mat-dialog-content-container">
     <h1 mat-dialog-title>{{'lang.activateMyAbs' | translate}}</h1>
-    <div mat-dialog-content>
+    <div mat-dialog-content style="display: flex; flex-direction: column;">
         <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
-        <mat-list>
+        <mat-list style="flex: 1; overflow: auto;">
             <div mat-subheader>{{'lang.basketsToRedirect' | translate}} :</div>
             <mat-list-item >
                 <mat-icon mat-list-icon style="display: flex;align-items: center;justify-content: center;">
