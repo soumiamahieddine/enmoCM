@@ -4,8 +4,8 @@
         <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
             <mat-spinner style="margin:auto;"></mat-spinner>
         </div>
+        <h5 mat-subheader>{{'lang.basketsToRedirect' | translate}}</h5>
         <mat-list style="flex: 1; overflow: auto;">
-            <div mat-subheader>{{'lang.basketsToRedirect' | translate}} :</div>
             <mat-list-item >
                 <mat-icon mat-list-icon style="display: flex;align-items: center;justify-content: center;">
                     <mat-checkbox color="primary" (change)="toggleAll()" [indeterminate]="oneOrMoreSelected()" [checked]="allSelected()"></mat-checkbox>
