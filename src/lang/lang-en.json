@@ -2471,5 +2471,7 @@
     "outlookPasswordRequired": "Outlook password not configured",
     "outlookPasswordWrong": "Wrong outlook password",
     "outlookGetAttachmentsImpossible": "Impossible de get the attachments",
-    "saeError": "Unable to retrieve retention rules"
+    "saeError": "Unable to retrieve retention rules",
+    "systemTechnicalFields": "System technical fields",
+    "customTechnicalFields": "Custom technical fields"
 }

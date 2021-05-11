@@ -2466,5 +2466,7 @@
     "expAddress": "Adresse expéditrice",
     "manual": "Manuelle",
     "mailServer": "Serveur de messagerie",
-    "canAddCopies": "Pouvoir ajouter des personnes en copie (CC / CCI)"
+    "canAddCopies": "Pouvoir ajouter des personnes en copie (CC / CCI)",
+    "systemTechnicalFields": "Champs techniques \"Système\"",
+    "customTechnicalFields": "Champs techniques personnalisés"
 }
