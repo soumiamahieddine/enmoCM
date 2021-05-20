@@ -503,6 +503,7 @@ export class DocumentViewerComponent implements OnInit, OnDestroy {
     }
 
     async saveDocService() {
+        this.headerService.setLoadedFile(null);
         const data: any = await this.getFilePdf();
 
         this.headerService.setLoadedFile(data);
