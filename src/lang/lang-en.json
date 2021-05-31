@@ -2482,5 +2482,6 @@
     "clientId": "Client ID",
     "clientSecret": "Client Secret",
     "siteUrl": "Sharepoint Online site URL",
-    "office365sharepointDesc": "<a href=\"https://www.office.com/\" target=\"_blank\"> Office 365 </a> is the online office suite from Microsoft. The editing is done via Sharepoint Online."
+    "office365sharepointDesc": "<a href=\"https://www.office.com/\" target=\"_blank\"> Office 365 </a> is the online office suite from Microsoft. The editing is done via Sharepoint Online.",
+    "contactsParameters_sector": "Sector"
 }

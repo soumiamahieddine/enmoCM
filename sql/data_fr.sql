@@ -247,6 +247,7 @@ INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable,
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (14, 'email', false, true, false, false);
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (15, 'phone', false, true, false, false);
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (16, 'notes', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (17, 'sector', false, false, false, false);
 
 INSERT INTO custom_fields (id, label, type, mode, "values") VALUES (1, 'Date de fin de contrat', 'date', 'form', '[]');
 INSERT INTO custom_fields (id, label, type, mode, "values") VALUES (2, 'Adresse d''intervention', 'banAutocomplete', 'form', '[]');
@@ -736,7 +737,7 @@ INSERT INTO notifications (notification_sid, notification_id, description, is_en
 INSERT INTO notifications (notification_sid, notification_id, description, is_enabled, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties) VALUES (100, 'QUOTA', 'Alerte lorsque le quota est dépassé', 'Y', 'user_quota', 'EMAIL', 110, 'user', 'superadmin', NULL, NULL);
 
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, NULL, 1, NULL);
-INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('database_version', NULL, '21.03.4', NULL, NULL);
+INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('database_version', NULL, '21.03.5', NULL, NULL);
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', NULL, '', 0, NULL);
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('defaultDepartment', 'Département par défaut sélectionné dans les autocomplétions de la Base Adresse Nationale', NULL, 75, NULL);
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('thumbnailsSize', 'Résolution des imagettes', '750x900', NULL, NULL);

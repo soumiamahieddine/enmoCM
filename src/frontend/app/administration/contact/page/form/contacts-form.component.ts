@@ -256,6 +256,17 @@ export class ContactsFormComponent implements OnInit {
             values: []
         },
         {
+            id: 'sector',
+            unit: 'address',
+            label: this.translate.instant('lang.contactsParameters_sector'),
+            type: 'string',
+            control: new FormControl({value: '', disabled: true}),
+            required: false,
+            display: true,
+            filling: false,
+            values: []
+        },
+        {
             id: 'communicationMeans',
             unit: 'maarch2maarch',
             label: this.translate.instant('lang.communicationMean'),
@@ -503,11 +514,6 @@ export class ContactsFormComponent implements OnInit {
                     );
             }
         });
-    }
-
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
-        return this.countries.filter((option: any) => option.toLowerCase().includes(filterValue));
     }
 
     selectCountry(ev: any) {
@@ -806,6 +812,15 @@ export class ContactsFormComponent implements OnInit {
             }
         });
         this.checkFilling();
+        this.http.get('../rest/contacts/sector', {params: {'addressNumber': contact['addressNumber'], 'addressStreet': contact['addressStreet'], 'addressPostcode': contact['addressPostcode'], 'addressTown': contact['addressTown']}}).pipe(
+            tap((data: any) => {
+                if (data.sector !== null) {
+                    const sectorIndex = this.contactForm.findIndex(element => element.id === 'sector');
+                    this.contactForm[sectorIndex].control.setValue(data.sector.label);
+                    this.contactForm[sectorIndex].display = true;
+                }
+            }),
+        ).subscribe();
 
         this.addressBANMode = disableBan ? false : true;
     }
@@ -1111,5 +1126,10 @@ export class ContactsFormComponent implements OnInit {
                 target.control.setValue( splitStr.join('-'));
             }
         }, 100);
+    }
+
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        return this.countries.filter((option: any) => option.toLowerCase().includes(filterValue));
     }
 }
