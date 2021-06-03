@@ -5,6 +5,7 @@
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
+--DATABASE_BACKUP|entities
 
 DROP TABLE IF EXISTS address_sectors;
 CREATE TABLE address_sectors
@@ -26,5 +27,8 @@ ALTER TABLE contacts ADD COLUMN sector CHARACTER VARYING(256);
 
 DELETE FROM contacts_parameters WHERE identifier = 'sector';
 INSERT INTO contacts_parameters (identifier, mandatory, filling, searchable, displayable) VALUES ('sector', false, false, false, false);
+
+UPDATE entities SET external_id = external_id - 'fastParapheurSubscriberId';
+UPDATE entities SET external_id = jsonb_set(external_id, '{fastParapheurSubscriberId}', to_jsonb(business_id)) WHERE business_id IS NOT NULL;
 
 UPDATE parameters SET param_value_string = '21.03.5' WHERE id = 'database_version';
