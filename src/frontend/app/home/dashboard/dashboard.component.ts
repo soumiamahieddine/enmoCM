@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     tiles: any = [];
     hoveredTool: boolean = false;
+    tileErrors: any[] = [];
 
     @ViewChildren('tileComponent') tileComponent: QueryList<any>;
 
@@ -210,4 +211,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     emptyDashboard() {
         return this.tiles.filter((item: any) => item.id !== null).length === 0;
     }
+
+    hasError(idTile: any) {
+        const getTile: any = this.tileErrors.find((tile: any) => tile.id === idTile);
+        return getTile !== undefined ? getTile.error : false;
+    }
+
 }
