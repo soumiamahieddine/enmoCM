@@ -31,4 +31,6 @@ INSERT INTO contacts_parameters (identifier, mandatory, filling, searchable, dis
 UPDATE entities SET external_id = external_id - 'fastParapheurSubscriberId';
 UPDATE entities SET external_id = jsonb_set(external_id, '{fastParapheurSubscriberId}', to_jsonb(business_id)) WHERE business_id IS NOT NULL;
 
+UPDATE history SET event_id = 'userlogin' WHERE event_id = 'login';
+
 UPDATE parameters SET param_value_string = '21.03.5' WHERE id = 'database_version';

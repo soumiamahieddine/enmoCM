@@ -123,11 +123,14 @@ export class AuthService {
             );
     }
 
-    async logout(cleanUrl: boolean = true, forcePageLogin: boolean = false) {
+    async logout(cleanUrl: boolean = true, forcePageLogin: boolean = false, history: boolean = false) {
         if (['cas', 'keycloak'].indexOf(this.authMode) > -1 && !forcePageLogin) {
             this.SsoLogout(cleanUrl);
         } else {
-            // AVOID UNLOCK ON DESROY COMPONENT
+            if (history) {
+                this.http.get('../rest/authenticate/logout').subscribe();
+            }
+            // AVOID UNLOCK ON DESTROY COMPONENT
             if (['process', 'signatureBook'].indexOf(this.router.url.split('/')[1]) > -1) {
                 this.router.navigate(['/home']);
                 setTimeout(() => {
