@@ -18,6 +18,12 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ExternalVisaWorkflowComponent implements OnInit {
 
+    @Input() injectDatas: any;
+    @Input() adminMode: boolean;
+    @Input() resId: number = null;
+
+    @Output() workflowUpdated = new EventEmitter<any>();
+
     visaWorkflow: any = {
         roles: ['sign', 'visa'],
         items: []
@@ -33,13 +39,6 @@ export class ExternalVisaWorkflowComponent implements OnInit {
 
     loading: boolean = false;
     data: any;
-
-    @Input() injectDatas: any;
-    @Input() adminMode: boolean;
-    @Input() resId: number = null;
-
-    @Output() workflowUpdated = new EventEmitter<any>();
-
 
     searchVisaSignUser = new FormControl();
 
@@ -336,10 +335,8 @@ export class ExternalVisaWorkflowComponent implements OnInit {
     }
 
     setPositionsWorkfow(resource: any, positions: any) {
-        if (this.visaWorkflow.items[0].signaturePositions === undefined) {
-            this.initPositionWorkflow();
-        }
-        this.clearPositionsFromResource(resource);
+        this.clearOldPositionsFromResource(resource);
+
         if (positions.signaturePositions !== undefined) {
             Object.keys(positions.signaturePositions).forEach(key => {
                 const objPos = {
@@ -347,7 +344,6 @@ export class ExternalVisaWorkflowComponent implements OnInit {
                     mainDocument : resource.mainDocument,
                     resId: resource.resId
                 };
-                this.visaWorkflow.items[positions.signaturePositions[key].sequence].signaturePositions = this.visaWorkflow.items[positions.signaturePositions[key].sequence].signaturePositions.filter((pos: any) => pos.resId !== resource.resId && pos.mainDocument !== resource.mainDocument);
                 this.visaWorkflow.items[positions.signaturePositions[key].sequence].signaturePositions.push(objPos);
             });
         }
@@ -358,23 +354,41 @@ export class ExternalVisaWorkflowComponent implements OnInit {
                     mainDocument : resource.mainDocument,
                     resId: resource.resId
                 };
-                this.visaWorkflow.items[positions.datePositions[key].sequence].datePositions = this.visaWorkflow.items[positions.datePositions[key].sequence].datePositions.filter((pos: any) => pos.resId !== resource.resId && pos.mainDocument !== resource.mainDocument);
                 this.visaWorkflow.items[positions.datePositions[key].sequence].datePositions.push(objPos);
             });
         }
     }
 
-    clearPositionsFromResource(resource: any) {
+    clearOldPositionsFromResource(resource: any) {
         this.visaWorkflow.items.forEach((user: any) => {
-            user.signaturePositions = user.signaturePositions.filter((pos: any) => pos.resId !== resource.resId && pos.mainDocument !== resource.mainDocument);
-            user.datePositions = user.datePositions.filter((pos: any) => pos.resId !== resource.resId && pos.mainDocument !== resource.mainDocument);
-        });
-    }
 
-    initPositionWorkflow() {
-        this.visaWorkflow.items.forEach((user: any) => {
-            user.signaturePositions = [];
-            user.datePositions = [];
+            if (user.signaturePositions === undefined) {
+                user.signaturePositions = [];
+            } else {
+                const signaturePositionsToKeep = [];
+                user.signaturePositions.forEach((pos: any) => {
+                    if (pos.resId !== resource.resId && pos.mainDocument === resource.mainDocument) {
+                        signaturePositionsToKeep.push(pos);
+                    } else if (pos.mainDocument !== resource.mainDocument) {
+                        signaturePositionsToKeep.push(pos);
+                    }
+                });
+                user.signaturePositions = signaturePositionsToKeep;
+            }
+
+            if (user.datePositions === undefined) {
+                user.datePositions = [];
+            } else {
+                const datePositionsToKeep = [];
+                user.newDatePositions.forEach((pos: any) => {
+                    if (pos.resId !== resource.resId && pos.mainDocument === resource.mainDocument) {
+                        datePositionsToKeep.push(pos);
+                    } else if (pos.mainDocument !== resource.mainDocument) {
+                        datePositionsToKeep.push(pos);
+                    }
+                });
+                user.datePositions = datePositionsToKeep;
+            }
         });
     }
 
