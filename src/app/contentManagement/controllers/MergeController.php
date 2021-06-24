@@ -289,17 +289,18 @@ class MergeController
         $opinion = [];
         if (!empty($args['resId'])) {
             $opinionWorkflow = ListInstanceModel::get([
-                'select'    => ['item_id', 'process_date'],
-                'where'     => ['item_mode = ?', 'res_id = ?'],
-                'data'      => ['avis', $args['resId']],
+                'select'    => ['item_id', 'process_date', 'delegate'],
+                'where'     => ['difflist_type = ?', 'res_id = ?'],
+                'data'      => ['AVIS_CIRCUIT', $args['resId']],
                 'orderBy'   => ['listinstance_id']
             ]);
             $visibleNotes = NoteModel::getByUserIdForResource(['select' => ['user_id', 'note_text'], 'resId' => $args['resId'], 'userId' => $GLOBALS['id']]);
             $visibleNotes = array_reverse($visibleNotes);
             $opinionCount = 1;
             foreach ($opinionWorkflow as $value) {
-                $user = UserModel::getById(['id' => $value['item_id'], 'select' => ['firstname', 'lastname']]);
-                $primaryEntity = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entities.entity_label', 'users_entities.user_role as role']]);
+                $valueUserId = $value['delegate'] ?? $value['item_id'];
+                $user = UserModel::getById(['id' => $valueUserId, 'select' => ['firstname', 'lastname']]);
+                $primaryEntity = UserModel::getPrimaryEntityById(['id' => $valueUserId, 'select' => ['entities.entity_label', 'users_entities.user_role as role']]);
                 $processDate = null;
                 if (!empty($value['process_date'])) {
                     $processDate = ' - ' . TextFormatModel::formatDate($value['process_date']);
@@ -311,7 +312,7 @@ class MergeController
                 $opinion['entity'.$opinionCount] = $primaryEntity['entity_label'];
                 $opinion['note'.$opinionCount] = [];
                 foreach ($visibleNotes as $visibleNote) {
-                    if ($visibleNote['user_id'] === $value['item_id'] && strpos($visibleNote['note_text'], _AVIS_NOTE_PREFIX) === 0) {
+                    if ($visibleNote['user_id'] === $valueUserId && strpos($visibleNote['note_text'], _AVIS_NOTE_PREFIX) === 0) {
                         $opinion['note'.$opinionCount][] = trim(str_replace(_AVIS_NOTE_PREFIX, '', $visibleNote['note_text']));
                     }   
                 }   
