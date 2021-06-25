@@ -28,6 +28,7 @@ ALTER TABLE contacts ADD COLUMN sector CHARACTER VARYING(256);
 DELETE FROM contacts_parameters WHERE identifier = 'sector';
 INSERT INTO contacts_parameters (identifier, mandatory, filling, searchable, displayable) VALUES ('sector', false, false, false, false);
 
+UPDATE entities SET external_id = '{}' WHERE external_id::text='null';
 UPDATE entities SET external_id = external_id - 'fastParapheurSubscriberId';
 UPDATE entities SET external_id = jsonb_set(external_id, '{fastParapheurSubscriberId}', to_jsonb(REPLACE(business_id, '/', '' ))) WHERE business_id IS NOT NULL;
 
