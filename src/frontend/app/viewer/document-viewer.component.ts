@@ -656,7 +656,7 @@ export class DocumentViewerComponent implements OnInit, OnDestroy {
                         this.file.content = `../rest/attachments/${resId}/originalContent?mode=base64`;
                         this.noConvertedFound = true;
                     } else {
-                        this.notify.error(err.error.errors);
+                        this.notify.handleSoftErrors(err);
                         this.noFile = true;
                     }
                     this.loading = false;
@@ -690,7 +690,7 @@ export class DocumentViewerComponent implements OnInit, OnDestroy {
                         }
                     },
                     (err: any) => {
-                        this.notify.error(err.error.errors);
+                        this.notify.handleSoftErrors(err);
                         this.noFile = true;
                         this.loading = false;
                         return of(false);
