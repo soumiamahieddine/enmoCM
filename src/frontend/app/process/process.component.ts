@@ -914,4 +914,8 @@ export class ProcessComponent implements OnInit, OnDestroy {
     openPrintedFolderPrompt() {
         this.dialog.open(PrintedFolderModalComponent, { panelClass: 'maarch-modal', data: { resId: this.currentResourceInformations.resId } });
     }
+
+    hasActions() {
+        return this.actionsList.filter(action => action.categoryUse.indexOf(this.currentResourceInformations.categoryId) > -1).length > 0;
+    }
 }
