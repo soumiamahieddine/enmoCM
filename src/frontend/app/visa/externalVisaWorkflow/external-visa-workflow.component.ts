@@ -380,7 +380,7 @@ export class ExternalVisaWorkflowComponent implements OnInit {
                 user.datePositions = [];
             } else {
                 const datePositionsToKeep = [];
-                user.newDatePositions.forEach((pos: any) => {
+                user.datePositions.forEach((pos: any) => {
                     if (pos.resId !== resource.resId && pos.mainDocument === resource.mainDocument) {
                         datePositionsToKeep.push(pos);
                     } else if (pos.mainDocument !== resource.mainDocument) {
