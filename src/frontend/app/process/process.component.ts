@@ -160,6 +160,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     resourceFollowed: boolean = false;
     resourceFreezed: boolean = false;
     resourceBinded: boolean = false;
+    prevCategory: string = '';
 
     constructor(
         public translate: TranslateService,
@@ -701,15 +702,18 @@ export class ProcessComponent implements OnInit, OnDestroy {
                 tap((data: string) => {
                     if (data !== 'ok') {
                         this.currentTool = tabId;
+                        this.currentResourceInformations.categoryId  = !this.functions.empty(this.prevCategory) ? this.prevCategory : this.currentResourceInformations.categoryId;
                     }
                 }),
                 filter((data: string) => data === 'ok'),
                 tap(() => {
                     this.saveTool();
-                    setTimeout(() => {
-                        this.loadResource(false);
-                    }, 400);
-                    this.currentTool = tabId;
+                    if (!this.indexingForm.mustFixErrors) {
+                        setTimeout(() => {
+                            this.loadResource(false);
+                        }, 400);
+                        this.currentTool = tabId;
+                    }
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
