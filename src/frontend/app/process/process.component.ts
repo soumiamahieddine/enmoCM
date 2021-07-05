@@ -161,6 +161,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
     resourceFreezed: boolean = false;
     resourceBinded: boolean = false;
     prevCategory: string = '';
+    currentCategory: string = '';
 
     constructor(
         public translate: TranslateService,
@@ -713,6 +714,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
                             this.loadResource(false);
                         }, 400);
                         this.currentTool = tabId;
+                        this.currentResourceInformations.categoryId = this.currentCategory;
                     }
                 }),
                 catchError((err: any) => {
@@ -801,6 +803,7 @@ export class ProcessComponent implements OnInit, OnDestroy {
                         this.notify.error(this.translate.instant('lang.mandatoryFile'));
                     } else {
                         await this.indexingForm.saveData();
+                        this.currentResourceInformations.categoryId = this.currentCategory;
                         setTimeout(() => {
                             this.loadResource(false);
                         }, 400);
@@ -921,5 +924,10 @@ export class ProcessComponent implements OnInit, OnDestroy {
 
     hasActions() {
         return this.loading ? true : this.actionsList.filter(action => action.categoryUse.indexOf(this.currentResourceInformations.categoryId) > -1).length > 0;
+    }
+
+    setValues(event: any) {
+        this.prevCategory = event.prevCategory;
+        this.currentCategory = event.indexingModel.category;
     }
 }
