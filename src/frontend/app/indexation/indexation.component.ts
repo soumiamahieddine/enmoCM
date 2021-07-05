@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, TemplateRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
@@ -28,7 +28,7 @@ import { SelectIndexingModelComponent } from './select-indexing-model/select-ind
     ],
     providers: [ActionsService, SortPipe],
 })
-export class IndexationComponent implements OnInit {
+export class IndexationComponent implements OnInit, OnDestroy {
 
     loading: boolean = false;
 
