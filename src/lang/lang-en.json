@@ -2486,7 +2486,7 @@
     "office365sharepointDesc": "<a href=\"https://www.office.com/\" target=\"_blank\"> Office 365 </a> is the online office suite from Microsoft. The editing is done via Sharepoint Online.",
     "contactsParameters_sector": "Sector",
     "interconnectionTest": "Test the configuration of the <b> Maarch Courrier / Maarch RM interconnection </b> configured in the <b> config.xml </b> file",
-    "interconnectionFailed": "Interconnection with Maarch RM has failed.",
+    "interconnectionFailed": "Interconnection with Maarch RM has failed",
     "interconnectionSuccess": "Successful interconnection with Maarch RM.",
     "startTest": "Start the test"
 }
