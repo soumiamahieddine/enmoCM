@@ -2480,7 +2480,7 @@
     "siteUrl": "URL de l'espace Sharepoint Online",
     "office365sharepointDesc": "<a href=\"https://www.office.com/\" target=\"_blank\"> Office 365 </a> est la suite bureautique en ligne de Microsoft. L'édition se fait via Sharepoint Online.",
     "contactsParameters_sector": "Secteur",
-    "interconnectionTest": "Tester le paramétrage de <b>l'interconnexion Maarch Courrier / Maarch RM</b> configuré dans le fichier <b>config.xml</b>",
+    "interconnectionTest": "Tester le paramétrage de <b>l'interconnexion Maarch Courrier / Maarch RM</b> configuré dans le fichier <b>config.json</b>",
     "interconnectionFailed": "L'interconnexion avec Maarch RM a été échouée",
     "interconnectionSuccess": "Interconnexion réussite avec Maarch RM.",
     "startTest": "Lancer le test"
