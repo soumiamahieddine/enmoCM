@@ -144,6 +144,7 @@ $app->get('/m2m/configuration', \Configuration\controllers\ConfigurationControll
 $app->put('/m2m/configuration', \Configuration\controllers\ConfigurationController::class . ':updateM2MConfiguration');
 $app->get('/watermark/configuration', \Configuration\controllers\ConfigurationController::class . ':getWatermarkConfiguration');
 $app->put('/watermark/configuration', \Configuration\controllers\ConfigurationController::class . ':updateWatermarkConfiguration');
+$app->get('/seda/configuration', \Configuration\controllers\ConfigurationController::class . ':getSedaExportConfiguration');
 
 //Contacts
 $app->get('/contacts', \Contact\controllers\ContactController::class . ':get');

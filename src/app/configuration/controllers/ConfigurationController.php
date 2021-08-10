@@ -452,4 +452,21 @@ class ConfigurationController
 
         return $response->withStatus(204);
     }
+
+    public function getSedaExportConfiguration(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $config = CoreConfigModel::getJsonLoaded(['path' => CoreConfigModel::getConfigPath()]);
+
+        if (empty($config['exportSeda'])) {
+            return $response->withJson(['exportSeda' => []]);
+        }
+        $config = $config['exportSeda'];
+        unset($config['token']);
+
+        return $response->withJson(['exportSeda' => $config]);
+    }
 }
