@@ -106,7 +106,7 @@ export class LifeCycleComponent implements OnInit {
             tap(() => {
                 this.loading = false;
                 this.hasError = false;
-                this.result = '<b>' + this.translate.instant('lang.interconnectionSuccess') + '</b> ';
+                this.result = this.translate.instant('lang.interconnectionSuccess');
             }),
             catchError((err: any) => {
                 this.hasError = true;
@@ -114,7 +114,7 @@ export class LifeCycleComponent implements OnInit {
                 this.archivalError = err.error.errors;
                 const index: number = this.archivalError.indexOf(':');
                 this.archivalError = `(${this.archivalError.slice(index + 1, this.archivalError.length).replace(/^[\s]/, '')})`;
-                this.result = '<b>' + this.translate.instant('lang.interconnectionFailed') + '</b> ' + this.archivalError;
+                this.result = this.translate.instant('lang.interconnectionFailed') + this.archivalError;
                 return of(false);
             })
         ).subscribe();
