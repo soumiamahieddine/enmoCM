@@ -1429,15 +1429,8 @@ class PreProcessActionController
             $isInCircuit = ListInstanceModel::get([
                 'select'  => [1],
                 'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null', 'item_id = ?', 'item_mode = ?'],
-                'data'    => [$resId, 'entity_id', $GLOBALS['id'], 'avis']
+                'data'    => [$resId, 'entity_id', $args['userId'], 'avis']
             ]);
-            if (empty($isInCircuit)) {
-                $isInCircuit = ListInstanceModel::get([
-                    'select'  => [1],
-                    'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null', 'item_id = ?', 'item_mode = ?'],
-                    'data'    => [$resId, 'entity_id', $args['userId'], 'avis']
-                ]);
-            }
             if (empty($isInCircuit)) {
                 $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userNotInDiffusionList'];
             } else {
