@@ -16,7 +16,6 @@ export class GiveAvisParallelActionComponent implements OnInit {
 
 
     loading: boolean = false;
-
     resourcesWarnings: any[] = [];
     resourcesErrors: any[] = [];
 
@@ -26,6 +25,12 @@ export class GiveAvisParallelActionComponent implements OnInit {
 
     ownerOpinion: string = '';
     opinionContent: string = '';
+
+    delegation: any = {
+        isDelegated: false,
+        userDelegated: null
+    };
+
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
 
@@ -37,7 +42,8 @@ export class GiveAvisParallelActionComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService) { }
 
-    ngOnInit() {
+    async ngOnInit() {
+        await this.isRedirected();
         this.checkAvisParallel();
     }
 
@@ -45,7 +51,6 @@ export class GiveAvisParallelActionComponent implements OnInit {
         this.loading = true;
         this.resourcesErrors = [];
         this.resourcesWarnings = [];
-
         this.http.post('../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkGiveParallelOpinion', { resources: this.data.resIds }).pipe(
             tap((data: any) => {
                 if (!this.functions.empty(data.resourcesInformations.warning)) {
@@ -79,7 +84,9 @@ export class GiveAvisParallelActionComponent implements OnInit {
     }
 
     executeAction(realResSelected: number[]) {
-        const noteContent: string = `[${this.translate.instant('lang.avisUserState')}] ${this.noteEditor.getNoteContent()}`;
+        const delegateMsg: string = this.translate.instant('lang.insteadOf').replace(/^.{1}/g, this.translate.instant('lang.insteadOf')[0].toLowerCase());
+        const avisUserState: string = this.delegation.isDelegated ? `${this.translate.instant('lang.avisUserState').toUpperCase()} ${delegateMsg} ${this.delegation.userDelegated}` : this.translate.instant('lang.avisUserState');
+        const noteContent: string = `[${avisUserState}] ${this.noteEditor.getNoteContent()}`;
         this.noteEditor.setNoteContent(noteContent);
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNote()}).pipe(
             tap((data: any) => {
@@ -100,5 +107,28 @@ export class GiveAvisParallelActionComponent implements OnInit {
 
     isValidAction() {
         return !this.noResourceToProcess && !this.functions.empty(this.noteEditor.getNoteContent());
+    }
+
+    isRedirected() {
+        return new Promise((resolve) => {
+            this.http.get('../rest/currentUser/profile').pipe(
+                tap((data: any) => {
+                    const userId: number = parseInt(this.data.userId, 10);
+                    this.delegation.isDelegated = userId !== data.id ? true : false;
+                    if (this.delegation.isDelegated) {
+                        this.http.get('../rest/users/' + userId).pipe(
+                            tap((user: any) => {
+                                this.delegation.userDelegated = `${user.firstname} ${user.lastname}`;
+                            })
+                        ).subscribe();
+                    }
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 }
