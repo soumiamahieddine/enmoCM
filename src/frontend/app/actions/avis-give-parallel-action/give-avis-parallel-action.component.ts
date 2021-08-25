@@ -7,6 +7,7 @@ import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { tap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FunctionsService } from '@service/functions.service';
+import { HeaderService } from '@service/header.service';
 
 @Component({
     templateUrl: 'give-avis-parallel-action.component.html',
@@ -40,10 +41,11 @@ export class GiveAvisParallelActionComponent implements OnInit {
         private notify: NotificationService,
         public dialogRef: MatDialogRef<GiveAvisParallelActionComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        public functions: FunctionsService) { }
+        public functions: FunctionsService,
+        public headerService: HeaderService
+    ) { }
 
-    async ngOnInit() {
-        await this.isRedirected();
+    ngOnInit() {
         this.checkAvisParallel();
     }
 
@@ -68,6 +70,11 @@ export class GiveAvisParallelActionComponent implements OnInit {
                     this.opinionLimitDate = new Date(data.resourcesInformations.success[0].opinionLimitDate);
                     this.opinionLimitDate = this.functions.formatDateObjectToDateString(this.opinionLimitDate);
                 }
+                const userId: number = parseInt(this.data.userId, 10);
+                this.delegation.isDelegated = userId !== this.headerService.user.id ? true : false;
+                if (this.delegation.isDelegated && !this.noResourceToProcess) {
+                    this.delegation.userDelegated = data.resourcesInformations.success[0].delegatingUser;
+                }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -85,8 +92,8 @@ export class GiveAvisParallelActionComponent implements OnInit {
 
     executeAction(realResSelected: number[]) {
         const delegateMsg: string = this.translate.instant('lang.insteadOf').replace(/^.{1}/g, this.translate.instant('lang.insteadOf')[0].toLowerCase());
-        const avisUserState: string = this.delegation.isDelegated ? `${this.translate.instant('lang.avisUserState').toUpperCase()} ${delegateMsg} ${this.delegation.userDelegated}` : this.translate.instant('lang.avisUserState');
-        const noteContent: string = `[${avisUserState}] ${this.noteEditor.getNoteContent()}`;
+        const opinionUserState: string = this.delegation.isDelegated ? `${this.translate.instant('lang.opinionUserState').toUpperCase()} ${delegateMsg} ${this.delegation.userDelegated}` : this.translate.instant('lang.opinionUserState');
+        const noteContent: string = `[${opinionUserState}] ${this.noteEditor.getNoteContent()}`;
         this.noteEditor.setNoteContent(noteContent);
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNote()}).pipe(
             tap((data: any) => {
@@ -107,28 +114,5 @@ export class GiveAvisParallelActionComponent implements OnInit {
 
     isValidAction() {
         return !this.noResourceToProcess && !this.functions.empty(this.noteEditor.getNoteContent());
-    }
-
-    isRedirected() {
-        return new Promise((resolve) => {
-            this.http.get('../rest/currentUser/profile').pipe(
-                tap((data: any) => {
-                    const userId: number = parseInt(this.data.userId, 10);
-                    this.delegation.isDelegated = userId !== data.id ? true : false;
-                    if (this.delegation.isDelegated) {
-                        this.http.get('../rest/users/' + userId).pipe(
-                            tap((user: any) => {
-                                this.delegation.userDelegated = `${user.firstname} ${user.lastname}`;
-                            })
-                        ).subscribe();
-                    }
-                    resolve(true);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        });
     }
 }
