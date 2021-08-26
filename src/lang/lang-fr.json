@@ -2484,5 +2484,6 @@
     "interconnectionFailed": "<b>L'interconnexion avec Maarch RM a échouée.</b> Erreur lors de l'appel au serveur Maarch RM",
     "interconnectionSuccess": "<b>Interconnexion réussie avec Maarch RM.</b>",
     "startTest": "Lancer le test",
-    "delegatedOpinion": "Avis donné à la place de"
+    "delegatedOpinion": "Avis donné à la place de",
+    "requestedOpinion": "Avis demandé à la place de"
 }
