@@ -2486,5 +2486,6 @@
     "startTest": "Lancer le test",
     "delegatedOpinion": "Avis donné à la place de",
     "requestedOpinion": "Avis demandé à la place de",
-    "sharePointWarning": "Fermez l'éditeur du document avant de valider l'édition"
+    "sharePointWarning": "Fermez l'éditeur du document avant de valider l'édition",
+    "autoRedirectToUser": "A moi-même"
 }

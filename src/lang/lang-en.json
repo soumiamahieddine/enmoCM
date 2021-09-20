@@ -2491,5 +2491,6 @@
     "startTest": "Start the test",
     "delegatedOpinion": "Opinion given instead of",
     "requestedOpinion": "Opinion requested instead of",
-    "sharePointWarning": "Close the document editor before validating the edit"
+    "sharePointWarning": "Close the document editor before validating the edit",
+    "autoRedirectToUser": "To myself"
 }
