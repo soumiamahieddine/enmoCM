@@ -50,6 +50,7 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\PasswordModel;
 use SrcCore\models\ValidatorModel;
+use SrcCore\models\TextFormatModel;
 use Template\models\TemplateModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEmailSignatureModel;
@@ -1694,9 +1695,51 @@ class UserController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        $allowedFields = [
+            'id',
+            'userId',
+            'firstname',
+            'lastname',
+            'phone',
+            'mail'
+        ];
+        $personalFields = ['phone'];
+
+        $fields = array_map(function ($field) {
+            return [
+                'label' => TextFormatModel::camelToSnake($field),
+                'value' => $field,
+            ];
+        }, $allowedFields);
+
+        $body = $request->getParsedBody();
+        if (!empty($body['data'])) {
+            $fields = [];
+            foreach ($body['data'] as $parameter) {
+                if (!empty($parameter['label']) && is_string($parameter['label']) && !empty($parameter['value']) && is_string($parameter['value'])) {
+                    if (!in_array($parameter['value'], $allowedFields)) {
+                        continue;
+                    }
+                    $fields[] = [
+                        'label' => $parameter['label'],
+                        'value' => $parameter['value']
+                    ];
+                }
+            }
+        }
+        $select = array_map(function ($field) {
+            return TextFormatModel::camelToSnake($field['value']);
+        }, $fields);
+        foreach ($select as $key => $value) {
+            $select[$key] = 'users.'.$value;
+        }
+        if (!empty($select)) {
+            $select[0] = 'DISTINCT '.$select[0];
+        }
+
         if (UserController::isRoot(['id' => $GLOBALS['id']])) {
             $users = UserModel::get([
-                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'mail', 'phone'],
+                'select'    => $select,
                 'where'     => ['status != ?'],
                 'data'      => ['DEL']
             ]);
@@ -1708,9 +1751,17 @@ class UserController
 
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['id']]);
             $users = [];
-            $select = ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'mail'];
-            if ($viewPersonaldata) {
-                $select[] = 'phone';
+            if (!$viewPersonaldata) {
+                foreach ($select as $selectKey => $selectValue) {
+                    foreach ($personalFields as $personalField) {
+                        $rpos = strrpos($selectValue, 'users.'.$personalField);
+                        if (is_int($rpos) && ($rpos + strlen('users.'.$personalField) === strlen($selectValue))) {
+                            // selectValue ends with personalField
+                            // TODO: replace all of this with str_ends_with in PHP8
+                            unset($select[$selectKey]);
+                        }
+                    }
+                }
             }
             if (!empty($entities)) {
                 $users = UserEntityModel::getWithUsers([
@@ -1719,16 +1770,11 @@ class UserController
                     'data'      => [$entities, 'DEL']
                 ]);
             }
-            $select = ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'mail'];
-            if ($viewPersonaldata) {
-                $select[] = 'phone';
-            }
             $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => $select]);
             $users = array_merge($users, $usersNoEntities);
         }
 
         $delimiter = ',';
-        $body = $request->getParsedBody();
         if (!empty($body['delimiter'])) {
             if (in_array($body['delimiter'], [',', ';', 'TAB'])) {
                 $delimiter = ($body['delimiter'] == 'TAB' ? "\t" : $body['delimiter']);
@@ -1737,11 +1783,14 @@ class UserController
 
         $file = fopen('php://temp', 'w');
 
-        $csvHead = ['id', 'user_id', 'firstname', 'lastname', 'mail', 'phone'];
+        $csvHead = array_column($fields, 'label');
         fputcsv($file, $csvHead, $delimiter);
 
         foreach ($users as $user) {
-            $csvContent = [$user['id'], $user['user_id'], utf8_decode($user['firstname']), utf8_decode($user['lastname']), utf8_decode($user['mail']), $user['phone']];
+            $csvContent = [];
+            foreach ($fields as $field) {
+                $csvContent[] = $user[TextFormatModel::camelToSnake($field['value'])] ?? '';
+            }
             fputcsv($file, $csvContent, $delimiter);
         }
 
