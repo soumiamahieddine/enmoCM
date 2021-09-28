@@ -45,7 +45,7 @@ class AuthenticationController
         if (!file_exists($path)) {
             return $response->withStatus(403)->withJson(['errors' => 'No configuration file found']);
         }
-        $hashedPath = md5($path);
+        $hashedPath = hash('sha256', $path);
 
         $appName   = CoreConfigModel::getApplicationName();
         $configFile = CoreConfigModel::getJsonLoaded(['path' => 'apps/maarch_entreprise/xml/config.json']);
