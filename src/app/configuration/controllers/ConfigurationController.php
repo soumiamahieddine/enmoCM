@@ -188,6 +188,11 @@ class ConfigurationController
             } elseif (!Validator::boolType()->validate($data['enabled'] ?? null)) {
                 return $response->withStatus(400)->withJson(['errors' => "Body enabled is not set or not a boolean"]);
             }
+            $data = [
+                'uri'     => rtrim($data['uri'], '/'),
+                'authUri' => rtrim($data['authUri'], '/'),
+                'enabled' => $data['enabled']
+            ];
         }
 
         $data = json_encode($data, JSON_UNESCAPED_SLASHES);
