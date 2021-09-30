@@ -107,6 +107,9 @@ export class UsersExportComponent implements OnInit {
                 this.listFilter.nativeElement.value = curFilter;
             }, 10);
 
+            if (event.item.dropContainer.id !== 'availableElements') {
+                this.dataAvailable = [... new Set(this.dataAvailable)];
+            }
         }
     }
 
