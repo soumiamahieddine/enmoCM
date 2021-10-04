@@ -707,12 +707,6 @@ class AutoCompleteController
 
         $addresses = [];
         foreach ($hits as $key => $hit) {
-            $sector = ContactController::getAddressSector([
-                'addressNumber'   => $hit->streetNumber,
-                'addressStreet'   => $hit->afnorName,
-                'addressPostcode' => $hit->postalCode,
-                'addressTown'     => $hit->city
-            ]);
             $addresses[] = [
                 'banId'         => $hit->banId,
                 'lon'           => $hit->lon,
@@ -721,8 +715,7 @@ class AutoCompleteController
                 'afnorName'     => $hit->afnorName,
                 'postalCode'    => $hit->postalCode,
                 'city'          => $hit->city,
-                'address'       => "{$hit->streetNumber} {$hit->afnorName}, {$hit->city} ({$hit->postalCode})",
-                'sector'        => $sector['label'] ?? null
+                'address'       => "{$hit->streetNumber} {$hit->afnorName}, {$hit->city} ({$hit->postalCode})"
 
             ];
         }
