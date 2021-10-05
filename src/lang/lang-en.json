@@ -2492,5 +2492,6 @@
     "delegatedOpinion": "Opinion given instead of",
     "requestedOpinion": "Opinion requested instead of",
     "sharePointWarning": "Close the document editor before validating the edit",
-    "autoRedirectToUser": "To myself"
+    "autoRedirectToUser": "To myself",
+    "sectorMsg": "This field will also appear on the metadata form for the contacts and BAN fields."
 }
