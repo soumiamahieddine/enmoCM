@@ -2492,5 +2492,6 @@
     "delegatedOpinion": "Opinion given instead of",
     "requestedOpinion": "Opinion requested instead of",
     "sharePointWarning": "Close the document editor before validating the edit",
-    "autoRedirectToUser": "To myself"
+    "autoRedirectToUser": "To myself",
+    "applicationVersion": "Maarch courrier {{version}} Powered by {{author}}"
 }
