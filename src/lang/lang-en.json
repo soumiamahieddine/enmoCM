@@ -2493,5 +2493,6 @@
     "requestedOpinion": "Opinion requested instead of",
     "sharePointWarning": "Close the document editor before validating the edit",
     "autoRedirectToUser": "To myself",
-    "applicationVersion": "Maarch courrier {{version}} Powered by {{author}}"
+    "applicationVersion": "Maarch courrier {{version}} Powered by {{author}}",
+    "sectorMsg": "This field will also appear on the metadata form for the contacts and BAN fields."
 }

@@ -1775,10 +1775,7 @@ class ContactController
             $address.= $args['contact']['address_town'] . ' ';
         }
         if (!empty($args['contact']['address_country'])) {
-            $address.= $args['contact']['address_country'] . ' ';
-        }
-        if (!empty($args['contact']['sector'])) {
-            $address .= $args['contact']['sector'];
+            $address.= $args['contact']['address_country'];
         }
 
         $contactName = '';
@@ -1800,12 +1797,14 @@ class ContactController
 
         $contactToDisplay = trim($contactName . $company);
 
-        $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
+        $sector = $args['contact']['sector'];
+        $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}" . (!empty($sector) ? " - {$sector}" : '');
         $contact = [
             'type'          => 'contact',
             'id'            => $args['contact']['id'],
             'contact'       => $contactToDisplay,
             'address'       => $address,
+            'sector'        => $sector,
             'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
             'otherInfo'     => $otherInfo,
             'thresholdLevel' => $thresholdLevel
@@ -1946,7 +1945,7 @@ class ContactController
         return $contactsUsed;
     }
 
-    private static function getAddressSector(array $args)
+    public static function getAddressSector(array $args)
     {
         ValidatorModel::stringType($args, ['addressNumber', 'addressStreet', 'addressPostcode', 'addressTown']);
 

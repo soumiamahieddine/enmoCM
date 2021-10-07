@@ -2488,5 +2488,6 @@
     "requestedOpinion": "Avis demandé à la place de",
     "sharePointWarning": "Fermez l'éditeur de document avant de valider l'édition",
     "autoRedirectToUser": "A moi-même",
-    "applicationVersion": "Maarch courrier {{version}} Powered by {{author}}"
+    "applicationVersion": "Maarch courrier {{version}} Powered by {{author}}",
+    "sectorMsg": "Ce champ s'affichera également sur le formulaire de méta-données pour les champs de contacts et de BAN."
 }
