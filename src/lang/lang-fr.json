@@ -2528,5 +2528,9 @@
     "setContactInfos": "Accéder à la fiche de détails du contact",
     "goToContact": "Vous allez perdre vos modifications actuelles, voulez-vous vraiment continuer ?",
     "associateContact": "pour associer ce contact au courrier/pièce jointe.",
-    "associateContactToDoc": "Associer ce contact au courrier/pièce jointe"
+    "associateContactToDoc": "Associer ce contact au courrier/pièce jointe",
+    "getProcessLimitDate": "Date limite de traitement",
+    "getProcessLimitDateSample": "<b color=\"warn\">3 jour(s)</b>",
+    "getCreationDate":             "Date de création",
+    "getCreationDateSample":       "1er janv."
 }
