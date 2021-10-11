@@ -2525,5 +2525,9 @@
     "entitiesParameters_visaCircuit": "Visa workflow",
     "entitiesParameters_opinionCircuit": "Opinion workflow",
     "entitiesParameters_users": "Users",
-    "entitiesParameters_templates": "Templates"
+    "entitiesParameters_templates": "Templates",
+    "getProcessLimitDate": "Processing deadline",
+    "getProcessLimitDateSample": "<b color=\"warn\">3 day(s)</b>",
+    "getCreationDate":             "Creation date",
+    "getCreationDateSample":       "Jan. 1st"
 }

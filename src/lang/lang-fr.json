@@ -2520,5 +2520,9 @@
     "entitiesParameters_visaCircuit": "Circuit de visa",
     "entitiesParameters_opinionCircuit": "Circuit d'avis",
     "entitiesParameters_users": "Utilisateurs",
-    "entitiesParameters_templates": "Modèles de documents"
+    "entitiesParameters_templates": "Modèles de documents",
+    "getProcessLimitDate": "Date limite de traitement",
+    "getProcessLimitDateSample": "<b color=\"warn\">3 jour(s)</b>",
+    "getCreationDate":             "Date de création",
+    "getCreationDateSample":       "1er janv."
 }
