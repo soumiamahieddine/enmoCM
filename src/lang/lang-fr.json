@@ -2520,5 +2520,9 @@
     "entitiesParameters_visaCircuit": "Circuit de visa",
     "entitiesParameters_opinionCircuit": "Circuit d'avis",
     "entitiesParameters_users": "Utilisateurs",
-    "entitiesParameters_templates": "Modèles de documents"
+    "entitiesParameters_templates": "Modèles de documents",
+    "copyInfos": "Copier les informations du contact",
+    "emptyAddress": "Adresse non renseignée",
+    "toCopyInfos": "pour copier ses informations.",
+    "find": "trouvé."
 }

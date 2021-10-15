@@ -2525,5 +2525,9 @@
     "entitiesParameters_visaCircuit": "Visa workflow",
     "entitiesParameters_opinionCircuit": "Opinion workflow",
     "entitiesParameters_users": "Users",
-    "entitiesParameters_templates": "Templates"
+    "entitiesParameters_templates": "Templates",
+    "copyInfos": "Copy contact information",
+    "emptyAddress": "Adresse non renseignée",
+    "toCopyInfos": "to copy its information.",
+    "find": "find."
 }
