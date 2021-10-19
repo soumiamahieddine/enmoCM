@@ -2526,8 +2526,10 @@
     "entitiesParameters_opinionCircuit": "Opinion workflow",
     "entitiesParameters_users": "Users",
     "entitiesParameters_templates": "Templates",
-    "copyInfos": "Copy contact information",
-    "emptyAddress": "Adresse non renseignée",
-    "toCopyInfos": "to copy its information.",
-    "find": "find."
+    "emptyAddress": "Address not filled in",
+    "copyInfos": "to copy its information.",
+    "find": "find.",
+    "showAll": "See other contacts",
+    "setContactInfos": "Access the contact details sheet",
+    "goToContact": "You will lose your current changes, are you sure you want to continue?"
 }

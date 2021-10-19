@@ -2521,8 +2521,10 @@
     "entitiesParameters_opinionCircuit": "Circuit d'avis",
     "entitiesParameters_users": "Utilisateurs",
     "entitiesParameters_templates": "Modèles de documents",
-    "copyInfos": "Copier les informations du contact",
     "emptyAddress": "Adresse non renseignée",
-    "toCopyInfos": "pour copier ses informations.",
-    "find": "trouvé."
+    "accessContact": "pour accéder à la fiche de détails.",
+    "find": "trouvé.",
+    "showAll": "Voir les autres contacts",
+    "setContactInfos": "Accéder à la fiche de détails du contact",
+    "goToContact": "Vous allez perdre vos modifications actuelles, voulez-vous vraiment continuer ?"
 }
