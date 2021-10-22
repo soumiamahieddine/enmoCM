@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, EventEmitter, Input, Output } from '@angu
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationService } from '@service/notification/notification.service';
-import { HeaderService } from '@service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '@service/app.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -51,6 +50,7 @@ export class ContactsFormComponent implements OnInit {
     @Input() actionButton: boolean = true;
     @Input() defaultName: string = '';
 
+    @Output() linkContact = new EventEmitter<number>();
     @Output() onSubmitEvent = new EventEmitter<number>();
 
     countries: any = [];
@@ -344,23 +344,29 @@ export class ContactsFormComponent implements OnInit {
 
     contactNameClone: any = null;
 
+    fromAdministration: boolean = false;
+    currentRoute: string = '';
+
+
     constructor(
         public translate: TranslateService,
         public http: HttpClient,
-        private route: ActivatedRoute,
         private router: Router,
         private notify: NotificationService,
-        private headerService: HeaderService,
         public appService: AppService,
         public dialog: MatDialog,
         public contactService: ContactService,
         public functions: FunctionsService,
-        private latinisePipe: LatinisePipe
+        private latinisePipe: LatinisePipe,
+        private activatedRoute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
 
         this.loading = true;
+
+        this.currentRoute = this.activatedRoute.snapshot['_routerState'].url;
+        this.fromAdministration = this.currentRoute.includes('administration') ? true : false;
 
         this.initBanSearch();
 
@@ -1213,22 +1219,26 @@ export class ContactsFormComponent implements OnInit {
     }
 
     setContact(id: number) {
-        const dialogRef = this.dialog.open(ConfirmComponent,
-            { panelClass: 'maarch-modal',
-                autoFocus: false, disableClose: true,
-                data: {
-                    title: this.translate.instant('lang.setContactInfos'),
-                    msg: this.translate.instant('lang.goToContact')
-                }
-            });
-        dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.router.navigate([`/administration/contacts/list/${id}`])),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        if (!this.fromAdministration) {
+            this.linkContact.emit(id);
+        } else {
+            const dialogRef = this.dialog.open(ConfirmComponent,
+                { panelClass: 'maarch-modal',
+                    autoFocus: false, disableClose: true,
+                    data: {
+                        title: this.translate.instant('lang.setContactInfos'),
+                        msg: this.translate.instant('lang.goToContact')
+                    }
+                });
+            dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                exhaustMap(() => this.router.navigate([`/administration/contacts/list/${id}`])),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     showAllContact() {
@@ -1236,7 +1246,10 @@ export class ContactsFormComponent implements OnInit {
             disableClose: true,
             width: '800px',
             panelClass: 'maarch-modal',
-            data: this.autocompleteContactName
+            data: {
+                contacts: this.autocompleteContactName,
+                fromAdministration: this.fromAdministration
+            }
         });
 
         dialogRef.afterClosed().pipe(
