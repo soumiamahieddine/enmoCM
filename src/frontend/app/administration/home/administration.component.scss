@@ -61,6 +61,7 @@
   color: white;
   background: var(--maarch-color-primary);
   cursor: pointer;
+  border-radius: 15px;
 }
 
 .avatarCount {
@@ -81,7 +82,7 @@
   justify-content: center;
   font-size: 30px;
   background: var(--maarch-color-primary);
-  border-radius: 40px;
+  border-radius: 15px;
   padding: 10px;
   width: 55px !important;
   height: 55px !important;

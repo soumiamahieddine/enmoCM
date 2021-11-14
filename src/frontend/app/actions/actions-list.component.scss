@@ -1,41 +1,40 @@
-
 .mat-icon {
-    height: auto;
+  height: auto;
 }
 
 .mat-stroked-button {
-    border-radius: 20px;
-    border-color: #135F7F;
-    color: #135F7F;
+  border-radius: 20px;
+  border-color: #280d43;
+  color: #280d43;
 }
 
 ::ng-deep.actionListMenu {
-    .mat-menu-content {
-        padding-top: 0;
-        padding-bottom: 0;
-    }
+  .mat-menu-content {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 .followAction {
-    .mat-icon {
-        font-size:20px;
-        color: var(--maarch-color-danger);
-    }
+  .mat-icon {
+    font-size: 20px;
+    color: var(--maarch-color-danger);
+  }
 }
 
 .freezeIcon {
-    color: var(--maarch-color-primary);
+  color: var(--maarch-color-primary);
 }
 
 .bindidngIcon {
-    color: var(--maarch-color-primary);
-    margin-left: 5px;
+  color: var(--maarch-color-primary);
+  margin-left: 5px;
 }
 
 .isSelectedMenu {
-    background: var(--maarch-color-secondary);
-  }
+  background: var(--maarch-color-secondary);
+}
 
 .notSelectedMenu {
-    background: white;
+  background: white;
 }

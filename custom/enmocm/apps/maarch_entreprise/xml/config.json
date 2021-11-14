@@ -1,0 +1,66 @@
+{
+  "config": {
+    "lang": "fr",
+    "applicationName": "Enmo CM",
+    "cookieTime": 10080,
+    "timezone": "Europe/Paris",
+    "maarchDirectory": "/var/www/html/MaarchCourrier/",
+    "customID": "enmocm",
+    "maarchUrl": "",
+    "lockAdvancedPrivileges": false
+  },
+  "database": [
+    {
+      "server": "localhost",
+      "port": "5432",
+      "type": "POSTGRESQL",
+      "name": "Enmo_last",
+      "user": "maarch",
+      "password": "maarch"
+    }
+  ],
+  "signatureBook": {
+    "userWS": "superadmin",
+    "passwordWS": "superadmin",
+    "validatedStatus": "EENV",
+    "validatedStatusOnlyVisa": "EENV",
+    "refusedStatus": "REJ_SIGN",
+    "validatedStatusAnnot": "COU",
+    "refusedStatusAnnot": "RET"
+  },
+  "exportSeda": {
+    "sae": "MaarchRM",
+    "token": "phdF9WkJuTKkDuPXoqDZuCFEQT7En7YqsVROsdD1HoNZV7jD5+XyCsyDQNvZ/ZGOy40wc78fDeWRY8ghhcb6yRSQutg5JON+rXaCjFqsz0/1btLg4x53lHx4H2zR6leU",
+    "urlSAEService": "http://www.alamodz.com/",
+    "senderOrgRegNumber": "org_987654321_DGS_SA",
+    "accessRuleCode": "AR039",
+    "certificateSSL": "",
+    "userAgent": "service",
+    "statusReplyReceived": "REPLY_SEDA",
+    "statusReplyRejected": "REPLY_SEDA",
+    "statusMailToPurge": "REPLY_SEDA",
+    "externalSAE": {
+      "retentionRules": [
+        {
+          "id": "id1",
+          "label": "label1"
+        }
+      ],
+      "archiveEntities": [
+        {
+          "id": "id1",
+          "label": "label1"
+        }
+      ],
+      "archivalAgreements": [
+        {
+          "id": "id1",
+          "label": "label1"
+        }
+      ]
+    },
+    "M2M": {
+      "gec": "maarch_courrier"
+    }
+  }
+}
