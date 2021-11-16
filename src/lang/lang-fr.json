@@ -2410,7 +2410,7 @@
   "setDefaultMetadata": "Paramétrer ici les métadonnées par défaut des courriers reçus.",
   "useContactsAnnuaries": "Utiliser des annuaires de contacts",
   "annuary": "Annuaire",
-  "ENMO2ENMO": "ENMO2ENMO",
+  "maarch2Maarch": "ENMO2ENMO",
   "basketId": "Identifiant de la bannette ex: NumericBasket",
   "maarch2maarchDesc": "La fonctionnalité M2M, permet d'envoyer un courrier et des pièces jointes entre <b>deux instances</b> de Enmo CM, ou entre Enmo CM et une autre GEC.<br/>Les données sont transmises dans une <b>archive ZIP</b> soit par l'envoi de mail (et Enmo Vortex), soit par web service REST, soit manuellement (<a href=\"{{url}}\">plus d'informations</a>).",
   "authorizationHeader": "En-tête d'autorisation",
