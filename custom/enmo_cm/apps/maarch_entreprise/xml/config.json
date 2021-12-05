@@ -7,16 +7,16 @@
         "maarchDirectory": "\/var\/www\/html\/MaarchCourrier\/",
         "customID": "enmo_cm",
         "maarchUrl": "",
-        "lockAdvancedPrivileges": true
+        "lockAdvancedPrivileges": false
     },
     "database": [
         {
-            "server": "localhost",
+            "server": "ec2-34-254-120-2.eu-west-1.compute.amazonaws.com",
             "port": "5432",
             "type": "POSTGRESQL",
-            "name": "enmo_cm",
-            "user": "maarch",
-            "password": "maarch"
+            "name": "d7s0p6ba5r7o51",
+            "user": "wvdnrsqczldjly",
+            "password": "0d1224862f6caefb3bca5f8259d380ce44a97f9ee35dcdf68db3504563b8420b"
         }
     ],
     "signatureBook": {

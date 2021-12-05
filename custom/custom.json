@@ -8,5 +8,10 @@
         "id": "enmo_cm",
         "uri": null,
         "path": "enmo_cm"
+    },
+    {
+        "id": "enmo-cm",
+        "uri": null,
+        "path": "enmo-cm"
     }
 ]
